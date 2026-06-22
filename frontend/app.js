@@ -330,7 +330,8 @@ function renderStructInfo(intel) {
       <div class="v">${comp.n_filled_from_holo} from holo · ${comp.n_interpolated} interpolated · ${comp.n_unplaced} unplaced
       <span style="color:var(--muted);font-weight:400"> (of ${comp.n_missing} missing)</span></div>
       ${comp.filled && comp.filled.length
-        ? `<div style="margin-top:6px;font-size:11px" class="missing">${comp.filled.map((f) => `${f.resname}${f.resnum} <span style="opacity:.7">(${f.source})</span>`).join(", ")}</div>`
+        ? `<details class="collapse" style="margin-top:6px"><summary>show ${comp.filled.length} filled residues</summary>
+            <div style="font-size:11px" class="missing">${comp.filled.map((f) => `${f.resname}${f.resnum} <span style="opacity:.7">(${f.source})</span>`).join(", ")}</div></details>`
         : ""}
     </div>`;
   }
@@ -366,7 +367,10 @@ function renderStructInfo(intel) {
   if (intel.n_missing) {
     const list = intel.missing_residues
       .map((m) => `${m.resname}${m.resnum}${m.chain ? "/" + m.chain : ""}`).join(", ");
-    html += `<h3>Missing (unresolved) residues — ${intel.n_missing}</h3><div class="missing">${list}</div>`;
+    html += `<details class="collapse">
+      <summary>Missing (unresolved) residues — ${intel.n_missing} <span class="hint">(click to expand)</span></summary>
+      <div class="missing">${list}</div>
+    </details>`;
   } else {
     html += `<h3>Missing residues</h3><div>None — structure is complete.</div>`;
   }

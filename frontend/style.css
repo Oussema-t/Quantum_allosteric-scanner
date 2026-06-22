@@ -153,6 +153,25 @@ button.secondary:disabled { opacity: .35; cursor: not-allowed; }
 .structinfo .tag.solvent\/ion, .structinfo .tag.ion { background: var(--panel); color: var(--muted); }
 .structinfo .missing { color: #ffb454; font-variant-numeric: tabular-nums; word-break: break-word; }
 
+/* collapsible boxes (e.g. long missing-residue lists) */
+.structinfo .collapse { margin: 12px 0 4px; }
+.structinfo .collapse > summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 12px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  padding: 6px 0;
+  user-select: none;
+}
+.structinfo .collapse > summary::-webkit-details-marker { display: none; }
+.structinfo .collapse > summary::before { content: "▶ "; font-size: 10px; display: inline-block; transition: transform .15s; }
+.structinfo .collapse[open] > summary::before { transform: rotate(90deg); }
+.structinfo .collapse > summary .hint { color: var(--muted); text-transform: none; letter-spacing: 0; font-weight: 400; }
+.structinfo .collapse[open] > summary .hint { display: none; }
+.structinfo .collapse > .missing { margin-top: 6px; max-height: 220px; overflow-y: auto; padding-right: 6px; }
+
 .legend { display: flex; align-items: center; gap: 16px; margin-top: 10px; font-size: 12px; color: var(--muted); }
 .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 4px; vertical-align: middle; }
 .swatch.src { background: var(--src); }
