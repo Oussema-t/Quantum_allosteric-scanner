@@ -318,6 +318,7 @@ function renderAnalysis(analysis, activeSite, prefix = "", drugSite = []) {
   keys.forEach((k, ci) => {
     const div = document.createElement("div");
     div.className = "chart";
+    div.dataset.name = k;
     charts.appendChild(div);
     ANALYSIS_CHART_DIVS.push(div);
     const vals = analysis.terms[k];
@@ -374,11 +375,19 @@ function exportCSV() {
   const mode = $("analysismode").value;
   const keys = ["V_B", "V_T", "V_R", "V_C", "V_M"];
   const activeSet = new Set(A.active_site || v.active_site || []);
-  const head = ["resnum", "is_active_site", ...keys];
+  const drugSet = new Set((A.drug_site) || []);
+  // include §5d structural change when exporting the Δ view
+  const struct = (mode === "delta" && LAST.shift) ? LAST.shift.structural : null;
+  const sMap = struct ? Object.fromEntries(struct.resnums.map(
+    (r, i) => [r, [struct.ca_displacement[i], struct.d_coordination[i]]])) : null;
+  const head = ["resnum", "is_active_site", "is_drug_site", ...keys]
+    .concat(sMap ? ["ca_displacement", "d_coordination"] : []);
   const lines = [head.join(",")];
   A.resnums.forEach((rn, i) => {
-    lines.push([rn, activeSet.has(rn) ? 1 : 0,
-      ...keys.map((k) => A.terms[k][i])].join(","));
+    const row = [rn, activeSet.has(rn) ? 1 : 0, drugSet.has(rn) ? 1 : 0,
+      ...keys.map((k) => A.terms[k][i])];
+    if (sMap) row.push(...(sMap[rn] || ["", ""]));
+    lines.push(row.join(","));
   });
   downloadFile(`${v.pdb_id}_site_potentials_${mode}.csv`, lines.join("\n"), "text/csv");
 }
@@ -392,12 +401,11 @@ function exportJSON() {
 
 async function exportPNG() {
   if (!ANALYSIS_CHART_DIVS.length) { setStatus("Load a protein first.", true); return; }
-  const keys = ["V_B", "V_T", "V_R", "V_C", "V_M"];
   for (let i = 0; i < ANALYSIS_CHART_DIVS.length; i++) {
-    const uri = await Plotly.toImage(ANALYSIS_CHART_DIVS[i],
-      { format: "png", width: 1100, height: 220, scale: 2 });
+    const div = ANALYSIS_CHART_DIVS[i];
+    const uri = await Plotly.toImage(div, { format: "png", width: 1100, height: 220, scale: 2 });
     const a = document.createElement("a");
-    a.href = uri; a.download = `${LAST.view.pdb_id}_${keys[i]}.png`; a.click();
+    a.href = uri; a.download = `${LAST.view.pdb_id}_${div.dataset.name || "chart" + i}.png`; a.click();
   }
 }
 
@@ -451,9 +459,61 @@ function applyAnalysisMode() {
     renderDrugIntersection(site, drug);
   } else {
     renderAnalysis(LAST.shift.delta, site, "Δ", drug);
+    renderStructuralCharts(LAST.shift.structural, site, drug);
     renderDrugIntersection(site, drug);
   }
   render3D();  // 3D color-by + drug-site markers follow the selected analysis
+}
+
+// generic per-residue profile chart with active-site + drug-site markers
+function makeProfileChart(div, o) {
+  const traces = [{
+    x: o.x, y: o.y, type: "scatter", mode: "lines", line: { color: o.color, width: 1 },
+    fill: "tozeroy", fillcolor: o.fillColor, hovertemplate: "res %{x}: %{y:.2f}<extra></extra>",
+  }];
+  const mark = (set, color, symbol, size, name) => {
+    if (!set || !set.size) return;
+    const mx = [], my = [];
+    o.x.forEach((r, i) => { if (set.has(r)) { mx.push(r); my.push(o.y[i]); } });
+    traces.push({ x: mx, y: my, type: "scatter", mode: "markers", name,
+      marker: { color, size, symbol, line: { color: "#fff", width: 0.5 } },
+      hovertemplate: `${name} %{x}<extra></extra>` });
+  };
+  mark(o.siteSet, "#ff4d6d", "circle", 5, "active site");
+  mark(o.drugSet, "#b15be0", "diamond", 7, "drug site");
+  Plotly.newPlot(div, traces, {
+    margin: { l: 44, r: 10, t: 20, b: o.isLast ? 40 : 18 }, height: 160,
+    title: { text: o.title, font: { size: 11, color: "#c7d0e6" }, x: 0.02 },
+    paper_bgcolor: "#141b30", plot_bgcolor: "#141b30", font: { color: "#8b97b8", size: 9 },
+    xaxis: { range: [o.rmin - 1, o.rmax + 1], showgrid: false, zeroline: false, nticks: 30,
+      tickformat: "d", title: o.isLast ? { text: "residue number", font: { size: 10 } } : undefined },
+    yaxis: { showgrid: false, zeroline: true, zerolinecolor: "#29355c" },
+    showlegend: false,
+  }, { displayModeBar: false, responsive: true });
+}
+
+// §5d: apo→holo Cα displacement (Kabsch) + coordination-number change
+function renderStructuralCharts(s, activeSite, drugSite) {
+  if (!s) return;
+  const charts = $("analysischarts");
+  const siteSet = new Set(activeSite || []), drugSet = new Set(drugSite || []);
+  const rmin = Math.min(...s.resnums), rmax = Math.max(...s.resnums);
+  const hdr = document.createElement("div");
+  hdr.className = "marker-legend";
+  hdr.innerHTML = `<b style="color:var(--ink)">apo→holo structural change</b> · Cα RMSD ${s.ca_rmsd} Å · max shift ${s.max_disp} Å`;
+  charts.appendChild(hdr);
+  const d1 = document.createElement("div");
+  d1.className = "chart"; d1.dataset.name = "ca_displacement";
+  charts.appendChild(d1); ANALYSIS_CHART_DIVS.push(d1);
+  makeProfileChart(d1, { title: "Cα displacement (Å) — how far each residue moves on binding",
+    x: s.resnums, y: s.ca_displacement, color: "#27ae60", fillColor: "rgba(39,174,96,0.15)",
+    siteSet, drugSet, isLast: false, rmin, rmax });
+  const d2 = document.createElement("div");
+  d2.className = "chart"; d2.dataset.name = "d_coordination";
+  charts.appendChild(d2); ANALYSIS_CHART_DIVS.push(d2);
+  makeProfileChart(d2, { title: "Δ coordination number (holo − apo) — contacts gained/lost",
+    x: s.resnums, y: s.d_coordination, color: "#8e44ad", fillColor: "rgba(142,68,173,0.15)",
+    siteSet, drugSet, isLast: true, rmin, rmax });
 }
 
 // does the drug bind AT the active site (orthosteric) or away from it (allosteric)?

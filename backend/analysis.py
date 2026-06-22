@@ -27,6 +27,22 @@ def _z(x):
     return (x - x.mean()) / (s + 1e-9) if s > 0 else np.zeros_like(x)
 
 
+def _coordination(coords, cutoff):
+    """Per-residue coordination number (contacts within cutoff)."""
+    D = cdist(coords, coords)
+    return ((D < cutoff) & (D > 1e-8)).sum(1).astype(float)
+
+
+def _kabsch_rotate(mobile, ref):
+    """Rotate `mobile` (N,3) onto `ref` (N,3) by least squares; return aligned mobile."""
+    mc = mobile - mobile.mean(0)
+    rc = ref - ref.mean(0)
+    U, _S, Vt = np.linalg.svd(mc.T @ rc)
+    d = np.sign(np.linalg.det(Vt.T @ U.T))
+    R = Vt.T @ np.diag([1.0, 1.0, d]) @ U.T
+    return mc @ R.T + ref.mean(0)
+
+
 def gnm_context(coords, bfac, cutoff=8.0):
     """Kirchhoff (GNM) operator and the quantities the five terms are built from."""
     N = len(coords)
@@ -140,6 +156,25 @@ def site_potential_shift(apo_pdb, apo_chain, holo_pdb, holo_chain=None,
             delta_enr[k] = round(float(v[sidx].mean()
                                        - (v[bidx].mean() if bidx else 0.0)), 3)
 
+    # §5d: apo->holo Cα displacement (Kabsch) + coordination-number change
+    structural = None
+    if len(shared) >= 5:
+        a_idx = {int(r): i for i, r in enumerate(apo["resnums"])}
+        h_idx = {int(r): i for i, r in enumerate(holo["resnums"])}
+        P = np.array([apo["coords"][a_idx[r]] for r in shared], float)   # apo
+        Q = np.array([holo["coords"][h_idx[r]] for r in shared], float)  # holo
+        disp = np.linalg.norm(P - _kabsch_rotate(Q, P), axis=1)
+        deg_a = _coordination(apo["coords"], cutoff)
+        deg_h = _coordination(holo["coords"], cutoff)
+        dcoord = np.array([deg_h[h_idx[r]] - deg_a[a_idx[r]] for r in shared], float)
+        structural = {
+            "resnums": shared,
+            "ca_displacement": [round(float(x), 3) for x in disp],
+            "d_coordination": [round(float(x), 1) for x in dcoord],
+            "ca_rmsd": round(float(np.sqrt((disp ** 2).mean())), 3),
+            "max_disp": round(float(disp.max()), 3),
+        }
+
     return {
         "labels": a["labels"],
         "active_site": sorted(siteset),
@@ -147,5 +182,6 @@ def site_potential_shift(apo_pdb, apo_chain, holo_pdb, holo_chain=None,
         "holo": h,
         "delta": {"resnums": shared, "terms": delta_terms,
                   "labels": a["labels"], "enrichment": delta_enr},
+        "structural": structural,
         "n_shared": len(shared),
     }
