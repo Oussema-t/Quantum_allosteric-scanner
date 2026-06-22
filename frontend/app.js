@@ -307,10 +307,16 @@ function render3D() {
       });
     }
 
-    // modeled (filled-in) residues — orange
-    data.residues.filter((r) => r.modeled).forEach((r) =>
-      viewer.addStyle({ chain: r.chain, resi: r.resnum, atom: "CA" },
-        { sphere: { color: "#ff8c2b", radius: 1.2 } }));
+    // filled (modeled) residues are NOT in the raw PDB the viewer downloaded, so
+    // draw them at their computed coordinates as orange spheres (the "added" atoms)
+    const comp = data.completion;
+    if (comp && comp.filled) {
+      comp.filled.forEach((f) => {
+        if (!f.coord) return;
+        viewer.addSphere({ center: { x: f.coord[0], y: f.coord[1], z: f.coord[2] },
+          radius: 1.0, color: "#ff8c2b" });
+      });
+    }
 
     // bound drugs / ligands — sticks + label
     if (showLig && intel && intel.ligands) {
@@ -361,7 +367,7 @@ function renderStructInfo(intel) {
     html += `<div class="scard" style="background:rgba(255,140,43,.12);margin-bottom:12px">
       <div class="l">Apo completion — filled from holo ${comp.holo || "?"}</div>
       <div class="v">${comp.n_filled_from_holo} from holo · ${comp.n_interpolated} interpolated · ${comp.n_unplaced} unplaced
-      <span style="color:var(--muted);font-weight:400"> (of ${comp.n_missing} missing)</span></div>
+      <span style="color:var(--muted);font-weight:400"> (of ${comp.n_missing} missing)${comp.align_rmsd != null ? ` · holo aligned onto apo, RMSD ${comp.align_rmsd} Å` : ""}</span></div>
       ${comp.filled && comp.filled.length
         ? `<details class="collapse" style="margin-top:6px"><summary>show ${comp.filled.length} filled residues</summary>
             <div style="font-size:11px" class="missing">${comp.filled.map((f) => `${f.resname}${f.resnum} <span style="opacity:.7">(${f.source})</span>`).join(", ")}</div></details>`

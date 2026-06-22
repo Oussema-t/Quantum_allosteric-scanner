@@ -147,6 +147,21 @@ def find_holo_candidates(apo_pdb, target_name=None, max_detail=12):
 
 # ── apo completion ──────────────────────────────────────────────────────────
 
+def _kabsch(P, Q):
+    """Optimal rotation aligning moving points P onto fixed points Q (both (N,3)).
+    Returns (R, P_centroid, Q_centroid) so that aligned = (X - P_c) @ R.T + Q_c."""
+    Pc, Qc = P.mean(0), Q.mean(0)
+    H = (P - Pc).T @ (Q - Qc)
+    U, _, Vt = np.linalg.svd(H)
+    d = np.sign(np.linalg.det(Vt.T @ U.T))
+    R = Vt.T @ np.diag([1.0, 1.0, d]) @ U.T
+    return R, Pc, Qc
+
+
+def _apply_transform(coords, R, Pc, Qc):
+    return (coords - Pc) @ R.T + Qc
+
+
 def complete_apo(apo_pdb, apo_chain, holo_pdb=None, holo_chain=None):
     """Fill the apo structure's missing residues. Returns a completed structure dict
     (coords/resnums/chains/bfac + `modeled` bool array) and a fill report.
@@ -170,12 +185,25 @@ def complete_apo(apo_pdb, apo_chain, holo_pdb=None, holo_chain=None):
     missing_nums = sorted(set(int(m["resnum"]) for m in missing))
     resname_of = {int(m["resnum"]): m["resname"] for m in missing}
 
-    # holo coordinates by residue number (first matching chain)
+    # holo coordinates by residue number, SUPERIMPOSED onto the apo frame first
+    # (apo and holo are separate crystal structures in different coordinate frames,
+    # so we Kabsch-align the holo onto the apo on their shared residues before
+    # borrowing any coordinate — otherwise filled atoms land in the wrong place).
     holo_map = {}
+    align_rmsd = None
     if holo_pdb:
         holo = load_structure(holo_pdb, holo_chain or apo_chain)
         if holo is not None:
-            holo_map = {int(rn): holo["coords"][i] for i, rn in enumerate(holo["resnums"])}
+            holo_by_num = {int(rn): holo["coords"][i] for i, rn in enumerate(holo["resnums"])}
+            common = sorted(set(resolved) & set(holo_by_num))
+            if len(common) >= 3:
+                P = np.array([holo_by_num[r] for r in common], float)
+                Q = np.array([resolved[r][0] for r in common], float)
+                R, Pc, Qc = _kabsch(P, Q)
+                aligned = _apply_transform(holo["coords"], R, Pc, Qc)
+                holo_map = {int(rn): aligned[i] for i, rn in enumerate(holo["resnums"])}
+                ac = _apply_transform(P, R, Pc, Qc)
+                align_rmsd = round(float(np.sqrt(((ac - Q) ** 2).sum(1).mean())), 3)
 
     filled = {}     # resnum -> (coord, source)
     # pass 1: real coordinates from holo
@@ -220,7 +248,10 @@ def complete_apo(apo_pdb, apo_chain, holo_pdb=None, holo_chain=None):
         else:
             c, src = filled[rn]
             coords.append(c); bfac.append(0.0); modeled.append(True)
-            report.append({"resnum": rn, "resname": resname_of.get(rn, "UNK"), "source": src})
+            report.append({"resnum": rn, "resname": resname_of.get(rn, "UNK"),
+                           "source": src,
+                           "coord": [round(float(c[0]), 3), round(float(c[1]), 3),
+                                     round(float(c[2]), 3)]})
         resnums.append(rn); chains.append(apo_chain.split(",")[0].strip())
 
     unplaced = [rn for rn in missing_nums if rn not in filled]
@@ -238,6 +269,7 @@ def complete_apo(apo_pdb, apo_chain, holo_pdb=None, holo_chain=None):
         "n_filled_from_holo": sum(1 for r in report if r["source"] == "holo"),
         "n_interpolated": sum(1 for r in report if r["source"].startswith("interpolated")),
         "n_unplaced": len(unplaced),
+        "align_rmsd": align_rmsd,
         "filled": report,
         "unplaced": unplaced,
     }
