@@ -1,0 +1,19 @@
+# Render Blueprint — one-click deploy of the Quantum Allosteric Scanner.
+# In the Render dashboard: New + -> Blueprint -> connect this repo. Render reads
+# this file, builds, and serves the app at a public https URL that auto-redeploys
+# on every git push to main.
+services:
+  - type: web
+    name: quantum-allosteric-scanner
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: APP_USERNAME
+        value: jury
+      - key: APP_PASSWORD
+        value: "QAS@CC"   # change here (or in the Render dashboard) to rotate the login

@@ -9,12 +9,16 @@ GET  /api/families          available Hamiltonian families + propagators
 POST /api/scan              run a scan -> connectivity matrix + hit list
 GET  /                      serves the frontend (static)
 """
+import base64
 import os
+import secrets
 from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from starlette.requests import Request
+from starlette.responses import Response
 from pydantic import BaseModel, Field
 
 from .hamiltonian import FAMILIES
@@ -27,6 +31,32 @@ app = FastAPI(title="Quantum Allosteric Scanner", version="0.1.0")
 app.add_middleware(
     CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"],
 )
+
+# ── login gate (HTTP Basic Auth) ────────────────────────────────────────────
+# Credentials come from env vars so they can be changed without code edits and
+# overridden per deployment. Defaults let the app run out-of-the-box for the jury.
+# Set APP_PASSWORD="" to disable the gate entirely.
+APP_USERNAME = os.environ.get("APP_USERNAME", "jury")
+APP_PASSWORD = os.environ.get("APP_PASSWORD", "QAS@CC")
+_REALM = 'Basic realm="Quantum Allosteric Scanner"'
+
+
+@app.middleware("http")
+async def basic_auth(request: Request, call_next):
+    # no gate if disabled, and always allow the health probe (for host monitoring)
+    if not APP_PASSWORD or request.url.path == "/api/health":
+        return await call_next(request)
+    header = request.headers.get("Authorization", "")
+    if header.startswith("Basic "):
+        try:
+            user, _, pw = base64.b64decode(header[6:]).decode("utf-8").partition(":")
+            if (secrets.compare_digest(user, APP_USERNAME)
+                    and secrets.compare_digest(pw, APP_PASSWORD)):
+                return await call_next(request)
+        except Exception:
+            pass
+    return Response(status_code=401, headers={"WWW-Authenticate": _REALM})
+
 
 FRONTEND_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
 

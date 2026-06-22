@@ -3,6 +3,11 @@
 **Quantum simulation of allosteric signal propagation to identify cryptic druggable pockets.**
 Cleveland Clinic — Global Quantum + AI Challenge 2026.
 
+> ### 🌐 Live demo
+> **[ launch the app ](https://quantum-allosteric-scanner.onrender.com)** &nbsp;·&nbsp; login — **username:** `jury` &nbsp; **password:** `QAS@CC`
+>
+> *(URL goes live once the Render deploy is connected — see [Deploy](#deploy-public-url) below.)*
+
 Over 85% of disease-causing proteins are considered *undruggable* — they lack the deep
 active-site pockets that classical small-molecule drugs need. The only viable strategy for
 these targets is **allostery**: finding hidden distal pockets that, when bound, shut down
@@ -46,7 +51,21 @@ pip install -r requirements.txt
 uvicorn backend.main:app --reload --port 8000
 ```
 
-Then open <http://localhost:8000>.
+Then open <http://localhost:8000> and log in with `jury` / `QAS@CC`.
+
+## Deploy (public URL)
+
+The app is configured for one-click deploy to [Render](https://render.com) via
+[`render.yaml`](render.yaml):
+
+1. Sign in to Render and authorize access to this (private) GitHub repo.
+2. **New + → Blueprint →** select `Oussema-t/Quantum_allosteric-scanner`.
+3. Render reads `render.yaml`, builds, and publishes a public `https://…onrender.com`
+   URL that **auto-redeploys on every push to `main`**.
+
+The login is set by the `APP_USERNAME` / `APP_PASSWORD` environment variables
+(defaults `jury` / `QAS@CC`); change them in `render.yaml` or the Render dashboard
+to rotate the password. Set `APP_PASSWORD` to empty to disable the gate.
 
 ## Scientific method
 
