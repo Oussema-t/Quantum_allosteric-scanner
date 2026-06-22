@@ -4,7 +4,8 @@ const API = ""; // same origin (served by FastAPI)
 
 const $ = (id) => document.getElementById(id);
 let TARGETS = [];
-const LAST = { view: null, intel: null };
+const LAST = { view: null, intel: null, shift: null };
+let CURRENT_ANALYSIS = null;  // analysis object currently shown (drives charts + 3D)
 
 // ── init: populate targets ─────────────────────────────────────────────────
 async function init() {
@@ -152,6 +153,11 @@ async function loadAndVisualize() {
     LAST.view = data;
     setStatus(`Loaded ${data.pdb_id} — ${data.n_residues} residues · ${dt}s`);
     showActiveSiteNote(data);
+    // reset apo→holo shift state for the newly loaded structure
+    LAST.shift = null;
+    $("analysismode").disabled = true;
+    $("analysismode").value = "loaded";
+    setShiftNote("");
     renderAnalysis(data.analysis, data.active_site);
     await loadIntel(data.pdb_id, data.chains);
     render3D();
@@ -270,23 +276,26 @@ function divergeColor(z) {
 }
 
 // ── GNM site-potential analysis: enrichment + per-residue profiles ──────────
-function renderAnalysis(analysis, activeSite) {
+function renderAnalysis(analysis, activeSite, prefix = "") {
   const enr = $("enrichment");
   const charts = $("analysischarts");
   if (!analysis) {
+    CURRENT_ANALYSIS = null;
     enr.innerHTML = "";
     charts.innerHTML = "<span class='hint-line'>Site-potential analysis unavailable for this structure (too large or failed).</span>";
     return;
   }
+  CURRENT_ANALYSIS = { ...analysis, active_site: activeSite || [] };
   const keys = ["V_B", "V_T", "V_R", "V_C", "V_M"];
 
-  // enrichment cards (pocket − bulk z) when an active site is known
+  // enrichment cards (term − bulk z, or Δ at active site) when an active site is known
   const e = analysis.enrichment;
-  if (e) {
-    enr.innerHTML = `<div class="enr-grid">` + keys.map((k) => {
+  if (e && Object.keys(e).length) {
+    const lbl = prefix ? "Δ at active site" : "active site − bulk";
+    enr.innerHTML = `<div class="hint-line">${lbl}:</div><div class="enr-grid">` + keys.map((k) => {
       const v = e[k];
       const cls = v > 0.05 ? "pos" : v < -0.05 ? "neg" : "";
-      return `<div class="enr"><div class="k">${k}</div><div class="lab">${analysis.labels[k]}</div>` +
+      return `<div class="enr"><div class="k">${prefix}${k}</div><div class="lab">${analysis.labels[k]}</div>` +
         `<div class="val ${cls}">${v > 0 ? "+" : ""}${v.toFixed(2)}</div></div>`;
     }).join("") + `</div>`;
   } else {
@@ -319,7 +328,7 @@ function renderAnalysis(analysis, activeSite) {
     const isLast = ci === keys.length - 1;
     Plotly.newPlot(div, traces, {
       margin: { l: 38, r: 10, t: 20, b: isLast ? 40 : 18 }, height: 150,
-      title: { text: `${k} · ${analysis.labels[k]}`, font: { size: 11, color: "#c7d0e6" }, x: 0.02 },
+      title: { text: `${prefix}${k} · ${analysis.labels[k]}`, font: { size: 11, color: "#c7d0e6" }, x: 0.02 },
       paper_bgcolor: "#141b30", plot_bgcolor: "#141b30",
       font: { color: "#8b97b8", size: 9 },
       xaxis: {
@@ -346,24 +355,24 @@ function downloadFile(name, content, type) {
 
 function exportCSV() {
   const v = LAST.view;
-  if (!v) { setStatus("Load a protein first.", true); return; }
-  const a = v.analysis;
-  const activeSet = new Set(v.active_site || []);
+  const A = CURRENT_ANALYSIS;
+  if (!v || !A) { setStatus("Load a protein first.", true); return; }
+  const mode = $("analysismode").value;
   const keys = ["V_B", "V_T", "V_R", "V_C", "V_M"];
-  const head = ["resnum", "chain", "bfactor", "modeled", "is_active_site", ...keys];
+  const activeSet = new Set(A.active_site || v.active_site || []);
+  const head = ["resnum", "is_active_site", ...keys];
   const lines = [head.join(",")];
-  v.residues.forEach((r, i) => {
-    const terms = a ? keys.map((k) => a.terms[k][i]) : keys.map(() => "");
-    lines.push([r.resnum, r.chain, r.bfactor, r.modeled ? 1 : 0,
-      activeSet.has(r.resnum) ? 1 : 0, ...terms].join(","));
+  A.resnums.forEach((rn, i) => {
+    lines.push([rn, activeSet.has(rn) ? 1 : 0,
+      ...keys.map((k) => A.terms[k][i])].join(","));
   });
-  downloadFile(`${v.pdb_id}_site_potentials.csv`, lines.join("\n"), "text/csv");
+  downloadFile(`${v.pdb_id}_site_potentials_${mode}.csv`, lines.join("\n"), "text/csv");
 }
 
 function exportJSON() {
   const v = LAST.view;
   if (!v) { setStatus("Load a protein first.", true); return; }
-  const bundle = { view: v, structure_intel: LAST.intel };
+  const bundle = { view: v, structure_intel: LAST.intel, shift: LAST.shift };
   downloadFile(`${v.pdb_id}_results.json`, JSON.stringify(bundle, null, 2), "application/json");
 }
 
@@ -381,6 +390,59 @@ async function exportPNG() {
 $("exportcsv").addEventListener("click", exportCSV);
 $("exportjson").addEventListener("click", exportJSON);
 $("exportpng").addEventListener("click", exportPNG);
+
+// ── apo → holo site-potential shift (notebook §5c) ──────────────────────────
+$("computeshift").addEventListener("click", computeShift);
+$("analysismode").addEventListener("change", applyAnalysisMode);
+
+async function computeShift() {
+  const apo = $("pdb").value.trim();
+  const holo = currentHolo();
+  if (!apo) { setShiftNote("Enter the apo PDB ID first.", true); return; }
+  if (!holo) { setShiftNote("No holo found — pick one with “Find holo” first.", true); return; }
+  const btn = $("computeshift");
+  btn.disabled = true;
+  setShiftNote(`Computing site potentials for holo ${holo} and the apo→holo shift…`);
+  try {
+    const t = TARGETS.find((x) => x.name === $("target").value);
+    const ac = ($("chains").value.trim() || "A").split(",")[0].trim();
+    const hc = (t && t.chain ? t.chain : ac).split(",")[0].trim();
+    const url = `${API}/api/analysis-shift?apo=${apo}&holo=${holo}&apo_chain=${ac}&holo_chain=${hc}` +
+      ($("target").value ? `&target_name=${encodeURIComponent($("target").value)}` : "");
+    const d = await fetch(url).then(async (r) => {
+      if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
+      return r.json();
+    });
+    LAST.shift = d;
+    $("analysismode").disabled = false;
+    $("analysismode").value = "delta";
+    applyAnalysisMode();
+    setShiftNote(`Holo + Δ ready (${d.n_shared} shared residues). Use “Show” to switch apo / holo / Δ.`);
+  } catch (e) {
+    setShiftNote(`Shift failed: ${e.message}`, true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function applyAnalysisMode() {
+  const mode = $("analysismode").value;
+  const site = (LAST.view && LAST.view.active_site) || [];
+  if (mode === "loaded" || !LAST.shift) {
+    renderAnalysis(LAST.view && LAST.view.analysis, site, "");
+  } else if (mode === "holo") {
+    renderAnalysis(LAST.shift.holo, site, "");
+  } else {
+    renderAnalysis(LAST.shift.delta, site, "Δ");
+  }
+  render3D();  // 3D color-by follows the selected analysis
+}
+
+function setShiftNote(msg, isError = false) {
+  const s = $("shiftnote");
+  s.textContent = msg;
+  s.classList.toggle("error", isError);
+}
 
 // ── structure intel ─────────────────────────────────────────────────────────
 async function loadIntel(pdbId, chains) {
@@ -418,10 +480,11 @@ function render3D() {
       data.residues.forEach((r) =>
         viewer.setStyle({ chain: r.chain, resi: r.resnum },
           { cartoon: { color: flexColor(r.bnorm) } }));
-    } else if (colorby.startsWith("V_") && data.analysis) {
-      // color by a GNM site-potential term (z-score, diverging blue→white→red)
-      const vals = data.analysis.terms[colorby] || [];
-      const nums = data.analysis.resnums || [];
+    } else if (colorby.startsWith("V_") && (CURRENT_ANALYSIS || data.analysis)) {
+      // color by the currently-shown GNM term (loaded / holo / Δ), diverging scale
+      const A = CURRENT_ANALYSIS || data.analysis;
+      const vals = A.terms[colorby] || [];
+      const nums = A.resnums || [];
       viewer.setStyle({}, { cartoon: { color: "#dfe6f5" } });
       nums.forEach((rn, i) =>
         viewer.setStyle({ resi: rn }, { cartoon: { color: divergeColor(vals[i]) } }));

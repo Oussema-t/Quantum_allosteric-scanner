@@ -170,7 +170,10 @@ button.secondary:disabled { opacity: .35; cursor: not-allowed; }
 #enrichment .enr .val.neg { color: var(--accent); }
 .charts { display: flex; flex-direction: column; gap: 8px; }
 .charts .chart { width: 100%; height: 150px; }
-.export-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 4px 0 14px; }
+.export-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 4px 0 14px; }
+.inline-sel { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; color: var(--muted); }
+.inline-sel select { width: auto; min-width: 150px; }
+#shiftnote { margin: 0; }
 .divgrad { display: inline-block; width: 80px; height: 10px; border-radius: 3px; vertical-align: middle; margin: 0 4px;
   background: linear-gradient(90deg, rgb(43,90,200), #eef2fb, rgb(255,77,60)); }
 

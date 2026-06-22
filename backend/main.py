@@ -31,6 +31,7 @@ from .rcsb import structure_intel
 from .discovery import find_holo_candidates
 from .compare import align_and_compare
 from .active_site import detect_active_site
+from .analysis import site_potential_shift
 
 app = FastAPI(title="Cleveland Clinic Quantum Allosteric Scanner", version="0.2.0")
 app.add_middleware(
@@ -116,6 +117,31 @@ def holo_finder(apo_pdb: str, chains: str = None, target_name: str = None):
         return find_holo_candidates(apo_pdb.strip().upper(), target_name=target_name)
     except Exception as e:
         raise HTTPException(422, f"holo search failed for {apo_pdb}: {e}")
+
+
+@app.get("/api/analysis-shift")
+def analysis_shift(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = None,
+                   target_name: str = None):
+    """GNM site potentials for apo and holo + the apo->holo shift on shared residues.
+    The active site is taken from the benchmark metadata or auto-detected on the apo."""
+    apo = apo.strip().upper()
+    holo = holo.strip().upper()
+    site = []
+    if target_name:
+        cfg = resolve_systems().get(target_name)
+        if cfg:
+            site = list(cfg.get("catalytic", []))
+    if not site:
+        try:
+            site = detect_active_site(apo, apo_chain).get("active_site", [])
+        except Exception:
+            site = []
+    try:
+        return site_potential_shift(apo, apo_chain, holo, holo_chain, site_resnums=site)
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+    except Exception as e:
+        raise HTTPException(422, f"shift analysis failed: {e}")
 
 
 @app.get("/api/active-site")

@@ -99,6 +99,17 @@
       <h2>Site-potential analysis (GNM)</h2>
       <p class="hint-line">Five structure-based descriptors per residue (z-scored). “active site − bulk” shows how elevated each term is at the active site vs the rest of the protein; the per-residue profiles reveal where rigidity, coupling and slow-mode participation peak across the chain — structural candidates for functional/allosteric regions. Use the 3D “Color by” menu to paint the structure by any term.</p>
       <div class="export-row">
+        <button id="computeshift" class="secondary">↔ Compute holo + apo→holo Δ</button>
+        <label class="inline-sel">Show
+          <select id="analysismode" disabled>
+            <option value="loaded">Loaded structure</option>
+            <option value="holo">Holo</option>
+            <option value="delta">apo → holo Δ</option>
+          </select>
+        </label>
+        <span id="shiftnote" class="status"></span>
+      </div>
+      <div class="export-row">
         <button id="exportcsv" class="secondary">⬇ Export CSV (per-residue)</button>
         <button id="exportjson" class="secondary">⬇ Export JSON (all data)</button>
         <button id="exportpng" class="secondary">⬇ Charts (PNG)</button>

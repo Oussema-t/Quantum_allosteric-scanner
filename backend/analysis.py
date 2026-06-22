@@ -18,6 +18,8 @@ This is structure-based only (the elastic-network hypothesis); no MD, no quantum
 import numpy as np
 from scipy.spatial.distance import cdist
 
+from .data_layer import load_structure, res_indices
+
 
 def _z(x):
     x = np.asarray(x, float)
@@ -104,3 +106,46 @@ def site_potentials(coords, bfac, resnums, cutoff=8.0, site_idx=None):
             for k, vals in terms.items()
         }
     return out
+
+
+def site_potential_shift(apo_pdb, apo_chain, holo_pdb, holo_chain=None,
+                         site_resnums=None, cutoff=8.0):
+    """Site potentials for apo and holo, plus the apo->holo shift on shared residues
+    (notebook §5c). Each structure is z-scored within itself, then subtracted, so the
+    shift captures how the drug binding reshapes the dynamic network per residue."""
+    apo = load_structure(apo_pdb, apo_chain)
+    holo = load_structure(holo_pdb, holo_chain or apo_chain)
+    if apo is None or holo is None:
+        raise ValueError(f"could not load apo {apo_pdb} or holo {holo_pdb}")
+
+    site = list(site_resnums or [])
+    a = site_potentials(apo["coords"], apo["bfac"], apo["resnums"], cutoff,
+                        site_idx=res_indices(apo, site) if site else None)
+    h = site_potentials(holo["coords"], holo["bfac"], holo["resnums"], cutoff,
+                        site_idx=res_indices(holo, site) if site else None)
+
+    keys = list(a["terms"].keys())
+    a_map = {k: dict(zip(a["resnums"], a["terms"][k])) for k in keys}
+    h_map = {k: dict(zip(h["resnums"], h["terms"][k])) for k in keys}
+    shared = sorted(set(a["resnums"]) & set(h["resnums"]))
+
+    delta_terms = {k: [round(h_map[k][r] - a_map[k][r], 4) for r in shared] for k in keys}
+    siteset = set(site)
+    sidx = [i for i, r in enumerate(shared) if r in siteset]
+    bidx = [i for i, r in enumerate(shared) if r not in siteset]
+    delta_enr = {}
+    if sidx:
+        for k in keys:
+            v = np.array(delta_terms[k], float)
+            delta_enr[k] = round(float(v[sidx].mean()
+                                       - (v[bidx].mean() if bidx else 0.0)), 3)
+
+    return {
+        "labels": a["labels"],
+        "active_site": sorted(siteset),
+        "apo": a,
+        "holo": h,
+        "delta": {"resnums": shared, "terms": delta_terms,
+                  "labels": a["labels"], "enrichment": delta_enr},
+        "n_shared": len(shared),
+    }
