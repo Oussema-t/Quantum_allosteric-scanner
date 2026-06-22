@@ -30,11 +30,26 @@ function addOption(sel, value, label) {
 // prefill from the chosen benchmark target — and load it immediately
 function onTargetChange(autoload = true) {
   const t = TARGETS.find((x) => x.name === $("target").value);
-  if (!t) return;
+  if (!t) { setHoloAvailability(true); return; }
   $("pdb").value = t.apo || "";
   $("chains").value = t.chain || "A";
   $("source").value = (t.active_site || []).join(",");
+  // some targets (e.g. c-Myc) have NO drug-bound holo structure
+  const hasHolo = !!t.holo;
+  setHoloAvailability(hasHolo);
+  if (!hasHolo) {
+    setHoloStatus(`⚠️ ${t.name} has no holo (drug-bound) structure — apo only. Completion and apo↔holo comparison are unavailable for this target.`, true);
+  } else {
+    setHoloStatus("");
+  }
   if (autoload) loadAndVisualize();
+}
+
+// enable/disable holo-dependent controls based on whether a holo exists
+function setHoloAvailability(hasHolo) {
+  $("compare").disabled = !hasHolo;
+  $("complete").disabled = !hasHolo;
+  if (!hasHolo) $("complete").checked = false;
 }
 
 // holo PDB for the current selection (explicit pick, else benchmark holo)
@@ -71,9 +86,11 @@ async function findHolo() {
     });
     if (!opts.length) {
       sel.innerHTML = `<option value="">— none found —</option>`;
-      setHoloStatus(`No holo structures found (UniProt ${d.uniprot || "?"}).`, true);
+      setHoloAvailability(false);
+      setHoloStatus(`No holo (drug-bound) structure exists for this protein (UniProt ${d.uniprot || "?"}). Comparison/completion unavailable.`, true);
     } else {
       opts.forEach((o) => addOption(sel, o.v, o.t));
+      setHoloAvailability(true);
       setHoloStatus(`Found ${opts.length} structures (UniProt ${d.uniprot || "?"}).`);
     }
   } catch (e) {
@@ -88,6 +105,11 @@ function setHoloStatus(msg, isError = false) {
   s.textContent = msg;
   s.classList.toggle("error", isError);
 }
+
+// picking a holo from the dropdown enables comparison/completion
+$("holo").addEventListener("change", () => {
+  if ($("holo").value) setHoloAvailability(true);
+});
 
 // ── load & visualize ────────────────────────────────────────────────────────
 $("load").addEventListener("click", loadAndVisualize);
@@ -177,19 +199,21 @@ function render3DCompare(d) {
   const el = $("viewer");
   if (!viewer) viewer = $3Dmol.createViewer(el, { backgroundColor: "#ffffff" });
   viewer.clear();
-  // model 0 = apo (grey reference), model 1 = holo aligned (colored by movement)
-  viewer.addModel(d.apo_text, "pdb");
-  viewer.setStyle({ model: 0 }, { cartoon: { color: "#c4c8d0" } });
-  viewer.addModel(d.holo_text_aligned, "pdb");
-  viewer.setStyle({ model: 1 }, { cartoon: { color: "#2b5ac8" } });
+
+  // apo = semi-transparent grey "ghost" reference
+  const apoM = viewer.addModel(d.apo_text, "pdb");
+  apoM.setStyle({}, { cartoon: { color: "#9aa0ad", opacity: 0.5 } });
+
+  // holo = solid cartoon colored by how far each residue moved on drug binding
+  const holoM = viewer.addModel(d.holo_text_aligned, "pdb");
+  holoM.setStyle({}, { cartoon: { color: "#2b5ac8" } });
   const dmax = d.max_disp || 1;
   d.displacements.forEach((x) =>
-    viewer.setStyle({ model: 1, resi: x.resnum },
-      { cartoon: { color: dispColor(x.disp / dmax) } }));
-  // bound drug from the holo, as sticks
-  viewer.addStyle({ model: 1, hetflag: true },
-    { stick: { colorscheme: "purpleCarbon", radius: 0.2 } });
-  viewer.addStyle({ model: 1, hetflag: true }, { sphere: { scale: 0.3 } });
+    holoM.setStyle({ resi: x.resnum }, { cartoon: { color: dispColor(x.disp / dmax) } }));
+  // bound drug from the holo, added on top
+  holoM.setStyle({ hetflag: true }, { stick: { colorscheme: "purpleCarbon", radius: 0.25 } }, true);
+  holoM.setStyle({ hetflag: true }, { sphere: { scale: 0.3 } }, true);
+
   viewer.zoomTo();
   viewer.render();
 }
