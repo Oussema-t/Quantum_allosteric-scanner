@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quantum Allosteric Scanner</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>⚛️ Quantum Allosteric Scanner</h1>
+    <p class="tagline">Quantum simulation of allosteric signal propagation &mdash; finding cryptic druggable pockets from PDB structure.</p>
+  </header>
+
+  <main>
+    <!-- ── Control panel ─────────────────────────────────────── -->
+    <section class="panel controls">
+      <h2>1 · Target</h2>
+      <label>Benchmark target
+        <select id="target"></select>
+      </label>
+      <div class="row">
+        <label>PDB ID
+          <input id="pdb" type="text" placeholder="4OBE" maxlength="4" />
+        </label>
+        <label>Chain(s)
+          <input id="chains" type="text" value="A" />
+        </label>
+      </div>
+      <label>Active-site residues (comma-sep, optional)
+        <input id="source" type="text" placeholder="auto from benchmark" />
+      </label>
+
+      <h2>2 · Quantum model</h2>
+      <div class="row">
+        <label>Hamiltonian
+          <select id="family"></select>
+        </label>
+        <label>Propagator
+          <select id="propagator"></select>
+        </label>
+      </div>
+      <div class="row">
+        <label>Contact cutoff (Å)
+          <input id="cutoff" type="number" value="8" step="0.5" min="4" max="15" />
+        </label>
+        <label>Top-K hits
+          <input id="topk" type="number" value="5" min="1" max="20" />
+        </label>
+      </div>
+
+      <button id="run">Run quantum scan ▶</button>
+      <p id="status" class="status"></p>
+
+      <div id="results" class="results hidden">
+        <h2>Hit list — top allosteric sites</h2>
+        <ol id="hitlist"></ol>
+        <div id="validation"></div>
+      </div>
+    </section>
+
+    <!-- ── 3D structure ──────────────────────────────────────── -->
+    <section class="panel viewer-panel">
+      <h2>3D connectivity map</h2>
+      <div id="viewer"></div>
+      <div class="legend">
+        <span class="swatch src"></span> active site (source)
+        <span class="swatch hit"></span> predicted allosteric hit
+        <span class="grad"></span> low → high quantum connectivity
+      </div>
+    </section>
+
+    <!-- ── Heatmap ───────────────────────────────────────────── -->
+    <section class="panel heatmap-panel">
+      <h2>Connectivity matrix</h2>
+      <div id="heatmap"></div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
