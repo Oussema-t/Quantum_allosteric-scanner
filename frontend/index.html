@@ -6,6 +6,7 @@
   <title>Cleveland Clinic · Quantum Allosteric Scanner — Team AuraQu</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
 </head>
 <body>
   <header>
@@ -72,6 +73,13 @@
             <option value="chain">chain</option>
             <option value="flex">flexibility (B-factor)</option>
             <option value="plain">single color</option>
+            <optgroup label="GNM site potentials (z-score)">
+              <option value="V_R">V_R · rigidity</option>
+              <option value="V_C">V_C · dynamic coupling</option>
+              <option value="V_M">V_M · slow-mode participation</option>
+              <option value="V_T">V_T · terminal / exposure</option>
+              <option value="V_B">V_B · B-factor flexibility</option>
+            </optgroup>
           </select>
         </label>
         <label class="chk"><input type="checkbox" id="opt-ligands" checked /> show drugs/ligands</label>
@@ -84,6 +92,14 @@
     <section class="panel struct-panel">
       <h2>Structure intelligence</h2>
       <div id="structinfo" class="structinfo">Load a protein to extract chains, drugs, and missing residues from the PDB.</div>
+    </section>
+
+    <!-- ── GNM site-potential analysis ───────────────────────── -->
+    <section class="panel analysis-panel">
+      <h2>Site-potential analysis (GNM)</h2>
+      <p class="hint-line">Five structure-based descriptors per residue (z-scored). “active site − bulk” shows how elevated each term is at the active site vs the rest of the protein; the per-residue profiles reveal where rigidity, coupling and slow-mode participation peak across the chain — structural candidates for functional/allosteric regions. Use the 3D “Color by” menu to paint the structure by any term.</p>
+      <div id="enrichment"></div>
+      <div id="analysischarts" class="charts"></div>
     </section>
   </main>
 

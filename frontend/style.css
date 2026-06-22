@@ -158,6 +158,21 @@ button.secondary:disabled { opacity: .35; cursor: not-allowed; }
 .cmpgrad { display: inline-block; width: 70px; height: 10px; border-radius: 3px;
   background: linear-gradient(90deg, rgb(40,90,200), rgb(255,60,50)); vertical-align: middle; margin-right: 4px; }
 
+/* ── GNM site-potential analysis panel ──────────────────── */
+.hint-line { font-size: 12px; color: var(--muted); margin: 0 0 12px; line-height: 1.5; }
+#enrichment { margin-bottom: 14px; }
+#enrichment .enr-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+#enrichment .enr { background: var(--panel-2); border-radius: 8px; padding: 8px 12px; min-width: 120px; }
+#enrichment .enr .k { font-size: 11px; color: var(--muted); }
+#enrichment .enr .lab { font-size: 10px; color: var(--muted); opacity: .8; }
+#enrichment .enr .val { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+#enrichment .enr .val.pos { color: var(--hit); }
+#enrichment .enr .val.neg { color: var(--accent); }
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 10px; }
+.charts .chart { width: 100%; height: 130px; }
+.divgrad { display: inline-block; width: 80px; height: 10px; border-radius: 3px; vertical-align: middle; margin: 0 4px;
+  background: linear-gradient(90deg, rgb(43,90,200), #eef2fb, rgb(255,77,60)); }
+
 .struct-panel { grid-column: 2; }
 .structinfo { font-size: 12px; color: var(--muted); line-height: 1.6; }
 .structinfo .sgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 12px; }

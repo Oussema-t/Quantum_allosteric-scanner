@@ -77,6 +77,16 @@ def build_view(pdb_id, chains="A", source_residues=None, target_name=None,
         for i in range(len(st["resnums"]))
     ]
 
+    # GNM site-potential analysis (structure-based descriptors), per protein
+    analysis = None
+    if len(st["resnums"]) <= 1500:
+        try:
+            from .analysis import site_potentials
+            analysis = site_potentials(st["coords"], st["bfac"], st["resnums"],
+                                       cutoff=8.0, site_idx=src_idx)
+        except Exception:
+            analysis = None
+
     return {
         "pdb_id": pdb_id,
         "chains": chains,
@@ -85,6 +95,7 @@ def build_view(pdb_id, chains="A", source_residues=None, target_name=None,
         "active_site_name": (cfg.get("site_name") if cfg else None),
         "active_site_source": src_source,
         "active_site_detail": src_detail,
+        "analysis": analysis,
         "residues": residues,
         "completion": completion,
         "bfactor_range": [round(bmin, 2), round(bmax, 2)],

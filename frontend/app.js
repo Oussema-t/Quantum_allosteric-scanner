@@ -152,6 +152,7 @@ async function loadAndVisualize() {
     LAST.view = data;
     setStatus(`Loaded ${data.pdb_id} — ${data.n_residues} residues · ${dt}s`);
     showActiveSiteNote(data);
+    renderAnalysis(data.analysis, data.active_site);
     await loadIntel(data.pdb_id, data.chains);
     render3D();
   } catch (e) {
@@ -259,6 +260,70 @@ function dispColor(t) {
   return `rgb(${c[0]},${c[1]},${c[2]})`;
 }
 
+// diverging z-score colour: blue (negative) → white (0) → red (positive), ±2.5σ
+function divergeColor(z) {
+  const t = Math.max(-1, Math.min(1, (z || 0) / 2.5));
+  const lo = [43, 90, 200], mid = [238, 242, 251], hi = [255, 77, 60];
+  const [a, b, f] = t < 0 ? [mid, lo, -t] : [mid, hi, t];
+  const c = a.map((v, k) => Math.round(v + (b[k] - v) * f));
+  return `rgb(${c[0]},${c[1]},${c[2]})`;
+}
+
+// ── GNM site-potential analysis: enrichment + per-residue profiles ──────────
+function renderAnalysis(analysis, activeSite) {
+  const enr = $("enrichment");
+  const charts = $("analysischarts");
+  if (!analysis) {
+    enr.innerHTML = "";
+    charts.innerHTML = "<span class='hint-line'>Site-potential analysis unavailable for this structure (too large or failed).</span>";
+    return;
+  }
+  const keys = ["V_B", "V_T", "V_R", "V_C", "V_M"];
+
+  // enrichment cards (pocket − bulk z) when an active site is known
+  const e = analysis.enrichment;
+  if (e) {
+    enr.innerHTML = `<div class="enr-grid">` + keys.map((k) => {
+      const v = e[k];
+      const cls = v > 0.05 ? "pos" : v < -0.05 ? "neg" : "";
+      return `<div class="enr"><div class="k">${k}</div><div class="lab">${analysis.labels[k]}</div>` +
+        `<div class="val ${cls}">${v > 0 ? "+" : ""}${v.toFixed(2)}</div></div>`;
+    }).join("") + `</div>`;
+  } else {
+    enr.innerHTML = `<span class="hint-line">No active site known — showing per-residue profiles only.</span>`;
+  }
+
+  // one profile chart per term, active-site residues marked in red
+  charts.innerHTML = "";
+  const siteSet = new Set(activeSite || []);
+  keys.forEach((k) => {
+    const div = document.createElement("div");
+    div.className = "chart";
+    charts.appendChild(div);
+    const vals = analysis.terms[k];
+    const traces = [{
+      x: analysis.resnums, y: vals, type: "scatter", mode: "lines",
+      line: { color: "#5b8cff", width: 1 }, fill: "tozeroy",
+      fillcolor: "rgba(91,140,255,0.15)", hovertemplate: "res %{x}: %{y:.2f}<extra></extra>",
+    }];
+    if (siteSet.size) {
+      const ax = [], ay = [];
+      analysis.resnums.forEach((r, i) => { if (siteSet.has(r)) { ax.push(r); ay.push(vals[i]); } });
+      traces.push({ x: ax, y: ay, type: "scatter", mode: "markers",
+        marker: { color: "#ff4d6d", size: 5 }, hovertemplate: "active site %{x}<extra></extra>" });
+    }
+    Plotly.newPlot(div, traces, {
+      margin: { l: 34, r: 6, t: 20, b: 22 }, height: 130,
+      title: { text: `${k} · ${analysis.labels[k]}`, font: { size: 11, color: "#c7d0e6" }, x: 0.02 },
+      paper_bgcolor: "#141b30", plot_bgcolor: "#141b30",
+      font: { color: "#8b97b8", size: 9 },
+      xaxis: { showgrid: false, zeroline: false },
+      yaxis: { showgrid: false, zeroline: true, zerolinecolor: "#29355c" },
+      showlegend: false,
+    }, { displayModeBar: false, responsive: true });
+  });
+}
+
 // ── structure intel ─────────────────────────────────────────────────────────
 async function loadIntel(pdbId, chains) {
   try {
@@ -295,6 +360,13 @@ function render3D() {
       data.residues.forEach((r) =>
         viewer.setStyle({ chain: r.chain, resi: r.resnum },
           { cartoon: { color: flexColor(r.bnorm) } }));
+    } else if (colorby.startsWith("V_") && data.analysis) {
+      // color by a GNM site-potential term (z-score, diverging blue→white→red)
+      const vals = data.analysis.terms[colorby] || [];
+      const nums = data.analysis.resnums || [];
+      viewer.setStyle({}, { cartoon: { color: "#dfe6f5" } });
+      nums.forEach((rn, i) =>
+        viewer.setStyle({ resi: rn }, { cartoon: { color: divergeColor(vals[i]) } }));
     } else {
       viewer.setStyle({}, { cartoon: { color: "#6f86c6" } });
     }
