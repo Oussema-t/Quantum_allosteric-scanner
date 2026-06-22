@@ -343,6 +343,9 @@ function render3D() {
 ["colorby", "opt-ligands", "opt-active", "opt-surface"].forEach((id) =>
   document.getElementById(id).addEventListener("change", render3D));
 
+// keep the full-width viewer sized to its container on window resize
+window.addEventListener("resize", () => { if (viewer) viewer.resize(); });
+
 // blue (rigid) → red (flexible) for B-factor coloring
 function flexColor(t) {
   t = Math.max(0, Math.min(1, t));

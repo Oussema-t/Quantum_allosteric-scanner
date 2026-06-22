@@ -18,38 +18,42 @@
   </header>
 
   <main>
-    <!-- ── Control panel ─────────────────────────────────────── -->
+    <!-- ── Control bar (horizontal, above the visualization) ─── -->
     <section class="panel controls">
-      <h2>1 · Protein</h2>
-      <label>Benchmark target
-        <select id="target"></select>
-      </label>
-      <div class="row">
-        <label>PDB ID (apo or holo)
+      <div class="phase-label">① Data Extraction &amp; Analysis</div>
+      <div class="toolbar">
+        <div class="field">
+          <label>Benchmark target</label>
+          <select id="target"></select>
+        </div>
+        <div class="field sm">
+          <label>PDB ID (apo/holo)</label>
           <input id="pdb" type="text" placeholder="4OBE" maxlength="4" />
-        </label>
-        <label>Chain(s)
+        </div>
+        <div class="field xs">
+          <label>Chain(s)</label>
           <input id="chains" type="text" value="A" />
-        </label>
+        </div>
+        <div class="field grow">
+          <label>Active-site residues (optional)</label>
+          <input id="source" type="text" placeholder="auto-detected on load" />
+        </div>
+        <button id="load">Find &amp; visualize ▶</button>
+        <div class="sep"></div>
+        <button id="findholo" class="secondary">🔍 Find holo</button>
+        <div class="field grow">
+          <label>Holo structure (drug-bound)</label>
+          <select id="holo"><option value="">— none found yet —</option></select>
+        </div>
+        <label class="chk box"><input type="checkbox" id="complete" /> Complete apo (fill missing)</label>
+        <button id="compare" class="secondary">↔ Compare apo vs holo</button>
       </div>
-      <label>Active-site residues (comma-sep, optional)
-        <input id="source" type="text" placeholder="auto-detected on load" />
-      </label>
-      <p id="sitenote" class="status"></p>
-
-      <button id="load">Find &amp; visualize ▶</button>
-      <p id="status" class="status"></p>
-
-      <h2>2 · Holo &amp; apo completion</h2>
-      <button id="findholo" class="secondary">🔍 Find holo structures from PDB</button>
-      <p id="holostatus" class="status"></p>
-      <label>Holo structure (drug-bound)
-        <select id="holo"><option value="">— none found yet —</option></select>
-      </label>
-      <label class="chk full"><input type="checkbox" id="complete" /> Complete apo — fill missing residues from holo + interpolation</label>
-
-      <button id="compare" class="secondary">↔ Compare apo vs holo — drug-induced movement</button>
-      <p id="comparestatus" class="status"></p>
+      <div class="statusbar">
+        <p id="status" class="status"></p>
+        <p id="sitenote" class="status"></p>
+        <p id="holostatus" class="status"></p>
+        <p id="comparestatus" class="status"></p>
+      </div>
     </section>
 
     <!-- ── 3D structure ──────────────────────────────────────── -->
