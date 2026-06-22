@@ -52,12 +52,18 @@
       </div>
 
       <button id="run">Run quantum scan ▶</button>
+      <button id="validate" class="secondary" title="Blind benchmark: scan the apo structure, score against the holo drug-bound ground truth">Validate apo → holo ✓</button>
       <p id="status" class="status"></p>
 
       <div id="results" class="results hidden">
         <h2>Hit list — top allosteric sites</h2>
         <ol id="hitlist"></ol>
         <div id="validation"></div>
+      </div>
+
+      <div id="valreport" class="results hidden">
+        <h2>Validation — apo → holo benchmark</h2>
+        <div id="valbody"></div>
       </div>
     </section>
 
@@ -68,6 +74,7 @@
       <div class="legend">
         <span class="swatch src"></span> active site (source)
         <span class="swatch hit"></span> predicted allosteric hit
+        <span class="swatch truth"></span> true holo pocket (validation)
         <span class="grad"></span> low → high quantum connectivity
       </div>
     </section>

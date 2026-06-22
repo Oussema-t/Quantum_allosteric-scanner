@@ -44,6 +44,8 @@ function addOption(sel, value, label) {
 function onTargetChange() {
   const name = $("target").value;
   const t = TARGETS.find((x) => x.name === name);
+  // validation needs a benchmark target with a holo structure
+  $("validate").disabled = !(t && t.holo);
   if (!t) return;
   $("pdb").value = t.apo || "";
   $("chains").value = t.chain || "A";
@@ -112,6 +114,101 @@ function setStatus(msg, isError = false) {
   s.classList.toggle("error", isError);
 }
 
+// ── validate apo → holo ────────────────────────────────────────────────────
+$("validate").addEventListener("click", runValidate);
+
+async function runValidate() {
+  const target = $("target").value;
+  if (!target) {
+    setStatus("Pick a benchmark target to validate.", true);
+    return;
+  }
+  const btn = $("validate");
+  btn.disabled = true;
+  setStatus("Scanning apo structure and validating against holo ground truth…");
+  $("results").classList.add("hidden");
+  $("valreport").classList.add("hidden");
+
+  const body = {
+    target_name: target,
+    family: $("family").value,
+    propagator: $("propagator").value,
+    cutoff: parseFloat($("cutoff").value),
+    top_k: parseInt($("topk").value, 10),
+  };
+
+  try {
+    const t0 = performance.now();
+    const res = await fetch(`${API}/api/validate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || `HTTP ${res.status}`);
+    }
+    const data = await res.json();
+    const dt = ((performance.now() - t0) / 1000).toFixed(1);
+    setStatus(`Validated ${data.target}: apo ${data.apo} → holo ${data.validation.holo} · ${dt}s`);
+
+    renderHits(data.scan);
+    $("results").classList.remove("hidden");
+    render3D(data.scan, data.validation.live_pocket || []);
+    renderHeatmap(data.scan);
+    renderValReport(data.validation);
+    $("valreport").classList.remove("hidden");
+  } catch (e) {
+    setStatus(`Error: ${e.message}`, true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function renderValReport(v) {
+  const el = $("valbody");
+  const pills = (arr, cls = "") =>
+    (arr && arr.length
+      ? arr.map((r) => `<span class="pill ${cls}">${r}</span>`).join("")
+      : `<span class="pill">none</span>`);
+
+  // headline metrics: prefer live-derived, fall back to frozen-pocket scan metrics
+  const lm = v.live_metrics || {};
+  const sm = v.scan_metrics || {};
+  const auc = lm.auc_vs_live ?? sm.auc ?? "—";
+  const p5 = lm["p@5_vs_live"] ?? sm["p@5"] ?? "—";
+
+  let html = `
+    <div class="vrow"><span>Ground truth (holo + drug)</span><b>${v.holo} · ${v.holo_ligand_name || v.holo_ligand || "—"}</b></div>
+    ${v.holo_challenge && v.holo_challenge !== v.holo
+      ? `<div class="vrow"><span>Challenge-listed holo</span><b>${v.holo_challenge}</b></div>` : ""}
+    <div class="vrow"><span>Allosteric site</span><b>${v.site_name || "—"}</b></div>
+
+    <div class="metrics-grid">
+      <div class="mcard"><div class="v">${auc}</div><div class="l">AUC ${v.live_metrics ? "(vs live pocket)" : "(vs frozen)"}</div></div>
+      <div class="mcard"><div class="v">${p5}</div><div class="l">Precision@5</div></div>
+    </div>`;
+
+  if (v.live_pocket) {
+    html += `
+      <div class="grade">Live drug-contact pocket re-derived from holo (≤${v.contact_cutoff} Å):</div>
+      <div>${pills(v.live_pocket)}</div>
+      <div class="vrow" style="margin-top:8px"><span>Frozen-vs-live agreement (Jaccard)</span><b>${v.frozen_vs_live_jaccard ?? "—"}</b></div>`;
+  } else {
+    html += `<div class="grade">No holo/ligand pocket available — discovery-only target.</div>`;
+  }
+
+  html += `
+    <div class="grade">Predicted hits landing in the true pocket: <b>${v.hits_in_pocket.length}/${v.predicted_hits.length}</b></div>
+    <div>${pills(v.predicted_hits.map((h) => (v.hits_in_pocket.includes(h) ? h + " ✓" : h)),
+      "")}</div>`;
+  if (v.top5_recovered && v.top5_recovered.length) {
+    html += `<div class="grade">Recovered known top-5 residues:</div><div>${pills(v.top5_recovered, "good")}</div>`;
+  }
+
+  el.innerHTML = html;
+}
+
 // ── hit list + validation ──────────────────────────────────────────────────
 function renderHits(data) {
   const ol = $("hitlist");
@@ -146,7 +243,7 @@ function metric(label, val) {
 
 // ── 3D structure (3Dmol.js) ────────────────────────────────────────────────
 let viewer = null;
-function render3D(data) {
+function render3D(data, truePocket = []) {
   const el = $("viewer");
   if (!viewer) {
     viewer = $3Dmol.createViewer(el, { backgroundColor: "#05080f" });
@@ -170,7 +267,15 @@ function render3D(data) {
       }
     });
 
-    // highlight predicted hits as spheres
+    // true holo-derived pocket: translucent yellow halo (ground truth)
+    truePocket.forEach((res) => {
+      viewer.addStyle(
+        { resi: res, atom: "CA" },
+        { sphere: { color: "#ffd166", radius: 2.2, opacity: 0.35 } }
+      );
+    });
+
+    // highlight predicted hits as red spheres (prediction)
     data.top_hits.forEach((res) => {
       viewer.addStyle(
         { resi: res },

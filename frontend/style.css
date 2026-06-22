@@ -83,6 +83,32 @@ button#run {
 button#run:hover { background: #6f9bff; }
 button#run:disabled { opacity: .5; cursor: wait; }
 
+button.secondary {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  background: transparent;
+  color: var(--src);
+  border: 1px solid var(--src);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+button.secondary:hover { background: rgba(0, 230, 195, 0.1); }
+button.secondary:disabled { opacity: .35; cursor: not-allowed; }
+
+#valbody { font-size: 12px; color: var(--muted); line-height: 1.7; }
+#valbody .vrow { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid var(--border); }
+#valbody .vrow b { color: var(--ink); font-variant-numeric: tabular-nums; }
+#valbody .pill { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 11px; margin: 2px 3px 2px 0; background: var(--panel-2); }
+#valbody .pill.good { background: rgba(0,230,195,.18); color: var(--src); }
+#valbody .grade { font-size: 13px; color: var(--ink); margin: 8px 0 4px; }
+#valbody .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0; }
+#valbody .mcard { background: var(--panel-2); border-radius: 8px; padding: 8px 10px; }
+#valbody .mcard .v { font-size: 18px; font-weight: 700; color: var(--accent); }
+#valbody .mcard .l { font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+
 .status { font-size: 12px; color: var(--muted); min-height: 16px; margin: 10px 0 0; }
 .status.error { color: var(--hit); }
 
@@ -103,6 +129,7 @@ button#run:disabled { opacity: .5; cursor: wait; }
 .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 4px; vertical-align: middle; }
 .swatch.src { background: var(--src); }
 .swatch.hit { background: var(--hit); }
+.swatch.truth { background: #ffd166; }
 .grad { display: inline-block; width: 90px; height: 10px; border-radius: 3px;
   background: linear-gradient(90deg, #2b3a6b, #5b8cff, #ffd166, #ff4d6d); vertical-align: middle; }
 

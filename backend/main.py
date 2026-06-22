@@ -20,6 +20,8 @@ from pydantic import BaseModel, Field
 from .hamiltonian import FAMILIES
 from .pipeline import run_scan, PROPAGATORS
 from .systems import resolve_systems
+from .data_layer import load_structure
+from .validation import validate_target, score_against_live
 
 app = FastAPI(title="Quantum Allosteric Scanner", version="0.1.0")
 app.add_middleware(
@@ -40,6 +42,17 @@ class ScanRequest(BaseModel):
     coarse_k: int = 1
     top_k: int = 5
     target_name: Optional[str] = None
+    pocket_mode: str = "full"
+
+
+class ValidateRequest(BaseModel):
+    target_name: str = Field(..., description="benchmark key, e.g. KRAS_G12C")
+    family: str = "GNM"
+    propagator: str = "ctqw"
+    cutoff: float = 8.0
+    gamma: float = 1.0
+    coarse_k: int = 1
+    top_k: int = 5
     pocket_mode: str = "full"
 
 
@@ -98,6 +111,42 @@ def scan(req: ScanRequest):
         )
     except ValueError as e:
         raise HTTPException(422, str(e))
+
+
+@app.post("/api/validate")
+def validate(req: ValidateRequest):
+    """Blind benchmark: scan the APO structure, then validate the prediction against
+    the HOLO drug-bound ground truth (frozen-vs-live pocket + AUC/P@k)."""
+    if req.family not in FAMILIES:
+        raise HTTPException(400, f"unknown family '{req.family}'")
+    if req.propagator not in PROPAGATORS:
+        raise HTTPException(400, f"unknown propagator '{req.propagator}'")
+    systems = resolve_systems(pocket_mode=req.pocket_mode)
+    cfg = systems.get(req.target_name)
+    if cfg is None:
+        raise HTTPException(404, f"unknown target '{req.target_name}'")
+    try:
+        scan = run_scan(
+            pdb_id=cfg["apo"], chains=cfg["chain"], family=req.family,
+            propagator=req.propagator, cutoff=req.cutoff, gamma=req.gamma,
+            coarse_k=req.coarse_k, top_k=req.top_k, target_name=req.target_name,
+            pocket_mode=req.pocket_mode,
+        )
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+
+    report = validate_target(cfg, scan)
+
+    # independent AUC/P@k vs the live-derived pocket (re-load apo to get coords)
+    if report.get("live_pocket"):
+        apo = load_structure(cfg["apo"], cfg["chain"])
+        if apo is not None:
+            live_metrics = score_against_live(scan, apo, report["live_pocket"])
+            if live_metrics:
+                report["live_metrics"] = live_metrics
+
+    return {"target": req.target_name, "apo": cfg["apo"], "scan": scan,
+            "validation": report}
 
 
 # serve the frontend at "/"
