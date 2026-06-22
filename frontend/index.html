@@ -45,6 +45,7 @@
       <label class="chk full"><input type="checkbox" id="complete" /> Complete apo — fill missing residues from holo + interpolation</label>
 
       <button id="load">Load &amp; visualize ▶</button>
+      <button id="compare" class="secondary">↔ Compare apo vs holo — drug-induced movement</button>
       <p id="status" class="status"></p>
     </section>
 
@@ -56,6 +57,7 @@
         <span class="swatch src"></span> active site
         <span class="swatch drug"></span> bound drug / ligand
         <span class="swatch modeled"></span> filled (modeled) residue
+        <span class="cmpgrad"></span> compare: low → high Cα shift
       </div>
       <div class="viewopts">
         <label>Color by

@@ -27,13 +27,21 @@ function addOption(sel, value, label) {
   sel.appendChild(o);
 }
 
-// prefill from the chosen benchmark target
-function onTargetChange() {
+// prefill from the chosen benchmark target — and load it immediately
+function onTargetChange(autoload = true) {
   const t = TARGETS.find((x) => x.name === $("target").value);
   if (!t) return;
   $("pdb").value = t.apo || "";
   $("chains").value = t.chain || "A";
   $("source").value = (t.active_site || []).join(",");
+  if (autoload) loadAndVisualize();
+}
+
+// holo PDB for the current selection (explicit pick, else benchmark holo)
+function currentHolo() {
+  if ($("holo").value) return $("holo").value;
+  const t = TARGETS.find((x) => x.name === $("target").value);
+  return t && t.holo ? t.holo : null;
 }
 
 // ── find holo structures for the entered apo ───────────────────────────────
@@ -134,6 +142,64 @@ function setStatus(msg, isError = false) {
   const s = $("status");
   s.textContent = msg;
   s.classList.toggle("error", isError);
+}
+
+// ── compare apo vs holo (drug-induced movement) ─────────────────────────────
+$("compare").addEventListener("click", compareApoHolo);
+
+async function compareApoHolo() {
+  const apo = $("pdb").value.trim();
+  const holo = currentHolo();
+  if (!apo) { setStatus("Enter the apo PDB ID first.", true); return; }
+  if (!holo) { setStatus("No holo found — pick one with “Find holo structures” first.", true); return; }
+  const btn = $("compare");
+  btn.disabled = true;
+  setStatus(`Superimposing holo ${holo} onto apo ${apo}…`);
+  try {
+    const t = TARGETS.find((x) => x.name === $("target").value);
+    const ac = ($("chains").value.trim() || "A").split(",")[0].trim();
+    const hc = (t && t.chain ? t.chain : ac).split(",")[0].trim();
+    const url = `${API}/api/compare?apo=${apo}&holo=${holo}&apo_chain=${ac}&holo_chain=${hc}`;
+    const d = await fetch(url).then(async (r) => {
+      if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
+      return r.json();
+    });
+    render3DCompare(d);
+    setStatus(`apo ${apo} (grey) vs holo ${holo} — ${d.n_aligned} residues aligned · RMSD ${d.rmsd} Å · max Cα shift ${d.max_disp} Å`);
+  } catch (e) {
+    setStatus(`Compare failed: ${e.message}`, true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function render3DCompare(d) {
+  const el = $("viewer");
+  if (!viewer) viewer = $3Dmol.createViewer(el, { backgroundColor: "#ffffff" });
+  viewer.clear();
+  // model 0 = apo (grey reference), model 1 = holo aligned (colored by movement)
+  viewer.addModel(d.apo_text, "pdb");
+  viewer.setStyle({ model: 0 }, { cartoon: { color: "#c4c8d0" } });
+  viewer.addModel(d.holo_text_aligned, "pdb");
+  viewer.setStyle({ model: 1 }, { cartoon: { color: "#2b5ac8" } });
+  const dmax = d.max_disp || 1;
+  d.displacements.forEach((x) =>
+    viewer.setStyle({ model: 1, resi: x.resnum },
+      { cartoon: { color: dispColor(x.disp / dmax) } }));
+  // bound drug from the holo, as sticks
+  viewer.addStyle({ model: 1, hetflag: true },
+    { stick: { colorscheme: "purpleCarbon", radius: 0.2 } });
+  viewer.addStyle({ model: 1, hetflag: true }, { sphere: { scale: 0.3 } });
+  viewer.zoomTo();
+  viewer.render();
+}
+
+// displacement gradient: blue (no movement) → red (large shift)
+function dispColor(t) {
+  t = Math.max(0, Math.min(1, t));
+  const a = [40, 90, 200], b = [255, 60, 50];
+  const c = a.map((v, k) => Math.round(v + (b[k] - v) * t));
+  return `rgb(${c[0]},${c[1]},${c[2]})`;
 }
 
 // ── structure intel ─────────────────────────────────────────────────────────

@@ -29,6 +29,7 @@ from .pipeline import build_view
 from .systems import resolve_systems
 from .rcsb import structure_intel
 from .discovery import find_holo_candidates
+from .compare import align_and_compare
 
 app = FastAPI(title="Cleveland Clinic Quantum Allosteric Scanner", version="0.2.0")
 app.add_middleware(
@@ -41,20 +42,30 @@ APP_PASSWORD = os.environ.get("APP_PASSWORD", "QAS@CC")
 _REALM = 'Basic realm="Quantum Allosteric Scanner"'
 
 
-@app.middleware("http")
-async def basic_auth(request: Request, call_next):
+def _authorized(request: Request) -> bool:
     if not APP_PASSWORD or request.url.path == "/api/health":
-        return await call_next(request)
+        return True
     header = request.headers.get("Authorization", "")
     if header.startswith("Basic "):
         try:
             user, _, pw = base64.b64decode(header[6:]).decode("utf-8").partition(":")
-            if (secrets.compare_digest(user, APP_USERNAME)
-                    and secrets.compare_digest(pw, APP_PASSWORD)):
-                return await call_next(request)
+            return (secrets.compare_digest(user, APP_USERNAME)
+                    and secrets.compare_digest(pw, APP_PASSWORD))
         except Exception:
-            pass
-    return Response(status_code=401, headers={"WWW-Authenticate": _REALM})
+            return False
+    return False
+
+
+@app.middleware("http")
+async def gate_and_cache(request: Request, call_next):
+    # login gate
+    if not _authorized(request):
+        return Response(status_code=401, headers={"WWW-Authenticate": _REALM})
+    resp = await call_next(request)
+    # never let the browser cache the frontend assets (avoids stale JS after deploys)
+    if not request.url.path.startswith("/api"):
+        resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    return resp
 
 
 FRONTEND_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
@@ -114,6 +125,19 @@ def structure(pdb_id: str, chains: str = None):
         return structure_intel(pdb_id.strip().upper(), chains)
     except Exception as e:
         raise HTTPException(422, f"could not read structure {pdb_id}: {e}")
+
+
+@app.get("/api/compare")
+def compare(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = None):
+    """Superimpose holo onto apo and report per-residue Cα displacement; returns both
+    structures (holo aligned into the apo frame) for an overlay view."""
+    try:
+        return align_and_compare(apo.strip().upper(), apo_chain,
+                                 holo.strip().upper(), holo_chain)
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+    except Exception as e:
+        raise HTTPException(422, f"comparison failed: {e}")
 
 
 @app.post("/api/load")
