@@ -42,13 +42,21 @@ def build_view(pdb_id, chains="A", source_residues=None, target_name=None,
             st = coarse_grain(st, coarse_k)
     modeled = st.get("modeled")
 
-    # resolve the active site (from explicit residues or a benchmark target)
+    # resolve the active site: explicit residues > benchmark metadata > auto-detect
+    src_source, src_detail = "none", None
     if source_residues:
         src_resnums = list(source_residues)
+        src_source, src_detail = "manual", "entered by user"
     elif cfg is not None:
         src_resnums = list(cfg["catalytic"])
+        src_source = "benchmark"
+        src_detail = f"validated literature active site ({cfg.get('site_name') or 'benchmark'})"
     else:
-        src_resnums = []
+        from .active_site import detect_active_site
+        det = detect_active_site(pdb_id, chains,
+                                 holo_pdb=(holo_pdb if complete else None))
+        src_resnums = det["active_site"]
+        src_source, src_detail = det["source"], det["detail"]
     src_idx = sources_from_resnums(st, src_resnums) if src_resnums else np.array([], int)
     src_set = set(int(st["resnums"][i]) for i in src_idx)
 
@@ -75,6 +83,8 @@ def build_view(pdb_id, chains="A", source_residues=None, target_name=None,
         "n_residues": int(len(st["resnums"])),
         "active_site": sorted(src_set),
         "active_site_name": (cfg.get("site_name") if cfg else None),
+        "active_site_source": src_source,
+        "active_site_detail": src_detail,
         "residues": residues,
         "completion": completion,
         "bfactor_range": [round(bmin, 2), round(bmax, 2)],

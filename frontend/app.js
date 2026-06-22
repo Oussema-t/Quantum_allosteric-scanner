@@ -33,7 +33,7 @@ function onTargetChange(autoload = true) {
   if (!t) { setHoloAvailability(true); return; }
   $("pdb").value = t.apo || "";
   $("chains").value = t.chain || "A";
-  $("source").value = (t.active_site || []).join(",");
+  $("source").value = "";  // let the backend resolve (benchmark/UniProt) + label it
   // some targets (e.g. c-Myc) have NO drug-bound holo structure
   const hasHolo = !!t.holo;
   setHoloAvailability(hasHolo);
@@ -151,6 +151,7 @@ async function loadAndVisualize() {
     const dt = ((performance.now() - t0) / 1000).toFixed(1);
     LAST.view = data;
     setStatus(`Loaded ${data.pdb_id} — ${data.n_residues} residues · ${dt}s`);
+    showActiveSiteNote(data);
     await loadIntel(data.pdb_id, data.chains);
     render3D();
   } catch (e) {
@@ -164,6 +165,26 @@ function setStatus(msg, isError = false) {
   const s = $("status");
   s.textContent = msg;
   s.classList.toggle("error", isError);
+}
+
+// show where the active site came from, and fill the field if the user left it blank
+const SITE_SOURCE_LABEL = {
+  benchmark: "validated benchmark", uniprot: "auto from UniProt",
+  ligand: "ligand binding site (no curated active site)", manual: "your input",
+  pdb_site: "PDB SITE records", none: "none found",
+};
+function showActiveSiteNote(data) {
+  const note = $("sitenote");
+  const src = data.active_site_source || "none";
+  const n = (data.active_site || []).length;
+  if (src === "none" || !n) {
+    note.textContent = "Active site: none found for this protein (UniProt has no annotation; no ligand pocket).";
+    note.classList.add("error");
+  } else {
+    note.classList.remove("error");
+    note.textContent = `Active site: ${SITE_SOURCE_LABEL[src] || src} — ${n} residues. ${data.active_site_detail || ""}`;
+    if (!$("source").value.trim()) $("source").value = (data.active_site || []).join(",");
+  }
 }
 
 // Enter in the PDB or Chain field loads the structure immediately

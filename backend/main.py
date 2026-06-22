@@ -30,6 +30,7 @@ from .systems import resolve_systems
 from .rcsb import structure_intel
 from .discovery import find_holo_candidates
 from .compare import align_and_compare
+from .active_site import detect_active_site
 
 app = FastAPI(title="Cleveland Clinic Quantum Allosteric Scanner", version="0.2.0")
 app.add_middleware(
@@ -115,6 +116,16 @@ def holo_finder(apo_pdb: str, chains: str = None, target_name: str = None):
         return find_holo_candidates(apo_pdb.strip().upper(), target_name=target_name)
     except Exception as e:
         raise HTTPException(422, f"holo search failed for {apo_pdb}: {e}")
+
+
+@app.get("/api/active-site")
+def active_site(pdb_id: str, chains: str = "A", holo: str = None):
+    """Auto-detect the active/functional site for any protein: UniProt curated
+    residues, else the ligand binding site, else PDB SITE records."""
+    try:
+        return detect_active_site(pdb_id.strip().upper(), chains, holo_pdb=holo)
+    except Exception as e:
+        raise HTTPException(422, f"active-site detection failed for {pdb_id}: {e}")
 
 
 @app.get("/api/structure")
