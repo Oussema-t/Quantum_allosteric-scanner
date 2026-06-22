@@ -276,7 +276,7 @@ function divergeColor(z) {
 }
 
 // ── GNM site-potential analysis: enrichment + per-residue profiles ──────────
-function renderAnalysis(analysis, activeSite, prefix = "") {
+function renderAnalysis(analysis, activeSite, prefix = "", drugSite = []) {
   const enr = $("enrichment");
   const charts = $("analysischarts");
   if (!analysis) {
@@ -285,7 +285,7 @@ function renderAnalysis(analysis, activeSite, prefix = "") {
     charts.innerHTML = "<span class='hint-line'>Site-potential analysis unavailable for this structure (too large or failed).</span>";
     return;
   }
-  CURRENT_ANALYSIS = { ...analysis, active_site: activeSite || [] };
+  CURRENT_ANALYSIS = { ...analysis, active_site: activeSite || [], drug_site: drugSite || [] };
   const keys = ["V_B", "V_T", "V_R", "V_C", "V_M"];
 
   // enrichment cards (term − bulk z, or Δ at active site) when an active site is known
@@ -305,6 +305,12 @@ function renderAnalysis(analysis, activeSite, prefix = "") {
   // one profile chart per term, active-site residues marked in red
   charts.innerHTML = "";
   const siteSet = new Set(activeSite || []);
+  const drugSet = new Set(drugSite || []);
+  const legend = document.createElement("div");
+  legend.className = "marker-legend";
+  legend.innerHTML = `<span class="dot site"></span> active site` +
+    (drugSet.size ? ` &nbsp; <span class="dot drug"></span> drug-binding site (holo)` : "");
+  charts.appendChild(legend);
   const rmin = Math.min(...analysis.resnums);
   const rmax = Math.max(...analysis.resnums);
   ANALYSIS_CHART_DIVS.length = 0;
@@ -322,8 +328,15 @@ function renderAnalysis(analysis, activeSite, prefix = "") {
     if (siteSet.size) {
       const ax = [], ay = [];
       analysis.resnums.forEach((r, i) => { if (siteSet.has(r)) { ax.push(r); ay.push(vals[i]); } });
-      traces.push({ x: ax, y: ay, type: "scatter", mode: "markers",
+      traces.push({ x: ax, y: ay, type: "scatter", mode: "markers", name: "active site",
         marker: { color: "#ff4d6d", size: 5 }, hovertemplate: "active site %{x}<extra></extra>" });
+    }
+    if (drugSet.size) {
+      const dx = [], dy = [];
+      analysis.resnums.forEach((r, i) => { if (drugSet.has(r)) { dx.push(r); dy.push(vals[i]); } });
+      traces.push({ x: dx, y: dy, type: "scatter", mode: "markers", name: "drug site",
+        marker: { color: "#b15be0", size: 7, symbol: "diamond", line: { color: "#fff", width: 0.5 } },
+        hovertemplate: "drug-binding %{x}<extra></extra>" });
     }
     const isLast = ci === keys.length - 1;
     Plotly.newPlot(div, traces, {
@@ -428,14 +441,15 @@ async function computeShift() {
 function applyAnalysisMode() {
   const mode = $("analysismode").value;
   const site = (LAST.view && LAST.view.active_site) || [];
+  const drug = (LAST.shift && LAST.shift.drug_site) || [];
   if (mode === "loaded" || !LAST.shift) {
-    renderAnalysis(LAST.view && LAST.view.analysis, site, "");
+    renderAnalysis(LAST.view && LAST.view.analysis, site, "", []);
   } else if (mode === "holo") {
-    renderAnalysis(LAST.shift.holo, site, "");
+    renderAnalysis(LAST.shift.holo, site, "", drug);
   } else {
-    renderAnalysis(LAST.shift.delta, site, "Δ");
+    renderAnalysis(LAST.shift.delta, site, "Δ", drug);
   }
-  render3D();  // 3D color-by follows the selected analysis
+  render3D();  // 3D color-by + drug-site markers follow the selected analysis
 }
 
 function setShiftNote(msg, isError = false) {
@@ -499,6 +513,12 @@ function render3D() {
         viewer.addStyle({ resi: res, atom: "CA" }, { sphere: { color: "#00b89c", radius: 0.9 } });
       });
     }
+
+    // drug-binding residues (from the holo) — purple, shown in holo/Δ analysis modes
+    const drugSite = (CURRENT_ANALYSIS && CURRENT_ANALYSIS.drug_site) || [];
+    drugSite.forEach((res) =>
+      viewer.addStyle({ resi: res, atom: "CA" },
+        { sphere: { color: "#b15be0", radius: 1.1 } }));
 
     // filled (modeled) residues are NOT in the raw PDB the viewer downloaded, so
     // draw them at their computed coordinates as orange spheres (the "added" atoms)

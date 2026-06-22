@@ -27,7 +27,7 @@ from pydantic import BaseModel, Field
 
 from .pipeline import build_view
 from .systems import resolve_systems
-from .rcsb import structure_intel
+from .rcsb import structure_intel, ligands_and_sites
 from .discovery import find_holo_candidates
 from .compare import align_and_compare
 from .active_site import detect_active_site
@@ -137,11 +137,21 @@ def analysis_shift(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = 
         except Exception:
             site = []
     try:
-        return site_potential_shift(apo, apo_chain, holo, holo_chain, site_resnums=site)
+        result = site_potential_shift(apo, apo_chain, holo, holo_chain, site_resnums=site)
     except ValueError as e:
         raise HTTPException(422, str(e))
     except Exception as e:
         raise HTTPException(422, f"shift analysis failed: {e}")
+    # mark exactly where the drug binds in the holo
+    try:
+        ligs = ligands_and_sites(holo, holo_chain or apo_chain)
+        drug_ligs = [l for l in ligs if l["is_drug"]]
+        result["drug_site"] = sorted(set(r for l in drug_ligs for r in l["binding_site"]))
+        result["drug_codes"] = [l["code"] for l in drug_ligs]
+    except Exception:
+        result["drug_site"] = []
+        result["drug_codes"] = []
+    return result
 
 
 @app.get("/api/active-site")
