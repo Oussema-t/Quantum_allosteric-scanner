@@ -52,6 +52,52 @@ function onTargetChange() {
   $("source").value = (t.active_site || []).join(",");
 }
 
+// ── find holo structures for the entered apo ───────────────────────────────
+$("findholo").addEventListener("click", findHolo);
+
+async function findHolo() {
+  const apo = $("pdb").value.trim();
+  if (!apo) { setHoloStatus("Enter an apo PDB ID first.", true); return; }
+  const btn = $("findholo");
+  btn.disabled = true;
+  setHoloStatus("Searching RCSB for drug-bound structures of this protein…");
+  try {
+    const url = `${API}/api/holo-finder?apo_pdb=${encodeURIComponent(apo)}` +
+      ($("target").value ? `&target_name=${encodeURIComponent($("target").value)}` : "");
+    const d = await fetch(url).then((r) => r.json());
+    const sel = $("holo");
+    sel.innerHTML = "";
+    const opts = [];
+    // benchmark validated holo first
+    if (d.benchmark_holo && d.benchmark_holo.holo) {
+      opts.push({ v: d.benchmark_holo.holo,
+        t: `${d.benchmark_holo.holo} — validated (${d.benchmark_holo.ligand_name || d.benchmark_holo.ligand || "drug"})` });
+    }
+    (d.candidates || []).forEach((c) => {
+      if (opts.some((o) => o.v === c.pdb_id)) return;
+      const tag = c.has_drug ? `drug ${c.drugs.join(",")}` : "no drug";
+      opts.push({ v: c.pdb_id, t: `${c.pdb_id} — ${tag}${c.resolution ? " · " + c.resolution + "Å" : ""}` });
+    });
+    if (!opts.length) {
+      sel.innerHTML = `<option value="">— none found —</option>`;
+      setHoloStatus(`No holo structures found (UniProt ${d.uniprot || "?"}).`, true);
+    } else {
+      opts.forEach((o) => addOption(sel, o.v, o.t));
+      setHoloStatus(`Found ${opts.length} structures (UniProt ${d.uniprot || "?"}). Pick one to complete/validate against.`);
+    }
+  } catch (e) {
+    setHoloStatus(`Holo search failed: ${e.message}`, true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function setHoloStatus(msg, isError = false) {
+  const s = $("holostatus");
+  s.textContent = msg;
+  s.classList.toggle("error", isError);
+}
+
 // ── run scan ───────────────────────────────────────────────────────────────
 $("run").addEventListener("click", runScan);
 
@@ -73,6 +119,8 @@ async function runScan() {
     cutoff: parseFloat($("cutoff").value),
     top_k: parseInt($("topk").value, 10),
     target_name: $("target").value || null,
+    complete: $("complete").checked,
+    holo_pdb: $("holo").value || null,
   };
 
   if (!body.pdb_id) {
@@ -316,6 +364,12 @@ function render3D() {
       });
     }
 
+    // modeled (filled-in) residues — orange, so added atoms are obvious
+    data.residues.filter((r) => r.modeled).forEach((r) => {
+      viewer.addStyle({ chain: r.chain, resi: r.resnum, atom: "CA" },
+        { sphere: { color: "#ff8c2b", radius: 1.2 } });
+    });
+
     // predicted allosteric hits — red spheres (the prediction)
     data.top_hits.forEach((res) => {
       viewer.addStyle({ resi: res }, { stick: { color: "#ff4d6d", radius: 0.3 } });
@@ -342,7 +396,22 @@ function renderStructInfo(intel) {
   const ligs = intel.ligands || [];
 
   const card = (l, v) => `<div class="scard"><div class="l">${l}</div><div class="v">${v ?? "—"}</div></div>`;
-  let html = `<div class="sgrid">
+  let html = "";
+
+  // apo completion banner (if this scan filled missing residues)
+  const comp = LAST.scan && LAST.scan.completion;
+  if (comp) {
+    html += `<div class="scard" style="background:rgba(255,140,43,.12);margin-bottom:12px">
+      <div class="l">Apo completion — filled from holo ${comp.holo || "?"}</div>
+      <div class="v">${comp.n_filled_from_holo} from holo · ${comp.n_interpolated} interpolated · ${comp.n_unplaced} unplaced
+      <span style="color:var(--muted);font-weight:400"> (of ${comp.n_missing} missing)</span></div>
+      ${comp.filled && comp.filled.length
+        ? `<div style="margin-top:6px;font-size:11px" class="missing">${comp.filled.map((f) => `${f.resname}${f.resnum} <span style="opacity:.7">(${f.source})</span>`).join(", ")}</div>`
+        : ""}
+    </div>`;
+  }
+
+  html += `<div class="sgrid">
     ${card("PDB", intel.pdb_id)}
     ${card("Resolution", s.resolution ? s.resolution + " Å" : "—")}
     ${card("Method", s.method || "—")}

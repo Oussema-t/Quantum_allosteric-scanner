@@ -27,6 +27,7 @@ from .systems import resolve_systems
 from .data_layer import load_structure
 from .validation import validate_target, score_against_live
 from .rcsb import structure_intel
+from .discovery import find_holo_candidates
 
 app = FastAPI(title="Quantum Allosteric Scanner", version="0.1.0")
 app.add_middleware(
@@ -74,6 +75,9 @@ class ScanRequest(BaseModel):
     top_k: int = 5
     target_name: Optional[str] = None
     pocket_mode: str = "full"
+    complete: bool = False
+    holo_pdb: Optional[str] = None
+    holo_chain: Optional[str] = None
 
 
 class ValidateRequest(BaseModel):
@@ -139,9 +143,22 @@ def scan(req: ScanRequest):
             top_k=req.top_k,
             target_name=req.target_name,
             pocket_mode=req.pocket_mode,
+            complete=req.complete,
+            holo_pdb=req.holo_pdb,
+            holo_chain=req.holo_chain,
         )
     except ValueError as e:
         raise HTTPException(422, str(e))
+
+
+@app.get("/api/holo-finder")
+def holo_finder(apo_pdb: str, chains: str = None, target_name: str = None):
+    """Find all ligand-bound (holo) structures of the same protein as `apo_pdb`,
+    drug-bound first, for completing/validating the apo."""
+    try:
+        return find_holo_candidates(apo_pdb.strip().upper(), target_name=target_name)
+    except Exception as e:
+        raise HTTPException(422, f"holo search failed for {apo_pdb}: {e}")
 
 
 @app.get("/api/structure")

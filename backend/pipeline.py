@@ -32,7 +32,8 @@ def _propagate(H, propagator, gamma):
 
 def run_scan(pdb_id, chains="A", source_residues=None, family="GNM",
              propagator="ctqw", cutoff=8.0, gamma=1.0, coarse_k=1,
-             top_k=5, target_name=None, pocket_mode="full"):
+             top_k=5, target_name=None, pocket_mode="full",
+             complete=False, holo_pdb=None, holo_chain=None):
     """Run a single-structure allosteric scan.
 
     Parameters
@@ -56,11 +57,20 @@ def run_scan(pdb_id, chains="A", source_residues=None, family="GNM",
     systems = resolve_systems(pocket_mode=pocket_mode)
     cfg = systems.get(target_name) if target_name else None
 
-    st = load_structure(pdb_id, chains)
-    if st is None:
-        raise ValueError(f"could not load structure {pdb_id} (chains {chains})")
-    if coarse_k > 1:
-        st = coarse_grain(st, coarse_k)
+    # optionally complete the apo (fill missing residues from holo + interpolation)
+    completion = None
+    if complete:
+        from .discovery import complete_apo
+        use_holo = holo_pdb or (cfg.get("holo") if cfg else None)
+        use_holo_chain = holo_chain or (cfg.get("chain") if cfg else None) or chains
+        st, completion = complete_apo(pdb_id, chains, use_holo, use_holo_chain)
+    else:
+        st = load_structure(pdb_id, chains)
+        if st is None:
+            raise ValueError(f"could not load structure {pdb_id} (chains {chains})")
+        if coarse_k > 1:
+            st = coarse_grain(st, coarse_k)
+    modeled = st.get("modeled")
 
     # resolve the signal source (active site)
     if source_residues:
@@ -112,6 +122,7 @@ def run_scan(pdb_id, chains="A", source_residues=None, family="GNM",
             "norm": norm(scores[i]),
             "bfactor": round(float(st["bfac"][i]), 2),
             "is_source": int(st["resnums"][i]) in src_set,
+            "modeled": bool(modeled[i]) if modeled is not None else False,
         }
         for i in range(len(st["resnums"]))
     ]
@@ -128,6 +139,7 @@ def run_scan(pdb_id, chains="A", source_residues=None, family="GNM",
         "residues": residues,
         "connectivity_matrix": np.round(C, 6).tolist(),
         "resnum_axis": [int(r) for r in st["resnums"]],
+        "completion": completion,
         "validation": (
             {"target": target_name,
              "site_name": cfg.get("site_name"),

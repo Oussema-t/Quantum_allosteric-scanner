@@ -131,6 +131,8 @@ button.secondary:disabled { opacity: .35; cursor: not-allowed; }
 .viewopts { display: flex; gap: 18px; margin-top: 8px; flex-wrap: wrap; }
 .chk { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); margin: 0; cursor: pointer; }
 .chk input { width: auto; margin: 0; }
+.chk.full { margin-bottom: 12px; align-items: flex-start; }
+.swatch.modeled { background: #ff8c2b; }
 
 .struct-panel { grid-column: 2; }
 .structinfo { font-size: 12px; color: var(--muted); line-height: 1.6; }

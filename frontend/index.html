@@ -37,7 +37,15 @@
         <input id="source" type="text" placeholder="auto from benchmark" />
       </label>
 
-      <h2>2 · Quantum model</h2>
+      <h2>2 · Holo &amp; apo completion</h2>
+      <button id="findholo" class="secondary">🔍 Find holo structures from PDB</button>
+      <p id="holostatus" class="status"></p>
+      <label>Holo structure (drug-bound)
+        <select id="holo"><option value="">— none found yet —</option></select>
+      </label>
+      <label class="chk full"><input type="checkbox" id="complete" /> Complete apo — fill missing residues from holo + interpolation</label>
+
+      <h2>3 · Quantum model</h2>
       <div class="row">
         <label>Hamiltonian
           <select id="family"></select>
@@ -80,6 +88,7 @@
         <span class="swatch hit"></span> predicted allosteric hit
         <span class="swatch truth"></span> true holo pocket (validation)
         <span class="swatch drug"></span> bound drug / ligand
+        <span class="swatch modeled"></span> filled (modeled) residue
         <span class="grad"></span> low → high quantum connectivity
       </div>
       <div class="viewopts">
