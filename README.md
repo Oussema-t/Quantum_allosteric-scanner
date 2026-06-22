@@ -1,4 +1,4 @@
-# Quantum Allosteric Scanner
+# Cleveland Clinic · Quantum Allosteric Scanner — Team AuraQu
 
 **Quantum simulation of allosteric signal propagation to identify cryptic druggable pockets.**
 Cleveland Clinic — Global Quantum + AI Challenge 2026.

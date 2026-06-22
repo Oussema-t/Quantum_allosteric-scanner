@@ -97,8 +97,11 @@ async function runScan() {
     setStatus(
       `Done — ${data.n_residues} residues · ${data.family} · ${data.propagator} · ${dt}s`
     );
+    LAST.scan = data;
+    LAST.truePocket = [];
     renderHits(data);
-    render3D(data);
+    await loadIntel(data.pdb_id, data.chains);
+    render3D();
     renderHeatmap(data);
     $("results").classList.remove("hidden");
   } catch (e) {
@@ -152,11 +155,14 @@ async function runValidate() {
     const dt = ((performance.now() - t0) / 1000).toFixed(1);
     setStatus(`Validated ${data.target}: apo ${data.apo} → holo ${data.validation.holo} · ${dt}s`);
 
+    LAST.scan = data.scan;
+    LAST.truePocket = data.validation.live_pocket || [];
     renderHits(data.scan);
-    $("results").classList.remove("hidden");
-    render3D(data.scan, data.validation.live_pocket || []);
+    await loadIntel(data.scan.pdb_id, data.scan.chains);
+    render3D();
     renderHeatmap(data.scan);
     renderValReport(data.validation);
+    $("results").classList.remove("hidden");
     $("valreport").classList.remove("hidden");
   } catch (e) {
     setStatus(`Error: ${e.message}`, true);
@@ -241,55 +247,144 @@ function metric(label, val) {
   return `<span class="metric">${label}: <b>${val ?? "—"}</b></span>`;
 }
 
-// ── 3D structure (3Dmol.js) ────────────────────────────────────────────────
+// ── 3D structure (3Dmol.js) — state-driven, white background ────────────────
 let viewer = null;
-function render3D(data, truePocket = []) {
-  const el = $("viewer");
-  if (!viewer) {
-    viewer = $3Dmol.createViewer(el, { backgroundColor: "#05080f" });
+const LAST = { scan: null, intel: null, truePocket: [] };
+
+// load structure intelligence (chains, drugs, missing residues) for a PDB
+async function loadIntel(pdbId, chains) {
+  try {
+    const url = `${API}/api/structure?pdb_id=${encodeURIComponent(pdbId)}` +
+      (chains ? `&chains=${encodeURIComponent(chains)}` : "");
+    LAST.intel = await fetch(url).then((r) => (r.ok ? r.json() : null));
+  } catch {
+    LAST.intel = null;
   }
+  renderStructInfo(LAST.intel);
+}
+
+function render3D() {
+  const data = LAST.scan;
+  if (!data) return;
+  const el = $("viewer");
+  if (!viewer) viewer = $3Dmol.createViewer(el, { backgroundColor: "#ffffff" });
   viewer.clear();
 
-  const pdbUrl = `https://files.rcsb.org/download/${data.pdb_id}.pdb`;
+  const byChain = $("opt-cartoon-chain").checked;
+  const showLig = $("opt-ligands").checked;
+  const showActive = $("opt-active").checked;
+  const intel = LAST.intel;
+
   $3Dmol.download(`pdb:${data.pdb_id}`, viewer, {}, () => {
-    // base cartoon colored by quantum connectivity (norm 0..1)
-    const scoreByKey = {};
-    data.residues.forEach((r) => (scoreByKey[`${r.chain}_${r.resnum}`] = r));
+    // base cartoon: colored by chain (biologist view) OR by quantum connectivity
+    if (byChain) {
+      viewer.setStyle({}, { cartoon: { colorscheme: "chain" } });
+    } else {
+      viewer.setStyle({}, { cartoon: { color: "#9fb0d8" } });
+      data.residues.forEach((r) => {
+        viewer.setStyle({ chain: r.chain, resi: r.resnum },
+          { cartoon: { color: r.is_source ? "#00b89c" : heat(r.norm) } });
+      });
+    }
 
-    viewer.setStyle({}, { cartoon: { color: "#33406b" } });
+    // active site (source residues) — teal, with sticks so it's clearly visible
+    if (showActive) {
+      (data.source_residues || []).forEach((res) => {
+        viewer.addStyle({ resi: res }, { cartoon: { color: "#00b89c" } });
+        viewer.addStyle({ resi: res, atom: "CA" },
+          { sphere: { color: "#00b89c", radius: 0.9 } });
+      });
+    }
 
-    data.residues.forEach((r) => {
-      const sel = { chain: r.chain, resi: r.resnum };
-      if (r.is_source) {
-        viewer.setStyle(sel, { cartoon: { color: "#00e6c3" } });
-      } else {
-        viewer.setStyle(sel, { cartoon: { color: heat(r.norm) } });
-      }
+    // true holo-derived pocket: translucent gold halo (validation ground truth)
+    LAST.truePocket.forEach((res) => {
+      viewer.addStyle({ resi: res, atom: "CA" },
+        { sphere: { color: "#f4b400", radius: 2.2, opacity: 0.35 } });
     });
 
-    // true holo-derived pocket: translucent yellow halo (ground truth)
-    truePocket.forEach((res) => {
-      viewer.addStyle(
-        { resi: res, atom: "CA" },
-        { sphere: { color: "#ffd166", radius: 2.2, opacity: 0.35 } }
-      );
-    });
+    // bound drugs / ligands — sticks + element coloring + label
+    if (showLig && intel && intel.ligands) {
+      intel.ligands.forEach((lig) => {
+        if (lig.category === "solvent/ion") return; // skip water/ions for clarity
+        const sel = { resn: lig.code, hetflag: true };
+        const col = lig.is_drug ? "#b15be0" : "#5b8cff";
+        viewer.addStyle(sel, { stick: { colorscheme: lig.is_drug ? "purpleCarbon" : "blueCarbon", radius: 0.18 } });
+        viewer.addStyle(sel, { sphere: { scale: 0.28 } });
+        viewer.addLabel(`${lig.code}${lig.is_drug ? " (drug)" : ""}`,
+          { fontColor: "white", backgroundColor: col, fontSize: 11, backgroundOpacity: 0.85 },
+          sel);
+      });
+    }
 
-    // highlight predicted hits as red spheres (prediction)
+    // predicted allosteric hits — red spheres (the prediction)
     data.top_hits.forEach((res) => {
-      viewer.addStyle(
-        { resi: res },
-        { stick: { color: "#ff4d6d", radius: 0.3 } }
-      );
-      viewer.addStyle(
-        { resi: res, atom: "CA" },
-        { sphere: { color: "#ff4d6d", radius: 1.6 } }
-      );
+      viewer.addStyle({ resi: res }, { stick: { color: "#ff4d6d", radius: 0.3 } });
+      viewer.addStyle({ resi: res, atom: "CA" },
+        { sphere: { color: "#ff4d6d", radius: 1.6 } });
     });
 
     viewer.zoomTo();
     viewer.render();
   });
+}
+
+// re-render when a view toggle changes (no refetch needed)
+["opt-cartoon-chain", "opt-ligands", "opt-active"].forEach((id) =>
+  document.getElementById(id).addEventListener("change", render3D)
+);
+
+// ── structure intelligence panel ───────────────────────────────────────────
+function renderStructInfo(intel) {
+  const el = $("structinfo");
+  if (!intel) { el.textContent = "Structure intel unavailable."; return; }
+  const s = intel.summary || {};
+  const drugs = intel.drugs || [];
+  const ligs = intel.ligands || [];
+
+  const card = (l, v) => `<div class="scard"><div class="l">${l}</div><div class="v">${v ?? "—"}</div></div>`;
+  let html = `<div class="sgrid">
+    ${card("PDB", intel.pdb_id)}
+    ${card("Resolution", s.resolution ? s.resolution + " Å" : "—")}
+    ${card("Method", s.method || "—")}
+    ${card("Chains", (intel.chains || []).map((c) => c.chain).join(", ") || "—")}
+    ${card("Drugs bound", drugs.length)}
+    ${card("Missing residues", intel.n_missing)}
+  </div>`;
+  if (s.title) html += `<div style="margin-bottom:10px">${s.title}</div>`;
+
+  // chains
+  if (intel.chains && intel.chains.length) {
+    html += `<h3>Chains</h3><table><tr><th>Chain</th><th>Residues</th><th>Range</th></tr>`;
+    intel.chains.forEach((c) => {
+      html += `<tr><td>${c.chain}</td><td>${c.n_residues}</td><td>${c.first}–${c.last}</td></tr>`;
+    });
+    html += `</table>`;
+  }
+
+  // ligands / drugs + binding sites
+  if (ligs.length) {
+    html += `<h3>Ligands & binding sites</h3><table><tr><th>Code</th><th>Name</th><th>Binds residues</th></tr>`;
+    ligs.forEach((l) => {
+      const site = (l.binding_site || []).slice(0, 12).join(", ") +
+        ((l.binding_site || []).length > 12 ? " …" : "");
+      html += `<tr><td>${l.code}<span class="tag ${l.category.replace("/", "\\/")}">${l.category}</span></td>` +
+        `<td>${l.name || "—"}</td><td>${site || "—"}</td></tr>`;
+    });
+    html += `</table>`;
+  }
+
+  // missing residues
+  if (intel.n_missing) {
+    const list = intel.missing_residues
+      .map((m) => `${m.resname}${m.resnum}${m.chain ? "/" + m.chain : ""}`)
+      .join(", ");
+    html += `<h3>Missing (unresolved) residues — ${intel.n_missing}</h3>` +
+      `<div class="missing">${list}</div>`;
+  } else {
+    html += `<h3>Missing residues</h3><div>None — structure is complete.</div>`;
+  }
+
+  el.innerHTML = html;
 }
 
 // blue → yellow → red gradient for connectivity

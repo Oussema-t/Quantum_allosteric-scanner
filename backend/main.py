@@ -26,6 +26,7 @@ from .pipeline import run_scan, PROPAGATORS
 from .systems import resolve_systems
 from .data_layer import load_structure
 from .validation import validate_target, score_against_live
+from .rcsb import structure_intel
 
 app = FastAPI(title="Quantum Allosteric Scanner", version="0.1.0")
 app.add_middleware(
@@ -141,6 +142,16 @@ def scan(req: ScanRequest):
         )
     except ValueError as e:
         raise HTTPException(422, str(e))
+
+
+@app.get("/api/structure")
+def structure(pdb_id: str, chains: str = None):
+    """Biologist-facing structure intel: chains, ligands/drugs + binding sites,
+    missing residues, title/organism/resolution — extracted from the PDB + RCSB."""
+    try:
+        return structure_intel(pdb_id.strip().upper(), chains)
+    except Exception as e:
+        raise HTTPException(422, f"could not read structure {pdb_id}: {e}")
 
 
 @app.post("/api/validate")
