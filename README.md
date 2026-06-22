@@ -4,9 +4,9 @@
 Cleveland Clinic — Global Quantum + AI Challenge 2026.
 
 > ### 🌐 Live demo
-> **[ launch the app ](https://quantum-allosteric-scanner.onrender.com)** &nbsp;·&nbsp; login — **username:** `jury` &nbsp; **password:** `QAS@CC`
+> **➡️ [ Launch the app ](https://quantum-allosteric-scanner.onrender.com)** &nbsp;·&nbsp; login — **username:** `jury` &nbsp; **password:** `QAS@CC`
 >
-> *(URL goes live once the Render deploy is connected — see [Deploy](#deploy-public-url) below.)*
+> Hosted on Render's free tier; the first visit after idle may take ~30–60 s to wake.
 
 Over 85% of disease-causing proteins are considered *undruggable* — they lack the deep
 active-site pockets that classical small-molecule drugs need. The only viable strategy for
