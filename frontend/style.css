@@ -44,9 +44,8 @@ main {
   border-radius: 12px;
   padding: 16px;
 }
-.controls { grid-column: 1; grid-row: 1 / span 3; }
+.controls { grid-column: 1; grid-row: 1 / span 2; }
 .viewer-panel { grid-column: 2; }
-.heatmap-panel { grid-column: 2; }
 
 .panel h2 {
   font-size: 13px;
@@ -71,7 +70,7 @@ input, select {
   font-size: 14px;
 }
 
-button#run {
+button#load {
   width: 100%;
   padding: 12px;
   margin-top: 6px;
@@ -83,8 +82,8 @@ button#run {
   font-weight: 600;
   cursor: pointer;
 }
-button#run:hover { background: #6f9bff; }
-button#run:disabled { opacity: .5; cursor: wait; }
+button#load:hover { background: #6f9bff; }
+button#load:disabled { opacity: .5; cursor: wait; }
 
 button.secondary {
   width: 100%;
@@ -128,7 +127,9 @@ button.secondary:disabled { opacity: .35; cursor: not-allowed; }
 #viewer { position: relative; width: 100%; height: 460px; border-radius: 8px; overflow: hidden; background: #ffffff; border: 1px solid var(--border); }
 #heatmap { width: 100%; height: 420px; }
 
-.viewopts { display: flex; gap: 18px; margin-top: 8px; flex-wrap: wrap; }
+.viewopts { display: flex; gap: 18px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
+.viewopts > label { margin: 0; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+.viewopts select { width: auto; padding: 4px 8px; }
 .chk { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); margin: 0; cursor: pointer; }
 .chk input { width: auto; margin: 0; }
 .chk.full { margin-bottom: 12px; align-items: flex-start; }

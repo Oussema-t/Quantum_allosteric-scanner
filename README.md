@@ -13,33 +13,44 @@ active-site pockets that classical small-molecule drugs need. The only viable st
 these targets is **allostery**: finding hidden distal pockets that, when bound, shut down
 the active site from a distance.
 
-This tool ingests a static protein structure from the [RCSB PDB](https://www.rcsb.org) and
-simulates **quantum signal propagation** (a continuous-time quantum walk on the residue
-contact network) to rank residues by their dynamic connectivity to the active site — a
-probability map of candidate allosteric/cryptic pockets. No classical MD trajectories are
-used; the dynamics are predicted *ab initio* from topology (the elastic-network hypothesis).
+This tool ingests protein structures from the [RCSB PDB](https://www.rcsb.org), assembles
+a clean, complete structural picture (apo + all drug-bound holo forms, missing residues
+filled, all binding sites mapped), and visualizes it for biologists. On that foundation, a
+**quantum signal-propagation** model (a continuous-time quantum walk on the residue contact
+network, predicted *ab initio* from topology — no classical MD) will rank candidate
+allosteric/cryptic pockets. This build delivers the data foundation; quantum prediction follows.
 
 ---
 
-## What it produces
+## Current phase — data foundation
 
-- **Connectivity matrix** — an *N×N* matrix where entry `(i, j)` is the quantum
-  connectivity strength between residue *i* and residue *j*.
-- **Hit list** — the top-5 predicted allosteric residues, seeded from the active site.
-- **3D map** — the protein colored by connectivity, with the predicted pockets highlighted.
+Build the right structural data first, visualize it for biologists, then layer
+quantum allosteric prediction on top. This build does the **data + visualization**:
+
+- **Holo discovery** — from an apo PDB id, find every drug-bound (holo) structure of
+  the same protein in RCSB, drug-bound first.
+- **Apo completion** — fill the apo's missing (unresolved) residues with real holo
+  coordinates where available, interpolation otherwise, all flagged.
+- **Structure intelligence** — chains, bound drugs/ligands + their binding sites,
+  active site, missing residues, resolution/method/title.
+- **3D view** — biologist-friendly: white background, color by chain or flexibility,
+  active site, drugs, and modeled residues highlighted.
+
+> Quantum prediction (continuous-time quantum walk on the residue contact network)
+> was prototyped and is preserved in git history; it will be reintroduced on top of
+> this data foundation.
 
 ## Architecture
 
 ```
-backend/   FastAPI service — ported verbatim from the research notebook
-  systems.py      validated benchmark metadata (apo/holo, pockets, top-5)
+backend/   FastAPI service
+  systems.py      validated benchmark metadata (apo/holo, pockets, active sites)
   data_layer.py   RCSB fetch + Cα / B-factor extraction
-  hamiltonian.py  9 elastic-network Hamiltonian families + normalized Laplacian
-  transport.py    quantum (CTQW / Green) + classical (heat) propagators
-  scoring.py      source-seeded scoring, top-5, AUC vs known pockets
-  pipeline.py     orchestrator: PDB id -> connectivity matrix + hit list
+  rcsb.py         structure intel: chains, ligands/drugs + sites, missing residues
+  discovery.py    holo search (RCSB) + apo completion (fill missing residues)
+  pipeline.py     data-view loader: PDB id -> per-residue payload for the viewer
   main.py         REST API + serves the frontend
-frontend/  3Dmol.js viewer + Plotly heatmap + hit list (no build step)
+frontend/  3Dmol.js viewer + structure-intelligence panel (no build step)
 ```
 
 ## Run locally
@@ -67,17 +78,12 @@ The login is set by the `APP_USERNAME` / `APP_PASSWORD` environment variables
 (defaults `jury` / `QAS@CC`); change them in `render.yaml` or the Render dashboard
 to rotate the password. Set `APP_PASSWORD` to empty to disable the gate.
 
-## Scientific method
+## Roadmap
 
-The contact network of Cα atoms defines a graph Laplacian *H* (the system "Hamiltonian").
-Signal propagation from the active-site residues is simulated as a **continuous-time
-quantum walk**, whose time-averaged transition probability `⟨|U(t)|²⟩` (or its
-dephased / Green's-function variant) defines the connectivity matrix. Residues that
-accumulate high connectivity to the active site — yet are spatially distant — are the
-candidate allosteric sites. See the methodological notes in each module.
-
-## Status
-
-Increment 1: data layer + quantum core + API + 3D frontend (single-structure scan).
-Roadmap: apo→holo validation · Hamiltonian optimization · gate-level NISQ circuits ·
-noise resilience · report export.
+1. **Data foundation (current)** — holo discovery, apo completion, structure
+   intelligence, biologist-grade 3D visualization.
+2. **Quantum allosteric prediction** — reintroduce the continuous-time quantum walk
+   on the residue contact network to rank candidate allosteric/cryptic pockets, on
+   top of the cleaned, completed structures.
+3. **Validation & reporting** — score predictions against known allosteric pockets;
+   export the methodological report and hit list.

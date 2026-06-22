@@ -6,27 +6,26 @@
   <title>Cleveland Clinic · Quantum Allosteric Scanner — Team AuraQu</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
-  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
 </head>
 <body>
   <header>
     <div class="brand">
-      <h1> Quantum Allosteric Scanner</h1>
+      <h1>Quantum Allosteric Scanner</h1>
       <span class="badge">Cleveland Clinic Challenge</span>
       <span class="badge team">Team AuraQu</span>
     </div>
-    <p class="tagline">Quantum simulation of allosteric signal propagation &mdash; finding cryptic druggable pockets from PDB structure.</p>
+    <p class="tagline">Structural data foundation &mdash; load a protein, complete it, and visualize chains, active sites, drugs and missing residues. <em>Quantum allosteric prediction comes next.</em></p>
   </header>
 
   <main>
     <!-- ── Control panel ─────────────────────────────────────── -->
     <section class="panel controls">
-      <h2>1 · Target</h2>
+      <h2>1 · Protein</h2>
       <label>Benchmark target
         <select id="target"></select>
       </label>
       <div class="row">
-        <label>PDB ID
+        <label>PDB ID (apo or holo)
           <input id="pdb" type="text" placeholder="4OBE" maxlength="4" />
         </label>
         <label>Chain(s)
@@ -45,69 +44,37 @@
       </label>
       <label class="chk full"><input type="checkbox" id="complete" /> Complete apo — fill missing residues from holo + interpolation</label>
 
-      <h2>3 · Quantum model</h2>
-      <div class="row">
-        <label>Hamiltonian
-          <select id="family"></select>
-        </label>
-        <label>Propagator
-          <select id="propagator"></select>
-        </label>
-      </div>
-      <div class="row">
-        <label>Contact cutoff (Å)
-          <input id="cutoff" type="number" value="8" step="0.5" min="4" max="15" />
-        </label>
-        <label>Top-K hits
-          <input id="topk" type="number" value="5" min="1" max="20" />
-        </label>
-      </div>
-
-      <button id="run">Run quantum scan ▶</button>
-      <button id="validate" class="secondary" title="Blind benchmark: scan the apo structure, score against the holo drug-bound ground truth">Validate apo → holo ✓</button>
+      <button id="load">Load &amp; visualize ▶</button>
       <p id="status" class="status"></p>
-
-      <div id="results" class="results hidden">
-        <h2>Hit list — top allosteric sites</h2>
-        <ol id="hitlist"></ol>
-        <div id="validation"></div>
-      </div>
-
-      <div id="valreport" class="results hidden">
-        <h2>Validation — apo → holo benchmark</h2>
-        <div id="valbody"></div>
-      </div>
     </section>
 
     <!-- ── 3D structure ──────────────────────────────────────── -->
     <section class="panel viewer-panel">
-      <h2>3D connectivity map</h2>
+      <h2>3D structure</h2>
       <div id="viewer"></div>
       <div class="legend">
-        <span class="swatch src"></span> active site (source)
-        <span class="swatch hit"></span> predicted allosteric hit
-        <span class="swatch truth"></span> true holo pocket (validation)
+        <span class="swatch src"></span> active site
         <span class="swatch drug"></span> bound drug / ligand
         <span class="swatch modeled"></span> filled (modeled) residue
-        <span class="grad"></span> low → high quantum connectivity
       </div>
       <div class="viewopts">
-        <label class="chk"><input type="checkbox" id="opt-cartoon-chain" /> color by chain</label>
+        <label>Color by
+          <select id="colorby">
+            <option value="chain">chain</option>
+            <option value="flex">flexibility (B-factor)</option>
+            <option value="plain">single color</option>
+          </select>
+        </label>
         <label class="chk"><input type="checkbox" id="opt-ligands" checked /> show drugs/ligands</label>
         <label class="chk"><input type="checkbox" id="opt-active" checked /> show active site</label>
+        <label class="chk"><input type="checkbox" id="opt-surface" /> surface</label>
       </div>
     </section>
 
     <!-- ── Structure intelligence ────────────────────────────── -->
     <section class="panel struct-panel">
       <h2>Structure intelligence</h2>
-      <div id="structinfo" class="structinfo">Run a scan to extract chains, drugs, and missing residues from the PDB.</div>
-    </section>
-
-    <!-- ── Heatmap ───────────────────────────────────────────── -->
-    <section class="panel heatmap-panel">
-      <h2>Connectivity matrix</h2>
-      <div id="heatmap"></div>
+      <div id="structinfo" class="structinfo">Load a protein to extract chains, drugs, and missing residues from the PDB.</div>
     </section>
   </main>
 
