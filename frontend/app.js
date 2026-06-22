@@ -158,6 +158,7 @@ async function loadAndVisualize() {
     $("analysismode").disabled = true;
     $("analysismode").value = "loaded";
     setShiftNote("");
+    $("druginter").innerHTML = "";
     renderAnalysis(data.analysis, data.active_site);
     await loadIntel(data.pdb_id, data.chains);
     render3D();
@@ -444,12 +445,36 @@ function applyAnalysisMode() {
   const drug = (LAST.shift && LAST.shift.drug_site) || [];
   if (mode === "loaded" || !LAST.shift) {
     renderAnalysis(LAST.view && LAST.view.analysis, site, "", []);
+    renderDrugIntersection([], []);
   } else if (mode === "holo") {
     renderAnalysis(LAST.shift.holo, site, "", drug);
+    renderDrugIntersection(site, drug);
   } else {
     renderAnalysis(LAST.shift.delta, site, "Δ", drug);
+    renderDrugIntersection(site, drug);
   }
   render3D();  // 3D color-by + drug-site markers follow the selected analysis
+}
+
+// does the drug bind AT the active site (orthosteric) or away from it (allosteric)?
+function renderDrugIntersection(activeSite, drugSite) {
+  const el = $("druginter");
+  if (!drugSite || !drugSite.length || !activeSite || !activeSite.length) {
+    el.innerHTML = "";
+    return;
+  }
+  const aset = new Set(activeSite);
+  const inter = drugSite.filter((r) => aset.has(r));
+  const overlap = inter.length > 0;
+  const pct = Math.round((100 * inter.length) / aset.size);
+  el.innerHTML = `<div class="dcard ${overlap ? "ortho" : "allo"}">
+    <div class="t">Active site ∩ drug-binding site</div>
+    <div class="big">${inter.length} shared residue${inter.length === 1 ? "" : "s"}${overlap ? `: ${inter.join(", ")}` : ""}</div>
+    <div class="verdict">${overlap
+      ? `⚠️ The drug <b>overlaps the active site</b> (${pct}% of it) → <b>orthosteric</b> binding, at/near the catalytic site.`
+      : `✓ <b>No overlap</b> with the active site → the drug binds <b>distal</b> to the catalytic site (<b>allosteric / cryptic pocket</b>).`}</div>
+    <div class="sub">drug-binding residues: ${drugSite.length} · active-site residues: ${aset.size}</div>
+  </div>`;
 }
 
 function setShiftNote(msg, isError = false) {
