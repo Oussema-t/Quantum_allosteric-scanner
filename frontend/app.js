@@ -166,17 +166,29 @@ function setStatus(msg, isError = false) {
   s.classList.toggle("error", isError);
 }
 
+// Enter in the PDB or Chain field loads the structure immediately
+["pdb", "chains"].forEach((id) =>
+  $(id).addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); loadAndVisualize(); }
+  }));
+
 // ── compare apo vs holo (drug-induced movement) ─────────────────────────────
 $("compare").addEventListener("click", compareApoHolo);
+
+function setCompareStatus(msg, isError = false) {
+  const s = $("comparestatus");
+  s.textContent = msg;
+  s.classList.toggle("error", isError);
+}
 
 async function compareApoHolo() {
   const apo = $("pdb").value.trim();
   const holo = currentHolo();
-  if (!apo) { setStatus("Enter the apo PDB ID first.", true); return; }
-  if (!holo) { setStatus("No holo found — pick one with “Find holo structures” first.", true); return; }
+  if (!apo) { setCompareStatus("Enter the apo PDB ID first.", true); return; }
+  if (!holo) { setCompareStatus("No holo found — pick one with “Find holo structures” first.", true); return; }
   const btn = $("compare");
   btn.disabled = true;
-  setStatus(`Superimposing holo ${holo} onto apo ${apo}…`);
+  setCompareStatus(`Superimposing holo ${holo} onto apo ${apo}…`);
   try {
     const t = TARGETS.find((x) => x.name === $("target").value);
     const ac = ($("chains").value.trim() || "A").split(",")[0].trim();
@@ -187,9 +199,9 @@ async function compareApoHolo() {
       return r.json();
     });
     render3DCompare(d);
-    setStatus(`apo ${apo} (grey) vs holo ${holo} — ${d.n_aligned} residues aligned · RMSD ${d.rmsd} Å · max Cα shift ${d.max_disp} Å`);
+    setCompareStatus(`apo ${apo} (grey) vs holo ${holo} — ${d.n_aligned} residues aligned · RMSD ${d.rmsd} Å · max Cα shift ${d.max_disp} Å`);
   } catch (e) {
-    setStatus(`Compare failed: ${e.message}`, true);
+    setCompareStatus(`Compare failed: ${e.message}`, true);
   } finally {
     btn.disabled = false;
   }

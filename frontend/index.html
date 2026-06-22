@@ -36,6 +36,9 @@
         <input id="source" type="text" placeholder="auto from benchmark" />
       </label>
 
+      <button id="load">Find &amp; visualize ▶</button>
+      <p id="status" class="status"></p>
+
       <h2>2 · Holo &amp; apo completion</h2>
       <button id="findholo" class="secondary">🔍 Find holo structures from PDB</button>
       <p id="holostatus" class="status"></p>
@@ -44,9 +47,8 @@
       </label>
       <label class="chk full"><input type="checkbox" id="complete" /> Complete apo — fill missing residues from holo + interpolation</label>
 
-      <button id="load">Load &amp; visualize ▶</button>
       <button id="compare" class="secondary">↔ Compare apo vs holo — drug-induced movement</button>
-      <p id="status" class="status"></p>
+      <p id="comparestatus" class="status"></p>
     </section>
 
     <!-- ── 3D structure ──────────────────────────────────────── -->
