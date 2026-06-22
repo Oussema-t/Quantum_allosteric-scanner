@@ -296,10 +296,14 @@ function renderAnalysis(analysis, activeSite) {
   // one profile chart per term, active-site residues marked in red
   charts.innerHTML = "";
   const siteSet = new Set(activeSite || []);
-  keys.forEach((k) => {
+  const rmin = Math.min(...analysis.resnums);
+  const rmax = Math.max(...analysis.resnums);
+  ANALYSIS_CHART_DIVS.length = 0;
+  keys.forEach((k, ci) => {
     const div = document.createElement("div");
     div.className = "chart";
     charts.appendChild(div);
+    ANALYSIS_CHART_DIVS.push(div);
     const vals = analysis.terms[k];
     const traces = [{
       x: analysis.resnums, y: vals, type: "scatter", mode: "lines",
@@ -312,17 +316,71 @@ function renderAnalysis(analysis, activeSite) {
       traces.push({ x: ax, y: ay, type: "scatter", mode: "markers",
         marker: { color: "#ff4d6d", size: 5 }, hovertemplate: "active site %{x}<extra></extra>" });
     }
+    const isLast = ci === keys.length - 1;
     Plotly.newPlot(div, traces, {
-      margin: { l: 34, r: 6, t: 20, b: 22 }, height: 130,
+      margin: { l: 38, r: 10, t: 20, b: isLast ? 40 : 18 }, height: 150,
       title: { text: `${k} · ${analysis.labels[k]}`, font: { size: 11, color: "#c7d0e6" }, x: 0.02 },
       paper_bgcolor: "#141b30", plot_bgcolor: "#141b30",
       font: { color: "#8b97b8", size: 9 },
-      xaxis: { showgrid: false, zeroline: false },
+      xaxis: {
+        range: [rmin - 1, rmax + 1], showgrid: false, zeroline: false,
+        nticks: 30, tickformat: "d",
+        title: isLast ? { text: "residue number", font: { size: 10 } } : undefined,
+      },
       yaxis: { showgrid: false, zeroline: true, zerolinecolor: "#29355c" },
       showlegend: false,
     }, { displayModeBar: false, responsive: true });
   });
 }
+
+// ── export the presented results ────────────────────────────────────────────
+const ANALYSIS_CHART_DIVS = [];
+
+function downloadFile(name, content, type) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = name; a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportCSV() {
+  const v = LAST.view;
+  if (!v) { setStatus("Load a protein first.", true); return; }
+  const a = v.analysis;
+  const activeSet = new Set(v.active_site || []);
+  const keys = ["V_B", "V_T", "V_R", "V_C", "V_M"];
+  const head = ["resnum", "chain", "bfactor", "modeled", "is_active_site", ...keys];
+  const lines = [head.join(",")];
+  v.residues.forEach((r, i) => {
+    const terms = a ? keys.map((k) => a.terms[k][i]) : keys.map(() => "");
+    lines.push([r.resnum, r.chain, r.bfactor, r.modeled ? 1 : 0,
+      activeSet.has(r.resnum) ? 1 : 0, ...terms].join(","));
+  });
+  downloadFile(`${v.pdb_id}_site_potentials.csv`, lines.join("\n"), "text/csv");
+}
+
+function exportJSON() {
+  const v = LAST.view;
+  if (!v) { setStatus("Load a protein first.", true); return; }
+  const bundle = { view: v, structure_intel: LAST.intel };
+  downloadFile(`${v.pdb_id}_results.json`, JSON.stringify(bundle, null, 2), "application/json");
+}
+
+async function exportPNG() {
+  if (!ANALYSIS_CHART_DIVS.length) { setStatus("Load a protein first.", true); return; }
+  const keys = ["V_B", "V_T", "V_R", "V_C", "V_M"];
+  for (let i = 0; i < ANALYSIS_CHART_DIVS.length; i++) {
+    const uri = await Plotly.toImage(ANALYSIS_CHART_DIVS[i],
+      { format: "png", width: 1100, height: 220, scale: 2 });
+    const a = document.createElement("a");
+    a.href = uri; a.download = `${LAST.view.pdb_id}_${keys[i]}.png`; a.click();
+  }
+}
+
+$("exportcsv").addEventListener("click", exportCSV);
+$("exportjson").addEventListener("click", exportJSON);
+$("exportpng").addEventListener("click", exportPNG);
 
 // ── structure intel ─────────────────────────────────────────────────────────
 async function loadIntel(pdbId, chains) {

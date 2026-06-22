@@ -168,8 +168,9 @@ button.secondary:disabled { opacity: .35; cursor: not-allowed; }
 #enrichment .enr .val { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
 #enrichment .enr .val.pos { color: var(--hit); }
 #enrichment .enr .val.neg { color: var(--accent); }
-.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 10px; }
-.charts .chart { width: 100%; height: 130px; }
+.charts { display: flex; flex-direction: column; gap: 8px; }
+.charts .chart { width: 100%; height: 150px; }
+.export-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 4px 0 14px; }
 .divgrad { display: inline-block; width: 80px; height: 10px; border-radius: 3px; vertical-align: middle; margin: 0 4px;
   background: linear-gradient(90deg, rgb(43,90,200), #eef2fb, rgb(255,77,60)); }
 
