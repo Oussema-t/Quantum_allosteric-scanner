@@ -121,7 +121,7 @@ candidates:[{pdb_id, title, resolution, ligands[], drugs[], has_drug, drug_names
 
 ### `GET /api/connectivity-change?apo=&holo=&apo_chain=A&holo_chain=&target_name=&cutoff=8.0`
 apo→holo network reorganization (§8d): distance-difference matrix (DDM), contact
-rewiring (+1/−1), ΔDCC (dynamic cross-correlation change), summary stats, + apo and
+rewiring (+1/−1), ΔDCC (dynamic cross-correlation change), a per-residue 'connectivity to the active site — built/broken' chart, summary stats, + apo and
 Kabsch-aligned holo coords for the browser morph. Matrices down-sampled to ≤400 for
 display; drug-bearing chain auto-resolved. Returns `{resnums, ddm, rewire, ddcc,
 apo_coords, holo_coords, site_positions, drug_site, summary{ddm_max, contacts_formed/

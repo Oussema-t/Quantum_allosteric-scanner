@@ -942,6 +942,48 @@ function renderConnHeatmaps(d) {
   connHeatmap($("ddmplot"), d.ddm, "DDM — distance change (red = apart, blue = closer)", ax, activeSet, drugSet, 0, -ddmLim, ddmLim);
   connHeatmap($("rewireplot"), d.rewire, "Contact rewiring (+1 formed / −1 broken)", ax, activeSet, drugSet, 0, -1, 1);
   connHeatmap($("ddccplot"), d.ddcc, "ΔDCC — dynamic coupling change (holo − apo)", ax, activeSet, drugSet, 0, -ddccLim, ddccLim);
+  renderActiveConnectivity(d, activeSet, drugSet);
+}
+
+// per-residue connectivity change TO the active site: contacts built (+, green) /
+// broken (−, red), and the dynamic-coupling (ΔDCC) change to the active site
+function renderActiveConnectivity(d, activeSet, drugSet) {
+  const ax = d.resnums;
+  const activePos = [];
+  ax.forEach((r, i) => { if (activeSet.has(r)) activePos.push(i); });
+  if (!activePos.length) { Plotly.purge("activeconnplot"); return; }
+
+  const netContacts = ax.map((_, j) => {
+    let s = 0; for (const i of activePos) s += d.rewire[i][j]; return s;
+  });
+  const ddccToActive = ax.map((_, j) => {
+    let s = 0; for (const i of activePos) s += d.ddcc[i][j];
+    return +(s / activePos.length).toFixed(4);
+  });
+  const traces = [
+    { x: ax, y: netContacts, type: "bar", name: "contacts to active site",
+      marker: { color: netContacts.map((v) => (v > 0 ? "#2ca02c" : v < 0 ? "#d62728" : "#445")) },
+      hovertemplate: "res %{x}: %{y} net contacts to active site<extra></extra>" },
+    { x: ax, y: ddccToActive, type: "scatter", mode: "lines", name: "ΔDCC to active site",
+      line: { color: "#5b8cff", width: 1 }, yaxis: "y2",
+      hovertemplate: "res %{x}: ΔDCC %{y:.3f}<extra></extra>" },
+  ];
+  // mark drug-binding residues
+  const dx = [], dy = [];
+  ax.forEach((r, i) => { if (drugSet.has(r)) { dx.push(r); dy.push(netContacts[i]); } });
+  if (dx.length) traces.push({ x: dx, y: dy, type: "scatter", mode: "markers", name: "drug site",
+    marker: { symbol: "diamond-open", size: 11, color: "#b15be0", line: { color: "#b15be0", width: 2 } },
+    hovertemplate: "drug-binding %{x}<extra></extra>" });
+
+  Plotly.newPlot("activeconnplot", traces, {
+    title: { text: "Connectivity to the active site — built (green) / broken (red) on drug binding", font: { size: 11, color: "#c7d0e6" }, x: 0.02 },
+    margin: { l: 42, r: 46, t: 26, b: 36 }, height: 280,
+    paper_bgcolor: "#141b30", plot_bgcolor: "#141b30", font: { color: "#8b97b8", size: 10 },
+    barmode: "relative", showlegend: true, legend: { font: { size: 9 }, orientation: "h", y: 1.12 },
+    xaxis: { title: "residue", showgrid: false },
+    yaxis: { title: "contacts ±", showgrid: false, zeroline: true, zerolinecolor: "#29355c" },
+    yaxis2: { title: "ΔDCC", overlaying: "y", side: "right", showgrid: false, zeroline: false },
+  }, { displayModeBar: false, responsive: true });
 }
 
 function matAbsPct(m, pct) {
