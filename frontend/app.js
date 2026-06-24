@@ -7,6 +7,13 @@ let TARGETS = [];
 const LAST = { view: null, intel: null, shift: null };
 let CURRENT_ANALYSIS = null;  // analysis object currently shown (drives charts + 3D)
 
+// Provenance of the "Active-site residues" field: which PDB id its content belongs
+// to, and whether the user typed it (manual) vs it being auto-filled from detection.
+// This prevents one protein's residue numbers from carrying over to a different PDB.
+let activeSitePdb = null;
+let activeSiteUserEdited = false;
+const curPdb = () => $("pdb").value.trim().toUpperCase();
+
 // ── init: populate targets ─────────────────────────────────────────────────
 async function init() {
   try {
@@ -35,6 +42,8 @@ function onTargetChange(autoload = true) {
   $("pdb").value = t.apo || "";
   $("chains").value = t.chain || "A";
   $("source").value = "";  // let the backend resolve (benchmark/UniProt) + label it
+  activeSiteUserEdited = false;
+  activeSitePdb = null;
   // some targets (e.g. c-Myc) have NO drug-bound holo structure
   const hasHolo = !!t.holo;
   setHoloAvailability(hasHolo);
@@ -120,7 +129,11 @@ async function loadAndVisualize() {
   btn.disabled = true;
   setStatus("Fetching structure from RCSB…");
 
-  const sourceRaw = $("source").value.trim();
+  // Only treat the field as manual input if the user typed it for THIS exact PDB id;
+  // otherwise ignore any leftover value and let the backend auto-detect the active
+  // site (UniProt/benchmark) for the structure being loaded.
+  const userTyped = activeSiteUserEdited && activeSitePdb === curPdb();
+  const sourceRaw = userTyped ? $("source").value.trim() : "";
   const body = {
     pdb_id: $("pdb").value.trim(),
     chains: $("chains").value.trim() || "A",
@@ -185,13 +198,22 @@ function showActiveSiteNote(data) {
   const note = $("sitenote");
   const src = data.active_site_source || "none";
   const n = (data.active_site || []).length;
+  // Did the user type the current field value FOR the structure just loaded?
+  const userOwnsThis = activeSiteUserEdited && activeSitePdb === data.pdb_id;
   if (src === "none" || !n) {
     note.textContent = "Active site: none found for this protein (UniProt has no annotation; no ligand pocket).";
     note.classList.add("error");
+    if (!userOwnsThis) { activeSitePdb = data.pdb_id; activeSiteUserEdited = false; }
   } else {
     note.classList.remove("error");
     note.textContent = `Active site: ${SITE_SOURCE_LABEL[src] || src} — ${n} residues. ${data.active_site_detail || ""}`;
-    if (!$("source").value.trim()) $("source").value = (data.active_site || []).join(",");
+    // The field reflects this structure's detected active site, unless the user
+    // deliberately typed their own list for this exact PDB id.
+    if (!userOwnsThis) {
+      $("source").value = (data.active_site || []).join(",");
+      activeSitePdb = data.pdb_id;
+      activeSiteUserEdited = false;
+    }
   }
 }
 
@@ -200,6 +222,23 @@ function showActiveSiteNote(data) {
   $(id).addEventListener("keydown", (e) => {
     if (e.key === "Enter") { e.preventDefault(); loadAndVisualize(); }
   }));
+
+// Changing the PDB id invalidates an active-site list from a previous structure:
+// clear the field (and its provenance) so the new protein is auto-detected on load.
+$("pdb").addEventListener("input", () => {
+  if (curPdb() !== activeSitePdb) {
+    $("source").value = "";
+    activeSiteUserEdited = false;
+    activeSitePdb = null;
+    const s = $("sitenote"); s.textContent = ""; s.classList.remove("error");
+  }
+});
+
+// The user typing in the field claims it as manual input for the CURRENT id only.
+$("source").addEventListener("input", () => {
+  activeSiteUserEdited = true;
+  activeSitePdb = curPdb();
+});
 
 // ── compare apo vs holo (drug-induced movement) ─────────────────────────────
 $("compare").addEventListener("click", compareApoHolo);
@@ -240,6 +279,10 @@ function render3DCompare(d) {
   const el = $("viewer");
   if (!viewer) viewer = $3Dmol.createViewer(el, { backgroundColor: "#ffffff" });
   viewer.clear();
+  // caption: both structures overlaid
+  $("viewcaption").innerHTML =
+    `Showing <b class="apo">apo ${d.apo_pdb}</b> (grey) + <b class="holo">holo ${d.holo_pdb}</b> ` +
+    `(colored by Cα shift), superimposed · chain <b>${d.apo_chain}</b>/<b>${d.holo_chain}</b>`;
 
   // apo = semi-transparent grey "ghost" reference
   const apoM = viewer.addModel(d.apo_text, "pdb");
@@ -557,12 +600,30 @@ async function loadIntel(pdbId, chains) {
 
 // ── 3D structure (3Dmol.js) — white background, biologist view ──────────────
 let viewer = null;
+// is this PDB the apo or holo of the selected target? else infer from bound drugs
+function structureRole(pdbId) {
+  const id = (pdbId || "").toUpperCase();
+  const t = TARGETS.find((x) => x.name === $("target").value);
+  if (t) {
+    if (t.apo && id === t.apo.toUpperCase()) return "apo (unbound)";
+    if ((t.holo && id === t.holo.toUpperCase()) ||
+        (t.holo_challenge && id === t.holo_challenge.toUpperCase())) return "holo (drug-bound)";
+  }
+  const drugs = (LAST.intel && LAST.intel.drugs) || [];
+  return drugs.length ? "holo (drug-bound)" : "apo (no drug bound)";
+}
+
 function render3D() {
   const data = LAST.view;
   if (!data) return;
   const el = $("viewer");
   if (!viewer) viewer = $3Dmol.createViewer(el, { backgroundColor: "#ffffff" });
   viewer.clear();
+  // caption: which structure + chain(s) are shown
+  const roleCls = structureRole(data.pdb_id).startsWith("holo") ? "holo" : "apo";
+  $("viewcaption").innerHTML =
+    `Showing <b class="${roleCls}">${structureRole(data.pdb_id)}</b> · ` +
+    `PDB <b>${data.pdb_id}</b> · chain(s) <b>${data.chains}</b>`;
 
   const colorby = $("colorby").value;
   const showLig = $("opt-ligands").checked;
