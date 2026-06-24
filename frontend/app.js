@@ -942,18 +942,19 @@ function renderConnHeatmaps(d) {
   connHeatmap($("ddmplot"), d.ddm, "DDM — distance change (red = apart, blue = closer)", ax, activeSet, drugSet, 0, -ddmLim, ddmLim);
   connHeatmap($("rewireplot"), d.rewire, "Contact rewiring (+1 formed / −1 broken)", ax, activeSet, drugSet, 0, -1, 1);
   connHeatmap($("ddccplot"), d.ddcc, "ΔDCC — dynamic coupling change (holo − apo)", ax, activeSet, drugSet, 0, -ddccLim, ddccLim);
-  renderActiveConnectivity(d, activeSet, drugSet);
-  renderProteinGraph(d, activeSet, drugSet);
+  setupGraphMorph(d, activeSet, drugSet);
 }
 
-// project 3D Cα coords to 2D via PCA (top-2 principal axes) using power iteration
-function pca2d(coords) {
+// PCA basis (top-2 principal axes) of a coord set, via power iteration
+function pcaBasis(coords) {
   const n = coords.length, mean = [0, 0, 0];
   for (const c of coords) { mean[0] += c[0]; mean[1] += c[1]; mean[2] += c[2]; }
   mean[0] /= n; mean[1] /= n; mean[2] /= n;
-  const X = coords.map((c) => [c[0] - mean[0], c[1] - mean[1], c[2] - mean[2]]);
   const C = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
-  for (const d of X) for (let a = 0; a < 3; a++) for (let b = 0; b < 3; b++) C[a][b] += d[a] * d[b];
+  for (const c of coords) {
+    const d = [c[0] - mean[0], c[1] - mean[1], c[2] - mean[2]];
+    for (let a = 0; a < 3; a++) for (let b = 0; b < 3; b++) C[a][b] += d[a] * d[b];
+  }
   for (let a = 0; a < 3; a++) for (let b = 0; b < 3; b++) C[a][b] /= n;
   const mul = (M, v) => [0, 1, 2].map((a) => M[a][0] * v[0] + M[a][1] * v[1] + M[a][2] * v[2]);
   const norm = (v) => { const m = Math.hypot(v[0], v[1], v[2]) || 1; return [v[0] / m, v[1] / m, v[2] / m]; };
@@ -965,86 +966,92 @@ function pca2d(coords) {
   const [v1, l1] = pow(C);
   const C2 = C.map((row, a) => row.map((val, b) => val - l1 * v1[a] * v1[b]));
   const [v2] = pow(C2);
-  return X.map((d) => [d[0] * v1[0] + d[1] * v1[1] + d[2] * v1[2],
-                       d[0] * v2[0] + d[1] * v2[1] + d[2] * v2[2]]);
+  return { mean, v1, v2 };
+}
+function projectTo2D(coords, basis) {
+  const { mean, v1, v2 } = basis;
+  return coords.map((c) => {
+    const d = [c[0] - mean[0], c[1] - mean[1], c[2] - mean[2]];
+    return [d[0] * v1[0] + d[1] * v1[1] + d[2] * v1[2], d[0] * v2[0] + d[1] * v2[1] + d[2] * v2[2]];
+  });
 }
 
-// 2D node-link contact graph: nodes = residues, edges = contacts, colored by how the
-// network rewires apo→holo (kept / formed / broken on drug binding)
-function renderProteinGraph(d, activeSet, drugSet) {
-  const pos = pca2d(d.apo_coords);
-  const n = pos.length, ax = d.resnums, cut = d.cutoff, apo = d.apo_coords, holo = d.holo_coords;
-  const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
-  const kept = { x: [], y: [] }, built = { x: [], y: [] }, broken = { x: [], y: [] };
-  for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
-    const da = dist(apo[i], apo[j]), dh = dist(holo[i], holo[j]);
-    const ea = da < cut && da > 1e-8, eh = dh < cut && dh > 1e-8;
-    if (!ea && !eh) continue;
-    const e = ea && eh ? kept : eh ? built : broken;
-    e.x.push(pos[i][0], pos[j][0], null);
-    e.y.push(pos[i][1], pos[j][1], null);
+// ── animated 2D protein contact graph (apo → holo) ─────────────────────────
+// nodes morph from apo to holo positions; edges form/break live (kept/formed/broken)
+let GRAPH = { data: null, t: 0, dir: 1, timer: null };
+const _gdist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+
+function setupGraphMorph(d, activeSet, drugSet) {
+  $("graphwrap").classList.remove("hidden");
+  const ax = d.resnums, cut = d.cutoff, apo3 = d.apo_coords, holo3 = d.holo_coords;
+  const basis = pcaBasis(apo3);                       // shared basis (holo already aligned)
+  const apo2 = projectTo2D(apo3, basis), holo2 = projectTo2D(holo3, basis);
+  const edges = [];                                   // pairs that are a contact in apo OR holo
+  for (let i = 0; i < ax.length; i++) for (let j = i + 1; j < ax.length; j++) {
+    const ea = _gdist(apo3[i], apo3[j]) < cut, eh = _gdist(holo3[i], holo3[j]) < cut;
+    if (ea || eh) edges.push([i, j, ea && eh ? 0 : eh ? 1 : 2]);  // 0 kept · 1 formed · 2 broken
   }
-  const edge = (e, color, w, op, name) => ({ x: e.x, y: e.y, mode: "lines", type: "scatter",
-    line: { color, width: w }, opacity: op, hoverinfo: "skip", name });
   const ncolor = ax.map((r) => (activeSet.has(r) && drugSet.has(r)) ? "#ffd166"
     : activeSet.has(r) ? "#00e6c3" : drugSet.has(r) ? "#b15be0" : "#7f8db0");
   const nsize = ax.map((r) => (activeSet.has(r) || drugSet.has(r)) ? 8 : 3.5);
-  const nodes = { x: pos.map((p) => p[0]), y: pos.map((p) => p[1]), mode: "markers", type: "scatter",
-    marker: { color: ncolor, size: nsize, line: { color: "#0b1020", width: 0.5 } },
-    text: ax.map((r) => `res ${r}${activeSet.has(r) ? " · active" : ""}${drugSet.has(r) ? " · drug" : ""}`),
-    hovertemplate: "%{text}<extra></extra>", name: "residues" };
+  const ntext = ax.map((r) => `res ${r}${activeSet.has(r) ? " · active" : ""}${drugSet.has(r) ? " · drug" : ""}`);
+  GRAPH.data = { apo3, holo3, apo2, holo2, edges, cut, ncolor, nsize, ntext };
+  GRAPH.t = 0; GRAPH.dir = 1;
+  const f = graphFrameData(0);
   Plotly.newPlot("protgraph", [
-    edge(kept, "#8a93b8", 0.5, 0.22, "kept"),
-    edge(broken, "#d62728", 1.3, 0.85, "broken"),
-    edge(built, "#2ca02c", 1.3, 0.85, "formed"),
-    nodes,
+    { x: f.kept.x, y: f.kept.y, mode: "lines", type: "scatter", line: { color: "#8a93b8", width: 0.5 }, opacity: 0.22, hoverinfo: "skip" },
+    { x: f.broken.x, y: f.broken.y, mode: "lines", type: "scatter", line: { color: "#d62728", width: 1.3 }, opacity: 0.9, hoverinfo: "skip" },
+    { x: f.formed.x, y: f.formed.y, mode: "lines", type: "scatter", line: { color: "#2ca02c", width: 1.3 }, opacity: 0.9, hoverinfo: "skip" },
+    { x: f.nx, y: f.ny, mode: "markers", type: "scatter", marker: { color: ncolor, size: nsize, line: { color: "#0b1020", width: 0.5 } }, text: ntext, hovertemplate: "%{text}<extra></extra>" },
   ], {
     margin: { l: 6, r: 6, t: 6, b: 6 }, paper_bgcolor: "#141b30", plot_bgcolor: "#141b30",
-    showlegend: false,
-    xaxis: { visible: false }, yaxis: { visible: false, scaleanchor: "x" },
+    showlegend: false, xaxis: { visible: false }, yaxis: { visible: false, scaleanchor: "x" },
   }, { displayModeBar: false, responsive: true });
+  startGraph();
 }
 
-// per-residue connectivity change TO the active site: contacts built (+, green) /
-// broken (−, red), and the dynamic-coupling (ΔDCC) change to the active site
-function renderActiveConnectivity(d, activeSet, drugSet) {
-  const ax = d.resnums;
-  const activePos = [];
-  ax.forEach((r, i) => { if (activeSet.has(r)) activePos.push(i); });
-  if (!activePos.length) { Plotly.purge("activeconnplot"); return; }
-
-  const netContacts = ax.map((_, j) => {
-    let s = 0; for (const i of activePos) s += d.rewire[i][j]; return s;
-  });
-  const ddccToActive = ax.map((_, j) => {
-    let s = 0; for (const i of activePos) s += d.ddcc[i][j];
-    return +(s / activePos.length).toFixed(4);
-  });
-  const traces = [
-    { x: ax, y: netContacts, type: "bar", name: "contacts to active site",
-      marker: { color: netContacts.map((v) => (v > 0 ? "#2ca02c" : v < 0 ? "#d62728" : "#445")) },
-      hovertemplate: "res %{x}: %{y} net contacts to active site<extra></extra>" },
-    { x: ax, y: ddccToActive, type: "scatter", mode: "lines", name: "ΔDCC to active site",
-      line: { color: "#5b8cff", width: 1 }, yaxis: "y2",
-      hovertemplate: "res %{x}: ΔDCC %{y:.3f}<extra></extra>" },
-  ];
-  // mark drug-binding residues
-  const dx = [], dy = [];
-  ax.forEach((r, i) => { if (drugSet.has(r)) { dx.push(r); dy.push(netContacts[i]); } });
-  if (dx.length) traces.push({ x: dx, y: dy, type: "scatter", mode: "markers", name: "drug site",
-    marker: { symbol: "diamond-open", size: 11, color: "#b15be0", line: { color: "#b15be0", width: 2 } },
-    hovertemplate: "drug-binding %{x}<extra></extra>" });
-
-  Plotly.newPlot("activeconnplot", traces, {
-    title: { text: "Connectivity to the active site — built (green) / broken (red) on drug binding", font: { size: 11, color: "#c7d0e6" }, x: 0.02 },
-    margin: { l: 42, r: 46, t: 26, b: 36 }, height: 280,
-    paper_bgcolor: "#141b30", plot_bgcolor: "#141b30", font: { color: "#8b97b8", size: 10 },
-    barmode: "relative", showlegend: true, legend: { font: { size: 9 }, orientation: "h", y: 1.12 },
-    xaxis: { title: "residue", showgrid: false },
-    yaxis: { title: "contacts ±", showgrid: false, zeroline: true, zerolinecolor: "#29355c" },
-    yaxis2: { title: "ΔDCC", overlaying: "y", side: "right", showgrid: false, zeroline: false },
-  }, { displayModeBar: false, responsive: true });
+function graphFrameData(t) {
+  const g = GRAPH.data;
+  const P3 = g.apo3.map((p, i) => [
+    (1 - t) * p[0] + t * g.holo3[i][0], (1 - t) * p[1] + t * g.holo3[i][1], (1 - t) * p[2] + t * g.holo3[i][2]]);
+  const nx = g.apo2.map((p, i) => (1 - t) * p[0] + t * g.holo2[i][0]);
+  const ny = g.apo2.map((p, i) => (1 - t) * p[1] + t * g.holo2[i][1]);
+  const kept = { x: [], y: [] }, formed = { x: [], y: [] }, broken = { x: [], y: [] };
+  for (const [i, j, cls] of g.edges) {
+    const dd = _gdist(P3[i], P3[j]);
+    if (dd < g.cut && dd > 1e-8) {              // edge present at this frame
+      const b = cls === 0 ? kept : cls === 1 ? formed : broken;
+      b.x.push(nx[i], nx[j], null); b.y.push(ny[i], ny[j], null);
+    }
+  }
+  return { kept, formed, broken, nx, ny };
 }
+
+function graphFrame(t) {
+  const f = graphFrameData(t);
+  Plotly.restyle("protgraph",
+    { x: [f.kept.x, f.broken.x, f.formed.x, f.nx], y: [f.kept.y, f.broken.y, f.formed.y, f.ny] },
+    [0, 1, 2, 3]);
+  $("grapht").textContent = `t = ${t.toFixed(2)} ${t < 0.02 ? "(apo)" : t > 0.98 ? "(holo)" : GRAPH.dir > 0 ? "(→ holo)" : "(→ apo)"}`;
+  $("graphslider").value = t;
+}
+
+function startGraph() {
+  if (GRAPH.timer) return;
+  GRAPH.timer = setInterval(() => {
+    GRAPH.t += 0.04 * GRAPH.dir;
+    if (GRAPH.t >= 1) { GRAPH.t = 1; GRAPH.dir = -1; }
+    else if (GRAPH.t <= 0) { GRAPH.t = 0; GRAPH.dir = 1; }
+    graphFrame(GRAPH.t);
+  }, 150);
+  $("graphplay").textContent = "⏸ Pause";
+}
+function stopGraph() {
+  if (GRAPH.timer) { clearInterval(GRAPH.timer); GRAPH.timer = null; }
+  $("graphplay").textContent = "▶ Play";
+}
+$("graphplay").addEventListener("click", () => { GRAPH.timer ? stopGraph() : startGraph(); });
+$("graphslider").addEventListener("input", (e) => { stopGraph(); GRAPH.t = parseFloat(e.target.value); graphFrame(GRAPH.t); });
 
 function matAbsPct(m, pct) {
   const v = [];
