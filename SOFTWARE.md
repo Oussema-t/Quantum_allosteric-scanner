@@ -97,6 +97,11 @@ coords included); **modeled (filled) residues are flagged** occupancy=0.00 / B-f
 and listed in `REMARK 470` so they're spottable when coloring by that column.
 Errors (422): `chain(s) 'X' not found in PDB. Available chains: ...` / `could not load PDB from RCSB — check the PDB ID`.
 
+### `GET /api/drug-site?holo=&chains=`
+Residues where the drug binds in the holo (drug-bearing chain), to overlay on the
+apo (same numbering) while viewing the GNM analysis. Returns `{holo, chain,
+drug_site:int[], drug_codes[]}`.
+
 ### `GET /api/structure?pdb_id=&chains=`
 Structure intelligence. Returns `{pdb_id, summary{title, method, resolution,
 deposited_residues}, chains:[{chain, n_residues, first, last}], ligands:[{code, name,
@@ -190,7 +195,8 @@ Errors (422): self-comparison; no drug-bearing chain.
 - **GNM Site-potential analysis panel:** mode selector (Loaded / Holo / apo→holo Δ),
   enrichment cards, five per-residue profile charts (full residue axis) + §5d Cα
   displacement & Δ coordination charts in Δ mode, active-site (red) + drug-site (purple)
-  markers, drug∩active-site verdict, exports (CSV / JSON / PNG).
+  markers, drug∩active-site verdict, exports (CSV / JSON / PNG). The apo/loaded view also
+  overlays where the drug binds (fetched from the known holo) on the charts + 3D.
 
 ---
 

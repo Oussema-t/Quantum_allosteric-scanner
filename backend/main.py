@@ -178,6 +178,23 @@ def active_site(pdb_id: str, chains: str = "A", holo: str = None):
         raise HTTPException(422, f"active-site detection failed for {pdb_id}: {e}")
 
 
+@app.get("/api/drug-site")
+def drug_site_lookup(holo: str, chains: str = None):
+    """Residues where the drug binds in the holo (drug-bearing chain) — to overlay on
+    the apo (same residue numbering) when viewing the GNM analysis."""
+    holo = holo.strip().upper()
+    try:
+        from .rcsb import drug_bearing_chain
+        hchain, _ = drug_bearing_chain(holo)
+        ch = hchain or ((chains or "").split(",")[0].strip() or None)
+        drug_ligs = [l for l in ligands_and_sites(holo, ch) if l["is_drug"]]
+        residues = sorted(set(r for l in drug_ligs for r in l["binding_site"]))
+        return {"holo": holo, "chain": ch, "drug_site": residues,
+                "drug_codes": [l["code"] for l in drug_ligs]}
+    except Exception as e:
+        raise HTTPException(422, f"drug-site lookup failed for {holo}: {e}")
+
+
 @app.get("/api/structure")
 def structure(pdb_id: str, chains: str = None):
     """Biologist-facing structure intel: chains, ligands/drugs + binding sites,

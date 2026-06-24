@@ -4,7 +4,7 @@ const API = ""; // same origin (served by FastAPI)
 
 const $ = (id) => document.getElementById(id);
 let TARGETS = [];
-const LAST = { view: null, intel: null, shift: null, compare: null, mode: "single" };
+const LAST = { view: null, intel: null, shift: null, compare: null, mode: "single", drugSite: [] };
 let CURRENT_ANALYSIS = null;  // analysis object currently shown (drives charts + 3D)
 
 // Provenance of the "Active-site residues" field: which PDB id its content belongs
@@ -186,6 +186,7 @@ async function loadAndVisualize() {
     showActiveSiteNote(data);
     // reset apo→holo shift state for the newly loaded structure
     LAST.shift = null;
+    LAST.drugSite = [];
     $("analysismode").disabled = true;
     $("analysismode").value = "loaded";
     setShiftNote("");
@@ -193,6 +194,7 @@ async function loadAndVisualize() {
     renderAnalysis(data.analysis, data.active_site);
     await loadIntel(data.pdb_id, data.chains);
     render3D();
+    loadDrugSite();   // async: overlay where the drug binds (from the holo) onto the apo
   } catch (e) {
     setStatus(`Error: ${e.message}`, true);
   } finally {
@@ -550,8 +552,8 @@ function applyAnalysisMode() {
   const site = (LAST.view && LAST.view.active_site) || [];
   const drug = (LAST.shift && LAST.shift.drug_site) || [];
   if (mode === "loaded" || !LAST.shift) {
-    renderAnalysis(LAST.view && LAST.view.analysis, site, "", []);
-    renderDrugIntersection([], []);
+    renderAnalysis(LAST.view && LAST.view.analysis, site, "", LAST.drugSite || []);
+    renderDrugIntersection(site, LAST.drugSite || []);
   } else if (mode === "holo") {
     renderAnalysis(LAST.shift.holo, site, "", drug);
     renderDrugIntersection(site, drug);
@@ -640,6 +642,25 @@ function setShiftNote(msg, isError = false) {
   const s = $("shiftnote");
   s.textContent = msg;
   s.classList.toggle("error", isError);
+}
+
+// fetch where the drug binds (from the known holo) and overlay it on the apo view
+async function loadDrugSite() {
+  const holo = currentHolo();
+  if (!holo || !LAST.view) return;
+  try {
+    const d = await fetch(`${API}/api/drug-site?holo=${encodeURIComponent(holo)}`)
+      .then((r) => (r.ok ? r.json() : null));
+    if (!d || !d.drug_site || !d.drug_site.length) return;
+    LAST.drugSite = d.drug_site;
+    // refresh the loaded/apo view so the drug-binding residues appear (holo/Δ modes
+    // already carry their own drug site from the shift computation)
+    if (!LAST.shift || $("analysismode").value === "loaded") {
+      renderAnalysis(LAST.view.analysis, LAST.view.active_site, "", LAST.drugSite);
+      renderDrugIntersection(LAST.view.active_site, LAST.drugSite);
+      render3D();
+    }
+  } catch { /* drug overlay is best-effort */ }
 }
 
 // ── structure intel ─────────────────────────────────────────────────────────

@@ -148,6 +148,7 @@ Quantum_allosteric-scanner/
 
 Keep newest first; one line per architectural change.
 
+- `/api/drug-site` (holo drug-binding residues) — overlays where the drug binds onto the apo GNM view.
 - Active-site source toggle: `active_site_mode` (benchmark|auto) on `/api/load` + toolbar select — validate UniProt detection against the curated benchmark values.
 - GNM coupling cutoff (Å) exposed as a variable: `/api/load` + `/api/analysis-shift` `cutoff` param (default 8, clamped 5–14) + toolbar input.
 - Ligand classifier moved into `rcsb.py` (chem_comp-driven); `pipeline` emits `pdb_text`.
