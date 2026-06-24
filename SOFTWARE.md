@@ -87,7 +87,7 @@ Benchmark systems for the dropdown. →
 
 ### `POST /api/load`
 Load a structure for visualization (+ optional apo completion).
-Body: `{pdb_id, chains="A", source_residues?:int[], target_name?, complete?:bool, holo_pdb?, holo_chain?}`
+Body: `{pdb_id, chains="A", source_residues?:int[], target_name?, complete?:bool, holo_pdb?, holo_chain?, cutoff?:float=8.0}`  (`cutoff` = GNM contact-network coupling cutoff in Å, clamped 5–14)
 Returns: `{pdb_id, chains, n_residues, active_site[], active_site_name, active_site_source
 ("benchmark"|"uniprot"|"ligand"|"pdb_site"|"manual"|"none"), active_site_detail,
 residues:[{resnum, chain, bfactor, bnorm, is_source, modeled}], completion(null|summary),
@@ -125,7 +125,7 @@ Returns `{apo_pdb, holo_pdb, apo_chain, holo_chain, rmsd, n_aligned, max_disp,
 displacements:[{resnum,disp}], apo_text(PDB), holo_text_aligned(PDB), drug_code}`.
 Errors (422): self-comparison (`apo==holo`); `no drug/ligand found in any chain of HOLO`.
 
-### `GET /api/analysis-shift?apo=&holo=&apo_chain=A&holo_chain=&target_name=`
+### `GET /api/analysis-shift?apo=&holo=&apo_chain=A&holo_chain=&target_name=&cutoff=8.0`
 GNM site potentials for apo and holo + the apo→holo shift (§5c) and structural change (§5d).
 Same drug-bearing-chain resolution as `/api/compare`. Returns `{labels{}, active_site[],
 apo:{resnums, terms, labels, enrichment}, holo:{...}, delta:{resnums, terms, labels,

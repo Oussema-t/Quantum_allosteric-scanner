@@ -81,6 +81,7 @@ class LoadRequest(BaseModel):
     complete: bool = False
     holo_pdb: Optional[str] = None
     holo_chain: Optional[str] = None
+    cutoff: float = 8.0          # GNM contact-network coupling cutoff (Å)
 
 
 @app.get("/api/health")
@@ -121,7 +122,7 @@ def holo_finder(apo_pdb: str, chains: str = None, target_name: str = None):
 
 @app.get("/api/analysis-shift")
 def analysis_shift(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = None,
-                   target_name: str = None):
+                   target_name: str = None, cutoff: float = 8.0):
     """GNM site potentials for apo and holo + the apo->holo shift on shared residues.
     The active site is taken from the benchmark metadata or auto-detected on the apo."""
     apo = apo.strip().upper()
@@ -146,7 +147,8 @@ def analysis_shift(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = 
         except Exception:
             site = []
     try:
-        result = site_potential_shift(apo, achain, holo, hchain, site_resnums=site)
+        result = site_potential_shift(apo, achain, holo, hchain, site_resnums=site,
+                                      cutoff=_clamp_cutoff(cutoff))
     except ValueError as e:
         raise HTTPException(422, str(e))
     except Exception as e:
@@ -208,6 +210,15 @@ def compare(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = None):
     return out
 
 
+def _clamp_cutoff(c):
+    """Keep the GNM coupling cutoff physically sensible (very small fragments the
+    network, very large over-connects it)."""
+    try:
+        return max(5.0, min(14.0, float(c)))
+    except (TypeError, ValueError):
+        return 8.0
+
+
 @app.post("/api/load")
 def load(req: LoadRequest):
     """Load a structure for visualization (optionally completing missing residues)."""
@@ -220,6 +231,7 @@ def load(req: LoadRequest):
             complete=req.complete,
             holo_pdb=req.holo_pdb,
             holo_chain=req.holo_chain,
+            cutoff=_clamp_cutoff(req.cutoff),
         )
     except ValueError as e:
         raise HTTPException(422, str(e))

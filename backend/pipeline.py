@@ -67,7 +67,8 @@ def structure_to_pdb_text(st, pdb_id, completion=None):
 
 
 def build_view(pdb_id, chains="A", source_residues=None, target_name=None,
-               complete=False, holo_pdb=None, holo_chain=None, coarse_k=1):
+               complete=False, holo_pdb=None, holo_chain=None, coarse_k=1,
+               cutoff=8.0):
     """Load a structure for visualization.
 
     Returns a JSON-serializable dict with the per-residue annotations, the resolved
@@ -142,7 +143,7 @@ def build_view(pdb_id, chains="A", source_residues=None, target_name=None,
         try:
             from .analysis import site_potentials
             analysis = site_potentials(st["coords"], st["bfac"], st["resnums"],
-                                       cutoff=8.0, site_idx=src_idx)
+                                       cutoff=cutoff, site_idx=src_idx)
         except Exception:
             analysis = None
 
