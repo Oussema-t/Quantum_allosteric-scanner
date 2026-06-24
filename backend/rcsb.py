@@ -190,6 +190,40 @@ def chain_summary(pdb_id, chains=None):
     return out
 
 
+def chain_resnums(pdb_id):
+    """{chain_id: set(author resnums)} for the first model — for chain matching."""
+    from Bio.PDB import PDBParser
+    fp = fetch(pdb_id)
+    if fp is None:
+        return {}
+    s = PDBParser(QUIET=True).get_structure(pdb_id, fp)
+    out = {}
+    for ch in s[0]:
+        nums = {res.id[1] for res in ch if res.id[0] == " "}
+        if nums:
+            out[ch.id] = nums
+    return out
+
+
+def drug_bearing_chain(pdb_id):
+    """The protein chain that actually contacts the bound DRUG (most drug contacts).
+    Returns (chain_id, drug_code), or (None, None) if no drug is present."""
+    from collections import Counter
+    drug_ligs = [l for l in ligands_and_sites(pdb_id) if l["is_drug"]]
+    if not drug_ligs:
+        return None, None
+    counts = Counter()
+    code_for = {}
+    for l in drug_ligs:
+        for d in l.get("binding_site_full", []):
+            counts[d["chain"]] += 1
+            code_for.setdefault(d["chain"], l["code"])
+    if not counts:  # drug present but no mapped protein contacts -> use its own chain
+        return drug_ligs[0].get("chain"), drug_ligs[0]["code"]
+    chain = counts.most_common(1)[0][0]
+    return chain, code_for.get(chain, drug_ligs[0]["code"])
+
+
 def structure_intel(pdb_id, chains=None):
     """One call: chains, ligands/drugs + binding sites, missing residues, summary."""
     pdb_id = pdb_id.upper()

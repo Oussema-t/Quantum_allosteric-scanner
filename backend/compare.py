@@ -12,6 +12,29 @@ import io
 import numpy as np
 
 from .data_layer import fetch
+from .rcsb import drug_bearing_chain, chain_resnums
+
+
+def resolve_compare_chains(apo_pdb, holo_pdb, apo_hint="A"):
+    """Pick the holo chain that bears the drug, and the apo chain that best matches it
+    by residue correspondence. Returns a dict (apo_chain, holo_chain, drug_code,
+    shared) or None if the holo has no drug-bound chain."""
+    hchain, drug_code = drug_bearing_chain(holo_pdb)
+    if hchain is None:
+        return None
+    holo_nums = chain_resnums(holo_pdb).get(hchain, set())
+    apo_chains = chain_resnums(apo_pdb)
+    hint = (apo_hint or "").split(",")[0].strip()
+    if hchain in apo_chains and len(apo_chains[hchain] & holo_nums) >= 5:
+        achain = hchain                                # the equivalent chain (A↔A)
+    elif hint and hint in apo_chains and len(apo_chains[hint] & holo_nums) >= 5:
+        achain = hint                                  # caller's chain matches well
+    elif apo_chains:
+        achain = max(apo_chains, key=lambda c: len(apo_chains[c] & holo_nums))
+    else:
+        achain = hint or hchain
+    return {"apo_chain": achain, "holo_chain": hchain, "drug_code": drug_code,
+            "shared": len(apo_chains.get(achain, set()) & holo_nums)}
 
 
 def _structure(pdb):

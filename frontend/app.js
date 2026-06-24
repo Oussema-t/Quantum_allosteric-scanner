@@ -276,16 +276,17 @@ async function compareApoHolo() {
   btn.disabled = true;
   setCompareStatus(`Superimposing holo ${holo} onto apo ${apo}…`);
   try {
-    const t = TARGETS.find((x) => x.name === $("target").value);
+    // pass only the apo-chain hint; the backend resolves the DRUG-BEARING holo chain
     const ac = ($("chains").value.trim() || "A").split(",")[0].trim();
-    const hc = (t && t.chain ? t.chain : ac).split(",")[0].trim();
-    const url = `${API}/api/compare?apo=${apo}&holo=${holo}&apo_chain=${ac}&holo_chain=${hc}`;
+    const url = `${API}/api/compare?apo=${apo}&holo=${holo}&apo_chain=${ac}`;
     const d = await fetch(url).then(async (r) => {
       if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
       return r.json();
     });
     render3DCompare(d);
-    setCompareStatus(`apo ${apo} (grey) vs holo ${holo} — ${d.n_aligned} residues aligned · RMSD ${d.rmsd} Å · max Cα shift ${d.max_disp} Å`);
+    setCompareStatus(`apo ${apo}/${d.apo_chain} ↔ holo ${holo}/${d.holo_chain}` +
+      `${d.drug_code ? ` (drug ${d.drug_code})` : ""} — ${d.n_aligned} aligned · ` +
+      `RMSD ${d.rmsd} Å · max Cα shift ${d.max_disp} Å`);
   } catch (e) {
     setCompareStatus(`Compare failed: ${e.message}`, true);
   } finally {
@@ -300,7 +301,8 @@ function render3DCompare(d) {
   // caption: both structures overlaid
   $("viewcaption").innerHTML =
     `Showing <b class="apo">apo ${d.apo_pdb}</b> (grey) + <b class="holo">holo ${d.holo_pdb}</b> ` +
-    `(colored by Cα shift), superimposed · chain <b>${d.apo_chain}</b>/<b>${d.holo_chain}</b>`;
+    `(colored by Cα shift), superimposed · apo chain <b>${d.apo_chain}</b> ↔ holo chain <b>${d.holo_chain}</b>` +
+    `${d.drug_code ? ` (drug <b>${d.drug_code}</b>)` : ""}`;
 
   // apo = semi-transparent grey "ghost" reference
   const apoM = viewer.addModel(d.apo_text, "pdb");
@@ -489,10 +491,9 @@ async function computeShift() {
   btn.disabled = true;
   setShiftNote(`Computing site potentials for holo ${holo} and the apo→holo shift…`);
   try {
-    const t = TARGETS.find((x) => x.name === $("target").value);
+    // pass only the apo-chain hint; the backend resolves the DRUG-BEARING holo chain
     const ac = ($("chains").value.trim() || "A").split(",")[0].trim();
-    const hc = (t && t.chain ? t.chain : ac).split(",")[0].trim();
-    const url = `${API}/api/analysis-shift?apo=${apo}&holo=${holo}&apo_chain=${ac}&holo_chain=${hc}` +
+    const url = `${API}/api/analysis-shift?apo=${apo}&holo=${holo}&apo_chain=${ac}` +
       ($("target").value ? `&target_name=${encodeURIComponent($("target").value)}` : "");
     const d = await fetch(url).then(async (r) => {
       if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
@@ -502,7 +503,10 @@ async function computeShift() {
     $("analysismode").disabled = false;
     $("analysismode").value = "delta";
     applyAnalysisMode();
-    setShiftNote(`Holo + Δ ready (${d.n_shared} shared residues). Use “Show” to switch apo / holo / Δ.`);
+    const cu = d.chains_used || {};
+    setShiftNote(`Holo + Δ ready — apo chain ${cu.apo_chain} ↔ holo chain ${cu.holo_chain}` +
+      `${cu.drug_code ? ` (drug ${cu.drug_code})` : ""}, ${d.n_shared} shared residues. ` +
+      `Use “Show” to switch apo / holo / Δ.`);
   } catch (e) {
     setShiftNote(`Shift failed: ${e.message}`, true);
   } finally {

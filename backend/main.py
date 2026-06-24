@@ -29,7 +29,7 @@ from .pipeline import build_view
 from .systems import resolve_systems
 from .rcsb import structure_intel, ligands_and_sites
 from .discovery import find_holo_candidates
-from .compare import align_and_compare
+from .compare import align_and_compare, resolve_compare_chains
 from .active_site import detect_active_site
 from .analysis import site_potential_shift
 
@@ -129,6 +129,12 @@ def analysis_shift(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = 
     if apo == holo:
         raise HTTPException(422, f"cannot compute an apo→holo shift for {apo} against "
                                  f"itself — provide a distinct apo and holo")
+    # use the holo chain that actually bears the drug + the matching apo chain
+    res = resolve_compare_chains(apo, holo, apo_chain)
+    if res is None:
+        raise HTTPException(422, f"no drug/ligand found in any chain of {holo} — cannot "
+                                 f"pick a drug-bound chain to compare against")
+    achain, hchain = res["apo_chain"], res["holo_chain"]
     site = []
     if target_name:
         cfg = resolve_systems().get(target_name)
@@ -136,18 +142,20 @@ def analysis_shift(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = 
             site = list(cfg.get("catalytic", []))
     if not site:
         try:
-            site = detect_active_site(apo, apo_chain).get("active_site", [])
+            site = detect_active_site(apo, achain).get("active_site", [])
         except Exception:
             site = []
     try:
-        result = site_potential_shift(apo, apo_chain, holo, holo_chain, site_resnums=site)
+        result = site_potential_shift(apo, achain, holo, hchain, site_resnums=site)
     except ValueError as e:
         raise HTTPException(422, str(e))
     except Exception as e:
         raise HTTPException(422, f"shift analysis failed: {e}")
-    # mark exactly where the drug binds in the holo
+    result["chains_used"] = {"apo_chain": achain, "holo_chain": hchain,
+                             "drug_code": res["drug_code"]}
+    # mark exactly where the drug binds in the holo (drug-bearing chain)
     try:
-        ligs = ligands_and_sites(holo, holo_chain or apo_chain)
+        ligs = ligands_and_sites(holo, hchain)
         drug_ligs = [l for l in ligs if l["is_drug"]]
         result["drug_site"] = sorted(set(r for l in drug_ligs for r in l["binding_site"]))
         result["drug_codes"] = [l["code"] for l in drug_ligs]
@@ -185,12 +193,19 @@ def compare(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = None):
     if apo == holo:
         raise HTTPException(422, f"cannot compare {apo} against itself — apo and holo "
                                  f"are the same structure (provide a different apo/holo)")
+    # use the holo chain that actually bears the drug + the matching apo chain
+    res = resolve_compare_chains(apo, holo, apo_chain)
+    if res is None:
+        raise HTTPException(422, f"no drug/ligand found in any chain of {holo} — cannot "
+                                 f"pick a drug-bound chain to compare against")
     try:
-        return align_and_compare(apo, apo_chain, holo, holo_chain)
+        out = align_and_compare(apo, res["apo_chain"], holo, res["holo_chain"])
     except ValueError as e:
         raise HTTPException(422, str(e))
     except Exception as e:
         raise HTTPException(422, f"comparison failed: {e}")
+    out["drug_code"] = res["drug_code"]
+    return out
 
 
 @app.post("/api/load")
