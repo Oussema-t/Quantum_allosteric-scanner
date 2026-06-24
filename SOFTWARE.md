@@ -87,7 +87,7 @@ Benchmark systems for the dropdown. →
 
 ### `POST /api/load`
 Load a structure for visualization (+ optional apo completion).
-Body: `{pdb_id, chains="A", source_residues?:int[], target_name?, complete?:bool, holo_pdb?, holo_chain?, cutoff?:float=8.0}`  (`cutoff` = GNM contact-network coupling cutoff in Å, clamped 5–14)
+Body: `{pdb_id, chains="A", source_residues?:int[], target_name?, complete?:bool, holo_pdb?, holo_chain?, cutoff?:float=8.0, active_site_mode?:"benchmark"|"auto"="benchmark"}`  (`cutoff` = GNM coupling cutoff Å, clamped 5–14; `active_site_mode="auto"` forces UniProt auto-detection even for benchmark targets)
 Returns: `{pdb_id, chains, n_residues, active_site[], active_site_name, active_site_source
 ("benchmark"|"uniprot"|"ligand"|"pdb_site"|"manual"|"none"), active_site_detail,
 residues:[{resnum, chain, bfactor, bnorm, is_source, modeled}], completion(null|summary),

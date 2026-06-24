@@ -68,7 +68,7 @@ def structure_to_pdb_text(st, pdb_id, completion=None):
 
 def build_view(pdb_id, chains="A", source_residues=None, target_name=None,
                complete=False, holo_pdb=None, holo_chain=None, coarse_k=1,
-               cutoff=8.0):
+               cutoff=8.0, active_site_mode="benchmark"):
     """Load a structure for visualization.
 
     Returns a JSON-serializable dict with the per-residue annotations, the resolved
@@ -102,12 +102,15 @@ def build_view(pdb_id, chains="A", source_residues=None, target_name=None,
             st = coarse_grain(st, coarse_k)
     modeled = st.get("modeled")
 
-    # resolve the active site: explicit residues > benchmark metadata > auto-detect
+    # resolve the active site: explicit residues > benchmark metadata > auto-detect.
+    # active_site_mode="auto" forces UniProt auto-detection even for benchmark targets
+    # (so the detector can be validated against the curated values).
     src_source, src_detail = "none", None
+    use_benchmark = (cfg is not None and active_site_mode != "auto")
     if source_residues:
         src_resnums = list(source_residues)
         src_source, src_detail = "manual", "entered by user"
-    elif cfg is not None:
+    elif use_benchmark:
         src_resnums = list(cfg["catalytic"])
         src_source = "benchmark"
         src_detail = f"validated literature active site ({cfg.get('site_name') or 'benchmark'})"

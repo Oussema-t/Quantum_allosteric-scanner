@@ -160,6 +160,7 @@ async function loadAndVisualize() {
     complete: $("complete").checked,
     holo_pdb: $("holo").value || null,
     cutoff: parseFloat($("cutoff").value) || 8.0,
+    active_site_mode: $("sitemode").value,
   };
   if (!body.pdb_id) {
     setStatus("Enter a PDB ID (or pick a benchmark target).", true);
@@ -242,6 +243,13 @@ function showActiveSiteNote(data) {
 
 // changing the coupling cutoff re-runs the GNM analysis on the loaded structure
 $("cutoff").addEventListener("change", () => { if (LAST.view) loadAndVisualize(); });
+
+// switching active-site source (benchmark ↔ UniProt auto-detect) re-resolves it
+$("sitemode").addEventListener("change", () => {
+  activeSiteUserEdited = false; activeSitePdb = null;  // let the chosen source repopulate
+  $("source").value = "";
+  if (LAST.view) loadAndVisualize();
+});
 
 // Changing the PDB id invalidates an active-site list from a previous structure:
 // clear the field (and its provenance) so the new protein is auto-detected on load.

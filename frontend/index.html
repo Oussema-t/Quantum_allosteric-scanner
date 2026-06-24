@@ -39,6 +39,13 @@
           <label title="GNM contact-network coupling cutoff (Å)">Cutoff (Å)</label>
           <input id="cutoff" type="number" value="8" min="5" max="14" step="0.5" />
         </div>
+        <div class="field">
+          <label title="Benchmark targets store a validated active site; switch to auto-detect to use UniProt instead">Active site</label>
+          <select id="sitemode">
+            <option value="benchmark">benchmark (validated)</option>
+            <option value="auto">auto-detect (UniProt)</option>
+          </select>
+        </div>
         <div class="field grow">
           <label>Active-site residues (optional)</label>
           <input id="source" type="text" placeholder="auto-detected on load" />

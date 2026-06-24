@@ -82,6 +82,7 @@ class LoadRequest(BaseModel):
     holo_pdb: Optional[str] = None
     holo_chain: Optional[str] = None
     cutoff: float = 8.0          # GNM contact-network coupling cutoff (Å)
+    active_site_mode: str = "benchmark"   # "benchmark" | "auto" (UniProt)
 
 
 @app.get("/api/health")
@@ -232,6 +233,7 @@ def load(req: LoadRequest):
             holo_pdb=req.holo_pdb,
             holo_chain=req.holo_chain,
             cutoff=_clamp_cutoff(req.cutoff),
+            active_site_mode=req.active_site_mode,
         )
     except ValueError as e:
         raise HTTPException(422, str(e))
