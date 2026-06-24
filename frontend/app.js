@@ -904,8 +904,9 @@ function renderConnSummary(d) {
     `<div style="margin-top:8px">Most-reorganized residues (DDM): <b style="color:var(--ink)">${s.most_reorganized.join(", ")}</b></div>`;
 }
 
-function connHeatmap(div, z, title, ax, activeSet, drugSet, zmid, zmin, zmax) {
-  // thin lines marking landmark residues: teal = active site, purple = drug-binding
+// thin grid lines on a matrix marking landmark residues:
+// teal = active site, purple = drug-binding
+function landmarkShapes(ax, activeSet, drugSet) {
   const lo = ax[0], hi = ax[ax.length - 1];
   const lineAt = (v, color) => [
     { type: "line", x0: v, x1: v, y0: lo, y1: hi, line: { color, width: 0.5 }, opacity: 0.6 },
@@ -916,6 +917,11 @@ function connHeatmap(div, z, title, ax, activeSet, drugSet, zmid, zmin, zmax) {
     if (drugSet.has(v)) shapes.push(...lineAt(v, "#b15be0"));   // drug-binding
     if (activeSet.has(v)) shapes.push(...lineAt(v, "#00e6c3")); // active site
   });
+  return shapes;
+}
+
+function connHeatmap(div, z, title, ax, activeSet, drugSet, zmid, zmin, zmax) {
+  const shapes = landmarkShapes(ax, activeSet, drugSet);
   Plotly.newPlot(div, [{
     z, x: ax, y: ax, type: "heatmap", colorscale: DIVERGE,
     zmid: zmid, zmin: zmin, zmax: zmax, showscale: true,
@@ -968,10 +974,12 @@ function setupMorph(d) {
   MORPH.data = d; MORPH.t = 0; MORPH.dir = 1;
   $("morphwrap").classList.remove("hidden");
   const W = couplingMatrix(d.apo_coords, d.cutoff, d.r0);
+  // landmark lines persist across frames (shapes live in the layout; z updates via restyle)
+  const shapes = landmarkShapes(d.resnums, new Set(d.active_site || []), new Set(d.drug_site || []));
   Plotly.newPlot("morphplot", [{ z: W, x: d.resnums, y: d.resnums, type: "heatmap", colorscale: "Magma", showscale: true }], {
-    title: { text: "Connectivity morph apo→holo", font: { size: 11, color: "#c7d0e6" }, x: 0.02 },
+    title: { text: "Connectivity morph apo→holo  ·  teal = active site, purple = drug", font: { size: 11, color: "#c7d0e6" }, x: 0.02 },
     margin: { l: 40, r: 10, t: 26, b: 36 }, paper_bgcolor: "#141b30", plot_bgcolor: "#141b30",
-    font: { color: "#8b97b8", size: 9 },
+    font: { color: "#8b97b8", size: 9 }, shapes,
     xaxis: { title: "residue", showgrid: false }, yaxis: { showgrid: false, autorange: "reversed" },
   }, { displayModeBar: false, responsive: true });
   startMorph();
