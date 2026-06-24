@@ -124,6 +124,84 @@ def site_potentials(coords, bfac, resnums, cutoff=8.0, site_idx=None):
     return out
 
 
+def _dcc(coords, cutoff):
+    """GNM dynamic cross-correlation (normalized covariance = Kirchhoff pseudo-inverse)."""
+    D = cdist(coords, coords)
+    A = ((D < cutoff) & (D > 1e-8)).astype(float)
+    K = np.diag(A.sum(1)) - A
+    w, U = np.linalg.eigh(K)
+    nz = w > 1e-9
+    winv = np.zeros_like(w)
+    winv[nz] = 1.0 / w[nz]
+    Cov = (U * winv) @ U.T
+    s = np.sqrt(np.clip(np.diag(Cov), 1e-12, None))
+    return Cov / np.outer(s, s)
+
+
+def connectivity_change(apo_pdb, apo_chain, holo_pdb, holo_chain=None, cutoff=8.0,
+                        site_resnums=None, max_n=400, r0=7.0):
+    """apo→holo network reorganization on shared residues (notebook §8d), topology only:
+      * DDM    distance-difference matrix  ΔD_ij = |r_ij|_holo − |r_ij|_apo
+      * rewire binary contacts gained (+1) / lost (−1) at the cutoff
+      * ΔDCC   change in GNM dynamic cross-correlation (allosteric coupling)
+    Returns the matrices (down-sampled to max_n for display), summary stats computed on
+    the FULL set, and the apo + Kabsch-aligned holo coords for the browser morph."""
+    apo = load_structure(apo_pdb, apo_chain)
+    holo = load_structure(holo_pdb, holo_chain or apo_chain)
+    if apo is None or holo is None:
+        raise ValueError(f"could not load apo {apo_pdb} or holo {holo_pdb}")
+    common = np.intersect1d(apo["resnums"], holo["resnums"])
+    if len(common) < 10:
+        raise ValueError(f"only {len(common)} common residues between {apo_pdb}/{holo_pdb} "
+                         f"— need ≥10 to compute the connectivity change")
+    ia = np.array([np.where(apo["resnums"] == r)[0][0] for r in common])
+    ib = np.array([np.where(holo["resnums"] == r)[0][0] for r in common])
+    Ca, Ch = apo["coords"][ia], holo["coords"][ib]
+    n = len(common)
+    Chk = _kabsch_rotate(Ch, Ca)                       # aligned holo, for the morph
+
+    Da, Dh = cdist(Ca, Ca), cdist(Ch, Ch)
+    DDM = Dh - Da
+    Aa = (Da < cutoff) & (Da > 1e-8)
+    Ah = (Dh < cutoff) & (Dh > 1e-8)
+    rewire = Ah.astype(int) - Aa.astype(int)
+    dDCC = _dcc(Ch, cutoff) - _dcc(Ca, cutoff)
+
+    mob = np.sqrt((DDM ** 2).mean(1))                  # per-residue reorganization
+    hot = np.argsort(mob)[::-1][:5]
+    summary = {
+        "n_shared": int(n),
+        "ddm_max": round(float(np.abs(DDM).max()), 2),
+        "contacts_formed": int((rewire > 0).sum() // 2),
+        "contacts_broken": int((rewire < 0).sum() // 2),
+        "mean_abs_ddcc": round(float(np.abs(dDCC).mean()), 3),
+        "most_reorganized": [int(common[i]) for i in hot],
+    }
+
+    # down-sample matrices/coords for the payload if large (summary stays on full set)
+    if n > max_n:
+        idx = np.unique(np.linspace(0, n - 1, max_n).astype(int))
+    else:
+        idx = np.arange(n)
+    sub = np.ix_(idx, idx)
+    site = set(int(r) for r in (site_resnums or []))
+    common_sub = [int(common[i]) for i in idx]
+    site_positions = [k for k, r in enumerate(common_sub) if r in site]
+
+    return {
+        "apo": apo_pdb, "holo": holo_pdb, "cutoff": cutoff, "r0": r0,
+        "n_shared": int(n), "downsampled": bool(n > max_n),
+        "resnums": common_sub,
+        "site_positions": site_positions,
+        "summary": summary,
+        "ddm": np.round(DDM[sub], 2).tolist(),
+        "rewire": rewire[sub].astype(int).tolist(),
+        "ddcc": np.round(dDCC[sub], 3).tolist(),
+        "apo_coords": np.round(Ca[idx], 3).tolist(),
+        "holo_coords": np.round(Chk[idx], 3).tolist(),
+    }
+
+
 def site_potential_shift(apo_pdb, apo_chain, holo_pdb, holo_chain=None,
                          site_resnums=None, cutoff=8.0):
     """Site potentials for apo and holo, plus the apo->holo shift on shared residues

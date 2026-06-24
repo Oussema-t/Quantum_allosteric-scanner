@@ -857,4 +857,147 @@ function renderStructInfo(intel) {
   el.innerHTML = html;
 }
 
+// ── apo→holo connectivity change (DDM · rewiring · ΔDCC + morph) ────────────
+$("connbtn").addEventListener("click", computeConnectivityChange);
+
+const DIVERGE = [[0, "#2166ac"], [0.5, "#f7f7f7"], [1, "#b2182b"]];
+
+async function computeConnectivityChange() {
+  const apo = $("pdb").value.trim();
+  const holo = currentHolo();
+  if (!apo) { setConnStatus("Enter the apo PDB ID first.", true); return; }
+  if (!holo) { setConnStatus("No holo found — pick one with “Find holo” first.", true); return; }
+  const selfErr = selfCompareError(apo, holo);
+  if (selfErr) { setConnStatus(selfErr, true); return; }
+  const btn = $("connbtn"); btn.disabled = true;
+  setConnStatus(`Computing apo→holo connectivity change (${apo} → ${holo})…`);
+  try {
+    const ac = ($("chains").value.trim() || "A").split(",")[0].trim();
+    const cutoff = parseFloat($("cutoff").value) || 8.0;
+    const url = `${API}/api/connectivity-change?apo=${apo}&holo=${holo}&apo_chain=${ac}&cutoff=${cutoff}` +
+      ($("target").value ? `&target_name=${encodeURIComponent($("target").value)}` : "");
+    const d = await fetch(url).then(async (r) => {
+      if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
+      return r.json();
+    });
+    renderConnSummary(d);
+    renderConnHeatmaps(d);
+    setupMorph(d);
+    setConnStatus(`Done — ${d.n_shared} shared residues${d.downsampled ? " (matrices down-sampled to 400 for display)" : ""}.`);
+  } catch (e) {
+    setConnStatus(`Failed: ${e.message}`, true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function setConnStatus(msg, isError = false) {
+  const s = $("connstatus"); s.textContent = msg; s.classList.toggle("error", isError);
+}
+
+function renderConnSummary(d) {
+  const s = d.summary;
+  const card = (l, v) => `<span class="scard"><span class="v">${v}</span> <span class="l">${l}</span></span>`;
+  $("connsummary").innerHTML =
+    card("max |ΔdistÅ|", s.ddm_max) + card("contacts formed", "+" + s.contacts_formed) +
+    card("contacts broken", "−" + s.contacts_broken) + card("mean |ΔDCC|", s.mean_abs_ddcc) +
+    `<div style="margin-top:8px">Most-reorganized residues (DDM): <b style="color:var(--ink)">${s.most_reorganized.join(", ")}</b></div>`;
+}
+
+function connHeatmap(div, z, title, ax, sitePos, zmid, zmin, zmax) {
+  // thin green lines marking drug-binding residues
+  const shapes = (sitePos || []).flatMap((p) => {
+    const v = ax[p];
+    return [
+      { type: "line", x0: v, x1: v, y0: ax[0], y1: ax[ax.length - 1], line: { color: "#2ca02c", width: 0.4 }, opacity: 0.5 },
+      { type: "line", y0: v, y1: v, x0: ax[0], x1: ax[ax.length - 1], line: { color: "#2ca02c", width: 0.4 }, opacity: 0.5 },
+    ];
+  });
+  Plotly.newPlot(div, [{
+    z, x: ax, y: ax, type: "heatmap", colorscale: DIVERGE,
+    zmid: zmid, zmin: zmin, zmax: zmax, showscale: true,
+  }], {
+    title: { text: title, font: { size: 11, color: "#c7d0e6" }, x: 0.02 },
+    margin: { l: 40, r: 10, t: 26, b: 36 }, paper_bgcolor: "#141b30", plot_bgcolor: "#141b30",
+    font: { color: "#8b97b8", size: 9 }, shapes,
+    xaxis: { title: "residue", showgrid: false }, yaxis: { title: "residue", showgrid: false, autorange: "reversed" },
+  }, { displayModeBar: false, responsive: true });
+}
+
+function renderConnHeatmaps(d) {
+  const ax = d.resnums;
+  const ddmLim = matAbsPct(d.ddm, 99);
+  const ddccLim = matAbsPct(d.ddcc, 99);
+  connHeatmap($("ddmplot"), d.ddm, "DDM — distance change (red = apart, blue = closer)", ax, d.site_positions, 0, -ddmLim, ddmLim);
+  connHeatmap($("rewireplot"), d.rewire, "Contact rewiring (+1 formed / −1 broken)", ax, d.site_positions, 0, -1, 1);
+  connHeatmap($("ddccplot"), d.ddcc, "ΔDCC — dynamic coupling change (holo − apo)", ax, d.site_positions, 0, -ddccLim, ddccLim);
+}
+
+function matAbsPct(m, pct) {
+  const v = [];
+  for (const row of m) for (const x of row) v.push(Math.abs(x));
+  v.sort((a, b) => a - b);
+  return (v[Math.floor((pct / 100) * (v.length - 1))] || 1) + 1e-9;
+}
+
+// ── morph animation: interpolate apo→holo coords, play the coupling matrix ───
+let MORPH = { data: null, t: 0, dir: 1, timer: null };
+
+function couplingMatrix(coords, cutoff, r0) {
+  const n = coords.length, W = [];
+  for (let i = 0; i < n; i++) {
+    const row = new Array(n).fill(0), ci = coords[i];
+    for (let j = 0; j < n; j++) {
+      if (i === j) continue;
+      const cj = coords[j];
+      const dx = ci[0] - cj[0], dy = ci[1] - cj[1], dz = ci[2] - cj[2];
+      const D = Math.sqrt(dx * dx + dy * dy + dz * dz);
+      if (D < cutoff && D > 1e-8) row[j] = Math.exp(-((D / r0) * (D / r0)));
+    }
+    W.push(row);
+  }
+  return W;
+}
+
+function setupMorph(d) {
+  MORPH.data = d; MORPH.t = 0; MORPH.dir = 1;
+  $("morphwrap").classList.remove("hidden");
+  const W = couplingMatrix(d.apo_coords, d.cutoff, d.r0);
+  Plotly.newPlot("morphplot", [{ z: W, x: d.resnums, y: d.resnums, type: "heatmap", colorscale: "Magma", showscale: true }], {
+    title: { text: "Connectivity morph apo→holo", font: { size: 11, color: "#c7d0e6" }, x: 0.02 },
+    margin: { l: 40, r: 10, t: 26, b: 36 }, paper_bgcolor: "#141b30", plot_bgcolor: "#141b30",
+    font: { color: "#8b97b8", size: 9 },
+    xaxis: { title: "residue", showgrid: false }, yaxis: { showgrid: false, autorange: "reversed" },
+  }, { displayModeBar: false, responsive: true });
+  startMorph();
+}
+
+function morphFrame(t) {
+  const d = MORPH.data; if (!d) return;
+  const P = d.apo_coords.map((p, i) => {
+    const h = d.holo_coords[i];
+    return [(1 - t) * p[0] + t * h[0], (1 - t) * p[1] + t * h[1], (1 - t) * p[2] + t * h[2]];
+  });
+  Plotly.restyle("morphplot", { z: [couplingMatrix(P, d.cutoff, d.r0)] });
+  $("morpht").textContent = `t = ${t.toFixed(2)} ${t < 0.02 ? "(apo)" : t > 0.98 ? "(holo)" : MORPH.dir > 0 ? "(→ holo)" : "(→ apo)"}`;
+  $("morphslider").value = t;
+}
+
+function startMorph() {
+  if (MORPH.timer) return;
+  MORPH.timer = setInterval(() => {
+    MORPH.t += 0.04 * MORPH.dir;
+    if (MORPH.t >= 1) { MORPH.t = 1; MORPH.dir = -1; }
+    else if (MORPH.t <= 0) { MORPH.t = 0; MORPH.dir = 1; }
+    morphFrame(MORPH.t);
+  }, 150);
+  $("morphplay").textContent = "⏸ Pause";
+}
+function stopMorph() {
+  if (MORPH.timer) { clearInterval(MORPH.timer); MORPH.timer = null; }
+  $("morphplay").textContent = "▶ Play";
+}
+$("morphplay").addEventListener("click", () => { MORPH.timer ? stopMorph() : startMorph(); });
+$("morphslider").addEventListener("input", (e) => { stopMorph(); MORPH.t = parseFloat(e.target.value); morphFrame(MORPH.t); });
+
 init();

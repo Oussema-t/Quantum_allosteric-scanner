@@ -180,6 +180,19 @@ button.secondary:disabled { opacity: .35; cursor: not-allowed; }
 .marker-legend .dot.site { background: #ff4d6d; }
 .marker-legend .dot.drug { background: #b15be0; }
 
+/* ── connectivity-change panel ──────────────────────────── */
+.conn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; margin-top: 12px; }
+.connchart { width: 100%; height: 320px; }
+.conn-morph { margin-top: 14px; }
+#morphplot { width: 100%; max-width: 460px; height: 380px; margin: 0 auto; }
+.morph-controls { display: flex; align-items: center; gap: 12px; max-width: 460px; margin: 6px auto 0; }
+.morph-controls input[type=range] { flex: 1; }
+#connsummary { font-size: 12px; color: var(--muted); margin-top: 10px; }
+#connsummary .scard { display: inline-block; background: var(--panel-2); border-radius: 8px; padding: 8px 12px; margin: 4px 6px 0 0; }
+#connsummary .scard .v { font-size: 16px; font-weight: 700; color: var(--accent); }
+#connsummary .scard .l { font-size: 10px; text-transform: uppercase; letter-spacing: .05em; }
+.hidden { display: none; }
+
 #druginter { margin-bottom: 14px; }
 #druginter .dcard { border-radius: 10px; padding: 12px 14px; border: 1px solid var(--border); }
 #druginter .dcard.allo { background: rgba(0,230,195,.10); border-color: rgba(0,230,195,.4); }

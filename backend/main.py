@@ -31,7 +31,7 @@ from .rcsb import structure_intel, ligands_and_sites
 from .discovery import find_holo_candidates
 from .compare import align_and_compare, resolve_compare_chains
 from .active_site import detect_active_site
-from .analysis import site_potential_shift
+from .analysis import site_potential_shift, connectivity_change
 
 app = FastAPI(title="Cleveland Clinic Quantum Allosteric Scanner", version="0.2.0")
 app.add_middleware(
@@ -166,6 +166,36 @@ def analysis_shift(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = 
         result["drug_site"] = []
         result["drug_codes"] = []
     return result
+
+
+@app.get("/api/connectivity-change")
+def connectivity_change_ep(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = None,
+                           target_name: str = None, cutoff: float = 8.0):
+    """apo→holo network reorganization (DDM, contact rewiring, ΔDCC) + coords for the
+    morph animation. Holo chain auto-resolved to the drug-bearing chain."""
+    apo, holo = apo.strip().upper(), holo.strip().upper()
+    if apo == holo:
+        raise HTTPException(422, f"cannot compute connectivity change for {apo} vs itself")
+    res = resolve_compare_chains(apo, holo, apo_chain)
+    if res is None:
+        raise HTTPException(422, f"no drug/ligand found in any chain of {holo}")
+    achain, hchain = res["apo_chain"], res["holo_chain"]
+    try:
+        drug_ligs = [l for l in ligands_and_sites(holo, hchain) if l["is_drug"]]
+        drug_site = sorted(set(r for l in drug_ligs for r in l["binding_site"]))
+    except Exception:
+        drug_site = []
+    try:
+        out = connectivity_change(apo, achain, holo, hchain,
+                                  cutoff=_clamp_cutoff(cutoff), site_resnums=drug_site)
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+    except Exception as e:
+        raise HTTPException(422, f"connectivity-change failed: {e}")
+    out["chains_used"] = {"apo_chain": achain, "holo_chain": hchain,
+                          "drug_code": res["drug_code"]}
+    out["drug_site"] = drug_site
+    return out
 
 
 @app.get("/api/active-site")
