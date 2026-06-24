@@ -402,7 +402,7 @@ function renderAnalysis(analysis, activeSite, prefix = "", drugSite = []) {
       const dx = [], dy = [];
       analysis.resnums.forEach((r, i) => { if (drugSet.has(r)) { dx.push(r); dy.push(vals[i]); } });
       traces.push({ x: dx, y: dy, type: "scatter", mode: "markers", name: "drug site",
-        marker: { color: "#b15be0", size: 7, symbol: "diamond", line: { color: "#fff", width: 0.5 } },
+        marker: { symbol: "diamond-open", size: 13, color: "#b15be0", line: { color: "#b15be0", width: 2 } },
         hovertemplate: "drug-binding %{x}<extra></extra>" });
     }
     const isLast = ci === keys.length - 1;
@@ -560,12 +560,13 @@ function makeProfileChart(div, o) {
     if (!set || !set.size) return;
     const mx = [], my = [];
     o.x.forEach((r, i) => { if (set.has(r)) { mx.push(r); my.push(o.y[i]); } });
+    const open = symbol.indexOf("open") >= 0;  // hollow markers: outline in `color`
     traces.push({ x: mx, y: my, type: "scatter", mode: "markers", name,
-      marker: { color, size, symbol, line: { color: "#fff", width: 0.5 } },
+      marker: { color, size, symbol, line: { color: open ? color : "#fff", width: open ? 2 : 0.5 } },
       hovertemplate: `${name} %{x}<extra></extra>` });
   };
   mark(o.siteSet, "#ff4d6d", "circle", 5, "active site");
-  mark(o.drugSet, "#b15be0", "diamond", 7, "drug site");
+  mark(o.drugSet, "#b15be0", "diamond-open", 13, "drug site");  // hollow so an active-site dot shows through
   Plotly.newPlot(div, traces, {
     margin: { l: 44, r: 10, t: 20, b: o.isLast ? 40 : 18 }, height: 160,
     title: { text: o.title, font: { size: 11, color: "#c7d0e6" }, x: 0.02 },
