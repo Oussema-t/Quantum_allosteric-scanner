@@ -42,6 +42,9 @@ quantum allosteric prediction on top. This build does the **data + visualization
 
 ## Architecture
 
+See **[ARCHITECTURE.md](ARCHITECTURE.md)** for diagrams (component map, module
+dependencies, request flows) and **[SOFTWARE.md](SOFTWARE.md)** for the full reference.
+
 ```
 backend/   FastAPI service
   systems.py      validated benchmark metadata (apo/holo, pockets, active sites)
