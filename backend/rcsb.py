@@ -25,18 +25,39 @@ from .data_layer import fetch
 
 DATA_API = "https://data.rcsb.org/rest/v1/core"
 
-# HET codes that are crystallization additives / ions / solvent, not drugs
+# Curated crystallographic-additive blocklist (NOT drugs): solvent, cryoprotectants,
+# buffers, ions, detergents, lipids/alkanes. The chem_comp-driven classifier below also
+# catches future additives heuristically, but this is the fast, authoritative first pass.
 _NON_DRUG = {
-    "HOH", "DOD", "WAT", "GOL", "EDO", "PEG", "PG4", "PGE", "1PE", "MPD", "ACT",
-    "SO4", "PO4", "NO3", "FMT", "DMS", "TRS", "EPE", "MES", "BME", "IMD", "CAC",
-    "NA", "CL", "MG", "ZN", "CA", "K", "MN", "FE", "FE2", "CU", "NI", "CO", "CD",
-    "BR", "IOD", "F", "SR", "CS", "BA", "HG", "PT", "AU", "LI", "RB",
+    # solvent / cryoprotectants
+    "HOH", "DOD", "WAT", "GOL", "EDO", "PEG", "PG4", "PGE", "1PE", "2PE", "P6G",
+    "PG0", "PG4", "MPD", "MRD", "BU3", "DMS", "DMSO", "TFA",
+    # buffers / small additives
+    "ACT", "ACY", "FMT", "TRS", "EPE", "MES", "BME", "IMD", "CAC", "BCT", "CIT",
+    "FLC", "TLA", "MLA", "MLI", "BTB", "MPO", "POL", "PO4", "SO4", "NO3", "SCN",
+    # ions
+    "NA", "CL", "MG", "ZN", "CA", "K", "MN", "FE", "FE2", "FE3", "CU", "CU1",
+    "NI", "CO", "CD", "BR", "IOD", "F", "SR", "CS", "BA", "HG", "PT", "AU",
+    "LI", "RB", "ZN2", "MN3", "YB", "GD", "EU", "SM", "TB", "W",
+    # detergents
+    "LDA", "LMT", "BOG", "BNG", "DDM", "C8E", "SDS", "F09", "TRT", "OGA", "HTG",
+    "BGL", "2CV", "JEF", "P4C", "PEE", "D10", "DD9",
+    # lipids / fatty acids / alkanes (long aliphatic chains)
+    "PLM", "MYR", "OLA", "STE", "DAO", "HEX", "OCT", "DKA", "UND", "16C", "R16",
+    "PEF", "LHG", "PGV", "PEV", "Y01", "CLR", "OLC",
 }
 # common biological cofactors worth showing but not the "drug" of interest
-_COFACTORS = {"GTP", "GDP", "GNP", "GSP", "ATP", "ADP", "AMP", "ANP", "NAD",
-              "NAP", "FAD", "FMN", "HEM", "BEF", "ALF", "MG", "MN"}
+_COFACTORS = {"GTP", "GDP", "GNP", "GSP", "GCP", "ATP", "ADP", "AMP", "ANP", "ACP",
+              "NAD", "NAI", "NAP", "NDP", "FAD", "FMN", "SAM", "SAH", "COA", "TPP",
+              "PLP", "BTN", "B12", "HEM", "HEC", "HEA", "BEF", "ALF", "MG", "MN"}
+
+# drug signals from the RCSB chem_comp record
+_DRUG_DB_REFS = {"DrugBank", "Pharos", "BindingDB"}
+_DRUG_HEAVY_MIN = 30          # heavy atoms that qualify as drug-sized without a drug-DB ref
 
 _name_cache = {}
+_record_cache = {}
+_FORMULA_RE = re.compile(r"([A-Z][a-z]?)(\d*)")
 
 
 def _get_json(url, timeout=8):
@@ -48,17 +69,84 @@ def _get_json(url, timeout=8):
         return None
 
 
+def _parse_formula(formula):
+    """'C34 H67 N O3' -> {'C':34,'H':67,'N':1,'O':3}."""
+    out = {}
+    for el, num in _FORMULA_RE.findall(formula or ""):
+        if not el:
+            continue
+        out[el] = out.get(el, 0) + (int(num) if num else 1)
+    return out
+
+
+def _chem_comp_record(code):
+    """Cached RCSB chem_comp record fields: name, type, formula, heavy-atom count,
+    cross-reference resource names, parsed element counts. None if unavailable."""
+    code = (code or "").strip().upper()
+    if code in _record_cache:
+        return _record_cache[code]
+    data = _get_json(f"{DATA_API}/chemcomp/{code}")
+    rec = None
+    if data:
+        cc = data.get("chem_comp", {}) or {}
+        info = data.get("rcsb_chem_comp_info", {}) or {}
+        related = data.get("rcsb_chem_comp_related", []) or []
+        formula = cc.get("formula") or ""
+        rec = {
+            "name": cc.get("name"),
+            "type": cc.get("type"),
+            "formula": formula,
+            "heavy": info.get("atom_count_heavy"),
+            "refs": set(r.get("resource_name") for r in related if r.get("resource_name")),
+            "elements": _parse_formula(formula),
+        }
+    _record_cache[code] = rec
+    return rec
+
+
 def chem_comp_name(code):
     """Full chemical name for a ligand 3-letter code (cached, best-effort)."""
-    code = code.strip().upper()
-    if code in _name_cache:
-        return _name_cache[code]
-    data = _get_json(f"{DATA_API}/chemcomp/{code}")
-    name = None
-    if data:
-        name = (data.get("chem_comp", {}) or {}).get("name")
-    _name_cache[code] = name
-    return name
+    rec = _chem_comp_record(code)
+    return rec["name"] if rec else None
+
+
+def _is_aliphatic_additive(elems):
+    """True for long saturated carbon chains (lipids/fatty acids/alkanes/detergents):
+    many carbons, few heteroatoms, no halogens, high H:C ratio. Generalizes additives
+    like 16C/R16/PLM beyond the curated list."""
+    c = elems.get("C", 0)
+    h = elems.get("H", 0)
+    hetero = sum(n for e, n in elems.items() if e not in ("C", "H"))
+    halogens = sum(elems.get(x, 0) for x in ("F", "Cl", "Br", "I"))
+    return c >= 10 and hetero <= 4 and halogens == 0 and (h / c) >= 1.8
+
+
+def classify_ligand(code, n_atoms=None):
+    """Return (category, is_drug) for a HET code, driven by the chem_comp record + the
+    curated additive blocklist. category ∈ {drug, ligand, cofactor, solvent/ion}.
+    - drug: substantial organic, not an additive/cofactor, with a drug-DB cross-reference
+      OR a drug-sized heavy-atom count.
+    - ligand: real organic ligand with no drug signal (visible, but is_drug=False).
+    - cofactor / solvent/ion: biological cofactors / additives, ions, buffers, lipids."""
+    code = (code or "").strip().upper()
+    if code in _NON_DRUG:
+        return "solvent/ion", False
+    if code in _COFACTORS:
+        return "cofactor", False
+    rec = _chem_comp_record(code)
+    if rec is None:                                       # data unavailable -> degrade safely
+        if n_atoms is not None and n_atoms <= 2:
+            return "solvent/ion", False
+        return ("drug", True) if (n_atoms or 0) >= _DRUG_HEAVY_MIN else ("ligand", False)
+    heavy = rec["heavy"] or (n_atoms or 0)
+    elems = rec["elements"]
+    if heavy <= 2 or "C" not in elems:                    # monoatomic ions / inorganic
+        return "solvent/ion", False
+    if _is_aliphatic_additive(elems):                     # lipids / detergents / alkanes
+        return "solvent/ion", False
+    if _DRUG_DB_REFS & rec["refs"] or heavy >= _DRUG_HEAVY_MIN:
+        return "drug", True
+    return "ligand", False                                # organic ligand, no drug signal
 
 
 def entry_summary(pdb_id):
@@ -151,22 +239,21 @@ def ligands_and_sites(pdb_id, chains=None, contact_cutoff=4.5):
                     seen.add(key)
                     site.append({"chain": c, "resnum": int(rn)})
             site.sort(key=lambda x: (x["chain"], x["resnum"]))
-        is_ion = len(res) <= 1 or code in _NON_DRUG
+        category, is_drug = classify_ligand(code, n_atoms=len(res))
         out.append({
             "code": code,
             "name": chem_comp_name(code),
             "chain": ch_id,
             "resnum": res.id[1],
             "n_atoms": len(res),
-            "category": ("solvent/ion" if code in _NON_DRUG else
-                         "cofactor" if code in _COFACTORS else "drug"),
-            "is_drug": (code not in _NON_DRUG and code not in _COFACTORS and not is_ion),
+            "category": category,
+            "is_drug": is_drug,
             "binding_site": [d["resnum"] for d in site],
             "binding_site_full": site,
         })
-    # drugs first, then cofactors, then solvent/ions
-    order = {"drug": 0, "cofactor": 1, "solvent/ion": 2}
-    out.sort(key=lambda l: (order.get(l["category"], 3), -l["n_atoms"]))
+    # drugs first, then cofactors, then other ligands, then solvent/ions
+    order = {"drug": 0, "cofactor": 1, "ligand": 2, "solvent/ion": 3}
+    out.sort(key=lambda l: (order.get(l["category"], 4), -l["n_atoms"]))
     return out
 
 
