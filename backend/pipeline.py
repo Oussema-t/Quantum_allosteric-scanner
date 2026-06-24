@@ -37,7 +37,15 @@ def build_view(pdb_id, chains="A", source_residues=None, target_name=None,
     else:
         st = load_structure(pdb_id, chains)
         if st is None:
-            raise ValueError(f"could not load structure {pdb_id} (chains {chains})")
+            # distinguish "no such chain" (tell the user which chains exist) from
+            # "could not fetch the entry at all"
+            from .rcsb import chain_summary
+            avail = [c["chain"] for c in chain_summary(pdb_id)]
+            if avail:
+                raise ValueError(
+                    f"chain(s) '{chains}' not found in {pdb_id}. "
+                    f"Available chains: {', '.join(avail)}")
+            raise ValueError(f"could not load {pdb_id} from RCSB — check the PDB ID")
         if coarse_k > 1:
             st = coarse_grain(st, coarse_k)
     modeled = st.get("modeled")

@@ -69,6 +69,22 @@ function currentHolo() {
   return t && t.holo ? t.holo : null;
 }
 
+// the currently-loaded structure is holo if it has ≥1 bound drug/ligand
+function loadedIsHolo() {
+  return (((LAST.intel && LAST.intel.drugs) || []).length) >= 1;
+}
+
+// guard apo→holo comparison: a holo can't be aligned against itself (RMSD 0).
+// Returns an error message to show, or null if it's OK to proceed.
+function selfCompareError(apo, holo) {
+  if (apo && holo && apo.toUpperCase() === holo.toUpperCase()) {
+    return loadedIsHolo()
+      ? "This structure is already holo (drug-bound). Enter an apo structure to compare, or pick a different holo from the list."
+      : `apo and holo are the same PDB (${apo}) — enter a different apo structure to compare.`;
+  }
+  return null;
+}
+
 // ── find holo structures for the entered apo ───────────────────────────────
 $("findholo").addEventListener("click", findHolo);
 
@@ -254,6 +270,8 @@ async function compareApoHolo() {
   const holo = currentHolo();
   if (!apo) { setCompareStatus("Enter the apo PDB ID first.", true); return; }
   if (!holo) { setCompareStatus("No holo found — pick one with “Find holo structures” first.", true); return; }
+  const selfErr = selfCompareError(apo, holo);
+  if (selfErr) { setCompareStatus(selfErr, true); return; }
   const btn = $("compare");
   btn.disabled = true;
   setCompareStatus(`Superimposing holo ${holo} onto apo ${apo}…`);
@@ -465,6 +483,8 @@ async function computeShift() {
   const holo = currentHolo();
   if (!apo) { setShiftNote("Enter the apo PDB ID first.", true); return; }
   if (!holo) { setShiftNote("No holo found — pick one with “Find holo” first.", true); return; }
+  const selfErr = selfCompareError(apo, holo);
+  if (selfErr) { setShiftNote(selfErr, true); return; }
   const btn = $("computeshift");
   btn.disabled = true;
   setShiftNote(`Computing site potentials for holo ${holo} and the apo→holo shift…`);

@@ -126,6 +126,9 @@ def analysis_shift(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = 
     The active site is taken from the benchmark metadata or auto-detected on the apo."""
     apo = apo.strip().upper()
     holo = holo.strip().upper()
+    if apo == holo:
+        raise HTTPException(422, f"cannot compute an apo→holo shift for {apo} against "
+                                 f"itself — provide a distinct apo and holo")
     site = []
     if target_name:
         cfg = resolve_systems().get(target_name)
@@ -178,9 +181,12 @@ def structure(pdb_id: str, chains: str = None):
 def compare(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = None):
     """Superimpose holo onto apo and report per-residue Cα displacement; returns both
     structures (holo aligned into the apo frame) for an overlay view."""
+    apo, holo = apo.strip().upper(), holo.strip().upper()
+    if apo == holo:
+        raise HTTPException(422, f"cannot compare {apo} against itself — apo and holo "
+                                 f"are the same structure (provide a different apo/holo)")
     try:
-        return align_and_compare(apo.strip().upper(), apo_chain,
-                                 holo.strip().upper(), holo_chain)
+        return align_and_compare(apo, apo_chain, holo, holo_chain)
     except ValueError as e:
         raise HTTPException(422, str(e))
     except Exception as e:
