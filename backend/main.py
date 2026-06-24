@@ -185,6 +185,17 @@ def connectivity_change_ep(apo: str, holo: str, apo_chain: str = "A", holo_chain
         drug_site = sorted(set(r for l in drug_ligs for r in l["binding_site"]))
     except Exception:
         drug_site = []
+    # active site for overlay (benchmark metadata, else auto-detected)
+    active = []
+    if target_name:
+        cfg = resolve_systems().get(target_name)
+        if cfg:
+            active = list(cfg.get("catalytic", []))
+    if not active:
+        try:
+            active = detect_active_site(apo, achain).get("active_site", [])
+        except Exception:
+            active = []
     try:
         out = connectivity_change(apo, achain, holo, hchain,
                                   cutoff=_clamp_cutoff(cutoff), site_resnums=drug_site)
@@ -195,6 +206,7 @@ def connectivity_change_ep(apo: str, holo: str, apo_chain: str = "A", holo_chain
     out["chains_used"] = {"apo_chain": achain, "holo_chain": hchain,
                           "drug_code": res["drug_code"]}
     out["drug_site"] = drug_site
+    out["active_site"] = sorted(set(active))
     return out
 
 

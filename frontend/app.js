@@ -904,14 +904,17 @@ function renderConnSummary(d) {
     `<div style="margin-top:8px">Most-reorganized residues (DDM): <b style="color:var(--ink)">${s.most_reorganized.join(", ")}</b></div>`;
 }
 
-function connHeatmap(div, z, title, ax, sitePos, zmid, zmin, zmax) {
-  // thin green lines marking drug-binding residues
-  const shapes = (sitePos || []).flatMap((p) => {
-    const v = ax[p];
-    return [
-      { type: "line", x0: v, x1: v, y0: ax[0], y1: ax[ax.length - 1], line: { color: "#2ca02c", width: 0.4 }, opacity: 0.5 },
-      { type: "line", y0: v, y1: v, x0: ax[0], x1: ax[ax.length - 1], line: { color: "#2ca02c", width: 0.4 }, opacity: 0.5 },
-    ];
+function connHeatmap(div, z, title, ax, activeSet, drugSet, zmid, zmin, zmax) {
+  // thin lines marking landmark residues: teal = active site, purple = drug-binding
+  const lo = ax[0], hi = ax[ax.length - 1];
+  const lineAt = (v, color) => [
+    { type: "line", x0: v, x1: v, y0: lo, y1: hi, line: { color, width: 0.5 }, opacity: 0.6 },
+    { type: "line", y0: v, y1: v, x0: lo, x1: hi, line: { color, width: 0.5 }, opacity: 0.6 },
+  ];
+  const shapes = [];
+  ax.forEach((v) => {
+    if (drugSet.has(v)) shapes.push(...lineAt(v, "#b15be0"));   // drug-binding
+    if (activeSet.has(v)) shapes.push(...lineAt(v, "#00e6c3")); // active site
   });
   Plotly.newPlot(div, [{
     z, x: ax, y: ax, type: "heatmap", colorscale: DIVERGE,
@@ -926,11 +929,13 @@ function connHeatmap(div, z, title, ax, sitePos, zmid, zmin, zmax) {
 
 function renderConnHeatmaps(d) {
   const ax = d.resnums;
+  const activeSet = new Set(d.active_site || []);
+  const drugSet = new Set(d.drug_site || []);
   const ddmLim = matAbsPct(d.ddm, 99);
   const ddccLim = matAbsPct(d.ddcc, 99);
-  connHeatmap($("ddmplot"), d.ddm, "DDM — distance change (red = apart, blue = closer)", ax, d.site_positions, 0, -ddmLim, ddmLim);
-  connHeatmap($("rewireplot"), d.rewire, "Contact rewiring (+1 formed / −1 broken)", ax, d.site_positions, 0, -1, 1);
-  connHeatmap($("ddccplot"), d.ddcc, "ΔDCC — dynamic coupling change (holo − apo)", ax, d.site_positions, 0, -ddccLim, ddccLim);
+  connHeatmap($("ddmplot"), d.ddm, "DDM — distance change (red = apart, blue = closer)", ax, activeSet, drugSet, 0, -ddmLim, ddmLim);
+  connHeatmap($("rewireplot"), d.rewire, "Contact rewiring (+1 formed / −1 broken)", ax, activeSet, drugSet, 0, -1, 1);
+  connHeatmap($("ddccplot"), d.ddcc, "ΔDCC — dynamic coupling change (holo − apo)", ax, activeSet, drugSet, 0, -ddccLim, ddccLim);
 }
 
 function matAbsPct(m, pct) {
