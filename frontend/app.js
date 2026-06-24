@@ -4,7 +4,7 @@ const API = ""; // same origin (served by FastAPI)
 
 const $ = (id) => document.getElementById(id);
 let TARGETS = [];
-const LAST = { view: null, intel: null, shift: null };
+const LAST = { view: null, intel: null, shift: null, compare: null, mode: "single" };
 let CURRENT_ANALYSIS = null;  // analysis object currently shown (drives charts + 3D)
 
 // Provenance of the "Active-site residues" field: which PDB id its content belongs
@@ -295,6 +295,8 @@ async function compareApoHolo() {
 }
 
 function render3DCompare(d) {
+  LAST.mode = "compare";
+  LAST.compare = d;
   const el = $("viewer");
   if (!viewer) viewer = $3Dmol.createViewer(el, { backgroundColor: "#ffffff" });
   viewer.clear();
@@ -461,6 +463,22 @@ function exportJSON() {
   const bundle = { view: v, structure_intel: LAST.intel, shift: LAST.shift };
   downloadFile(`${v.pdb_id}_results.json`, JSON.stringify(bundle, null, 2), "application/json");
 }
+
+// download the currently visualized structure as PDB (modeled residues flagged:
+// occupancy 0 / B-factor 999, listed in REMARK 470). In compare mode, export both.
+function exportPDB() {
+  if (LAST.mode === "compare" && LAST.compare) {
+    const c = LAST.compare;
+    if (c.apo_text) downloadFile(`${c.apo_pdb}_apo.pdb`, c.apo_text, "chemical/x-pdb");
+    if (c.holo_text_aligned)
+      downloadFile(`${c.holo_pdb}_holo_aligned.pdb`, c.holo_text_aligned, "chemical/x-pdb");
+    return;
+  }
+  const v = LAST.view;
+  if (!v || !v.pdb_text) { setStatus("Load a structure first.", true); return; }
+  downloadFile(`${v.pdb_id}_visualized.pdb`, v.pdb_text, "chemical/x-pdb");
+}
+$("exportpdb").addEventListener("click", exportPDB);
 
 async function exportPNG() {
   if (!ANALYSIS_CHART_DIVS.length) { setStatus("Load a protein first.", true); return; }
@@ -640,6 +658,7 @@ function structureRole(pdbId) {
 function render3D() {
   const data = LAST.view;
   if (!data) return;
+  LAST.mode = "single";
   const el = $("viewer");
   if (!viewer) viewer = $3Dmol.createViewer(el, { backgroundColor: "#ffffff" });
   viewer.clear();

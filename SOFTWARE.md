@@ -12,7 +12,7 @@ to test it / generate prompts for Claude. **Keep it updated with every change.**
 - **Live app:** https://quantum-allosteric-scanner.onrender.com
 - **Login (HTTP Basic Auth):** username `jury` · password `QAS@CC` (`/api/health` is open)
 - **Repo:** https://github.com/Oussema-t/Quantum_allosteric-scanner
-- **Last doc update reflects commit:** `e123d96` (chain-pairing fix)
+- **Last doc update reflects:** chem_comp-driven ligand classifier + PDB export (`pdb_text`)
 
 ---
 
@@ -92,14 +92,22 @@ Returns: `{pdb_id, chains, n_residues, active_site[], active_site_name, active_s
 ("benchmark"|"uniprot"|"ligand"|"pdb_site"|"manual"|"none"), active_site_detail,
 residues:[{resnum, chain, bfactor, bnorm, is_source, modeled}], completion(null|summary),
 bfactor_range:[min,max], analysis:{cutoff, resnums[], labels{}, terms{V_B,V_T,V_R,V_C,V_M},
-enrichment{}}}`
+enrichment{}}, pdb_text}`. `pdb_text` is the Cα structure **as visualized** (completed
+coords included); **modeled (filled) residues are flagged** occupancy=0.00 / B-factor=999.00
+and listed in `REMARK 470` so they're spottable when coloring by that column.
 Errors (422): `chain(s) 'X' not found in PDB. Available chains: ...` / `could not load PDB from RCSB — check the PDB ID`.
 
 ### `GET /api/structure?pdb_id=&chains=`
 Structure intelligence. Returns `{pdb_id, summary{title, method, resolution,
 deposited_residues}, chains:[{chain, n_residues, first, last}], ligands:[{code, name,
-chain, resnum, n_atoms, category("drug"|"cofactor"|"solvent/ion"), is_drug,
-binding_site:int[], binding_site_full:[{chain,resnum}]}], drugs:[...], missing_residues:[{chain,resnum,resname}], n_missing}`
+chain, resnum, n_atoms, category("drug"|"cofactor"|"ligand"|"solvent/ion"), is_drug,
+binding_site:int[], binding_site_full:[{chain,resnum}]}], drugs:[...], missing_residues:[{chain,resnum,resname}], n_missing}`.
+**Ligand classification** is driven by the RCSB chem_comp record: a curated additive
+blocklist + an aliphatic-chain heuristic (high H:C, long carbon chain, few heteroatoms)
+catch ions/buffers/cryo/detergents/lipids → `solvent/ion`; cofactors (ATP/GTP/NAD/…) →
+`cofactor`; an organic non-additive is `drug` if it has a drug-DB cross-ref (DrugBank/Pharos)
+**or** heavy-atom count ≥ 30, else `ligand` (visible, `is_drug=False`). NB: DrugBank ref
+alone is unreliable (some drugs lack it; some additives have it).
 
 ### `GET /api/holo-finder?apo_pdb=&chains=&target_name=`
 All ligand-bound (holo) structures of the same protein, drug-bound first. Returns
@@ -174,7 +182,9 @@ Errors (422): self-comparison; no drug-bearing chain.
   Complete-apo toggle, Find & visualize, Compare, Compute shift.
 - **3D viewer:** white background; caption stating apo/holo + chain(s) (or both in compare);
   color by chain / flexibility / GNM term; show drugs (labeled), active site (teal),
-  modeled residues (orange), drug-binding residues (purple), optional surface.
+  modeled residues (orange), drug-binding residues (purple), optional surface;
+  **Export PDB** button (downloads the visualized structure with modeled residues flagged;
+  in compare mode exports both apo and aligned-holo).
 - **Structure Intelligence panel:** chains, ligands/drugs + binding sites, missing residues
   (collapsible), completion summary.
 - **GNM Site-potential analysis panel:** mode selector (Loaded / Holo / apo→holo Δ),
