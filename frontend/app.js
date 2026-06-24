@@ -943,6 +943,66 @@ function renderConnHeatmaps(d) {
   connHeatmap($("rewireplot"), d.rewire, "Contact rewiring (+1 formed / −1 broken)", ax, activeSet, drugSet, 0, -1, 1);
   connHeatmap($("ddccplot"), d.ddcc, "ΔDCC — dynamic coupling change (holo − apo)", ax, activeSet, drugSet, 0, -ddccLim, ddccLim);
   renderActiveConnectivity(d, activeSet, drugSet);
+  renderProteinGraph(d, activeSet, drugSet);
+}
+
+// project 3D Cα coords to 2D via PCA (top-2 principal axes) using power iteration
+function pca2d(coords) {
+  const n = coords.length, mean = [0, 0, 0];
+  for (const c of coords) { mean[0] += c[0]; mean[1] += c[1]; mean[2] += c[2]; }
+  mean[0] /= n; mean[1] /= n; mean[2] /= n;
+  const X = coords.map((c) => [c[0] - mean[0], c[1] - mean[1], c[2] - mean[2]]);
+  const C = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+  for (const d of X) for (let a = 0; a < 3; a++) for (let b = 0; b < 3; b++) C[a][b] += d[a] * d[b];
+  for (let a = 0; a < 3; a++) for (let b = 0; b < 3; b++) C[a][b] /= n;
+  const mul = (M, v) => [0, 1, 2].map((a) => M[a][0] * v[0] + M[a][1] * v[1] + M[a][2] * v[2]);
+  const norm = (v) => { const m = Math.hypot(v[0], v[1], v[2]) || 1; return [v[0] / m, v[1] / m, v[2] / m]; };
+  const pow = (M) => {
+    let v = norm([0.51, 0.37, 0.82]);
+    for (let k = 0; k < 60; k++) v = norm(mul(M, v));
+    const Mv = mul(M, v); return [v, v[0] * Mv[0] + v[1] * Mv[1] + v[2] * Mv[2]];
+  };
+  const [v1, l1] = pow(C);
+  const C2 = C.map((row, a) => row.map((val, b) => val - l1 * v1[a] * v1[b]));
+  const [v2] = pow(C2);
+  return X.map((d) => [d[0] * v1[0] + d[1] * v1[1] + d[2] * v1[2],
+                       d[0] * v2[0] + d[1] * v2[1] + d[2] * v2[2]]);
+}
+
+// 2D node-link contact graph: nodes = residues, edges = contacts, colored by how the
+// network rewires apo→holo (kept / formed / broken on drug binding)
+function renderProteinGraph(d, activeSet, drugSet) {
+  const pos = pca2d(d.apo_coords);
+  const n = pos.length, ax = d.resnums, cut = d.cutoff, apo = d.apo_coords, holo = d.holo_coords;
+  const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+  const kept = { x: [], y: [] }, built = { x: [], y: [] }, broken = { x: [], y: [] };
+  for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
+    const da = dist(apo[i], apo[j]), dh = dist(holo[i], holo[j]);
+    const ea = da < cut && da > 1e-8, eh = dh < cut && dh > 1e-8;
+    if (!ea && !eh) continue;
+    const e = ea && eh ? kept : eh ? built : broken;
+    e.x.push(pos[i][0], pos[j][0], null);
+    e.y.push(pos[i][1], pos[j][1], null);
+  }
+  const edge = (e, color, w, op, name) => ({ x: e.x, y: e.y, mode: "lines", type: "scatter",
+    line: { color, width: w }, opacity: op, hoverinfo: "skip", name });
+  const ncolor = ax.map((r) => (activeSet.has(r) && drugSet.has(r)) ? "#ffd166"
+    : activeSet.has(r) ? "#00e6c3" : drugSet.has(r) ? "#b15be0" : "#7f8db0");
+  const nsize = ax.map((r) => (activeSet.has(r) || drugSet.has(r)) ? 8 : 3.5);
+  const nodes = { x: pos.map((p) => p[0]), y: pos.map((p) => p[1]), mode: "markers", type: "scatter",
+    marker: { color: ncolor, size: nsize, line: { color: "#0b1020", width: 0.5 } },
+    text: ax.map((r) => `res ${r}${activeSet.has(r) ? " · active" : ""}${drugSet.has(r) ? " · drug" : ""}`),
+    hovertemplate: "%{text}<extra></extra>", name: "residues" };
+  Plotly.newPlot("protgraph", [
+    edge(kept, "#8a93b8", 0.5, 0.22, "kept"),
+    edge(broken, "#d62728", 1.3, 0.85, "broken"),
+    edge(built, "#2ca02c", 1.3, 0.85, "formed"),
+    nodes,
+  ], {
+    margin: { l: 6, r: 6, t: 6, b: 6 }, paper_bgcolor: "#141b30", plot_bgcolor: "#141b30",
+    showlegend: false,
+    xaxis: { visible: false }, yaxis: { visible: false, scaleanchor: "x" },
+  }, { displayModeBar: false, responsive: true });
 }
 
 // per-residue connectivity change TO the active site: contacts built (+, green) /
