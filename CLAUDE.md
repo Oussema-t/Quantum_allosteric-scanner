@@ -38,9 +38,12 @@ is the anchor**; the **allosteric site is distal** to it.
 6. **Git**: the user sometimes edits on GitHub — always `git fetch` + rebase before push.
    Every push auto-deploys to Render (~2–3 min). Commit: imperative subject + bullet body
    + `Co-Authored-By` trailer.
-7. **Keep docs in sync**: update `ARCHITECTURE.md` (+ its change log) and `SOFTWARE.md`
-   in the **same commit** as any change to modules / endpoints / response fields /
-   frontend behavior / conventions. This file rarely changes.
+7. **Keep docs in sync**: update `ARCHITECTURE.md` (+ a **dated, signed** change-log line:
+   `- YYYY-MM-DD · <name> · <summary>`) and `SOFTWARE.md` in the **same commit** as any
+   change to modules / endpoints / response fields / frontend behavior / conventions.
+8. **Multi-person repo** — follow [COLLABORATION.md](COLLABORATION.md): `git pull --rebase`
+   before starting; `git fetch` + rebase before pushing. On a fresh session, read the
+   change log + `git log` to learn what teammates changed, and re-read modified files.
 
 ## Run & test locally
 ```bash

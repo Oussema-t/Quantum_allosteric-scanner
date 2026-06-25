@@ -146,8 +146,10 @@ Quantum_allosteric-scanner/
 
 ## Change log
 
-Keep newest first; one line per architectural change.
+Newest first; one line per change, **dated + signed** so teammates can see what changed
+when: `- YYYY-MM-DD · <name> · <summary>`. See [COLLABORATION.md](COLLABORATION.md).
 
+- 2026-06-25 · Oussema · Added COLLABORATION.md (team workflow) + dated change-log convention.
 - Added CLAUDE.md + AGENTS.md (agent onboarding entry points) — a new session/agent reads these to get full project context; kept in sync with ARCHITECTURE.md + SOFTWARE.md.
 - `/api/connectivity-change` (§8d DDM · rewiring · ΔDCC + morph coords) + connectivity-change panel with JS morph animation.
 - `/api/drug-site` (holo drug-binding residues) — overlays where the drug binds onto the apo GNM view.
