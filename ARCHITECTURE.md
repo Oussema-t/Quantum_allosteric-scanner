@@ -148,6 +148,7 @@ Quantum_allosteric-scanner/
 
 Keep newest first; one line per architectural change.
 
+- Added CLAUDE.md + AGENTS.md (agent onboarding entry points) — a new session/agent reads these to get full project context; kept in sync with ARCHITECTURE.md + SOFTWARE.md.
 - `/api/connectivity-change` (§8d DDM · rewiring · ΔDCC + morph coords) + connectivity-change panel with JS morph animation.
 - `/api/drug-site` (holo drug-binding residues) — overlays where the drug binds onto the apo GNM view.
 - Active-site source toggle: `active_site_mode` (benchmark|auto) on `/api/load` + toolbar select — validate UniProt detection against the curated benchmark values.
