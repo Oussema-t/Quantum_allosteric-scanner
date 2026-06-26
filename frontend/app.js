@@ -755,16 +755,25 @@ function render3D() {
       });
     }
 
-    // bound drugs / ligands — sticks + label
+    // bound drugs / ligands — sticks + a label per INSTANCE, anchored to that copy's
+    // centroid (explicit world position → stays put on zoom; handles duplicate codes)
     if (showLig && intel && intel.ligands) {
+      const model = viewer.getModel();
       intel.ligands.forEach((lig) => {
         if (lig.category === "solvent/ion") return;
-        const sel = { resn: lig.code, hetflag: true };
+        const sel = { resn: lig.code, chain: lig.chain, resi: lig.resnum, hetflag: true };
         const col = lig.is_drug ? "#b15be0" : "#5b8cff";
         viewer.addStyle(sel, { stick: { colorscheme: lig.is_drug ? "purpleCarbon" : "blueCarbon", radius: 0.2 } });
         viewer.addStyle(sel, { sphere: { scale: 0.3 } });
-        viewer.addLabel(`${lig.code}${lig.is_drug ? " (drug)" : ""}`,
-          { fontColor: "white", backgroundColor: col, fontSize: 11, backgroundOpacity: 0.85 }, sel);
+        const atoms = (model && model.selectedAtoms(sel)) || [];
+        if (!atoms.length) return;
+        let cx = 0, cy = 0, cz = 0;
+        atoms.forEach((a) => { cx += a.x; cy += a.y; cz += a.z; });
+        cx /= atoms.length; cy /= atoms.length; cz /= atoms.length;
+        viewer.addLabel(`${lig.code}${lig.is_drug ? " (drug)" : ""}`, {
+          fontColor: "white", backgroundColor: col, fontSize: 11, backgroundOpacity: 0.85,
+          inFront: true, position: { x: cx, y: cy, z: cz },
+        });
       });
     }
 
