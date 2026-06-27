@@ -954,47 +954,15 @@ function renderConnHeatmaps(d) {
   setupGraphMorph(d, activeSet, drugSet);
 }
 
-// PCA basis (top-2 principal axes) of a coord set, via power iteration
-function pcaBasis(coords) {
-  const n = coords.length, mean = [0, 0, 0];
-  for (const c of coords) { mean[0] += c[0]; mean[1] += c[1]; mean[2] += c[2]; }
-  mean[0] /= n; mean[1] /= n; mean[2] /= n;
-  const C = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
-  for (const c of coords) {
-    const d = [c[0] - mean[0], c[1] - mean[1], c[2] - mean[2]];
-    for (let a = 0; a < 3; a++) for (let b = 0; b < 3; b++) C[a][b] += d[a] * d[b];
-  }
-  for (let a = 0; a < 3; a++) for (let b = 0; b < 3; b++) C[a][b] /= n;
-  const mul = (M, v) => [0, 1, 2].map((a) => M[a][0] * v[0] + M[a][1] * v[1] + M[a][2] * v[2]);
-  const norm = (v) => { const m = Math.hypot(v[0], v[1], v[2]) || 1; return [v[0] / m, v[1] / m, v[2] / m]; };
-  const pow = (M) => {
-    let v = norm([0.51, 0.37, 0.82]);
-    for (let k = 0; k < 60; k++) v = norm(mul(M, v));
-    const Mv = mul(M, v); return [v, v[0] * Mv[0] + v[1] * Mv[1] + v[2] * Mv[2]];
-  };
-  const [v1, l1] = pow(C);
-  const C2 = C.map((row, a) => row.map((val, b) => val - l1 * v1[a] * v1[b]));
-  const [v2] = pow(C2);
-  return { mean, v1, v2 };
-}
-function projectTo2D(coords, basis) {
-  const { mean, v1, v2 } = basis;
-  return coords.map((c) => {
-    const d = [c[0] - mean[0], c[1] - mean[1], c[2] - mean[2]];
-    return [d[0] * v1[0] + d[1] * v1[1] + d[2] * v1[2], d[0] * v2[0] + d[1] * v2[1] + d[2] * v2[2]];
-  });
-}
-
-// ── animated 2D protein contact graph (apo → holo) ─────────────────────────
-// nodes morph from apo to holo positions; edges form/break live (kept/formed/broken)
+// ── animated 3D protein contact graph (apo → holo) ─────────────────────────
+// nodes morph from apo to holo 3D positions; edges form/break live (kept/formed/broken).
+// Uses the real Cα coordinates (no projection); drag to rotate, scroll to zoom.
 let GRAPH = { data: null, t: 0, dir: 1, timer: null };
 const _gdist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
 
 function setupGraphMorph(d, activeSet, drugSet) {
   $("graphwrap").classList.remove("hidden");
   const ax = d.resnums, cut = d.cutoff, apo3 = d.apo_coords, holo3 = d.holo_coords;
-  const basis = pcaBasis(apo3);                       // shared basis (holo already aligned)
-  const apo2 = projectTo2D(apo3, basis), holo2 = projectTo2D(holo3, basis);
   const edges = [];                                   // pairs that are a contact in apo OR holo
   for (let i = 0; i < ax.length; i++) for (let j = i + 1; j < ax.length; j++) {
     const ea = _gdist(apo3[i], apo3[j]) < cut, eh = _gdist(holo3[i], holo3[j]) < cut;
@@ -1002,44 +970,52 @@ function setupGraphMorph(d, activeSet, drugSet) {
   }
   const ncolor = ax.map((r) => (activeSet.has(r) && drugSet.has(r)) ? "#ffd166"
     : activeSet.has(r) ? "#00e6c3" : drugSet.has(r) ? "#b15be0" : "#7f8db0");
-  const nsize = ax.map((r) => (activeSet.has(r) || drugSet.has(r)) ? 8 : 3.5);
+  const nsize = ax.map((r) => (activeSet.has(r) || drugSet.has(r)) ? 6 : 3);
   const ntext = ax.map((r) => `res ${r}${activeSet.has(r) ? " · active" : ""}${drugSet.has(r) ? " · drug" : ""}`);
-  GRAPH.data = { apo3, holo3, apo2, holo2, edges, cut, ncolor, nsize, ntext };
+  GRAPH.data = { apo3, holo3, edges, cut, ncolor, nsize, ntext };
   GRAPH.t = 0; GRAPH.dir = 1;
   const f = graphFrameData(0);
+  const eTrace = (e, color, w, op) => ({ type: "scatter3d", mode: "lines", x: e.x, y: e.y, z: e.z,
+    line: { color, width: w }, opacity: op, hoverinfo: "skip" });
   Plotly.newPlot("protgraph", [
-    { x: f.kept.x, y: f.kept.y, mode: "lines", type: "scatter", line: { color: "#8a93b8", width: 0.5 }, opacity: 0.22, hoverinfo: "skip" },
-    { x: f.broken.x, y: f.broken.y, mode: "lines", type: "scatter", line: { color: "#d62728", width: 1.3 }, opacity: 0.9, hoverinfo: "skip" },
-    { x: f.formed.x, y: f.formed.y, mode: "lines", type: "scatter", line: { color: "#2ca02c", width: 1.3 }, opacity: 0.9, hoverinfo: "skip" },
-    { x: f.nx, y: f.ny, mode: "markers", type: "scatter", marker: { color: ncolor, size: nsize, line: { color: "#0b1020", width: 0.5 } }, text: ntext, hovertemplate: "%{text}<extra></extra>" },
+    eTrace(f.kept, "#8a93b8", 1.5, 0.2),
+    eTrace(f.broken, "#d62728", 3.5, 0.9),
+    eTrace(f.formed, "#2ca02c", 3.5, 0.9),
+    { type: "scatter3d", mode: "markers", x: f.nx, y: f.ny, z: f.nz,
+      marker: { color: ncolor, size: nsize, line: { color: "#0b1020", width: 0.5 } },
+      text: ntext, hovertemplate: "%{text}<extra></extra>" },
   ], {
-    margin: { l: 6, r: 6, t: 6, b: 6 }, paper_bgcolor: "#141b30", plot_bgcolor: "#141b30",
-    showlegend: false, xaxis: { visible: false }, yaxis: { visible: false, scaleanchor: "x" },
+    margin: { l: 0, r: 0, t: 0, b: 0 }, paper_bgcolor: "#141b30", showlegend: false,
+    scene: {
+      xaxis: { visible: false }, yaxis: { visible: false }, zaxis: { visible: false },
+      aspectmode: "data", bgcolor: "#141b30",
+    },
   }, { displayModeBar: false, responsive: true });
   startGraph();
 }
 
 function graphFrameData(t) {
   const g = GRAPH.data;
-  const P3 = g.apo3.map((p, i) => [
+  const P = g.apo3.map((p, i) => [
     (1 - t) * p[0] + t * g.holo3[i][0], (1 - t) * p[1] + t * g.holo3[i][1], (1 - t) * p[2] + t * g.holo3[i][2]]);
-  const nx = g.apo2.map((p, i) => (1 - t) * p[0] + t * g.holo2[i][0]);
-  const ny = g.apo2.map((p, i) => (1 - t) * p[1] + t * g.holo2[i][1]);
-  const kept = { x: [], y: [] }, formed = { x: [], y: [] }, broken = { x: [], y: [] };
+  const nx = [], ny = [], nz = [];
+  for (const p of P) { nx.push(p[0]); ny.push(p[1]); nz.push(p[2]); }
+  const kept = { x: [], y: [], z: [] }, formed = { x: [], y: [], z: [] }, broken = { x: [], y: [], z: [] };
   for (const [i, j, cls] of g.edges) {
-    const dd = _gdist(P3[i], P3[j]);
+    const dd = _gdist(P[i], P[j]);
     if (dd < g.cut && dd > 1e-8) {              // edge present at this frame
       const b = cls === 0 ? kept : cls === 1 ? formed : broken;
-      b.x.push(nx[i], nx[j], null); b.y.push(ny[i], ny[j], null);
+      b.x.push(P[i][0], P[j][0], null); b.y.push(P[i][1], P[j][1], null); b.z.push(P[i][2], P[j][2], null);
     }
   }
-  return { kept, formed, broken, nx, ny };
+  return { kept, formed, broken, nx, ny, nz };
 }
 
 function graphFrame(t) {
   const f = graphFrameData(t);
+  // restyle preserves the camera, so the user can keep rotating while it animates
   Plotly.restyle("protgraph",
-    { x: [f.kept.x, f.broken.x, f.formed.x, f.nx], y: [f.kept.y, f.broken.y, f.formed.y, f.ny] },
+    { x: [f.kept.x, f.broken.x, f.formed.x, f.nx], y: [f.kept.y, f.broken.y, f.formed.y, f.ny], z: [f.kept.z, f.broken.z, f.formed.z, f.nz] },
     [0, 1, 2, 3]);
   $("grapht").textContent = `t = ${t.toFixed(2)} ${t < 0.02 ? "(apo)" : t > 0.98 ? "(holo)" : GRAPH.dir > 0 ? "(→ holo)" : "(→ apo)"}`;
   $("graphslider").value = t;
