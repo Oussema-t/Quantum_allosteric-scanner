@@ -149,6 +149,7 @@ Quantum_allosteric-scanner/
 Newest first; one line per change, **dated + signed** so teammates can see what changed
 when: `- YYYY-MM-DD · <name> · <summary>`. See [COLLABORATION.md](COLLABORATION.md).
 
+- 2026-06-25 · Oussema · GNM analysis: permutation-significance on descriptor enrichment (p-value + red/grey bar) + contact-Laplacian spectrum histogram (`l_eigs`).
 - 2026-06-25 · Oussema · Protein contact-graph animation upgraded from 2D (PCA projection) to interactive 3D (scatter3d, real Cα coords; drag-rotate while it morphs apo→holo).
 - 2026-06-25 · Oussema · Fix 3D ligand labels: anchor each label to its own ligand copy's centroid (stable on zoom; labels duplicate ligands like KRAS's two GDPs correctly).
 - 2026-06-25 · Oussema · Added COLLABORATION.md (team workflow) + dated change-log convention.

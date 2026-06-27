@@ -59,7 +59,7 @@ def gnm_context(coords, bfac, cutoff=8.0):
     with np.errstate(invalid="ignore", divide="ignore"):
         clust = np.where(deg > 1, tri / (deg * (deg - 1)), 0.0)
     return dict(N=N, A=A, deg=deg, U=U, nz=nz, winv=winv, msf=msf,
-                clust=clust, beta=np.asarray(bfac, float))
+                clust=clust, beta=np.asarray(bfac, float), eigs=w)
 
 
 def V_Bfactor(c):
@@ -112,15 +112,30 @@ def site_potentials(coords, bfac, resnums, cutoff=8.0, site_idx=None):
         "resnums": [int(r) for r in resnums],
         "labels": {k: lab for k, lab, _ in TERMS},
         "terms": {k: [round(float(v), 4) for v in vals] for k, vals in terms.items()},
+        "l_eigs": [round(float(x), 4) for x in c["eigs"]],   # Kirchhoff/Laplacian spectrum
     }
     if site_idx is not None and len(site_idx):
         site_idx = np.asarray(site_idx, int)
-        bulk = np.setdiff1d(np.arange(c["N"]), site_idx)
-        out["enrichment"] = {
-            k: round(float(vals[site_idx].mean()
-                           - (vals[bulk].mean() if len(bulk) else 0.0)), 3)
-            for k, vals in terms.items()
-        }
+        N = c["N"]
+        n_site = len(site_idx)
+        nb = N - n_site
+        rng = np.random.default_rng(0)
+        n_perm = 1000
+        enr, sig = {}, {}
+        for k, vals in terms.items():
+            v = np.asarray(vals, float)
+            total, site_sum = v.sum(), v[site_idx].sum()
+            obs = site_sum / n_site - ((total - site_sum) / nb if nb else 0.0)
+            # permutation null: random residue sets of the same size as the active site
+            null = np.empty(n_perm)
+            for p in range(n_perm):
+                ps = v[rng.choice(N, n_site, replace=False)].sum()
+                null[p] = ps / n_site - ((total - ps) / nb if nb else 0.0)
+            pval = float((np.abs(null) >= abs(obs)).mean())
+            enr[k] = round(float(obs), 3)
+            sig[k] = {"p": round(pval, 4), "sig": bool(pval < 0.05)}
+        out["enrichment"] = enr
+        out["enrichment_sig"] = sig
     return out
 
 

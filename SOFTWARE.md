@@ -92,7 +92,7 @@ Returns: `{pdb_id, chains, n_residues, active_site[], active_site_name, active_s
 ("benchmark"|"uniprot"|"ligand"|"pdb_site"|"manual"|"none"), active_site_detail,
 residues:[{resnum, chain, bfactor, bnorm, is_source, modeled}], completion(null|summary),
 bfactor_range:[min,max], analysis:{cutoff, resnums[], labels{}, terms{V_B,V_T,V_R,V_C,V_M},
-enrichment{}}, pdb_text}`. `pdb_text` is the Cα structure **as visualized** (completed
+enrichment{}, enrichment_sig{term:{p,sig}} (permutation test), l_eigs[] (Laplacian spectrum)}, pdb_text}`. `pdb_text` is the Cα structure **as visualized** (completed
 coords included); **modeled (filled) residues are flagged** occupancy=0.00 / B-factor=999.00
 and listed in `REMARK 470` so they're spottable when coloring by that column.
 Errors (422): `chain(s) 'X' not found in PDB. Available chains: ...` / `could not load PDB from RCSB — check the PDB ID`.

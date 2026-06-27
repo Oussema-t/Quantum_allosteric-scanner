@@ -382,6 +382,10 @@ function renderAnalysis(analysis, activeSite, prefix = "", drugSite = []) {
     enr.innerHTML = `<span class="hint-line">No active site known — showing per-residue profiles only.</span>`;
   }
 
+  // descriptor-significance bar chart + Laplacian spectrum
+  renderEnrichmentBar(analysis, prefix);
+  renderSpectrum(analysis);
+
   // one profile chart per term, active-site residues marked in red
   charts.innerHTML = "";
   const siteSet = new Set(activeSite || []);
@@ -563,6 +567,47 @@ function applyAnalysisMode() {
     renderDrugIntersection(site, drug);
   }
   render3D();  // 3D color-by + drug-site markers follow the selected analysis
+}
+
+// descriptor enrichment bar chart, coloured by permutation significance
+function renderEnrichmentBar(analysis, prefix) {
+  const div = $("enrichbar");
+  const e = analysis.enrichment;
+  if (!e || !Object.keys(e).length) { Plotly.purge(div); div.style.display = "none"; return; }
+  div.style.display = "";
+  const keys = ["V_B", "V_T", "V_R", "V_C", "V_M"];
+  const sig = analysis.enrichment_sig || {};
+  const y = keys.map((k) => e[k]);
+  const colors = keys.map((k) => (sig[k] && sig[k].sig) ? "#c0392b" : "#7f8db0");
+  const cd = keys.map((k) => (sig[k] ? sig[k].p : null));
+  const lbl = prefix ? "Δ at active site" : "active site − bulk";
+  Plotly.newPlot(div, [{
+    x: keys.map((k) => `${prefix}${k}`), y, type: "bar",
+    marker: { color: colors }, customdata: cd,
+    hovertemplate: "%{x}: %{y}<br>p=%{customdata}<extra></extra>",
+  }], {
+    title: { text: `Descriptor signal (${lbl}) — red = permutation-significant (p<0.05)`, font: { size: 11, color: "#c7d0e6" }, x: 0.02 },
+    margin: { l: 42, r: 10, t: 26, b: 30 }, height: 240,
+    paper_bgcolor: "#141b30", plot_bgcolor: "#141b30", font: { color: "#8b97b8", size: 10 },
+    xaxis: { showgrid: false },
+    yaxis: { title: lbl + " (z)", showgrid: false, zeroline: true, zerolinecolor: "#29355c" },
+  }, { displayModeBar: false, responsive: true });
+}
+
+// histogram of the contact-Laplacian eigenvalues (network spectrum)
+function renderSpectrum(analysis) {
+  const div = $("lspectrum");
+  if (!analysis.l_eigs || !analysis.l_eigs.length) { Plotly.purge(div); div.style.display = "none"; return; }
+  div.style.display = "";
+  Plotly.newPlot(div, [{
+    x: analysis.l_eigs, type: "histogram", nbinsx: 40, marker: { color: "#2c3e50" },
+    hovertemplate: "λ≈%{x}: %{y}<extra></extra>",
+  }], {
+    title: { text: "Contact-Laplacian spectrum (eigenvalues λ)", font: { size: 11, color: "#c7d0e6" }, x: 0.02 },
+    margin: { l: 42, r: 10, t: 26, b: 30 }, height: 220,
+    paper_bgcolor: "#141b30", plot_bgcolor: "#141b30", font: { color: "#8b97b8", size: 10 },
+    xaxis: { title: "λ", showgrid: false }, yaxis: { title: "count", showgrid: false },
+  }, { displayModeBar: false, responsive: true });
 }
 
 // generic per-residue profile chart with active-site + drug-site markers
