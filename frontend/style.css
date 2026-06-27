@@ -165,6 +165,15 @@ button.secondary:disabled { opacity: .35; cursor: not-allowed; }
 
 /* ── GNM site-potential analysis panel ──────────────────── */
 .hint-line { font-size: 12px; color: var(--muted); margin: 0 0 12px; line-height: 1.5; }
+
+/* "how to read these values" help box */
+.help-box { margin: 0 0 14px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; }
+.help-box > summary { cursor: pointer; padding: 9px 12px; font-size: 12px; font-weight: 600; color: var(--accent); list-style: none; user-select: none; }
+.help-box > summary::-webkit-details-marker { display: none; }
+.help-box .help-body { padding: 0 14px 12px; font-size: 12px; color: var(--muted); line-height: 1.55; }
+.help-box .help-body b { color: var(--ink); }
+.help-box .help-body ul { margin: 8px 0; padding-left: 18px; }
+.help-box .help-body li { margin: 4px 0; }
 #enrichment { margin-bottom: 14px; }
 #enrichment .enr-grid { display: flex; flex-wrap: wrap; gap: 8px; }
 #enrichment .enr { background: var(--panel-2); border-radius: 8px; padding: 8px 12px; min-width: 120px; }

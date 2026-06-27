@@ -111,6 +111,20 @@
     <section class="panel analysis-panel">
       <h2>Site-potential analysis (GNM)</h2>
       <p class="hint-line">Five structure-based descriptors per residue (z-scored). “active site − bulk” shows how elevated each term is at the active site vs the rest of the protein; the per-residue profiles reveal where rigidity, coupling and slow-mode participation peak across the chain — structural candidates for functional/allosteric regions. Use the 3D “Color by” menu to paint the structure by any term.</p>
+      <details class="help-box">
+        <summary>ℹ︎ How to read these values</summary>
+        <div class="help-body">
+          <p>Each descriptor is a <b>z-score</b> (standard deviations from the protein's mean). “active site − bulk” = how the active site compares to the rest: <b style="color:#c0392b">+ elevated</b> there, <b style="color:#5b8cff">− depleted</b>. A bar is <b style="color:#c0392b">red</b> only if a permutation test says the difference is unlikely by chance (p&lt;0.05).</p>
+          <ul>
+            <li><b>V_B · B-factor flexibility</b> — crystallographic mobility. <b>−</b> = more <b>rigid / ordered</b> (a stable core); <b>+</b> = more flexible.</li>
+            <li><b>V_T · terminal / exposure</b> — chain-end + solvent exposure. <b>−</b> = more <b>buried / central</b>; <b>+</b> = more exposed / peripheral.</li>
+            <li><b>V_R · rigidity</b> — high contacts + clustering, low fluctuation. <b>+</b> = a <b>rigid hub</b>; <b>−</b> = floppy.</li>
+            <li><b>V_C · dynamic coupling</b> — how correlated its motion is with the rest. <b>+</b> = a <b>communication hub</b> (allosteric signal carrier); <b>−</b> = dynamically isolated.</li>
+            <li><b>V_M · slow-mode participation</b> — share in the slowest collective motions. <b>+</b> = drives <b>global hinge/domain motion</b>; <b>−</b> = in the static body.</li>
+          </ul>
+          <p><b>Contact-Laplacian spectrum (λ):</b> the network's vibrational modes. <b>Low λ (near 0)</b> = slow, large-scale <b>collective motions</b> (hinges / domains) — these carry allosteric signals over long range; lots of low-λ density (a small “spectral gap”) means a <b>softer, more deformable</b> network. <b>High λ</b> = fast, local fluctuations. (One λ≈0 per connected chain.)</p>
+        </div>
+      </details>
       <div class="export-row">
         <button id="computeshift" class="secondary">↔ Compute holo + apo→holo Δ</button>
         <label class="inline-sel">Show
