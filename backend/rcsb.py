@@ -60,11 +60,25 @@ _record_cache = {}
 _FORMULA_RE = re.compile(r"([A-Z][a-z]?)(\d*)")
 
 
+# in-memory cache of raw GET responses (RCSB Data API is immutable per PDB id, so
+# repeat loads + cutoff/param changes reuse the download instead of re-hitting the
+# network). We cache the TEXT and re-parse per call, so callers can't mutate a shared
+# dict. None responses are not cached (so transient failures can recover).
+_GET_CACHE = {}
+
+
 def _get_json(url, timeout=8):
+    if url in _GET_CACHE:
+        try:
+            return json.loads(_GET_CACHE[url])
+        except Exception:
+            return None
     try:
         req = urllib.request.Request(url, headers={"Accept": "application/json"})
         with urllib.request.urlopen(req, timeout=timeout) as r:
-            return json.loads(r.read().decode("utf-8"))
+            text = r.read().decode("utf-8")
+        _GET_CACHE[url] = text
+        return json.loads(text)
     except Exception:
         return None
 

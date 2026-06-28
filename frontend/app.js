@@ -246,8 +246,12 @@ function showActiveSiteNote(data) {
     if (e.key === "Enter") { e.preventDefault(); loadAndVisualize(); }
   }));
 
-// changing the coupling cutoff re-runs the GNM analysis on the loaded structure
+// once a structure is loaded, changing ANY core parameter reloads everything
+// (before the first load nothing auto-runs — the user sets options then clicks
+// "Find & visualize"). cutoff re-runs the GNM; chains/complete re-fetch + re-analyze.
 $("cutoff").addEventListener("change", () => { if (LAST.view) loadAndVisualize(); });
+$("chains").addEventListener("change", () => { if (LAST.view) loadAndVisualize(); });
+$("complete").addEventListener("change", () => { if (LAST.view) loadAndVisualize(); });
 
 // switching active-site source (benchmark ↔ UniProt auto-detect) re-resolves it
 $("sitemode").addEventListener("change", () => {

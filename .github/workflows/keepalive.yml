@@ -1,0 +1,21 @@
+name: keep-warm
+
+# Ping the Render health endpoint so the free-tier instance never sleeps (it idles
+# out after ~15 min, and the cold start then costs 30–60 s on the next real click).
+# GitHub's scheduler is best-effort and can be delayed a few minutes, so we ping every
+# 10 minutes to stay safely under the 15-minute sleep window. /api/health is unauthenticated.
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch: {}        # allow manual run from the Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping /api/health
+        run: |
+          curl -fsS --max-time 60 --retry 3 --retry-delay 15 \
+            https://quantum-allosteric-scanner.onrender.com/api/health \
+            && echo "warm at $(date -u)"
