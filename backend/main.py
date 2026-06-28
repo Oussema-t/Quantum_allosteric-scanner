@@ -212,7 +212,8 @@ def connectivity_change_ep(apo: str, holo: str, apo_chain: str = "A", holo_chain
     try:
         out["seed_readiness"] = seed_readiness_shift(
             apo, achain, holo, hchain,
-            site_resnums=out["active_site"], cutoff=_clamp_cutoff(cutoff))
+            site_resnums=out["active_site"], drug_resnums=drug_site,
+            cutoff=_clamp_cutoff(cutoff))
     except Exception:
         out["seed_readiness"] = None
     return out

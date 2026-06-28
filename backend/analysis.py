@@ -187,6 +187,62 @@ def _abs_coupling(c):
     return np.abs(nDCC).sum(1)
 
 
+def _slow_participation(c, n_low=3):
+    """Raw participation in the n_low slowest NON-zero GNM modes (unit-fixed)."""
+    idx = np.where(c["nz"])[0][:n_low]
+    return (c["U"][:, idx] ** 2).sum(1)
+
+
+def _site_descriptors_z(c, idx):
+    """z-scored descriptors — for cross-RESIDUE ranking within one structure."""
+    return {
+        "rigidity": round(float(np.mean(V_rigidity(c)[idx])), 2),
+        "coupling": round(float(np.mean(V_covariance(c)[idx])), 2),
+        "slow": round(float(np.mean(V_modeparticipation(c)[idx])), 2),
+    }
+
+
+def _site_descriptors_raw(c, idx):
+    """Raw, unit-fixed descriptors — for the apo↔holo comparison (no z-score baseline, so
+    the shift reflects the residues, not a changed protein-wide normalisation).
+    msf high = flexible (inverse rigidity); coupling = |nDCC| row-sum; slow = mode participation."""
+    return {
+        "msf": float(np.mean(c["msf"][idx])),
+        "coupling": float(np.mean(_abs_coupling(c)[idx])),
+        "slow": float(np.mean(_slow_participation(c)[idx])),
+    }
+
+
+def _bootstrap_floor(c, n_seed, n_boot=200, seed=0):
+    """2σ noise floor of the RAW seed-mean descriptors under random-residue sampling of the
+    SAME size — the significance threshold (replaces a fixed d_z constant)."""
+    rng = np.random.default_rng(seed)
+    N = len(c["msf"])
+    n_seed = max(1, min(int(n_seed), N - 1))
+    samp = [_site_descriptors_raw(c, rng.choice(N, n_seed, replace=False)) for _ in range(n_boot)]
+    return {k: float(np.std([s[k] for s in samp])) for k in samp[0]}
+
+
+def _raw_shift(idx_a, idx_h, c_a, c_h, n_boot=200):
+    """Raw apo→holo descriptor shift at a residue set + 2σ significance per descriptor."""
+    idx_a, idx_h = np.asarray(idx_a, int), np.asarray(idx_h, int)
+    if len(idx_a) == 0 or len(idx_h) == 0:
+        return None
+    da, dh = _site_descriptors_raw(c_a, idx_a), _site_descriptors_raw(c_h, idx_h)
+    delta = {k: dh[k] - da[k] for k in da}
+    fa = _bootstrap_floor(c_a, len(idx_a), n_boot)
+    fb = _bootstrap_floor(c_h, len(idx_h), n_boot)
+    thr = {k: 2.0 * float(np.sqrt(fa[k] ** 2 + fb[k] ** 2)) for k in da}
+    sig = {k: bool(abs(delta[k]) > thr[k]) for k in da}
+    return {
+        "apo": {k: round(da[k], 3) for k in da},
+        "holo": {k: round(dh[k], 3) for k in dh},
+        "delta": {k: round(delta[k], 3) for k in delta},
+        "thr": {k: round(thr[k], 3) for k in thr},
+        "sig": sig,
+    }
+
+
 def quantum_seed_readiness(coords, bfac, resnums, site_idx, cutoff=8.0,
                            R_c=8.0, r0=7.0, distal_ang=12.0, modeled_mask=None):
     """§5h — audit whether the active site is a safe quantum-walk seed.
@@ -217,6 +273,10 @@ def quantum_seed_readiness(coords, bfac, resnums, site_idx, cutoff=8.0,
     off[site_idx] = False
     denom = transfer[off].sum() + 1e-12
     distal_reach = float(transfer[distal & off].sum() / denom)
+    # size-invariant: how much the walk concentrates on distal residues vs a uniform spread
+    # (replaces hard-coded 0.05/0.15 cutoffs — works for an 88-mer or a 950-mer alike)
+    distal_baseline = float((distal & off).sum()) / max(int(off.sum()), 1)
+    distal_enrich = float(distal_reach / (distal_baseline + 1e-12))
 
     rows = []
     for i in site_idx:
@@ -242,37 +302,41 @@ def quantum_seed_readiness(coords, bfac, resnums, site_idx, cutoff=8.0,
     n_good = sum(r["status"] == "good" for r in rows)
     frac = n_good / n_total if n_total else 0.0
     recommend = [r["resnum"] for r in rows if r["status"] == "good"]
-    if n_good == 0 or frac < 0.34 or distal_reach < 0.05:
+    if n_good == 0 or frac < 0.34 or distal_enrich < 0.5:
         verdict = "RISKY"
-    elif frac >= 0.60 and distal_reach >= 0.15:
+    elif frac >= 0.60 and distal_enrich >= 1.2:
         verdict = "SAFE"
     else:
         verdict = "PARTIAL"
-    reach_word = ("reaches" if distal_reach >= 0.15
-                  else "weakly reaches" if distal_reach >= 0.05 else "fails to reach")
-    detail = (f"{n_good}/{n_total} active-site residues are reliable seeds; "
-              f"distal-reach {distal_reach:.2f} ({reach_word} distal pockets).")
+    reach_word = ("concentrates on distal" if distal_enrich >= 1.2
+                  else "spreads ~uniformly" if distal_enrich >= 0.5 else "stays local")
+    detail = (f"{n_good}/{n_total} reliable seeds; distal-reach {distal_enrich:.2f}× vs "
+              f"uniform ({reach_word}).")
     return {
-        "verdict": verdict, "detail": detail, "distal_reach": round(distal_reach, 3),
+        "verdict": verdict, "detail": detail,
+        "distal_reach": round(distal_reach, 3), "distal_enrich": round(distal_enrich, 3),
         "frac_good": round(frac, 2), "n_good": n_good, "n_total": n_total,
         "recommend_seed": recommend, "per_residue": rows,
-        "descriptors": {
-            "rigidity": round(float(np.mean(rig[site_idx])), 2),
-            "coupling": round(float(np.mean(V_covariance(c)[site_idx])), 2),
-            "slow": round(float(np.mean(V_modeparticipation(c)[site_idx])), 2),
-        },
+        "descriptors": _site_descriptors_z(c, site_idx),
+        "descriptors_raw": {k: round(v, 3) for k, v in _site_descriptors_raw(c, site_idx).items()},
+        "_gnm": c,   # internal: reused by seed_readiness_shift (stripped before serialization)
     }
 
 
 def seed_readiness_shift(apo_pdb, apo_chain, holo_pdb, holo_chain=None,
-                         site_resnums=None, cutoff=8.0):
-    """§5i — apo vs holo active-site seed readiness + a drug-mechanism hypothesis.
+                         site_resnums=None, drug_resnums=None, cutoff=8.0, n_boot=200):
+    """§5i — apo vs holo seed readiness + a drug-mechanism hypothesis. Fully data-driven:
 
-    Runs the §5h audit on both states and reads the apo→holo shift of the seed
-    descriptors (rigidity V_R, coupling V_C, slow-mode V_M) + distal-reach:
-      rigidifies + decouples → locks/damps communication → DEACTIVATION (inhibitor)
-      mobilises  + couples   → preserves/enhances signal → ACTIVATION
-    Network-dynamics hypothesis only (elastic network, no MD). None if unavailable."""
+      * the DRUG POCKET is the drug-binding residues passed in (computed from the holo
+        structure upstream — `rcsb.ligands_and_sites`), not a hardcoded list;
+      * ORTHOSTERIC vs ALLOSTERIC is auto-detected from geometry (does the pocket overlap /
+        sit within contact range of the active site?);
+      * the shift uses RAW, unit-fixed descriptors (no z-score baseline drift);
+      * SIGNIFICANCE comes from a per-structure BOOTSTRAP NOISE FLOOR (2σ), not a fixed d_z.
+
+    Rule (one rule for both topologies): rigidify the DRUG-binding site AND the active site
+    loses coupling OR shows a global mode reorganisation → DEACTIVATION (inhibitor). For an
+    orthosteric drug the drug site IS the active site, so it reduces to rigidify+decouple."""
     site_resnums = list(site_resnums or [])
     if not site_resnums:
         return None
@@ -290,28 +354,48 @@ def seed_readiness_shift(apo_pdb, apo_chain, holo_pdb, holo_chain=None,
                                 cutoff, modeled_mask=holo.get("modeled"))
     if ra is None or rh is None:
         return None
-    da = dict(ra["descriptors"]); da["distal_reach"] = ra["distal_reach"]
-    dh = dict(rh["descriptors"]); dh["distal_reach"] = rh["distal_reach"]
-    delta = {k: round(dh[k] - da[k], 3) for k in da}
+    ca, ch = ra.pop("_gnm"), rh.pop("_gnm")          # internal contexts; strip before return
 
-    d_z, d_reach = 0.10, 0.02
-    rigidifies = delta["rigidity"] > d_z
-    decouples = (delta["coupling"] < -d_z) or (delta["distal_reach"] < -d_reach)
-    couples = (delta["coupling"] > d_z) or (delta["distal_reach"] > d_reach)
-    if rigidifies and decouples:
+    # drug pocket (structure-derived, passed in) → indices in each state
+    pocket = sorted(set(int(r) for r in (drug_resnums or [])))
+    pa, ph = res_indices(apo, pocket), res_indices(holo, pocket)
+
+    # orthosteric vs allosteric — AUTO from geometry (holo coords)
+    sep, topology = None, "unknown"
+    if len(ph) and len(sh):
+        sep = float(cdist(holo["coords"][ph], holo["coords"][sh]).min())
+        overlap = len(set(pocket) & set(int(r) for r in site_resnums))
+        topology = "orthosteric" if (overlap > 0 or sep <= cutoff) else "allosteric"
+
+    # raw, significance-gated shift at the active-site READOUT and at the DRUG pocket
+    act = _raw_shift(sa, sh, ca, ch, n_boot)
+    pkt = _raw_shift(pa, ph, ca, ch, n_boot)
+    reach_shift = round(rh["distal_enrich"] - ra["distal_enrich"], 3)
+
+    # rigidify = raw MSF drops significantly; decouple = raw coupling drops significantly
+    pkt_rig = bool(pkt and pkt["sig"]["msf"] and pkt["delta"]["msf"] < 0)
+    act_rig = bool(act["sig"]["msf"] and act["delta"]["msf"] < 0)
+    act_dec = bool(act["sig"]["coupling"] and act["delta"]["coupling"] < 0)
+    act_cpl = bool(act["sig"]["coupling"] and act["delta"]["coupling"] > 0)
+    act_slow = bool(act["sig"]["slow"])              # significant slow-mode reorganisation
+    if (pkt_rig or act_rig) and (act_dec or act_slow):
         mechanism = "DEACTIVATION"
-        mech_detail = ("drug rigidifies + decouples the active site — locks / damps "
-                       "allosteric communication (inhibitor-like)")
-    elif couples and not rigidifies:
+        mech_detail = ("rigidifies the drug-binding site + the active site loses coupling / "
+                       "shows a global mode shift (inhibitor-like)")
+    elif act_cpl and not act_rig and not pkt_rig:
         mechanism = "ACTIVATION"
-        mech_detail = ("drug mobilises / raises coupling at the active site — "
-                       "preserves or enhances signalling")
+        mech_detail = "raises coupling at the active site without rigidifying the drug site"
     else:
         mechanism = "AMBIGUOUS"
-        mech_detail = "mixed apo→holo shift — needs functional confirmation"
+        mech_detail = "no significant rigidify + decouple pattern above the noise floor"
+
     return {
         "active_site": sorted(set(int(r) for r in site_resnums)),
-        "apo": ra, "holo": rh, "delta": delta,
+        "topology": topology,
+        "drug_active_sep": round(sep, 1) if sep is not None else None,
+        "n_pocket": len(pocket),
+        "apo": ra, "holo": rh,
+        "active_shift": act, "pocket_shift": pkt, "reach_shift": reach_shift,
         "mechanism": mechanism, "mechanism_detail": mech_detail,
     }
 

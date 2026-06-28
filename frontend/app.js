@@ -974,43 +974,59 @@ function seedVerdictBadge(v) {
   return `<span class="seed-badge ${cls}">${v}</span>`;
 }
 
+// raw apo→holo shift table for a residue set, with 2σ-significance markers
+function seedShiftTable(title, shift) {
+  if (!shift) return "";
+  const dcol = (x) => (x > 0 ? "#5fb89b" : x < 0 ? "#c77b73" : "#8b97b8");
+  const sigtag = (s) => s
+    ? `<span style="color:var(--accent)">✓ &gt;2σ</span>`
+    : `<span style="color:#8b97b8">ns</span>`;
+  const labels = { msf: "flexibility (MSF, ↓ = more rigid)", coupling: "dynamic coupling (|nDCC|)", slow: "slow-mode participation" };
+  const rows = ["msf", "coupling", "slow"].map((k) => {
+    const dv = shift.delta[k];
+    return `<tr><td style="text-align:left">${labels[k]}</td><td>${shift.apo[k].toFixed(3)}</td>` +
+      `<td>${shift.holo[k].toFixed(3)}</td><td style="color:${dcol(dv)}">${(dv >= 0 ? "+" : "") + dv.toFixed(3)}</td>` +
+      `<td>${sigtag(shift.sig[k])}</td></tr>`;
+  }).join("");
+  return `<div class="status" style="margin-top:8px">${title}</div>
+    <table class="seed-table"><thead><tr><th style="text-align:left">descriptor (raw)</th><th>apo</th><th>holo</th><th>Δ</th><th>sig.</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
 function renderSeedReadiness(sr) {
   const wrap = $("seedwrap");
   if (!sr || !sr.apo || !sr.holo) { wrap.classList.add("hidden"); return; }
   wrap.classList.remove("hidden");
-  const a = sr.apo, h = sr.holo, d = sr.delta;
-  const sign = (x) => (x >= 0 ? "+" : "") + x.toFixed(2);
-  const dcol = (x) => (x > 0 ? "#5fb89b" : x < 0 ? "#c77b73" : "#8b97b8");
+  const a = sr.apo, h = sr.holo;
   const mechCol = { ACTIVATION: "#5fb89b", DEACTIVATION: "#c77b73", AMBIGUOUS: "#c2a04e" }[sr.mechanism] || "#8b97b8";
 
-  const descRows = [
-    ["rigidity (V_R)", a.descriptors.rigidity, h.descriptors.rigidity, d.rigidity],
-    ["dynamic coupling (V_C)", a.descriptors.coupling, h.descriptors.coupling, d.coupling],
-    ["slow-mode participation (V_M)", a.descriptors.slow, h.descriptors.slow, d.slow],
-    ["distal-reach", a.distal_reach, h.distal_reach, d.distal_reach],
-  ].map(([l, av, hv, dv]) =>
-    `<tr><td style="text-align:left">${l}</td><td>${av.toFixed(2)}</td><td>${hv.toFixed(2)}</td>` +
-    `<td style="color:${dcol(dv)}">${sign(dv)}</td></tr>`).join("");
+  const sep = (sr.drug_active_sep != null) ? `${sr.drug_active_sep} Å` : "n/a";
+  const topoLine = (sr.topology && sr.topology !== "unknown")
+    ? `<div class="status" style="margin:2px 0 8px">Drug binding (auto from geometry): <b style="color:var(--ink)">${sr.topology}</b> · ${sr.n_pocket} pocket residues · min drug–active-site separation ${sep}</div>`
+    : `<div class="status" style="margin:2px 0 8px">Drug pocket not resolved — mechanism read from the active site only.</div>`;
+
+  const reachLine = `<div class="status" style="margin-top:6px">Distal-reach enrichment shift (size-invariant): <b style="color:${sr.reach_shift > 0 ? "#5fb89b" : sr.reach_shift < 0 ? "#c77b73" : "#8b97b8"}">${(sr.reach_shift >= 0 ? "+" : "") + sr.reach_shift}×</b></div>`;
 
   const prRows = a.per_residue.map((r) =>
     `<tr style="color:${r.status === "weak" ? "#c77b73" : "var(--ink)"}">` +
     `<td>${r.resnum}</td><td>${r.degree}</td><td>${r.coupling.toFixed(2)}</td>` +
     `<td>${r.rigidity.toFixed(2)}</td><td>${r.modeled ? "yes" : "—"}</td>` +
     `<td style="text-align:left">${r.status === "weak" ? r.reasons : "good"}</td></tr>`).join("");
-
   const recommend = (a.recommend_seed.length && a.n_good < a.n_total)
     ? `<div class="status" style="margin-top:6px">Recommended seed (reliable subset): <b style="color:var(--ink)">${a.recommend_seed.join(", ")}</b></div>` : "";
 
   $("seedbody").innerHTML = `
-    <div style="display:flex;gap:24px;flex-wrap:wrap;margin:6px 0 10px">
+    <div style="display:flex;gap:24px;flex-wrap:wrap;margin:6px 0 6px">
       <div>apo seed: ${seedVerdictBadge(a.verdict)} <span class="status">${a.detail}</span></div>
       <div>holo seed: ${seedVerdictBadge(h.verdict)} <span class="status">${h.detail}</span></div>
     </div>
+    ${topoLine}
     <div style="margin:8px 0;padding:8px 10px;border-left:3px solid ${mechCol};background:#141b30">
       <b style="color:${mechCol}">Drug mechanism (hypothesis): ${sr.mechanism}</b>
       <span class="status"> — ${sr.mechanism_detail}</span>
     </div>
-    <table class="seed-table"><thead><tr><th style="text-align:left">descriptor (z-score)</th><th>apo</th><th>holo</th><th>Δ</th></tr></thead><tbody>${descRows}</tbody></table>
+    ${seedShiftTable("apo→holo shift at the active site (readout):", sr.active_shift)}
+    ${seedShiftTable("apo→holo shift at the drug-binding pocket:", sr.pocket_shift)}
+    ${reachLine}
     ${recommend}
     <details style="margin-top:8px"><summary class="status" style="cursor:pointer">Per-residue apo seed audit (${a.n_good}/${a.n_total} reliable)</summary>
       <table class="seed-table"><thead><tr><th>res</th><th>degree</th><th>coupling</th><th>rigidity</th><th>modeled</th><th style="text-align:left">flag</th></tr></thead><tbody>${prRows}</tbody></table>
