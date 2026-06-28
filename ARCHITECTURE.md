@@ -149,6 +149,7 @@ Quantum_allosteric-scanner/
 Newest first; one line per change, **dated + signed** so teammates can see what changed
 when: `- YYYY-MM-DD · <name> · <summary>`. See [COLLABORATION.md](COLLABORATION.md).
 
+- 2026-06-25 · Oussema · Connectivity-change panel: "how to read these values" guide (DDM / rewiring / ΔDCC / summary / morph interpretation).
 - 2026-06-25 · Oussema · GNM panel: collapsible "how to read these values" guide (descriptor +/− meaning + Laplacian-spectrum interpretation).
 - 2026-06-25 · Oussema · GNM analysis: permutation-significance on descriptor enrichment (p-value + red/grey bar) + contact-Laplacian spectrum histogram (`l_eigs`).
 - 2026-06-25 · Oussema · Protein contact-graph animation upgraded from 2D (PCA projection) to interactive 3D (scatter3d, real Cα coords; drag-rotate while it morphs apo→holo).

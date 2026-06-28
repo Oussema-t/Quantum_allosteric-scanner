@@ -156,6 +156,19 @@
         <b>rewiring</b> = contacts formed (+1) / broken (−1); <b>ΔDCC</b> = change in dynamic
         cross-correlation (the coupling that underlies allosteric communication).
         Overlay lines: <span style="color:#00e6c3">teal = active site</span>, <span style="color:#b15be0">purple = drug-binding residues</span>.</p>
+      <details class="help-box">
+        <summary>ℹ︎ How to read these values</summary>
+        <div class="help-body">
+          <p>Everything compares the <b>holo</b> (drug-bound) to the <b>apo</b> structure on their shared residues — i.e. what the drug <i>changed</i>.</p>
+          <ul>
+            <li><b>DDM — distance-difference matrix</b> (Å): for each residue pair, |distance|<sub>holo</sub> − |distance|<sub>apo</sub>. <b style="color:#b2182b">red = moved apart</b>, <b style="color:#2166ac">blue = moved closer</b>. Off-diagonal red/blue <b>blocks</b> = whole regions shifting against each other (a hinge / domain motion); it's frame-independent (no alignment needed).</li>
+            <li><b>Contact rewiring</b>: which contacts change at the cutoff — <b style="color:#2ca02c">+1 = formed</b> on binding, <b style="color:#b2182b">−1 = broken</b>. Clusters mark where the network physically re-wires.</li>
+            <li><b>ΔDCC — dynamic cross-correlation change</b>: change in how <i>correlated</i> two residues' motions are. <b style="color:#b2182b">+ = more coupled</b> on binding (a new communication channel), <b style="color:#2166ac">− = decoupled</b>. This is the <b>dynamic connectivity</b> that underlies allosteric signalling.</li>
+          </ul>
+          <p><b>Summary numbers:</b> <b>max |Δdist|</b> = the single largest Cα move; <b>contacts formed / broken</b> = how much the contact network rewired; <b>mean |ΔDCC|</b> = overall change in dynamic coupling; <b>most-reorganized residues</b> = largest per-residue distance change (DDM row-norm).</p>
+          <p><b>3D graph + morph:</b> the contact network in 3D — nodes morph apo→holo, edges <b style="color:#2ca02c">form (green)</b> / <b style="color:#d62728">break (red)</b> live. The two endpoints are real PDB structures; the motion between them is a straight-line <b>illustrative morph</b>, not a simulated trajectory.</p>
+        </div>
+      </details>
       <button id="connbtn" class="secondary">▶ Compute connectivity change + morph</button>
       <p id="connstatus" class="status"></p>
       <div id="connsummary"></div>
