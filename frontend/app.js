@@ -963,9 +963,8 @@ function renderConnSummary(d) {
 
 // §5h/§5i — quantum-seed readiness card (apo vs holo) shown before the 3D graph
 function seedVerdictBadge(v) {
-  const m = { SAFE: ["🟢", "#2ecc71"], PARTIAL: ["🟡", "#f1c40f"], RISKY: ["🔴", "#e74c3c"] };
-  const [icon, col] = m[v] || ["•", "#8b97b8"];
-  return `<span style="color:${col};font-weight:600">${icon} ${v}</span>`;
+  const cls = { SAFE: "sb-safe", PARTIAL: "sb-partial", RISKY: "sb-risky" }[v] || "sb-neutral";
+  return `<span class="seed-badge ${cls}">${v}</span>`;
 }
 
 function renderSeedReadiness(sr) {
@@ -974,8 +973,8 @@ function renderSeedReadiness(sr) {
   wrap.classList.remove("hidden");
   const a = sr.apo, h = sr.holo, d = sr.delta;
   const sign = (x) => (x >= 0 ? "+" : "") + x.toFixed(2);
-  const dcol = (x) => (x > 0 ? "#2ecc71" : x < 0 ? "#e07a7a" : "#8b97b8");
-  const mechCol = { ACTIVATION: "#2ecc71", DEACTIVATION: "#e74c3c", AMBIGUOUS: "#f1c40f" }[sr.mechanism] || "#8b97b8";
+  const dcol = (x) => (x > 0 ? "#5fb89b" : x < 0 ? "#c77b73" : "#8b97b8");
+  const mechCol = { ACTIVATION: "#5fb89b", DEACTIVATION: "#c77b73", AMBIGUOUS: "#c2a04e" }[sr.mechanism] || "#8b97b8";
 
   const descRows = [
     ["rigidity (V_R)", a.descriptors.rigidity, h.descriptors.rigidity, d.rigidity],
@@ -987,7 +986,7 @@ function renderSeedReadiness(sr) {
     `<td style="color:${dcol(dv)}">${sign(dv)}</td></tr>`).join("");
 
   const prRows = a.per_residue.map((r) =>
-    `<tr style="color:${r.status === "weak" ? "#e07a7a" : "var(--ink)"}">` +
+    `<tr style="color:${r.status === "weak" ? "#c77b73" : "var(--ink)"}">` +
     `<td>${r.resnum}</td><td>${r.degree}</td><td>${r.coupling.toFixed(2)}</td>` +
     `<td>${r.rigidity.toFixed(2)}</td><td>${r.modeled ? "yes" : "—"}</td>` +
     `<td style="text-align:left">${r.status === "weak" ? r.reasons : "good"}</td></tr>`).join("");
