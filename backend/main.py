@@ -31,7 +31,7 @@ from .rcsb import structure_intel, ligands_and_sites
 from .discovery import find_holo_candidates
 from .compare import align_and_compare, resolve_compare_chains
 from .active_site import detect_active_site
-from .analysis import site_potential_shift, connectivity_change
+from .analysis import site_potential_shift, connectivity_change, seed_readiness_shift
 
 app = FastAPI(title="Cleveland Clinic Quantum Allosteric Scanner", version="0.2.0")
 app.add_middleware(
@@ -207,6 +207,14 @@ def connectivity_change_ep(apo: str, holo: str, apo_chain: str = "A", holo_chain
                           "drug_code": res["drug_code"]}
     out["drug_site"] = drug_site
     out["active_site"] = sorted(set(active))
+    # §5h/§5i: is the active site a safe quantum-walk seed, and how does the drug
+    # shift it (activation vs deactivation)? Best-effort — never fails the request.
+    try:
+        out["seed_readiness"] = seed_readiness_shift(
+            apo, achain, holo, hchain,
+            site_resnums=out["active_site"], cutoff=_clamp_cutoff(cutoff))
+    except Exception:
+        out["seed_readiness"] = None
     return out
 
 

@@ -139,6 +139,183 @@ def site_potentials(coords, bfac, resnums, cutoff=8.0, site_idx=None):
     return out
 
 
+# ── CTQW source-readiness (notebook §5h / §5i) ──────────────────────────────
+# Is the active site a safe SEED for a quantum walk? The CTQW propagator e^{-iHt}
+# runs on the SAME Kirchhoff/Laplacian operator the GNM is built from, so the GNM
+# connectivity + rigidity of the seed predict whether a walk launched there
+# propagates to distal pockets or stays trapped.
+
+def _ctqw_build_H(coords, R_c=8.0, r0=7.0):
+    """Distance-weighted Laplacian on the Cα graph (§5f): Gaussian edges
+    w=exp(-(r/r0)²) cut at R_c, H = D − W (real-symmetric → e^{-iHt} unitary)."""
+    D = cdist(coords, coords)
+    within = (D < R_c) & (D > 1e-8)
+    W = np.where(within, np.exp(-(D / r0) ** 2), 0.0)
+    np.fill_diagonal(W, 0.0)
+    H = np.diag(W.sum(1)) - W
+    return 0.5 * (H + H.T)
+
+
+def _average_mixing_matrix(H, degen_tol=1e-6):
+    """Godsil average mixing matrix M̂ = Σ_r E_r∘E_r (§5f): the time-averaged
+    |e^{-iHt}|² — immune to the destructive interference of a single-t snapshot."""
+    w, V = np.linalg.eigh(H)
+    N = H.shape[0]
+    V2 = V ** 2
+    if N < 2 or np.all(np.diff(w) > degen_tol):
+        return V2 @ V2.T
+    M = np.zeros((N, N))
+    i = 0
+    while i < N:
+        j = i + 1
+        while j < N and (w[j] - w[i]) <= degen_tol:
+            j += 1
+        Vg = V[:, i:j]
+        P = Vg @ Vg.T
+        M += P * P
+        i = j
+    return M
+
+
+def _abs_coupling(c):
+    """Absolute GNM dynamic coupling per residue (pre-z-score form of V_C):
+    row-sum of |normalised cross-correlation|. High = coupled to the whole protein."""
+    Cov = (c["U"] * c["winv"]) @ c["U"].T
+    d = np.sqrt(np.clip(np.diag(Cov), 1e-12, None))
+    nDCC = Cov / np.outer(d, d)
+    np.fill_diagonal(nDCC, 0.0)
+    return np.abs(nDCC).sum(1)
+
+
+def quantum_seed_readiness(coords, bfac, resnums, site_idx, cutoff=8.0,
+                           R_c=8.0, r0=7.0, distal_ang=12.0, modeled_mask=None):
+    """§5h — audit whether the active site is a safe quantum-walk seed.
+
+    Per active-site residue we flag weak seeds (low degree / weak coupling / floppy /
+    interpolated coords); the set-level DISTAL-REACH is read from the real average-
+    mixing matrix (fraction of walk amplitude landing > distal_ang Å from the site).
+    Thresholds are RELATIVE to this protein's own quartiles. Returns None if empty."""
+    site_idx = np.asarray(site_idx, int)
+    coords = np.asarray(coords, float)
+    N = len(coords)
+    if N == 0 or len(site_idx) == 0:
+        return None
+    c = gnm_context(coords, bfac, cutoff)
+    deg, msf = c["deg"], c["msf"]
+    cpl = _abs_coupling(c)
+    rig = V_rigidity(c)
+    deg_lo = max(3.0, float(np.percentile(deg, 25)))   # poorly embedded
+    cpl_lo = float(np.percentile(cpl, 25))             # weakly coupled
+    msf_hi = float(np.percentile(msf, 75))             # floppy (low rigidity)
+
+    H = _ctqw_build_H(coords, R_c, r0)
+    M = _average_mixing_matrix(H)
+    transfer = M[site_idx, :].mean(0)
+    dmin = cdist(coords, coords[site_idx]).min(1)
+    distal = dmin > distal_ang
+    off = np.ones(N, bool)
+    off[site_idx] = False
+    denom = transfer[off].sum() + 1e-12
+    distal_reach = float(transfer[distal & off].sum() / denom)
+
+    rows = []
+    for i in site_idx:
+        reasons = []
+        if deg[i] == 0:
+            reasons.append("isolated (not in contact network)")
+        elif deg[i] < deg_lo:
+            reasons.append(f"low connectivity (degree {int(deg[i])})")
+        if cpl[i] < cpl_lo:
+            reasons.append("weak dynamic coupling")
+        if msf[i] > msf_hi:
+            reasons.append("floppy (low rigidity)")
+        is_mod = bool(modeled_mask[i]) if modeled_mask is not None else False
+        if is_mod:
+            reasons.append("interpolated coordinates")
+        rows.append({
+            "resnum": int(resnums[i]), "degree": int(deg[i]),
+            "coupling": round(float(cpl[i]), 3), "rigidity": round(float(rig[i]), 2),
+            "msf": round(float(msf[i]), 3), "modeled": is_mod,
+            "status": "weak" if reasons else "good", "reasons": "; ".join(reasons),
+        })
+    n_total = len(rows)
+    n_good = sum(r["status"] == "good" for r in rows)
+    frac = n_good / n_total if n_total else 0.0
+    recommend = [r["resnum"] for r in rows if r["status"] == "good"]
+    if n_good == 0 or frac < 0.34 or distal_reach < 0.05:
+        verdict = "RISKY"
+    elif frac >= 0.60 and distal_reach >= 0.15:
+        verdict = "SAFE"
+    else:
+        verdict = "PARTIAL"
+    reach_word = ("reaches" if distal_reach >= 0.15
+                  else "weakly reaches" if distal_reach >= 0.05 else "fails to reach")
+    detail = (f"{n_good}/{n_total} active-site residues are reliable seeds; "
+              f"distal-reach {distal_reach:.2f} ({reach_word} distal pockets).")
+    return {
+        "verdict": verdict, "detail": detail, "distal_reach": round(distal_reach, 3),
+        "frac_good": round(frac, 2), "n_good": n_good, "n_total": n_total,
+        "recommend_seed": recommend, "per_residue": rows,
+        "descriptors": {
+            "rigidity": round(float(np.mean(rig[site_idx])), 2),
+            "coupling": round(float(np.mean(V_covariance(c)[site_idx])), 2),
+            "slow": round(float(np.mean(V_modeparticipation(c)[site_idx])), 2),
+        },
+    }
+
+
+def seed_readiness_shift(apo_pdb, apo_chain, holo_pdb, holo_chain=None,
+                         site_resnums=None, cutoff=8.0):
+    """§5i — apo vs holo active-site seed readiness + a drug-mechanism hypothesis.
+
+    Runs the §5h audit on both states and reads the apo→holo shift of the seed
+    descriptors (rigidity V_R, coupling V_C, slow-mode V_M) + distal-reach:
+      rigidifies + decouples → locks/damps communication → DEACTIVATION (inhibitor)
+      mobilises  + couples   → preserves/enhances signal → ACTIVATION
+    Network-dynamics hypothesis only (elastic network, no MD). None if unavailable."""
+    site_resnums = list(site_resnums or [])
+    if not site_resnums:
+        return None
+    apo = load_structure(apo_pdb, apo_chain)
+    holo = load_structure(holo_pdb, holo_chain or apo_chain)
+    if apo is None or holo is None:
+        return None
+    sa = res_indices(apo, site_resnums)
+    sh = res_indices(holo, site_resnums)
+    if len(sa) == 0 or len(sh) == 0:
+        return None
+    ra = quantum_seed_readiness(apo["coords"], apo["bfac"], apo["resnums"], sa,
+                                cutoff, modeled_mask=apo.get("modeled"))
+    rh = quantum_seed_readiness(holo["coords"], holo["bfac"], holo["resnums"], sh,
+                                cutoff, modeled_mask=holo.get("modeled"))
+    if ra is None or rh is None:
+        return None
+    da = dict(ra["descriptors"]); da["distal_reach"] = ra["distal_reach"]
+    dh = dict(rh["descriptors"]); dh["distal_reach"] = rh["distal_reach"]
+    delta = {k: round(dh[k] - da[k], 3) for k in da}
+
+    d_z, d_reach = 0.10, 0.02
+    rigidifies = delta["rigidity"] > d_z
+    decouples = (delta["coupling"] < -d_z) or (delta["distal_reach"] < -d_reach)
+    couples = (delta["coupling"] > d_z) or (delta["distal_reach"] > d_reach)
+    if rigidifies and decouples:
+        mechanism = "DEACTIVATION"
+        mech_detail = ("drug rigidifies + decouples the active site — locks / damps "
+                       "allosteric communication (inhibitor-like)")
+    elif couples and not rigidifies:
+        mechanism = "ACTIVATION"
+        mech_detail = ("drug mobilises / raises coupling at the active site — "
+                       "preserves or enhances signalling")
+    else:
+        mechanism = "AMBIGUOUS"
+        mech_detail = "mixed apo→holo shift — needs functional confirmation"
+    return {
+        "active_site": sorted(set(int(r) for r in site_resnums)),
+        "apo": ra, "holo": rh, "delta": delta,
+        "mechanism": mechanism, "mechanism_detail": mech_detail,
+    }
+
+
 def _dcc(coords, cutoff):
     """GNM dynamic cross-correlation (normalized covariance = Kirchhoff pseudo-inverse)."""
     D = cdist(coords, coords)

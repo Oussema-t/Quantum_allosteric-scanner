@@ -127,6 +127,20 @@ display; drug-bearing chain auto-resolved. Returns `{resnums, ddm, rewire, ddcc,
 apo_coords, holo_coords, site_positions, drug_site, summary{ddm_max, contacts_formed/
 broken, mean_abs_ddcc, most_reorganized}, n_shared, downsampled, chains_used}`.
 
+Also returns `seed_readiness` (§5h/§5i) — whether the active site is a safe **quantum-walk
+seed**. The CTQW propagator `e^{−iHt}` runs on the same Kirchhoff operator as the GNM, so
+seed connectivity/rigidity predicts walk propagation. Per active-site residue it flags weak
+seeds (low degree / weak coupling `_abs_coupling` / floppy high-MSF / interpolated coords);
+the set-level **distal-reach** = fraction of average-mixing-matrix amplitude (`_ctqw_build_H`
++ `_average_mixing_matrix`, Gaussian-weighted Laplacian) landing >12 Å from the site →
+verdict **SAFE / PARTIAL / RISKY** (relative per-protein quartile thresholds). Runs on apo
+*and* holo; the apo→holo shift of (rigidity V_R, coupling V_C, slow-mode V_M, distal-reach)
+yields a drug-mechanism hypothesis: rigidifies+decouples → **DEACTIVATION** (inhibitor-like),
+mobilises+couples → **ACTIVATION**. Shape: `seed_readiness{active_site, apo{verdict, detail,
+distal_reach, frac_good, n_good, n_total, recommend_seed, per_residue[], descriptors{rigidity,
+coupling, slow}}, holo{…}, delta{…}, mechanism, mechanism_detail}`. Rendered as a card in the
+connectivity panel just before the 3D contact-graph animation.
+
 ### `GET /api/active-site?pdb_id=&chains=&holo=`
 Auto-detect active/functional site. Returns `{active_site:int[], source, detail, uniprot?}`.
 

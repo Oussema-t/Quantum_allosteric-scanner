@@ -209,6 +209,25 @@
         </div>
       </div>
 
+      <!-- §5h/§5i: quantum-seed readiness (apo vs holo) -->
+      <div id="seedwrap" class="hidden">
+        <h3 style="font-size:13px;color:var(--accent);margin:18px 0 4px">Quantum-seed readiness — is the active site safe to run the quantum algorithm from?</h3>
+        <p class="hint-line">Before seeding a quantum walk at the active site, check it's <b>connected + rigid enough</b> to carry signal (the walk runs on the same Kirchhoff operator as the GNM, so its connectivity predicts propagation). Verdict per state:
+          <span style="color:#2ecc71">🟢 SAFE</span>, <span style="color:#f1c40f">🟡 PARTIAL</span> (seed the strong subset), <span style="color:#e74c3c">🔴 RISKY</span> (signal stays local). The <b>apo→holo shift</b> reads whether the drug <b>locks/decouples</b> the site (deactivation) or <b>mobilises</b> it (activation).</p>
+        <details class="help-box">
+          <summary>ℹ︎ How to read these values</summary>
+          <div class="help-body">
+            <ul>
+              <li><b>degree</b> = contacts in the Cα network (low → poorly embedded, signal can't leave); <b>coupling</b> = dynamic coupling to the whole protein (low → isolated); <b>rigidity</b> = rigid-core score (low / high MSF → floppy seed dissipates the walk); <b>modeled</b> = interpolated coordinates (a guess → vetoed).</li>
+              <li><b>distal-reach</b> = fraction of the walk's amplitude (average-mixing matrix) that lands on residues &gt;12 Å from the active site — the real test of "will a walk seeded here reach distal pockets." ≥0.15 good, &lt;0.05 trapped.</li>
+              <li><b>Verdict</b>: 🟢 most seed residues reliable <i>and</i> reaches distal · 🟡 some weak (use <b>recommend seed</b>) · 🔴 mostly weak or trapped → predictions low-confidence (expand the seed to the binding pocket).</li>
+              <li><b>Mechanism</b> (hypothesis, elastic-network not assay): drug <b>rigidifies + decouples</b> → <b style="color:#e74c3c">deactivation</b> (inhibitor-like); drug <b>mobilises / raises coupling</b> → <b style="color:#2ecc71">activation</b>.</li>
+            </ul>
+          </div>
+        </details>
+        <div id="seedbody"></div>
+      </div>
+
       <!-- animated 2D protein contact graph (at the end) -->
       <div id="graphwrap" class="hidden">
         <h3 style="font-size:13px;color:var(--accent);margin:18px 0 4px">3D protein contact graph — apo → holo animation</h3>

@@ -28,7 +28,7 @@ flowchart TB
     RCSB["rcsb<br/>chains · ligands · missing res · chem_comp classify"]
     DISC["discovery<br/>UniProt · holo search · complete_apo"]
     ACT["active_site<br/>UniProt→PDB mapping"]
-    ANA["analysis<br/>GNM §5b · shift §5c · §5d"]
+    ANA["analysis<br/>GNM §5b · shift §5c/§5d · seed §5h/§5i"]
     CMP["compare<br/>Kabsch · drug-bearing chain"]
   end
 
@@ -149,6 +149,7 @@ Quantum_allosteric-scanner/
 Newest first; one line per change, **dated + signed** so teammates can see what changed
 when: `- YYYY-MM-DD · <name> · <summary>`. See [COLLABORATION.md](COLLABORATION.md).
 
+- 2026-06-28 · Oussema · Quantum-seed readiness (notebook §5h/§5i): `analysis.quantum_seed_readiness` (is the active site a safe quantum-walk seed — per-residue degree/coupling/rigidity/modeled flags + average-mixing distal-reach → SAFE/PARTIAL/RISKY) + `seed_readiness_shift` (apo vs holo → drug activation/deactivation hypothesis). Returned on `/api/connectivity-change` as `seed_readiness`; rendered as a card in the connectivity panel just before the 3D contact-graph animation.
 - 2026-06-25 · Oussema · Connectivity-change panel: residue-region selector (X cols / Y rows = all / active site / drug site / custom interval) restricts all 3 matrices to the sub-block and the morph + 3D graph to the union subset.
 - 2026-06-25 · Oussema · Connectivity-change panel: "how to read these values" guide (DDM / rewiring / ΔDCC / summary / morph interpretation).
 - 2026-06-25 · Oussema · GNM panel: collapsible "how to read these values" guide (descriptor +/− meaning + Laplacian-spectrum interpretation).

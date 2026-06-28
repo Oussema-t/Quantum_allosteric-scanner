@@ -936,6 +936,7 @@ async function computeConnectivityChange() {
     });
     LAST.conn = d;
     renderConnSummary(d);
+    renderSeedReadiness(d.seed_readiness);   // §5h/§5i — before the 3D graph
     ["connX", "connY"].forEach((id) => ($(id).value = "all"));
     $("connXint").value = ""; $("connYint").value = "";
     $("connfilter").classList.remove("hidden");
@@ -958,6 +959,56 @@ function renderConnSummary(d) {
     card("max |ΔdistÅ|", s.ddm_max) + card("contacts formed", "+" + s.contacts_formed) +
     card("contacts broken", "−" + s.contacts_broken) + card("mean |ΔDCC|", s.mean_abs_ddcc) +
     `<div style="margin-top:8px">Most-reorganized residues (DDM): <b style="color:var(--ink)">${s.most_reorganized.join(", ")}</b></div>`;
+}
+
+// §5h/§5i — quantum-seed readiness card (apo vs holo) shown before the 3D graph
+function seedVerdictBadge(v) {
+  const m = { SAFE: ["🟢", "#2ecc71"], PARTIAL: ["🟡", "#f1c40f"], RISKY: ["🔴", "#e74c3c"] };
+  const [icon, col] = m[v] || ["•", "#8b97b8"];
+  return `<span style="color:${col};font-weight:600">${icon} ${v}</span>`;
+}
+
+function renderSeedReadiness(sr) {
+  const wrap = $("seedwrap");
+  if (!sr || !sr.apo || !sr.holo) { wrap.classList.add("hidden"); return; }
+  wrap.classList.remove("hidden");
+  const a = sr.apo, h = sr.holo, d = sr.delta;
+  const sign = (x) => (x >= 0 ? "+" : "") + x.toFixed(2);
+  const dcol = (x) => (x > 0 ? "#2ecc71" : x < 0 ? "#e07a7a" : "#8b97b8");
+  const mechCol = { ACTIVATION: "#2ecc71", DEACTIVATION: "#e74c3c", AMBIGUOUS: "#f1c40f" }[sr.mechanism] || "#8b97b8";
+
+  const descRows = [
+    ["rigidity (V_R)", a.descriptors.rigidity, h.descriptors.rigidity, d.rigidity],
+    ["dynamic coupling (V_C)", a.descriptors.coupling, h.descriptors.coupling, d.coupling],
+    ["slow-mode participation (V_M)", a.descriptors.slow, h.descriptors.slow, d.slow],
+    ["distal-reach", a.distal_reach, h.distal_reach, d.distal_reach],
+  ].map(([l, av, hv, dv]) =>
+    `<tr><td style="text-align:left">${l}</td><td>${av.toFixed(2)}</td><td>${hv.toFixed(2)}</td>` +
+    `<td style="color:${dcol(dv)}">${sign(dv)}</td></tr>`).join("");
+
+  const prRows = a.per_residue.map((r) =>
+    `<tr style="color:${r.status === "weak" ? "#e07a7a" : "var(--ink)"}">` +
+    `<td>${r.resnum}</td><td>${r.degree}</td><td>${r.coupling.toFixed(2)}</td>` +
+    `<td>${r.rigidity.toFixed(2)}</td><td>${r.modeled ? "yes" : "—"}</td>` +
+    `<td style="text-align:left">${r.status === "weak" ? r.reasons : "good"}</td></tr>`).join("");
+
+  const recommend = (a.recommend_seed.length && a.n_good < a.n_total)
+    ? `<div class="status" style="margin-top:6px">Recommended seed (reliable subset): <b style="color:var(--ink)">${a.recommend_seed.join(", ")}</b></div>` : "";
+
+  $("seedbody").innerHTML = `
+    <div style="display:flex;gap:24px;flex-wrap:wrap;margin:6px 0 10px">
+      <div>apo seed: ${seedVerdictBadge(a.verdict)} <span class="status">${a.detail}</span></div>
+      <div>holo seed: ${seedVerdictBadge(h.verdict)} <span class="status">${h.detail}</span></div>
+    </div>
+    <div style="margin:8px 0;padding:8px 10px;border-left:3px solid ${mechCol};background:#141b30">
+      <b style="color:${mechCol}">Drug mechanism (hypothesis): ${sr.mechanism}</b>
+      <span class="status"> — ${sr.mechanism_detail}</span>
+    </div>
+    <table class="seed-table"><thead><tr><th style="text-align:left">descriptor (z-score)</th><th>apo</th><th>holo</th><th>Δ</th></tr></thead><tbody>${descRows}</tbody></table>
+    ${recommend}
+    <details style="margin-top:8px"><summary class="status" style="cursor:pointer">Per-residue apo seed audit (${a.n_good}/${a.n_total} reliable)</summary>
+      <table class="seed-table"><thead><tr><th>res</th><th>degree</th><th>coupling</th><th>rigidity</th><th>modeled</th><th style="text-align:left">flag</th></tr></thead><tbody>${prRows}</tbody></table>
+    </details>`;
 }
 
 // thin grid lines marking landmark residues on a (possibly non-square) matrix:
