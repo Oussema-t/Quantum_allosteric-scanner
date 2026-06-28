@@ -21,7 +21,9 @@ async function init() {
     TARGETS = tgt.targets;
     addOption($("target"), "", "— custom PDB —");
     TARGETS.forEach((t) => addOption($("target"), t.name, `${t.name} · ${t.target_class}`));
-    $("target").addEventListener("change", onTargetChange);
+    // selecting a target only POPULATES the fields — the user sets cutoff/options
+    // and clicks "Find & visualize" to load (no auto-extraction on select).
+    $("target").addEventListener("change", () => onTargetChange(false));
     onTargetChange();
   } catch (e) {
     setStatus("Could not reach backend. Is the server running?", true);
@@ -35,8 +37,9 @@ function addOption(sel, value, label) {
   sel.appendChild(o);
 }
 
-// prefill from the chosen benchmark target — and load it immediately
-function onTargetChange(autoload = true) {
+// prefill the inputs from the chosen benchmark target; does NOT load (the user
+// adjusts cutoff/options, then clicks "Find & visualize"). autoload kept for callers.
+function onTargetChange(autoload = false) {
   const t = TARGETS.find((x) => x.name === $("target").value);
   if (!t) { setHoloAvailability(true); return; }
   $("pdb").value = t.apo || "";
