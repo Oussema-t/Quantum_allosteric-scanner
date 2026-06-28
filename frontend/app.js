@@ -934,10 +934,12 @@ async function computeConnectivityChange() {
       if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
       return r.json();
     });
+    LAST.conn = d;
     renderConnSummary(d);
-    renderConnHeatmaps(d);
-    setupMorph(d);
-    setConnStatus(`Done — ${d.n_shared} shared residues${d.downsampled ? " (matrices down-sampled to 400 for display)" : ""}.`);
+    ["connX", "connY"].forEach((id) => ($(id).value = "all"));
+    $("connXint").value = ""; $("connYint").value = "";
+    $("connfilter").classList.remove("hidden");
+    applyConnRegion();   // renders heatmaps + morph + 3D graph (all residues initially)
   } catch (e) {
     setConnStatus(`Failed: ${e.message}`, true);
   } finally {
@@ -958,46 +960,102 @@ function renderConnSummary(d) {
     `<div style="margin-top:8px">Most-reorganized residues (DDM): <b style="color:var(--ink)">${s.most_reorganized.join(", ")}</b></div>`;
 }
 
-// thin grid lines on a matrix marking landmark residues:
-// teal = active site, purple = drug-binding
-function landmarkShapes(ax, activeSet, drugSet) {
-  const lo = ax[0], hi = ax[ax.length - 1];
-  const lineAt = (v, color) => [
-    { type: "line", x0: v, x1: v, y0: lo, y1: hi, line: { color, width: 0.5 }, opacity: 0.6 },
-    { type: "line", y0: v, y1: v, x0: lo, x1: hi, line: { color, width: 0.5 }, opacity: 0.6 },
-  ];
+// thin grid lines marking landmark residues on a (possibly non-square) matrix:
+// teal = active site, purple = drug-binding. Vertical lines for X (cols), horizontal for Y (rows).
+function landmarkShapes(xax, yax, activeSet, drugSet) {
+  const xlo = xax[0], xhi = xax[xax.length - 1], ylo = yax[0], yhi = yax[yax.length - 1];
+  const vline = (v, color) => ({ type: "line", x0: v, x1: v, y0: ylo, y1: yhi, line: { color, width: 0.5 }, opacity: 0.6 });
+  const hline = (v, color) => ({ type: "line", y0: v, y1: v, x0: xlo, x1: xhi, line: { color, width: 0.5 }, opacity: 0.6 });
   const shapes = [];
-  ax.forEach((v) => {
-    if (drugSet.has(v)) shapes.push(...lineAt(v, "#b15be0"));   // drug-binding
-    if (activeSet.has(v)) shapes.push(...lineAt(v, "#00e6c3")); // active site
-  });
+  xax.forEach((v) => { if (drugSet.has(v)) shapes.push(vline(v, "#b15be0")); if (activeSet.has(v)) shapes.push(vline(v, "#00e6c3")); });
+  yax.forEach((v) => { if (drugSet.has(v)) shapes.push(hline(v, "#b15be0")); if (activeSet.has(v)) shapes.push(hline(v, "#00e6c3")); });
   return shapes;
 }
 
-function connHeatmap(div, z, title, ax, activeSet, drugSet, zmid, zmin, zmax) {
-  const shapes = landmarkShapes(ax, activeSet, drugSet);
+function connHeatmap(div, z, title, xax, yax, activeSet, drugSet, zmid, zmin, zmax) {
+  const shapes = landmarkShapes(xax, yax, activeSet, drugSet);
   Plotly.newPlot(div, [{
-    z, x: ax, y: ax, type: "heatmap", colorscale: DIVERGE,
+    z, x: xax, y: yax, type: "heatmap", colorscale: DIVERGE,
     zmid: zmid, zmin: zmin, zmax: zmax, showscale: true,
+    hovertemplate: "row %{y} · col %{x}: %{z}<extra></extra>",
   }], {
     title: { text: title, font: { size: 11, color: "#c7d0e6" }, x: 0.02 },
     margin: { l: 40, r: 10, t: 26, b: 36 }, paper_bgcolor: "#141b30", plot_bgcolor: "#141b30",
     font: { color: "#8b97b8", size: 9 }, shapes,
-    xaxis: { title: "residue", showgrid: false }, yaxis: { title: "residue", showgrid: false, autorange: "reversed" },
+    xaxis: { title: "residue (cols)", showgrid: false }, yaxis: { title: "residue (rows)", showgrid: false, autorange: "reversed" },
   }, { displayModeBar: false, responsive: true });
 }
 
-function renderConnHeatmaps(d) {
-  const ax = d.resnums;
+// render the three matrices restricted to a Y (rows) × X (cols) residue sub-block
+function renderConnHeatmaps(d, rowIdx, colIdx) {
+  const xax = colIdx.map((i) => d.resnums[i]);
+  const yax = rowIdx.map((i) => d.resnums[i]);
+  const slice = (M) => rowIdx.map((i) => colIdx.map((j) => M[i][j]));
+  const ddm = slice(d.ddm), rewire = slice(d.rewire), ddcc = slice(d.ddcc);
   const activeSet = new Set(d.active_site || []);
   const drugSet = new Set(d.drug_site || []);
-  const ddmLim = matAbsPct(d.ddm, 99);
-  const ddccLim = matAbsPct(d.ddcc, 99);
-  connHeatmap($("ddmplot"), d.ddm, "DDM — distance change (red = apart, blue = closer)", ax, activeSet, drugSet, 0, -ddmLim, ddmLim);
-  connHeatmap($("rewireplot"), d.rewire, "Contact rewiring (+1 formed / −1 broken)", ax, activeSet, drugSet, 0, -1, 1);
-  connHeatmap($("ddccplot"), d.ddcc, "ΔDCC — dynamic coupling change (holo − apo)", ax, activeSet, drugSet, 0, -ddccLim, ddccLim);
-  setupGraphMorph(d, activeSet, drugSet);
+  const ddmLim = matAbsPct(ddm, 99);
+  const ddccLim = matAbsPct(ddcc, 99);
+  connHeatmap($("ddmplot"), ddm, "DDM — distance change (red = apart, blue = closer)", xax, yax, activeSet, drugSet, 0, -ddmLim, ddmLim);
+  connHeatmap($("rewireplot"), rewire, "Contact rewiring (+1 formed / −1 broken)", xax, yax, activeSet, drugSet, 0, -1, 1);
+  connHeatmap($("ddccplot"), ddcc, "ΔDCC — dynamic coupling change (holo − apo)", xax, yax, activeSet, drugSet, 0, -ddccLim, ddccLim);
 }
+
+// ── residue-region selection (filter all connectivity views) ────────────────
+function parseRanges(text) {
+  return (text || "").split(",").map((s) => s.trim()).filter(Boolean).map((s) => {
+    const p = s.split("-").map((x) => parseInt(x, 10));
+    if (p.length === 2 && !isNaN(p[0]) && !isNaN(p[1])) return [Math.min(p[0], p[1]), Math.max(p[0], p[1])];
+    if (p.length === 1 && !isNaN(p[0])) return [p[0], p[0]];
+    return null;
+  }).filter(Boolean);
+}
+
+function resolveRegion(sel, intervalText, d) {
+  const ax = d.resnums;
+  if (sel === "active") { const s = new Set(d.active_site || []); return ax.map((r, i) => (s.has(r) ? i : -1)).filter((i) => i >= 0); }
+  if (sel === "drug") { const s = new Set(d.drug_site || []); return ax.map((r, i) => (s.has(r) ? i : -1)).filter((i) => i >= 0); }
+  if (sel === "interval") { const R = parseRanges(intervalText); return ax.map((r, i) => (R.some(([a, b]) => r >= a && r <= b) ? i : -1)).filter((i) => i >= 0); }
+  return ax.map((_, i) => i);
+}
+
+function subsetConn(d, idx) {
+  return {
+    apo_coords: idx.map((i) => d.apo_coords[i]), holo_coords: idx.map((i) => d.holo_coords[i]),
+    resnums: idx.map((i) => d.resnums[i]), cutoff: d.cutoff, r0: d.r0,
+    active_site: d.active_site, drug_site: d.drug_site,
+  };
+}
+
+function applyConnRegion() {
+  const d = LAST.conn;
+  if (!d) return;
+  let rowIdx = resolveRegion($("connY").value, $("connYint").value, d);
+  let colIdx = resolveRegion($("connX").value, $("connXint").value, d);
+  if (!rowIdx.length) rowIdx = d.resnums.map((_, i) => i);
+  if (!colIdx.length) colIdx = d.resnums.map((_, i) => i);
+  renderConnHeatmaps(d, rowIdx, colIdx);
+  // morph + 3D graph use the union of the selected residues (a single node set)
+  const uni = Array.from(new Set([...rowIdx, ...colIdx])).sort((a, b) => a - b);
+  const sub = subsetConn(d, uni);
+  setupMorph(sub);
+  setupGraphMorph(sub, new Set(d.active_site || []), new Set(d.drug_site || []));
+  const full = d.resnums.length;
+  const note = (rowIdx.length < full || colIdx.length < full)
+    ? `showing ${rowIdx.length}×${colIdx.length} residues (morph/graph: ${uni.length})`
+    : "showing all residues";
+  setConnStatus(`${d.n_shared} shared residues · ${note}.`);
+}
+
+$("connapply").addEventListener("click", applyConnRegion);
+$("connreset").addEventListener("click", () => {
+  ["connX", "connY"].forEach((id) => ($(id).value = "all"));
+  $("connXint").value = ""; $("connYint").value = ""; applyConnRegion();
+});
+["connX", "connY"].forEach((id) => $(id).addEventListener("change", applyConnRegion));
+["connXint", "connYint"].forEach((id) => $(id).addEventListener("keydown", (e) => {
+  if (e.key === "Enter") { e.preventDefault(); applyConnRegion(); }
+}));
 
 // ── animated 3D protein contact graph (apo → holo) ─────────────────────────
 // nodes morph from apo to holo 3D positions; edges form/break live (kept/formed/broken).
@@ -1114,7 +1172,7 @@ function setupMorph(d) {
   $("morphwrap").classList.remove("hidden");
   const W = couplingMatrix(d.apo_coords, d.cutoff, d.r0);
   // landmark lines persist across frames (shapes live in the layout; z updates via restyle)
-  const shapes = landmarkShapes(d.resnums, new Set(d.active_site || []), new Set(d.drug_site || []));
+  const shapes = landmarkShapes(d.resnums, d.resnums, new Set(d.active_site || []), new Set(d.drug_site || []));
   Plotly.newPlot("morphplot", [{ z: W, x: d.resnums, y: d.resnums, type: "heatmap", colorscale: "Magma", showscale: true }], {
     title: { text: "Connectivity morph apo→holo  ·  teal = active site, purple = drug", font: { size: 11, color: "#c7d0e6" }, x: 0.02 },
     margin: { l: 40, r: 10, t: 26, b: 36 }, paper_bgcolor: "#141b30", plot_bgcolor: "#141b30",

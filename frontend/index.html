@@ -172,6 +172,29 @@
       <button id="connbtn" class="secondary">▶ Compute connectivity change + morph</button>
       <p id="connstatus" class="status"></p>
       <div id="connsummary"></div>
+      <div id="connfilter" class="conn-filter hidden">
+        <span class="cf-label">Region:</span>
+        <label>Y (rows)
+          <select id="connY">
+            <option value="all">all residues</option>
+            <option value="active">active site</option>
+            <option value="drug">drug site</option>
+            <option value="interval">interval…</option>
+          </select>
+        </label>
+        <input id="connYint" type="text" placeholder="e.g. 50-80, 100-110" />
+        <label>X (cols)
+          <select id="connX">
+            <option value="all">all residues</option>
+            <option value="active">active site</option>
+            <option value="drug">drug site</option>
+            <option value="interval">interval…</option>
+          </select>
+        </label>
+        <input id="connXint" type="text" placeholder="e.g. 50-80" />
+        <button id="connapply" class="secondary">Apply</button>
+        <button id="connreset" class="secondary">Reset</button>
+      </div>
       <div class="conn-grid">
         <div id="ddmplot" class="connchart"></div>
         <div id="rewireplot" class="connchart"></div>
