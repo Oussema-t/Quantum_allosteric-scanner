@@ -56,7 +56,11 @@ backend/   FastAPI service
 frontend/  3Dmol.js viewer + structure-intelligence panel (no build step)
 ```
 
-## Run locally
+## Two ways to run
+
+**A · Hosted (nothing to install)** — open the [live demo](https://quantum-allosteric-scanner.onrender.com), login `jury` / `QAS@CC`. The first visit after idle takes ~30–60 s to wake (free tier); after that it's fast.
+
+**B · Local (fastest, no cold start)** — recommended for development:
 
 ```bash
 python3 -m venv .venv
@@ -65,7 +69,15 @@ pip install -r requirements.txt
 uvicorn backend.main:app --reload --port 8000
 ```
 
-Then open <http://localhost:8000> and log in with `jury` / `QAS@CC`.
+Then open <http://localhost:8000>. By default the login is `jury` / `QAS@CC`; to skip the
+login locally, set blank credentials before starting:
+
+```bash
+APP_USERNAME= APP_PASSWORD= uvicorn backend.main:app --reload --port 8000
+```
+
+Same code path as the server — only difference is no idle cold start and the structure
+cache persists between runs, so it feels faster.
 
 ## Deploy (public URL)
 
