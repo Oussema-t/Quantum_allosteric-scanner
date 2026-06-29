@@ -478,22 +478,79 @@ def connectivity_change(apo_pdb, apo_chain, holo_pdb, holo_chain=None, cutoff=8.
     }
 
 
+def _coords_on(s, common):
+    pos = {int(r): i for i, r in enumerate(s["resnums"])}
+    return np.array([s["coords"][pos[int(r)]] for r in common], float)
+
+
+def _auto_intermediates(apo_pdb, chain, apo, holo, holo_pdb, k, pool_cap=12):
+    """Auto-pick k real structures of the SAME protein, ordered along the apo→holo path.
+
+    No hardcoding / no user-supplied ids: query the PDB for other structures of this
+    protein (UniProt), and for each compute a 'progress' coordinate = best-fit RMSD to
+    apo / (RMSD to apo + RMSD to holo) — 0 ≈ apo-like, 1 ≈ holo-like. Then pick k spread
+    evenly across that coordinate. Returns (ordered ids, [{pdb_id, progress}])."""
+    from .discovery import same_protein_entries
+    pool = [p for p in same_protein_entries(apo_pdb, max_n=40)
+            if p != str(holo_pdb).upper()]
+    base = set(int(r) for r in apo["resnums"]) & set(int(r) for r in holo["resnums"])
+    scored, loaded = [], 0
+    for pid in pool:
+        if loaded >= pool_cap:
+            break
+        st = load_structure(pid, chain)
+        if st is None:
+            continue
+        loaded += 1
+        com = base & set(int(r) for r in st["resnums"])
+        if len(com) < 10:
+            continue
+        com = np.array(sorted(com), int)
+        A, H, C = _coords_on(apo, com), _coords_on(holo, com), _coords_on(st, com)
+        r_apo = float(np.sqrt(((_kabsch_rotate(C, A) - A) ** 2).sum(1).mean()))
+        r_holo = float(np.sqrt(((_kabsch_rotate(C, H) - H) ** 2).sum(1).mean()))
+        scored.append((r_apo / (r_apo + r_holo + 1e-9), pid))
+    scored.sort()
+    if not scored:
+        return [], []
+    if k >= len(scored):
+        chosen = scored
+    else:
+        chosen, used = [], set()
+        for t in np.linspace(0.0, 1.0, k + 2)[1:-1]:          # interior targets
+            best = min((s for s in scored if s[1] not in used),
+                       key=lambda s: abs(s[0] - t), default=None)
+            if best:
+                used.add(best[1]); chosen.append(best)
+        chosen.sort()
+    return [pid for _, pid in chosen], [{"pdb_id": pid, "progress": round(pr, 2)} for pr, pid in chosen]
+
+
 def morph_frames(apo_pdb, apo_chain, holo_pdb, holo_chain=None, inter_pdbs=None,
-                 cutoff=8.0, max_n=400):
+                 n_frames=None, cutoff=8.0, max_n=400):
     """Real apo→intermediate→holo keyframes for the 3D graph animation. Each structure's
     Cα coords are taken on the residue set SHARED by ALL of them and Kabsch-aligned to apo,
-    so the animation can pass through real experimental conformations instead of a single
-    straight-line apo→holo interpolation. `inter_pdbs` is a user-chosen, any-length list."""
-    inter_pdbs = [str(p).strip().upper() for p in (inter_pdbs or []) if str(p).strip()]
+    so the animation passes through real experimental conformations instead of a single
+    straight-line apo→holo interpolation.
+
+    Intermediates are AUTO-discovered for the same protein when `n_frames` > 2 (the user
+    just chooses how many frames); `inter_pdbs` is an optional explicit override."""
     apo = load_structure(apo_pdb, apo_chain)
     holo = load_structure(holo_pdb, holo_chain or apo_chain)
     if apo is None or holo is None:
         raise ValueError(f"could not load apo {apo_pdb} or holo {holo_pdb}")
+    inter_ids = [str(p).strip().upper() for p in (inter_pdbs or []) if str(p).strip()]
+    auto_selected = []
+    if not inter_ids and n_frames and int(n_frames) > 2:
+        inter_ids, auto_selected = _auto_intermediates(
+            apo_pdb, apo_chain, apo, holo, holo_pdb, int(n_frames) - 2)
     states = [(str(apo_pdb).upper(), apo)]
-    for pid in inter_pdbs:
+    for pid in inter_ids:
         st = load_structure(pid, apo_chain)
         if st is None:
-            raise ValueError(f"could not load intermediate {pid} on chain {apo_chain}")
+            if inter_pdbs:                                     # explicit id must load
+                raise ValueError(f"could not load intermediate {pid} on chain {apo_chain}")
+            continue                                           # auto pick: just skip
         states.append((pid, st))
     states.append((str(holo_pdb).upper(), holo))
 
@@ -507,21 +564,17 @@ def morph_frames(apo_pdb, apo_chain, holo_pdb, holo_chain=None, inter_pdbs=None,
     if len(common) > max_n:
         common = common[np.unique(np.linspace(0, len(common) - 1, max_n).astype(int))]
 
-    def coords_on(s):
-        pos = {int(r): i for i, r in enumerate(s["resnums"])}
-        return np.array([s["coords"][pos[int(r)]] for r in common], float)
-
-    ref = coords_on(apo)
+    ref = _coords_on(apo, common)
     frames, labels = [], []
     for k, (name, s) in enumerate(states):
-        C = ref if k == 0 else _kabsch_rotate(coords_on(s), ref)
+        C = ref if k == 0 else _kabsch_rotate(_coords_on(s, common), ref)
         frames.append(np.round(C, 3).tolist())
         labels.append(name)
     labels[0] = f"apo ({labels[0]})"
     labels[-1] = f"holo ({labels[-1]})"
     return {
         "resnums": [int(r) for r in common], "cutoff": cutoff,
-        "frames": frames, "frame_labels": labels,
+        "frames": frames, "frame_labels": labels, "auto_selected": auto_selected,
         "n_frames": len(frames), "n_shared": int(len(common)),
     }
 

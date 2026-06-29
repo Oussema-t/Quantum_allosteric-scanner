@@ -222,18 +222,20 @@ def connectivity_change_ep(apo: str, holo: str, apo_chain: str = "A", holo_chain
 
 @app.get("/api/morph-frames")
 def morph_frames_ep(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = None,
-                    intermediates: str = "", cutoff: float = 8.0):
-    """Real apo→intermediate→holo keyframes (Kabsch-aligned on shared residues) for the 3D
-    graph animation — lets the user pass through real structures instead of a straight line."""
+                    n_frames: int = 4, cutoff: float = 8.0):
+    """Real keyframes for the 3D graph animation. The protein is already chosen, so the
+    intermediate structures are AUTO-discovered (other PDB entries of the same protein,
+    ordered apo→holo); the user only picks how many frames (`n_frames`, 2–8)."""
     apo, holo = apo.strip().upper(), holo.strip().upper()
     if apo == holo:
         raise HTTPException(422, f"apo and holo are the same entry ({apo})")
-    inter = [p.strip().upper() for p in (intermediates or "").split(",") if p.strip()]
+    n_frames = max(2, min(int(n_frames), 8))
     res = resolve_compare_chains(apo, holo, apo_chain)
     achain = res["apo_chain"] if res else apo_chain
     hchain = res["holo_chain"] if res else (holo_chain or apo_chain)
     try:
-        return morph_frames(apo, achain, holo, hchain, inter, cutoff=_clamp_cutoff(cutoff))
+        return morph_frames(apo, achain, holo, hchain, n_frames=n_frames,
+                            cutoff=_clamp_cutoff(cutoff))
     except ValueError as e:
         raise HTTPException(422, str(e))
     except Exception as e:

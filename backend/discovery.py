@@ -106,6 +106,21 @@ def _entry_drug_info(pdb_id):
     }
 
 
+def same_protein_entries(pdb_id, max_n=40, with_ligand=False):
+    """All PDB entries of the same protein as `pdb_id` (via UniProt), excluding it.
+    `with_ligand=False` includes apo-like conformers too — used to build morph keyframes."""
+    unis = get_uniprot(pdb_id)
+    if not unis:
+        return []
+    up = pdb_id.upper()
+    seen, out = set(), []
+    for i in _search_entries_by_uniprot(unis[0], with_ligand=with_ligand, rows=max_n):
+        iu = i.upper()
+        if iu != up and iu not in seen:
+            seen.add(iu); out.append(iu)
+    return out
+
+
 def find_holo_candidates(apo_pdb, target_name=None, max_detail=12):
     """All ligand-bound structures of the same protein as `apo_pdb`, drug-bound first.
 

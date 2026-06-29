@@ -1236,14 +1236,14 @@ async function applyGraphMotion() {
     return;
   }
   const apo = $("pdb").value.trim(), holo = currentHolo();
-  const inter = $("graphinter").value.trim();
+  const nFrames = parseInt($("graphnframes").value, 10) || 4;
   const ac = ($("chains").value.trim() || "A").split(",")[0].trim();
   const cutoff = parseFloat($("cutoff").value) || 8.0;
   const btn = $("graphapply"); btn.disabled = true;
-  st.textContent = inter ? "Fetching real intermediate structures…" : "Fetching real apo/holo frames…";
+  st.textContent = `Finding ${nFrames - 2} real intermediate structure(s) of this protein…`;
   try {
     const url = `${API}/api/morph-frames?apo=${apo}&holo=${holo}&apo_chain=${ac}&cutoff=${cutoff}` +
-      `&intermediates=${encodeURIComponent(inter)}`;
+      `&n_frames=${nFrames}`;
     const fr = await fetch(url).then(async (r) => {
       if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
       return r.json();
@@ -1253,7 +1253,7 @@ async function applyGraphMotion() {
     setupGraphMorph(d, new Set(LAST.conn.active_site || []), new Set(LAST.conn.drug_site || []));
     st.textContent = (fr.n_frames > 2)
       ? `Playing ${fr.n_frames} real frames: ${fr.frame_labels.join(" → ")} · ${fr.n_shared} shared residues.`
-      : `Only apo + holo (no intermediates given) — add ordered PDB IDs to pass through real structures. ${fr.n_shared} shared residues.`;
+      : `No other structures of this protein found in the PDB — using apo + holo only (${fr.n_shared} shared residues).`;
   } catch (e) {
     st.textContent = `Failed: ${e.message}`;
   } finally {

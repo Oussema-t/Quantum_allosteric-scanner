@@ -147,15 +147,18 @@ recommend_seed, per_residue[], descriptors{…}, descriptors_raw{…}}, holo{…
 holo, delta, thr, sig}, pocket_shift{…|null}, reach_shift, mechanism, mechanism_detail}`.
 Rendered as a card in the connectivity panel just before the 3D contact-graph animation.
 
-### `GET /api/morph-frames?apo=&holo=&apo_chain=A&holo_chain=&intermediates=&cutoff=8.0`
-Real keyframes for the 3D contact-graph animation. `intermediates` = comma-separated, ordered,
-user-chosen PDB ids (any length, may be empty). Loads apo + each intermediate + holo, takes Cα
-on the residue set **shared by all**, Kabsch-aligns every frame to apo, downsamples to ≤400.
-Returns `{resnums, cutoff, frames[[xyz]…] (ordered apo→…→holo), frame_labels[], n_frames,
-n_shared}`. The frontend "Motion" toggle plays a path **through these real conformations**
-(piecewise interpolation) instead of the single straight-line apo→holo morph; with no
-intermediates it returns the 2 endpoints (≡ the straight-line mode). 422 on self-compare /
-unloadable id / <10 shared residues.
+### `GET /api/morph-frames?apo=&holo=&apo_chain=A&holo_chain=&n_frames=4&cutoff=8.0`
+Real keyframes for the 3D contact-graph animation. The protein is already chosen, so
+intermediates are **auto-discovered**: `discovery.same_protein_entries` (UniProt → RCSB
+search) lists other PDB structures of the same protein, and `analysis._auto_intermediates`
+orders them along the apo→holo path by a best-fit-RMSD progress coordinate
+(`RMSD→apo / (RMSD→apo + RMSD→holo)`), picking `n_frames−2` spread evenly. Loads apo + the
+picked structures + holo, takes Cα on the residue set **shared by all**, Kabsch-aligns every
+frame to apo, downsamples to ≤400. The user only chooses **`n_frames` (2–8)**. Returns
+`{resnums, cutoff, frames[[xyz]…] (apo→…→holo), frame_labels[], auto_selected[{pdb_id,
+progress}], n_frames, n_shared}`. The "Motion" toggle plays the path **through these real
+conformations** (piecewise interpolation) vs the straight-line apo→holo morph; if no other
+structures exist it falls back to the 2 endpoints. 422 on self-compare / <10 shared residues.
 
 ### `GET /api/active-site?pdb_id=&chains=&holo=`
 Auto-detect active/functional site. Returns `{active_site:int[], source, detail, uniprot?}`.
