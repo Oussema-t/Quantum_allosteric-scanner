@@ -31,7 +31,8 @@ from .rcsb import structure_intel, ligands_and_sites
 from .discovery import find_holo_candidates
 from .compare import align_and_compare, resolve_compare_chains
 from .active_site import detect_active_site
-from .analysis import site_potential_shift, connectivity_change, seed_readiness_shift
+from .analysis import (site_potential_shift, connectivity_change, seed_readiness_shift,
+                       morph_frames)
 
 app = FastAPI(title="Cleveland Clinic Quantum Allosteric Scanner", version="0.2.0")
 app.add_middleware(
@@ -217,6 +218,26 @@ def connectivity_change_ep(apo: str, holo: str, apo_chain: str = "A", holo_chain
     except Exception:
         out["seed_readiness"] = None
     return out
+
+
+@app.get("/api/morph-frames")
+def morph_frames_ep(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = None,
+                    intermediates: str = "", cutoff: float = 8.0):
+    """Real apo→intermediate→holo keyframes (Kabsch-aligned on shared residues) for the 3D
+    graph animation — lets the user pass through real structures instead of a straight line."""
+    apo, holo = apo.strip().upper(), holo.strip().upper()
+    if apo == holo:
+        raise HTTPException(422, f"apo and holo are the same entry ({apo})")
+    inter = [p.strip().upper() for p in (intermediates or "").split(",") if p.strip()]
+    res = resolve_compare_chains(apo, holo, apo_chain)
+    achain = res["apo_chain"] if res else apo_chain
+    hchain = res["holo_chain"] if res else (holo_chain or apo_chain)
+    try:
+        return morph_frames(apo, achain, holo, hchain, inter, cutoff=_clamp_cutoff(cutoff))
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+    except Exception as e:
+        raise HTTPException(422, f"morph-frames failed: {e}")
 
 
 @app.get("/api/active-site")

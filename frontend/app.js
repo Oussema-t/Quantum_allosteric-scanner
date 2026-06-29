@@ -1138,7 +1138,10 @@ const _gdist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
 
 function setupGraphMorph(d, activeSet, drugSet) {
   $("graphwrap").classList.remove("hidden");
-  const ax = d.resnums, cut = d.cutoff, apo3 = d.apo_coords, holo3 = d.holo_coords;
+  const ax = d.resnums, cut = d.cutoff;
+  // keyframes: real frames [apo, …intermediates, holo] if provided, else the 2-frame straight line
+  const frames = (d.frames && d.frames.length >= 2) ? d.frames : [d.apo_coords, d.holo_coords];
+  const apo3 = frames[0], holo3 = frames[frames.length - 1];  // endpoints decide formed/broken
   const edges = [];                                   // pairs that are a contact in apo OR holo
   for (let i = 0; i < ax.length; i++) for (let j = i + 1; j < ax.length; j++) {
     const ea = _gdist(apo3[i], apo3[j]) < cut, eh = _gdist(holo3[i], holo3[j]) < cut;
@@ -1148,7 +1151,8 @@ function setupGraphMorph(d, activeSet, drugSet) {
     : activeSet.has(r) ? "#00e6c3" : drugSet.has(r) ? "#b15be0" : "#7f8db0");
   const nsize = ax.map((r) => (activeSet.has(r) || drugSet.has(r)) ? 6 : 3);
   const ntext = ax.map((r) => `res ${r}${activeSet.has(r) ? " · active" : ""}${drugSet.has(r) ? " · drug" : ""}`);
-  GRAPH.data = { apo3, holo3, edges, cut, ncolor, nsize, ntext };
+  GRAPH.data = { frames, apo3, holo3, edges, cut, ncolor, nsize, ntext };
+  GRAPH.labels = d.frame_labels || ["apo", "holo"];
   GRAPH.t = 0; GRAPH.dir = 1;
   const f = graphFrameData(0);
   const eTrace = (e, color, w, op) => ({ type: "scatter3d", mode: "lines", x: e.x, y: e.y, z: e.z,
@@ -1171,9 +1175,13 @@ function setupGraphMorph(d, activeSet, drugSet) {
 }
 
 function graphFrameData(t) {
-  const g = GRAPH.data;
-  const P = g.apo3.map((p, i) => [
-    (1 - t) * p[0] + t * g.holo3[i][0], (1 - t) * p[1] + t * g.holo3[i][1], (1 - t) * p[2] + t * g.holo3[i][2]]);
+  const g = GRAPH.data, F = g.frames, K = F.length;
+  // map global t∈[0,1] across the K−1 segments, then interpolate within the segment
+  const seg = Math.min(Math.floor(t * (K - 1)), K - 2);
+  const u = t * (K - 1) - seg;                        // local 0→1 within this segment
+  const A = F[seg], B = F[seg + 1];
+  const P = A.map((p, i) => [
+    (1 - u) * p[0] + u * B[i][0], (1 - u) * p[1] + u * B[i][1], (1 - u) * p[2] + u * B[i][2]]);
   const nx = [], ny = [], nz = [];
   for (const p of P) { nx.push(p[0]); ny.push(p[1]); nz.push(p[2]); }
   const kept = { x: [], y: [], z: [] }, formed = { x: [], y: [], z: [] }, broken = { x: [], y: [], z: [] };
@@ -1193,7 +1201,11 @@ function graphFrame(t) {
   Plotly.restyle("protgraph",
     { x: [f.kept.x, f.broken.x, f.formed.x, f.nx], y: [f.kept.y, f.broken.y, f.formed.y, f.ny], z: [f.kept.z, f.broken.z, f.formed.z, f.nz] },
     [0, 1, 2, 3]);
-  $("grapht").textContent = `t = ${t.toFixed(2)} ${t < 0.02 ? "(apo)" : t > 0.98 ? "(holo)" : GRAPH.dir > 0 ? "(→ holo)" : "(→ apo)"}`;
+  const L = GRAPH.labels || ["apo", "holo"], K = L.length;
+  const near = Math.round(t * (K - 1));               // nearest keyframe label
+  const tag = (t < 0.01) ? L[0] : (t > 0.99) ? L[K - 1]
+    : (Math.abs(t * (K - 1) - near) < 0.04 ? `@ ${L[near]}` : (GRAPH.dir > 0 ? "→ holo" : "→ apo"));
+  $("grapht").textContent = `t = ${t.toFixed(2)} (${tag})`;
   $("graphslider").value = t;
 }
 
@@ -1213,6 +1225,42 @@ function stopGraph() {
 }
 $("graphplay").addEventListener("click", () => { GRAPH.timer ? stopGraph() : startGraph(); });
 $("graphslider").addEventListener("input", (e) => { stopGraph(); GRAPH.t = parseFloat(e.target.value); graphFrame(GRAPH.t); });
+
+// switch the 3D-graph motion: straight-line (current region) vs real intermediate frames
+async function applyGraphMotion() {
+  const st = $("graphmotionstatus");
+  if (!LAST.conn) { st.textContent = "Run “Compute connectivity change” first."; return; }
+  if ($("graphmode").value === "linear") {
+    st.textContent = "Straight-line apo → holo (linear interpolation).";
+    applyConnRegion();                                 // rebuild the graph from the current region
+    return;
+  }
+  const apo = $("pdb").value.trim(), holo = currentHolo();
+  const inter = $("graphinter").value.trim();
+  const ac = ($("chains").value.trim() || "A").split(",")[0].trim();
+  const cutoff = parseFloat($("cutoff").value) || 8.0;
+  const btn = $("graphapply"); btn.disabled = true;
+  st.textContent = inter ? "Fetching real intermediate structures…" : "Fetching real apo/holo frames…";
+  try {
+    const url = `${API}/api/morph-frames?apo=${apo}&holo=${holo}&apo_chain=${ac}&cutoff=${cutoff}` +
+      `&intermediates=${encodeURIComponent(inter)}`;
+    const fr = await fetch(url).then(async (r) => {
+      if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
+      return r.json();
+    });
+    const d = { resnums: fr.resnums, cutoff: fr.cutoff, frames: fr.frames,
+      frame_labels: fr.frame_labels, apo_coords: fr.frames[0], holo_coords: fr.frames[fr.frames.length - 1] };
+    setupGraphMorph(d, new Set(LAST.conn.active_site || []), new Set(LAST.conn.drug_site || []));
+    st.textContent = (fr.n_frames > 2)
+      ? `Playing ${fr.n_frames} real frames: ${fr.frame_labels.join(" → ")} · ${fr.n_shared} shared residues.`
+      : `Only apo + holo (no intermediates given) — add ordered PDB IDs to pass through real structures. ${fr.n_shared} shared residues.`;
+  } catch (e) {
+    st.textContent = `Failed: ${e.message}`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+$("graphapply").addEventListener("click", applyGraphMotion);
 
 function matAbsPct(m, pct) {
   const v = [];

@@ -478,6 +478,54 @@ def connectivity_change(apo_pdb, apo_chain, holo_pdb, holo_chain=None, cutoff=8.
     }
 
 
+def morph_frames(apo_pdb, apo_chain, holo_pdb, holo_chain=None, inter_pdbs=None,
+                 cutoff=8.0, max_n=400):
+    """Real apo→intermediate→holo keyframes for the 3D graph animation. Each structure's
+    Cα coords are taken on the residue set SHARED by ALL of them and Kabsch-aligned to apo,
+    so the animation can pass through real experimental conformations instead of a single
+    straight-line apo→holo interpolation. `inter_pdbs` is a user-chosen, any-length list."""
+    inter_pdbs = [str(p).strip().upper() for p in (inter_pdbs or []) if str(p).strip()]
+    apo = load_structure(apo_pdb, apo_chain)
+    holo = load_structure(holo_pdb, holo_chain or apo_chain)
+    if apo is None or holo is None:
+        raise ValueError(f"could not load apo {apo_pdb} or holo {holo_pdb}")
+    states = [(str(apo_pdb).upper(), apo)]
+    for pid in inter_pdbs:
+        st = load_structure(pid, apo_chain)
+        if st is None:
+            raise ValueError(f"could not load intermediate {pid} on chain {apo_chain}")
+        states.append((pid, st))
+    states.append((str(holo_pdb).upper(), holo))
+
+    common = set(int(r) for r in apo["resnums"])
+    for _, s in states[1:]:
+        common &= set(int(r) for r in s["resnums"])
+    common = np.array(sorted(common), int)
+    if len(common) < 10:
+        raise ValueError(f"only {len(common)} residues shared across all "
+                         f"{len(states)} structures — need ≥10 to animate")
+    if len(common) > max_n:
+        common = common[np.unique(np.linspace(0, len(common) - 1, max_n).astype(int))]
+
+    def coords_on(s):
+        pos = {int(r): i for i, r in enumerate(s["resnums"])}
+        return np.array([s["coords"][pos[int(r)]] for r in common], float)
+
+    ref = coords_on(apo)
+    frames, labels = [], []
+    for k, (name, s) in enumerate(states):
+        C = ref if k == 0 else _kabsch_rotate(coords_on(s), ref)
+        frames.append(np.round(C, 3).tolist())
+        labels.append(name)
+    labels[0] = f"apo ({labels[0]})"
+    labels[-1] = f"holo ({labels[-1]})"
+    return {
+        "resnums": [int(r) for r in common], "cutoff": cutoff,
+        "frames": frames, "frame_labels": labels,
+        "n_frames": len(frames), "n_shared": int(len(common)),
+    }
+
+
 def site_potential_shift(apo_pdb, apo_chain, holo_pdb, holo_chain=None,
                          site_resnums=None, cutoff=8.0):
     """Site potentials for apo and holo, plus the apo->holo shift on shared residues
