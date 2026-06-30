@@ -942,6 +942,7 @@ async function computeConnectivityChange() {
       return r.json();
     });
     LAST.conn = d;
+    LAST.frames = null;                      // real frames are stale until re-fetched
     renderConnSummary(d);
     renderSeedReadiness(d.seed_readiness);   // §5h/§5i — before the 3D graph
     ["connX", "connY"].forEach((id) => ($(id).value = "all"));
@@ -1100,6 +1101,22 @@ function subsetConn(d, idx) {
   };
 }
 
+function graphMotionMode() { return $("graphmode") ? $("graphmode").value : "linear"; }
+
+// restrict a real-frames payload to residues in `regionSet` (by residue NUMBER, since the
+// frames live on a different shared-residue set than LAST.conn). null if <2 residues remain.
+function subsetFrames(fp, regionSet) {
+  const keep = [];
+  for (let i = 0; i < fp.resnums.length; i++) if (regionSet.has(fp.resnums[i])) keep.push(i);
+  if (keep.length < 2) return null;
+  return {
+    resnums: keep.map((i) => fp.resnums[i]), cutoff: fp.cutoff, frame_labels: fp.frame_labels,
+    frames: fp.frames.map((fr) => keep.map((i) => fr[i])),
+    apo_coords: keep.map((i) => fp.frames[0][i]),
+    holo_coords: keep.map((i) => fp.frames[fp.frames.length - 1][i]),
+  };
+}
+
 function applyConnRegion() {
   const d = LAST.conn;
   if (!d) return;
@@ -1112,7 +1129,12 @@ function applyConnRegion() {
   const uni = Array.from(new Set([...rowIdx, ...colIdx])).sort((a, b) => a - b);
   const sub = subsetConn(d, uni);
   setupMorph(sub);
-  setupGraphMorph(sub, new Set(d.active_site || []), new Set(d.drug_site || []));
+  const activeSet = new Set(d.active_site || []), drugSet = new Set(d.drug_site || []);
+  // 3D graph: in real-structures mode, restrict the real frames to this region too;
+  // otherwise the straight-line graph on the region subset.
+  const realFrames = (graphMotionMode() === "real" && LAST.frames)
+    ? subsetFrames(LAST.frames, new Set(uni.map((i) => d.resnums[i]))) : null;
+  setupGraphMorph(realFrames || sub, activeSet, drugSet);
   const full = d.resnums.length;
   const note = (rowIdx.length < full || colIdx.length < full)
     ? `showing ${rowIdx.length}×${colIdx.length} residues (morph/graph: ${uni.length})`
@@ -1248,11 +1270,11 @@ async function applyGraphMotion() {
       if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
       return r.json();
     });
-    const d = { resnums: fr.resnums, cutoff: fr.cutoff, frames: fr.frames,
-      frame_labels: fr.frame_labels, apo_coords: fr.frames[0], holo_coords: fr.frames[fr.frames.length - 1] };
-    setupGraphMorph(d, new Set(LAST.conn.active_site || []), new Set(LAST.conn.drug_site || []));
+    LAST.frames = { resnums: fr.resnums, cutoff: fr.cutoff, frames: fr.frames,
+      frame_labels: fr.frame_labels };
+    applyConnRegion();                                 // render the real frames on the current region
     st.textContent = (fr.n_frames > 2)
-      ? `Playing ${fr.n_frames} real frames: ${fr.frame_labels.join(" → ")} · ${fr.n_shared} shared residues.`
+      ? `Playing ${fr.n_frames} real frames: ${fr.frame_labels.join(" → ")} · ${fr.n_shared} shared residues (follows the Region selector).`
       : `No other structures of this protein found in the PDB — using apo + holo only (${fr.n_shared} shared residues).`;
   } catch (e) {
     st.textContent = `Failed: ${e.message}`;
@@ -1261,6 +1283,8 @@ async function applyGraphMotion() {
   }
 }
 $("graphapply").addEventListener("click", applyGraphMotion);
+// toggling motion mode re-renders the graph on the current region (real frames if cached)
+$("graphmode").addEventListener("change", () => { if (LAST.conn) applyConnRegion(); });
 
 function matAbsPct(m, pct) {
   const v = [];
