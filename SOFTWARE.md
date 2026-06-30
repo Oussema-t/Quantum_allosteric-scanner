@@ -152,11 +152,14 @@ Real keyframes for the 3D contact-graph animation. The protein is already chosen
 intermediates are **auto-discovered**: `discovery.same_protein_entries` (UniProt → RCSB
 search) lists other PDB structures of the same protein, and `analysis._auto_intermediates`
 orders them along the apo→holo path by a best-fit-RMSD progress coordinate
-(`RMSD→apo / (RMSD→apo + RMSD→holo)`), picking `n_frames−2` spread evenly. Loads apo + the
-picked structures + holo, takes Cα on the residue set **shared by all**, Kabsch-aligns every
-frame to apo, downsamples to ≤400. The user only chooses **`n_frames` (2–8)**. Returns
+(`RMSD→apo / (RMSD→apo + RMSD→holo)`), picking `n_frames−2` spread evenly. The node/edge set
+is the **canonical apo∩holo residue set** (identical residues + cutoff to the connectivity
+graph, so straight-line and real modes are directly comparable); each intermediate only
+**repositions** the residues it actually contains (Kabsch-aligned to apo), and residues a PDB
+lacks follow the apo→holo interpolation for that frame — so the graph never loses nodes/edges
+or fragments. Downsamples to ≤400. The user only chooses **`n_frames` (2–8)**. Returns
 `{resnums, cutoff, frames[[xyz]…] (apo→…→holo), frame_labels[], auto_selected[{pdb_id,
-progress}], n_frames, n_shared}`. The "Motion" toggle plays the path **through these real
+progress}], coverage[{pdb_id, covered, of}], n_frames, n_shared}`. The "Motion" toggle plays the path **through these real
 conformations** (piecewise interpolation) vs the straight-line apo→holo morph; if no other
 structures exist it falls back to the 2 endpoints. 422 on self-compare / <10 shared residues.
 

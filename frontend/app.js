@@ -1260,7 +1260,8 @@ async function applyGraphMotion() {
   const apo = $("pdb").value.trim(), holo = currentHolo();
   const nFrames = parseInt($("graphnframes").value, 10) || 4;
   const ac = ($("chains").value.trim() || "A").split(",")[0].trim();
-  const cutoff = parseFloat($("cutoff").value) || 8.0;
+  // use the SAME cutoff the connectivity graph was built with, so both modes match exactly
+  const cutoff = (LAST.conn && LAST.conn.cutoff) || parseFloat($("cutoff").value) || 8.0;
   const btn = $("graphapply"); btn.disabled = true;
   st.textContent = `Finding ${nFrames - 2} real intermediate structure(s) of this protein…`;
   try {

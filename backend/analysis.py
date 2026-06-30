@@ -528,13 +528,14 @@ def _auto_intermediates(apo_pdb, chain, apo, holo, holo_pdb, k, pool_cap=12):
 
 def morph_frames(apo_pdb, apo_chain, holo_pdb, holo_chain=None, inter_pdbs=None,
                  n_frames=None, cutoff=8.0, max_n=400):
-    """Real apo→intermediate→holo keyframes for the 3D graph animation. Each structure's
-    Cα coords are taken on the residue set SHARED by ALL of them and Kabsch-aligned to apo,
-    so the animation passes through real experimental conformations instead of a single
-    straight-line apo→holo interpolation.
+    """Real apo→intermediate→holo keyframes for the 3D graph animation.
 
-    Intermediates are AUTO-discovered for the same protein when `n_frames` > 2 (the user
-    just chooses how many frames); `inter_pdbs` is an optional explicit override."""
+    The node/edge set is the CANONICAL apo∩holo residue set (same residues, same cutoff as
+    the connectivity graph) so straight-line and real modes are directly comparable. Each
+    intermediate only REPOSITIONS the residues it actually contains (Kabsch-aligned to apo);
+    residues a given PDB lacks follow the apo→holo interpolation for that frame, so the graph
+    never loses nodes/edges or fragments. Intermediates are AUTO-discovered for the same
+    protein when `n_frames` > 2; `inter_pdbs` is an optional explicit override."""
     apo = load_structure(apo_pdb, apo_chain)
     holo = load_structure(holo_pdb, holo_chain or apo_chain)
     if apo is None or holo is None:
@@ -544,38 +545,50 @@ def morph_frames(apo_pdb, apo_chain, holo_pdb, holo_chain=None, inter_pdbs=None,
     if not inter_ids and n_frames and int(n_frames) > 2:
         inter_ids, auto_selected = _auto_intermediates(
             apo_pdb, apo_chain, apo, holo, holo_pdb, int(n_frames) - 2)
-    states = [(str(apo_pdb).upper(), apo)]
+
+    # canonical set = apo ∩ holo (identical nodes/edges to the connectivity graph)
+    common = np.array(sorted(set(int(r) for r in apo["resnums"]) &
+                             set(int(r) for r in holo["resnums"])), int)
+    if len(common) < 10:
+        raise ValueError(f"only {len(common)} residues shared between apo and holo — need ≥10")
+    if len(common) > max_n:
+        common = common[np.unique(np.linspace(0, len(common) - 1, max_n).astype(int))]
+    ref = _coords_on(apo, common)                          # apo endpoint (frame 0)
+    holo_c = _kabsch_rotate(_coords_on(holo, common), ref)  # holo endpoint, aligned to apo
+
+    inter_states = []
     for pid in inter_ids:
         st = load_structure(pid, apo_chain)
         if st is None:
-            if inter_pdbs:                                     # explicit id must load
+            if inter_pdbs:                                 # explicit id must load
                 raise ValueError(f"could not load intermediate {pid} on chain {apo_chain}")
-            continue                                           # auto pick: just skip
-        states.append((pid, st))
-    states.append((str(holo_pdb).upper(), holo))
+            continue                                       # auto pick: just skip
+        inter_states.append((pid, st))
 
-    common = set(int(r) for r in apo["resnums"])
-    for _, s in states[1:]:
-        common &= set(int(r) for r in s["resnums"])
-    common = np.array(sorted(common), int)
-    if len(common) < 10:
-        raise ValueError(f"only {len(common)} residues shared across all "
-                         f"{len(states)} structures — need ≥10 to animate")
-    if len(common) > max_n:
-        common = common[np.unique(np.linspace(0, len(common) - 1, max_n).astype(int))]
-
-    ref = _coords_on(apo, common)
-    frames, labels = [], []
-    for k, (name, s) in enumerate(states):
-        C = ref if k == 0 else _kabsch_rotate(_coords_on(s, common), ref)
+    K = len(inter_states) + 2
+    frames = [np.round(ref, 3).tolist()]
+    labels = [f"apo ({str(apo_pdb).upper()})"]
+    coverage = []
+    for k, (pid, st) in enumerate(inter_states, start=1):
+        p = k / (K - 1)
+        C = (1.0 - p) * ref + p * holo_c                   # residues this PDB lacks follow the line
+        posmap = {int(r): j for j, r in enumerate(st["resnums"])}
+        present = [i for i, r in enumerate(common) if int(r) in posmap]
+        if len(present) >= 3:                              # place its real residues (aligned to apo)
+            sub = np.array([st["coords"][posmap[int(common[i])]] for i in present], float)
+            sub_al = _kabsch_rotate(sub, ref[present])
+            for j, i in enumerate(present):
+                C[i] = sub_al[j]
         frames.append(np.round(C, 3).tolist())
-        labels.append(name)
-    labels[0] = f"apo ({labels[0]})"
-    labels[-1] = f"holo ({labels[-1]})"
+        labels.append(pid)
+        coverage.append({"pdb_id": pid, "covered": len(present), "of": int(len(common))})
+    frames.append(np.round(holo_c, 3).tolist())
+    labels.append(f"holo ({str(holo_pdb).upper()})")
+
     return {
         "resnums": [int(r) for r in common], "cutoff": cutoff,
         "frames": frames, "frame_labels": labels, "auto_selected": auto_selected,
-        "n_frames": len(frames), "n_shared": int(len(common)),
+        "coverage": coverage, "n_frames": len(frames), "n_shared": int(len(common)),
     }
 
 
