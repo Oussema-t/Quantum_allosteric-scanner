@@ -5,6 +5,10 @@ implemented here; future tasks will be added in-place.
 
 Sections implemented
 --------------------
+T-009  contact_matrix() – weight schemes, exact values on a 4-point line
+T-010  contact_matrix() – cutoff boundary and distance geometry vs. cdist
+T-011  Structural/spectral smoke tests for H1 – H13
+T-012  build_H_new() – shape, symmetry, zero-lambda recovery
 T-014  time_averaged_ctqw() – dimer long-time limit → 0.5
 T-015  ipr, spectral_gap, check_degree_correlation – analytical values
 T-016  ctqw + heat on synthetic helical backbone
@@ -12,10 +16,270 @@ T-016  ctqw + heat on synthetic helical backbone
 import numpy as np
 import pytest
 import networkx as nx
+from scipy.spatial.distance import cdist
 
 from allostery.propagators import ctqw, heat, time_averaged_ctqw
-from allostery.hamiltonians import contact_matrix, laplacian
+from allostery.hamiltonians import (
+    contact_matrix,
+    laplacian,
+    normalised_laplacian_alpha,
+    build_H_new,
+    H1_unweighted_adjacency,
+    H2_combinatorial_laplacian,
+    H3_normalised_laplacian,
+    H4_powered_normalised,
+    H5_gaussian_elastic,
+    H6_exponential_decay,
+    H7_harmonic,
+    H8_gnm,
+    H9_bfactor_regularised,
+    H10_disorder_suppressed,
+    H11_anisotropic_mechanical,
+    H12_anm_scalarised,
+    H13_3N_anm_hessian,
+)
 from allostery.metrics import ipr, spectral_gap, check_degree_correlation
+
+
+# ---------------------------------------------------------------------------
+# T-009 · contact_matrix() — weight schemes, exact values on a 4-point line
+# ---------------------------------------------------------------------------
+
+class TestContactMatrixWeightSchemes:
+    """4 colinear points at unit spacing; cutoff=2.5 keeps dist∈{1,2} and drops
+    dist=3 (the (0,3) pair). Expected values are computed from the closed-form
+    weight formulas, not by re-deriving contact_matrix's own code path."""
+
+    coords = np.array([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0],
+                        [2.0, 0.0, 0.0], [3.0, 0.0, 0.0]])
+    cutoff = 2.5
+
+    @staticmethod
+    def _expected(v1: float, v2: float) -> np.ndarray:
+        """Fill the (0,3)-excluded pattern with per-distance values v1 (dist=1)
+        and v2 (dist=2)."""
+        return np.array([
+            [0.0, v1, v2, 0.0],
+            [v1, 0.0, v1, v2],
+            [v2, v1, 0.0, v1],
+            [0.0, v2, v1, 0.0],
+        ])
+
+    def _assert_symmetric_zero_diagonal(self, W: np.ndarray):
+        assert np.allclose(W, W.T)
+        assert np.allclose(np.diag(W), 0.0)
+
+    def test_binary(self):
+        W = contact_matrix(self.coords, cutoff=self.cutoff, weight="binary")
+        np.testing.assert_allclose(W, self._expected(1.0, 1.0))
+        self._assert_symmetric_zero_diagonal(W)
+
+    def test_gaussian(self):
+        sigma = 2.0
+        W = contact_matrix(self.coords, cutoff=self.cutoff, weight="gaussian", sigma=sigma)
+        v1 = np.exp(-(1.0 ** 2) / (2 * sigma ** 2))
+        v2 = np.exp(-(2.0 ** 2) / (2 * sigma ** 2))
+        np.testing.assert_allclose(W, self._expected(v1, v2), atol=1e-12)
+        self._assert_symmetric_zero_diagonal(W)
+
+    def test_exponential(self):
+        alpha = 0.5
+        W = contact_matrix(self.coords, cutoff=self.cutoff, weight="exponential", alpha=alpha)
+        v1 = np.exp(-alpha * 1.0)
+        v2 = np.exp(-alpha * 2.0)
+        np.testing.assert_allclose(W, self._expected(v1, v2), atol=1e-12)
+        self._assert_symmetric_zero_diagonal(W)
+
+    def test_harmonic(self):
+        """1/(d+eps)**2 with eps=1e-6 (internal); the eps shift is <2e-6 relative
+        so atol=1e-4 comfortably separates it from a wrong formula."""
+        W = contact_matrix(self.coords, cutoff=self.cutoff, weight="harmonic")
+        v1 = 1.0 / 1.0 ** 2
+        v2 = 1.0 / 2.0 ** 2
+        np.testing.assert_allclose(W, self._expected(v1, v2), atol=1e-4)
+        self._assert_symmetric_zero_diagonal(W)
+
+    def test_invdist(self):
+        """1/(d+eps) with eps=1e-6 (internal); see test_harmonic for tolerance."""
+        W = contact_matrix(self.coords, cutoff=self.cutoff, weight="invdist")
+        v1 = 1.0 / 1.0
+        v2 = 1.0 / 2.0
+        np.testing.assert_allclose(W, self._expected(v1, v2), atol=1e-4)
+        self._assert_symmetric_zero_diagonal(W)
+
+    def test_unknown_weight_raises(self):
+        with pytest.raises(ValueError):
+            contact_matrix(self.coords, cutoff=self.cutoff, weight="not_a_scheme")
+
+
+# ---------------------------------------------------------------------------
+# T-010 · contact_matrix() — cutoff boundary and distance geometry
+# ---------------------------------------------------------------------------
+
+class TestContactMatrixCutoffAndGeometry:
+
+    def test_dist_at_cutoff_boundary_is_excluded(self):
+        """Pairs with dist >= cutoff (strict '<' mask) must get zero weight,
+        even at the exact boundary value."""
+        coords = np.array([[0.0, 0.0, 0.0], [5.0, 0.0, 0.0], [10.0, 0.0, 0.0]])
+        W = contact_matrix(coords, cutoff=5.0, weight="binary")
+        assert np.allclose(W, 0.0), "dist == cutoff must not be included"
+
+    @pytest.mark.parametrize("weight,kwargs", [
+        ("binary", {}), ("gaussian", {}), ("exponential", {}),
+        ("harmonic", {}), ("invdist", {}),
+    ])
+    def test_self_loops_always_zero(self, weight, kwargs):
+        coords = np.array([[0.0, 0.0, 0.0], [3.0, 1.0, 0.0], [-2.0, 4.0, 1.0],
+                            [5.0, -3.0, 2.0]])
+        W = contact_matrix(coords, cutoff=100.0, weight=weight, **kwargs)
+        assert np.allclose(np.diag(W), 0.0), f"{weight}: diagonal not zero"
+
+    coords_geo = np.array([
+        [0.0, 0.0, 0.0], [3.0, 0.0, 0.0], [0.0, 4.0, 0.0], [6.0, 8.0, 0.0],
+        [1.0, 1.0, 1.0], [-2.0, 3.0, 5.0], [4.0, -1.0, 2.0], [-3.0, -3.0, -3.0],
+    ])
+
+    def test_pairwise_distances_match_cdist(self):
+        """contact_matrix's internal Euclidean distance must agree with
+        scipy.spatial.distance.cdist, the independent reference."""
+        D_ref = cdist(self.coords_geo, self.coords_geo)
+        for cutoff in (5.0, 8.0, 12.0):
+            expected = ((D_ref < cutoff) & (D_ref > 0)).astype(float)
+            got = contact_matrix(self.coords_geo, cutoff=cutoff, weight="binary")
+            np.testing.assert_allclose(got, expected)
+
+    @pytest.mark.parametrize("cutoff", [5.0, 8.0, 12.0])
+    def test_dist_ge_cutoff_produce_zero_weight(self, cutoff):
+        D_ref = cdist(self.coords_geo, self.coords_geo)
+        W = contact_matrix(self.coords_geo, cutoff=cutoff, weight="binary")
+        assert np.all(W[D_ref >= cutoff] == 0.0)
+
+
+# ---------------------------------------------------------------------------
+# T-011 · Structural/spectral smoke tests for H1 – H13
+# ---------------------------------------------------------------------------
+
+_H11_BFACTORS = np.array([30.0, 25.0, 18.0, 22.0, 30.0, 15.0])
+
+# Laplacian-based operators: PSD, with exactly one zero mode on a connected
+# 6-node graph. (Confirmed empirically: H2-H9, H11, H12 all have nullity==1
+# on the fixture below; H1 is adjacency-based and H10/H13 are handled
+# separately below because they break the plain nullity>=1 pattern.)
+_LAPLACIAN_OPS = {
+    "H2": lambda c: H2_combinatorial_laplacian(c, cutoff=10.0),
+    "H3": lambda c: H3_normalised_laplacian(c, cutoff=10.0),
+    "H4": lambda c: H4_powered_normalised(c, cutoff=10.0),
+    "H5": lambda c: H5_gaussian_elastic(c, cutoff=10.0),
+    "H6": lambda c: H6_exponential_decay(c, cutoff=10.0),
+    "H7": lambda c: H7_harmonic(c, cutoff=10.0),
+    "H8": lambda c: H8_gnm(c, cutoff=10.0),
+    "H9": lambda c: H9_bfactor_regularised(c, _H11_BFACTORS, cutoff=10.0),
+    "H11": lambda c: H11_anisotropic_mechanical(c, cutoff=10.0),
+    "H12": lambda c: H12_anm_scalarised(c, cutoff=10.0),
+}
+
+
+class TestH1toH13Smoke:
+    """Fixed 6-residue synthetic helix (non-colinear, avoids the ANM rotational
+    degeneracy that a straight-line fixture would introduce for H13)."""
+
+    @staticmethod
+    @pytest.fixture(scope="class")
+    def coords6():
+        return _helix_coords(6)
+
+    def test_h1_matches_binary_contact_matrix(self, coords6):
+        A = contact_matrix(coords6, cutoff=10.0, weight="binary")
+        H1 = H1_unweighted_adjacency(coords6, cutoff=10.0)
+        assert H1.shape == (6, 6)
+        assert np.allclose(H1, H1.T)
+        np.testing.assert_allclose(H1, A)
+
+    @pytest.mark.parametrize("name", sorted(_LAPLACIAN_OPS))
+    def test_laplacian_ops_psd_with_nullity(self, coords6, name):
+        M = _LAPLACIAN_OPS[name](coords6)
+        assert M.shape == (6, 6)
+        assert np.allclose(M, M.T), f"{name} is not symmetric"
+        w = np.linalg.eigvalsh(M)
+        assert (w >= -1e-10).all(), f"{name} has eigenvalue {w.min():.3e} < -1e-10"
+        nullity = int((np.abs(w) < 1e-8).sum())
+        assert nullity >= 1, f"{name} nullity={nullity}, expected >= 1 on a connected graph"
+
+    def test_h10_disorder_suppressed_psd_no_zero_mode(self, coords6):
+        """H10 adds strictly non-negative diagonal terms (V_B, V_F) on top of the
+        combinatorial Laplacian; it stays PSD but the diagonal shift lifts the
+        zero mode away from zero, so nullity is *not* asserted here."""
+        M = H10_disorder_suppressed(coords6, _H11_BFACTORS, cutoff=10.0)
+        assert M.shape == (6, 6)
+        assert np.allclose(M, M.T)
+        w = np.linalg.eigvalsh(M)
+        assert (w >= -1e-10).all()
+
+    def test_h13_shape_and_translational_nullspace(self, coords6):
+        """H13 operates in 3N x 3N space; translational invariance guarantees
+        (at least) 3 zero modes regardless of coordinate geometry."""
+        M = H13_3N_anm_hessian(coords6, cutoff=10.0)
+        N = coords6.shape[0]
+        assert M.shape == (3 * N, 3 * N)
+        assert np.allclose(M, M.T)
+        w = np.linalg.eigvalsh(M)
+        assert (w >= -1e-10).all()
+        nullity = int((np.abs(w) < 1e-8).sum())
+        assert nullity >= 3, f"H13 nullity={nullity}, expected >= 3 (translations)"
+
+
+# ---------------------------------------------------------------------------
+# T-012 · build_H_new()
+# ---------------------------------------------------------------------------
+
+class TestBuildHNew:
+    """Synthetic 10-residue helix with uniform B-factors."""
+
+    BFACTORS_UNIFORM = np.full(10, 20.0)
+
+    @staticmethod
+    @pytest.fixture(scope="class")
+    def coords10():
+        return _helix_coords(10)
+
+    def test_shape_and_symmetry(self, coords10):
+        Hn = build_H_new(coords10, self.BFACTORS_UNIFORM, cutoff=10.0)
+        assert Hn.shape == (10, 10)
+        assert np.allclose(Hn, Hn.T)
+
+    def test_zero_lambdas_recovers_base_laplacian(self, coords10):
+        """lam_B=lam_T=lam_R=lam_C=lam_M=0 must recover normalised_laplacian_alpha
+        exactly — build_H_new degenerates to its base term with no potentials."""
+        Hn = build_H_new(
+            coords10, self.BFACTORS_UNIFORM, cutoff=10.0,
+            lam_B=0.0, lam_T=0.0, lam_R=0.0, lam_C=0.0, lam_M=0.0,
+        )
+        L = normalised_laplacian_alpha(coords10, cutoff=10.0)
+        np.testing.assert_allclose(Hn, L, atol=1e-12)
+
+    def test_base_laplacian_is_psd(self, coords10):
+        """With all potential terms disabled, H_new is exactly a normalised
+        graph Laplacian and must be positive semidefinite."""
+        Hn = build_H_new(
+            coords10, self.BFACTORS_UNIFORM, cutoff=10.0,
+            lam_B=0.0, lam_T=0.0, lam_R=0.0, lam_C=0.0, lam_M=0.0,
+        )
+        w = np.linalg.eigvalsh(Hn)
+        assert (w >= -1e-10).all()
+
+    def test_default_h_new_is_not_globally_psd(self, coords10):
+        """V_R, V_C, V_M (potentials.py) are *reward* terms — they contribute a
+        negative diagonal for rigid/coupled/low-mode-participating residues by
+        design (see CRIT-003 T-019/T-020) and are not constrained to preserve
+        positive-semidefiniteness. Empirically, default build_H_new has at
+        least one negative eigenvalue. This is a canary, not a hard physics
+        requirement: if potentials.py semantics change and this starts failing,
+        that's a signal to revisit this note and TASKS.md T-012, not to loosen
+        the assertion."""
+        Hn = build_H_new(coords10, self.BFACTORS_UNIFORM, cutoff=10.0)
+        w = np.linalg.eigvalsh(Hn)
+        assert w.min() < 0
 
 
 # ---------------------------------------------------------------------------
