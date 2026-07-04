@@ -79,20 +79,20 @@ see the claim-before-start rule under "Current Rules" below.
 |---------|-------------|-------------|--------|----------|-------------|------------|------------|------|
 | TASK-0001 | Bootstrap repo-local agent scaffold under `.github` + `.ai` | Architect/Planner | In Progress | P0 | 2026-06-25 | — | — | `.ai/tasks/IN_PROGRESS/TASK-0001-agent-scaffold-bootstrap.md` |
 | TASK-0002 | AI-scaffold hygiene & engineering review (this reconciliation pass) | General Critic | Done | P0 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0002-ai-scaffold-hygiene-review.md` |
-| TASK-0003 | Reconcile and author `__WORK_IN_PROGRESS__/config/targets.yaml` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0003-targets-yaml-reconciliation.md` |
-| TASK-0004 | Implement `__WORK_IN_PROGRESS__/src/allostery/labels.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0004-labels-py.md` |
-| TASK-0005 | Implement `__WORK_IN_PROGRESS__/src/allostery/superpose.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0005-superpose-py.md` |
-| TASK-0006 | Implement `__WORK_IN_PROGRESS__/src/allostery/protocol.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0006-protocol-py.md` |
-| TASK-0007 | Implement `__WORK_IN_PROGRESS__/src/allostery/select.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0007-select-py.md` |
-| TASK-0008 | Implement `__WORK_IN_PROGRESS__/src/allostery/analysis.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0008-analysis-py.md` |
-| TASK-0009 | Implement `__WORK_IN_PROGRESS__/src/allostery/diagnostics.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0009-diagnostics-py.md` |
-| TASK-0010 | Implement `__WORK_IN_PROGRESS__/src/allostery/report.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0010-report-py.md` |
-| TASK-0011 | Implement `__WORK_IN_PROGRESS__/src/allostery/baselines.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0011-baselines-py.md` |
-| TASK-0012 | Implement `__WORK_IN_PROGRESS__/src/allostery/pathways.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0012-pathways-py.md` |
-| TASK-0013 | Implement `__WORK_IN_PROGRESS__/src/allostery/coarse.py` | Implementer | TODO | P2 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0013-coarse-py.md` |
-| TASK-0014 | Implement `__WORK_IN_PROGRESS__/src/allostery/viz.py` | Implementer | TODO | P3 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0014-viz-py.md` |
-| TASK-0015 | Build the holo-direction module (`HOLO_DIRECTION_MODULE.md`) | Implementer | TODO | P2 (blocked on 0005/0006/0011) | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0015-holo-direction-module.md` |
-| TASK-0016 | Add test for `heat()` behavior on indefinite `H_new` output (orphaned gap, see IMP-H4) | Implementer | TODO | P2 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0016-heat-indefinite-hnew-test.md` |
+| TASK-0003 | Reconcile and author `__WORK_IN_PROGRESS__/config/targets.yaml` | Implementer | TODO | P1 | 2026-07-04 | Implementer (this thread) | 2026-07-04 19:43 | `.ai/tasks/TODO/TASK-0003-targets-yaml-reconciliation.md` |
+| TASK-0004 | Implement `__WORK_IN_PROGRESS__/src/allostery/labels.py` | Implementer | TODO | P1 | 2026-07-04 | Implementer (this thread) | 2026-07-04 19:43 | `.ai/tasks/TODO/TASK-0004-labels-py.md` |
+| TASK-0005 | Implement `__WORK_IN_PROGRESS__/src/allostery/superpose.py` | Implementer | TODO | P1 | 2026-07-04 | Implementer (this thread) | 2026-07-04 19:43 | `.ai/tasks/TODO/TASK-0005-superpose-py.md` |
+| TASK-0006 | Implement `__WORK_IN_PROGRESS__/src/allostery/protocol.py` | Implementer | TODO | P1 | 2026-07-04 | Implementer (this thread) | 2026-07-04 19:43 | `.ai/tasks/TODO/TASK-0006-protocol-py.md` |
+| TASK-0007 | Implement `__WORK_IN_PROGRESS__/src/allostery/select.py` | Implementer | TODO | P1 | 2026-07-04 | Implementer (this thread) | 2026-07-04 19:43 | `.ai/tasks/TODO/TASK-0007-select-py.md` |
+| TASK-0008 | Implement `__WORK_IN_PROGRESS__/src/allostery/analysis.py` | Implementer | TODO | P1 | 2026-07-04 | Implementer (this thread) | 2026-07-04 19:43 | `.ai/tasks/TODO/TASK-0008-analysis-py.md` |
+| TASK-0009 | Implement `__WORK_IN_PROGRESS__/src/allostery/diagnostics.py` | Implementer | TODO | P1 | 2026-07-04 | Implementer (this thread) | 2026-07-04 19:43 | `.ai/tasks/TODO/TASK-0009-diagnostics-py.md` |
+| TASK-0010 | Implement `__WORK_IN_PROGRESS__/src/allostery/report.py` | Implementer | TODO | P1 | 2026-07-04 | Implementer (this thread) | 2026-07-04 19:43 | `.ai/tasks/TODO/TASK-0010-report-py.md` |
+| TASK-0011 | Implement `__WORK_IN_PROGRESS__/src/allostery/baselines.py` | Implementer | TODO | P1 | 2026-07-04 | Implementer (this thread) | 2026-07-04 19:43 | `.ai/tasks/TODO/TASK-0011-baselines-py.md` |
+| TASK-0012 | Implement `__WORK_IN_PROGRESS__/src/allostery/pathways.py` | Implementer | TODO | P1 | 2026-07-04 | Implementer (this thread) | 2026-07-04 19:43 | `.ai/tasks/TODO/TASK-0012-pathways-py.md` |
+| TASK-0013 | Implement `__WORK_IN_PROGRESS__/src/allostery/coarse.py` | Implementer | TODO | P2 | 2026-07-04 | Implementer (this thread) | 2026-07-04 19:43 | `.ai/tasks/TODO/TASK-0013-coarse-py.md` |
+| TASK-0014 | Implement `__WORK_IN_PROGRESS__/src/allostery/viz.py` | Implementer | TODO | P3 | 2026-07-04 | Implementer (this thread) | 2026-07-04 19:43 | `.ai/tasks/TODO/TASK-0014-viz-py.md` |
+| TASK-0015 | Build the holo-direction module (`HOLO_DIRECTION_MODULE.md`) | Implementer | TODO | P2 (blocked on 0005/0006/0011) | 2026-07-04 | Implementer (this thread) | 2026-07-04 19:43 | `.ai/tasks/TODO/TASK-0015-holo-direction-module.md` |
+| TASK-0016 | Add test for `heat()` behavior on indefinite `H_new` output (orphaned gap, see IMP-H4) | Implementer | TODO | P2 | 2026-07-04 | Implementer (this thread) | 2026-07-04 19:43 | `.ai/tasks/TODO/TASK-0016-heat-indefinite-hnew-test.md` |
 | TASK-0017 | Soft-lock claim column on this registry (fixes the concurrent-edit near-miss between this session and a parallel thread on TASK-0002/COMMON.md/TASK-0007) | Implementer | Done | P0 | 2026-07-04 | Implementer (this thread) | 2026-07-04 14:30 | `.ai/tasks/DONE/TASK-0017-registry-claim-lock.md` |
 | TASK-0018 | Reconcile `backend/` (QAS) vs `__WORK_IN_PROGRESS__/src/allostery` (CCC) architecture — granularity/design-pattern gap confirmed, wraps closed-ledger T-018/T-021 | Architect/Planner | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0018-backend-vs-allostery-architecture-reconciliation.md` |
 | TASK-0019 | Package accumulated `.ai`/`.claude` scaffold changes on `bartosz` into ordered, reviewable commits (Commit Packager overlay) | Commit Packager | TODO | P1 | 2026-07-04 | Implementer (this thread) | 2026-07-04 14:58 | `.ai/tasks/TODO/TASK-0019-scaffold-commit-packaging.md` |
