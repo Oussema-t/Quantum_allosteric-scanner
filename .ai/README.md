@@ -50,3 +50,21 @@ Not included yet:
 - MCP server implementation
 - broad migration of existing `.claude` content
 - wrappers for all current `agents-tools` providers
+
+## `__WORK_IN_PROGRESS__` Boundary (decided in TASK-0002, 2026-07-04)
+
+`.ai/`, `.claude/`, and `.github/` moved to the repo root in commit
+`255b72e` because they are **repo-wide agent-scaffold tooling** — they apply
+equally to `backend/`/`frontend/` (the production QAS web app) and to any
+research code.
+
+`__WORK_IN_PROGRESS__/src/allostery/`, `__WORK_IN_PROGRESS__/tests/`, and
+`__WORK_IN_PROGRESS__/config/` (once created) stay under
+`__WORK_IN_PROGRESS__/` deliberately — this is not an oversight to "fix" by
+moving them to repo root alongside `backend/`/`frontend/`. That directory is
+the **Cleveland Clinic Challenge (CCC) quantum-walk research sandbox**:
+exploratory allostery-pipeline code (`PLAN.md`'s Phase 0-4 work), separate
+from the production QAS web app. It graduates out of
+`__WORK_IN_PROGRESS__/` only when a phase gate passes and the result is
+deliberately promoted into `backend/`/`frontend/` — not by relocating the
+sandbox wholesale.

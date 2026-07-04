@@ -30,7 +30,9 @@ reasonable negative-eigenvalue floor check.
 **T-014** — `time_averaged_ctqw()` on 2-node dimer → long-time average ≈ 0.5  
 **T-016** — `ctqw()` and `heat()` spatial decay on 50-node synthetic helix
 
-**Not yet in TASKS.md — must be added:**  
+**Filed as `.ai/tasks/TODO/TASK-0016-heat-indefinite-hnew-test.md` (2026-07-04)
+— not a new `TASKS.md` T-NNN entry, per the Task Ledger Boundary in
+`.ai/COMMON.md` (this ledger is closed to new entries):**
 `heat()` called with indefinite H_new output should either raise a clear error or
 be documented as unsupported. Add a test that confirms one of these behaviors.
 See `../improvements/hamiltonian_code.md` IMP-H4.

@@ -4,6 +4,13 @@
 **Companion docs:** PLAN.md · HOLO_DIRECTION_MODULE.md · ALGORITHM_REGISTER.md ·
 SYSTEMS_allosteric_corrected_v2.md
 
+**Relationship to `PLAN.md`:** confirmed companion timeline overlay, not a
+superseding rewrite — this file schedules `PLAN.md`'s phases (Week 1 ≈
+Phase 0, Week 2 ≈ Phase 1/2 gate, …) against the challenge deadline; it does
+not redefine the gates. Decided in TASK-0002 (2026-07-04). Whether a new
+`PLAN-DD.MM.YY.md` should be authored each week or this stays a one-off
+snapshot is unresolved — ask before assuming either.
+
 ---
 
 ## Where we are (settled conclusions)
