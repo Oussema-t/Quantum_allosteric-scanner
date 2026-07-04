@@ -7,7 +7,10 @@
   changes (bootstrap restructure, TASK-0002 hygiene review, TASK-0003–0016
   backlog spawn, TASK-0017 claim-lock) into a small number of coherent,
   reviewable commits on the current branch (`bartosz`)
-- Status: TODO
+- Status: Done (file left in `TODO/` and `.ai/COMMON.md`'s registry left
+  unedited for now — deliberately not touching that file again
+  immediately after the concurrent-write collision documented below; move
+  to `DONE/` + update the registry row in a later, calmer pass)
 - Owner: Commit Packager (overlay applied by the Implementer thread that
   also did TASK-0017, per user request in the same session)
 - Claimed By: Implementer (this thread)
@@ -170,18 +173,13 @@ later by their own threads) is the goal, not full cleanup this round.
 - [x] Ask user separately about the three `__WORK_IN_PROGRESS__/*.md`
       files. — deferred to a future, not-yet-formulated task; held out of
       this task's scope entirely.
-- [ ] Reconstruct intermediate snapshots of `.ai/COMMON.md` and
-      `.ai/tasks/README.md` per commit boundary (both files' final state is
-      a superset of what commits 1/2/4/6 introduce; the remaining diff after
-      those land should be exactly the commit-3/5 rows) and commit 1, 2, 4,
-      6 in order.
-- [ ] Restore both shared files' working-tree content to the true final
-      state (including commit-3/5 rows) after the last commit, so nothing
-      already written is lost — it just stays uncommitted, correctly
-      reflected by `git status`.
-- [ ] Verify with `git status`/`git diff` that the only remaining
-      uncommitted scaffold items are the TASK-0003–0018 files/rows (commits
-      3/5, intentionally deferred).
+- [x] Reconstruct intermediate snapshots of `.ai/COMMON.md` and
+      `.ai/tasks/README.md` per commit boundary and commit 1, 2, 4 in order.
+      Done cleanly for commits 1 and 2. Commit 4 (TASK-0017) hit a real
+      `.git/index` race — see Done section.
+- [x] Verify with `git status` that only the deferred items remain
+      uncommitted. Confirmed — see Done section for the final list, which
+      grew mid-task (TASK-0020–0024 appeared from another live thread).
 
 ## Dependency
 
@@ -198,13 +196,76 @@ later by their own threads) is the goal, not full cleanup this round.
 - Resolved 2026-07-04: `__WORK_IN_PROGRESS__/*.md` disposition — deferred to
   a separate, not-yet-formulated task that moves them into the repo's main
   structure; out of this task's scope.
-- Open: once the Implementer and Architect/Planner threads see the
-  "Pending commit handoffs" note in `.ai/COMMON.md`, is a passive note
-  enough, or does this scaffold need an actual notification mechanism
-  (the note only helps a thread that re-reads `COMMON.md`)? No mechanism
-  built here — flagging for a future scaffold-hygiene pass if silent notes
-  prove insufficient in practice.
+- Superseded: the planned "Pending commit handoffs" note in `.ai/COMMON.md`
+  was never landed as its own edit — see Done section, "the race," below.
+  The registry now carries a different thread's own note about the same
+  underlying risk (concurrent whole-file writes), plus TASK-0024, which
+  proposes an actual mechanism. Treat that as the answer to this question
+  rather than building a second, redundant note.
 
 ## Done
 
-(not yet)
+**Commits 1, 2 landed clean, exactly as planned:**
+- `300b464` — mechanical lifecycle-folder restructure (TASK-0001 move, 9
+  expert-file path fixups, ripeness-review fixup, README.md convention).
+- `84a1d64` — TASK-0002 hygiene-review outcomes (plan reconciliation,
+  scaffold-boundary docs, ledger-boundary note, `/learn` registration,
+  TASK-0002's own DONE record).
+
+**Commit 4 (TASK-0017) hit a real `.git/index` race with a concurrent
+thread.** This working directory is shared by more than one live Claude
+Code session at once (confirmed: TASK-0020–0024 appeared on disk,
+unregistered, mid-task, authored by a thread calling itself
+"Intent-Inferrer"). Sequence of events:
+1. This thread wrote a clean intermediate snapshot of `.ai/COMMON.md`
+   (claim-lock columns/rules + TASK-0001/0002/0017 rows only, no
+   TASK-0003+ rows — by design, since those were meant to stay
+   uncommitted for their owning threads) and `git add`ed it.
+2. Between that `git add` and this thread's `git commit`, another
+   process's `git add` on the same file won the race for what ended up
+   in the index at commit time. The resulting commit (`e70a644`, still
+   titled "TASK-0017: registry claim-lock convention") carries that other
+   thread's full registry (TASK-0003 through TASK-0024, including a note
+   from that thread about the table being "found reverted twice" — which
+   was this thread's own snapshot-reconstruction technique, seen from the
+   other side, being mistaken for data loss) and a rule about
+   `.ai/COMMON.md` being unsafe under concurrent whole-file writes. None
+   of that extra content was authored or reviewed by this thread; it is
+   real, was already correct and self-registered, and reflects actual
+   task files sitting on disk — it just landed inside the wrong commit,
+   attributed to the wrong story.
+3. **Decision: did not amend `e70a644`.** It's on a shared branch another
+   live thread may already be building on top of; rewriting it risks a
+   worse collision than the one that produced it. Left as-is per explicit
+   user direction ("use COMMON.md as is") once this was discovered.
+4. This thread's planned commit 6 (register TASK-0019 + add a "Pending
+   commit handoffs" note) was reduced to just adding the TASK-0019 task
+   file itself (`ec2cf4b`) — its registry row had already landed via the
+   race in `e70a644`, so only the tree/registry inconsistency (a row
+   pointing at a file that didn't exist yet) needed closing, not a new
+   registry edit. The originally-planned handoff note was dropped rather
+   than layered on top of an already-messy commit — see Open Questions.
+
+**Commits 3 and 5 (TASK-0003–0016, TASK-0018) were never committed by
+this thread**, per the user's explicit decision — left for the
+Implementer and Architect/Planner threads that own them respectively.
+Their registry rows are already present (via the race, in `e70a644`) even
+though their task files are not yet committed; this is a known,
+acknowledged inconsistency, not a silent one.
+
+**Final state at task close:** four commits landed
+(`300b464`, `84a1d64`, `e70a644`, `ec2cf4b`). Remaining uncommitted:
+TASK-0003–0016, TASK-0018, TASK-0020–0024 (the last five appeared from
+the concurrent "Intent-Inferrer" thread during this task and were never
+this thread's to commit), and the three `__WORK_IN_PROGRESS__/*.md`
+research docs (explicitly out of scope). Per the user: reducing the
+uncommitted pile incrementally was the goal, not reaching zero this pass
+— that goal was met (from 19 modified + 17 new + 2 DONE files uncommitted
+at task start, to 4 commits landed and the remainder clearly attributed
+to their owning threads).
+
+**Field evidence for TASK-0024:** this task is now itself a second,
+concrete instance of the exact `.ai/COMMON.md` concurrent-write collision
+TASK-0024 (filed by the other thread) proposes to fix with an atomic
+claim/free tool. Worth citing there directly if that task's thread wants
+a second real example beyond its own.
