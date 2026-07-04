@@ -33,6 +33,8 @@ It defines the role model and the brief shape.
   - packaging-focused overlay for branch planning and split recommendations
 - Test Report Reviewer
   - report-focused overlay for drift, bug, and failure-cause triage across test executions
+- Skills Crafter
+  - candidate overlay under Toolsmith for authoring repo-local scripts and `.claude/skills/` Skills — Toolsmith picks the provider, Skills Crafter writes it
 
 ## Seeded Briefs
 
@@ -54,6 +56,8 @@ It defines the role model and the brief shape.
   - candidate overlay brief for packaging analysis and split recommendations
 - `test-report-reviewer.md`
   - candidate overlay brief for reading execution reports and isolating broken system areas
+- `skills-crafter.md`
+  - candidate overlay brief for script/Skill authoring under Toolsmith, inferred from TASK-0025/TASK-0026 work — not yet ratified
 
 ## Role Model Notes
 
