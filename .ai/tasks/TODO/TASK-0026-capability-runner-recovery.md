@@ -69,6 +69,10 @@ This task (TASK-0026) is Done only when all four subtasks are Done — see
   subtask file); TASK-0026.003 re-validates the full `CAPABILITIES.md`
   table against what actually landed.
 
+## In Progress
+
+None
+
 ## TODO
 
 - [ ] Track subtask completion (see table above); update this file's

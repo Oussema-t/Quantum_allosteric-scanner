@@ -104,6 +104,10 @@
   same task ID don't corrupt the file, the registry, or leave the task in
   two folders at once.
 
+## In Progress
+
+None
+
 ## TODO
 
 - [ ] Implement `claim.py move <TASK-ID> <TODO|IN_PROGRESS|DONE> --as

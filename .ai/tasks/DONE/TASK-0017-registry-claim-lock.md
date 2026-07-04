@@ -84,6 +84,10 @@
   (long-running, last active 2026-06-25 — a real example of a claim that
   would look stale under this rule) without actually taking it over.
 
+## In Progress
+
+None
+
 ## TODO
 
 - [x] Add `Claimed By` / `Claimed At` columns to `.ai/COMMON.md`'s Active
