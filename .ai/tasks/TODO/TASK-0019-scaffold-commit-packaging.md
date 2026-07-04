@@ -191,6 +191,16 @@ later by their own threads) is the goal, not full cleanup this round.
 
 ## Open Questions
 
+- Noted 2026-07-04 (cross-reference added by a concurrent Skills Crafter
+  thread, per user direction to flag this in every task that touches it):
+  this task's packaging work was done by hand (raw `git`/manual analysis),
+  not via the `repo.packaging.*` / `repo.vcs.*` capability set that
+  `.ai/reference/CAPABILITIES.md` documents as backed by
+  `agents-tools/capability-runner.sh` — that script does not exist on disk
+  and is being rebuilt under TASK-0026 (parent) and its
+  `TASK-0026.001`-`.004` subtasks. If this task or a successor packaging
+  task is revisited after TASK-0026 lands, prefer the capability-runner
+  path over manual git plumbing where it now covers the same ground.
 - Resolved 2026-07-04: commits 3 and 5 are not committed by this thread —
   see "Decision: commits 3 and 5" above.
 - Resolved 2026-07-04: `__WORK_IN_PROGRESS__/*.md` disposition — deferred to
