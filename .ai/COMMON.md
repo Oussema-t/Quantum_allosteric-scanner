@@ -11,7 +11,7 @@ Central coordination hub for the repo-local agent scaffold.
 
 - scaffold overview: `.ai/README.md`
 - architecture overview: `.ai/ARCHITECTURE_OVERVIEW.md`
-- active bootstrap task: `.ai/tasks/TASK-0001-agent-scaffold-bootstrap.md`
+- active bootstrap task: `.ai/tasks/IN_PROGRESS/TASK-0001-agent-scaffold-bootstrap.md`
 - first agent bootstrap guide: `.ai/reference/FIRST_AGENT_BOOTSTRAP.md`
 - second expert handoff walkthrough: `.ai/reference/SECOND_EXPERT_THREAD_WALKTHROUGH.md`
 - local automation guidance: `.ai/reference/LOCAL_AUTOMATION_MANUAL_ENVIRONMENTS.md`
@@ -38,7 +38,7 @@ Central coordination hub for the repo-local agent scaffold.
 
 | Task ID | Description | Assigned To | Status | Priority | Last Active | Path |
 |---------|-------------|-------------|--------|----------|-------------|------|
-| TASK-0001 | Bootstrap repo-local agent scaffold under `.github` + `.ai` | Architect/Planner | In Progress | P0 | 2026-06-25 | `.ai/tasks/TASK-0001-agent-scaffold-bootstrap.md` |
+| TASK-0001 | Bootstrap repo-local agent scaffold under `.github` + `.ai` | Architect/Planner | In Progress | P0 | 2026-06-25 | `.ai/tasks/IN_PROGRESS/TASK-0001-agent-scaffold-bootstrap.md` |
 
 ## Current Rules
 
