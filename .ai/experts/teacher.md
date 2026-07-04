@@ -46,7 +46,7 @@ Status: Active seed
 
 ## Linked Tasks
 
-- `.ai/tasks/TASK-0001-agent-scaffold-bootstrap.md`
+- `.ai/tasks/IN_PROGRESS/TASK-0001-agent-scaffold-bootstrap.md`
 
 ## Reference Files
 
