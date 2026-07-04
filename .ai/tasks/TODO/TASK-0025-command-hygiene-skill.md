@@ -138,6 +138,10 @@
   allowlist line — then have a human approve the allowlist addition before
   it's applied.
 
+## In Progress
+
+None
+
 ## TODO
 
 - [ ] Draft `.github/instructions/tooling/command-hygiene.instructions.md`

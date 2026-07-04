@@ -67,6 +67,10 @@
   from the plan below; run `git status` after all staging to confirm
   nothing scaffold-related was left behind unaccounted-for.
 
+## In Progress
+
+None
+
 ## Packaging Analysis
 
 Current diff shape (`git diff --stat` + untracked, `.ai`/`.claude` only):

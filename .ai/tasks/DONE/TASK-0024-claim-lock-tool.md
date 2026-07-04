@@ -105,6 +105,10 @@
   files' state after both finish (this is the regression test for the
   actual failure that motivated this task).
 
+## In Progress
+
+None
+
 ## TODO
 
 - [x] Decide the lock-file location and format (see Open Questions).
