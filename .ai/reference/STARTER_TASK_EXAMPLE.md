@@ -17,6 +17,9 @@ This is a reusable example for scaffold adopters, not an active task.
 - Title: Consolidate duplicated auth setup into a shared helper
 - Status: In Progress
 - Owner: Implementer
+- Claimed By: Implementer (this thread) — optional, mirrors `.ai/COMMON.md`'s
+  registry row; only needed if the registry entry is ambiguous or missing
+- Claimed At: 2026-07-04 09:00
 - Scope: Refactor repeated setup logic without changing intended behavior
 
 ## Intent Contract
