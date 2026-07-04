@@ -44,7 +44,7 @@ In heavily manual customer environments, repo-local wrappers that produce local 
 | `workflow.task.assign` | Delegate or assign a task to a person, role, or agent | manual fallback | generic with backend adapter | write | Backend may support human assignees, role tags, or agent overlays differently. |
 | `workflow.task.claim` | Atomically claim a task row so concurrent threads don't collide on it | `.ai/tools/claim.py claim <TASK-ID> <claimant>` | repo-local, on-disk task backend only | write (scoped) | TASK-0024. Creates `.ai/tasks/.locks/<TASK-ID>.lock` via an `O_EXCL` atomic open; fails loudly if already claimed unless `--force --reason TEXT`. Replaces hand-editing the `Claimed By`/`Claimed At` cells in `.ai/COMMON.md` directly. |
 | `workflow.task.release` | Release a task's claim | `.ai/tools/claim.py release <TASK-ID>` | repo-local, on-disk task backend only | write (scoped) | TASK-0024. Idempotent — a no-op if already unclaimed. `--claimant` checks expected holder (warns on mismatch, `--strict` to fail instead). |
-| `workflow.task.claim-status` | Read current claim(s) without mutating anything | `.ai/tools/claim.py status [TASK-ID]` | repo-local, on-disk task backend only | read-only | TASK-0024. Single task or full listing; flags dangling locks (a lock with no corresponding task file on disk). |
+| `workflow.task.claim-status` | Read current claim(s) without mutating anything | `.ai/tools/claim.py status [TASK-ID]` | repo-local, on-disk task backend only | read-only | TASK-0024. Single task or full listing. The full listing (no `TASK-ID` given) flags dangling locks (a lock with no corresponding task file on disk); single-task mode does not check this. |
 | `workflow.registry.sync` | Regenerate the `Claimed By`/`Claimed At` cells of `.ai/COMMON.md`'s Active Work Registry from lock files | `.ai/tools/claim.py sync` | repo-local, `.ai/COMMON.md` only | write (scoped) | TASK-0024. Touches only those two columns per row — Description/Assigned To/Status/Priority/Last Active/Path stay hand-maintained. Supports `--dry-run` and `--check` (exit 1 if out of sync, no write); also warns (stderr) about task files on disk with no registry row and rows with no task file, without attempting to fix either. Serializes concurrent writers via a short-lived `.ai/COMMON.md.synclock` file. |
 | `workflow.task.resolve` | Resolve a task with an explicit backend-relevant resolution value | manual fallback | generic with backend adapter | write | Distinct from deletion; backend adapters should map the resolution field correctly. |
 | `workflow.task.promote` | Promote reusable outcomes from a TASK file into review and contract artifacts | prompt or agent orchestration | scaffold-specific with backend adapter | write (scoped) | Supports retrieval-first updates of `.ai/tasks/contracts/*` and `.ai/reviews/*` artifacts from resolved-task sections such as UI intent baselines and architecture findings. |
@@ -68,6 +68,28 @@ In heavily manual customer environments, repo-local wrappers that produce local 
 | `workflow.learn.manage` | Internalize validated findings and retrieve canonical learned facts with explicit lookup-path metadata | prompt or agent orchestration | scaffold-specific | write (scoped) | Supports modes `internalize|retrieve|improve`; retrieval is schema-index authoritative and source grep is auxiliary only. |
 | `workflow.agent.delegate` | Hand a slice to another agent role or overlay | prompt or agent orchestration | scaffold-specific | control-plane | Should route by role contract, not by ad hoc prose only. |
 | `workflow.agent.review` | Invoke a review or critic pass by the appropriate role | prompt or agent orchestration | scaffold-specific | control-plane | Maps naturally to General Critic, Code Reviewer, or future specialized critics. |
+
+**On the four `.ai/tools/claim.py`-backed rows above** (`workflow.task.claim`,
+`workflow.task.release`, `workflow.task.claim-status`,
+`workflow.registry.sync`): this table is a one-line summary and can drift
+from the tool's actual behavior as it's extended (see TASK-0024.001,
+TASK-0027 for planned extensions) — it already had one small inaccuracy,
+corrected above. Before relying on exact flag names, defaults, or output
+format, run `.ai/tools/claim.py --help` or `.ai/tools/claim.py <subcommand>
+--help` (both already whitelisted in `.claude/settings.json`, same as any
+other invocation of the tool — no separate permission needed), or read the
+module docstring at the top of `.ai/tools/claim.py` directly. Treat this
+table as a pointer to the tool, not a substitute for it.
+
+**Invoke it directly — don't pipe or redirect its output** (e.g.
+`... | head`, `... | grep`, `2>&1 | tee ...`). The whitelist entries only
+cover invocations of `claim.py` itself; a pipe hands output to a *second*
+program (`head`, `grep`, …) that isn't covered, so the whole command still
+prompts even though `claim.py` alone wouldn't. This also isn't needed in
+practice — `status` with no args prints one short line per active claim
+(9 lines total as of this writing), and single-task `status TASK-ID` is
+one line. Matches TASK-0025's broader command-hygiene guidance: prefer a
+single, non-piped command over an ad hoc shell pipeline.
 
 ## Slash Command Fit
 
