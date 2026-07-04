@@ -100,6 +100,11 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0022 | Frontend/UI tiered test coverage — presence / isolated functionality / intent chains / E2E process | Implementer | TODO | P0 | 2026-07-04 | Intent-Inferrer (this thread) | 2026-07-04 15:10 | `.ai/tasks/TODO/TASK-0022-frontend-ui-tiered-test-coverage.md` |
 | TASK-0023 | YAGNI / scope-creep review of Product feature backlog vs. challenge rubric | General Critic | TODO | P1 | 2026-07-04 | Intent-Inferrer (this thread) | 2026-07-04 15:10 | `.ai/tasks/TODO/TASK-0023-product-yagni-scope-review.md` |
 | TASK-0024 | Whitelisted claim/free tool for scaffold coordination files — hardens TASK-0017 after two real collisions this session | Toolsmith | TODO | P0 | 2026-07-04 | Intent-Inferrer (this thread) | 2026-07-04 15:20 | `.ai/tasks/TODO/TASK-0024-claim-lock-tool.md` |
+| TASK-0025 | Single-command preference + reusable-script convention for `.ai/` scaffold threads, delivered as a policy doc + Claude Skill | Skills Crafter | TODO | P2 | 2026-07-04 | Skills Crafter (this thread) | 2026-07-04 16:30 | `.ai/tasks/TODO/TASK-0025-command-hygiene-skill.md` |
+| TASK-0026 | Recover `agents-tools/capability-runner.sh` (parent/coordinator — see subtasks below) | Toolsmith | TODO | P1 | 2026-07-04 | Skills Crafter (this thread) | 2026-07-04 16:45 | `.ai/tasks/TODO/TASK-0026-capability-runner-recovery.md` |
+| TASK-0026.001 | Dispatcher entry point + `repo.vcs.*` primitives + `repo.packaging.snapshot` | Toolsmith | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0026.001-vcs-core.md` |
+| TASK-0026.002 | Remaining `repo.packaging.*` + `repo.maintenance.behavior-contract-capture` + `repo.test.playwright-local` (blocked on .001) | Toolsmith | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0026.002-packaging-remainder.md` |
+| TASK-0026.003 | `CAPABILITIES.md` honesty pass + draft allowlist entry (blocked on .001, .002) | Toolsmith | TODO | P2 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0026.003-capabilities-doc-correction.md` |
 
 ## Current Rules
 

@@ -5,6 +5,17 @@ Use this folder for multi-step implementation, investigation, migration, or vali
 Naming:
 
 - `TASK-0001-slug.md` — number is a permanent ID, never reused, never renumbered on move.
+- `TASK-0001.001-slug.md` — a subtask of TASK-0001. Use dotted subtask IDs
+  (`.001`, `.002`, …) when a task's work splits into independently
+  claimable, independently stateful slices (e.g. one thread per slice)
+  instead of writing one large task file with an internal checklist that
+  spans multiple owners. The parent file stays a thin coordinator: it holds
+  shared decisions/constraints and a subtask table linking to each
+  `TASK-XXXX.NNN` file, but not the implementation detail itself. Each
+  subtask file is a full task file in its own right — same required
+  sections below, own `Status`/`Owner`/`Claimed By`, own folder placement —
+  and links back to its parent in `Context`/`Dependency`. The parent is Done
+  only once every subtask is Done.
 
 ## Folder = lifecycle state
 
