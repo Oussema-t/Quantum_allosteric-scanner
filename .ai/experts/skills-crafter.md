@@ -1,9 +1,10 @@
 # Skills Crafter Brief
 
-Status: Candidate overlay — proposed 2026-07-04, not yet ratified by
-Architect/Planner. Inferred from this session's work (TASK-0025, TASK-0026
-family) rather than pre-designed; treat as a first draft to correct, not a
-settled contract.
+Status: Active — ratified 2026-07-04 (user decision, in response to
+TASK-0025's open question). Originally inferred from this session's work
+(TASK-0025, TASK-0026 family) rather than pre-designed; the brief below is
+still expected to be refined in place as the role gets more use, but the
+role itself is settled, not provisional.
 
 ## Relationship To Toolsmith
 
@@ -111,12 +112,10 @@ Crafter once the answer is "yes, write a small script/Skill."
 - record token-cost/determinism wins concretely (before/after) when they
   turn out to be real, not just asserted at design time
 
-## Open Question (for Architect/Planner)
+## Resolved
 
-Should this become a seeded core-adjacent brief in
-`.ai/experts/README.md`'s Specialist Overlays list (alongside Code
-Reviewer, Commit Packager, Test Report Reviewer), or does its scope turn
-out to be narrow enough to fold into Toolsmith directly once TASK-0025/0026
-land? Recommend seeding it now as a candidate (this file) and revisiting
-after those tasks close — same "prove repeated demand before adding a
-thread" rule `.ai/experts/README.md`'s First Agent Pattern already states.
+Formalized as a seeded specialist overlay in `.ai/experts/README.md`'s
+Specialist Overlays list, alongside Code Reviewer, Commit Packager, and
+Test Report Reviewer (user decision, 2026-07-04, answering TASK-0025's
+open question directly). No longer a candidate pending Architect/Planner
+review.
