@@ -39,6 +39,7 @@ Track candidate slash commands that bind to protocol steps or named capabilities
 | `/test-report-review` | `.github/prompts/test-report-review.prompt.md` | `workflow.testreport.review` | review reports and artifacts without writing tickets |
 | `/test-report-triage` | `.github/prompts/test-report-triage.prompt.md` | `workflow.testreport.triage` | classify report findings and route the next likely action without writing tickets |
 | `/test-execute` | `.github/prompts/test-execute.prompt.md` | `workflow.testexecution.run` | execute specified automated test code on the active backend |
+| `/learn` | `.github/prompts/learn.prompt.md` | `workflow.learn.manage` | internalize or retrieve canonical learned facts against the learn-schema index, with explicit retrieval-path metadata |
 
 ## Candidate Commands
 

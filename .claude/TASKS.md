@@ -4,6 +4,15 @@
 **Last updated:** 2026-07-02  
 **Threads:** BLUE = Code generator | RED = Reviewer/Critic | ORCH = Orchestrator
 
+**Ledger boundary (decided in TASK-0002, 2026-07-04):** this ledger is closed
+to new entries — it stays in place as the historical record for the
+T-001…T-021 review-remediation cycle sourced from `.claude/criticism/*`. Any
+new work item, including further work on this same `__WORK_IN_PROGRESS__`
+codebase, gets filed as a `.ai/tasks/TASK-XXXX` file instead (see
+`.ai/COMMON.md` → "Task Ledger Boundary"). Resuming a `TODO`/`Blocked` row
+below (T-017, T-018, T-021) means wrapping it in a new `TASK-XXXX` file that
+links back here, not adding a `T-022`.
+
 **Criticism files (source of truth for task rationale):**
 - `CRIT-001` → `.claude/criticism/test_physics_criticism.md` (test file quality)
 - `CRIT-002` → `.claude/criticism/coverage_gaps_2026-06-21.md` (missing coverage)

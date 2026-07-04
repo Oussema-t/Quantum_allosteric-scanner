@@ -3,6 +3,16 @@
 Plan of action, repo structure, and feature backlog for the Cleveland Clinic
 Quantum + AI challenge submission.
 
+**Relationship to `PLAN-01.07.26.md`:** this file is the phase-gated
+technical/scientific plan — the *what* and *why* (gates, physics, repo
+structure, feature backlog). `PLAN-01.07.26.md` is a companion week-by-week
+timeline overlay — the *when*, scheduled against the Phase 1 (Ideation)
+2026-09-15 deadline. Neither supersedes the other; decided in TASK-0002
+(2026-07-04). Confirm whether the dated-filename pattern
+(`PLAN-DD.MM.YY.md`) is meant to recur each planning cycle, or was a
+one-off snapshot, before assuming a new dated file should be authored
+next week.
+
 ## Guiding principle: gates before build
 
 Every phase below is a **validity or feasibility gate**. A gate that fails is a
@@ -161,32 +171,42 @@ Only on targets whose ceiling clears the baselines.
 ```
 src/allostery/
   data.py          fetch, parse Cα                                    [have]
-  clean.py         NEW: deterministic structure cleanup (Phase 0b)
+  clean.py         deterministic structure cleanup (Phase 0b)              [have]
   labels.py        NEW: curated ligand pick, residues_near, seq-align map,
-                   holo_pocket_mask, functional_indices, terminal_mask
+                   holo_pocket_mask, functional_indices, terminal_mask — TASK-0004
   superpose.py     NEW: Kabsch superpose, per-chain RMSD, 3D pocket map,
-                   cryptic-openness; mode-projection / κ calibration (Phase 1b)
-  potentials.py    NEW: V_B, V_T, V_R, V_C, V_M  (H_new physics)
+                   cryptic-openness; mode-projection / κ calibration (Phase 1b) — TASK-0005
+  potentials.py    V_B, V_T, V_R, V_C, V_M  (H_new physics)                 [have]
   hamiltonians.py  H1–H13, build_H_new, build_H10, normalized Laplacian  [have]
   propagators.py   heat, green(dephased), ctqw, qsw, chiral, spread      [have]
   metrics.py       P@k, AUC, block-bootstrap CI, perm, graph_features,
                    guardrails, distance-bias quantile correction (ProteinLens) [have+]
-  baselines.py     NEW: degree/betweenness + external (ProteinLens/AlloPred…)
-  select.py        unsupervised selector (focusing/specificity/ballistic)  [have]
-  protocol.py      DEV/FROZEN firewall + leave_one_protein_out             [have]
+  baselines.py     NEW: degree/betweenness + external (ProteinLens/AlloPred…) — TASK-0011
+  select.py        NEW: unsupervised selector (focusing/specificity/ballistic) — TASK-0007
+  protocol.py      NEW: DEV/FROZEN firewall + leave_one_protein_out — TASK-0006
   pathways.py      NEW: current-flow / edge-propensity pathway extraction
-                   (the real version of the "green tube")
-  coarse.py        NEW: Louvain/spectral coarse-grain + Trotter cost
+                   (the real version of the "green tube") — TASK-0012
+  coarse.py        NEW: Louvain/spectral coarse-grain + Trotter cost — TASK-0013
   analysis.py      NEW: quantum_vs_classical, ablation, apo_holo_consistency,
-                   spectral_enrichment, dephasing_sweep
-  diagnostics.py   NEW: operator diagnostics + failure-mode classifier
-  viz.py           structure/pathway viz (presentation only)
-  report.py        verdict template + hit-list deliverable
+                   spectral_enrichment, dephasing_sweep — TASK-0008
+  diagnostics.py   NEW: operator diagnostics + failure-mode classifier — TASK-0009
+  viz.py           structure/pathway viz (presentation only) — TASK-0014
+  report.py        verdict template + hit-list deliverable — TASK-0010
 config/targets.yaml   frozen registry: 4.5 Å pocket, curated allosteric ligand,
-                      keep_nucleic / chains per target
+                      keep_nucleic / chains per target — TASK-0003
 tests/                physics unit tests (Phase 0a) + guardrails           [have+]
 notebooks/report.ipynb  THIN: imports package, makes figures only
 ```
+
+**`[have]` tag spot-check (TASK-0002, 2026-07-04, requested by TASK-0007's Open
+Questions):** every `[have]`/`[have+]` tag above was verified against the actual
+file on disk (line count + stub/`NotImplementedError` check), not assumed.
+Corrected two directions of drift: `select.py` and `protocol.py` were tagged
+`[have]` but are 6-line stubs (now `NEW`, tracked as TASK-0007/TASK-0006); `clean.py`
+and `potentials.py` were tagged `NEW` but are fully implemented (260 and 173
+lines respectively, now `[have]`). Treat this table as re-verified as of this
+date, not further tags as of TASK-0015/labels.py etc. — re-check before relying
+on a `[have]` tag once new module work lands.
 
 ---
 
