@@ -23,6 +23,7 @@ Central coordination hub for the repo-local agent scaffold.
 - issue backend contract: `.ai/reference/ISSUE_BACKEND_PLACEHOLDER_CONTRACT.md`
 - memory policy: `.ai/memory/README.md`
 - backend selection: `.ai/reference/BACKEND_SELECTION.md`
+- claim/lock tool (TASK-0024): `.ai/tools/claim.py` — `claim`/`release`/`status`/`sync`, see "Current Rules" below
 - roadmap / phase-gated plan: `.ai/tasks/PLANS/PLAN.md`
 - weekly timeline overlay: `.ai/tasks/PLANS/PLAN-01.07.26.md`
 
@@ -99,12 +100,13 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0021 | Backend API test-coverage baseline — codify `SOFTWARE.md` §9 examples as `pytest` | Implementer | TODO | P0 | 2026-07-04 | Intent-Inferrer (this thread) | 2026-07-04 15:10 | `.ai/tasks/TODO/TASK-0021-backend-api-test-baseline.md` |
 | TASK-0022 | Frontend/UI tiered test coverage — presence / isolated functionality / intent chains / E2E process | Implementer | TODO | P0 | 2026-07-04 | Intent-Inferrer (this thread) | 2026-07-04 15:10 | `.ai/tasks/TODO/TASK-0022-frontend-ui-tiered-test-coverage.md` |
 | TASK-0023 | YAGNI / scope-creep review of Product feature backlog vs. challenge rubric | General Critic | TODO | P1 | 2026-07-04 | Intent-Inferrer (this thread) | 2026-07-04 15:10 | `.ai/tasks/TODO/TASK-0023-product-yagni-scope-review.md` |
-| TASK-0024 | Whitelisted claim/free tool for scaffold coordination files — hardens TASK-0017 after two real collisions this session | Toolsmith | TODO | P0 | 2026-07-04 | Intent-Inferrer (this thread) | 2026-07-04 15:20 | `.ai/tasks/TODO/TASK-0024-claim-lock-tool.md` |
+| TASK-0024 | Whitelisted claim/free tool for scaffold coordination files — hardens TASK-0017 after two real collisions this session | Toolsmith | Done | P0 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0024-claim-lock-tool.md` |
 | TASK-0025 | Single-command preference + reusable-script convention for `.ai/` scaffold threads, delivered as a policy doc + Claude Skill | Skills Crafter | TODO | P2 | 2026-07-04 | Skills Crafter (this thread) | 2026-07-04 16:30 | `.ai/tasks/TODO/TASK-0025-command-hygiene-skill.md` |
 | TASK-0026 | Recover `agents-tools/capability-runner.sh` (parent/coordinator — see subtasks below) | Toolsmith | TODO | P1 | 2026-07-04 | Skills Crafter (this thread) | 2026-07-04 16:45 | `.ai/tasks/TODO/TASK-0026-capability-runner-recovery.md` |
 | TASK-0026.001 | Dispatcher entry point + `repo.vcs.*` primitives + `repo.packaging.snapshot` | Toolsmith | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0026.001-vcs-core.md` |
 | TASK-0026.002 | Remaining `repo.packaging.*` + `repo.maintenance.behavior-contract-capture` + `repo.test.playwright-local` (blocked on .001) | Toolsmith | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0026.002-packaging-remainder.md` |
 | TASK-0026.003 | `CAPABILITIES.md` honesty pass + draft allowlist entry (blocked on .001, .002) | Toolsmith | TODO | P2 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0026.003-capabilities-doc-correction.md` |
+| TASK-0026.004 | Named `repo.test.playwright-local` presets tied to TASK-0021/0022 + sibling `repo.test.pytest-local` — whitelisted self-verification for any thread | Toolsmith | TODO | P1 | 2026-07-04 | Intent-Inferrer (this thread) | 2026-07-04 16:55 | `.ai/tasks/TODO/TASK-0026.004-test-execution-self-verification.md` |
 
 ## Current Rules
 
@@ -116,31 +118,37 @@ see the claim-before-start rule under "Current Rules" below.
 - Whoever creates or moves a `TASK-XXXX` file must update this registry in
   the same edit — it must not silently drift out of sync (see Task Ledger
   Boundary above for the `.claude/TASKS.md` split).
-- **Claim before you start (TASK-0017).** Before starting or resuming work
-  on a registry row — or editing this registry itself, the single most
-  contended file in the scaffold — write your claim into that row's
-  `Claimed By` / `Claimed At` columns first, as its own edit, before making
-  substantive changes to the task file or its dependents. If the row already
-  shows another claim, do not proceed silently: either pick a different
-  unclaimed task, or if the claim looks stale (see the staleness rule
-  below), note the override in that task file's Open Questions and proceed.
-  Free-text claim labels are fine (e.g. "Implementer (this thread)",
-  "General Critic hygiene pass") — this is advisory, not a distributed
-  lock, and nothing enforces it beyond a reader checking the table.
+- **Claim before you start (TASK-0017, hardened by TASK-0024).** Before
+  starting or resuming work on a registry row — or editing this registry
+  itself, the single most contended file in the scaffold — run
+  `python3 .ai/tools/claim.py claim <TASK-ID> "<your label>"` first. This is
+  an atomic, whitelisted local operation (an `O_EXCL`-created lock file
+  under `.ai/tasks/.locks/`), not a hand-edit of this table's `Claimed By` /
+  `Claimed At` cells — **do not hand-edit those two cells anymore**; run
+  `python3 .ai/tools/claim.py sync` to regenerate them from the lock files
+  (everything else in a row — Description/Assigned To/Status/Priority/Last
+  Active/Path — is still hand-maintained exactly as before). If the row is
+  already claimed, `claim` fails loudly and prints the current holder:
+  either pick a different unclaimed task, or override with
+  `--force --reason TEXT` if you judge the claim stale (see below) — the
+  reason is recorded in the lock file for audit. Free-text claim labels are
+  still fine (e.g. "Implementer (this thread)").
 - **Staleness override (TASK-0017).** A claim with no corresponding file
   activity (check the task file's own mtime / `git log -- <path>`) for
-  longer than one working session is stale and may be taken over. No
-  numeric TTL is enforced — a human or agent reading the table makes the
-  call, same as everything else in this scaffold. Example: TASK-0001's
-  claim (if it had one) would already read as stale under this rule, since
-  its Last Active is 2026-06-25 with no row claim — that's a real
-  candidate for override, not a hypothetical, but nobody has taken it over
-  as of this writing.
-- **This table is unsafe under concurrent whole-file writes (until
-  TASK-0024 lands).** Two such collisions happened in this single session.
-  If you're about to write this file, `ls .ai/tasks/TODO IN_PROGRESS DONE`
-  immediately first and reconcile against that, not against a prose read
-  that may already be stale by the time your write lands.
+  longer than one working session is stale and may be taken over via
+  `claim.py claim <TASK-ID> "<label>" --force --reason "..."`. No numeric
+  TTL is enforced — a human or agent reading the table makes the call, same
+  as everything else in this scaffold.
+- **This table's claim columns are no longer edited by hand (TASK-0024).**
+  `.ai/tools/claim.py sync` is the only writer of `Claimed By` /
+  `Claimed At` — it reads lock files and rewrites only those two cells per
+  row, serialized through a short-lived `.ai/COMMON.md.synclock` file, so
+  concurrent `sync` runs can't clobber each other's claim data. Two such
+  whole-table collisions happened in one session before this landed.
+  Adding, removing, or reordering *rows* (new tasks, moved tasks) is still a
+  manual edit with the original whole-file-write risk — `ls .ai/tasks/TODO
+  IN_PROGRESS DONE` immediately before such an edit and reconcile against
+  that, not against a prose read that may already be stale.
 
 ## Open Questions
 

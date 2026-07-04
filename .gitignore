@@ -14,3 +14,6 @@ outputs/
 .DS_Store
 .vscode/
 .idea/
+
+# .ai scaffold coordination (TASK-0024): ephemeral claim locks, not reviewed history
+.ai/tasks/.locks/*.lock

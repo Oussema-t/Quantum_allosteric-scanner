@@ -6,7 +6,7 @@
 - Title: Add a `Claimed By` / `Claimed At` soft-lock convention to
   `.ai/COMMON.md`'s Active Work Registry, to prevent the concurrent-edit
   collision this task exists to fix
-- Status: In Progress
+- Status: Done
 - Owner: Implementer (picked up 2026-07-04, redirected from the original
   General Critic/hygiene-pass placeholder owner — a bounded schema+doc
   change fits the Implementer brief directly)
@@ -151,3 +151,16 @@
   check. Moved this file `TODO/` → `IN_PROGRESS/` → `DONE/` as part of
   finishing the pass, updating the registry's `Status`/`Path` at each
   move per the existing registry-sync rule (TASK-0002).
+
+- **Forward pointer (2026-07-04, added by TASK-0024):** this task's
+  hand-edited `Claimed By` / `Claimed At` convention was clobbered twice by
+  concurrent whole-file writes within hours of shipping — the exact
+  failure mode this task's Out Of Scope section called "hypothetical."
+  `.ai/tasks/DONE/TASK-0024-claim-lock-tool.md` replaced the mechanism (not
+  the philosophy) with `.ai/tools/claim.py`: an atomic per-task lock file
+  under `.ai/tasks/.locks/`, with `claim.py sync` as the sole writer of
+  this registry's two claim columns. **Do not hand-edit `Claimed By` /
+  `Claimed At` anymore** — see `.ai/COMMON.md`'s "Current Rules" and
+  TASK-0024 for the current mechanism. Everything else this task
+  established (advisory staleness override, human/agent judgment call, no
+  distributed lock) is unchanged.
