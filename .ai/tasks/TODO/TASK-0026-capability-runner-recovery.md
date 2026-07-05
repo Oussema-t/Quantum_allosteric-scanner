@@ -97,6 +97,23 @@ None
   (`agents-tools/capability-runner.sh` here, `.ai/tools/claim.py` under
   TASK-0024)? Flagged, not decided — a future task should address this once
   both exist, rather than guessing now.
+- **Added 2026-07-05 (Toolsmith thread + Reviewer, via TASK-0029 —
+  contributed evidence, this task remains claimed by Skills Crafter, not a
+  claim override):** should `.ai/tools/claim.py` eventually register under
+  a structurally-validated capability-runner dispatch model (whatever
+  `agents-tools/capability-runner.sh` ends up being) instead of being
+  whitelisted via enumerated `.claude/settings.json` entries per
+  subcommand? Context: TASK-0029 needed to scope a new `stage` subcommand
+  so claim.py's own blanket wildcard allowlist couldn't silently imply
+  unconstrained `git add`. The near-term fix landed was enumerating each
+  of claim.py's subcommands explicitly in `.claude/settings.json` (no new
+  code, closes the same "silent future-subcommand creep" gap for every
+  subcommand, not just `stage`) — a Reviewer note on that work flagged the
+  heavier dispatch-model alternative as a better fit for this task's own
+  scope rather than deciding it ad hoc in TASK-0029, since this task
+  already defers the parallel `agents-tools/` vs `.ai/tools/` "one script
+  home" question above. Recommend resolving both questions together once
+  a subtask here actually builds the dispatcher, rather than separately.
 
 ## Done
 

@@ -23,7 +23,7 @@ Central coordination hub for the repo-local agent scaffold.
 - issue backend contract: `.ai/reference/ISSUE_BACKEND_PLACEHOLDER_CONTRACT.md`
 - memory policy: `.ai/memory/README.md`
 - backend selection: `.ai/reference/BACKEND_SELECTION.md`
-- claim/lock tool (TASK-0024, TASK-0027, TASK-0028): `.ai/tools/claim.py` — `claim`/`release`/`status`/`sync`/`move`/`commit-guard`, see "Current Rules" below
+- claim/lock tool (TASK-0024, TASK-0027, TASK-0028, TASK-0029): `.ai/tools/claim.py` — `claim`/`release`/`status`/`sync`/`move`/`commit-guard`/`stage`, see "Current Rules" below
 - command hygiene (TASK-0025): `.github/instructions/tooling/command-hygiene.instructions.md` — one command per call, no chains/pipes; `.claude/skills/command-hygiene/` is the applied procedure
 - roadmap / phase-gated plan: `.ai/tasks/PLANS/PLAN.md`
 - weekly timeline overlay: `.ai/tasks/PLANS/PLAN-01.07.26.md`
@@ -111,6 +111,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0026.004 | Named `repo.test.playwright-local` presets tied to TASK-0021/0022 + sibling `repo.test.pytest-local` — whitelisted self-verification for any thread | Toolsmith | TODO | P1 | 2026-07-04 | Intent-Inferrer (this thread) | 2026-07-04 16:55 | `.ai/tasks/TODO/TASK-0026.004-test-execution-self-verification.md` |
 | TASK-0027 | Whitelisted `claim.py move` subcommand for TODO/IN_PROGRESS/DONE task-file transitions — folder move + Status field + registry row as one claim-checked command | Toolsmith | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0027-task-move-tool.md` |
 | TASK-0028 | Commit lock (`claim.py`-backed) serializing stage-and-ship across threads, plus an index-hygiene guard refusing unexpected staged paths before commit — filed after a real misattributed-commit incident this session | Toolsmith | Done | P0 | 2026-07-05 | — | — | `.ai/tasks/DONE/TASK-0028-commit-lock.md` |
+| TASK-0029 | Scoped `claim.py stage --expect` subcommand — stages exactly the declared `.ai/`/`.claude/` paths and self-verifies, closing the loop with `commit-guard` without making the tool's blanket whitelist imply unconstrained `git add` | Toolsmith | Done | P1 | 2026-07-05 | — | — | `.ai/tasks/DONE/TASK-0029-scoped-stage-tool.md` |
 
 ## Current Rules
 
@@ -162,19 +163,31 @@ see the claim-before-start rule under "Current Rules" below.
   auto-releases the claim by default (`--keep-claim` to opt out). `--as` is
   always required.
 - **Claim `GIT-COMMIT` before staging anything you intend to commit
-  (TASK-0028).** Run `python3 .ai/tools/claim.py claim GIT-COMMIT "<your
-  label>"` before the *first* `git add` of a commit-bound change, not
-  right before `git commit` — release it once the commit lands (or
-  explicitly if you abandon the staged work). If another thread holds it,
-  `claim` refuses and names the holder; do not proceed, and do not pass
-  `--force --reason --hitl-override` yourself — that combination requires
-  an explicit human instruction in the current conversation, not an
-  agent's own judgment call, unlike the advisory task-row override above.
-  Immediately before `git commit`, also run `python3 .ai/tools/claim.py
-  commit-guard --expect <path> [<path> ...]` — it refuses if the staged
-  index contains anything beyond what you declared, which is what would
-  have caught the incident that motivated this rule (another thread's
-  already-staged files silently riding along into an unrelated commit).
+  (TASK-0028, workflow completed by TASK-0029).** Full sequence:
+  1. `python3 .ai/tools/claim.py claim GIT-COMMIT "<your label>"` before
+     the *first* `git add` of a commit-bound change, not right before
+     `git commit`. If another thread holds it, `claim` refuses and names
+     the holder; do not proceed, and do not pass
+     `--force --reason --hitl-override` yourself — that combination
+     requires an explicit human instruction in the current conversation,
+     not an agent's own judgment call, unlike the advisory task-row
+     override above.
+  2. `python3 .ai/tools/claim.py commit-guard --expect-empty` — fail fast
+     if the index isn't actually clean, before you touch it (beats
+     staging first and discovering contamination after).
+  3. `python3 .ai/tools/claim.py stage --expect <path> [<path> ...]` for
+     any `.ai/`/`.claude/` files — stages exactly those paths and
+     self-verifies. Files outside `.ai/`/`.claude/` still need a plain
+     `git add`, which correctly prompts (deliberately not whitelisted —
+     see TASK-0029's Intent Contract for why an unscoped stage would have
+     been a whitelist-bypass in disguise).
+  4. `python3 .ai/tools/claim.py commit-guard --expect <path> [<path>
+     ...]` immediately before `git commit` — refuses if the staged index
+     contains anything beyond what you declared, which is what would have
+     caught the incident that motivated this whole rule (another thread's
+     already-staged files silently riding along into an unrelated
+     commit).
+  5. `git commit`, then `python3 .ai/tools/claim.py release GIT-COMMIT`.
 
 ## Open Questions
 
