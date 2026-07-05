@@ -138,11 +138,23 @@ None
 - [ ] Add the QAS/CCC naming gloss to `.claude/TASKS.md`'s Group C header
       (small, additive edit — doesn't violate the ledger being "closed to
       new entries," it's a clarifying note on existing entries).
-- [ ] Cross-check whether `backend/analysis.py`'s live
+- [x] Cross-check whether `backend/analysis.py`'s live
       `quantum_seed_readiness`/`_ctqw_build_H` means the README's "quantum
       prediction... not built yet" framing is now slightly stale (a partial
       quantum-walk-flavored feature *is* live) — if so, flag for a doc fix,
-      don't silently rewrite the README from this task.
+      don't silently rewrite the README from this task. **Confirmed
+      independently by TASK-0020** (Product intent/feature inventory audit,
+      2026-07-04, cross-linking thread — not a claim on this task): see
+      [`.ai/reviews/PRODUCT_INTENT_MAP.md`](../../reviews/PRODUCT_INTENT_MAP.md)
+      §1 (`connectivity-change` row) and §3 item 2. That audit reached the
+      same conclusion from the Product-intent side (is this feature's
+      purpose stated anywhere?) rather than the architecture side (does it
+      duplicate `hamiltonians.py`?) — two independent routes to the same
+      finding. TASK-0020 flags the doc-staleness as a still-open item; it
+      did not fix `ARCHITECTURE.md`/`SOFTWARE.md`/`CLAUDE.md`'s "not built
+      yet" wording itself, so that edit is still this task's (or a
+      follow-up's) to make. Cross-links added: `ARCHITECTURE.md` new §5b,
+      one line before `SOFTWARE.md` §4.
 
 ## Dependency
 
@@ -152,6 +164,12 @@ None
   should read this task's side-by-side first so the two `analysis.py`
   files' relationship (if any) is a decision, not an accident.
 - Wraps `.claude/TASKS.md` T-018, T-021 (see Crit Ref above).
+- TASK-0020 (Product intent/feature inventory, done) — not a blocking
+  dependency, but its output
+  ([`.ai/reviews/PRODUCT_INTENT_MAP.md`](../../reviews/PRODUCT_INTENT_MAP.md))
+  independently confirms this task's quantum-seed-readiness staleness
+  finding (see TODO above) and is worth reading alongside this task's own
+  side-by-side once that's written.
 
 ## Open Questions
 
