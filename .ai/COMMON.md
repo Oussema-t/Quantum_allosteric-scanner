@@ -112,6 +112,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0027 | Whitelisted `claim.py move` subcommand for TODO/IN_PROGRESS/DONE task-file transitions — folder move + Status field + registry row as one claim-checked command | Toolsmith | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0027-task-move-tool.md` |
 | TASK-0028 | Commit lock (`claim.py`-backed) serializing stage-and-ship across threads, plus an index-hygiene guard refusing unexpected staged paths before commit — filed after a real misattributed-commit incident this session | Toolsmith | Done | P0 | 2026-07-05 | — | — | `.ai/tasks/DONE/TASK-0028-commit-lock.md` |
 | TASK-0029 | Scoped `claim.py stage --expect` subcommand — stages exactly the declared `.ai/`/`.claude/` paths and self-verifies, closing the loop with `commit-guard` without making the tool's blanket whitelist imply unconstrained `git add` | Toolsmith | Done | P1 | 2026-07-05 | — | — | `.ai/tasks/DONE/TASK-0029-scoped-stage-tool.md` |
+| TASK-0030 | Extract a shared, unit-tested Kabsch helper in `backend/` — dedupes `discovery.py::_kabsch` / `analysis.py::_kabsch_rotate`; reuse target for TASK-0005; concrete instance of TASK-0018 evidence #6 | Implementer | TODO | P2 | 2026-07-05 | — | — | `.ai/tasks/TODO/TASK-0030-backend-kabsch-dedup.md` |
 
 ## Current Rules
 

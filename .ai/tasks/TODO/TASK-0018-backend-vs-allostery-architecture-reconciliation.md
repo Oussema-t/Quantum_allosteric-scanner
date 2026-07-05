@@ -113,6 +113,22 @@ Confirmed by direct comparison, not just a feeling:
    re-litigate; TASK-0003 owns the targets-config side of this, this task
    owns the physics-code side.
 
+6. **Kabsch/SVD superposition is duplicated *inside* `backend/` itself,
+   independent of the allostery-side question** (found 2026-07-05 while
+   scoping TASK-0005): `backend/discovery.py::_kabsch` and
+   `backend/analysis.py::_kabsch_rotate` are the same algorithm (SVD +
+   `det(Vt.T@U.T)` reflection correction), written twice with different
+   call signatures. A third, semantically different implementation
+   (`backend/compare.py::align_and_compare`, Biopython `Superimposer`,
+   whole-structure atom transforms for PDB-text export) is a superset
+   problem, not a straight duplicate. TASK-0030 (new) deduplicates the two
+   NumPy copies and is the reuse target for TASK-0005's own Kabsch step
+   (port the math, don't import cross-package — same "port, don't share
+   code across `backend/`↔`allostery/`" principle this task's Constraints
+   section already states). This is a smaller, already-actionable instance
+   of "break down the backend spaghetti" — worth treating as a proof of
+   concept for whatever this task's full side-by-side turns up.
+
 ## In Progress
 
 None
@@ -170,6 +186,9 @@ None
   independently confirms this task's quantum-seed-readiness staleness
   finding (see TODO above) and is worth reading alongside this task's own
   side-by-side once that's written.
+- TASK-0030 (new, `backend/` Kabsch dedup) — not blocking; a small,
+  concrete, already-scoped instance of evidence item 6 above. Its landed
+  helper is also TASK-0005's recommended porting target.
 
 ## Open Questions
 
