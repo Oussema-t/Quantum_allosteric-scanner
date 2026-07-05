@@ -8,7 +8,7 @@
   `Status`/`Path` columns) into a single whitelisted command that checks
   `.ai/tools/claim.py`'s lock state first, instead of the current
   hand-rolled three-step sequence every thread performs manually
-- Status: TODO
+- Status: Done
 - Owner: Toolsmith
 - Claimed By: —
 - Claimed At: —
@@ -110,19 +110,23 @@ None
 
 ## TODO
 
-- [ ] Implement `claim.py move <TASK-ID> <TODO|IN_PROGRESS|DONE> --as
+- [x] Implement `claim.py move <TASK-ID> <TODO|IN_PROGRESS|DONE> --as
       <label>` per Intent Contract, reusing (not duplicating) `claim.py`'s
       task-ID normalization, lock reading, and `COMMON.md`
       row-parsing/`.synclock` serialization.
-- [ ] Add the claim-mismatch refusal + `--force --reason` override path,
+- [x] Add the claim-mismatch refusal + `--force --reason` override path,
       and the `DONE`-move auto-release (+ `--keep-claim`) behavior.
-- [ ] Add the subcommand to `.claude/settings.json`'s allowlist.
-- [ ] Run Planned Validation, including the concurrent-move case.
-- [ ] Update `.ai/COMMON.md`'s "Current Rules" (the claim-before-start
-      rule currently only mentions `claim`/`sync`) and
-      `.ai/tasks/README.md` to point at this tool for state transitions,
-      the same way TASK-0024 updated those rules for claiming.
-- [ ] Add a forward pointer in `.ai/tasks/DONE/TASK-0024-claim-lock-tool.md`
+- [x] Add the subcommand to `.claude/settings.json`'s allowlist. — Already
+      covered: the existing `Bash(.ai/tools/claim.py *)` / `Bash(python3
+      .ai/tools/claim.py *)` wildcard entries match any subcommand/args,
+      no new entry needed (same finding as TASK-0028).
+- [x] Run Planned Validation, including the concurrent-move case.
+- [x] Update `.ai/COMMON.md`'s "Current Rules" (the claim-before-start
+      rule currently only mentions `claim`/`sync`) to point at this tool
+      for state transitions, the same way TASK-0024 updated those rules
+      for claiming. (`.ai/tasks/README.md` needed no change — it documents
+      the folder/Status convention itself, not the mechanism that edits it.)
+- [x] Add a forward pointer in `.ai/tasks/DONE/TASK-0024-claim-lock-tool.md`
       noting that task-state transitions now have their own subcommand,
       mirroring how TASK-0024 pointed forward from TASK-0017.
 
@@ -147,4 +151,48 @@ Intent Contract above.)
 
 ## Done
 
-(not yet)
+- Extended `.ai/tools/claim.py` (no new tool, no new dependency):
+  - `find_task_file(task_id)`: scans TODO/IN_PROGRESS/DONE for the file,
+    raising a clear error on zero matches (not found) or more than one
+    (real on-disk drift) rather than silently picking one.
+  - `update_registry_row(task_id, new_status, new_path)`: reuses the
+    existing `_parse_row`/`_common_md_lock` from `sync` — touches only the
+    `Status` (index 3) and `Path` (index 8) cells for that row, same
+    targeted-replacement discipline as `sync`'s claim-column writes.
+  - `cmd_move`: claim check (refuse on mismatch unless `--force --reason`,
+    warn-and-proceed if unclaimed — same philosophy as `claim`) → locate
+    the file → rewrite its `- Status:` line in place → `git mv` (falling
+    back to `os.replace` if not yet tracked) → update the registry row →
+    auto-release the claim on a `DONE` move unless `--keep-claim`.
+    Idempotent: if the folder, Status line, and registry row all already
+    match the target state, reports a no-op instead of doing anything.
+  - `move` is restricted to `TASK-XXXX[.NNN]` ids (`is_task_id` check) —
+    refuses on `GIT-COMMIT` or other special resources, since "moving" a
+    non-task resource is meaningless.
+- Planned Validation, all five cases exercised on a scratch task
+  (`TASK-9500`, cleaned up afterward — file, lock, and registry row all
+  removed): (1) unclaimed move proceeds with a warning; (2) a mismatched
+  `--as` refuses, naming the actual claimant; (2b) a matching `--as` move
+  to `DONE` succeeds, updates the registry row, and auto-releases the
+  claim; (3) moving to the state it's already in reports a no-op; (4) two
+  concurrent `move` calls on the same task to different target states —
+  one succeeded, the other got a clear "may have already been moved by
+  another thread" error (not a crash/traceback) via a caught
+  `FileNotFoundError`/`CalledProcessError`, and the file ended up in
+  exactly one folder with the registry row correctly matching it — no
+  corruption, matching the concurrency-safety bar `find_task_file`'s
+  atomic `os.replace`/`git mv` gives for free on same-filesystem renames.
+- Confirmed no `.claude/settings.json` change was needed, same as
+  TASK-0028's finding: the existing wildcard allow entries already cover
+  `move` and any future subcommand on this tool.
+- Updated `.ai/COMMON.md`: Quick Navigation line lists `move` alongside
+  the other subcommands; added a new "Current Rules" bullet describing
+  the convention (run `move` instead of hand `mv` + two edits).
+- Registered `workflow.task.move` in `.ai/reference/CAPABILITIES.md`.
+- Added a forward pointer in `.ai/tasks/DONE/TASK-0024-claim-lock-tool.md`
+  covering both this task and TASK-0028 together, since both extend the
+  same tool and landed in the same session.
+- Dogfooded on itself: this file's own TODO/IN_PROGRESS → DONE transition
+  (this move) was performed via `claim.py move TASK-0027 DONE --as
+  "Toolsmith (this thread)"` rather than by hand, as the first real
+  (non-scratch) exercise of the tool.

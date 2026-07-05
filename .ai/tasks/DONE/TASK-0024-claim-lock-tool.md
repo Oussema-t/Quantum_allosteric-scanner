@@ -220,3 +220,16 @@ None
 - Validation performed: re-ran `claim.py sync --dry-run` after all edits —
   reports "no claim-column changes needed", confirming `.ai/COMMON.md`
   matches lock-file state for every row TASK-0001 through TASK-0026.004.
+
+- **Forward pointers (2026-07-05, added by TASK-0028 and TASK-0027):**
+  `.ai/tools/claim.py` grew two extensions on top of this task's
+  `claim`/`release`/`status`/`sync`. TASK-0028 added `GIT-COMMIT`, a fixed
+  non-task resource id serializing the git add-through-commit critical
+  section (with a stricter `--hitl-override` requirement on top of
+  `--force --reason`), plus a `commit-guard` subcommand checking the
+  staged index against an explicit expectation. TASK-0027 added `move`,
+  which encapsulates the folder-move + `Context: Status` edit + registry
+  `Status`/`Path` edit this task's own Done section documents doing by
+  hand three separate times above — see
+  `.ai/tasks/DONE/TASK-0028-commit-lock.md` and
+  `.ai/tasks/DONE/TASK-0027-task-move-tool.md` for both.

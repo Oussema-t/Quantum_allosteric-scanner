@@ -19,6 +19,12 @@ instruction, in the current conversation, to override a held commit lock.
 actually-staged git index against an --expect list and refuses if they
 don't match exactly, independent of whether GIT-COMMIT was claimed.
 
+Extended for TASK-0027: `move` relocates a task file between
+TODO/IN_PROGRESS/DONE, rewrites its own "- Status:" line, and updates its
+.ai/COMMON.md registry row's Status/Path cells, all as one command --
+refusing on a claim mismatch the same way `claim` does. Moving to DONE
+auto-releases the claim by default (--keep-claim to opt out).
+
 No third-party dependencies -- stdlib only.
 
 Usage:
@@ -28,6 +34,7 @@ Usage:
     claim.py status  [TASK-0024]
     claim.py sync    [--dry-run] [--check]
     claim.py commit-guard --expect PATH [PATH ...]
+    claim.py move    TASK-0024 IN_PROGRESS --as "Toolsmith (this thread)" [--force --reason TEXT] [--keep-claim]
 """
 
 import argparse
@@ -117,6 +124,35 @@ def disk_task_ids():
                 task_id = "TASK-" + task_id[1]
                 found[task_id] = os.path.join(".ai", "tasks", state, name)
     return found
+
+
+def find_task_file(task_id):
+    # type: (str) -> tuple
+    """Locate task_id's file across TODO/IN_PROGRESS/DONE.
+
+    Returns (state, filename). Raises SystemExit if zero or more than one
+    match is found -- a duplicate is real on-disk drift, not something to
+    silently pick one of.
+    """
+    matches = []
+    for state in TASK_STATE_DIRS:
+        d = os.path.join(TASKS_DIR, state)
+        if not os.path.isdir(d):
+            continue
+        for name in os.listdir(d):
+            if name.startswith(task_id + "-") and name.endswith(".md"):
+                matches.append((state, name))
+    if not matches:
+        raise SystemExit(
+            "error: no task file found for %s under TODO/IN_PROGRESS/DONE" % task_id
+        )
+    if len(matches) > 1:
+        raise SystemExit(
+            "error: %s has more than one task file on disk (%s) -- resolve "
+            "this drift manually before moving"
+            % (task_id, ", ".join("%s/%s" % m for m in matches))
+        )
+    return matches[0]
 
 
 # ---------------------------------------------------------------- claim ----
@@ -276,6 +312,40 @@ def _parse_row(line):
     return cols
 
 
+def update_registry_row(task_id, new_status, new_path):
+    # type: (str, str, str) -> bool
+    """Rewrite only the Status (index 3) and Path (index 8) cells for
+    task_id's row in COMMON.md, via the same targeted per-row replacement
+    and .synclock serialization `sync` uses for the claim columns.
+
+    Returns True if a row was found and changed, False otherwise (no row
+    for task_id, or the row already matched).
+    """
+    if not os.path.exists(COMMON_MD):
+        return False
+
+    with open(COMMON_MD, "r") as f:
+        lines = f.readlines()
+
+    changed = False
+    new_lines = []
+    for line in lines:
+        cols = _parse_row(line)
+        if cols is not None and cols[0] == task_id:
+            if cols[3] != new_status or cols[8] != new_path:
+                cols[3] = new_status
+                cols[8] = new_path
+                line = "| " + " | ".join(cols) + " |\n"
+                changed = True
+        new_lines.append(line)
+
+    if changed:
+        with _common_md_lock():
+            with open(COMMON_MD, "w") as f:
+                f.writelines(new_lines)
+    return changed
+
+
 def cmd_sync(args):
     if not os.path.exists(COMMON_MD):
         print("error: %s not found" % COMMON_MD, file=sys.stderr)
@@ -340,6 +410,142 @@ def cmd_sync(args):
         with open(COMMON_MD, "w") as f:
             f.writelines(new_lines)
     print("wrote %s (%d row(s) updated)" % (COMMON_MD, len(changed)))
+    return 0
+
+
+# ----------------------------------------------------------------- move ----
+
+STATE_TO_STATUS = {"TODO": "TODO", "IN_PROGRESS": "In Progress", "DONE": "Done"}
+STATUS_LINE_RE = re.compile(r"^- Status:.*$", re.MULTILINE)
+
+
+def cmd_move(args):
+    task_id = normalize_task_id(args.task_id)
+    if not is_task_id(task_id):
+        print(
+            "error: move only operates on TASK-XXXX[.NNN] ids, not special "
+            "resources like %s" % task_id,
+            file=sys.stderr,
+        )
+        return 1
+
+    target_state = args.target_state
+    lock = read_lock(task_id)
+    if lock is not None and lock["claimant"] != args.as_:
+        if not args.force:
+            print(
+                "error: %s already claimed by %r at %s (use --force --reason "
+                "TEXT to override if you judge this stale)"
+                % (task_id, lock["claimant"], lock["claimed_at"]),
+                file=sys.stderr,
+            )
+            return 1
+        if not args.reason:
+            print(
+                "error: --force requires --reason (a short note on why the "
+                "existing claim is being overridden)",
+                file=sys.stderr,
+            )
+            return 1
+        print(
+            "warning: moving %s despite a claim mismatch (held by %r), "
+            "reason: %s" % (task_id, lock["claimant"], args.reason),
+            file=sys.stderr,
+        )
+    elif lock is None:
+        print(
+            "warning: %s is unclaimed -- proceeding without a claim check"
+            % task_id,
+            file=sys.stderr,
+        )
+
+    try:
+        current_state, filename = find_task_file(task_id)
+    except SystemExit as exc:
+        print(exc, file=sys.stderr)
+        return 1
+
+    src_path = os.path.join(TASKS_DIR, current_state, filename)
+    dst_path = os.path.join(TASKS_DIR, target_state, filename)
+    src_rel = os.path.relpath(src_path, REPO_ROOT)
+    dst_rel = os.path.relpath(dst_path, REPO_ROOT)
+
+    with open(src_path, "r") as f:
+        content = f.read()
+
+    target_status_text = STATE_TO_STATUS[target_state]
+    status_match = STATUS_LINE_RE.search(content)
+    current_status_text = (
+        status_match.group(0)[len("- Status:") :].strip() if status_match else None
+    )
+    need_status_rewrite = current_status_text != target_status_text
+    need_file_move = current_state != target_state
+
+    if need_status_rewrite:
+        if status_match is None:
+            print(
+                "warning: no '- Status:' line found in %s -- Status not rewritten"
+                % src_path,
+                file=sys.stderr,
+            )
+        else:
+            new_content = STATUS_LINE_RE.sub(
+                "- Status: %s" % target_status_text, content, count=1
+            )
+            with open(src_path, "w") as f:
+                f.write(new_content)
+
+    if need_file_move:
+        os.makedirs(os.path.join(TASKS_DIR, target_state), exist_ok=True)
+        tracked = (
+            subprocess.run(
+                ["git", "ls-files", "--error-unmatch", src_rel],
+                cwd=REPO_ROOT,
+                capture_output=True,
+            ).returncode
+            == 0
+        )
+        try:
+            if tracked:
+                subprocess.run(
+                    ["git", "mv", src_rel, dst_rel],
+                    cwd=REPO_ROOT,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+            else:
+                os.replace(src_path, dst_path)
+        except (subprocess.CalledProcessError, FileNotFoundError) as exc:
+            print(
+                "error: failed to move %s -> %s (%s) -- it may have already "
+                "been moved by another thread; re-run status/find before "
+                "retrying" % (src_rel, dst_rel, exc),
+                file=sys.stderr,
+            )
+            return 1
+
+    registry_path_cell = "`%s`" % dst_rel.replace(os.sep, "/")
+    registry_changed = update_registry_row(task_id, target_status_text, registry_path_cell)
+
+    released = False
+    if target_state == "DONE" and lock is not None and not args.keep_claim:
+        os.remove(lock_path(task_id))
+        released = True
+
+    if not need_file_move and not need_status_rewrite and not registry_changed:
+        print("%s already in %s with Status: %s -- no-op" % (task_id, target_state, target_status_text))
+    else:
+        print(
+            "moved %s -> %s (Status: %s)%s%s"
+            % (
+                task_id,
+                target_state,
+                target_status_text,
+                ", registry updated" if registry_changed else "",
+                ", claim released" if released else "",
+            )
+        )
     return 0
 
 
@@ -412,6 +618,22 @@ def build_parser():
     p_sync.add_argument("--dry-run", action="store_true", help="print what would change without writing")
     p_sync.add_argument("--check", action="store_true", help="exit 1 if the table is out of sync; do not write")
     p_sync.set_defaults(func=cmd_sync)
+
+    p_move = sub.add_parser(
+        "move",
+        help="move a task file between TODO/IN_PROGRESS/DONE, syncing its Status line + registry row",
+    )
+    p_move.add_argument("task_id")
+    p_move.add_argument("target_state", choices=["TODO", "IN_PROGRESS", "DONE"])
+    p_move.add_argument("--as", dest="as_", required=True, metavar="LABEL", help="claimant label, always required")
+    p_move.add_argument("--force", action="store_true", help="override a claim mismatch")
+    p_move.add_argument("--reason", help="required with --force")
+    p_move.add_argument(
+        "--keep-claim",
+        action="store_true",
+        help="do not auto-release the claim when moving to DONE (default: release)",
+    )
+    p_move.set_defaults(func=cmd_move)
 
     p_guard = sub.add_parser(
         "commit-guard",

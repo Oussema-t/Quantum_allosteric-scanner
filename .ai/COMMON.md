@@ -23,7 +23,7 @@ Central coordination hub for the repo-local agent scaffold.
 - issue backend contract: `.ai/reference/ISSUE_BACKEND_PLACEHOLDER_CONTRACT.md`
 - memory policy: `.ai/memory/README.md`
 - backend selection: `.ai/reference/BACKEND_SELECTION.md`
-- claim/lock tool (TASK-0024, TASK-0028): `.ai/tools/claim.py` — `claim`/`release`/`status`/`sync`/`commit-guard`, see "Current Rules" below
+- claim/lock tool (TASK-0024, TASK-0027, TASK-0028): `.ai/tools/claim.py` — `claim`/`release`/`status`/`sync`/`move`/`commit-guard`, see "Current Rules" below
 - command hygiene (TASK-0025): `.github/instructions/tooling/command-hygiene.instructions.md` — one command per call, no chains/pipes; `.claude/skills/command-hygiene/` is the applied procedure
 - roadmap / phase-gated plan: `.ai/tasks/PLANS/PLAN.md`
 - weekly timeline overlay: `.ai/tasks/PLANS/PLAN-01.07.26.md`
@@ -109,8 +109,8 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0026.002 | Remaining `repo.packaging.*` + `repo.maintenance.behavior-contract-capture` + `repo.test.playwright-local` (blocked on .001) | Toolsmith | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0026.002-packaging-remainder.md` |
 | TASK-0026.003 | `CAPABILITIES.md` honesty pass + draft allowlist entry (blocked on .001, .002) | Toolsmith | TODO | P2 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0026.003-capabilities-doc-correction.md` |
 | TASK-0026.004 | Named `repo.test.playwright-local` presets tied to TASK-0021/0022 + sibling `repo.test.pytest-local` — whitelisted self-verification for any thread | Toolsmith | TODO | P1 | 2026-07-04 | Intent-Inferrer (this thread) | 2026-07-04 16:55 | `.ai/tasks/TODO/TASK-0026.004-test-execution-self-verification.md` |
-| TASK-0027 | Whitelisted `claim.py move` subcommand for TODO/IN_PROGRESS/DONE task-file transitions — folder move + Status field + registry row as one claim-checked command | Toolsmith | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0027-task-move-tool.md` |
-| TASK-0028 | Commit lock (`claim.py`-backed) serializing stage-and-ship across threads, plus an index-hygiene guard refusing unexpected staged paths before commit — filed after a real misattributed-commit incident this session | Toolsmith | Done | P0 | 2026-07-05 | Toolsmith (this thread) | 2026-07-05 08:38 | `.ai/tasks/DONE/TASK-0028-commit-lock.md` |
+| TASK-0027 | Whitelisted `claim.py move` subcommand for TODO/IN_PROGRESS/DONE task-file transitions — folder move + Status field + registry row as one claim-checked command | Toolsmith | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0027-task-move-tool.md` |
+| TASK-0028 | Commit lock (`claim.py`-backed) serializing stage-and-ship across threads, plus an index-hygiene guard refusing unexpected staged paths before commit — filed after a real misattributed-commit incident this session | Toolsmith | Done | P0 | 2026-07-05 | — | — | `.ai/tasks/DONE/TASK-0028-commit-lock.md` |
 
 ## Current Rules
 
@@ -153,6 +153,14 @@ see the claim-before-start rule under "Current Rules" below.
   manual edit with the original whole-file-write risk — `ls .ai/tasks/TODO
   IN_PROGRESS DONE` immediately before such an edit and reconcile against
   that, not against a prose read that may already be stale.
+- **Moving a task file between folders is no longer a manual `mv` + two
+  hand-edits (TASK-0027).** Run `python3 .ai/tools/claim.py move <TASK-ID>
+  <TODO|IN_PROGRESS|DONE> --as "<your label>"` — it relocates the file,
+  rewrites its own `- Status:` line, and updates this registry's `Status`/
+  `Path` cells for that row, together. Refuses on a claim mismatch the same
+  way `claim` does (`--force --reason TEXT` to override); moving to `DONE`
+  auto-releases the claim by default (`--keep-claim` to opt out). `--as` is
+  always required.
 - **Claim `GIT-COMMIT` before staging anything you intend to commit
   (TASK-0028).** Run `python3 .ai/tools/claim.py claim GIT-COMMIT "<your
   label>"` before the *first* `git add` of a commit-bound change, not
