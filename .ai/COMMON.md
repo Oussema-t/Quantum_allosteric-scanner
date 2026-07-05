@@ -119,6 +119,11 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0034 | Reconcile RCSB-fetch error-handling philosophy + `data_layer.py`/`rcsb_extract.py` overlap — Medium finding, backend-internal instance of the TASK-0018 duplication pattern | Architect/Planner | TODO | P2 | 2026-07-05 | — | — | `.ai/tasks/TODO/TASK-0034-rcsb-fetch-error-philosophy-reconciliation.md` |
 | TASK-0035 | Performance-audit the seed-readiness/permutation bootstrap cost (measure first, optimize only if needed) — Medium finding | Implementer | TODO | P2 | 2026-07-05 | — | — | `.ai/tasks/TODO/TASK-0035-seed-readiness-bootstrap-performance.md` |
 | TASK-0036 | Surface an explicit warning when `complete_apo` skips Kabsch alignment (currently only inferable from a null `align_rmsd`) — Medium finding | Implementer | TODO | P2 | 2026-07-05 | — | — | `.ai/tasks/TODO/TASK-0036-complete-apo-alignment-warning.md` |
+| TASK-0037 | `H11_anisotropic_mechanical`/`H12_anm_scalarised` don't implement the anisotropic physics their docstrings claim (both silently duplicate H6/H2) — High finding from the `Bartosz`/`bchmura` commit review | Implementer | TODO | P1 | 2026-07-05 | — | — | `.ai/tasks/TODO/TASK-0037-h11-h12-anisotropic-not-implemented.md` |
+| TASK-0038 | `clean.py`'s module docstring says disconnected graphs are an error; `_assert_connected` only warns — contract mismatch | Implementer | TODO | P1 | 2026-07-05 | — | — | `.ai/tasks/TODO/TASK-0038-clean-py-connectivity-gate-contract.md` |
+| TASK-0039 | `clean.py`'s alt-loc handling always keeps `'A'`, never implements the docstring's "or highest occupancy" fallback | Implementer | TODO | P2 | 2026-07-05 | — | — | `.ai/tasks/TODO/TASK-0039-clean-py-altloc-occupancy-fallback.md` |
+| TASK-0040 | `potentials.py` recomputes the GNM eigendecomposition redundantly in `_gnm_msf`/`V_C`/`V_M` — no shared context, unlike `backend/analysis.py::gnm_context` | Implementer | TODO | P2 | 2026-07-05 | — | — | `.ai/tasks/TODO/TASK-0040-potentials-shared-gnm-context.md` |
+| TASK-0041 | `propagators.haken_strobl` never checks `solve_ivp`'s `sol.success` flag — a failed integration would silently return as if it succeeded | Implementer | TODO | P2 | 2026-07-05 | — | — | `.ai/tasks/TODO/TASK-0041-haken-strobl-solve-ivp-success-check.md` |
 
 ## Current Rules
 
