@@ -20,6 +20,7 @@ import urllib.request
 import numpy as np
 
 from .data_layer import load_structure
+from .geometry import kabsch_fit, kabsch_apply
 from .rcsb import parse_missing_residues, _get_json, DATA_API, _NON_DRUG, _COFACTORS, chem_comp_name
 from .systems import resolve_systems
 
@@ -162,21 +163,6 @@ def find_holo_candidates(apo_pdb, target_name=None, max_detail=12):
 
 # ── apo completion ──────────────────────────────────────────────────────────
 
-def _kabsch(P, Q):
-    """Optimal rotation aligning moving points P onto fixed points Q (both (N,3)).
-    Returns (R, P_centroid, Q_centroid) so that aligned = (X - P_c) @ R.T + Q_c."""
-    Pc, Qc = P.mean(0), Q.mean(0)
-    H = (P - Pc).T @ (Q - Qc)
-    U, _, Vt = np.linalg.svd(H)
-    d = np.sign(np.linalg.det(Vt.T @ U.T))
-    R = Vt.T @ np.diag([1.0, 1.0, d]) @ U.T
-    return R, Pc, Qc
-
-
-def _apply_transform(coords, R, Pc, Qc):
-    return (coords - Pc) @ R.T + Qc
-
-
 def complete_apo(apo_pdb, apo_chain, holo_pdb=None, holo_chain=None):
     """Fill the apo structure's missing residues. Returns a completed structure dict
     (coords/resnums/chains/bfac + `modeled` bool array) and a fill report.
@@ -214,10 +200,10 @@ def complete_apo(apo_pdb, apo_chain, holo_pdb=None, holo_chain=None):
             if len(common) >= 3:
                 P = np.array([holo_by_num[r] for r in common], float)
                 Q = np.array([resolved[r][0] for r in common], float)
-                R, Pc, Qc = _kabsch(P, Q)
-                aligned = _apply_transform(holo["coords"], R, Pc, Qc)
+                R, Pc, Qc = kabsch_fit(P, Q)
+                aligned = kabsch_apply(holo["coords"], R, Pc, Qc)
                 holo_map = {int(rn): aligned[i] for i, rn in enumerate(holo["resnums"])}
-                ac = _apply_transform(P, R, Pc, Qc)
+                ac = kabsch_apply(P, R, Pc, Qc)
                 align_rmsd = round(float(np.sqrt(((ac - Q) ** 2).sum(1).mean())), 3)
 
     filled = {}     # resnum -> (coord, source)

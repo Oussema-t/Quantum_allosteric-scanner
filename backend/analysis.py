@@ -19,6 +19,7 @@ import numpy as np
 from scipy.spatial.distance import cdist
 
 from .data_layer import load_structure, res_indices
+from .geometry import kabsch_align
 
 
 def _z(x):
@@ -31,16 +32,6 @@ def _coordination(coords, cutoff):
     """Per-residue coordination number (contacts within cutoff)."""
     D = cdist(coords, coords)
     return ((D < cutoff) & (D > 1e-8)).sum(1).astype(float)
-
-
-def _kabsch_rotate(mobile, ref):
-    """Rotate `mobile` (N,3) onto `ref` (N,3) by least squares; return aligned mobile."""
-    mc = mobile - mobile.mean(0)
-    rc = ref - ref.mean(0)
-    U, _S, Vt = np.linalg.svd(mc.T @ rc)
-    d = np.sign(np.linalg.det(Vt.T @ U.T))
-    R = Vt.T @ np.diag([1.0, 1.0, d]) @ U.T
-    return mc @ R.T + ref.mean(0)
 
 
 def gnm_context(coords, bfac, cutoff=8.0):
@@ -434,7 +425,7 @@ def connectivity_change(apo_pdb, apo_chain, holo_pdb, holo_chain=None, cutoff=8.
     ib = np.array([np.where(holo["resnums"] == r)[0][0] for r in common])
     Ca, Ch = apo["coords"][ia], holo["coords"][ib]
     n = len(common)
-    Chk = _kabsch_rotate(Ch, Ca)                       # aligned holo, for the morph
+    Chk = kabsch_align(Ch, Ca)                       # aligned holo, for the morph
 
     Da, Dh = cdist(Ca, Ca), cdist(Ch, Ch)
     DDM = Dh - Da
@@ -507,8 +498,8 @@ def _auto_intermediates(apo_pdb, chain, apo, holo, holo_pdb, k, pool_cap=12):
             continue
         com = np.array(sorted(com), int)
         A, H, C = _coords_on(apo, com), _coords_on(holo, com), _coords_on(st, com)
-        r_apo = float(np.sqrt(((_kabsch_rotate(C, A) - A) ** 2).sum(1).mean()))
-        r_holo = float(np.sqrt(((_kabsch_rotate(C, H) - H) ** 2).sum(1).mean()))
+        r_apo = float(np.sqrt(((kabsch_align(C, A) - A) ** 2).sum(1).mean()))
+        r_holo = float(np.sqrt(((kabsch_align(C, H) - H) ** 2).sum(1).mean()))
         scored.append((r_apo / (r_apo + r_holo + 1e-9), pid))
     scored.sort()
     if not scored:
@@ -554,7 +545,7 @@ def morph_frames(apo_pdb, apo_chain, holo_pdb, holo_chain=None, inter_pdbs=None,
     if len(common) > max_n:
         common = common[np.unique(np.linspace(0, len(common) - 1, max_n).astype(int))]
     ref = _coords_on(apo, common)                          # apo endpoint (frame 0)
-    holo_c = _kabsch_rotate(_coords_on(holo, common), ref)  # holo endpoint, aligned to apo
+    holo_c = kabsch_align(_coords_on(holo, common), ref)  # holo endpoint, aligned to apo
 
     inter_states = []
     for pid in inter_ids:
@@ -576,7 +567,7 @@ def morph_frames(apo_pdb, apo_chain, holo_pdb, holo_chain=None, inter_pdbs=None,
         present = [i for i, r in enumerate(common) if int(r) in posmap]
         if len(present) >= 3:                              # place its real residues (aligned to apo)
             sub = np.array([st["coords"][posmap[int(common[i])]] for i in present], float)
-            sub_al = _kabsch_rotate(sub, ref[present])
+            sub_al = kabsch_align(sub, ref[present])
             for j, i in enumerate(present):
                 C[i] = sub_al[j]
         frames.append(np.round(C, 3).tolist())
@@ -631,7 +622,7 @@ def site_potential_shift(apo_pdb, apo_chain, holo_pdb, holo_chain=None,
         h_idx = {int(r): i for i, r in enumerate(holo["resnums"])}
         P = np.array([apo["coords"][a_idx[r]] for r in shared], float)   # apo
         Q = np.array([holo["coords"][h_idx[r]] for r in shared], float)  # holo
-        disp = np.linalg.norm(P - _kabsch_rotate(Q, P), axis=1)
+        disp = np.linalg.norm(P - kabsch_align(Q, P), axis=1)
         deg_a = _coordination(apo["coords"], cutoff)
         deg_h = _coordination(holo["coords"], cutoff)
         dcoord = np.array([deg_h[h_idx[r]] - deg_a[a_idx[r]] for r in shared], float)
