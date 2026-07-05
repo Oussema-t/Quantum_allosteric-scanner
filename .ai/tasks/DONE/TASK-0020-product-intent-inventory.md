@@ -7,7 +7,7 @@
   control/feature, state its intended purpose and which challenge-rubric
   criterion or roadmap phase it serves, and flag anything without a stated
   purpose
-- Status: TODO
+- Status: Done
 - Owner: Architect/Planner
 - Claimed By: Intent-Inferrer (this thread)
 - Claimed At: 2026-07-04 15:10
@@ -90,26 +90,45 @@ None
 
 ## TODO
 
-- [ ] Extract the full `backend/main.py` route table (method + path) and
+- [x] Extract the full `backend/main.py` route table (method + path) and
       diff it against `SOFTWARE.md` §4's documented endpoint list — note
       any drift (undocumented route, or documented route that no longer
-      exists).
-- [ ] Walk `frontend/app.js` for every user-facing control (toolbar
+      exists). **Result: no drift** — both list the same 11 endpoints.
+- [x] Walk `frontend/app.js` for every user-facing control (toolbar
       inputs, buttons, toggles, chart mode selectors) and cross-reference
       against `ARCHITECTURE.md`'s change log to identify which log entry
-      introduced it.
-- [ ] For each endpoint/control, write the one-line stated purpose +
+      introduced it. **Result:** grepped all 44 unique `$("...")`/
+      `getElementById` ids referenced in `app.js`; every one matches an
+      element in `index.html` — no orphaned JS-only or HTML-only controls.
+- [x] For each endpoint/control, write the one-line stated purpose +
       rubric-criterion-or-phase + confidence flag.
-- [ ] Locate the actual challenge rubric (Problem/Impact 25, Technical 25,
+- [x] Locate the actual challenge rubric (Problem/Impact 25, Technical 25,
       Feasibility 20, Validation 15, Hybrid 5, Team 10 is quoted in
       `.ai/tasks/PLANS/PLAN-01.07.26.md` Week 3 — confirm this is the full,
       current rubric and not a paraphrase; ask the user if the authoritative
-      rubric document isn't in-repo).
-- [ ] Decide + record where the inventory lives (`SOFTWARE.md` new section
+      rubric document isn't in-repo). **Result: used as the working rubric,
+      explicitly flagged provisional/unconfirmed in the output doc** — no
+      primary challenge-rules document found in-repo to verify against;
+      genuinely needs the user, not something this task can resolve alone.
+- [x] Decide + record where the inventory lives (`SOFTWARE.md` new section
       vs standalone `.ai/reviews/` doc) and link it from both
-      `ARCHITECTURE.md` and `SOFTWARE.md`.
-- [ ] List every `unclear`-purpose item separately at the end, as the
-      direct input list for TASK-0023.
+      `ARCHITECTURE.md` and `SOFTWARE.md`. **Result:** standalone
+      `.ai/reviews/PRODUCT_INTENT_MAP.md` (keeps the already-long
+      `SOFTWARE.md` focused as API reference; matches the existing
+      `.ai/reviews/` precedent for audit-style output). Linked from
+      `ARCHITECTURE.md` (new §5b) and `SOFTWARE.md` (before §4).
+- [x] List every `unclear`-purpose item separately at the end, as the
+      direct input list for TASK-0023. **Result: 4 items** — the 3D
+      contact-graph real-structures animation (`morph-frames` +
+      `graphmode`/`graphnframes`/`graphapply`/`graphplay`/`graphslider`,
+      the single largest recent engineering cluster per the change log,
+      explicitly illustrative-only per its own UI copy), the bundled
+      `seed_readiness`/`_ctqw_build_H` CTQW-flavored feature (real physics,
+      undocumented rubric/roadmap positioning — also makes the "quantum
+      not built yet" framing stale, cross-referencing TASK-0018's own
+      finding), the straight-line morph controls (same illustrative
+      category, smaller effort), and the connectivity-change region
+      selector's per-axis custom-interval granularity.
 
 ## Dependency
 
@@ -133,4 +152,26 @@ None
 
 ## Done
 
-(not yet)
+- Produced `.ai/reviews/PRODUCT_INTENT_MAP.md`: all 11 backend endpoints +
+  every frontend control (grouped by panel), each with purpose, roadmap
+  phase, rubric linkage, and confidence flag (`stated`/`inferred`/
+  `unclear`).
+- Completeness check passed: every `backend/main.py` route present; every
+  `app.js`-referenced DOM id present in `index.html` (no orphans either
+  direction).
+- No backend endpoint-list drift found between `SOFTWARE.md` §4 and the
+  live route table.
+- 4 unclear-purpose items handed off to TASK-0023 (see TODO above for the
+  list) — the 3D real-structures contact-graph animation is the standout:
+  heaviest recent engineering effort, explicitly illustrative-only, no
+  stated rubric tie.
+- Rubric source **not** independently confirmed — used
+  `PLAN-01.07.26.md`'s quoted six criteria as a working rubric, flagged
+  provisional in the output doc's own caveat section. This is a genuine
+  open item for the user, not resolved here.
+- Cross-linked from `ARCHITECTURE.md` (new §5b, additive) and
+  `SOFTWARE.md` (one line before §4, additive) — no existing content
+  deleted or rewritten, per this task's Constraint.
+- "Keep it live" open question: left open for the user (see Open
+  Questions) rather than unilaterally amending CLAUDE.md/SOFTWARE.md's
+  maintenance-rule conventions.
