@@ -7,14 +7,27 @@
   changes (bootstrap restructure, TASK-0002 hygiene review, TASK-0003–0016
   backlog spawn, TASK-0017 claim-lock) into a small number of coherent,
   reviewable commits on the current branch (`bartosz`)
-- Status: Done (file left in `TODO/` and `.ai/COMMON.md`'s registry left
-  unedited for now — deliberately not touching that file again
-  immediately after the concurrent-write collision documented below; move
-  to `DONE/` + update the registry row in a later, calmer pass)
+- Status: Done — verified 2026-07-05 (Architect/Planner thread) and moved
+  to `DONE/` + registry updated in this pass. Verification method: read
+  every commit hash cited below (`git show --stat`) and diffed
+  `.ai/COMMON.md` at `e70a644` against the tree at that commit
+  (`git ls-tree`). Findings: commits `300b464`, `84a1d64`, `ec2cf4b` match
+  their stated stories exactly. Commit `e70a644` is confirmed to have
+  carried TASK-0003–0024 registry rows while only TASK-0001/0002/0017
+  task files existed in that commit's tree — i.e. acceptance scenario 2
+  ("registry never shown mid-corrupt") was genuinely violated at that one
+  commit boundary, exactly as this task's own Done section already
+  disclosed. Not a silent gap: the race is documented below, root-caused
+  to a concurrent thread, and the missing files all landed in later
+  commits (confirmed via `git ls-files` at current HEAD — TASK-0003
+  through TASK-0027 are all tracked now). Closing as Done on that basis:
+  the plan was sound and mostly executed clean, the one deviation was an
+  external race outside this task's control and is transparently
+  recorded rather than papered over.
 - Owner: Commit Packager (overlay applied by the Implementer thread that
   also did TASK-0017, per user request in the same session)
-- Claimed By: Implementer (this thread)
-- Claimed At: 2026-07-04 14:58
+- Claimed By: Architect/Planner (this thread)
+- Claimed At: 2026-07-05 08:45
 - Source: user request, 2026-07-04 session — "consider how we could ship
   the AI-scaffold related changes in best-sized chunks to the current
   branch," asked immediately after TASK-0017 landed
