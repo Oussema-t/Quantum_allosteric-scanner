@@ -169,21 +169,26 @@ None
 
 ## TODO
 
-- [ ] Draft `.github/instructions/tooling/command-hygiene.instructions.md`
+- [x] Draft `.github/instructions/tooling/command-hygiene.instructions.md`
       (policy + rationale + escape hatch) and link it from
       `.ai/COMMON.md`'s Quick Navigation and from `test-execute.prompt.md`.
-- [ ] Design the Claude Skill's shape (name, trigger conditions, inputs,
+- [x] Design the Claude Skill's shape (name, trigger conditions, inputs,
       outputs) before writing it — per Toolsmith's own rule, "a
       capability-first contract before provider expansion."
-- [ ] Implement the skill under `.claude/skills/`.
-- [ ] Run Planned Validation against one real repeated command from this
-      session.
-- [ ] Register the resulting script as a capability in
-      `.ai/reference/CAPABILITIES.md`.
-- [ ] Draft (not apply) the `.claude/settings.json` allowlist addition; get
-      human approval before it lands, consistent with this scaffold's
-      approval-gated-local-helper rule in
-      `.ai/reference/LOCAL_AUTOMATION_MANUAL_ENVIRONMENTS.md`.
+- [x] Implement the skill under `.claude/skills/` —
+      `.claude/skills/command-hygiene/SKILL.md`.
+- [x] Run Planned Validation against one real repeated command from this
+      session — used incident 2 (see Context); see Done section.
+- [x] Register the resulting script as a capability in
+      `.ai/reference/CAPABILITIES.md` — `workflow.task.locate`.
+- [ ] Draft (not apply) the `.claude/settings.json` allowlist addition —
+      drafted below; **awaiting human approval before it's applied.**
+      ```json
+      "Bash(python3 .ai/tools/task_locate.py *)"
+      ```
+      To apply: add this string to `.claude/settings.json`'s
+      `permissions.allow` array, same list `.ai/tools/claim.py`'s entry is
+      already in.
 - [x] Decide and record whether "Skills Crafter" becomes a seeded role brief
       under `.ai/experts/` — **Resolved 2026-07-04 (user decision): yes.**
       Formalized in `.ai/experts/skills-crafter.md` (Status: Active) and
@@ -220,4 +225,35 @@ None
 
 ## Done
 
-(not yet)
+- Wrote `.github/instructions/tooling/command-hygiene.instructions.md`
+  (stable layer): the preference, escape hatch, rationale (token churn,
+  determinism, whitelisting/capability-runner precondition), and the two
+  reproduced incidents as evidence. Pointed `.ai/COMMON.md`'s Quick
+  Navigation at it and replaced `test-execute.prompt.md`'s inline
+  "Command-structure contract" with a pointer to the shared doc, so
+  there's exactly one canonical copy instead of two independently-drifting
+  ones.
+- Wrote `.claude/skills/command-hygiene/SKILL.md` — this repo's first
+  repo-local skill. Procedure: decompose the chain, check
+  `CAPABILITIES.md` for an existing capability first, write the smallest
+  reusable script if none exists and it's likely to recur, register it,
+  draft (never apply) the allowlist line for human approval, prefer the
+  script going forward.
+- Planned Validation, exercised directly: used incident 2 from Context (the
+  5-program `claim.py status && echo && find && echo && ls` chain) as the
+  worked example. Built `.ai/tools/task_locate.py <TASK-ID>` — imports
+  `claim.py`'s own `normalize_task_id`/`read_lock`/`disk_task_ids`
+  directly (same directory, no subprocess re-derivation) and prints claim
+  status + on-disk path + lifecycle-folder state in one call. Ran it
+  against `TASK-0024` (Done, unclaimed, correct path), `26.1` (dotted-id
+  form, resolved to `TASK-0026.001`, correct path), and `TASK-9999`
+  (correctly reports "not found") — both from the script's own directory
+  and from repo root (matching how `claim.py` itself is invoked). Output
+  correct in all three cases.
+- Registered `workflow.task.locate` in `.ai/reference/CAPABILITIES.md`.
+- `.claude/settings.json` allowlist line drafted (see TODO above) but
+  **not applied** — awaiting explicit human approval per
+  `.ai/reference/LOCAL_AUTOMATION_MANUAL_ENVIRONMENTS.md`'s
+  approval-gated-helper rule. This is the one remaining open TODO item;
+  task stays in `TODO/` (not moved to `DONE/`) until it's resolved one way
+  or the other.

@@ -24,6 +24,7 @@ Central coordination hub for the repo-local agent scaffold.
 - memory policy: `.ai/memory/README.md`
 - backend selection: `.ai/reference/BACKEND_SELECTION.md`
 - claim/lock tool (TASK-0024, TASK-0028): `.ai/tools/claim.py` — `claim`/`release`/`status`/`sync`/`commit-guard`, see "Current Rules" below
+- command hygiene (TASK-0025): `.github/instructions/tooling/command-hygiene.instructions.md` — one command per call, no chains/pipes; `.claude/skills/command-hygiene/` is the applied procedure
 - roadmap / phase-gated plan: `.ai/tasks/PLANS/PLAN.md`
 - weekly timeline overlay: `.ai/tasks/PLANS/PLAN-01.07.26.md`
 

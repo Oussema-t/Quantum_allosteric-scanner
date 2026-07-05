@@ -22,12 +22,13 @@ Required behavior:
 - Use the active execution backend from the backend selection reference.
 - Prefer local execution when no backend is specified.
 - For local repository execution, prefer the repo-aware test execution tooling over ad hoc shell behavior.
-- Command-structure contract for local execution:
-	- use one stable capability command per run, for example `agents-tools/capability-runner.sh repo.test.playwright-local ...`
-	- avoid chained shell orchestration (`&&`, `;`, and mixed pipe workflows) for test execution
-	- avoid inline shell variable setup plus execution in one command
-	- prefer request-file mode for multi-argument or repeatable runs; reserve inline args for short one-off runs
-	- run artifact extraction or snippet generation as a separate command after execution, not in the same command line
+- Command-structure contract for local execution: follow
+  [command-hygiene](../instructions/tooling/command-hygiene.instructions.md)
+  (repo-wide, TASK-0025) — one stable capability command per run (e.g.
+  `agents-tools/capability-runner.sh repo.test.playwright-local ...`), no
+  chained/piped shell orchestration, no inline variable-setup-plus-execution,
+  request-file mode for multi-argument or repeatable runs, artifact
+  extraction as a separate command after execution.
 - If the user asks for a remote or project-specific backend and that adapter is unresolved, say so explicitly instead of guessing.
 - Do not reinterpret testcase or teststep identifiers as executable test code without a clear traceability link.
 - After execution, decide whether report triage is the most likely immediate next step.
