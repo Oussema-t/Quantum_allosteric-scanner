@@ -6,7 +6,7 @@
 - Title: Single-command preference + reusable-script convention for all
   threads (widened 2026-07-04 from `.ai/` scaffold-only), delivered as a
   written policy plus a Claude Skill
-- Status: TODO
+- Status: Done
 - Owner: Skills Crafter
 - Claimed By: Skills Crafter (this thread)
 - Claimed At: 2026-07-04 16:30
