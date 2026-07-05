@@ -9,13 +9,25 @@ cells of that table from the lock files -- every other column (Description,
 Assigned To, Priority, Last Active, Path) stays hand-maintained, per
 TASK-0024's decision to scope this to the claim mechanism only.
 
+Extended for TASK-0028: GIT-COMMIT is a fixed, non-task resource id
+usable with claim/release/status like any TASK-XXXX id, meant to serialize
+the git add -> git commit critical section across threads. Overriding a
+held GIT-COMMIT claim requires --hitl-override in addition to
+--force --reason -- do not pass --hitl-override without an explicit human
+instruction, in the current conversation, to override a held commit lock.
+`commit-guard` is a separate, read-only safety check: it compares the
+actually-staged git index against an --expect list and refuses if they
+don't match exactly, independent of whether GIT-COMMIT was claimed.
+
 No third-party dependencies -- stdlib only.
 
 Usage:
     claim.py claim   TASK-0024 "Toolsmith (this thread)" [--reason TEXT] [--force] [--note TEXT]
+    claim.py claim   GIT-COMMIT "Toolsmith (this thread)" [--force --reason TEXT --hitl-override]
     claim.py release TASK-0024 [--claimant TEXT] [--strict]
     claim.py status  [TASK-0024]
     claim.py sync    [--dry-run] [--check]
+    claim.py commit-guard --expect PATH [PATH ...]
 """
 
 import argparse
@@ -23,6 +35,7 @@ import contextlib
 import json
 import os
 import re
+import subprocess
 import sys
 import time
 from datetime import datetime
@@ -35,22 +48,40 @@ COMMON_MD = os.path.join(REPO_ROOT, ".ai", "COMMON.md")
 TASK_STATE_DIRS = ["TODO", "IN_PROGRESS", "DONE"]
 
 TASK_ID_RE = re.compile(r"(\d+)(?:\.(\d+))?")
+TASK_ID_ONLY_RE = re.compile(r"^TASK-\d{4}(?:\.\d+)?$")
 TABLE_ROW_RE = re.compile(r"^\|\s*TASK-\d{4}(?:\.\d+)?\s*\|")
+
+# TASK-0028: fixed non-task resource ids usable with claim/release/status.
+# Kept as a small explicit set (not general arbitrary-resource support --
+# that's TASK-0024.001) so this doesn't collide with or duplicate that
+# broader mechanism if/when it lands; same lock-file format either way.
+SPECIAL_RESOURCE_IDS = frozenset(["GIT-COMMIT"])
 
 
 def normalize_task_id(raw):
     # type: (str) -> str
-    """Accepts TASK-0024, 24, TASK-0026.001, 26.1, etc.
+    """Accepts TASK-0024, 24, TASK-0026.001, 26.1, GIT-COMMIT, etc.
 
     Dotted suffixes are the .ai/tasks/README.md subtask convention
     (TASK-XXXX.NNN) for independently claimable slices of a parent task.
+    GIT-COMMIT (TASK-0028) is a fixed non-numeric resource id, checked
+    before the numeric parsing below.
     """
+    upper = raw.strip().upper()
+    if upper in SPECIAL_RESOURCE_IDS:
+        return upper
     match = TASK_ID_RE.search(raw)
     if not match:
         raise SystemExit("error: could not find a task number in %r" % raw)
     main = "TASK-%04d" % int(match.group(1))
     sub = match.group(2)
     return main if sub is None else "%s.%03d" % (main, int(sub))
+
+
+def is_task_id(resource_id):
+    # type: (str) -> bool
+    """True for TASK-XXXX[.NNN] ids, False for special resources like GIT-COMMIT."""
+    return bool(TASK_ID_ONLY_RE.match(resource_id))
 
 
 def lock_path(task_id):
@@ -120,8 +151,18 @@ def cmd_claim(args):
                 file=sys.stderr,
             )
             return 1
+        if task_id in SPECIAL_RESOURCE_IDS and not args.hitl_override:
+            print(
+                "error: overriding %s requires --hitl-override in addition "
+                "to --force --reason -- do not pass --hitl-override without "
+                "an explicit human instruction, in the current conversation, "
+                "to override a held commit lock" % task_id,
+                file=sys.stderr,
+            )
+            return 1
         data["forced_from"] = existing
         data["override_reason"] = args.reason
+        data["hitl_override"] = bool(args.hitl_override)
         tmp = path + ".tmp-%d" % os.getpid()
         with open(tmp, "w") as f:
             json.dump(data, f, indent=2)
@@ -186,7 +227,10 @@ def cmd_status(args):
         print("no active claims")
     for task_id in lock_ids:
         lock = read_lock(task_id)
-        dangling = "" if task_id in on_disk else "  [warning: no task file on disk]"
+        if is_task_id(task_id):
+            dangling = "" if task_id in on_disk else "  [warning: no task file on disk]"
+        else:
+            dangling = ""  # special resource (e.g. GIT-COMMIT), not a task file
         print(
             "%s: claimed by %r at %s%s"
             % (task_id, lock["claimant"], lock["claimed_at"], dangling)
@@ -299,6 +343,41 @@ def cmd_sync(args):
     return 0
 
 
+# --------------------------------------------------------- commit-guard ----
+
+def cmd_commit_guard(args):
+    proc = subprocess.run(
+        ["git", "diff", "--cached", "--name-only"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    staged = set(line for line in proc.stdout.splitlines() if line)
+    expected = set(args.expect)
+
+    unexpected = sorted(staged - expected)
+    missing = sorted(expected - staged)
+
+    if unexpected:
+        print(
+            "error: staged index contains paths not in --expect: %s"
+            % ", ".join(unexpected),
+            file=sys.stderr,
+        )
+        return 1
+    if missing:
+        print(
+            "error: --expect listed paths that are not actually staged: %s"
+            % ", ".join(missing),
+            file=sys.stderr,
+        )
+        return 1
+
+    print("ok: staged index exactly matches --expect (%d path(s))" % len(expected))
+    return 0
+
+
 def build_parser():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = p.add_subparsers(dest="command", required=True)
@@ -309,6 +388,14 @@ def build_parser():
     p_claim.add_argument("--force", action="store_true", help="override an existing claim")
     p_claim.add_argument("--reason", help="required with --force: why the existing claim is being overridden")
     p_claim.add_argument("--note", help="optional free-text note stored in the lock file")
+    p_claim.add_argument(
+        "--hitl-override",
+        action="store_true",
+        help="required in addition to --force --reason when overriding GIT-COMMIT "
+        "(or other special resources) specifically -- do NOT pass this without an "
+        "explicit human instruction, in the current conversation, to override a "
+        "held commit lock",
+    )
     p_claim.set_defaults(func=cmd_claim)
 
     p_release = sub.add_parser("release", help="release a task's claim (idempotent)")
@@ -325,6 +412,19 @@ def build_parser():
     p_sync.add_argument("--dry-run", action="store_true", help="print what would change without writing")
     p_sync.add_argument("--check", action="store_true", help="exit 1 if the table is out of sync; do not write")
     p_sync.set_defaults(func=cmd_sync)
+
+    p_guard = sub.add_parser(
+        "commit-guard",
+        help="refuse (read-only check) unless the staged index exactly matches --expect",
+    )
+    p_guard.add_argument(
+        "--expect",
+        nargs="+",
+        required=True,
+        metavar="PATH",
+        help="exact set of paths expected to be staged for the next commit",
+    )
+    p_guard.set_defaults(func=cmd_commit_guard)
 
     return p
 
