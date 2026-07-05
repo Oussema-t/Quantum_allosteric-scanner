@@ -18,12 +18,26 @@ instruction, in the current conversation, to override a held commit lock.
 `commit-guard` is a separate, read-only safety check: it compares the
 actually-staged git index against an --expect list and refuses if they
 don't match exactly, independent of whether GIT-COMMIT was claimed.
+--expect-empty asserts nothing is staged yet -- run it before your first
+git add, so a mismatch is caught before the index is ever touched, not
+after (fail-fast beats add-then-check-then-git-reset-HEAD--).
 
 Extended for TASK-0027: `move` relocates a task file between
 TODO/IN_PROGRESS/DONE, rewrites its own "- Status:" line, and updates its
 .ai/COMMON.md registry row's Status/Path cells, all as one command --
 refusing on a claim mismatch the same way `claim` does. Moving to DONE
 auto-releases the claim by default (--keep-claim to opt out).
+
+Extended for TASK-0029: `stage` runs `git add` on exactly the --expect
+paths and self-verifies with the same comparison commit-guard uses --
+but ONLY for paths under .ai/ or .claude/ (path-traversal-safe: it
+normalizes first). This is deliberate and load-bearing: claim.py's own
+invocation is already blanket-whitelisted, so an unscoped stage wrapper
+would silently make that whitelist imply unconstrained `git add` of any
+repo path. Anything outside .ai/.claude still needs a plain `git add`,
+which correctly prompts. Full recommended workflow:
+    claim GIT-COMMIT -> commit-guard --expect-empty -> stage --expect ... ->
+    commit-guard --expect ... -> git commit -> release GIT-COMMIT
 
 No third-party dependencies -- stdlib only.
 
@@ -34,7 +48,9 @@ Usage:
     claim.py status  [TASK-0024]
     claim.py sync    [--dry-run] [--check]
     claim.py commit-guard --expect PATH [PATH ...]
+    claim.py commit-guard --expect-empty
     claim.py move    TASK-0024 IN_PROGRESS --as "Toolsmith (this thread)" [--force --reason TEXT] [--keep-claim]
+    claim.py stage   --expect PATH [PATH ...]
 """
 
 import argparse
@@ -551,7 +567,8 @@ def cmd_move(args):
 
 # --------------------------------------------------------- commit-guard ----
 
-def cmd_commit_guard(args):
+def _staged_paths():
+    # type: () -> set
     proc = subprocess.run(
         ["git", "diff", "--cached", "--name-only"],
         cwd=REPO_ROOT,
@@ -559,16 +576,29 @@ def cmd_commit_guard(args):
         text=True,
         check=True,
     )
-    staged = set(line for line in proc.stdout.splitlines() if line)
-    expected = set(args.expect)
+    return set(line for line in proc.stdout.splitlines() if line)
 
-    unexpected = sorted(staged - expected)
-    missing = sorted(expected - staged)
+
+def _compare_staged(expected):
+    # type: (set) -> tuple
+    """Compare the actually-staged index against an expected path set.
+
+    Returns (unexpected, missing) -- both sorted lists. Shared by
+    commit-guard and stage's self-verification step so the two never
+    drift out of sync with each other.
+    """
+    staged = _staged_paths()
+    return sorted(staged - expected), sorted(expected - staged)
+
+
+def cmd_commit_guard(args):
+    expected = set() if args.expect_empty else set(args.expect)
+    unexpected, missing = _compare_staged(expected)
 
     if unexpected:
         print(
-            "error: staged index contains paths not in --expect: %s"
-            % ", ".join(unexpected),
+            "error: staged index contains paths not in --expect%s: %s"
+            % ("-empty" if args.expect_empty else "", ", ".join(unexpected)),
             file=sys.stderr,
         )
         return 1
@@ -580,7 +610,70 @@ def cmd_commit_guard(args):
         )
         return 1
 
-    print("ok: staged index exactly matches --expect (%d path(s))" % len(expected))
+    if args.expect_empty:
+        print("ok: staged index is empty")
+    else:
+        print("ok: staged index exactly matches --expect (%d path(s))" % len(expected))
+    return 0
+
+
+# --------------------------------------------------------------- stage ----
+
+STAGE_ALLOWED_PREFIXES = (".ai", ".claude")
+
+
+def _in_scope(rel_path):
+    # type: (str) -> bool
+    """True if rel_path normalizes to somewhere under .ai/ or .claude/.
+
+    TASK-0029: this is the load-bearing check that keeps `stage` from
+    quietly becoming an unconstrained `git add` wrapper riding on
+    claim.py's existing blanket allowlist. Normalizes first so a
+    traversal like ".ai/../backend/x.py" (which collapses to
+    "backend/x.py") is rejected, not silently allowed.
+    """
+    norm = os.path.normpath(rel_path)
+    if os.path.isabs(norm) or norm == os.pardir or norm.startswith(os.pardir + os.sep):
+        return False
+    first = norm.split(os.sep, 1)[0]
+    return first in STAGE_ALLOWED_PREFIXES
+
+
+def cmd_stage(args):
+    expect = list(args.expect)
+
+    out_of_scope = [p for p in expect if not _in_scope(p)]
+    if out_of_scope:
+        print(
+            "error: stage only accepts paths under .ai/ or .claude/; "
+            "out-of-scope: %s -- use a normal `git add` for these (it will "
+            "correctly prompt)" % ", ".join(out_of_scope),
+            file=sys.stderr,
+        )
+        return 1
+
+    missing_on_disk = [p for p in expect if not os.path.exists(os.path.join(REPO_ROOT, p))]
+    if missing_on_disk:
+        print(
+            "error: --expect names paths that do not exist on disk: %s"
+            % ", ".join(missing_on_disk),
+            file=sys.stderr,
+        )
+        return 1
+
+    subprocess.run(["git", "add", "--"] + expect, cwd=REPO_ROOT, check=True)
+
+    unexpected, missing = _compare_staged(set(expect))
+    if unexpected or missing:
+        print(
+            "error: staged index does not match --expect after staging -- "
+            "unexpected: %s; missing: %s"
+            % (", ".join(unexpected) or "none", ", ".join(missing) or "none"),
+            file=sys.stderr,
+        )
+        return 1
+
+    print("staged exactly %d path(s), self-verified clean" % len(expect))
     return 0
 
 
@@ -637,16 +730,37 @@ def build_parser():
 
     p_guard = sub.add_parser(
         "commit-guard",
-        help="refuse (read-only check) unless the staged index exactly matches --expect",
+        help="refuse (read-only check) unless the staged index exactly matches --expect(-empty)",
     )
-    p_guard.add_argument(
+    guard_group = p_guard.add_mutually_exclusive_group(required=True)
+    guard_group.add_argument(
+        "--expect",
+        nargs="+",
+        metavar="PATH",
+        help="exact set of paths expected to be staged for the next commit",
+    )
+    guard_group.add_argument(
+        "--expect-empty",
+        action="store_true",
+        help="assert nothing is currently staged -- run this before your first "
+        "git add/stage, so a fail-fast check happens before you ever touch the "
+        "index, instead of adding then discovering contamination and having to "
+        "undo it",
+    )
+    p_guard.set_defaults(func=cmd_commit_guard)
+
+    p_stage = sub.add_parser(
+        "stage",
+        help="git add exactly the declared .ai/.claude paths, self-verifying after",
+    )
+    p_stage.add_argument(
         "--expect",
         nargs="+",
         required=True,
         metavar="PATH",
-        help="exact set of paths expected to be staged for the next commit",
+        help="exact paths to stage; every path must be under .ai/ or .claude/",
     )
-    p_guard.set_defaults(func=cmd_commit_guard)
+    p_stage.set_defaults(func=cmd_stage)
 
     return p
 
