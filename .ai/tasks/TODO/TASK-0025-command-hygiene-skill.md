@@ -50,6 +50,31 @@
   `task-perform.prompt.md` — but there it means "skip automatic
   prompt-to-prompt workflow chaining," not "avoid shell command chaining."
   Different concept, same word; don't conflate them when cross-referencing.)
+- **Real incidents found (2026-07-04, Toolsmith thread — added per direct
+  user instruction; this task remains claimed by Skills Crafter, this is
+  contributed evidence, not a claim override):** two concrete, reproduced
+  permission-prompt failures this session, both strong candidates for the
+  Planned Validation "one real chained/piped command" input below, and
+  both already root-caused (see `.ai/reference/CAPABILITIES.md`'s two
+  callouts after the `.ai/tools/claim.py`-backed capability rows for the
+  full writeup):
+  1. `python3 .ai/tools/claim.py status 2>&1 | head -80` — piping a
+     whitelisted command's output to `head` still prompted, because the
+     pipe hands the command to a second, unwhitelisted program; `claim.py`
+     alone would not have prompted.
+  2. `python3 .ai/tools/claim.py status && echo "..." && find .ai/tasks
+     -iname "TASK-0024*" && echo "..." && ls .ai/tasks/TODO
+     .ai/tasks/IN_PROGRESS .ai/tasks/DONE` — same mechanism via `&&`
+     chaining four programs. Checked `.claude/settings.json` directly:
+     only `claim.py` is whitelisted; `echo`/`find`/`ls` are not, so
+     splitting this into separate calls would reduce it to up to three
+     individual prompts, not zero — not a free fix on its own, which is
+     exactly the case for this task's named-script/capability-runner
+     approach over ad hoc per-command whitelisting.
+  In both cases the user explicitly declined an ad hoc
+  `head`/`find`/`ls`/`echo` whitelist addition to `.claude/settings.json`
+  and said to leave it for this task instead — don't read that silence in
+  `.claude/settings.json` as an oversight if you're picking this task up.
 
 ## Intent Contract
 
