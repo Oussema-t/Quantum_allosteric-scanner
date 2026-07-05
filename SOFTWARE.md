@@ -73,6 +73,10 @@ active site.
 
 ---
 
+**Feature intent map:** every endpoint below and every frontend control is mapped to its
+purpose and challenge-rubric/roadmap linkage (or flagged unclear) in
+[`.ai/reviews/PRODUCT_INTENT_MAP.md`](.ai/reviews/PRODUCT_INTENT_MAP.md) (TASK-0020).
+
 ## 4. API reference
 
 All endpoints require Basic Auth (`jury:QAS@CC`) except `/api/health`. Base URL is the
