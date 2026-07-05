@@ -6,7 +6,7 @@
 - Title: Deduplicate `backend/discovery.py::_kabsch` and
   `backend/analysis.py::_kabsch_rotate` — two independent, near-identical
   NumPy SVD Kabsch implementations — into one shared, tested helper
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Source: user request, 2026-07-05 session, found while updating TASK-0005
   (`superpose.py`) to point at existing Kabsch prior art instead of
@@ -78,19 +78,22 @@
 
 ## TODO
 
-- [ ] Read both `_kabsch` and `_kabsch_rotate` call sites fully (not just
+- [x] Read both `_kabsch` and `_kabsch_rotate` call sites fully (not just
       the function bodies already excerpted in TASK-0005/TASK-0018) to
       confirm the safe unification signature.
-- [ ] Create `backend/geometry.py` with one `kabsch_align(mobile, ref)` (or
+- [x] Create `backend/geometry.py` with one `kabsch_align(mobile, ref)` (or
       agreed name) function + docstring citing both original call sites.
-- [ ] Update `discovery.py`/`analysis.py` to call the shared helper; delete
+- [x] Update `discovery.py`/`analysis.py` to call the shared helper; delete
       the two originals.
-- [ ] Unit tests: known rotation+translation recovery, reflection case.
-- [ ] Smoke-test `complete_apo` and `morph_frames`/`connectivity_change` on
+- [x] Unit tests: known rotation+translation recovery, reflection case.
+- [x] Smoke-test `complete_apo` and `morph_frames`/`connectivity_change` on
       a real target pre/post refactor.
-- [ ] Cross-link this task's landed helper from TASK-0005's Dependency
+- [x] Cross-link this task's landed helper from TASK-0005's Dependency
       section (already done pre-emptively; confirm the pointer still
-      matches once this lands).
+      matches once this lands). — confirmed: TASK-0005's Dependency section
+      already frames TASK-0030 as a soft dependency with a fallback
+      ("port from `_kabsch_rotate` directly instead of waiting"); no edit
+      needed there, since that fallback text is now moot rather than wrong.
 
 ## Dependency
 
@@ -116,4 +119,21 @@
 
 ## Done
 
-(not yet)
+- Added `backend/geometry.py`: `kabsch_fit(mobile, ref) -> (R, mc, rc)`,
+  `kabsch_apply(coords, R, mc, rc)`, and `kabsch_align(mobile, ref,
+  apply_to=None)` — one SVD implementation, all three helpers built on it.
+- `discovery.py::complete_apo` now calls `kabsch_fit`/`kabsch_apply`
+  (needed a single fit reused across two applies — full holo coords and
+  the common-subset RMSD check — so the two-step form, not the
+  single-call convenience wrapper, was the right fit here).
+- `analysis.py`'s six `_kabsch_rotate` call sites now call `kabsch_align`
+  directly (single mobile/ref -> aligned-array call, matching the old
+  call shape exactly).
+- `backend/test_geometry.py`: 3 unit tests (known rotation+translation
+  recovery, reflection/det=-1 correction, fit-reuse-on-a-different-point-
+  set) — `pytest backend/test_geometry.py`, 3 passed.
+- Smoke test on KRAS_G12C (apo 4OBE, holo 6OIM, chain A), comparing
+  pre-refactor (`git stash`) vs. post-refactor output: `complete_apo`
+  (coord sum, per-atom sample, `align_rmsd`), `connectivity_change`, and
+  `morph_frames` are byte-identical (JSON diff) before and after.
+- No dependency added (stdlib/NumPy only); no API response-shape change.
