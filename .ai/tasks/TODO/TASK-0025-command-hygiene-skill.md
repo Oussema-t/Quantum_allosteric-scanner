@@ -181,14 +181,12 @@ None
       session — used incident 2 (see Context); see Done section.
 - [x] Register the resulting script as a capability in
       `.ai/reference/CAPABILITIES.md` — `workflow.task.locate`.
-- [ ] Draft (not apply) the `.claude/settings.json` allowlist addition —
-      drafted below; **awaiting human approval before it's applied.**
-      ```json
-      "Bash(python3 .ai/tools/task_locate.py *)"
-      ```
-      To apply: add this string to `.claude/settings.json`'s
-      `permissions.allow` array, same list `.ai/tools/claim.py`'s entry is
-      already in.
+- [x] Draft (not apply) the `.claude/settings.json` allowlist addition —
+      **Applied 2026-07-05 (explicit user approval).** Added all three
+      invocation forms (`python3 .../task_locate.py *`,
+      `.../task_locate.py *`, `python .../task_locate.py *`), matching the
+      enumerated-per-tool pattern `claim.py`'s own entries already use in
+      that file (not a bare wildcard).
 - [x] Decide and record whether "Skills Crafter" becomes a seeded role brief
       under `.ai/experts/` — **Resolved 2026-07-04 (user decision): yes.**
       Formalized in `.ai/experts/skills-crafter.md` (Status: Active) and
@@ -251,9 +249,11 @@ None
   and from repo root (matching how `claim.py` itself is invoked). Output
   correct in all three cases.
 - Registered `workflow.task.locate` in `.ai/reference/CAPABILITIES.md`.
-- `.claude/settings.json` allowlist line drafted (see TODO above) but
-  **not applied** — awaiting explicit human approval per
-  `.ai/reference/LOCAL_AUTOMATION_MANUAL_ENVIRONMENTS.md`'s
-  approval-gated-helper rule. This is the one remaining open TODO item;
-  task stays in `TODO/` (not moved to `DONE/`) until it's resolved one way
-  or the other.
+- `.claude/settings.json` allowlist entries applied 2026-07-05 (explicit
+  user approval, after being drafted-only in the prior pass): all three
+  invocation forms, enumerated per-form like `claim.py`'s own entries
+  (not a bare wildcard), per this scaffold's TASK-0029-established
+  preference against silent future-command creep under one wildcard.
+- All TODO items complete. Every deliverable this task's Intent Contract
+  promised now exists and is applied: the instructions doc, the Skill, the
+  worked-example script + capability row, and the allowlist entry.

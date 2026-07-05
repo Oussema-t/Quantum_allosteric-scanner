@@ -31,6 +31,12 @@
       "Bash(python3 .ai/tools/claim.py stage *)",
       "Bash(.ai/tools/claim.py stage *)",
       "Bash(python .ai/tools/claim.py stage *)",
+      "Bash(python3 .ai/tools/task_locate.py *)",
+      "Bash(.ai/tools/task_locate.py *)",
+      "Bash(python .ai/tools/task_locate.py *)",
+      "Bash(python3 .ai/tools/claim.py --help)",
+      "Bash(.ai/tools/claim.py --help)",
+      "Bash(python .ai/tools/claim.py --help)",
       "Bash(cd /home/bchmura/PROJECTS/Quantum_allosteric-scanner)",
       "Bash(find .ai/tasks -name '*.md')"
     ],
