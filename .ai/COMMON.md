@@ -82,7 +82,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0002 | AI-scaffold hygiene & engineering review (this reconciliation pass) | General Critic | Done | P0 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0002-ai-scaffold-hygiene-review.md` |
 | TASK-0003 | Reconcile and author `__WORK_IN_PROGRESS__/config/targets.yaml` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0003-targets-yaml-reconciliation.md` |
 | TASK-0004 | Implement `__WORK_IN_PROGRESS__/src/allostery/labels.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0004-labels-py.md` |
-| TASK-0005 | Implement `__WORK_IN_PROGRESS__/src/allostery/superpose.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0005-superpose-py.md` |
+| TASK-0005 | Implement `__WORK_IN_PROGRESS__/src/allostery/superpose.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0005-superpose-py.md` |
 | TASK-0006 | Implement `__WORK_IN_PROGRESS__/src/allostery/protocol.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0006-protocol-py.md` |
 | TASK-0007 | Implement `__WORK_IN_PROGRESS__/src/allostery/select.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0007-select-py.md` |
 | TASK-0008 | Implement `__WORK_IN_PROGRESS__/src/allostery/analysis.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0008-analysis-py.md` |
