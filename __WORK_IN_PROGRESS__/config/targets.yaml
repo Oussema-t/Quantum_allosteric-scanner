@@ -1,0 +1,467 @@
+schema_version: 1
+
+# Reconciliation of SYSTEMS_allosteric_corrected_v2.md (2026-06-21) against
+# backend/systems.py (production, "ported verbatim from the research
+# notebook"). See .ai/tasks/DONE/TASK-0003-targets-yaml-reconciliation.md for
+# the full Intent Contract and per-field decision log.
+#
+# Field meanings (inputs to derivation only — see the hard rule below):
+#   apo_pdb / holo_pdb / holo_challenge_pdb : PDB accession codes.
+#   chains            : chain letters to keep during clean() (list[str]).
+#   keep_nucleic      : passed straight to clean()/clean_from_config().
+#   quarantine / quarantine_reason : passed straight to clean_from_config();
+#                       when quarantine is true, clean_from_config() warns.
+#   enm_cutoff        : GNM/ENM contact-graph cutoff (Angstrom) — the network
+#                       construction distance, NOT the pocket-contact distance.
+#   pocket_contact_cutoff : the ligand-contact distance (Angstrom) labels.py
+#                       must use to derive the allosteric pocket (v2's stated
+#                       method: "any heavy atom within 4.5 A of the bound
+#                       allosteric ligand").
+#   drug_ligand       : 3-letter RCSB chemical-component ID of the allosteric
+#                       ligand to derive the pocket from.
+#   func_ligand       : ligand code(s)/marker(s) for the orthosteric/active
+#                       site, to EXCLUDE from the derived pocket.
+#   allosteric_pocket_exists : false only for targets with no folded-state
+#                       pocket at all (MYC_MAX); omit otherwise.
+#   status            : "verified" | "draft".
+#   verified          : bool mirror of status, kept for backend/systems.py-
+#                       style call sites that check a bool.
+#   confidence        : confidence in the structural anchors (apo/holo/
+#                       ligand/chain), NOT in any residue list — there are
+#                       none here to have confidence in.
+#   warnings          : free-text hazards carried from the source docs.
+#   source            : which doc(s) an entry traces to, and whether this
+#                       task (TASK-0003) independently re-checked it on RCSB.
+#
+# HARD RULE (SYSTEMS_allosteric_corrected_v2.md's central correction, carried
+# forward unchanged): no hand-transcribed pocket-residue numbers go in this
+# file. Every field above is metadata about *structures and ligands*, not a
+# residue list. Deriving the actual pocket (by sequence-aligned Ca-to-holo-
+# ligand-heavy-atom contact at pocket_contact_cutoff) is labels.py's job
+# (TASK-0004), not this file's.
+
+targets:
+
+  # ---------------------------------------------------------------------
+  # Mandatory challenge targets (4) — re-checked against RCSB directly by
+  # this task (2026-07-06), independent of trusting either source doc.
+  # ---------------------------------------------------------------------
+
+  KRAS_G12C:
+    apo_pdb: 4OBE
+    holo_pdb: 6OIM
+    chains: ["A"]
+    keep_nucleic: false
+    quarantine: false
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    drug_ligand: MOV
+    func_ligand: ["GDP"]
+    status: verified
+    verified: true
+    confidence: 0.95
+    disease: Oncology
+    target_class: GTPase
+    site_name: Switch-II pocket
+    objective: >
+      Switch-II cryptic pocket (SII-P); sotorasib/AMG510 covalently anchored
+      at Cys12. EXCLUDE Cys12/P-loop (covalent/orthosteric) from the derived
+      allosteric pocket — that residue and the GDP site define the active
+      site to exclude, not the pocket to find.
+    warnings:
+      - "RCSB-reconfirmed 2026-07-06: 6OIM nonpolymer_bound_components =
+         GDP, MG, MOV; MOV is sotorasib/AMG510 per the entry title. Matches
+         both source docs — no discrepancy."
+    source: >
+      backend/systems.py (apo/holo/chain/drug_ligand) +
+      SYSTEMS_allosteric_corrected_v2.md (pocket_contact_cutoff method,
+      exclusion note); both independently reconfirmed against RCSB by
+      TASK-0003 on 2026-07-06.
+
+  BCR_ABL1:
+    apo_pdb: 1OPL
+    holo_pdb: 5MO4
+    chains: ["A"]
+    keep_nucleic: false
+    quarantine: false
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    drug_ligand: AY7
+    func_ligand: ["NIL"]
+    status: verified
+    verified: true
+    confidence: 0.90
+    disease: Oncology
+    target_class: Tyrosine Kinase
+    site_name: Myristoyl pocket
+    objective: >
+      Myristoyl pocket; asciminib (ABL001) is the allosteric inhibitor.
+      5MO4 holds BOTH asciminib (allosteric, myristoyl site — derive the
+      pocket from this) and nilotinib (NIL, ATP-site orthosteric — EXCLUDE,
+      do not predict).
+    warnings:
+      - "RCSB-reconfirmed 2026-07-06: 5MO4 title is 'ABL1 kinase (T334I_D382N)
+         in complex with asciminib and nilotinib'; ligand table confirms
+         AY7=asciminib and NIL=nilotinib both bound to chain B (auth chain
+         A). This resolves SYSTEMS_allosteric_corrected_v2.md's *** CRITICAL
+         FIX *** placeholder (drug_ligand: ASCIMINIB, 'verify 3-letter code
+         on RCSB') — AY7 is the correct, RCSB-confirmed code; backend/
+         systems.py already had this right."
+      - "5MO4's T334I/D382N mutation numbering is +19 vs. the literature
+         T315I/D363N (334-315=19, 382-363=19) — this is exactly the ABL1
+         1a/1b isoform numbering offset SYSTEMS_allosteric_corrected_v2.md
+         warns about, now confirmed as a real, consistent +19 shift rather
+         than a doc error. Resolve numbering before any residue-level
+         mapping in labels.py/superpose.py."
+    source: >
+      backend/systems.py (apo/holo/chain, and the already-correct AY7 code)
+      + SYSTEMS_allosteric_corrected_v2.md (func_ligand exclusion rationale,
+      numbering-offset warning); both independently reconfirmed against
+      RCSB by TASK-0003 on 2026-07-06.
+
+  CARDIAC_MYOSIN:
+    apo_pdb: 5TBY
+    holo_pdb: 8QYR              # validation structure — real drug contacts
+    holo_challenge_pdb: 6C1H    # challenge-listed; confirmed unusable, see below
+    chains: ["B"]
+    keep_nucleic: false
+    quarantine: false
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    drug_ligand: XB2
+    func_ligand: ["ADP", "ATP"]
+    status: verified
+    verified: true
+    confidence: 0.65
+    disease: Cardiology
+    target_class: Motor Protein
+    site_name: Mavacamten site
+    objective: >
+      Mavacamten super-relaxed/IHM-stabilization site. Derive the pocket
+      from XB2 (mavacamten) contacts in 8QYR, chain B — NOT from 6C1H,
+      which does not contain the drug.
+    warnings:
+      - "RCSB-reconfirmed 2026-07-06: 6C1H is confirmed NOT mavacamten-bound
+         — polymer entities are actin, unconventional myosin-1b (rat),
+         and calmodulin; nonpolymer_bound_components = ADP, MG only. This
+         satisfies SYSTEMS_allosteric_corrected_v2.md's quarantine
+         condition ('confirm 6C1H actually contains mavacamten') by
+         confirming the negative: it does not. 6C1H is kept only as the
+         challenge-listed holo for compliance reporting, never for pocket
+         derivation."
+      - "RCSB-reconfirmed 2026-07-06: 8QYR is real Bos taurus MYH7
+         (beta-cardiac myosin motor domain), 1.80 A X-ray, resolution
+         confirmed, nonpolymer_bound_components include XB2 (mavacamten,
+         C15H19N3O2) bound to chain B (auth), plus ADP/BEF/MG/SO4/EDO.
+         holo_validation_chain='B' in backend/systems.py is correct."
+      - "UNRESOLVED, still open: apo 5TBY is confirmed a 20.0 A cryo-EM
+         interacting-heads-motif (IHM) assembly — 6 chains (A-F), a
+         homology model rigidly docked to a thick-filament reconstruction
+         (EMD-2240), not a clean single motor-domain crystal. This is the
+         apo-construct concern SYSTEMS_allosteric_corrected_v2.md flagged
+         and it is NOT resolved by this task — confidence is held at 0.65
+         (below the ~0.90-0.95 of the other 3 mandatory targets) rather
+         than promoted to full verified confidence, and chains=['B'] carries
+         forward backend/systems.py's choice unverified against the
+         6-chain assembly's actual motor-domain mapping. TASK-0005
+         (superpose.py) or TASK-0018 should re-examine before trusting the
+         apo Ca graph uncritically; clean.py's own resolution check
+         (>3.5A warns) will also fire on this structure."
+    source: >
+      backend/systems.py (apo/holo_validation/chain resolution) +
+      SYSTEMS_allosteric_corrected_v2.md (quarantine rationale, now
+      partially resolved — see warnings); both independently reconfirmed
+      against RCSB by TASK-0003 on 2026-07-06. Apo-construct quality
+      concern remains open, not resolved by this task.
+
+  MYC_MAX:
+    apo_pdb: 1NKP
+    holo_pdb: null
+    chains: ["A", "B"]
+    keep_nucleic: true
+    quarantine: false
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    drug_ligand: null
+    func_ligand: ["DNA"]
+    allosteric_pocket_exists: false
+    status: verified
+    verified: false
+    confidence: 0.75
+    disease: Oncology
+    target_class: Transcription Factor (IDP)
+    site_name: null
+    objective: >
+      No validated allosteric pocket exists. Myc/Max are IDPs with no
+      surface pocket in the folded dimer; score by consensus/docking
+      viability only, never by predicted-pocket derivation.
+    warnings:
+      - "RCSB-reconfirmed 2026-07-06: 1NKP has 2 protein polymer entities
+         + 1 DNA polymer entity, consistent with a cMyc/Max heterodimer on
+         DNA (matches the documented cMyc=A,D | Max=B,E | DNA=F,G,H,J
+         chain layout)."
+      - "chains=['A','B'] follows SYSTEMS_allosteric_corrected_v2.md's
+         explicit 'A=Myc, B=Max bHLH-LZ' pairing (the biologically
+         relevant heterodimer) — NOT backend/systems.py's chain='A' field,
+         which conflicts with its own inline note ('Use chain=\"A,D\"',
+         i.e. two Myc copies with no Max at all). That production
+         field/note contradiction looks like an error there; flagged
+         rather than silently carried forward. If TASK-0018 or a future
+         pass disagrees, revisit this chain choice explicitly."
+      - "verified=false and allosteric_pocket_exists=false are deliberate:
+         the *anchor* (1NKP) is real and confidence-worthy (0.75), but the
+         pocket concept itself is not applicable — do not let a future
+         reader interpret verified=false here as 'anchor is shaky'."
+    source: >
+      SYSTEMS_allosteric_corrected_v2.md (IDP rationale, chain pairing,
+      keep_nucleic) + backend/systems.py (apo id); RCSB-reconfirmed for
+      chain composition by TASK-0003 on 2026-07-06. Chain-letter conflict
+      between the two docs resolved in favor of v2 (see warnings).
+
+  # ---------------------------------------------------------------------
+  # ASD expansion — DRAFT. Anchors NOT re-verified against RCSB this pass
+  # (TASK-0003 scoped its RCSB re-check to the 4 mandatory targets above).
+  # Do not silently promote any of these to verified: true.
+  # ---------------------------------------------------------------------
+
+  PTP1B:
+    apo_pdb: 1SUG
+    holo_pdb: 1T49
+    chains: ["A"]
+    keep_nucleic: false
+    quarantine: false
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    drug_ligand: 892   # candidate from backend/systems.py; NOT RCSB-rechecked this pass
+    func_ligand: ["pTyr / active-site Cys215 (descriptive marker, not a ligand code)"]
+    status: draft
+    verified: false
+    confidence: 0.70
+    disease: Metabolic/Diabetes
+    target_class: Phosphatase
+    site_name: Allosteric BB site (alpha7)
+    objective: "Allosteric site ~20 A from catalytic Cys215 (alpha3/alpha7, BB-series)."
+    warnings:
+      - "drug_ligand '892' is backend/systems.py's already-resolved value
+         (there marked verified=True with a populated pocket), carried
+         here as a candidate only — TASK-0003 did not independently
+         re-check it against RCSB, so it stays draft/unverified per this
+         task's own scope, same as the other 10 ASD entries."
+    source: >
+      SYSTEMS_allosteric_corrected_v2.md (2026-06-21, objective/warnings) +
+      backend/systems.py (candidate drug_ligand). Not RCSB-rechecked by
+      TASK-0003.
+
+  GLUCOKINASE:
+    apo_pdb: 1V4S
+    holo_pdb: 3H1V
+    chains: null   # UNRESOLVED: v2 says "A", backend/systems.py says "X" — conflict, not guessed
+    keep_nucleic: false
+    quarantine: false
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    drug_ligand: TK1   # candidate from backend/systems.py; NOT RCSB-rechecked this pass
+    func_ligand: ["Glucose"]
+    status: draft
+    verified: false
+    confidence: 0.60
+    disease: Metabolic/Diabetes
+    target_class: Kinase
+    site_name: GKA allosteric site
+    objective: "Allosteric activator (GKA) site ~20 A from glucose."
+    warnings:
+      - "chain conflict: SYSTEMS_allosteric_corrected_v2.md sets chain='A';
+         backend/systems.py sets chain='X'. Left null rather than guessed —
+         verify on RCSB before this target is graduated out of draft."
+      - "drug_ligand 'TK1' is backend/systems.py's already-resolved value
+         (there marked verified=True with a populated pocket), carried
+         here as a candidate only, not independently RCSB-rechecked."
+    source: >
+      SYSTEMS_allosteric_corrected_v2.md (2026-06-21, objective) +
+      backend/systems.py (candidate drug_ligand). Not RCSB-rechecked by
+      TASK-0003.
+
+  ATCase:
+    apo_pdb: 6AT1
+    holo_pdb: 4KH1
+    chains: null   # v2: "VERIFY" — unresolved, resolving the assembly is its own task
+    keep_nucleic: false
+    quarantine: false
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    drug_ligand: null   # v2: "CTP?" — unconfirmed
+    func_ligand: ["Asp", "carbamoyl-P"]
+    status: draft
+    verified: false
+    confidence: 0.55
+    target_class: Regulatory enzyme (oligomeric)
+    site_name: Regulatory-subunit CTP/UTP allosteric site (T->R)
+    objective: "Regulatory-subunit CTP/UTP allosteric site (T->R transition)."
+    warnings:
+      - "Allostery is INTER-SUBUNIT (regulatory vs. catalytic chains).
+         Single-chain analysis destroys the mechanism — resolve the
+         biological assembly before deriving a pocket, per v2."
+    source: "SYSTEMS_allosteric_corrected_v2.md (2026-06-21). Not RCSB-rechecked."
+
+  CASPASE1:
+    apo_pdb: 1ICE
+    holo_pdb: 2FQQ
+    chains: null   # v2: "VERIFY"
+    keep_nucleic: false
+    quarantine: false
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    drug_ligand: null   # v2: "VERIFY"
+    func_ligand: ["substrate"]
+    status: draft
+    verified: false
+    confidence: 0.55
+    target_class: Protease (oligomeric)
+    site_name: Allosteric thiol site at dimer interface
+    objective: "Allosteric thiol site at dimer interface (zymogen reversal)."
+    source: "SYSTEMS_allosteric_corrected_v2.md (2026-06-21). Not RCSB-rechecked."
+
+  CASPASE7:
+    apo_pdb: 1F1J
+    holo_pdb: 1SHL
+    chains: null   # v2: "VERIFY"
+    keep_nucleic: false
+    quarantine: false
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    drug_ligand: null   # v2: "FICA?" — unconfirmed
+    func_ligand: ["substrate"]
+    status: draft
+    verified: false
+    confidence: 0.50
+    target_class: Protease (oligomeric)
+    site_name: Allosteric dimer-interface site (FICA)
+    objective: "Allosteric dimer-interface site (FICA)."
+    source: "SYSTEMS_allosteric_corrected_v2.md (2026-06-21). Not RCSB-rechecked."
+
+  HEMOGLOBIN:
+    apo_pdb: 2HHB
+    holo_pdb: 1HHO
+    chains: null   # v2: "VERIFY"
+    keep_nucleic: false
+    quarantine: false
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    drug_ligand: null   # v2: "BPG?" — unconfirmed
+    func_ligand: ["O2", "heme"]
+    status: draft
+    verified: false
+    confidence: 0.55
+    target_class: Oxygen transport protein (oligomeric)
+    site_name: 2,3-BPG allosteric site (T->R, O2 cooperativity)
+    objective: "2,3-BPG allosteric site (T->R, O2 cooperativity)."
+    warnings:
+      - "BPG binds in the central cavity BETWEEN beta-subunits of the
+         alpha2beta2 tetramer — requires the full assembly, meaningless on
+         a single chain, per v2."
+      - "2HHB is deoxy(T) and 1HHO is oxy(R) — this apo/holo pair is a
+         STATE change, not an unbound/bound pair in the usual sense.
+         Confirm this is the intended apo/holo sense before use, per v2."
+    source: "SYSTEMS_allosteric_corrected_v2.md (2026-06-21). Not RCSB-rechecked."
+
+  TAR_RECEPTOR:
+    apo_pdb: 1LIH
+    holo_pdb: 1VLT
+    chains: ["A"]
+    keep_nucleic: false
+    quarantine: false
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    drug_ligand: null   # v2: "Asp?" — unconfirmed
+    func_ligand: ["Asp"]
+    status: draft
+    verified: false
+    confidence: 0.45
+    target_class: Chemotaxis receptor (transmembrane)
+    site_name: Aspartate site (dimer interface)
+    objective: "Transmembrane chemotaxis signaling (aspartate)."
+    warnings:
+      - "Periplasmic/TM signaling protein; 'allosteric pocket' is the
+         aspartate site at a dimer interface. Transmembrane context may
+         not suit a soluble-domain ENM. Lower priority, per v2."
+    source: "SYSTEMS_allosteric_corrected_v2.md (2026-06-21). Not RCSB-rechecked."
+
+  GLYCOGEN_PHOSPHORYLASE:
+    apo_pdb: 1GPY
+    holo_pdb: 1A8I
+    chains: null   # v2: "VERIFY"
+    keep_nucleic: false
+    quarantine: false
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    drug_ligand: null   # v2: "AMP?" — unconfirmed
+    func_ligand: ["Pi", "G1P"]
+    status: draft
+    verified: false
+    confidence: 0.60
+    target_class: Metabolic enzyme (oligomeric)
+    site_name: AMP allosteric site (T->R)
+    objective: "AMP allosteric site (T->R transition)."
+    warnings:
+      - "Functional dimer; AMP site near the subunit interface — resolve
+         the assembly before deriving a pocket, per v2."
+    source: "SYSTEMS_allosteric_corrected_v2.md (2026-06-21). Not RCSB-rechecked."
+
+  PFK:
+    apo_pdb: 1PFK
+    holo_pdb: 3O8L
+    chains: null   # v2: "VERIFY"
+    keep_nucleic: false
+    quarantine: false
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    drug_ligand: null   # v2: "VERIFY"
+    func_ligand: ["F6P", "ATP"]
+    status: draft
+    verified: false
+    confidence: 0.45
+    target_class: Metabolic enzyme (oligomeric)
+    site_name: FBP/ADP allosteric site (bacterial PFK, homotetramer)
+    objective: "FBP/ADP allosteric site (bacterial PFK, homotetramer)."
+    warnings:
+      - "Bacterial (E. coli) PFK — may not transfer to human targets.
+         Homotetramer; allosteric site at subunit interface, per v2."
+    source: "SYSTEMS_allosteric_corrected_v2.md (2026-06-21). Not RCSB-rechecked."
+
+  GROEL_SUBUNIT:
+    apo_pdb: 1GRL
+    holo_pdb: 1AON
+    chains: null   # v2: "VERIFY"
+    keep_nucleic: false
+    quarantine: false
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    drug_ligand: "GroES (protein, not a small molecule — drug-contact pocket definition does not apply cleanly)"
+    func_ligand: ["ATP"]
+    status: draft
+    verified: false
+    confidence: 0.45
+    target_class: Chaperonin (oligomeric)
+    site_name: GroES-binding / ATP allosteric site
+    objective: "GroES-binding / ATP allosteric site (chaperonin cycle)."
+    warnings:
+      - "1AON is the GroEL-GroES-ADP complex (14+7 mer, huge). Allostery is
+         inter-ring/inter-subunit. Hard case; low priority, per v2."
+    source: "SYSTEMS_allosteric_corrected_v2.md (2026-06-21). Not RCSB-rechecked."
+
+# ---------------------------------------------------------------------------
+# Deliberately omitted targets — documented, not silently dropped.
+# ---------------------------------------------------------------------------
+omitted_targets:
+  LDH:
+    reason: >
+      SYSTEMS_allosteric_corrected_v2.md's own apo-PDB inconsistency (the
+      prior v1.2 file listed apo as BOTH 6LDH and 1LDH across two dicts)
+      was not re-resolved this pass, and v2 itself calls LDH "borderline
+      allostery, candidate to drop" with the lowest confidence of any ASD
+      candidate (0.35). Dropped per that own suggestion rather than
+      guessing between the two apo IDs. Re-add only if someone
+      independently resolves the correct apo PDB on RCSB and still wants
+      to pursue this borderline case.
+    source: "SYSTEMS_allosteric_corrected_v2.md (2026-06-21)"
+    decided_by: "TASK-0003, 2026-07-06"
