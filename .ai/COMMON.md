@@ -126,6 +126,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0041 | `propagators.haken_strobl` never checks `solve_ivp`'s `sol.success` flag — a failed integration would silently return as if it succeeded | Implementer | TODO | P2 | 2026-07-05 | — | — | `.ai/tasks/TODO/TASK-0041-haken-strobl-solve-ivp-success-check.md` |
 | TASK-0042 | Hook-enforce the `GIT-COMMIT` gate via a Claude Code `PreToolUse` hook (upgrades TASK-0028's advisory lock to a blocking one) — filed as a handoff for Toolsmith, justified by this session's repeated real coordination incidents | Toolsmith | TODO | P1 | 2026-07-05 | — | — | `.ai/tasks/TODO/TASK-0042-hook-enforced-commit-gate.md` |
 | TASK-0043 | Split `bartosz` into a `scaffold` branch (40 commits, PR-ready toward `main`) holding back the one product-code commit (TASK-0030) as its own chunk — push/PR step blocked on user credentials, not available in this sandbox | Architect/Planner | Done | P1 | 2026-07-05 | — | — | `.ai/tasks/DONE/TASK-0043-scaffold-branch-split.md` |
+| TASK-0044 | Reconcile the "Python 3.9" convention (CLAUDE.md/SOFTWARE.md/AGENTS.md) against the actual 3.11.9 Render runtime and a `biotite==0.41.0` pin requiring 3.10+ — no documented rationale found for 3.9 | Architect/Planner | TODO | P2 | 2026-07-06 | — | — | `.ai/tasks/TODO/TASK-0044-python-version-convention-reconciliation.md` |
 
 ## Current Rules
 
