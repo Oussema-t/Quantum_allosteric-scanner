@@ -84,8 +84,8 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0004 | Implement `__WORK_IN_PROGRESS__/src/allostery/labels.py` | Implementer | Done | P1 | 2026-07-06 | — | — | `.ai/tasks/DONE/TASK-0004-labels-py.md` |
 | TASK-0005 | Implement `__WORK_IN_PROGRESS__/src/allostery/superpose.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0005-superpose-py.md` |
 | TASK-0006 | Implement `__WORK_IN_PROGRESS__/src/allostery/protocol.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0006-protocol-py.md` |
-| TASK-0007 | Implement `__WORK_IN_PROGRESS__/src/allostery/select.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0007-select-py.md` |
-| TASK-0008 | Implement `__WORK_IN_PROGRESS__/src/allostery/analysis.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0008-analysis-py.md` |
+| TASK-0007 | Implement `__WORK_IN_PROGRESS__/src/allostery/select.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0007-select-py.md` |
+| TASK-0008 | Implement `__WORK_IN_PROGRESS__/src/allostery/analysis.py` | Implementer | TODO | P1 | 2026-07-04 | Implementer A (this thread) | 2026-07-07 06:20 | `.ai/tasks/TODO/TASK-0008-analysis-py.md` |
 | TASK-0009 | Implement `__WORK_IN_PROGRESS__/src/allostery/diagnostics.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0009-diagnostics-py.md` |
 | TASK-0010 | Implement `__WORK_IN_PROGRESS__/src/allostery/report.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0010-report-py.md` |
 | TASK-0011 | Implement `__WORK_IN_PROGRESS__/src/allostery/baselines.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0011-baselines-py.md` |
@@ -128,6 +128,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0043 | Split `bartosz` into a `scaffold` branch (40 commits, PR-ready toward `main`) holding back the one product-code commit (TASK-0030) as its own chunk — push/PR step blocked on user credentials, not available in this sandbox | Architect/Planner | Done | P1 | 2026-07-05 | — | — | `.ai/tasks/DONE/TASK-0043-scaffold-branch-split.md` |
 | TASK-0044 | Reconcile the "Python 3.9" convention (CLAUDE.md/SOFTWARE.md/AGENTS.md) against the actual 3.11.9 Render runtime and a `biotite==0.41.0` pin requiring 3.10+ — no documented rationale found for 3.9 | Architect/Planner | TODO | P2 | 2026-07-06 | — | — | `.ai/tasks/TODO/TASK-0044-python-version-convention-reconciliation.md` |
 | TASK-0045 | Extend `claim.py` with an atomic `reserve-next` task-id allocator — filed after this exact task number collided with a concurrent thread's TASK-0045 (see TASK-0046), which is the live incident motivating it | Toolsmith | Done | P1 | 2026-07-07 | — | — | `.ai/tasks/DONE/TASK-0045-highest-task-lookup-tool.md` |
+| TASK-0046 | Give notebook §8's coordinate-descent ceiling search a home (`ceiling.py` or `analysis.ceiling_search`) — filed after TASK-0006/0007 landed, the trigger condition TASK-0008's own Open Questions named for this (renumbered from a colliding TASK-0045 claimed concurrently by another thread) | Implementer | TODO | P1 (blocked on TASK-0008 if the analysis.py-function option is chosen) | 2026-07-07 | — | — | `.ai/tasks/TODO/TASK-0046-ceiling-coordinate-descent-search.md` |
 
 ## Current Rules
 

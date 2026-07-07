@@ -182,7 +182,7 @@ src/allostery/
   metrics.py       P@k, AUC, block-bootstrap CI, perm, graph_features,
                    guardrails, distance-bias quantile correction (ProteinLens) [have+]
   baselines.py     NEW: degree/betweenness + external (ProteinLens/AlloPred…) — TASK-0011
-  select.py        NEW: unsupervised selector (focusing/specificity/ballistic) — TASK-0007
+  select.py        unsupervised selector (focusing/specificity/ballistic) — TASK-0007 [have]
   protocol.py      NEW: DEV/FROZEN firewall + leave_one_protein_out — TASK-0006
   pathways.py      NEW: current-flow / edge-propensity pathway extraction
                    (the real version of the "green tube") — TASK-0012
