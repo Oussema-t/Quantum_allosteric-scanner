@@ -39,18 +39,33 @@ which correctly prompts. Full recommended workflow:
     claim GIT-COMMIT -> commit-guard --expect-empty -> stage --expect ... ->
     commit-guard --expect ... -> git commit -> release GIT-COMMIT
 
+Extended for TASK-0045: `reserve-next` atomically hands back a TASK-XXXX
+id guaranteed not to collide with any other thread's concurrent
+reservation. Plain `claim` requires the caller to already know which id
+to ask for -- if two threads independently compute "the highest number"
+from a snapshot (disk listing, CAPABILITIES.md read, etc.) and then each
+file a new task at highest+1, that read-then-write gap is exactly where a
+collision happens (the incident that motivated this: two threads both
+filed TASK-0045). `reserve-next` closes the gap by taking the highest
+number found across BOTH on-disk task files AND currently-held lock files
+(a number can be "used" before its task file is ever written), then
+claiming that candidate via the same O_EXCL primitive `claim` uses,
+retrying upward on a lost race instead of racing again on the next
+candidate.
+
 No third-party dependencies -- stdlib only.
 
 Usage:
-    claim.py claim   TASK-0024 "Toolsmith (this thread)" [--reason TEXT] [--force] [--note TEXT]
-    claim.py claim   GIT-COMMIT "Toolsmith (this thread)" [--force --reason TEXT --hitl-override]
-    claim.py release TASK-0024 [--claimant TEXT] [--strict]
-    claim.py status  [TASK-0024]
-    claim.py sync    [--dry-run] [--check]
+    claim.py claim        TASK-0024 "Toolsmith (this thread)" [--reason TEXT] [--force] [--note TEXT]
+    claim.py claim        GIT-COMMIT "Toolsmith (this thread)" [--force --reason TEXT --hitl-override]
+    claim.py reserve-next --as "Toolsmith (this thread)" [--note TEXT] [--dry-run] [--quiet]
+    claim.py release      TASK-0024 [--claimant TEXT] [--strict]
+    claim.py status       [TASK-0024]
+    claim.py sync         [--dry-run] [--check]
     claim.py commit-guard --expect PATH [PATH ...]
     claim.py commit-guard --expect-empty
-    claim.py move    TASK-0024 IN_PROGRESS --as "Toolsmith (this thread)" [--force --reason TEXT] [--keep-claim]
-    claim.py stage   --expect PATH [PATH ...]
+    claim.py move         TASK-0024 IN_PROGRESS --as "Toolsmith (this thread)" [--force --reason TEXT] [--keep-claim]
+    claim.py stage        --expect PATH [PATH ...]
 """
 
 import argparse
@@ -231,6 +246,88 @@ def cmd_claim(args):
             f.write("\n")
         print("claimed %s for %r at %s" % (task_id, args.claimant, data["claimed_at"]))
         return 0
+
+
+# --------------------------------------------------------- reserve-next ----
+
+RESERVE_NEXT_MAX_ATTEMPTS = 50
+
+
+def _highest_top_level_number(task_ids):
+    # type: (List[str]) -> int
+    """Highest TASK-XXXX main number across an iterable of task-id-like strings.
+
+    Dotted subtask ids (TASK-0026.004) contribute their main number (26),
+    never their sub number -- a subtask never raises the ceiling a new
+    top-level task must clear.
+    """
+    highest = 0
+    for raw in task_ids:
+        match = TASK_ID_RE.search(raw)
+        if match:
+            highest = max(highest, int(match.group(1)))
+    return highest
+
+
+def cmd_reserve_next(args):
+    """Atomically hand back a TASK-XXXX id no other thread also holds.
+
+    Fixes the actual race TASK-0045 hit: reading "the highest number" and
+    then writing a new task file at highest+1 is a read-then-write race
+    with no lock in between -- two threads can read the same snapshot and
+    file the same number. This considers both on-disk task files AND
+    currently-held locks (a number can be reserved before its task file
+    exists), then claims the candidate via the same O_EXCL primitive
+    cmd_claim uses, retrying upward on a lost race instead of racing again.
+    """
+    on_disk_max = _highest_top_level_number(disk_task_ids().keys())
+    lock_max = 0
+    if os.path.isdir(LOCKS_DIR):
+        lock_max = _highest_top_level_number(
+            name[: -len(".lock")] for name in os.listdir(LOCKS_DIR) if name.endswith(".lock")
+        )
+    candidate = max(on_disk_max, lock_max) + 1
+
+    if args.dry_run:
+        print(
+            "TASK-%04d (preview only -- not reserved; this can go stale if "
+            "another thread reserves first. Run without --dry-run to "
+            "actually claim it.)" % candidate
+        )
+        return 0
+
+    os.makedirs(LOCKS_DIR, exist_ok=True)
+    for _ in range(RESERVE_NEXT_MAX_ATTEMPTS):
+        task_id = "TASK-%04d" % candidate
+        path = lock_path(task_id)
+        data = {
+            "task_id": task_id,
+            "claimant": args.claimant,
+            "claimed_at": now_str(),
+            "note": args.note,
+            "reserved": True,
+        }
+        try:
+            fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+        except FileExistsError:
+            candidate += 1
+            continue
+        with os.fdopen(fd, "w") as f:
+            json.dump(data, f, indent=2)
+            f.write("\n")
+        if args.quiet:
+            print(task_id)
+        else:
+            print("reserved %s for %r at %s" % (task_id, args.claimant, data["claimed_at"]))
+        return 0
+
+    print(
+        "error: could not find an available id after %d attempts starting "
+        "from TASK-%04d -- something is wrong beyond normal contention"
+        % (RESERVE_NEXT_MAX_ATTEMPTS, candidate),
+        file=sys.stderr,
+    )
+    return 1
 
 
 # -------------------------------------------------------------- release ----
@@ -696,6 +793,24 @@ def build_parser():
         "held commit lock",
     )
     p_claim.set_defaults(func=cmd_claim)
+
+    p_reserve_next = sub.add_parser(
+        "reserve-next",
+        help="atomically claim the next available TASK-XXXX id -- no read-then-write race",
+    )
+    p_reserve_next.add_argument("--as", dest="claimant", required=True, metavar="LABEL", help="claimant label, always required")
+    p_reserve_next.add_argument("--note", help="optional free-text note stored in the lock file")
+    p_reserve_next.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="preview the next candidate id without claiming it -- can go stale before you act on it",
+    )
+    p_reserve_next.add_argument(
+        "--quiet",
+        action="store_true",
+        help="print only the bare reserved id (for command substitution), no human-readable line",
+    )
+    p_reserve_next.set_defaults(func=cmd_reserve_next)
 
     p_release = sub.add_parser("release", help="release a task's claim (idempotent)")
     p_release.add_argument("task_id")

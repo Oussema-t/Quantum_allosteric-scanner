@@ -125,6 +125,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0040 | `potentials.py` recomputes the GNM eigendecomposition redundantly in `_gnm_msf`/`V_C`/`V_M` — no shared context, unlike `backend/analysis.py::gnm_context` | Implementer | TODO | P2 | 2026-07-05 | — | — | `.ai/tasks/TODO/TASK-0040-potentials-shared-gnm-context.md` |
 | TASK-0041 | `propagators.haken_strobl` never checks `solve_ivp`'s `sol.success` flag — a failed integration would silently return as if it succeeded | Implementer | TODO | P2 | 2026-07-05 | — | — | `.ai/tasks/TODO/TASK-0041-haken-strobl-solve-ivp-success-check.md` |
 | TASK-0042 | Hook-enforce the `GIT-COMMIT` gate via a Claude Code `PreToolUse` hook (upgrades TASK-0028's advisory lock to a blocking one) — filed as a handoff for Toolsmith, justified by this session's repeated real coordination incidents | Toolsmith | TODO | P1 | 2026-07-05 | — | — | `.ai/tasks/TODO/TASK-0042-hook-enforced-commit-gate.md` |
+| TASK-0045 | Extend `claim.py` with an atomic `reserve-next` task-id allocator — filed after this exact task number collided with a concurrent thread's TASK-0045 (see TASK-0046 on `bartosz`; that row and TASK-0043/TASK-0044 are not on `scaffold` since their task files aren't cherry-picked here) | Toolsmith | Done | P1 | 2026-07-07 | — | — | `.ai/tasks/DONE/TASK-0045-highest-task-lookup-tool.md` |
 
 ## Current Rules
 
