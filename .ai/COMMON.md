@@ -85,7 +85,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0005 | Implement `__WORK_IN_PROGRESS__/src/allostery/superpose.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0005-superpose-py.md` |
 | TASK-0006 | Implement `__WORK_IN_PROGRESS__/src/allostery/protocol.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0006-protocol-py.md` |
 | TASK-0007 | Implement `__WORK_IN_PROGRESS__/src/allostery/select.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0007-select-py.md` |
-| TASK-0008 | Implement `__WORK_IN_PROGRESS__/src/allostery/analysis.py` | Implementer | TODO | P1 | 2026-07-04 | Implementer A (this thread) | 2026-07-07 06:20 | `.ai/tasks/TODO/TASK-0008-analysis-py.md` |
+| TASK-0008 | Implement `__WORK_IN_PROGRESS__/src/allostery/analysis.py` | Implementer | Done | P1 | 2026-07-04 | Implementer A (this thread) | 2026-07-07 06:20 | `.ai/tasks/DONE/TASK-0008-analysis-py.md` |
 | TASK-0009 | Implement `__WORK_IN_PROGRESS__/src/allostery/diagnostics.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0009-diagnostics-py.md` |
 | TASK-0010 | Implement `__WORK_IN_PROGRESS__/src/allostery/report.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0010-report-py.md` |
 | TASK-0011 | Implement `__WORK_IN_PROGRESS__/src/allostery/baselines.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0011-baselines-py.md` |

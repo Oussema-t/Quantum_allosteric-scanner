@@ -13,34 +13,61 @@ confirming coherence adds nothing beyond topology for these protein graphs.
 """
 from __future__ import annotations
 
+from typing import Sequence, Union
+
 import numpy as np
 from scipy import linalg as sla
 from scipy.integrate import solve_ivp
+
+Source = Union[int, Sequence[int]]
+
+
+def _source_indices(source: Source) -> np.ndarray:
+    """Normalize a scalar or sequence `source` into a 1-D int index array."""
+    return np.atleast_1d(np.asarray(source, dtype=int))
+
+
+def _quantum_initial_coeffs(v: np.ndarray, source: Source) -> np.ndarray:
+    """<v_k | psi0> for a coherent equal-amplitude superposition psi0 over
+    `source` index/indices (a scalar reduces to the single-source delta
+    state |source>, matching the original single-index formula exactly)."""
+    idx = _source_indices(source)
+    return v[idx, :].sum(axis=0) / np.sqrt(len(idx))
+
+
+def _classical_initial_weights(v: np.ndarray, source: Source) -> np.ndarray:
+    """<v_k | p0> for a uniform *probability* mass split over `source`
+    index/indices (linear in p0, unlike the quantum amplitude case above --
+    classical mixtures add probabilities, not amplitudes)."""
+    idx = _source_indices(source)
+    return v[idx, :].sum(axis=0) / len(idx)
 
 
 def ctqw(
     H: np.ndarray,
     t: float,
-    source: int = 0,
+    source: Source = 0,
 ) -> np.ndarray:
     """CTQW occupation probabilities at time t, starting from |source⟩.
 
-    p_j(t) = |⟨j| e^{−iHt} |source⟩|²
+    p_j(t) = |⟨j| e^{−iHt} |psi0⟩|²
 
     Parameters
     ----------
     H      : (N, N) real symmetric Hamiltonian.
     t      : propagation time.
-    source : starting node index.
+    source : starting node index, or a sequence of indices -- a multi-index
+             source is a coherent equal-amplitude superposition over those
+             nodes (the functional/active-site seed set is rarely a single
+             atom), not a scalar reduction of one.
 
     Returns
     -------
     p : (N,) non-negative array summing to 1.
     """
-    N = H.shape[0]
     w, v = np.linalg.eigh(H)
-    # U|source⟩ = Σ_k e^{-iw_k t} v_k (v_k · e_{source})
-    amplitudes = v @ (np.exp(-1j * w * t) * v[source, :])
+    coeffs = _quantum_initial_coeffs(v, source)
+    amplitudes = v @ (np.exp(-1j * w * t) * coeffs)
     p = np.abs(amplitudes) ** 2
     p /= p.sum() + 1e-300  # normalise against floating-point drift
     return p
@@ -49,11 +76,11 @@ def ctqw(
 def heat(
     H: np.ndarray,
     t: float,
-    source: int = 0,
+    source: Source = 0,
 ) -> np.ndarray:
     """Heat-kernel (classical diffusion) occupation at time t.
 
-    p_j(t) = [e^{−Ht}]_{j,source}
+    p_j(t) = [e^{−Ht} p0]_j, p0 uniform over `source` index/indices.
 
     H should be a positive-semidefinite Laplacian. The result is clipped to
     non-negative and re-normalised to handle floating-point noise.
@@ -63,8 +90,9 @@ def heat(
     p : (N,) non-negative array summing to 1.
     """
     w, v = np.linalg.eigh(H)
+    coeffs = _classical_initial_weights(v, source)
     exp_w = np.exp(-w * t)
-    col = v @ (exp_w * v[source, :])
+    col = v @ (exp_w * coeffs)
     p = np.clip(col, 0.0, None)
     s = p.sum()
     return p / (s + 1e-300)
@@ -74,7 +102,7 @@ def haken_strobl(
     H: np.ndarray,
     t: float,
     gamma: float,
-    source: int = 0,
+    source: Source = 0,
     rtol: float = 1e-6,
     atol: float = 1e-8,
 ) -> np.ndarray:
@@ -83,8 +111,11 @@ def haken_strobl(
     Lindblad master equation (dephasing-only):
         dρ/dt = −i[H, ρ] − γ · (ρ − diag(ρ) · I)
 
-    Starting from ρ₀ = |source⟩⟨source|, integrates to time t and returns
-    the diagonal of the density matrix (occupation probabilities).
+    Starting from ρ₀ = |psi0⟩⟨psi0| (psi0 a coherent equal-amplitude
+    superposition over `source` index/indices -- a scalar `source` recovers
+    the original single-index ρ₀ = |source⟩⟨source| exactly), integrates to
+    time t and returns the diagonal of the density matrix (occupation
+    probabilities).
 
     Parameters
     ----------
@@ -96,8 +127,10 @@ def haken_strobl(
     p : (N,) diagonal of ρ(t), non-negative, sums to 1.
     """
     N = H.shape[0]
-    rho0 = np.zeros((N, N), dtype=complex)
-    rho0[source, source] = 1.0
+    idx = _source_indices(source)
+    psi0 = np.zeros(N, dtype=complex)
+    psi0[idx] = 1.0 / np.sqrt(len(idx))
+    rho0 = np.outer(psi0, psi0.conj())
 
     def rhs(t_: float, rho_flat: np.ndarray) -> np.ndarray:
         rho = rho_flat.reshape(N, N)
@@ -123,7 +156,7 @@ def haken_strobl(
 def time_averaged_ctqw(
     H: np.ndarray,
     t_max: float,
-    source: int = 0,
+    source: Source = 0,
     n_steps: int = 500,
 ) -> np.ndarray:
     """Time-average of CTQW occupation from 0 to t_max.

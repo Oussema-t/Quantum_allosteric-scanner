@@ -42,6 +42,7 @@ class CleanResult:
     resnames: list[str]         # 3-letter residue names
     chain_ids: list[str]        # chain IDs
     resolution: float | None    # crystallographic resolution in Å, None if unavailable
+    bfactors: np.ndarray        # (N,) per-residue Cα B-factor (TASK-0008: build_H_new/H10 need the full array, not just b_mean/b_std)
     b_mean: float               # mean B-factor of Cα atoms
     b_std: float                # std of B-factors
     gap_pairs: list[tuple[int, int]]  # (res_i, res_j) pairs where |resnum gap| > 1
@@ -150,6 +151,7 @@ def clean(
     # --- B-factor statistics ---
     bfacs = ca_atoms.getBetas()
     if bfacs is not None:
+        bfactors = bfacs.astype(np.float64)
         b_mean = float(np.mean(bfacs))
         b_std = float(np.std(bfacs))
         if b_std < 0.1:
@@ -158,6 +160,7 @@ def clean(
                 "possibly a homology model or degenerate entry."
             )
     else:
+        bfactors = np.full(len(coords), np.nan)
         b_mean, b_std = float("nan"), float("nan")
         warn_list.append(f"{pdb_id}: B-factors unavailable.")
 
@@ -196,6 +199,7 @@ def clean(
         resnames=resnames,
         chain_ids=chain_ids,
         resolution=resolution,
+        bfactors=bfactors,
         b_mean=b_mean,
         b_std=b_std,
         gap_pairs=gap_pairs,
