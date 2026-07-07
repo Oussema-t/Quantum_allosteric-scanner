@@ -73,6 +73,10 @@ active site.
 
 ---
 
+**Feature intent map:** every endpoint below and every frontend control is mapped to its
+purpose and challenge-rubric/roadmap linkage (or flagged unclear) in
+[`.ai/reviews/PRODUCT_INTENT_MAP.md`](.ai/reviews/PRODUCT_INTENT_MAP.md) (TASK-0020).
+
 ## 4. API reference
 
 All endpoints require Basic Auth (`jury:QAS@CC`) except `/api/health`. Base URL is the
@@ -272,7 +276,10 @@ uvicorn backend.main:app --port 8000        # local server
 ```
 
 - **Backend change:** smoke-test the endpoint with curl + a python one-liner on a real
-  benchmark protein; check expected values.
+  benchmark protein; check expected values. For the `backend/test_geometry.py` pytest
+  suite (and the `__WORK_IN_PROGRESS__/tests/` research-code suite), any thread can run
+  `python3 .ai/tools/pytest_local.py <preset>` — whitelisted, no permission prompt; `--list`
+  prints available presets (see `repo.test.pytest-local` in `.ai/reference/CAPABILITIES.md`).
 - **Frontend change:** confirm assets serve; grep served JS/HTML for new markers.
 - **Keep edits surgical;** don't disturb working behavior (metadata, holo-finder, drug
   classification, binding lookup, GNM analysis).

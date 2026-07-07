@@ -1,0 +1,24 @@
+# Normalize line endings so Windows/WSL and Mac checkouts match byte-for-byte.
+# Text files are stored as LF in the repo; Git handles local checkout conversion.
+* text=auto eol=lf
+
+# Shell scripts must stay LF or they break on Mac/Linux/WSL (CRLF shebang failure).
+*.sh text eol=lf
+
+*.py text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Binary files — do not touch.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdb binary
+*.npz binary
+*.npy binary

@@ -134,6 +134,13 @@ Quantum_allosteric-scanner/
 
 ---
 
+## 5b. Feature intent map
+
+Every backend endpoint and frontend control, mapped to its purpose and challenge-rubric/
+roadmap linkage (or flagged as unclear): [`.ai/reviews/PRODUCT_INTENT_MAP.md`](.ai/reviews/PRODUCT_INTENT_MAP.md) (TASK-0020).
+
+---
+
 ## 6. Where the next phases plug in
 
 - **② Quantum solving** — a new `backend/quantum.py` (CTQW on the residue contact network

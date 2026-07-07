@@ -69,6 +69,23 @@ If `git push` is rejected, someone pushed first → `git fetch` + `git rebase` a
 5. Try to avoid two people editing the **same file** at the same time; coordinate areas
    (e.g. one on `frontend/app.js`, one on `backend/analysis.py`).
 6. The repo stays **private**; collaborators have access via GitHub Settings → Collaborators.
+7. **Scaffold-only changes go on the `scaffold` branch, not `main`/product branches** —
+   see below.
+
+## Scaffold vs. product branches
+
+If your change touches **only** `.ai/`, `.github/`, or `.claude/` (coordination, task
+files, agent tooling, docs-about-the-scaffold — never `backend/`/`frontend/`), branch it
+from and merge it to `scaffold`, not `main`. If it touches `backend/`/`frontend/` at all,
+treat it as ordinary product code on its own branch off `main`, even if it also happens to
+update a task file in the same commit.
+
+Why: mixing the two on one branch means untangling them by hand before a merge (exactly
+what happened once already — a branch accumulated 41 commits with one product-code commit
+buried inside it, needing a manual `git worktree` + cherry-pick split before it could be
+merged responsibly). Keeping them separate means scaffold/process changes can be reviewed
+and merged on their own cadence, independent of anything that triggers a Render redeploy.
+See `.ai/memory/shared/decisions.md` D-0004 for the full rationale.
 
 ## "I've been away — what changed?"
 ```bash
