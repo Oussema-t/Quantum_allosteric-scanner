@@ -4,7 +4,7 @@
 
 - ID: TASK-0010
 - Title: Implement `__WORK_IN_PROGRESS__/src/allostery/report.py`
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Source: notebook `notebooks/H_new_engineering (4) CLEAN.ipynb` §15
   "Synthesis & honest verdict", §16 "Final recommendation (decision-support
@@ -48,10 +48,10 @@ None
 
 ## TODO
 
-- [ ] Read notebook §15, §16, §17, §17.1 cells.
-- [ ] Implement `verdict_template`, `hit_list`, `jaccard_stability`.
-- [ ] Unit tests.
-- [ ] Add the DEV-vs-FROZEN labeling safeguard described above.
+- [x] Read notebook §15, §16, §17, §17.1 cells.
+- [x] Implement `verdict_template`, `hit_list`, `jaccard_stability`.
+- [x] Unit tests.
+- [x] Add the DEV-vs-FROZEN labeling safeguard described above.
 
 ## Dependency
 
@@ -64,7 +64,36 @@ None
 ## Open Questions
 
 - None yet — surface after reading §15-17 in detail.
+- Resolved: §17.1's markdown header (cell 63, "Stability Analysis: Jaccard
+  Similarity (Top 5)") has no corresponding code cell in the notebook —
+  cells 64-69 that follow it are unrelated KRAS visualization/exploration
+  cells, not the promised computation. `jaccard_stability` was built from
+  this task's own Intent Contract spec (pairwise Jaccard over hit-lists)
+  using this package's already-ported Jaccard convention
+  (`analysis.py::apo_holo_consistency`, itself §12/cell 52's
+  `rank_overlap`) rather than a verbatim port of nonexistent code.
 
 ## Done
 
-(not yet)
+- `hit_list(scores, k=5, resnums=None, exclude_idx=None)`: §17/cell 62's
+  top-k selection, with optional source-residue exclusion and resnum
+  mapping.
+- `jaccard_stability(hit_lists_across_runs)`: pairwise Jaccard over any
+  number of hit-lists (mean/min + per-pair detail). Documented divergence
+  from notebook cell 52's edge-case handling (empty-union pair scores 1.0
+  here, matching `apo_holo_consistency`'s convention, vs. 0.0 there) — see
+  Open Questions and the function's own docstring.
+- `verdict_template(results, provenance="dev"|"frozen")`: §15/§16's
+  headline verdict + the four data-driven recommendation lines from cell
+  60 (the fifth, static-prose bullet is out of scope — competence-map
+  narrative, not numbers/lists). `provenance != "frozen"` prepends a loud
+  DEV/CEILING banner (this task's DEV-vs-FROZEN safeguard); missing
+  `results` keys render "N/A" and skip their dependent line instead of
+  raising. DEV/FROZEN vocabulary (lowercase strings) matches
+  `protocol.py::ProtocolRoster`.
+- `__WORK_IN_PROGRESS__/tests/test_report.py`: 21 tests covering all three
+  functions' Planned Validation cases (identical/disjoint hit-lists,
+  verdict threshold classifications, missing-key handling, DEV banner).
+  Full suite green: 301 passed, 4 pre-existing skips (was 280 before this
+  task; +21 new).
+- No changes to any other module; no API/response-shape changes.

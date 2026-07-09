@@ -87,8 +87,8 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0007 | Implement `__WORK_IN_PROGRESS__/src/allostery/select.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0007-select-py.md` |
 | TASK-0008 | Implement `__WORK_IN_PROGRESS__/src/allostery/analysis.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0008-analysis-py.md` |
 | TASK-0009 | Implement `__WORK_IN_PROGRESS__/src/allostery/diagnostics.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0009-diagnostics-py.md` |
-| TASK-0010 | Implement `__WORK_IN_PROGRESS__/src/allostery/report.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0010-report-py.md` |
-| TASK-0011 | Implement `__WORK_IN_PROGRESS__/src/allostery/baselines.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0011-baselines-py.md` |
+| TASK-0010 | Implement `__WORK_IN_PROGRESS__/src/allostery/report.py` | Implementer | Done | P1 | 2026-07-04 | Implementer A (this thread) | 2026-07-09 21:27 | `.ai/tasks/DONE/TASK-0010-report-py.md` |
+| TASK-0011 | Implement `__WORK_IN_PROGRESS__/src/allostery/baselines.py` | Implementer | TODO | P1 | 2026-07-04 | Implementer B (this thread) | 2026-07-09 22:08 | `.ai/tasks/TODO/TASK-0011-baselines-py.md` |
 | TASK-0012 | Implement `__WORK_IN_PROGRESS__/src/allostery/pathways.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0012-pathways-py.md` |
 | TASK-0013 | Implement `__WORK_IN_PROGRESS__/src/allostery/coarse.py` | Implementer | TODO | P2 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0013-coarse-py.md` |
 | TASK-0014 | Implement `__WORK_IN_PROGRESS__/src/allostery/viz.py` | Implementer | TODO | P3 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0014-viz-py.md` |
