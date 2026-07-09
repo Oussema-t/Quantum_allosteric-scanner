@@ -38,7 +38,7 @@
 
 | Task | Scope | Status |
 |------|-------|--------|
-| [TASK-0026.001](TASK-0026.001-vcs-core.md) | Dispatcher entry point + `repo.vcs.*` read-only primitives + `repo.packaging.snapshot` composite | TODO |
+| [TASK-0026.001](../DONE/TASK-0026.001-vcs-core.md) | Dispatcher entry point + `repo.vcs.*` read-only primitives + `repo.packaging.snapshot` composite | Done (2026-07-09, Toolsmith thread) |
 | [TASK-0026.002](TASK-0026.002-packaging-remainder.md) | Remaining `repo.packaging.*` rows + `repo.maintenance.behavior-contract-capture` + `repo.test.playwright-local` | TODO (blocked on .001) |
 | [TASK-0026.003](TASK-0026.003-capabilities-doc-correction.md) | `CAPABILITIES.md` honesty pass (correct any row not actually implemented) + draft `.claude/settings.json` allowlist entry | TODO (blocked on .001, .002) |
 | [TASK-0026.004](TASK-0026.004-test-execution-self-verification.md) | Named request-file presets for `repo.test.playwright-local` (tied to TASK-0021/0022) + sibling `repo.test.pytest-local` capability, so any thread can self-verify Product changes via a whitelisted preset | TODO (filed by a concurrent thread this session; depends on TASK-0026.002's base wrapper) |
