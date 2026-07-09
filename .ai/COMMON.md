@@ -86,7 +86,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0006 | Implement `__WORK_IN_PROGRESS__/src/allostery/protocol.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0006-protocol-py.md` |
 | TASK-0007 | Implement `__WORK_IN_PROGRESS__/src/allostery/select.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0007-select-py.md` |
 | TASK-0008 | Implement `__WORK_IN_PROGRESS__/src/allostery/analysis.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0008-analysis-py.md` |
-| TASK-0009 | Implement `__WORK_IN_PROGRESS__/src/allostery/diagnostics.py` | Implementer | Done | P1 | 2026-07-04 | Implementer A (this thread) | 2026-07-09 20:35 | `.ai/tasks/DONE/TASK-0009-diagnostics-py.md` |
+| TASK-0009 | Implement `__WORK_IN_PROGRESS__/src/allostery/diagnostics.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0009-diagnostics-py.md` |
 | TASK-0010 | Implement `__WORK_IN_PROGRESS__/src/allostery/report.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0010-report-py.md` |
 | TASK-0011 | Implement `__WORK_IN_PROGRESS__/src/allostery/baselines.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0011-baselines-py.md` |
 | TASK-0012 | Implement `__WORK_IN_PROGRESS__/src/allostery/pathways.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0012-pathways-py.md` |
@@ -131,6 +131,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0046 | Give notebook §8's coordinate-descent ceiling search a home (`ceiling.py` or `analysis.ceiling_search`) — filed after TASK-0006/0007 landed, the trigger condition TASK-0008's own Open Questions named for this (renumbered from a colliding TASK-0045 claimed concurrently by another thread) | Implementer | TODO | P1 (blocked on TASK-0008 if the analysis.py-function option is chosen) | 2026-07-07 | — | — | `.ai/tasks/TODO/TASK-0046-ceiling-coordinate-descent-search.md` |
 | TASK-0047 | Bridge gaps from Reviewer A's Foundation Review (TASK-0003/0004/0005): add the missing network-gated KRAS_G12C integration test `labels.py`'s own TASK-0004 Intent Contract promised, and strengthen the numbering-offset test with a real alignment indel case | Implementer | TODO | P2 | 2026-07-07 | — | — | `.ai/tasks/TODO/TASK-0047-foundation-review-gap-bridging.md` |
 | TASK-0048 | Phase 3 review (Code Reviewer overlay): `protocol.py` (TASK-0006) + `select.py` (TASK-0007), both now Done — same evidence-first method as the Foundation review; deferred to next session per user direction | Code Reviewer | TODO | P2 | 2026-07-07 | — | — | `.ai/tasks/TODO/TASK-0048-phase3-review-protocol-select.md` |
+| TASK-0049 | Target decomposition proposal for `backend/` + `frontend/` into smaller single-concern modules (plan only, no code moved yet) — prepared ahead of a repository-standards meeting to diff against an external expert review | Architect/Planner | TODO | P1 | 2026-07-09 | Architect/Planner (this thread) | 2026-07-09 20:49 | `.ai/tasks/TODO/TASK-0049-backend-frontend-decomposition-proposal.md` |
 
 ## Current Rules
 
