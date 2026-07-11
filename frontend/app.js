@@ -37,6 +37,20 @@ function addOption(sel, value, label) {
   sel.appendChild(o);
 }
 
+// escape HTML-special characters before interpolating an externally-sourced
+// string (RCSB title/ligand name/code/chain id, etc.) into innerHTML —
+// defense-in-depth (TASK-0032), not an active-incident fix; RCSB is a
+// curated, non-attacker-controlled source for this app's normal usage.
+function escapeHtml(s) {
+  if (s == null) return s;
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 // prefill the inputs from the chosen benchmark target; does NOT load (the user
 // adjusts cutoff/options, then clicks "Find & visualize"). autoload kept for callers.
 function onTargetChange(autoload = false) {
@@ -323,9 +337,9 @@ function render3DCompare(d) {
   viewer.clear();
   // caption: both structures overlaid
   $("viewcaption").innerHTML =
-    `Showing <b class="apo">apo ${d.apo_pdb}</b> (grey) + <b class="holo">holo ${d.holo_pdb}</b> ` +
-    `(colored by Cα shift), superimposed · apo chain <b>${d.apo_chain}</b> ↔ holo chain <b>${d.holo_chain}</b>` +
-    `${d.drug_code ? ` (drug <b>${d.drug_code}</b>)` : ""}`;
+    `Showing <b class="apo">apo ${escapeHtml(d.apo_pdb)}</b> (grey) + <b class="holo">holo ${escapeHtml(d.holo_pdb)}</b> ` +
+    `(colored by Cα shift), superimposed · apo chain <b>${escapeHtml(d.apo_chain)}</b> ↔ holo chain <b>${escapeHtml(d.holo_chain)}</b>` +
+    `${d.drug_code ? ` (drug <b>${escapeHtml(d.drug_code)}</b>)` : ""}`;
 
   // apo = semi-transparent grey "ghost" reference
   const apoM = viewer.addModel(d.apo_text, "pdb");
@@ -753,7 +767,7 @@ function render3D() {
   const roleCls = structureRole(data.pdb_id).startsWith("holo") ? "holo" : "apo";
   $("viewcaption").innerHTML =
     `Showing <b class="${roleCls}">${structureRole(data.pdb_id)}</b> · ` +
-    `PDB <b>${data.pdb_id}</b> · chain(s) <b>${data.chains}</b>`;
+    `PDB <b>${escapeHtml(data.pdb_id)}</b> · chain(s) <b>${escapeHtml(data.chains)}</b>`;
 
   const colorby = $("colorby").value;
   const showLig = $("opt-ligands").checked;
@@ -866,30 +880,30 @@ function renderStructInfo(intel) {
   const comp = LAST.view && LAST.view.completion;
   if (comp) {
     html += `<div class="scard" style="background:rgba(255,140,43,.12);margin-bottom:12px">
-      <div class="l">Apo completion — filled from holo ${comp.holo || "?"}</div>
+      <div class="l">Apo completion — filled from holo ${escapeHtml(comp.holo) || "?"}</div>
       <div class="v">${comp.n_filled_from_holo} from holo · ${comp.n_interpolated} interpolated · ${comp.n_unplaced} unplaced
       <span style="color:var(--muted);font-weight:400"> (of ${comp.n_missing} missing)${comp.align_rmsd != null ? ` · holo aligned onto apo, RMSD ${comp.align_rmsd} Å` : ""}</span></div>
       ${comp.filled && comp.filled.length
         ? `<details class="collapse" style="margin-top:6px"><summary>show ${comp.filled.length} filled residues</summary>
-            <div style="font-size:11px" class="missing">${comp.filled.map((f) => `${f.resname}${f.resnum} <span style="opacity:.7">(${f.source})</span>`).join(", ")}</div></details>`
+            <div style="font-size:11px" class="missing">${comp.filled.map((f) => `${escapeHtml(f.resname)}${f.resnum} <span style="opacity:.7">(${f.source})</span>`).join(", ")}</div></details>`
         : ""}
     </div>`;
   }
 
   html += `<div class="sgrid">
-    ${card("PDB", intel.pdb_id)}
+    ${card("PDB", escapeHtml(intel.pdb_id))}
     ${card("Resolution", s.resolution ? s.resolution + " Å" : "—")}
-    ${card("Method", s.method || "—")}
-    ${card("Chains", (intel.chains || []).map((c) => c.chain).join(", ") || "—")}
+    ${card("Method", escapeHtml(s.method) || "—")}
+    ${card("Chains", (intel.chains || []).map((c) => escapeHtml(c.chain)).join(", ") || "—")}
     ${card("Drugs bound", drugs.length)}
     ${card("Missing residues", intel.n_missing)}
   </div>`;
-  if (s.title) html += `<div style="margin-bottom:10px">${s.title}</div>`;
+  if (s.title) html += `<div style="margin-bottom:10px">${escapeHtml(s.title)}</div>`;
 
   if (intel.chains && intel.chains.length) {
     html += `<h3>Chains</h3><table><tr><th>Chain</th><th>Residues</th><th>Range</th></tr>`;
     intel.chains.forEach((c) =>
-      html += `<tr><td>${c.chain}</td><td>${c.n_residues}</td><td>${c.first}–${c.last}</td></tr>`);
+      html += `<tr><td>${escapeHtml(c.chain)}</td><td>${c.n_residues}</td><td>${c.first}–${c.last}</td></tr>`);
     html += `</table>`;
   }
 
@@ -898,15 +912,15 @@ function renderStructInfo(intel) {
     ligs.forEach((l) => {
       const site = (l.binding_site || []).slice(0, 12).join(", ") +
         ((l.binding_site || []).length > 12 ? " …" : "");
-      html += `<tr><td>${l.code}<span class="tag">${l.category}</span></td>` +
-        `<td>${l.name || "—"}</td><td>${site || "—"}</td></tr>`;
+      html += `<tr><td>${escapeHtml(l.code)}<span class="tag">${escapeHtml(l.category)}</span></td>` +
+        `<td>${escapeHtml(l.name) || "—"}</td><td>${site || "—"}</td></tr>`;
     });
     html += `</table>`;
   }
 
   if (intel.n_missing) {
     const list = intel.missing_residues
-      .map((m) => `${m.resname}${m.resnum}${m.chain ? "/" + m.chain : ""}`).join(", ");
+      .map((m) => `${escapeHtml(m.resname)}${m.resnum}${m.chain ? "/" + escapeHtml(m.chain) : ""}`).join(", ");
     html += `<details class="collapse">
       <summary>Missing (unresolved) residues — ${intel.n_missing} <span class="hint">(click to expand)</span></summary>
       <div class="missing">${list}</div>
