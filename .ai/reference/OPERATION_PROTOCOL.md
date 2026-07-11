@@ -69,6 +69,15 @@ For non-trivial task files in this scaffold, the Intent Contract is mandatory.
 - If final verification fails or is ambiguous, enter the verification debugging sub-loop before widening scope or rewriting intent.
 - If learning capture is weak or speculative, keep it local and do not promote it.
 
+## Seam Sweep (TASK-0050)
+
+A decomposition into task-sized units creates boundaries between those units
+that no single task owns by default. The seam sweep is a distinct pass from
+Critic Review above — it is cross-unit by construction, run by a dedicated
+review role at phase boundaries and before multi-task merges, not folded into
+any single step 0-12 here. Full method: `.ai/reference/SEAM_PROTOCOL.md`,
+registry at `.ai/seams/`.
+
 ## Verification Debugging Sub-loop
 
 Use this sub-loop inside verification when the implementation exists but the claim that it realizes the intent is still not trustworthy.

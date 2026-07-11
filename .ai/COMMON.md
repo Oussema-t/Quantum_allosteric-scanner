@@ -27,6 +27,8 @@ Central coordination hub for the repo-local agent scaffold.
 - command hygiene (TASK-0025): `.github/instructions/tooling/command-hygiene.instructions.md` — one command per call, no chains/pipes; `.claude/skills/command-hygiene/` is the applied procedure
 - roadmap / phase-gated plan: `.ai/tasks/PLANS/PLAN.md`
 - weekly timeline overlay: `.ai/tasks/PLANS/PLAN-01.07.26.md`
+- seam protocol (TASK-0050): `.ai/reference/SEAM_PROTOCOL.md`, registry at `.ai/seams/`
+- invariance protocol (TASK-0051): `.ai/reference/INVARIANCE_PROTOCOL.md`, registry at `.ai/invariants/`
 
 ## Source Of Truth
 
@@ -38,6 +40,8 @@ Central coordination hub for the repo-local agent scaffold.
 | Capability contracts | `.ai/reference/CAPABILITIES.md` | Behavior-first catalog |
 | Workflow backend selection | `.ai/reference/BACKEND_SELECTION.md` | Current task, test, and delegation backend defaults |
 | New work touching `__WORK_IN_PROGRESS__` module code | `.ai/tasks/TASK-XXXX` | See "Task ledger boundary" below — `.claude/TASKS.md` is closed to new entries |
+| Cross-unit invariants (boundaries between tasks/modules) | `.ai/seams/` | TASK-0050. Every seam needs a real task owner — see `.ai/seams/README.md` |
+| GAUGE/KNOB/SIGNAL classification per reported quantity | `.ai/invariants/` | TASK-0051. No transformation table → not reportable — see `.ai/invariants/README.md` |
 
 ## Task Ledger Boundary
 
@@ -134,6 +138,12 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0047 | Bridge gaps from Reviewer A's Foundation Review (TASK-0003/0004/0005): add the missing network-gated KRAS_G12C integration test `labels.py`'s own TASK-0004 Intent Contract promised, and strengthen the numbering-offset test with a real alignment indel case | Implementer | TODO | P2 | 2026-07-07 | — | — | `.ai/tasks/TODO/TASK-0047-foundation-review-gap-bridging.md` |
 | TASK-0048 | Phase 3 review (Code Reviewer overlay): `protocol.py` (TASK-0006) + `select.py` (TASK-0007), both now Done — same evidence-first method as the Foundation review; deferred to next session per user direction | Code Reviewer | TODO | P2 | 2026-07-07 | — | — | `.ai/tasks/TODO/TASK-0048-phase3-review-protocol-select.md` |
 | TASK-0049 | Target decomposition proposal for `backend/` + `frontend/` into smaller single-concern modules (plan only, no code moved yet) — prepared ahead of a repository-standards meeting to diff against an external expert review | Architect/Planner | TODO | P1 | 2026-07-09 | Architect/Planner (this thread) | 2026-07-09 20:49 | `.ai/tasks/TODO/TASK-0049-backend-frontend-decomposition-proposal.md` |
+| TASK-0050 | Adopt the Seam Protocol: `.ai/seams/` registry (5 seed records) + definition-of-done/green-bar gates + cross-link from OPERATION_PROTOCOL.md | Architect/Planner | Done | P1 | 2026-07-11 | Architect/Planner (this thread) | 2026-07-11 11:59 | `.ai/tasks/DONE/TASK-0050-adopt-seam-protocol.md` |
+| TASK-0051 | Adopt the Invariance Protocol: `.ai/invariants/` registry seeded with `INV-0001` (real finding on `cumulative_overlap`), `SUGGESTION.md` absorbed into `pitfalls.md` | Architect/Planner | Done | P1 | 2026-07-11 | Architect/Planner (this thread) | 2026-07-11 12:00 | `.ai/tasks/DONE/TASK-0051-adopt-invariance-protocol.md` |
+| TASK-0052 | Reconcile `test_leakage_gate.py`'s assumed `build_labels`/`FrozenConfig`/`lopo` contract against the real `labels.py`/`protocol.py` API — owns SEAM-0003 | Implementer | TODO | P1 | 2026-07-11 | Architect/Planner (this thread) | 2026-07-11 12:01 | `.ai/tasks/TODO/TASK-0052-reconcile-leakage-gate-contract.md` |
+| TASK-0053 | First seam sweep (General Critic overlay) — enumerate cross-unit invariants across TASK-0003–0012, register new `.ai/seams/` records | General Critic | TODO | P2 | 2026-07-11 | Architect/Planner (this thread) | 2026-07-11 12:02 | `.ai/tasks/TODO/TASK-0053-first-seam-sweep.md` |
+| TASK-0054 | Add the missing SE(3)-joint-rotation regression test for `cumulative_overlap`/`anm_modes` — owns INV-0001's one OPEN GAUGE row | Implementer | TODO | P2 | 2026-07-11 | Architect/Planner (this thread) | 2026-07-11 12:02 | `.ai/tasks/TODO/TASK-0054-se3-invariance-regression-test.md` |
+| TASK-0055 | Verify `AUC_*_optimised` provenance is structurally tied to `protocol.py`'s frozen state, not just a matching label — owns SEAM-0004 | Implementer | TODO | P2 | 2026-07-11 | Architect/Planner (this thread) | 2026-07-11 12:03 | `.ai/tasks/TODO/TASK-0055-optimised-auc-freeze-provenance-check.md` |
 
 ## Current Rules
 
@@ -210,6 +220,18 @@ see the claim-before-start rule under "Current Rules" below.
      already-staged files silently riding along into an unrelated
      commit).
   5. `git commit`, then `python3 .ai/tools/claim.py release GIT-COMMIT`.
+- **Seam gate (TASK-0050).** A task may not move to `DONE` if it opens a
+  seam (its output is consumed by another unit, or it splits a
+  responsibility a previous unit held whole) without a corresponding
+  `.ai/seams/SEAM-XXXX` record with a named owner and seam-test (may be
+  `xfail` while `OPEN`). The repo is not green if any `OPEN` seam has no
+  seam-test at all; `WAIVED` requires a reason and expiry. See
+  `.ai/seams/README.md`.
+- **Invariance gate (TASK-0051).** Before a quantity is reported, its
+  GAUGE/KNOB/SIGNAL transformation table must exist in `.ai/invariants/`
+  — no table, not reportable. "Invariant on our test set" is a trigger to
+  widen the transformation group, not a green light — see
+  `.ai/invariants/README.md` and [[pitfalls#P-0001]].
 
 ## Open Questions
 
