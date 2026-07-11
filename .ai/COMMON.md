@@ -22,6 +22,7 @@ Central coordination hub for the repo-local agent scaffold.
 - minimum copy bundle: `.ai/reference/MINIMUM_COPY_BUNDLE.md`
 - issue backend contract: `.ai/reference/ISSUE_BACKEND_PLACEHOLDER_CONTRACT.md`
 - memory policy: `.ai/memory/README.md`
+- addressed questions (per-role, lifecycle-foldered): `.ai/memory/questions/`
 - backend selection: `.ai/reference/BACKEND_SELECTION.md`
 - claim/lock tool (TASK-0024, TASK-0027, TASK-0028, TASK-0029): `.ai/tools/claim.py` — `claim`/`release`/`status`/`sync`/`move`/`commit-guard`/`stage`, see "Current Rules" below
 - command hygiene (TASK-0025): `.github/instructions/tooling/command-hygiene.instructions.md` — one command per call, no chains/pipes; `.claude/skills/command-hygiene/` is the applied procedure
