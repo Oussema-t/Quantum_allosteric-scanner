@@ -10,12 +10,16 @@
   directed edges, a dense (N,N) array, or 1-indexed residues) that looks
   plausible but silently mismatches
 - owner: [[TASK-0014]]
-- seam-test: not yet written — cannot be written for real until `viz.py`
-  exists to be the other side of the boundary (same precedent as
-  SEAM-0004/SEAM-0005 pointing at not-yet-landed consumers); when TASK-0014
-  starts, its first step should assert against `pathways.py`'s actual
-  return shapes documented above, not re-derive an assumed one
-- status: OPEN
+- seam-test: `tests/test_seam_0006_pathways_viz.py` —
+  `TestSeam0006PathwaysVizConsumption` (3 tests): real
+  `pathways.edge_propensity`/`extract_pathway` output (not a hand-built
+  dict assuming the shape) fed directly into `viz.plot_pathway_overlay`,
+  covering the reached and not-reached cases. `viz.py`'s own
+  `_validate_edge_propensity`/`_validate_pathway` are the executable form
+  of this seam's invariant (i < j, non-negative, the exact 4 `pathway`
+  keys) — checked against `pathways.py`'s source directly while writing
+  `viz.py`, not re-derived from memory.
+- status: VERIFIED
 - provenance: found by [[TASK-0057]] while applying the newly-adopted Seam
   Protocol ([[TASK-0050]]) retroactively to [[TASK-0012]], which closed to
   DONE one commit before the seam gate existed and was never checked
@@ -23,4 +27,7 @@
   ("for viz.py (TASK-0014) to render the full field alongside the traced
   path") but flagging in a docstring is not the same as a registered,
   owned seam per `SEAM_PROTOCOL.md`'s own distinction (docstring ≠
-  contract).
+  contract). Closed 2026-07-12 by [[TASK-0014]] (same task that owns it —
+  the consumer landing and the seam closing are the same event here,
+  unlike SEAM-0005 where the seam-test predates its still-missing
+  consumer).
