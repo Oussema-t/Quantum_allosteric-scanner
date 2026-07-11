@@ -95,7 +95,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0010 | Implement `__WORK_IN_PROGRESS__/src/allostery/report.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0010-report-py.md` |
 | TASK-0011 | Implement `__WORK_IN_PROGRESS__/src/allostery/baselines.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0011-baselines-py.md` |
 | TASK-0012 | Implement `__WORK_IN_PROGRESS__/src/allostery/pathways.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0012-pathways-py.md` |
-| TASK-0013 | Implement `__WORK_IN_PROGRESS__/src/allostery/coarse.py` | Implementer | TODO | P2 | 2026-07-04 | Implementer A (this thread) | 2026-07-12 00:08 | `.ai/tasks/TODO/TASK-0013-coarse-py.md` |
+| TASK-0013 | Implement `__WORK_IN_PROGRESS__/src/allostery/coarse.py` | Implementer | Done | P2 | 2026-07-04 | Implementer A (this thread) | 2026-07-12 00:08 | `.ai/tasks/DONE/TASK-0013-coarse-py.md` |
 | TASK-0014 | Implement `__WORK_IN_PROGRESS__/src/allostery/viz.py` | Implementer | TODO | P3 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0014-viz-py.md` |
 | TASK-0015 | Build the holo-direction module (`HOLO_DIRECTION_MODULE.md`) | Implementer | TODO | P2 (blocked on 0005/0006/0011) | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0015-holo-direction-module.md` |
 | TASK-0016 | Add test for `heat()` behavior on indefinite `H_new` output (orphaned gap, see IMP-H4) | Implementer | TODO | P2 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0016-heat-indefinite-hnew-test.md` |
@@ -157,6 +157,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0065 | Informational FIFO queue for `GIT-COMMIT` — ticket + visible position on refusal (via `--enqueue`), no ordering enforcement; reuses `reserve-next`'s allocation logic (coordinate with TASK-0062, same generalization needed by both) | Toolsmith | TODO | P3 | 2026-07-11 | — | — | `.ai/tasks/TODO/TASK-0065-git-commit-queue.md` |
 | TASK-0066 | Shared Kirchhoff-context + DCC numpy helper — dedupes `backend/analysis.py::gnm_context`/`_dcc` vs `allostery/potentials.py::_gnm_msf`/`V_R`/`V_C`/`V_M`'s independently re-derived pseudo-inverse math (TASK-0030-style port, not import); filed by TASK-0018's decision doc | Implementer | TODO | P2 | 2026-07-12 | — | — | `.ai/tasks/TODO/TASK-0066-shared-kirchhoff-dcc-helper.md` |
 | TASK-0067 | Run the T-018 (GNM cutoff 7.5/8.0/10.0 Å) and T-021 (5 contact-weight schemes) benchmark against `config/targets.yaml` — resolves the three-way cutoff divergence TASK-0018's decision doc found, wraps closed-ledger T-018/T-021 | Implementer | TODO | P1 | 2026-07-12 | — | — | `.ai/tasks/TODO/TASK-0067-gnm-cutoff-weight-scheme-benchmark.md` |
+| TASK-0068 | NISQ noise-model simulation (depolarizing + amplitude-damping Trotterized sim, top-5 degradation vs depth/error) consuming `coarse.py`'s output — owns SEAM-0010, filed per TASK-0013's own Open Question once `coarse.py` landed | Implementer | TODO | P2 | 2026-07-12 | — | — | `.ai/tasks/TODO/TASK-0068-nisq-noise-model-simulation.md` |
 
 ## Current Rules
 
