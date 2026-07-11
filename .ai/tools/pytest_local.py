@@ -19,6 +19,14 @@ of scope here -- no Playwright config or test files exist in this repo yet.
 No third-party dependencies -- stdlib only. Always runs against the local
 working tree, never against Render.
 
+Interpreter resolution (TASK-0026.005): prefers `REPO_ROOT/.venv/bin/python3`
+if it exists on disk, so this works from a cold Bash call regardless of
+whether the invoking shell happens to have a venv active (it can't, across
+separate tool calls -- shell state doesn't persist). Falls back to
+`sys.executable` unchanged when no `.venv/` is present, so environments
+where the ambient interpreter already has the test deps keep working
+exactly as before -- purely additive, not a behavior change for that case.
+
 Usage:
     pytest_local.py <preset> [--json]
     pytest_local.py --list
@@ -42,6 +50,15 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 WIP_SRC = str(REPO_ROOT / "__WORK_IN_PROGRESS__" / "src")
 
+
+def _resolve_interpreter():
+    # type: () -> str
+    """`.venv/bin/python3` if present, else `sys.executable` unchanged."""
+    venv_python = REPO_ROOT / ".venv" / "bin" / "python3"
+    if venv_python.exists():
+        return str(venv_python)
+    return sys.executable
+
 # extra_pythonpath: the `allostery` package under __WORK_IN_PROGRESS__/src has
 # no editable install/conftest.py, so its tests need src/ on PYTHONPATH.
 # backend/ imports as a top-level package from the repo root, so it needs none.
@@ -58,11 +75,20 @@ PRESETS = {
 
 def run_preset(name):
     targets, extra_pythonpath = PRESETS[name]
-    cmd = [sys.executable, "-m", "pytest", "-q"] + targets
+    interpreter = _resolve_interpreter()
+    cmd = [interpreter, "-m", "pytest", "-q"] + targets
     env = os.environ.copy()
     if extra_pythonpath:
         env["PYTHONPATH"] = extra_pythonpath + os.pathsep + env.get("PYTHONPATH", "")
-    return cmd, subprocess.run(cmd, cwd=REPO_ROOT, capture_output=True, text=True, env=env)
+    result = subprocess.run(cmd, cwd=REPO_ROOT, capture_output=True, text=True, env=env)
+    if result.returncode != 0 and "No module named pytest" in result.stderr:
+        result.stderr += (
+            f"\n\npytest_local.py: resolved interpreter {interpreter!r} has no "
+            "pytest installed. If .venv/ doesn't exist yet, build it per "
+            "CLAUDE.md: python3 -m venv .venv && source .venv/bin/activate "
+            "&& pip install -r requirements.txt && pip install pytest"
+        )
+    return cmd, result
 
 
 def main():
