@@ -6,7 +6,7 @@
 - Title: `fetch()` only catches `urllib.error.HTTPError`, not the broader
   network-failure class — a transient RCSB outage/timeout produces an
   unhandled 500 instead of a clean error
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Source: review of all `Oussema-t`-authored commits, 2026-07-05 session —
   High-severity finding #1
@@ -54,10 +54,10 @@ the strength of the review alone.
 
 ## TODO
 
-- [ ] Reproduce the uncaught-exception failure mode first (see callout).
-- [ ] Widen the `except` clause.
-- [ ] Confirm callers already degrade gracefully on `None`.
-- [ ] Manual smoke test: force the failure, confirm a clean error response
+- [x] Reproduce the uncaught-exception failure mode first (see callout).
+- [x] Widen the `except` clause.
+- [x] Confirm callers already degrade gracefully on `None`.
+- [x] Manual smoke test: force the failure, confirm a clean error response
       instead of a 500.
 
 ## Dependency
@@ -70,7 +70,42 @@ the strength of the review alone.
   in `backend/` worth checking in the same pass, or is `fetch()` the only
   one? (`rcsb.py::_get_json` already uses broad `except Exception`, so it's
   likely just this one function — confirm rather than assume.)
+  **Answered:** confirmed by direct grep of every `fetch(`/`load_structure(`
+  call site (21 total, across `pipeline.py`, `compare.py`, `active_site.py`,
+  `rcsb.py`, `discovery.py`, `analysis.py`) — every one already checks for
+  `None` and degrades gracefully (return `None`/`[]`/`{}`, skip, or raise
+  `ValueError`). `fetch()` was the only narrow-catch site; no second instance
+  found.
 
 ## Done
 
-(not yet)
+- Reproduced first, per the callout, with no real network dependency:
+  monkeypatched `urllib.request.urlretrieve` to raise
+  `urllib.error.URLError(socket.gaierror(...))` and `socket.timeout`; before
+  the fix, both propagated uncaught out of `fetch()` (confirmed via
+  `except urllib.error.URLError` / `except socket.timeout` around the call —
+  they were *not* caught by the old `except urllib.error.HTTPError` clause).
+  `HTTPError` (404) was confirmed still returning `None`, as today, as the
+  baseline that must keep working.
+- Fix (`backend/data_layer.py::fetch`): widened the `except` clause to
+  `except (urllib.error.URLError, socket.timeout, TimeoutError):` and added
+  `import socket`. `URLError` is `HTTPError`'s parent (one clause now covers
+  both HTTP and DNS/connection failures); `socket.timeout`/`TimeoutError`
+  listed separately because they're distinct classes on Python 3.9 (unified
+  only in 3.10+ — see TASK-0044 on the 3.9-vs-3.11.9 convention gap, not
+  resolved here, just accommodated). Confirmed a genuinely unrelated
+  exception (`ValueError`) still propagates — the widening is not a bare
+  `except Exception`.
+- Callers: verified all 21 call sites of `fetch()`/`load_structure()` already
+  handle `None` (see Open Questions answer above) — no caller-side changes
+  needed.
+- End-to-end smoke test: with the same `URLError` monkeypatch,
+  `pipeline.build_view(...)` now raises the existing clean
+  `ValueError("could not load ZZZZ from RCSB — check the PDB ID")` instead of
+  an unhandled exception; `POST /api/load` (via `fastapi.testclient.TestClient`
+  against the real `backend.main.app`) returns `422` with that message in the
+  body, instead of an unhandled 500. Same class of confirmation as the
+  originally-cited High finding, now closed.
+- Scope held to the Intent Contract: only the `except` clause (+ the new
+  `socket` import) changed in `data_layer.py`; no retry/backoff added, no
+  caller code touched, no response-shape change on the success path.

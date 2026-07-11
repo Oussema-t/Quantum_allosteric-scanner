@@ -6,6 +6,7 @@ contact topology built from these drives all downstream signal propagation
 (the elastic-network hypothesis).
 """
 import os
+import socket
 import urllib.request
 import urllib.error
 
@@ -22,7 +23,10 @@ def fetch(pdb):
         try:
             urllib.request.urlretrieve(
                 f"https://files.rcsb.org/download/{pdb}.pdb", fp)
-        except urllib.error.HTTPError:
+        except (urllib.error.URLError, socket.timeout, TimeoutError):
+            # URLError is HTTPError's parent (covers DNS/connection failures
+            # too); socket.timeout/TimeoutError are listed separately since
+            # they're distinct classes on Python 3.9 (unified only in 3.10+).
             return None
     return fp
 
