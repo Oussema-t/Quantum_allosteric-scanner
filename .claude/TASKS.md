@@ -292,6 +292,15 @@ Blocked on running the Phase 0 notebook with network access and confirmed PDB fe
 justified and internally consistent state, cross-validated against the QAS reference
 implementation. No code is being sent to QAS at this stage.*
 
+**Naming gloss (added by TASK-0018, 2026-07-12):** "QAS" = `backend/analysis.py`
+(the live, deployed reference implementation); "CCC" =
+`__WORK_IN_PROGRESS__/src/allostery/potentials.py` (the research-scaffold port).
+Confirmed by direct comparison — `potentials.py::V_R`/`V_C` already implement the
+same z-scored rigidity terms and Kirchhoff-pseudo-inverse DCC as
+`backend/analysis.py::V_rigidity`/`V_covariance`. See
+`.ai/tasks/DONE/TASK-0018-backend-vs-allostery-architecture-reconciliation.md` for
+the full side-by-side and decision record.
+
 ---
 
 ### T-018 · Benchmark GNM contact cutoff (7–10 Å) against crystallographic B-factors

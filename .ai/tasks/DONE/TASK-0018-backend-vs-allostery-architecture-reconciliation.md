@@ -7,7 +7,7 @@
   physics code (`backend/analysis.py` et al.) against the research scaffold
   (`__WORK_IN_PROGRESS__/src/allostery/`), and a decision on what — if
   anything — should converge
-- Status: TODO
+- Status: Done
 - Owner: Architect/Planner
 - Source: user request, 2026-07-04 session — "my feeling is that they have
   a different granularity and different design patterns... no thorough
@@ -135,23 +135,21 @@ None
 
 ## TODO
 
-- [ ] Full side-by-side of every `backend/analysis.py` function against
-      its nearest `allostery/` counterpart (or "no counterpart" — note
-      those too, e.g. `connectivity_change`/`morph_frames` may have no
-      research-scaffold equivalent at all and that might be fine, `backend`
-      -only presentation logic).
-- [ ] Resolve T-018 (cutoff 7-10 Å benchmark) and T-021 (weight-scheme
-      benchmark) as part of this reconciliation, using both `backend`'s
-      already-deployed choices and the research scaffold's benchmarks as
-      cross-checks against each other, not just against B-factors in
-      isolation.
-- [ ] Decide, per overlap area (GNM/contact-matrix, potentials, CTQW
+- [x] Full side-by-side of every `backend/analysis.py` function against
+      its nearest `allostery/` counterpart (or "no counterpart") — see
+      Done section, evidence table.
+- [x] Resolve T-018 (cutoff 7-10 Å benchmark) and T-021 (weight-scheme
+      benchmark) — **not resolvable from static comparison alone**, needs
+      a real benchmark run; current divergent values documented in Done
+      section, benchmark execution filed as TASK-0067.
+- [x] Decide, per overlap area (GNM/contact-matrix, potentials, CTQW
       Hamiltonian, morph/mode machinery): converge-on-one-implementation,
-      or document-why-they-legitimately-differ.
-- [ ] If convergence is chosen anywhere, open a follow-up TASK for the
-      actual refactor — this task records the decision, a separate one
-      executes it (keeps this task reviewable as a decision doc).
-- [ ] Add the QAS/CCC naming gloss to `.claude/TASKS.md`'s Group C header
+      or document-why-they-legitimately-differ — see Done section decision
+      table.
+- [x] If convergence is chosen anywhere, open a follow-up TASK for the
+      actual refactor — TASK-0066 (shared Kirchhoff/DCC numeric helper)
+      filed; no other convergence chosen (see decision table).
+- [x] Add the QAS/CCC naming gloss to `.claude/TASKS.md`'s Group C header
       (small, additive edit — doesn't violate the ledger being "closed to
       new entries," it's a clarifying note on existing entries).
 - [x] Cross-check whether `backend/analysis.py`'s live
@@ -192,15 +190,48 @@ None
 
 ## Open Questions
 
-- Is `backend/`'s simplified single-formula CTQW (`_ctqw_build_H`) meant
-  to be replaced by the research scaffold's `build_H_new` once TASK-0004
-  through TASK-0008 land, or does the live app deliberately want a cheaper,
-  single-formula version regardless of what the research pipeline settles
-  on (Render free-tier latency/cold-start constraints)? This is the crux
-  decision the whole task hinges on — recommend answering it first, before
-  the full function-by-function side-by-side, since it determines whether
-  most of the rest of this task is "converge" or "document the split."
+- ~~Is `backend/`'s simplified single-formula CTQW (`_ctqw_build_H`) meant
+  to be replaced by the research scaffold's `build_H_new`...~~ **Answered
+  below (Done, item 3).** Verdict: `_ctqw_build_H` is mathematically in the
+  same family as `hamiltonians.H5_gaussian_elastic` (Gaussian-weighted
+  combinatorial Laplacian) but structurally simpler than `build_H_new`
+  (which additively layers four z/max-scored potential corrections on top
+  of an exponential-decay Laplacian). Given the Constraints section's
+  cold-start/no-heavy-deps requirement, this is judged a **deliberate live
+  approximation, not an accidental duplicate** — document, don't converge
+  now (see decision table).
+- New, raised by the side-by-side: `_average_mixing_matrix` (closed-form
+  analytic time-average) vs `propagators.time_averaged_ctqw` (numerical
+  sampled time-average) compute conceptually the same quantity
+  (time-averaged CTQW transition probability) by genuinely different
+  methods. Nobody has checked whether they agree numerically. Not urgent —
+  backend's feature works today — but if the allostery pipeline is later
+  used to validate or replace backend's quantum-seed-readiness feature,
+  this discrepancy should be checked first. No task filed; flagging for
+  whoever picks up TASK-0008 (`allostery/analysis.py`) or a future
+  Phase 2 quantum-solving task to notice.
 
 ## Done
 
-(not yet)
+**Decision table — one row per overlap area, converge or document:**
+
+| Overlap area | backend/ | allostery/ | Verdict |
+|---|---|---|---|
+| **CTQW Hamiltonian** | `_ctqw_build_H` (analysis.py:139) — Gaussian-weighted Laplacian, `R_c=8.0, r0=7.0`, single formula | 13 named variants + `build_H_new`/`build_H10` (hamiltonians.py) | **Document, don't converge.** Same family as `H5_gaussian_elastic` (§1 below) but simpler than `build_H_new`; judged a deliberate cheap approximation for the live request path, not drift. Revisit only if/when Phase 2 quantum-solving work expands the live feature. |
+| **GNM/Kirchhoff contact matrix** | `gnm_context` (analysis.py:37), binary contacts, cutoff=8.0 Å, reused at 3 call sites | `H8_gnm` (hamiltonians.py:124), binary, cutoff=7.5 Å default; `potentials.py`'s `_gnm_msf`/`V_R`/`V_C`/`V_M` callers pass cutoff=10.0 Å | **Can't converge or dismiss from static reading — needs a benchmark.** Same weighting scheme, three different cutoff numbers in active use (8.0 / 7.5 / 10.0). This *is* T-018 (still literally unresolved). Filed **TASK-0067** to actually run the cutoff-sweep benchmark against target proteins and pick one number (or document why contexts differ) — this task documents the divergence, TASK-0067 resolves it empirically. |
+| **Potentials (`V_rigidity`/`V_covariance`/`V_modeparticipation` vs `V_R`/`V_C`/`V_M`)** | z-scored final outputs, positive-is-more-rigid sign convention | same core math (same 3 z-scored ingredients for rigidity; identical Kirchhoff-pseudo-inverse DCC for covariance) but max-normalized + negated final step, since these feed additively into `build_H_new` as energy-lowering diagonal terms | **Document the final-step divergence; it's a legitimate consumption-context difference** (backend needs an interpretable, comparable-across-proteins z-score for display; allostery needs a bounded, sign-consistent additive potential). **But the intermediate math (Kirchhoff pseudo-inverse, DCC, z-score helper) is identical and independently re-derived on both sides** — same pattern TASK-0030 already fixed for Kabsch. Filed **TASK-0066** to extract a shared, unit-tested "binary-Kirchhoff-context + DCC" numpy helper (ported into both trees, not cross-imported, per this task's own Constraints). Code-hygiene dedup, not a correctness fix — both sides currently produce correct, if independently-derived, results. |
+| **Granularity / module count** (one 655-line `analysis.py` vs ~8 single-concern files + 11 DEV/FROZEN-pipeline-only stub files) | — | — | **Document — legitimately justified, not indicted.** `backend/` has no leakage-firewall/LOPO/ceiling/ablation/diagnostics/report machinery because it is a live interactive tool (user picks apo+holo, sees both), not a scored blind-prediction pipeline. No convergence proposed; this is the correct shape for what each tree is for. |
+| **`_average_mixing_matrix` vs `propagators.time_averaged_ctqw`** | closed-form analytic degenerate-eigenspace projector | numerical sampled time-average loop | **Document as an open question, not a decision** (see Open Questions above) — same target quantity, different method, unverified agreement. No task filed; too speculative to own yet. |
+| **`connectivity_change`/`morph_frames`/`site_potential_shift`/`quantum_seed_readiness`/`seed_readiness_shift`/`site_potentials`'s permutation enrichment/`_bootstrap_floor`/`_raw_shift`** | live, JSON-response-shaping + UI-animation logic | confirmed **no counterpart anywhere in allostery/** (repo-wide grep for `morph`, `DDM`, `rewire`, `keyframe`, `connectivity_change` — zero hits) | **Document — legitimately backend-only.** This is presentation/live-comparison-UI logic with no offline-research analog; nothing to converge. |
+| **Kabsch/SVD superposition** | `backend/geometry.py` shared helper (`kabsch_fit`/`kabsch_apply`/`kabsch_align`), both former call sites updated, unit-tested | (separate axis — allostery's own `superpose.py` ported the math independently per this task's port-don't-import principle) | **Already resolved.** TASK-0030 confirmed Done; verified in this pass that `backend/analysis.py` and `backend/discovery.py` both import the shared helper with no residual local duplicate. No further action. |
+| **Naming collision: two `analysis.py`** | `backend/analysis.py` (655 lines, live GNM+CTQW+connectivity module) | `allostery/analysis.py` (6-line stub, TASK-0008, unrelated quantum-vs-classical/ablation content) | **Document, no rename proposed** (renaming a live, deployed module is out of proportion to the footgun). Naming gloss added to `.claude/TASKS.md` Group C header (this commit) so the QAS/CCC identity is discoverable without re-deriving it. |
+
+**Full function-by-function inventory** (backend/analysis.py's 25 top-level functions against their nearest allostery/ counterpart, or "no counterpart found") is preserved as working evidence rather than duplicated here — see the Explore-agent transcript this task's evidence was built from; the counterpart/no-counterpart call for every function is already reflected in the decision-table rows above (potentials, GNM, CTQW covered; the presentation-only functions — `site_potentials`, `_site_descriptors_z/_raw`, `quantum_seed_readiness`, `seed_readiness_shift`, `connectivity_change`, `morph_frames`, `_auto_intermediates`, `site_potential_shift`, `_bootstrap_floor`, `_raw_shift` — all confirmed "no counterpart found," rolled into the backend-only row above rather than one row each).
+
+**T-018/T-021 status:** both remain technically open in `.claude/TASKS.md` — this task does not close them, it converts them from "vague, unlocated benchmark asks" into **TASK-0067** with the exact three candidate cutoffs (7.5 / 8.0 / 10.0 Å) and the existing 5-weight-scheme machinery (`hamiltonians.contact_matrix`) already available to run it against.
+
+**Follow-ups filed:**
+- **TASK-0066** — shared Kirchhoff-context + DCC numpy helper (dedup potentials.py `_gnm_msf`/`V_R`/`V_C`/`V_M` internals against backend's `gnm_context`/`_dcc`; TASK-0030-style port-not-import).
+- **TASK-0067** — actually run the T-018 cutoff benchmark (7.5/8.0/10.0 Å) and T-021 weight-scheme benchmark against the target proteins in `config/targets.yaml`, using allostery's existing `hamiltonians.contact_matrix`/`baselines.py` machinery.
+
+**Acceptance scenario check:** every function found in both trees under a similar name (or purpose) now has a stated verdict — same-physics-converge (none found to warrant immediate code convergence; only intermediate-math dedup, TASK-0066), or documented-legitimate-difference (CTQW, granularity, presentation-only functions), or empirical-question-deferred (GNM cutoff → TASK-0067; average-mixing-matrix methods → open question). No rewriting done in this task itself, per Out of Scope.
