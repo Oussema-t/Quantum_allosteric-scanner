@@ -608,6 +608,8 @@ def cmd_move(args):
             with open(src_path, "w") as f:
                 f.write(new_content)
 
+    final_rel = src_rel
+
     if need_file_move:
         os.makedirs(os.path.join(TASKS_DIR, target_state), exist_ok=True)
         tracked = (
@@ -637,6 +639,31 @@ def cmd_move(args):
                 file=sys.stderr,
             )
             return 1
+        final_rel = dst_rel
+
+    # `git mv`/a plain rename carries over the index's existing blob for the
+    # path rather than re-reading the working tree -- so any content written
+    # above (the Status rewrite) or already sitting unstaged on disk before
+    # this call (e.g. prior edits the caller made) would otherwise land in
+    # the index as stale. Re-add the final path so the staged blob always
+    # matches what's actually on disk post-move (mirrors commit-guard's
+    # disk-vs-expect verification, per Q-0002).
+    final_tracked = (
+        subprocess.run(
+            ["git", "ls-files", "--error-unmatch", final_rel],
+            cwd=REPO_ROOT,
+            capture_output=True,
+        ).returncode
+        == 0
+    )
+    if final_tracked:
+        subprocess.run(
+            ["git", "add", final_rel],
+            cwd=REPO_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
 
     registry_path_cell = "`%s`" % dst_rel.replace(os.sep, "/")
     registry_changed = update_registry_row(task_id, target_status_text, registry_path_cell)

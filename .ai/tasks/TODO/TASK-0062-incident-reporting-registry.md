@@ -125,6 +125,12 @@
 
 - [TASK-0045](../DONE/TASK-0045-highest-task-lookup-tool.md) (Done) —
   `reserve-next`'s existing logic, generalized rather than duplicated.
+- [TASK-0065](TASK-0065-git-commit-queue.md) (TODO, unclaimed) — the
+  *other* pending consumer of the same `reserve-next` generalization
+  (ticket numbers for its commit queue, instead of `INC-XXXX` ids).
+  Whichever of these two tasks lands first should do the actual
+  namespace-parameter generalization; the other just consumes it —
+  coordinate rather than each building a separate generalized version.
 - `.ai/tools/task_locate.py` — the same-directory-import pattern this
   task's `incident.py` follows for reusing `claim.py` internals.
 - `.ai/memory/questions/README.md` — the directory-per-concern,

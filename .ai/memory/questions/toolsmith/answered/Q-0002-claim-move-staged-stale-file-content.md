@@ -3,7 +3,7 @@
 ## Context
 
 - ID: Q-0002 (toolsmith addressee folder)
-- Status: Open
+- Status: Answered
 - Addressee: Toolsmith
 - Raised By: Implementer A, 2026-07-11 session
 - Raised At: 2026-07-11, discovered by the user reviewing commit `e60b13b`
@@ -99,8 +99,61 @@ hypothesis, not a confirmed cause.
 
 ## Answer
 
-(not yet)
+Real, deterministic logic bug in `cmd_move` -- not a concurrency race.
+Reproduced single-threaded, isolated, no other thread involved (scratch
+task `TASK-9700`, commit `839896a`, cleaned up alongside this answer):
+
+1. Committed a stub file, tracked by git.
+2. Three plain `Edit`-tool writes to it (unstaged, working-tree only) --
+   mirrors the reported sequence exactly.
+3. Ran `claim.py move TASK-9700 DONE` -- printed success, `Status: Done`.
+4. `git show :.ai/tasks/DONE/TASK-9700-scratch-move-repro.md` (the
+   *staged* blob, not the working-tree file) showed the original stub
+   content -- `Status: TODO`, empty sections, none of the three edits.
+   `cat` on the same path confirmed the on-disk file was fully correct.
+
+Root cause: `git mv <src> <dst>` does not re-read the working tree. It
+relocates the index entry, carrying over whatever blob the index already
+held for `<src>` (the last-committed/last-`git add`-ed blob). If the
+working-tree file has unstaged modifications at the moment `git mv` runs
+-- true here at both step 2 of this reproduction (three prior unstaged
+edits) and step 597-609 of `cmd_move` (its own Status-line rewrite is
+written via a plain `open(...).write()`, never staged) -- the new path in
+the index ends up pointing at the *old* blob. The physical file at the
+destination is correct; only the staged content is wrong. This matches
+your own `cmd_move` read exactly (sequencing was never wrong) -- the bug
+is in an assumption about what `git mv` does, not in the order of
+operations. It also fully explains the earlier `TASK-0026.001` stale-
+tracked-path incident, previously (wrongly) attributed to a timing/
+concurrency artifact.
+
+Fixed in `cmd_move` (`.ai/tools/claim.py`): after the move (or in place,
+if no move was needed), `git add` the final path whenever it's tracked,
+re-syncing the index to current on-disk content regardless of how it got
+dirty -- move's own rewrite, or edits made before `move` was ever called.
+Verified fix against the same reproduction: staged blob now matches the
+working-tree file exactly (`16 insertions`, correct `Status`/sections),
+no rename-vs-content ambiguity left.
+
+Direct answer to your question: yes -- `move` now self-verifies (by
+re-adding, not just asserting) the same way `commit-guard` verifies
+`--expect` against the index; it doesn't just trust `git mv`. `stage`
+does not need the same fix -- it only ever calls plain `git add` on
+caller-supplied paths (never `git mv`), so it doesn't have this specific
+carry-over failure mode; its known gap is different (can't stage
+deletions, already documented). `add` (TASK-0061, not yet implemented)
+will also only use `git add`, not `git mv`, so it's unaffected by this
+class of bug by construction -- worth a one-line note in that task file
+so its implementer doesn't need to rediscover this.
 
 ## Action
 
-(not yet)
+- Fixed `cmd_move` in `.ai/tools/claim.py`: re-`git add`s the final
+  (post-move) path whenever it's tracked, so the index always reflects
+  current on-disk content instead of trusting `git mv`'s blob-carryover.
+- Cleaned up the `TASK-9700` scratch reproduction (file removed, scratch
+  commit `839896a` left in history per this session's no-history-rewrite
+  convention -- see the follow-up cleanup commit).
+- No change needed to `stage` or the planned `add` (TASK-0061) -- neither
+  uses `git mv`, both are unaffected by this bug class; noted in
+  TASK-0061 for its future implementer.

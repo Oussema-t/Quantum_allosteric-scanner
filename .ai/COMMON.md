@@ -154,6 +154,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0062 | `.ai/memory/incidents/` registry + `.ai/tools/incident.py` — structured facts (detection/blast-radius/data-loss/recovery), not self-declared severity, so severity can be inferred consistently across incidents later | Toolsmith | TODO | P2 | 2026-07-11 | — | — | `.ai/tasks/TODO/TASK-0062-incident-reporting-registry.md` |
 | TASK-0063 | `protocol.get_functional_indices` doesn't forward `labels.functional_indices`'s `heavy_atom_coords`/`heavy_atom_seq_index` — FROZEN-path callers silently forced onto the coarser Cα-only approximation, no way around the gate — TASK-0048's P2 finding | Implementer | TODO | P2 | 2026-07-11 | — | — | `.ai/tasks/TODO/TASK-0063-functional-indices-gate-parameter-gap.md` |
 | TASK-0064 | Wire `select.unsupervised_score` into a real FROZEN-loop consumer — closes SEAM-0009 (`analysis.py` never imports `select.py` despite both Done), found by TASK-0048's Phase 3 review, missed by TASK-0053's same-day sweep | Implementer | TODO | P2 | 2026-07-11 | — | — | `.ai/tasks/TODO/TASK-0064-wire-unsupervised-score-into-frozen-loop.md` |
+| TASK-0065 | Informational FIFO queue for `GIT-COMMIT` — ticket + visible position on refusal (via `--enqueue`), no ordering enforcement; reuses `reserve-next`'s allocation logic (coordinate with TASK-0062, same generalization needed by both) | Toolsmith | TODO | P3 | 2026-07-11 | — | — | `.ai/tasks/TODO/TASK-0065-git-commit-queue.md` |
 
 ## Current Rules
 

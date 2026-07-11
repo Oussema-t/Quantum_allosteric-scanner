@@ -152,6 +152,14 @@
   the lock) is the real backstop — `add` is additive documentation on top
   of that, not a replacement for running `commit-guard` before `git
   commit`.
+- `.ai/memory/questions/toolsmith/answered/Q-0002-*.md` — a real bug found
+  in `move`'s use of `git mv` (stages a stale blob when the working-tree
+  file has unstaged modifications, since `git mv` carries over the
+  index's existing blob instead of re-reading disk). `add` is unaffected
+  by construction: it must only ever call plain `git add` on its paths,
+  never `git mv`/rename — plain `git add` always reads current on-disk
+  content, so this bug class doesn't apply. Don't rediscover this; just
+  don't introduce a rename/move code path into `add`.
 
 ## Open Questions
 
