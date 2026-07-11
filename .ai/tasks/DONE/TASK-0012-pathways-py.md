@@ -4,7 +4,7 @@
 
 - ID: TASK-0012
 - Title: Implement `__WORK_IN_PROGRESS__/src/allostery/pathways.py`
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Source: **no notebook precedent — net-new.** `.ai/tasks/PLANS/PLAN.md`
   feature backlog: "current-flow / edge-propensity pathway extraction
@@ -50,12 +50,15 @@ None
 
 ## TODO
 
-- [ ] Implement `edge_propensity` (current-flow betweenness adaptation on
+- [x] Implement `edge_propensity` (current-flow betweenness adaptation on
       the CTQW/transport operator).
-- [ ] Implement `extract_pathway`.
-- [ ] Unit test on the bottleneck-graph synthetic case.
+- [x] Implement `extract_pathway`.
+- [x] Unit test on the bottleneck-graph synthetic case.
 - [ ] Decide (with TASK-0002 or standalone) where the distance-bias
-      quantile correction belongs; don't fold it in here silently.
+      quantile correction belongs; don't fold it in here silently. **Still
+      open** — deliberately not decided by this task (Out Of Scope above);
+      left as a standing open question for whoever picks it up next, same
+      pattern as TASK-0008's ceiling-search question that became TASK-0046.
 
 ## Dependency
 
@@ -69,7 +72,36 @@ None
   (`backend/`, `frontend/`, or `__WORK_IN_PROGRESS__`) — it's referenced
   only as prose in `PLAN.md`. Treat this as a from-scratch build, not a
   replacement of code that needs to be located first.
+- Distance-bias quantile correction placement (`metrics.py` vs
+  `analysis.py`) — still undecided, see TODO above.
 
 ## Done
 
-(not yet)
+- `edge_propensity(H, source)` and `extract_pathway(H, source, target,
+  max_hops=None)` implemented in
+  `__WORK_IN_PROGRESS__/src/allostery/pathways.py`. Both rebuild a
+  resistor-network Laplacian from `H`'s off-diagonal magnitude
+  (`abs(H_ij)`, robust to either sign convention `hamiltonians.py`
+  documents) and solve node potentials via `np.linalg.pinv` — the standard
+  current-flow-betweenness construction (Newman 2005). Confirmed by
+  reading `potentials.py` that all five V_* terms are diagonal-only, so
+  this conductance network is identical for any H a caller passes in
+  (H2/H3/H_new/...), never distorted by the potential terms.
+- `edge_propensity` uses a single linear solve (unit current at `source`,
+  extracted uniformly over every other node) rather than one solve per
+  candidate sink, matching its signature (no `target` argument) and
+  keeping it O(N^3) once, not O(N^4).
+- `extract_pathway` greedily walks the potential gradient from `source` to
+  `target`, returning `reached_target=False` (not raising) when no route
+  exists, and raises `ValueError` if `target` coincides with (or is inside
+  a multi-index) `source`.
+- Validated on `__WORK_IN_PROGRESS__/tests/test_pathways.py`: a two-clique
+  synthetic graph joined by one bridge edge, confirming (a) the bridge
+  scores highest in `edge_propensity`, including with a multi-index
+  source, (b) `extract_pathway` traces straight through the bridge to a
+  cross-cluster target, (c) an unreachable target reports
+  `reached_target=False` instead of a partial/incorrect path, (d) the two
+  `target`-coincides-with-`source` guard cases raise.
+- Full local run: `python3 .ai/tools/pytest_local.py wip-all --json` →
+  340 passed, 4 skipped (pre-existing network-gated skips, unrelated),
+  0 failed.
