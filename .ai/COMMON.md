@@ -92,9 +92,9 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0007 | Implement `__WORK_IN_PROGRESS__/src/allostery/select.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0007-select-py.md` |
 | TASK-0008 | Implement `__WORK_IN_PROGRESS__/src/allostery/analysis.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0008-analysis-py.md` |
 | TASK-0009 | Implement `__WORK_IN_PROGRESS__/src/allostery/diagnostics.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0009-diagnostics-py.md` |
-| TASK-0010 | Implement `__WORK_IN_PROGRESS__/src/allostery/report.py` | Implementer | Done | P1 | 2026-07-04 | Implementer A (this thread) | 2026-07-09 21:27 | `.ai/tasks/DONE/TASK-0010-report-py.md` |
+| TASK-0010 | Implement `__WORK_IN_PROGRESS__/src/allostery/report.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0010-report-py.md` |
 | TASK-0011 | Implement `__WORK_IN_PROGRESS__/src/allostery/baselines.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0011-baselines-py.md` |
-| TASK-0012 | Implement `__WORK_IN_PROGRESS__/src/allostery/pathways.py` | Implementer | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0012-pathways-py.md` |
+| TASK-0012 | Implement `__WORK_IN_PROGRESS__/src/allostery/pathways.py` | Implementer | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0012-pathways-py.md` |
 | TASK-0013 | Implement `__WORK_IN_PROGRESS__/src/allostery/coarse.py` | Implementer | TODO | P2 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0013-coarse-py.md` |
 | TASK-0014 | Implement `__WORK_IN_PROGRESS__/src/allostery/viz.py` | Implementer | TODO | P3 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0014-viz-py.md` |
 | TASK-0015 | Build the holo-direction module (`HOLO_DIRECTION_MODULE.md`) | Implementer | TODO | P2 (blocked on 0005/0006/0011) | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0015-holo-direction-module.md` |
@@ -139,13 +139,16 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0047 | Bridge gaps from Reviewer A's Foundation Review (TASK-0003/0004/0005): add the missing network-gated KRAS_G12C integration test `labels.py`'s own TASK-0004 Intent Contract promised, and strengthen the numbering-offset test with a real alignment indel case | Implementer | TODO | P2 | 2026-07-07 | — | — | `.ai/tasks/TODO/TASK-0047-foundation-review-gap-bridging.md` |
 | TASK-0048 | Phase 3 review (Code Reviewer overlay): `protocol.py` (TASK-0006) + `select.py` (TASK-0007), both now Done — same evidence-first method as the Foundation review; deferred to next session per user direction | Code Reviewer | TODO | P2 | 2026-07-07 | — | — | `.ai/tasks/TODO/TASK-0048-phase3-review-protocol-select.md` |
 | TASK-0049 | Target decomposition proposal for `backend/` + `frontend/` into smaller single-concern modules (plan only, no code moved yet) — prepared ahead of a repository-standards meeting to diff against an external expert review | Architect/Planner | TODO | P1 | 2026-07-09 | Architect/Planner (this thread) | 2026-07-09 20:49 | `.ai/tasks/TODO/TASK-0049-backend-frontend-decomposition-proposal.md` |
-| TASK-0050 | Adopt the Seam Protocol: `.ai/seams/` registry (5 seed records) + definition-of-done/green-bar gates + cross-link from OPERATION_PROTOCOL.md | Architect/Planner | Done | P1 | 2026-07-11 | Architect/Planner (this thread) | 2026-07-11 11:59 | `.ai/tasks/DONE/TASK-0050-adopt-seam-protocol.md` |
-| TASK-0051 | Adopt the Invariance Protocol: `.ai/invariants/` registry seeded with `INV-0001` (real finding on `cumulative_overlap`), `SUGGESTION.md` absorbed into `pitfalls.md` | Architect/Planner | Done | P1 | 2026-07-11 | Architect/Planner (this thread) | 2026-07-11 12:00 | `.ai/tasks/DONE/TASK-0051-adopt-invariance-protocol.md` |
-| TASK-0052 | Reconcile `test_leakage_gate.py`'s assumed `build_labels`/`FrozenConfig`/`lopo` contract against the real `labels.py`/`protocol.py` API — owns SEAM-0003 | Implementer | TODO | P1 | 2026-07-11 | Architect/Planner (this thread) | 2026-07-11 12:01 | `.ai/tasks/TODO/TASK-0052-reconcile-leakage-gate-contract.md` |
-| TASK-0053 | First seam sweep (General Critic overlay) — enumerate cross-unit invariants across TASK-0003–0012, register new `.ai/seams/` records | General Critic | TODO | P2 | 2026-07-11 | Architect/Planner (this thread) | 2026-07-11 12:02 | `.ai/tasks/TODO/TASK-0053-first-seam-sweep.md` |
-| TASK-0054 | Add the missing SE(3)-joint-rotation regression test for `cumulative_overlap`/`anm_modes` — owns INV-0001's one OPEN GAUGE row | Implementer | TODO | P2 | 2026-07-11 | Architect/Planner (this thread) | 2026-07-11 12:02 | `.ai/tasks/TODO/TASK-0054-se3-invariance-regression-test.md` |
-| TASK-0055 | Verify `AUC_*_optimised` provenance is structurally tied to `protocol.py`'s frozen state, not just a matching label — owns SEAM-0004 | Implementer | TODO | P2 | 2026-07-11 | Architect/Planner (this thread) | 2026-07-11 12:03 | `.ai/tasks/TODO/TASK-0055-optimised-auc-freeze-provenance-check.md` |
-| TASK-0058 | Wire a `floor_scores` beats-floor check into `diagnostics.classify_failure` — closes SEAM-0005 (a seam-test already exists, `xfail(strict=True)` pending this task) | Implementer | TODO | P2 | 2026-07-11 | — | — | `.ai/tasks/TODO/TASK-0058-wire-baseline-floor-into-classify-failure.md` |
+| TASK-0050 | Adopt the Seam Protocol: `.ai/seams/` registry (5 seed records) + definition-of-done/green-bar gates + cross-link from OPERATION_PROTOCOL.md | Architect/Planner | Done | P1 | 2026-07-11 | — | — | `.ai/tasks/DONE/TASK-0050-adopt-seam-protocol.md` |
+| TASK-0051 | Adopt the Invariance Protocol: `.ai/invariants/` registry seeded with `INV-0001` (real finding on `cumulative_overlap`), `SUGGESTION.md` absorbed into `pitfalls.md` | Architect/Planner | Done | P1 | 2026-07-11 | — | — | `.ai/tasks/DONE/TASK-0051-adopt-invariance-protocol.md` |
+| TASK-0052 | Reconcile `test_leakage_gate.py`'s assumed `build_labels`/`FrozenConfig`/`lopo` contract against the real `labels.py`/`protocol.py` API — owns SEAM-0003 | Implementer | TODO | P1 | 2026-07-11 | — | — | `.ai/tasks/TODO/TASK-0052-reconcile-leakage-gate-contract.md` |
+| TASK-0053 | First seam sweep (General Critic overlay) — enumerate cross-unit invariants across TASK-0003–0012, register new `.ai/seams/` records | General Critic | Done | P2 | 2026-07-11 | — | — | `.ai/tasks/DONE/TASK-0053-first-seam-sweep.md` |
+| TASK-0054 | Add the missing SE(3)-joint-rotation regression test for `cumulative_overlap`/`anm_modes` — owns INV-0001's one OPEN GAUGE row | Implementer | TODO | P2 | 2026-07-11 | — | — | `.ai/tasks/TODO/TASK-0054-se3-invariance-regression-test.md` |
+| TASK-0055 | Verify `AUC_*_optimised` provenance is structurally tied to `protocol.py`'s frozen state, not just a matching label — owns SEAM-0004 | Implementer | TODO | P2 | 2026-07-11 | — | — | `.ai/tasks/TODO/TASK-0055-optimised-auc-freeze-provenance-check.md` |
+| TASK-0056 | Phase 4 review (Code Reviewer overlay): `diagnostics.py`/`report.py`/`baselines.py`/`pathways.py` (TASK-0009-0012), none reviewed yet — cross-checks SEAM-0004/SEAM-0005 while reading `report.py`/`baselines.py` | Code Reviewer | TODO | P2 | 2026-07-11 | — | — | `.ai/tasks/TODO/TASK-0056-phase4-review-diagnostics-report-baselines-pathways.md` |
+| TASK-0057 | Retroactively apply Seam/Invariance protocol to TASK-0012 (`pathways.py`): registers SEAM-0006 (owner TASK-0014) + INV-0002, writes real SE(3)/permutation invariance tests | Implementer | Done | P2 | 2026-07-11 | — | — | `.ai/tasks/DONE/TASK-0057-pathways-seam-invariance-registration.md` |
+| TASK-0058 | Wire a `floor_scores` beats-floor check into `diagnostics.classify_failure` — closes SEAM-0005 (a seam-test already exists, `xfail(strict=True)` pending this task) | Implementer | TODO | P2 | 2026-07-11 | Implementer A (this thread) | 2026-07-11 12:26 | `.ai/tasks/TODO/TASK-0058-wire-baseline-floor-into-classify-failure.md` |
+| TASK-0059 | Wire the cumulative-overlap go/no-go gate into which targets `analysis.py` actually scores — closes SEAM-0007, found by TASK-0053's sweep | Implementer | TODO | P2 | 2026-07-11 | — | — | `.ai/tasks/TODO/TASK-0059-wire-openness-gate-into-scoring.md` |
 
 ## Current Rules
 
@@ -197,7 +200,12 @@ see the claim-before-start rule under "Current Rules" below.
   auto-releases the claim by default (`--keep-claim` to opt out). `--as` is
   always required.
 - **Claim `GIT-COMMIT` before staging anything you intend to commit
-  (TASK-0028, workflow completed by TASK-0029).** Full sequence:
+  (TASK-0028, workflow completed by TASK-0029) — but the claim alone is
+  advisory, not enforced; `commit-guard` is the real safety net (see
+  `.ai/memory/questions/toolsmith/answered/Q-0001-*.md` for a real
+  incident where a non-honoring thread's `git add` landed in another
+  thread's staged index despite the lock being held; hardening this into
+  an actually-blocking hook is TASK-0042, TODO).** Full sequence:
   1. `python3 .ai/tools/claim.py claim GIT-COMMIT "<your label>"` before
      the *first* `git add` of a commit-bound change, not right before
      `git commit`. If another thread holds it, `claim` refuses and names
@@ -205,7 +213,9 @@ see the claim-before-start rule under "Current Rules" below.
      `--force --reason --hitl-override` yourself — that combination
      requires an explicit human instruction in the current conversation,
      not an agent's own judgment call, unlike the advisory task-row
-     override above.
+     override above. **Holding this claim does not stop a thread that
+     never checks it** — treat it as a courtesy signal other cooperating
+     threads read, not a lock the filesystem enforces.
   2. `python3 .ai/tools/claim.py commit-guard --expect-empty` — fail fast
      if the index isn't actually clean, before you touch it (beats
      staging first and discovering contamination after).
@@ -215,12 +225,12 @@ see the claim-before-start rule under "Current Rules" below.
      `git add`, which correctly prompts (deliberately not whitelisted —
      see TASK-0029's Intent Contract for why an unscoped stage would have
      been a whitelist-bypass in disguise).
-  4. `python3 .ai/tools/claim.py commit-guard --expect <path> [<path>
-     ...]` immediately before `git commit` — refuses if the staged index
-     contains anything beyond what you declared, which is what would have
-     caught the incident that motivated this whole rule (another thread's
-     already-staged files silently riding along into an unrelated
-     commit).
+  4. **`python3 .ai/tools/claim.py commit-guard --expect <path> [<path>
+     ...]` immediately before `git commit` — every time, even if no time
+     seems to have passed since step 2/3.** This is the check that
+     actually catches contamination; step 1's claim is not a substitute
+     for it. Refuses if the staged index contains anything beyond what
+     you declared.
   5. `git commit`, then `python3 .ai/tools/claim.py release GIT-COMMIT`.
 - **Seam gate (TASK-0050).** A task may not move to `DONE` if it opens a
   seam (its output is consumed by another unit, or it splits a

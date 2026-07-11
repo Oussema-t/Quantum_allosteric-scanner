@@ -8,7 +8,7 @@
   src/allostery` module chain (TASK-0003–0012), registering new `.ai/
   seams/` records for cross-unit invariants beyond the 5 already seeded
   by [[TASK-0050]]
-- Status: TODO
+- Status: Done
 - Owner: General Critic (the protocol explicitly names this "a dedicated
   review role," distinct from a node-execution Implementer — see
   `SEAM_PROTOCOL.md`'s "The seam sweep" section: "Node-execution agents
@@ -78,13 +78,15 @@ None
 
 ## TODO
 
-- [ ] Enumerate cross-unit data flows among TASK-0003–0012's modules.
-- [ ] Re-check the 3 `OPEN` seeds from [[TASK-0050]] against current
-      code state.
-- [ ] Name the invariant per flow as an assertion, not prose.
-- [ ] Register new `.ai/seams/SEAM-XXXX` records for anything not already
+- [x] Enumerate cross-unit data flows among TASK-0003–0012's modules.
+- [x] Re-check the 3 `OPEN` seeds from [[TASK-0050]] against current
+      code state. (Found 5, not 3, existing seeds — TASK-0057 landed
+      SEAM-0006 concurrently with this sweep; treated as already covered,
+      not re-verified from scratch.)
+- [x] Name the invariant per flow as an assertion, not prose.
+- [x] Register new `.ai/seams/SEAM-XXXX` records for anything not already
       covered.
-- [ ] File owner tasks for any newly-`OPEN` seam without an existing
+- [x] File owner tasks for any newly-`OPEN` seam without an existing
       natural owner.
 
 ## Dependency
@@ -108,4 +110,61 @@ None
 
 ## Done
 
-(not yet)
+Read `labels.py`, `protocol.py`, `superpose.py`, `analysis.py`,
+`diagnostics.py`, `report.py` in full (current landed state, all Done).
+Cross-checked `test_protocol.py`/`test_report.py` directly rather than
+trusting docstrings.
+
+**Existing seeds re-checked (5, not the 3 named at filing — SEAM-0006 was
+seeded by a concurrent TASK-0057 pass during this sweep, treated as
+already-covered rather than re-verified from scratch, per this task's own
+Out-Of-Scope on re-litigating without new evidence):**
+
+- **SEAM-0001** (labels seq-pocket ↔ superpose geom-pocket) — confirmed
+  accurate as-is, `pocket_cross_map` exists exactly as described. No change.
+- **SEAM-0002** (protocol firewall ↔ label readers) — **upgraded from
+  "not independently re-verified" to confirmed VERIFIED.** Named the exact
+  seam-tests (`test_protocol.py::test_get_pocket_mask_raises_when_target_blocked`
+  and two siblings) that genuinely cross the protocol.py↔labels.py/
+  superpose.py boundary, distinct from the same-module `assert_readable`
+  tests that don't qualify per this registry's own definition.
+- **SEAM-0003** (pocket excludes functional/terminal) — confirmed still
+  OPEN, no `build_labels()`/assembly function exists. TASK-0052 remains
+  correct owner, no change.
+- **SEAM-0004** (`AUC_*_optimised` provenance) — confirmed still OPEN,
+  strengthened with direct evidence: `verdict_template`'s `provenance` is
+  a plain caller-supplied keyword, zero connection to
+  `protocol.current_context().mode` anywhere in the codebase. TASK-0055
+  remains correct owner.
+- **SEAM-0005** (verdict signal vs. baseline floor) — confirmed still
+  OPEN, corroborated from the `diagnostics.py` side (prior evidence was
+  `baselines.py`-side only): `classify_failure`'s actual signature has no
+  `floor_scores` parameter. TASK-0058 remains correct owner.
+- **SEAM-0006** (pathways→viz) — landed by TASK-0057 concurrently with
+  this sweep; not re-verified, out of scope to re-litigate.
+
+**New seams found and registered:**
+
+- **SEAM-0007** (new): `superpose.run_superpose`'s cumulative-overlap
+  go/no-go gate is never consumed by any of `analysis.py`'s six scoring
+  functions — confirmed by reading every one of their signatures, none
+  reference the gate at all. This is one of the four flows this task's own
+  Intent Contract named to check explicitly, and it was open. Filed
+  **TASK-0059** as owner (no natural existing owner found).
+- **SEAM-0008** (new): no assembly function converts `analysis.py`'s real
+  (nested) output shapes into `report.verdict_template`'s expected flat
+  schema (`AUC_apo_Hnew_default` etc.) — confirmed by grep: every
+  occurrence of those key names across the whole package is inside
+  `test_report.py`'s hand-built fixture, zero in production code.
+  `verdict_template` has never once been exercised against real
+  `analysis.py` output. Did not file a new task — **TASK-0056** (existing,
+  unclaimed Phase 4 review of `report.py` among others) is the natural
+  owner and was already scoped to ask exactly this question; cross-linked
+  the finding into its Intent Contract directly instead of duplicating.
+
+**Not done in this pass:** did not extend the sweep to TASK-0013–0016
+(coarse.py/viz.py/holo-direction module/heat-test) — those aren't Done
+yet, matching this task's own Open-Question recommendation to run now for
+landed modules and extend later rather than wait for one sweep at the end.
+A follow-up sweep once TASK-0013–0016 land would be a new task, not a
+reopening of this one.

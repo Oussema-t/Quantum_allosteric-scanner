@@ -11,3 +11,10 @@
   `protocol.py::ProtocolRoster` — but whether that match is structurally enforced or just a
   naming convention both sides happen to follow is exactly what [[TASK-0055]] checks. Unchecked
   as of seeding; re-imports the doc's own referenced "§8 leak" if false.
+  **Corroborated by [[TASK-0053]]'s sweep (2026-07-11):** `verdict_template(results, *,
+  provenance="dev")` — `provenance` is a plain caller-supplied keyword with no read of
+  `protocol.current_context().mode` anywhere in `report.py`, and no call site anywhere
+  in `__WORK_IN_PROGRESS__/src/allostery` or its tests currently calls
+  `verdict_template` from inside a real `frozen_context` — every exercised call
+  (`test_report.py`) hand-passes the string. The gap is real, not hypothetical;
+  still OPEN, [[TASK-0055]] remains the right owner.

@@ -1,9 +1,7 @@
 # Addressed Questions
 
 Use this folder for a question raised by one thread that needs an answer from a
-*specific* expert role — as opposed to `.ai/memory/shared/open-questions.md`, which is a
-single running document for questions without one clear addressee. If a question names
-who should answer it, it belongs here, not there.
+*specific* expert role. If a question names who should answer it, it belongs here.
 
 This is a companion registry to `.ai/tasks/`, same lifecycle-folder idea, applied to
 questions instead of work items. It does **not** replace `.ai/tasks/` — a question that

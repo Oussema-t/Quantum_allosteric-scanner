@@ -3,10 +3,21 @@
 - units: `protocol` (DEV/FROZEN + LOPO selection) -> any label reader during selection
 - invariant: held-out labels are unreadable during selection (`assert_readable` raises)
 - owner: [[TASK-0006]] (Done)
-- seam-test: `protocol.py::assert_readable` (raises) — exact test file/function not independently confirmed at seeding time, see Open item below
+- seam-test: `test_protocol.py::test_get_pocket_mask_raises_when_target_blocked`,
+  `::test_get_functional_indices_gated`, `::test_get_superpose_report_gated` —
+  each calls a `protocol.py` gated accessor (`get_pocket_mask`/
+  `get_functional_indices`/`get_superpose_report`) that internally invokes
+  `labels.py`/`superpose.py` functions, inside a `frozen_context`, and
+  asserts `LeakageError`. These genuinely cross the protocol.py <->
+  labels.py/superpose.py boundary — distinct from the same-module
+  `test_frozen_context_blocks_named_target`-style tests (lines 76-100 of the
+  same file), which only exercise `assert_readable` in isolation and would
+  not qualify as seam-tests on their own.
 - status: VERIFIED
 - provenance: seeded from `SEAM_PROTOCOL.md`'s own table at adoption ([[TASK-0050]], 2026-07-11).
-  **Not independently re-verified** — confirmed `assert_readable` exists in `protocol.py`
-  (line 90) but did not confirm a dedicated cross-unit seam-test exercises it (vs. a
-  same-module unit test only, which per this registry's own definition would not qualify
-  as a seam-test). Follow-up: confirm or demote to OPEN as part of [[TASK-0053]]'s sweep.
+  **Confirmed by [[TASK-0053]]'s sweep (2026-07-11):** read `protocol.py` and
+  `test_protocol.py` directly; the three seam-tests named above exist, pass
+  by construction (they assert the raise), and exercise the real cross-unit
+  call path (accessor -> `assert_readable` -> underlying `labels`/
+  `superpose` call), not just `protocol.py`'s internal state machine.
+  Upgraded from "not independently re-verified" to confirmed.

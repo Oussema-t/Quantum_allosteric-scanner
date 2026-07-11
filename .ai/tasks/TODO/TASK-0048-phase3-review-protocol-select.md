@@ -8,7 +8,7 @@
   unsupervised operator selection) — against their own Intent Contracts,
   mirroring the Foundation review's format.
 - Status: TODO
-- Owner: Code Reviewer (Reviewer A)
+- Owner: Code Reviewer
 - Source: continuation of the review-plan thread established across this
   session's TASK-0044/TASK-0047 work. Both cluster members reached Done
   (TASK-0006, TASK-0007) during this session; user directed this review to
