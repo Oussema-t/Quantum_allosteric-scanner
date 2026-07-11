@@ -7,7 +7,7 @@
   `protocol.py` (DEV/FROZEN firewall + LOPO) and `select.py` (label-free
   unsupervised operator selection) — against their own Intent Contracts,
   mirroring the Foundation review's format.
-- Status: TODO
+- Status: Done
 - Owner: Code Reviewer
 - Source: continuation of the review-plan thread established across this
   session's TASK-0044/TASK-0047 work. Both cluster members reached Done
@@ -66,17 +66,19 @@
 
 None
 
-## TODO
+## TODO (resolved 2026-07-11, Reviewer B)
 
-- [ ] Read `protocol.py` + `test_protocol.py` in full; check against
+- [x] Read `protocol.py` + `test_protocol.py` in full; check against
       TASK-0006's Intent Contract and Constraints.
-- [ ] Read `select.py` + `test_select.py` in full; check against
+- [x] Read `select.py` + `test_select.py` in full; check against
       TASK-0007's Intent Contract and Constraints.
-- [ ] Run both test files; for any network/optional-dependency-gated test
+- [x] Run both test files; for any network/optional-dependency-gated test
       (if present), install the dependency and actually run it rather than
-      trusting the skip, per the Foundation review's method.
-- [ ] Cross-task checks per Intent Contract above.
-- [ ] Write `REVIEW-<date>-phase3-protocol-select.md` under `.ai/reviews/`,
+      trusting the skip, per the Foundation review's method. Neither file
+      has such a gate (synthetic data only) — nothing to install; 35/35
+      passed.
+- [x] Cross-task checks per Intent Contract above.
+- [x] Write `REVIEW-<date>-phase3-protocol-select.md` under `.ai/reviews/`,
       same shape as the Foundation Record; file follow-up gap-bridging
       task(s) if findings warrant, same pattern as TASK-0047.
 
@@ -91,8 +93,48 @@ None
 
 ## Open Questions
 
-- None yet — will surface during the review itself.
+- None — see the Review Record's own Open Questions for the one remaining
+  (small, not worth a task) `PLAN.md` doc-drift note.
 
 ## Done
 
-(not yet)
+- Review Record written:
+  [`REVIEW-2026-07-11-phase3-protocol-select.md`](../../reviews/REVIEW-2026-07-11-phase3-protocol-select.md).
+- Both test files run directly (`pytest test_protocol.py test_select.py -v`):
+  35/35 passed, no network/optional-dependency gates present in this
+  cluster. Full WIP suite (`pytest_local.py wip-all`): 343 passed, 4
+  skipped, 1 xfailed (pre-existing, unrelated) — no regressions.
+- Findings: one P2 (`protocol.get_functional_indices` drops
+  `heavy_atom_coords`/`heavy_atom_seq_index`, forcing FROZEN-path callers
+  onto the coarser Cα-only approximation with no way around the gate — no
+  live caller affected yet), filed as
+  [TASK-0063](../TODO/TASK-0063-functional-indices-gate-parameter-gap.md);
+  one P3 (`PLAN.md`'s `protocol.py` row still tagged `NEW`, stale since
+  TASK-0006 landed — `select.py`'s own row is correctly `[have]`), left as
+  a documented note rather than a task, matching TASK-0007's own inline-fix
+  precedent for this exact kind of drift.
+- No P0/P1 issues. Both cluster members' Intent Contracts and Constraints
+  are met otherwise: phase-switchable firewall confirmed (not a blanket
+  lock), LOPO full-coverage confirmed, gated accessors confirmed to wrap
+  the real `labels.py`/`superpose.py` functions (not reimplementations),
+  `select.py` confirmed fully label-free by direct grep (not just by
+  reading the docstrings), `unsupervised_score`'s intended FROZEN-loop
+  call site confirmed documented, leakage-boundary docstring language
+  confirmed consistent across all four modules.
+- **Seam/Invariance Protocol cross-check (done before this task's own
+  commit, per user direction):** `.ai/reference/SEAM_PROTOCOL.md` and
+  `.ai/reference/INVARIANCE_PROTOCOL.md` both landed today (TASK-0050/
+  TASK-0051), after this task file was originally written — read both
+  before closing out, rather than assuming the original 2026-07-07 scope
+  already covered them. Added a scope-clarifying provenance note to
+  [SEAM-0002](../../seams/SEAM-0002-protocol-firewall-label-isolation.md)
+  (its `VERIFIED` status is correct for its own stated invariant; the
+  `get_functional_indices` parameter gap above is a related-but-distinct
+  plain defect, not a seam violation). Registered a genuinely missing
+  seam TASK-0053's same-day sweep didn't catch:
+  [SEAM-0009](../../seams/SEAM-0009-select-unsupervised-score-frozen-consumption.md)
+  (`select.unsupervised_score` has zero production callers — `analysis.py`
+  never imports `select.py` despite both being Done), owner
+  [TASK-0064](../TODO/TASK-0064-wire-unsupervised-score-into-frozen-loop.md).
+  `select.py`'s missing `.ai/invariants/` table flagged as a TASK-0064
+  follow-up rather than built here without empirical verification.

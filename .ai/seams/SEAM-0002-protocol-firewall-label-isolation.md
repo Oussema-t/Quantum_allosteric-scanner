@@ -21,3 +21,14 @@
   call path (accessor -> `assert_readable` -> underlying `labels`/
   `superpose` call), not just `protocol.py`'s internal state machine.
   Upgraded from "not independently re-verified" to confirmed.
+  **Scope note added by [[TASK-0048]]'s Phase 3 review (2026-07-11):** this
+  seam's invariant (held-out labels unreadable) still holds and this record
+  stays `VERIFIED` for that invariant. But `::test_get_functional_indices_gated`
+  only exercises the raise/permit boundary, not parameter-forwarding fidelity
+  — `protocol.get_functional_indices` silently drops two of
+  `labels.functional_indices`'s parameters (`heavy_atom_coords`,
+  `heavy_atom_seq_index`), so an *unblocked* call through the gate gets
+  different (coarser) behavior than calling `labels.functional_indices`
+  directly. Filed separately as a plain implementation defect, not a new
+  seam (it's entirely within `protocol.py`'s own TASK-0006 responsibility,
+  not a boundary owned by nobody): [[TASK-0063]].
