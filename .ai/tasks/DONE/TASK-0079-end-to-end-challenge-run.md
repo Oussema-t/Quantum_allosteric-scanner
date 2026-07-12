@@ -6,8 +6,8 @@
 - Title: One command producing, per mandatory target, the three required
   deliverables: the N×N connectivity matrix, the top-5 ranked hit list,
   and the methodological report.
-- Status: TODO (parent — thin coordinator; Done only once every subtask
-  below is Done, per `.ai/tasks/README.md`'s subtask convention)
+- Status: Done
+  2026-07-12)
 - Owner: Implementer
 - Source: `__WORK_IN_PROGRESS__/EXECUTION_PLAN.md` Phase 5, item 5.1 —
   "This is what the submission is actually judged on... Currently no
@@ -71,7 +71,7 @@
 | [[TASK-0079.002]] | Connectivity matrix + hit list assembly (`pathways.py`/`report.hit_list`) | Phase 0/1 (Done) | Done |
 | [[TASK-0079.003]] | FROZEN-gated per-target verdict pipeline | `.001` | Done |
 | [[TASK-0079.004]] | One-command orchestrator + output files | `.002`, `.003` | Done |
-| [[TASK-0079.005]] | Run end-to-end for KRAS_G12C / BCR_ABL1 / CARDIAC_MYOSIN + manual inspection | `.004` | TODO |
+| [[TASK-0079.005]] | Run end-to-end for KRAS_G12C / BCR_ABL1 / CARDIAC_MYOSIN + manual inspection | `.004` | Done |
 
 `.001` and `.002` have no dependency on each other — independently
 claimable/parallelizable. `.003` needs `.001`'s assembly function to exist
@@ -99,4 +99,23 @@ landed. `.005` is pure execution + inspection once `.004` exists.
 
 ## Done
 
-(not yet — parent closes once all 5 subtasks are Done)
+- 2026-07-12. All 5 subtasks landed: `.001` (schema assembly, closes
+  SEAM-0008), `.002` (connectivity matrix + hit-list assembly), `.003`
+  (FROZEN-gated verdict pipeline, `protocol.run_frozen_verdict`), `.004`
+  (`scripts/run_challenge.py` orchestrator — found and filed, not fixed
+  inline, a real `select.py` multi-index-source crash as **TASK-0090**),
+  `.005` (real live run against all 3 mandatory targets + manual
+  inspection).
+- The submission artifact this task exists to produce is real: three
+  populated `results/<target>/` directories, each independently
+  Acceptance-Scenario-checked.
+- The run surfaced four real scientific findings and three follow-up
+  investigation tasks ([[TASK-0091]], [[TASK-0092]], [[TASK-0093]]) — full
+  narrative in `__WORK_IN_PROGRESS__/RESULTS.md`, the durable
+  science-facing record that survives independent of this task's own
+  closure. This parent task closing does not mean the science is
+  settled — `RESULTS.md`'s open-questions index is the thing to check
+  for that, not this file.
+- One Acceptance Scenario line not fully met as shipped: non-`N/A`
+  holo-side values for every report — tracked openly as [[TASK-0092]],
+  not silently marked passing.
