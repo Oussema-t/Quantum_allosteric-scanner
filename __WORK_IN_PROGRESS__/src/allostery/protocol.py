@@ -218,3 +218,38 @@ def leave_one_protein_out(targets):
     targets = list(targets)
     for i, held_out in enumerate(targets):
         yield targets[:i] + targets[i + 1:], held_out
+
+
+def select_frozen_config(build_candidates, held_out_target: str) -> dict:
+    """Pick the best operator/parameter candidate for `held_out_target`
+    using `select.unsupervised_score`, inside the `frozen_context` that
+    blocks that target -- the concrete FROZEN-loop selection step
+    `leave_one_protein_out`'s own docstring describes, and the missing
+    connective layer SEAM-0009 names (TASK-0064).
+
+    `build_candidates` is a zero-arg callable returning
+    `unsupervised_score`'s own input shape (a list of `{"H", "source",
+    "t", ...}` dicts) -- taking a callable rather than an already-built
+    list is deliberate: it lets this function hold the `frozen_context`
+    open across *both* candidate construction and scoring, so a
+    candidate-building routine that accidentally reads
+    `held_out_target`'s pocket/holo label via any of this module's gated
+    accessors raises `LeakageError` too, not just a direct
+    `unsupervised_score` call (which never touches labels at all and so
+    could never itself trigger the gate).
+
+    Returns the winning candidate dict (shallow copy, caller's own keys
+    intact) with `"index"` (its position in `build_candidates()`'s
+    output) and `"score"` (its `unsupervised_score` value) added.
+    """
+    from .select import unsupervised_score
+
+    with frozen_context({held_out_target}):
+        candidates = build_candidates()
+        scores = unsupervised_score(candidates)
+
+    best_i = int(scores.argmax())
+    winner = dict(candidates[best_i])
+    winner["index"] = best_i
+    winner["score"] = float(scores[best_i])
+    return winner
