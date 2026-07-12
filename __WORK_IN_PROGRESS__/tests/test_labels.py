@@ -135,6 +135,57 @@ class TestHoloPocketMask:
         # same sequence position (index 6) must still be flagged in apo space
         assert mask[6]
 
+    def test_indel_case_needleman_wunsch_recovers_correct_apo_index(self):
+        """TASK-0047 P3: a genuine insertion/deletion -- apo and holo
+        sequences of DIFFERENT length, not just re-numbered -- so this
+        actually exercises _needleman_wunsch_map's gap handling. Distinct
+        from test_numbering_offset_still_maps_correctly above: that test
+        checks numbering-INDEPENDENCE (same sequence, shifted resnums, a
+        constant offset would also pass it); this one checks
+        alignment-CORRECTNESS-UNDER-GAPS (a naive positional mapper, or a
+        constant-offset mapper, both fail this one, since the correct
+        apo<->holo offset changes before vs. after the deletion).
+
+        apo (13 residues): ALA ARG ASN ASP CYS GLN GLU GLY HIS ILE LEU LYS PHE
+        holo (12 residues): apo with index 6 ("GLU") deleted, i.e.
+                             ALA ARG ASN ASP CYS GLN GLY HIS ILE LEU LYS PHE
+
+        The ligand sits at holo index 8; adjacent helix residues are only
+        ~3.8 A apart (inside the 4.5 A contact cutoff), so holo indices
+        7/8/9 all legitimately contact it -- this test does not assume a
+        single hit. Under the correct gap-aware mapping those become apo
+        indices 8/9/10; under a naive same-position (non-aligned) mapper
+        they would instead become apo indices 7/8/9. The two hypotheses
+        share indices 8-9 but disagree at the edges, so the discriminating
+        assertions are: apo index 10 (only reachable via correct alignment)
+        IS flagged, and apo index 7 (only produced by the wrong, naive
+        mapping) is NOT.
+        """
+        apo_seq3 = ["ALA", "ARG", "ASN", "ASP", "CYS", "GLN", "GLU",
+                    "GLY", "HIS", "ILE", "LEU", "LYS", "PHE"]
+        holo_seq3 = apo_seq3[:6] + apo_seq3[7:]  # delete index 6 ("GLU")
+        assert len(apo_seq3) == 13 and len(holo_seq3) == 12
+
+        apo_coords = _helix_coords(13)
+        holo_coords = _helix_coords(12)
+        apo = _Struct(apo_coords, np.arange(1, 14), apo_seq3)
+        ligand = LigandGroup("AY7", 900, "A", np.array([holo_coords[8]]), 1)
+        holo = _Struct(holo_coords, np.arange(1, 13), holo_seq3, [ligand])
+
+        mask = holo_pocket_mask(apo, holo, "AY7", cutoff=4.5)
+        assert mask is not None
+        assert mask[10], (
+            "gap-aware alignment must map holo index 9 -> apo index 10 -- "
+            "unreachable under a naive same-position mapper, which would "
+            "cap out at apo index 9"
+        )
+        assert not mask[7], (
+            "apo index 7 must NOT be flagged -- a naive same-position "
+            "mapper would wrongly produce it (holo index 7 -> apo index 7), "
+            "but the correct gap-aware mapping sends holo index 7 -> apo "
+            "index 8 instead"
+        )
+
     def test_missing_ligand_code_returns_none(self):
         apo = _Struct(COORDS, np.arange(1, N + 1), _SEQ3)
         holo = _Struct(COORDS, np.arange(1, N + 1), _SEQ3, [])
@@ -478,3 +529,44 @@ def test_bcr_abl1_real_exclusion_invariant_holds():
     # the exclusion must have actually removed something on this target too
     # (not a no-op that happens to pass because nothing overlapped).
     assert labels.pocket.sum() < labels.pocket_raw.sum()
+
+
+def test_kras_g12c_real_holo_pocket_mask_matches_systems_py_pocket_full():
+    """TASK-0047 P2 (the piece TASK-0070's Cys12 test doesn't cover): load
+    KRAS_G12C via `load_target_config` (TASK-0003's loader) rather than a
+    hand-built dict, exercising the TASK-0003->TASK-0004 config handoff
+    end-to-end -- then assert `holo_pocket_mask`'s heavy-atom-path output on
+    real 4OBE/6OIM data matches `backend/systems.py`'s `pocket_full[4.5]`
+    KRAS_G12C entry exactly, pinning the 21/21 heavy-atom recovery finding
+    cited in `labels.py`'s own docstrings (`labels.py:56-67`, `:96-104`) as
+    a real regression check instead of a docstring claim nobody re-runs.
+
+    Deliberately checks the *raw* contact mask (`holo_pocket_mask`), not
+    `build_labels`'s exclusion-applied `.pocket` -- `backend/systems.py`'s
+    `pocket_full` is itself the raw ligand-contact list (pre-exclusion), so
+    that is the correct thing to pin against, not the assembled/excluded
+    label TASK-0070's tests already cover.
+    """
+    pytest.importorskip("prody")
+    from allostery.clean import load_target_config
+
+    cfg = load_target_config("KRAS_G12C")
+    try:
+        apo, holo = _load_real_target(cfg["apo_pdb"], cfg["holo_pdb"], cfg["chains"])
+    except Exception as exc:
+        pytest.skip(f"real-structure fetch unavailable in this environment: {exc!r}")
+
+    mask = holo_pocket_mask(
+        apo, holo, cfg["drug_ligand"], cutoff=cfg["pocket_contact_cutoff"]
+    )
+    assert mask is not None
+
+    recovered = set(int(r) for r in apo.resnums[mask])
+    # backend/systems.py SYSTEMS["KRAS_G12C"]["pocket_full"][4.5], verbatim.
+    expected = {9, 10, 11, 12, 13, 16, 34, 58, 59, 60, 61, 62, 63,
+                68, 69, 72, 95, 96, 99, 100, 103}
+    assert recovered == expected, (
+        "heavy-atom-path pocket recovery diverged from backend/systems.py's "
+        f"pocket_full[4.5] -- missing {sorted(expected - recovered)}, "
+        f"extra {sorted(recovered - expected)}"
+    )

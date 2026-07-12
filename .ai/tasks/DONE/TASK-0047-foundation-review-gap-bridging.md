@@ -7,7 +7,7 @@
   test (TASK-0004's own unmet Planned Validation item) and strengthen the
   numbering-offset regression test in `test_labels.py` to actually exercise
   a real sequence-alignment indel case.
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Source: Reviewer A's Foundation Review Record,
   [`.ai/reviews/REVIEW-2026-07-07-foundation-0003-0005.md`](../../reviews/REVIEW-2026-07-07-foundation-0003-0005.md),
@@ -84,17 +84,16 @@ None
 
 ## TODO
 
-- [ ] Write the network-gated KRAS_G12C integration test in
+- [x] Write the network-gated KRAS_G12C integration test in
       `test_labels.py`, following `test_superpose.py`'s
       `pytest.importorskip("prody")` pattern.
-- [ ] Confirm it passes locally with `prody` installed (this session's
-      review already confirmed `prody` installs cleanly in `.venv` and the
-      equivalent `superpose.py` test passes against live RCSB data — reuse
-      that same environment state).
-- [ ] Add/extend the indel-case test for `_needleman_wunsch_map` per P3
+- [x] Confirm it passes locally with `prody` installed (`prody` was
+      *not* already installed in `.venv` despite this note's claim —
+      installed it fresh this session; ran against live RCSB data).
+- [x] Add/extend the indel-case test for `_needleman_wunsch_map` per P3
       above; add a one-line comment distinguishing it from the existing
       offset test's purpose.
-- [ ] Run the full `test_labels.py` suite both with and without `prody`
+- [x] Run the full `test_labels.py` suite both with and without `prody`
       installed to confirm the skip path still works cleanly.
 
 ## Dependency
@@ -113,4 +112,48 @@ None
 
 ## Done
 
-(not yet)
+**Scope note found at pickup (2026-07-12):** TASK-0070 (pocket label
+exclusion assembly) landed since this task was filed and already added
+`build_labels` plus two real-target network-gated tests
+(`test_kras_g12c_real_cys12_excluded`, `test_bcr_abl1_real_exclusion_invariant_holds`).
+Those cover the Cys12/exclusion-invariant question, but neither uses
+`load_target_config` (both hand-build the config dict) nor asserts
+`holo_pocket_mask`'s raw recovery against `backend/systems.py`'s
+`pocket_full[4.5]` — so P2 was only partially subsumed, not fully closed.
+Wrote the remaining piece rather than duplicating TASK-0070's coverage.
+
+- **P2:** added `test_kras_g12c_real_holo_pocket_mask_matches_systems_py_pocket_full`
+  — loads KRAS_G12C via `load_target_config` (exercises the
+  TASK-0003→TASK-0004 config handoff end-to-end, not a hand-built dict),
+  calls `holo_pocket_mask` directly (the raw contact mask, matching what
+  `backend/systems.py`'s `pocket_full` itself represents — pre-exclusion,
+  distinct from `build_labels`'s assembled `.pocket`), and asserts the
+  recovered residue set matches `pocket_full[4.5]` **exactly**: `{9, 10,
+  11, 12, 13, 16, 34, 58, 59, 60, 61, 62, 63, 68, 69, 72, 95, 96, 99, 100,
+  103}` (21 residues). Ran against live 4OBE/6OIM data — passes, pinning
+  the "21/21 heavy-atom recovery" docstring claim as a real regression
+  check for the first time.
+- **P3:** added `test_indel_case_needleman_wunsch_recovers_correct_apo_index`
+  to `TestHoloPocketMask` — a genuine insertion/deletion (apo 13 residues,
+  holo 12, one residue deleted mid-sequence), not just re-numbering.
+  First attempt asserted a single flagged residue and failed: adjacent
+  synthetic-helix residues sit ~3.8 Å apart, inside the 4.5 Å contact
+  cutoff, so a ligand placed at one residue also contacts its immediate
+  neighbors — not a bug, a wrong test assumption. Redesigned around two
+  discriminating residues instead of one (apo index 10, reachable only
+  under correct gap-aware alignment; apo index 7, produced only by a
+  naive same-position mapper) so the test is robust to the multi-residue
+  contact radius and still fails under a naively-reverted
+  `_needleman_wunsch_map`.
+- **Validation:** `pytest __WORK_IN_PROGRESS__/tests/test_labels.py`:
+  30 passed / 3 skipped with `prody` absent (clean skip path, confirmed
+  by reading skip reasons — all three are `No module named 'prody'`, not
+  a masked failure); installed `prody` fresh in `.venv` (was *not*
+  already present, despite this task's own TODO note claiming otherwise)
+  and re-ran against live RCSB data: **33 passed, 0 skipped, 0 failed**
+  — includes TASK-0070's two real-target tests and both new ones.
+- No production code changed, per this task's own Scope — confirmed via
+  `git diff` touching only `__WORK_IN_PROGRESS__/tests/test_labels.py`.
+- **Not yet staged or committed** — holding per explicit instruction
+  (second in the stage-commit queue at time of writing); this Done
+  section and the DONE-folder move are filesystem-only, no `git add`.
