@@ -10,7 +10,7 @@ arbitrary pytest/shell arguments through this wrapper -- that is the actual
 safety property `.claude/settings.json` whitelists.
 
 Scoped to the two real, currently-existing local Python test surfaces:
-`__WORK_IN_PROGRESS__/tests/` (research code) and `backend/test_geometry.py`
+`__WORK_IN_PROGRESS__/tests/` (research code) and `backend/test_*.py`
 (product/QAS code). Playwright-based UI/API presets (TASK-0021, TASK-0022)
 are a separate, still-blocked effort (TASK-0026.002/TASK-0026 parent
 recovery of `agents-tools/capability-runner.sh`) and are intentionally out
@@ -37,7 +37,7 @@ Presets:
     wip-physics       __WORK_IN_PROGRESS__/tests/test_physics.py
     wip-potentials    __WORK_IN_PROGRESS__/tests/test_potentials.py
     wip-all           __WORK_IN_PROGRESS__/tests/ (whole directory)
-    backend           backend/test_geometry.py
+    backend           backend/test_geometry.py backend/test_analysis_characterization.py
     all               wip-all + backend
 """
 import argparse
@@ -68,8 +68,15 @@ PRESETS = {
     "wip-physics": (["__WORK_IN_PROGRESS__/tests/test_physics.py"], WIP_SRC),
     "wip-potentials": (["__WORK_IN_PROGRESS__/tests/test_potentials.py"], WIP_SRC),
     "wip-all": (["__WORK_IN_PROGRESS__/tests"], WIP_SRC),
-    "backend": (["backend/test_geometry.py"], None),
-    "all": (["__WORK_IN_PROGRESS__/tests", "backend/test_geometry.py"], WIP_SRC),
+    "backend": (
+        ["backend/test_geometry.py", "backend/test_analysis_characterization.py"],
+        None,
+    ),
+    "all": (
+        ["__WORK_IN_PROGRESS__/tests", "backend/test_geometry.py",
+         "backend/test_analysis_characterization.py"],
+        WIP_SRC,
+    ),
 }
 
 

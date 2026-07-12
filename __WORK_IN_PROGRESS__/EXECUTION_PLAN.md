@@ -16,7 +16,7 @@ re-check there (or regenerate this table) before trusting it for dispatch decisi
 
 | Done | In Progress | TODO | Total |
 |---|---|---|---|
-| 11 (TASK-0070, TASK-0052, TASK-0047, TASK-0058, TASK-0063, TASK-0055, TASK-0064, TASK-0071, TASK-0056, TASK-0067, TASK-0079) | 0 | 24 | 35 |
+| 12 (TASK-0070, TASK-0052, TASK-0047, TASK-0058, TASK-0063, TASK-0055, TASK-0064, TASK-0071, TASK-0056, TASK-0067, TASK-0079, TASK-0074) | 0 | 23 | 35 |
 
 **To refresh this snapshot:** each task file's own `- Status:` line is authoritative
 (`.ai/COMMON.md`'s registry mirrors it). One-line check for any ID:
@@ -133,7 +133,7 @@ modules have **zero** tests, including `analysis.py` (646 lines).
 | # | Task | Why now | Status |
 |---|---|---|---|
 | 4.1 | **[EXISTS] TASK-0021** — backend API test baseline | Smoke floor: `/api/health`, `/api/targets`, `/api/load` + the two documented 422s. Converts the standards commitment from *assigned* to *started*. | TODO |
-| 4.2 | **[FILED] TASK-0074 — characterization tests for `backend/analysis.py`** | Golden-output tests pinning the **current** live surface (`gnm_context`, `site_potentials`, `quantum_seed_readiness`, `connectivity_change`) *before* convergence touches it. Safety net for TASK-0066. | TODO |
+| 4.2 | **[FILED] TASK-0074 — characterization tests for `backend/analysis.py`** | Golden-output tests pinning the **current** live surface (`gnm_context`, `site_potentials`, `quantum_seed_readiness`, `connectivity_change`) *before* convergence touches it. Safety net for TASK-0066. | **Done**. `backend/test_analysis_characterization.py`, 8 tests, real KRAS_G12C network fetch, values pinned 2026-07-12. Confirmed to genuinely land *before* TASK-0066 (not just nominally): re-ran against the unmodified pre-TASK-0066 `analysis.py` via a scoped `git stash`, 8/8 passed identically. Committed as its own, earlier commit. |
 | 4.3 | **[EXISTS] TASK-0054** — SE(3) invariance regression test | The metamorphic gauge test, applied to **both** trees. Catches the class of bug unit tests structurally cannot see. | TODO |
 | 4.4 | **[EXISTS] TASK-0022** — frontend UI tiered test coverage | After the API floor exists. | TODO |
 | 4.5 | **[EXISTS] TASK-0044** — Python version reconciliation | Docs say 3.9 / `typing.Optional`; runtime is **3.11.9**, `biotite` needs ≥3.10. Shared root docs. Cheap — do before the next standards meeting so the stated rules are true. | TODO |
