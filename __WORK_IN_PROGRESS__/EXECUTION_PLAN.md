@@ -16,7 +16,7 @@ re-check there (or regenerate this table) before trusting it for dispatch decisi
 
 | Done | In Progress | TODO | Total |
 |---|---|---|---|
-| 10 (TASK-0070, TASK-0052, TASK-0047, TASK-0058, TASK-0063, TASK-0055, TASK-0064, TASK-0071, TASK-0056, TASK-0067) | 0 | 25 | 35 |
+| 10 (TASK-0070, TASK-0052, TASK-0047, TASK-0058, TASK-0063, TASK-0055, TASK-0064, TASK-0071, TASK-0056, TASK-0067) | 1 (TASK-0079 — .001 Done, .002 claimed, .003-.005 TODO) | 24 | 35 |
 
 **To refresh this snapshot:** each task file's own `- Status:` line is authoritative
 (`.ai/COMMON.md`'s registry mirrors it). One-line check for any ID:
@@ -147,7 +147,7 @@ numbers *defensible*; this phase produces them.
 
 | # | Task | Why | Status |
 |---|---|---|---|
-| 5.1 | **[FILED] TASK-0079 — end-to-end challenge run** | Produce the three **required deliverables** for every mandatory target (KRAS 4OBE→6OIM, BCR-ABL1 1OPL→5MO4, Myosin, + c-Myc): the **N×N connectivity matrix**, the **top-5 ranked hit list**, and the **methodological report**. Currently no single command produces them. This is the submission artifact. | TODO |
+| 5.1 | **[FILED] TASK-0079 — end-to-end challenge run** (split into **.001–.005** subtasks 2026-07-12) | Produce the three **required deliverables** for every mandatory target (KRAS 4OBE→6OIM, BCR-ABL1 1OPL→5MO4, CARDIAC_MYOSIN; MYC_MAX deferred to TASK-0080): the **N×N connectivity matrix**, the **top-5 ranked hit list**, and the **methodological report**. Currently no single command produces them. This is the submission artifact. | **In Progress** — .001 (schema assembly, closes SEAM-0008) **Done**; .002 (matrix/hit-list assembly) claimed by Implementer B; .003 (FROZEN-gated pipeline), .004 (orchestrator), .005 (live run) TODO |
 | 5.2 | **[FILED] TASK-0082 — competence map synthesis** | The per-target floor / ceiling / headroom table — **the strategic differentiator**. "We close X% of the gap knowing the answer would close, on these targets; ~0 on those, and here is why." A per-target honest NO is a publishable result, not a failure to hide. | TODO |
 | 5.3 | **[EXISTS] TASK-0068** — NISQ noise-model simulation | Directly scored ("noise resilience"): Trotterized simulation under gate noise, testing whether ENAQT is more noise-robust than coherent CTQW. Needs `coarse.py` (done) for qubit feasibility. | TODO (claimed by Implementer A, 07-12 00:25 — not yet moved) |
 | 5.4 | **[EXISTS] TASK-0015** — holo-direction module | LRT / PRS / two-state ANM / NMFF, gated by cumulative overlap. | TODO |

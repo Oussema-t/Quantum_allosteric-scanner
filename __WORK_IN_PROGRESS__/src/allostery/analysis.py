@@ -172,6 +172,101 @@ def benchmark(
 
 
 # ---------------------------------------------------------------------------
+# TASK-0079.001 -- assemble this module's real (nested) output into
+# report.verdict_template's expected flat schema (closes SEAM-0008)
+# ---------------------------------------------------------------------------
+
+def assemble_verdict_results(
+    benchmark_out: dict | None = None,
+    ablation_out: dict | None = None,
+    qvc_out: dict | None = None,
+    consistency_out: dict | None = None,
+    *,
+    auc_apo_optimised: float | None = None,
+    auc_holo_optimised: float | None = None,
+) -> dict:
+    """Translate this module's real return shapes into
+    `report.verdict_template`'s expected flat `results` dict
+    (`AUC_apo_Hnew_default`, `AUC_apo_H10_baseline`, ..., `mean_jacc20`).
+
+    Every argument is optional and independently omittable, matching
+    `verdict_template`'s own "a missing key renders N/A" philosophy for a
+    caller who hasn't run every upstream analysis for a given target --
+    this function degrades the same way, key-by-key, not all-or-nothing.
+
+    `auc_apo_optimised`/`auc_holo_optimised` are **not** derived from
+    `benchmark()` (which is explicitly the *default*-parameter comparison,
+    per its own docstring) -- they must be supplied directly by the
+    caller, from whatever produced the optimized-config run (TASK-0079.003's
+    `select_frozen_config`-driven pipeline). Guessing them from `benchmark_out`
+    would silently mislabel a default-parameter number as an optimized one.
+
+    `most_impactful_term`/`least_impactful_term` are derived from
+    `ablation_out`'s per-term *attribution* deltas against `"L_only"`
+    (this module's `ablation()` adds each term individually to the bare
+    base operator -- a single-term-attribution design, not a leave-one-out
+    one, per that function's own docstring; "impact" here means the same
+    thing cell 58's `abl_strength` meant, adapted to this module's actual
+    computation rather than the notebook's). Formatted as `"V_B"`/`"V_T"`/
+    etc., matching `potentials.py`'s canonical term names, not the bare
+    single-letter dict keys `ablation()` returns.
+
+    A `NaN` `"AUC"` (from `metrics.auc`'s own degenerate-labels convention,
+    e.g. an all-positive or all-negative label mask) is treated as missing,
+    not rendered as the literal string `"nan"` -- consistent with
+    `verdict_template`'s `"N/A"` styling for every other absent value.
+    """
+    def _finite_or_none(value):
+        return value if np.isfinite(value) else None
+
+    results: dict = {}
+
+    if benchmark_out is not None:
+        v = _finite_or_none(benchmark_out["H_new_default"]["AUC"])
+        if v is not None:
+            results["AUC_apo_Hnew_default"] = v
+        v = _finite_or_none(benchmark_out["H10_disorder_suppressed"]["AUC"])
+        if v is not None:
+            results["AUC_apo_H10_baseline"] = v
+
+    if auc_apo_optimised is not None:
+        results["AUC_apo_Hnew_optimised"] = auc_apo_optimised
+    if auc_holo_optimised is not None:
+        results["AUC_holo_Hnew_optimised"] = auc_holo_optimised
+
+    if qvc_out is not None:
+        v = _finite_or_none(qvc_out["ctqw"]["AUC"])
+        if v is not None:
+            results["AUC_ctqw_mean"] = v
+        v = _finite_or_none(qvc_out["heat"]["AUC"])
+        if v is not None:
+            results["AUC_heat_mean"] = v
+
+    if ablation_out is not None and "L_only" in ablation_out:
+        baseline_auc = ablation_out["L_only"]["AUC"]
+        impact = {
+            name: pack["AUC"] - baseline_auc
+            for name, pack in ablation_out.items()
+            if name != "L_only" and np.isfinite(pack["AUC"]) and np.isfinite(baseline_auc)
+        }
+        if impact:
+            most = max(impact, key=lambda k: abs(impact[k]))
+            least = min(impact, key=lambda k: abs(impact[k]))
+            results["most_impactful_term"] = f"V_{most}"
+            results["least_impactful_term"] = f"V_{least}"
+
+    if consistency_out is not None:
+        v = consistency_out.get("spearman_rho")
+        if v is not None and np.isfinite(v):
+            results["mean_rho_apo_holo"] = v
+        v = consistency_out.get("top_k_jaccard")
+        if v is not None and np.isfinite(v):
+            results["mean_jacc20"] = v
+
+    return results
+
+
+# ---------------------------------------------------------------------------
 # Sec.12 -- apo<->holo consistency in pocket ranking
 # ---------------------------------------------------------------------------
 

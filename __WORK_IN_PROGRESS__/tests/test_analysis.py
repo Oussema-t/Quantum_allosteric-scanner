@@ -23,12 +23,14 @@ if str(_SRC) not in sys.path:
 from allostery.analysis import (  # noqa: E402
     ablation,
     apo_holo_consistency,
+    assemble_verdict_results,
     benchmark,
     dephasing_sweep,
     gnm_cutoff_weight_sweep,
     quantum_vs_classical,
     spectral_enrichment,
 )
+from allostery.report import verdict_template  # noqa: E402
 from allostery.hamiltonians import (  # noqa: E402
     H2_combinatorial_laplacian,
     build_H_new,
@@ -224,6 +226,83 @@ class TestGnmCutoffWeightSweep:
         )
         for pack in result.values():
             assert np.isfinite(pack["AUC"])
+
+
+# ---------------------------------------------------------------------------
+# assemble_verdict_results (TASK-0079.001 -- closes SEAM-0008)
+# ---------------------------------------------------------------------------
+
+class TestAssembleVerdictResults:
+    def _real_outputs(self):
+        bench = benchmark(COORDS, BFACTORS, source=0, labels=LABELS, t_max=5.0, n_steps=50)
+        abl = ablation(COORDS, BFACTORS, source=0, labels=LABELS, t_max=5.0, n_steps=50)
+        L = H2_combinatorial_laplacian(COORDS, cutoff=10.0)
+        qvc = quantum_vs_classical(L, source=0, labels=LABELS, t_max=5.0, n_steps=50)
+        occ = np.abs(np.random.default_rng(0).normal(size=N))
+        idx = np.arange(N)
+        consistency = apo_holo_consistency(occ, occ, idx, idx, k=20)
+        return bench, abl, qvc, consistency
+
+    def test_full_assembly_populates_every_verdict_template_key(self):
+        bench, abl, qvc, consistency = self._real_outputs()
+        results = assemble_verdict_results(
+            benchmark_out=bench,
+            ablation_out=abl,
+            qvc_out=qvc,
+            consistency_out=consistency,
+            auc_apo_optimised=0.55,
+            auc_holo_optimised=0.60,
+        )
+        expected_keys = {
+            "AUC_apo_Hnew_default", "AUC_apo_H10_baseline",
+            "AUC_apo_Hnew_optimised", "AUC_holo_Hnew_optimised",
+            "AUC_ctqw_mean", "AUC_heat_mean",
+            "most_impactful_term", "least_impactful_term",
+            "mean_rho_apo_holo", "mean_jacc20",
+        }
+        assert expected_keys <= set(results)
+        for key in expected_keys:
+            assert results[key] is not None
+
+    def test_render_has_no_na_for_any_populated_key(self):
+        bench, abl, qvc, consistency = self._real_outputs()
+        results = assemble_verdict_results(
+            benchmark_out=bench,
+            ablation_out=abl,
+            qvc_out=qvc,
+            consistency_out=consistency,
+            auc_apo_optimised=0.55,
+            auc_holo_optimised=0.60,
+        )
+        rendered = verdict_template(results, provenance="dev")
+        assert "N/A" not in rendered
+
+    def test_most_impactful_term_is_v_prefixed_and_not_l_only(self):
+        _, abl, _, _ = self._real_outputs()
+        results = assemble_verdict_results(ablation_out=abl)
+        assert results["most_impactful_term"].startswith("V_")
+        assert results["least_impactful_term"].startswith("V_")
+        assert results["most_impactful_term"] != "V_L_only"
+
+    def test_every_argument_is_independently_omittable(self):
+        assert assemble_verdict_results() == {}
+        bench, _, _, _ = self._real_outputs()
+        results = assemble_verdict_results(benchmark_out=bench)
+        assert set(results) == {"AUC_apo_Hnew_default", "AUC_apo_H10_baseline"}
+
+    def test_optimised_aucs_pass_through_directly_not_from_benchmark(self):
+        results = assemble_verdict_results(auc_apo_optimised=0.77, auc_holo_optimised=0.81)
+        assert results["AUC_apo_Hnew_optimised"] == 0.77
+        assert results["AUC_holo_Hnew_optimised"] == 0.81
+
+    def test_nan_auc_is_omitted_not_rendered_as_nan(self):
+        all_false = np.zeros(N, dtype=bool)
+        bench = benchmark(COORDS, BFACTORS, source=0, labels=all_false, t_max=5.0, n_steps=50)
+        assert np.isnan(bench["H_new_default"]["AUC"])
+        results = assemble_verdict_results(benchmark_out=bench)
+        assert "AUC_apo_Hnew_default" not in results
+        rendered = verdict_template(results, provenance="dev")
+        assert "nan" not in rendered.lower()
 
 
 # ---------------------------------------------------------------------------

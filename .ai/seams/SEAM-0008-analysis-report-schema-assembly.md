@@ -1,11 +1,18 @@
 # SEAM-0008 no assembly step converts `analysis.py`'s real output into `report.verdict_template`'s expected schema
 
-- units: `analysis.py` (`benchmark`, `ablation`, `quantum_vs_classical`, `apo_holo_consistency`) -> *no assembly step exists* -> `report.verdict_template` (expects a flat `results` dict: `AUC_apo_Hnew_default`, `AUC_apo_H10_baseline`, `AUC_apo_Hnew_optimised`, `AUC_holo_Hnew_optimised`, `AUC_ctqw_mean`, `AUC_heat_mean`, `most_impactful_term`, `least_impactful_term`, `mean_rho_apo_holo`, `mean_jacc20`)
+- units: `analysis.py` (`benchmark`, `ablation`, `quantum_vs_classical`, `apo_holo_consistency`) -> `analysis.assemble_verdict_results` -> `report.verdict_template` (expects a flat `results` dict: `AUC_apo_Hnew_default`, `AUC_apo_H10_baseline`, `AUC_apo_Hnew_optimised`, `AUC_holo_Hnew_optimised`, `AUC_ctqw_mean`, `AUC_heat_mean`, `most_impactful_term`, `least_impactful_term`, `mean_rho_apo_holo`, `mean_jacc20`)
 - invariant: the `results` dict `verdict_template` renders is actually assembled from
   real `analysis.py` output, not a shape that merely happens to satisfy the tests
-- owner: [[TASK-0079]] (reassigned by [[TASK-0056]]'s review, 2026-07-12 — see below)
-- seam-test: not yet written
-- status: OPEN
+- owner: [[TASK-0079.001]] (subtask of [[TASK-0079]], split 2026-07-12)
+- seam-test: `__WORK_IN_PROGRESS__/tests/test_analysis.py::TestAssembleVerdictResults`
+  — calls the real `benchmark`/`ablation`/`quantum_vs_classical`/`apo_holo_consistency`
+  on synthetic fixtures, feeds the real (nested) output into
+  `analysis.assemble_verdict_results`, asserts every `verdict_template`-expected key
+  is present with a real value, and confirms the rendered report has no `"N/A"` and
+  no literal `"nan"` text. Also covers per-key omittability and the
+  `auc_*_optimised` direct-passthrough (not derived from `benchmark`).
+- status: VERIFIED (2026-07-12, Implementer A — 440 passed via
+  `.ai/tools/pytest_local.py wip-all`)
 - provenance: found by [[TASK-0053]]'s sweep (2026-07-11). Grepped every one of
   `verdict_template`'s expected keys (`AUC_apo_Hnew_default`, `AUC_apo_H10_baseline`,
   `AUC_apo_Hnew_optimised`, `most_impactful_term`, `mean_jacc20`) across
