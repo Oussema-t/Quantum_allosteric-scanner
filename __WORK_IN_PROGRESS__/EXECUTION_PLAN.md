@@ -16,7 +16,7 @@ re-check there (or regenerate this table) before trusting it for dispatch decisi
 
 | Done | In Progress | TODO | Total |
 |---|---|---|---|
-| 2 (TASK-0070, TASK-0052) | 0 | 33 | 35 |
+| 3 (TASK-0070, TASK-0052, TASK-0047) | 0 | 32 | 35 |
 
 **To refresh this snapshot:** each task file's own `- Status:` line is authoritative
 (`.ai/COMMON.md`'s registry mirrors it). One-line check for any ID:
@@ -59,7 +59,7 @@ Defects in *shipped, reviewed, tested* code. Everything downstream inherits them
 |---|---|---|---|
 | 0.1 | **[FILED] TASK-0070 — pocket label exclusion assembly** | **Oldest live defect.** Nothing assembles `pocket & ~functional & ~terminal`; `labels` owns ingredients, `protocol` gates them, `analysis` consumes the raw mask. Survived four reviews *because no task owns it* — it is a seam, not a module. Blocks 0.2, 0.3, and every honest AUC. | **Done** (commit `5970bc5`). `build_labels()` landed in `labels.py`, asserts the exclusion invariant; `protocol.get_pocket_mask` now returns the assembled label, not the raw mask. KRAS Cys12 decision recorded: excluded via the general `~active_site` rule, no special-casing needed (verified against real 4OBE/6OIM data). |
 | 0.2 | **[EXISTS] TASK-0052** — reconcile leakage-gate contract | Gate is green on self-validating guards but its 3 contract tests are still `xfail`. Acceptance for TASK-0004/0006 was **0 xfail**. Needs 0.1 to bind `build_labels`. | **Done** (commit `fb9a2eb`). All 3 CONTRACT stubs rewritten against the real API (0 xfail, 12/12 passing both under `pytest` and standalone). `SEAM-0003` closed to VERIFIED. Real gap found verifying `frozen_context`/`assert_readable` vs. the `_SealedLabels` reference spec — it's an opt-in/cooperative gate, not a hard data-seal (`labels.py`/`superpose.py` called directly bypass it) — filed as **TASK-0087**, not fixed here (out of this task's scope). |
-| 0.3 | **[EXISTS] TASK-0047** — foundation review gap bridging | Commits the network-gated KRAS integration test (apo 4OBE / holo 6OIM). The 21/21 match is still a **docstring claim**. | TODO (claimed by Reviewer A, 07-07 — stale, re-claimable) |
+| 0.3 | **[EXISTS] TASK-0047** — foundation review gap bridging | Commits the network-gated KRAS integration test (apo 4OBE / holo 6OIM). The 21/21 match is still a **docstring claim**. | **Done** (commit `e4410a0`). TASK-0070 had landed in the interim and partially subsumed this (its Cys12/exclusion real-target tests), but not fully — neither used `load_target_config` nor pinned `holo_pocket_mask`'s raw recovery against `backend/systems.py`. Added the remaining piece: a `load_target_config`-driven KRAS_G12C test pinning the 21/21 heavy-atom recovery against `pocket_full[4.5]` exactly (the docstring claim is now a real regression check, verified against live 4OBE/6OIM data), plus the P3 indel test for `_needleman_wunsch_map` (genuine insertion/deletion, not just re-numbering — first attempt's single-residue assumption was wrong, adjacent synthetic-helix residues sit inside the contact cutoff, redesigned around two discriminating residues). 33/33 passing with `prody` + live network, 30/33 with a clean skip path without it. No production code touched. |
 | 0.4 | **[EXISTS] TASK-0063** — `functional_indices` gate parameter gap | Plumbing so a FROZEN caller reaches `functional_indices` without bypassing the gate. Same seam as 0.1 — do together. | TODO |
 
 > **Decision required inside 0.1:** KRAS **Cys12** — in or out of the pocket label?
