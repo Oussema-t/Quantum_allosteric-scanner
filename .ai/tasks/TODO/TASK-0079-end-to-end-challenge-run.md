@@ -67,10 +67,10 @@
 
 | ID | Title | Depends on | Status |
 |---|---|---|---|
-| [[TASK-0079.001]] | Schema assembly: `analysis.py` → `report.py`'s flat results dict (closes SEAM-0008) | Phase 0/1 (Done) | TODO |
-| [[TASK-0079.002]] | Connectivity matrix + hit list assembly (`pathways.py`/`report.hit_list`) | Phase 0/1 (Done) | TODO |
-| [[TASK-0079.003]] | FROZEN-gated per-target verdict pipeline | `.001` | TODO |
-| [[TASK-0079.004]] | One-command orchestrator + output files | `.002`, `.003` | TODO |
+| [[TASK-0079.001]] | Schema assembly: `analysis.py` → `report.py`'s flat results dict (closes SEAM-0008) | Phase 0/1 (Done) | Done |
+| [[TASK-0079.002]] | Connectivity matrix + hit list assembly (`pathways.py`/`report.hit_list`) | Phase 0/1 (Done) | Done |
+| [[TASK-0079.003]] | FROZEN-gated per-target verdict pipeline | `.001` | Done |
+| [[TASK-0079.004]] | One-command orchestrator + output files | `.002`, `.003` | TODO — unblocked, both deps now Done |
 | [[TASK-0079.005]] | Run end-to-end for KRAS_G12C / BCR_ABL1 / CARDIAC_MYOSIN + manual inspection | `.004` | TODO |
 
 `.001` and `.002` have no dependency on each other — independently

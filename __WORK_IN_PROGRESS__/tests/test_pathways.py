@@ -18,7 +18,7 @@ _SRC = Path(__file__).resolve().parent.parent / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
-from allostery.pathways import edge_propensity, extract_pathway  # noqa: E402
+from allostery.pathways import edge_propensity, edge_propensity_to_matrix, extract_pathway  # noqa: E402
 from allostery.hamiltonians import H2_combinatorial_laplacian  # noqa: E402
 
 
@@ -199,3 +199,49 @@ class TestInvariance:
         expected_nodes = [int(perm[n]) for n in result["nodes"]]
         assert result_perm["nodes"] == expected_nodes
         assert result_perm["reached_target"] == result["reached_target"]
+
+
+# ---------------------------------------------------------------------------
+# edge_propensity_to_matrix (TASK-0079.002)
+# ---------------------------------------------------------------------------
+
+class TestEdgePropensityToMatrix:
+    def test_symmetric_with_zero_diagonal_and_correct_values(self):
+        L = _two_cluster_laplacian()
+        prop = edge_propensity(L, source=0)
+        M = edge_propensity_to_matrix(prop, n=8)
+
+        assert M.shape == (8, 8)
+        np.testing.assert_allclose(M, M.T)
+        assert np.all(np.diag(M) == 0.0)
+        for (i, j), value in prop.items():
+            assert M[i, j] == value
+            assert M[j, i] == value
+
+    def test_absent_edges_are_zero_not_nan(self):
+        M = edge_propensity_to_matrix({(0, 1): 0.5}, n=4)
+        assert M[2, 3] == 0.0
+        assert not np.isnan(M).any()
+
+    def test_i_greater_equal_j_raises(self):
+        with pytest.raises(ValueError):
+            edge_propensity_to_matrix({(1, 0): 0.5}, n=4)
+        with pytest.raises(ValueError):
+            edge_propensity_to_matrix({(2, 2): 0.5}, n=4)
+
+    def test_out_of_range_index_raises(self):
+        with pytest.raises(ValueError):
+            edge_propensity_to_matrix({(0, 10): 0.5}, n=4)
+
+    def test_negative_value_raises(self):
+        with pytest.raises(ValueError):
+            edge_propensity_to_matrix({(0, 1): -0.1}, n=4)
+
+    def test_non_tuple_key_raises(self):
+        with pytest.raises(TypeError):
+            edge_propensity_to_matrix({"01": 0.5}, n=4)
+
+    def test_empty_propensity_gives_all_zero_matrix(self):
+        M = edge_propensity_to_matrix({}, n=5)
+        assert M.shape == (5, 5)
+        assert np.all(M == 0.0)

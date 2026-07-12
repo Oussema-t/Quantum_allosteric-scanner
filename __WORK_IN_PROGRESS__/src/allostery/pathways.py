@@ -172,3 +172,50 @@ def extract_pathway(H: np.ndarray, source, target: int, max_hops: int | None = N
         "reached_target": reached,
         "propensity": propensity,
     }
+
+
+# ---------------------------------------------------------------------------
+# TASK-0079.002 -- dense N x N connectivity matrix (submission deliverable)
+# ---------------------------------------------------------------------------
+
+def edge_propensity_to_matrix(propensity: dict, n: int) -> np.ndarray:
+    """Dense `(n, n)` symmetric connectivity matrix from `edge_propensity`'s
+    half-matrix dict -- the "N x N connectivity matrix" submission
+    deliverable (`EXECUTION_PLAN.md` Phase 5.1).
+
+    `propensity` must match `edge_propensity`'s own contract exactly
+    (`SEAM-0006`, closed `VERIFIED`): `{(i, j): float}` for `i < j` only
+    (undirected, half the matrix), both indices `< n`, non-negative.
+    Any violation -- `i >= j`, an out-of-range index, a non-integer key, a
+    negative value -- raises rather than being silently clipped or
+    ignored, matching this codebase's "raise, don't repair" convention
+    for structural invariants (`INVARIANCE_PROTOCOL.md` Tier 1: "never
+    select by index... raise, do not slice"). Mirrors `viz.py`'s own
+    `_validate_edge_propensity` checks (not re-derived independently --
+    same contract, checked inline here rather than importing a `viz.py`
+    private helper into a lower-layer module).
+
+    Returns an `(n, n)` float array: `M[i, j] == M[j, i]` for every edge
+    present, `0.0` elsewhere (including the diagonal) -- absence of an
+    edge in the conductance graph, not missing data, so `0.0` rather than
+    `NaN` is the correct fill value.
+    """
+    M = np.zeros((n, n), dtype=float)
+    for key, value in propensity.items():
+        if not (isinstance(key, tuple) and len(key) == 2):
+            raise TypeError(f"edge_propensity key {key!r} is not an (i, j) tuple")
+        i, j = key
+        if not (isinstance(i, (int, np.integer)) and isinstance(j, (int, np.integer))):
+            raise TypeError(f"edge_propensity key {key!r} must be a pair of ints")
+        if not (0 <= i < n and 0 <= j < n):
+            raise ValueError(f"edge_propensity key {key!r} out of range for n={n}")
+        if not (i < j):
+            raise ValueError(
+                f"edge_propensity key {key!r} violates the i < j (undirected, "
+                "half-matrix) convention this module's own docstring specifies"
+            )
+        if value < 0:
+            raise ValueError(f"edge_propensity[{key!r}] = {value} is negative")
+        M[i, j] = float(value)
+        M[j, i] = float(value)
+    return M

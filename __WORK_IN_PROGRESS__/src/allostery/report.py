@@ -71,6 +71,35 @@ def hit_list(
 
 
 # ---------------------------------------------------------------------------
+# TASK-0079.002 -- per-target wiring: labels.Labels -> hit_list's raw args
+# ---------------------------------------------------------------------------
+
+def assemble_hit_list(scores: np.ndarray, labels, resnums: np.ndarray | None = None, k: int = 5) -> dict:
+    """Thin per-target call site wiring a real `labels.Labels` object
+    (`labels.py`, TASK-0004/TASK-0070) into `hit_list`'s raw-array
+    interface -- derives `exclude_idx` from `labels.active_site` so the
+    functional/source residues this task's Intent Contract names are
+    excluded automatically, rather than every call site re-deriving that
+    mask by hand.
+
+    Lives here (not `labels.py`) despite `Labels` being the "source
+    shape": unlike TASK-0079.001's `analysis.assemble_verdict_results`
+    (a real nested-to-flat shape *transformation*, kept with the module
+    owning the shapes being transformed), this is a thin wrapper whose
+    entire body is "derive one mask, call `hit_list`" -- discoverability
+    next to the function it wraps outweighs the source-module precedent
+    for something this thin.
+
+    `scores` is caller-supplied and unconstrained by design: which
+    occupation/ranking array feeds a given target's hit list is the
+    FROZEN-gated pipeline's decision (TASK-0079.003), not this function's
+    -- see this task's own Out Of Scope.
+    """
+    exclude_idx = np.where(labels.active_site)[0]
+    return hit_list(scores, k=k, resnums=resnums, exclude_idx=exclude_idx)
+
+
+# ---------------------------------------------------------------------------
 # Sec.17.1 -- stability across repeated/perturbed runs (notebook-oracle gap,
 # see module docstring)
 # ---------------------------------------------------------------------------

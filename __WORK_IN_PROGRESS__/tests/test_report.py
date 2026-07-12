@@ -6,7 +6,8 @@ import numpy as np
 import pytest
 
 from allostery import protocol
-from allostery.report import hit_list, jaccard_stability, verdict_template
+from allostery.labels import Labels
+from allostery.report import assemble_hit_list, hit_list, jaccard_stability, verdict_template
 
 
 class TestHitList:
@@ -36,6 +37,45 @@ class TestHitList:
     def test_resnums_none_when_not_given(self):
         out = hit_list(np.array([1.0, 2.0]), k=1)
         assert out["resnums"] is None
+
+
+class TestAssembleHitList:
+    """TASK-0079.002: labels.Labels -> hit_list's raw-array interface."""
+
+    @staticmethod
+    def _labels(active_site: np.ndarray) -> Labels:
+        n = len(active_site)
+        return Labels(
+            pocket=np.zeros(n, dtype=bool),
+            pocket_raw=np.zeros(n, dtype=bool),
+            active_site=active_site,
+            terminal=np.zeros(n, dtype=bool),
+            functional_provenance="test",
+            drug_ligand=None,
+        )
+
+    def test_active_site_residues_excluded_from_hit_list(self):
+        scores = np.array([9.0, 8.0, 7.0, 6.0, 5.0])
+        active_site = np.zeros(5, dtype=bool)
+        active_site[0] = True  # would otherwise be the top hit
+        labels = self._labels(active_site)
+
+        out = assemble_hit_list(scores, labels, k=2)
+        assert 0 not in out["indices"]
+        assert list(out["indices"]) == [1, 2]
+
+    def test_no_active_site_residues_behaves_like_plain_hit_list(self):
+        scores = np.array([1.0, 5.0, 3.0])
+        labels = self._labels(np.zeros(3, dtype=bool))
+        out = assemble_hit_list(scores, labels, k=2)
+        assert list(out["indices"]) == list(hit_list(scores, k=2)["indices"])
+
+    def test_resnums_forwarded(self):
+        scores = np.array([1.0, 3.0, 2.0])
+        resnums = np.array([101, 102, 103])
+        labels = self._labels(np.zeros(3, dtype=bool))
+        out = assemble_hit_list(scores, labels, resnums=resnums, k=1)
+        assert list(out["resnums"]) == [102]
 
 
 class TestJaccardStability:
