@@ -31,10 +31,20 @@ def _zscore(x: np.ndarray) -> np.ndarray:
     return (x - x.mean()) / (std + 1e-9)
 
 
-def _gnm_msf(coords: np.ndarray, cutoff: float) -> np.ndarray:
-    """GNM mean-square fluctuation = diagonal of the Kirchhoff pseudo-inverse.
+def _kirchhoff_eigh(coords: np.ndarray, cutoff: float):
+    """Binary contact matrix -> Kirchhoff (`hamiltonians.laplacian`) ->
+    eigendecomposition -> Moore-Penrose pseudo-inverse ingredients
+    (TASK-0066).
 
-    Returns (N,) array of per-residue predicted MSF values.
+    Shared by `_gnm_msf`/`V_C`/`V_M` -- previously three independent
+    re-derivations of the same binary-Kirchhoff eigendecomposition
+    (`V_M`'s own copy went through `hamiltonians.H8_gnm`, mathematically
+    identical to this function's `A`/`K` construction -- same `weight=
+    "binary"`, same `laplacian(..., normalised=False)` default -- just a
+    second call site for it). Ported analogue of
+    `backend/analysis.py::_kirchhoff_eigh` -- same math, independent
+    implementation per TASK-0018's backend<->allostery boundary (no
+    cross-package import). Returns `(A, w, U, nz, winv)`.
     """
     from .hamiltonians import contact_matrix, laplacian
 
@@ -43,6 +53,28 @@ def _gnm_msf(coords: np.ndarray, cutoff: float) -> np.ndarray:
     w, U = np.linalg.eigh(K)
     nz = w > 1e-9
     winv = np.where(nz, 1.0 / np.where(nz, w, 1.0), 0.0)
+    return A, w, U, nz, winv
+
+
+def _normalized_dcc(U: np.ndarray, winv: np.ndarray) -> np.ndarray:
+    """Normalized GNM dynamic cross-correlation matrix from the Kirchhoff
+    pseudo-inverse's eigenvectors/inverted-eigenvalues (TASK-0066).
+
+    Diagonal is left as computed (self-correlation = 1), not zeroed --
+    `V_C` zeroes it itself before summing, matching its own pre-existing
+    convention.
+    """
+    Cov = (U * winv) @ U.T                            # GNM covariance = Kirchhoff pseudo-inverse
+    d = np.sqrt(np.clip(np.diag(Cov), 1e-12, None))
+    return Cov / np.outer(d, d)
+
+
+def _gnm_msf(coords: np.ndarray, cutoff: float) -> np.ndarray:
+    """GNM mean-square fluctuation = diagonal of the Kirchhoff pseudo-inverse.
+
+    Returns (N,) array of per-residue predicted MSF values.
+    """
+    _A, _w, U, _nz, winv = _kirchhoff_eigh(coords, cutoff)
     return np.diag((U * winv) @ U.T)
 
 
@@ -124,20 +156,8 @@ def V_C(
 
     Returns (N, N) diagonal matrix (negative = reward for high DCC coupling).
     """
-    from .hamiltonians import contact_matrix, laplacian
-
-    A = contact_matrix(coords, cutoff=cutoff, weight="binary")
-    K = laplacian(A)
-    w, U = np.linalg.eigh(K)
-
-    # Pseudo-inverse: invert all non-zero eigenvalues
-    nz = w > 1e-9
-    winv = np.where(nz, 1.0 / np.where(nz, w, 1.0), 0.0)
-    Cov = (U * winv) @ U.T                            # GNM covariance (Kirchhoff⁺)
-
-    # Normalised DCC: C_ij / sqrt(C_ii * C_jj)
-    d = np.sqrt(np.clip(np.diag(Cov), 1e-12, None))
-    nDCC = Cov / np.outer(d, d)
+    _A, _w, U, _nz, winv = _kirchhoff_eigh(coords, cutoff)
+    nDCC = _normalized_dcc(U, winv)
     np.fill_diagonal(nDCC, 0.0)                       # exclude self-coupling
 
     centrality = np.abs(nDCC).sum(axis=1)             # mean absolute DCC per residue
@@ -158,10 +178,7 @@ def V_M(
 
     Returns (N, N) diagonal matrix (negative = reward).
     """
-    from .hamiltonians import H8_gnm
-
-    L = H8_gnm(coords, cutoff=cutoff)
-    w, v = np.linalg.eigh(L)
+    _A, w, v, _nz, _winv = _kirchhoff_eigh(coords, cutoff)
 
     # Skip the zero mode (rigid body); take next n_modes
     idx_start = max(1, np.searchsorted(w, 1e-8))

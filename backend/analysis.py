@@ -34,9 +34,18 @@ def _coordination(coords, cutoff):
     return ((D < cutoff) & (D > 1e-8)).sum(1).astype(float)
 
 
-def gnm_context(coords, bfac, cutoff=8.0):
-    """Kirchhoff (GNM) operator and the quantities the five terms are built from."""
-    N = len(coords)
+def _kirchhoff_eigh(coords, cutoff):
+    """Binary contact matrix -> Kirchhoff (D-A) -> eigendecomposition ->
+    Moore-Penrose pseudo-inverse ingredients (TASK-0066).
+
+    Shared by `gnm_context` (the five site-potential terms) and `_dcc`
+    (`connectivity_change`'s coupling-change term) -- previously two
+    independent re-derivations of the same math, diverging only in what
+    each caller does with `U`/`winv` afterwards (`gnm_context` needs the
+    cheap MSF shortcut plus `A`/`deg`/`clust` for the other four terms;
+    `_dcc` needs the full normalized DCC matrix). Returns
+    `(A, deg, w, U, nz, winv)`.
+    """
     D = cdist(coords, coords)
     A = ((D < cutoff) & (D > 1e-8)).astype(float)
     deg = A.sum(1)
@@ -45,6 +54,26 @@ def gnm_context(coords, bfac, cutoff=8.0):
     nz = w > 1e-9
     winv = np.zeros_like(w)
     winv[nz] = 1.0 / w[nz]
+    return A, deg, w, U, nz, winv
+
+
+def _normalized_dcc(U, winv):
+    """Normalized GNM dynamic cross-correlation matrix from the Kirchhoff
+    pseudo-inverse's eigenvectors/inverted-eigenvalues (TASK-0066).
+
+    Diagonal is left as computed (self-correlation = 1), not zeroed --
+    `V_covariance` zeroes it itself before summing, matching its own
+    pre-existing convention; `_dcc` never zeroed it either.
+    """
+    Cov = (U * winv) @ U.T                         # GNM covariance = Kirchhoff pseudo-inverse
+    d = np.sqrt(np.clip(np.diag(Cov), 1e-12, None))
+    return Cov / np.outer(d, d)
+
+
+def gnm_context(coords, bfac, cutoff=8.0):
+    """Kirchhoff (GNM) operator and the quantities the five terms are built from."""
+    N = len(coords)
+    A, deg, w, U, nz, winv = _kirchhoff_eigh(coords, cutoff)
     msf = ((U ** 2) * winv).sum(1)                # mean-square fluctuation (high = flexible)
     tri = np.diag(A @ A @ A)
     with np.errstate(invalid="ignore", divide="ignore"):
@@ -73,9 +102,7 @@ def V_rigidity(c):
 
 
 def V_covariance(c):
-    Cov = (c["U"] * c["winv"]) @ c["U"].T          # GNM covariance = Kirchhoff pseudo-inverse
-    d = np.sqrt(np.clip(np.diag(Cov), 1e-12, None))
-    nDCC = Cov / np.outer(d, d)
+    nDCC = _normalized_dcc(c["U"], c["winv"])
     np.fill_diagonal(nDCC, 0.0)
     return _z(np.abs(nDCC).sum(1))
 
@@ -171,9 +198,7 @@ def _average_mixing_matrix(H, degen_tol=1e-6):
 def _abs_coupling(c):
     """Absolute GNM dynamic coupling per residue (pre-z-score form of V_C):
     row-sum of |normalised cross-correlation|. High = coupled to the whole protein."""
-    Cov = (c["U"] * c["winv"]) @ c["U"].T
-    d = np.sqrt(np.clip(np.diag(Cov), 1e-12, None))
-    nDCC = Cov / np.outer(d, d)
+    nDCC = _normalized_dcc(c["U"], c["winv"])
     np.fill_diagonal(nDCC, 0.0)
     return np.abs(nDCC).sum(1)
 
@@ -393,16 +418,8 @@ def seed_readiness_shift(apo_pdb, apo_chain, holo_pdb, holo_chain=None,
 
 def _dcc(coords, cutoff):
     """GNM dynamic cross-correlation (normalized covariance = Kirchhoff pseudo-inverse)."""
-    D = cdist(coords, coords)
-    A = ((D < cutoff) & (D > 1e-8)).astype(float)
-    K = np.diag(A.sum(1)) - A
-    w, U = np.linalg.eigh(K)
-    nz = w > 1e-9
-    winv = np.zeros_like(w)
-    winv[nz] = 1.0 / w[nz]
-    Cov = (U * winv) @ U.T
-    s = np.sqrt(np.clip(np.diag(Cov), 1e-12, None))
-    return Cov / np.outer(s, s)
+    _A, _deg, _w, U, _nz, winv = _kirchhoff_eigh(coords, cutoff)
+    return _normalized_dcc(U, winv)
 
 
 def connectivity_change(apo_pdb, apo_chain, holo_pdb, holo_chain=None, cutoff=8.0,

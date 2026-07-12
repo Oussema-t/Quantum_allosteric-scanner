@@ -37,7 +37,7 @@ Presets:
     wip-physics       __WORK_IN_PROGRESS__/tests/test_physics.py
     wip-potentials    __WORK_IN_PROGRESS__/tests/test_potentials.py
     wip-all           __WORK_IN_PROGRESS__/tests/ (whole directory)
-    backend           backend/test_geometry.py backend/test_analysis_characterization.py
+    backend           backend/test_geometry.py backend/test_analysis.py backend/test_analysis_characterization.py
     all               wip-all + backend
 """
 import argparse
@@ -69,11 +69,11 @@ PRESETS = {
     "wip-potentials": (["__WORK_IN_PROGRESS__/tests/test_potentials.py"], WIP_SRC),
     "wip-all": (["__WORK_IN_PROGRESS__/tests"], WIP_SRC),
     "backend": (
-        ["backend/test_geometry.py", "backend/test_analysis_characterization.py"],
+        ["backend/test_geometry.py", "backend/test_analysis.py", "backend/test_analysis_characterization.py"],
         None,
     ),
     "all": (
-        ["__WORK_IN_PROGRESS__/tests", "backend/test_geometry.py",
+        ["__WORK_IN_PROGRESS__/tests", "backend/test_geometry.py", "backend/test_analysis.py",
          "backend/test_analysis_characterization.py"],
         WIP_SRC,
     ),
