@@ -5,7 +5,28 @@ all science stubs implemented (`baselines` 180, `coarse` 260, `pathways` 174, `v
 seam + invariance protocols adopted (TASK-0050/0051); no `w[6:]` index-slicing bug in the
 physics core. Ordering is by **dependency and risk**, not task number.
 
-Legend: **[EXISTS]** = already filed · **[NEW]** = must be created (one-liner intent at the end)
+Legend: **[EXISTS]** = filed before this plan · **[FILED]** = created *from* this plan
+(TASK-0070–0086, all 17 filed 2026-07-12, commit `9fdeb2f`) — no `[NEW]` remains outstanding.
+
+## Progress tracker (Phases 0–6, the scored/critical-path work — 35 tasks)
+
+**Snapshot as of 2026-07-12, 10:30 — this is a point-in-time copy, not a live view.**
+`.ai/COMMON.md`'s Active Work Registry is the canonical, continuously-updated source —
+re-check there (or regenerate this table) before trusting it for dispatch decisions.
+
+| Done | In Progress | TODO | Total |
+|---|---|---|---|
+| 0 | 1 (TASK-0070) | 34 | 35 |
+
+**To refresh this snapshot:** each task file's own `- Status:` line is authoritative
+(`.ai/COMMON.md`'s registry mirrors it). One-line check for any ID:
+`grep -h "^- Status:" .ai/tasks/*/TASK-0070*.md` (swap the glob per ID), or read the
+`Status` column directly in `.ai/COMMON.md`'s Active Work Registry table, which already
+covers every ID below. `python3 .ai/tools/claim.py status` additionally shows which IDs
+are currently *claimed* (about to move) even before their `Status:` line changes.
+
+Per-phase tables below carry a **Status** column (Done / In Progress / TODO, same
+snapshot time). Phase 7 (deferred scaffold hygiene) is tracked separately, at the end.
 
 ---
 
@@ -34,12 +55,12 @@ frontend be built in parallel with the science. The contract (TASK-0083) is ther
 
 Defects in *shipped, reviewed, tested* code. Everything downstream inherits them.
 
-| # | Task | Why now |
-|---|---|---|
-| 0.1 | **[NEW] TASK-0070 — pocket label exclusion assembly** | **Oldest live defect.** Nothing assembles `pocket & ~functional & ~terminal`; `labels` owns ingredients, `protocol` gates them, `analysis` consumes the raw mask. Survived four reviews *because no task owns it* — it is a seam, not a module. Blocks 0.2, 0.3, and every honest AUC. |
-| 0.2 | **[EXISTS] TASK-0052** — reconcile leakage-gate contract | Gate is green on self-validating guards but its 3 contract tests are still `xfail`. Acceptance for TASK-0004/0006 was **0 xfail**. Needs 0.1 to bind `build_labels`. |
-| 0.3 | **[EXISTS] TASK-0047** — foundation review gap bridging | Commits the network-gated KRAS integration test (apo 4OBE / holo 6OIM). The 21/21 match is still a **docstring claim**. |
-| 0.4 | **[EXISTS] TASK-0063** — `functional_indices` gate parameter gap | Plumbing so a FROZEN caller reaches `functional_indices` without bypassing the gate. Same seam as 0.1 — do together. |
+| # | Task | Why now | Status |
+|---|---|---|---|
+| 0.1 | **[FILED] TASK-0070 — pocket label exclusion assembly** | **Oldest live defect.** Nothing assembles `pocket & ~functional & ~terminal`; `labels` owns ingredients, `protocol` gates them, `analysis` consumes the raw mask. Survived four reviews *because no task owns it* — it is a seam, not a module. Blocks 0.2, 0.3, and every honest AUC. | **In Progress** (Implementer A, claimed 07-12 10:25) |
+| 0.2 | **[EXISTS] TASK-0052** — reconcile leakage-gate contract | Gate is green on self-validating guards but its 3 contract tests are still `xfail`. Acceptance for TASK-0004/0006 was **0 xfail**. Needs 0.1 to bind `build_labels`. | TODO (claimed by Implementer A, 07-12 09:07 — not yet moved) |
+| 0.3 | **[EXISTS] TASK-0047** — foundation review gap bridging | Commits the network-gated KRAS integration test (apo 4OBE / holo 6OIM). The 21/21 match is still a **docstring claim**. | TODO (claimed by Reviewer A, 07-07 — stale, re-claimable) |
+| 0.4 | **[EXISTS] TASK-0063** — `functional_indices` gate parameter gap | Plumbing so a FROZEN caller reaches `functional_indices` without bypassing the gate. Same seam as 0.1 — do together. | TODO |
 
 > **Decision required inside 0.1:** KRAS **Cys12** — in or out of the pocket label?
 > `targets.yaml` says exclude; sotorasib (MOV) is covalent at Cys12 so it enters the
@@ -53,13 +74,13 @@ The verdict layer was built **before** its denominator. `classify_failure` ancho
 AUC-vs-chance (0.5); `verdict_template` compares against the **H10 operator**. Neither is a
 triviality floor. `baselines.py` now exists — wire it in.
 
-| # | Task | Why now |
-|---|---|---|
-| 1.1 | **[EXISTS] TASK-0058** — wire baseline floor into `classify_failure` | Turns "beats chance" into "beats degree / betweenness / distance-to-active". Without it **no verdict the pipeline emits is honest.** |
-| 1.2 | **[EXISTS] TASK-0055** — `optimised` AUC freeze-provenance check | Verifies headline AUCs come from the frozen/DEV path, not the old label-tuned notebook route. If not, the report layer silently re-imports the §8 leak. |
-| 1.3 | **[EXISTS] TASK-0064** — wire unsupervised score into frozen loop | Completes the label-free selection path. |
-| 1.4 | **[NEW] TASK-0071 — permutation-null leak detector** | The firewall *prevents* known leak vectors; nothing *detects* an unforeseen one. Shuffle labels, re-run, flag anything still scoring. Home: `diagnostics.py`. Verified reference implementation exists. |
-| 1.5 | **[EXISTS] TASK-0056** — phase-4 review (diagnostics/report/baselines/pathways) | Same lens the phase-3 review applied, on the four newest modules. |
+| # | Task | Why now | Status |
+|---|---|---|---|
+| 1.1 | **[EXISTS] TASK-0058** — wire baseline floor into `classify_failure` | Turns "beats chance" into "beats degree / betweenness / distance-to-active". Without it **no verdict the pipeline emits is honest.** | TODO |
+| 1.2 | **[EXISTS] TASK-0055** — `optimised` AUC freeze-provenance check | Verifies headline AUCs come from the frozen/DEV path, not the old label-tuned notebook route. If not, the report layer silently re-imports the §8 leak. | TODO |
+| 1.3 | **[EXISTS] TASK-0064** — wire unsupervised score into frozen loop | Completes the label-free selection path. | TODO |
+| 1.4 | **[FILED] TASK-0071 — permutation-null leak detector** | The firewall *prevents* known leak vectors; nothing *detects* an unforeseen one. Shuffle labels, re-run, flag anything still scoring. Home: `diagnostics.py`. Verified reference implementation exists. | TODO |
+| 1.5 | **[EXISTS] TASK-0056** — phase-4 review (diagnostics/report/baselines/pathways) | Same lens the phase-3 review applied, on the four newest modules. | TODO |
 
 ---
 
@@ -68,13 +89,13 @@ triviality floor. `baselines.py` now exists — wire it in.
 Dedup means *one implementation of each shared primitive, ported into both trees, numbers
 pinned*. **Resolve the constant before extracting the helper.**
 
-| # | Task | Why in this order |
-|---|---|---|
-| 2.1 | **[EXISTS] TASK-0067** — GNM cutoff + weight-scheme benchmark | **Confirmed live divergence:** `backend` uses **8.0 Å**; `hamiltonians.py` defaults to **10.0 Å** (12.0 for some variants). *The app and the research pipeline currently answer the same question differently.* Extracting a helper first would make the wrong number official. |
-| 2.2 | **[EXISTS] TASK-0066** — shared Kirchhoff + DCC helper | Extract binary-Kirchhoff context + DCC + z-score; port into both trees (not cross-imported), one test suite. **Must land 2.1's chosen constant.** |
-| 2.3 | **[NEW] TASK-0072 — golden-value cross-tree drift test** | The anti-drift mechanism 2.2 needs: fix a reference structure, assert both trees produce **numerically identical** output. Without it "ported" decays back into "duplicated" — exactly how 8.0 vs 10.0 happened. |
-| 2.4 | **[EXISTS] TASK-0040** — potentials shared GNM context | Same family as 2.2. |
-| 2.5 | **[NEW] TASK-0073 — register cross-tree seams** | `.ai/seams/` records (owner + seam-test) for the shared primitive and the cutoff constant, per the adopted SEAM_PROTOCOL. The green bar then remembers the boundary — mechanism, not discipline. |
+| # | Task | Why in this order | Status |
+|---|---|---|---|
+| 2.1 | **[EXISTS] TASK-0067** — GNM cutoff + weight-scheme benchmark | **Confirmed live divergence:** `backend` uses **8.0 Å**; `hamiltonians.py` defaults to **10.0 Å** (12.0 for some variants). *The app and the research pipeline currently answer the same question differently.* Extracting a helper first would make the wrong number official. | TODO |
+| 2.2 | **[EXISTS] TASK-0066** — shared Kirchhoff + DCC helper | Extract binary-Kirchhoff context + DCC + z-score; port into both trees (not cross-imported), one test suite. **Must land 2.1's chosen constant.** | TODO |
+| 2.3 | **[FILED] TASK-0072 — golden-value cross-tree drift test** | The anti-drift mechanism 2.2 needs: fix a reference structure, assert both trees produce **numerically identical** output. Without it "ported" decays back into "duplicated" — exactly how 8.0 vs 10.0 happened. | TODO |
+| 2.4 | **[EXISTS] TASK-0040** — potentials shared GNM context | Same family as 2.2. | TODO |
+| 2.5 | **[FILED] TASK-0073 — register cross-tree seams** | `.ai/seams/` records (owner + seam-test) for the shared primitive and the cutoff constant, per the adopted SEAM_PROTOCOL. The green bar then remembers the boundary — mechanism, not discipline. | TODO |
 
 ---
 
@@ -85,11 +106,11 @@ green (252 tests). "Work in progress" invites the question *"when does it stop b
 progress?"* — the honest answer is **it already has**. Graduate it. Three mechanical steps,
 each a separate MR, none changing behaviour.
 
-| # | Task | Content |
-|---|---|---|
-| 3.1 | **[NEW] TASK-0076 — graduation part 1: promote the package** | `git mv __WORK_IN_PROGRESS__/src/allostery → allostery/` at repo top level, sibling to `backend/`. Update imports + test paths. **No behaviour change; suite must stay 252-green before and after.** Pure `git mv` + import rewrite. |
-| 3.2 | **[NEW] TASK-0077 — graduation part 2: one CI, one green bar** | Single CI workflow runs `backend/` + `allostery/` suites together. Ends the "two test worlds" split and makes the repo-wide bar real (the standards-memo commitment). |
-| 3.3 | **[NEW] TASK-0078 — graduation part 3: dissolve the folder** | Remaining `__WORK_IN_PROGRESS__` contents to their permanent homes (`config/targets.yaml` → `config/`, notebooks → `notebooks/`, planning docs → `documentation/`), then **delete the folder**. Nothing "dangling" remains. |
+| # | Task | Content | Status |
+|---|---|---|---|
+| 3.1 | **[FILED] TASK-0076 — graduation part 1: promote the package** | `git mv __WORK_IN_PROGRESS__/src/allostery → allostery/` at repo top level, sibling to `backend/`. Update imports + test paths. **No behaviour change; suite must stay 252-green before and after.** Pure `git mv` + import rewrite. | TODO |
+| 3.2 | **[FILED] TASK-0077 — graduation part 2: one CI, one green bar** | Single CI workflow runs `backend/` + `allostery/` suites together. Ends the "two test worlds" split and makes the repo-wide bar real (the standards-memo commitment). | TODO |
+| 3.3 | **[FILED] TASK-0078 — graduation part 3: dissolve the folder** | Remaining `__WORK_IN_PROGRESS__` contents to their permanent homes (`config/targets.yaml` → `config/`, notebooks → `notebooks/`, planning docs → `documentation/`), then **delete the folder**. Nothing "dangling" remains. | TODO |
 
 End state: `backend/` (service) · `allostery/` (research) · `config/` · `tests/` · one CI.
 Two packages, one repo, **no cross-import**, shared primitives kept honest by golden tests.
@@ -106,13 +127,13 @@ modules have **zero** tests, including `analysis.py` (646 lines).
 > its numbers. Convention 4 ("ADD-only, don't break response shapes") is only *enforceable*
 > if a test would catch the break.
 
-| # | Task | Why now |
-|---|---|---|
-| 4.1 | **[EXISTS] TASK-0021** — backend API test baseline | Smoke floor: `/api/health`, `/api/targets`, `/api/load` + the two documented 422s. Converts the standards commitment from *assigned* to *started*. |
-| 4.2 | **[NEW] TASK-0074 — characterization tests for `backend/analysis.py`** | Golden-output tests pinning the **current** live surface (`gnm_context`, `site_potentials`, `quantum_seed_readiness`, `connectivity_change`) *before* convergence touches it. Safety net for TASK-0066. |
-| 4.3 | **[EXISTS] TASK-0054** — SE(3) invariance regression test | The metamorphic gauge test, applied to **both** trees. Catches the class of bug unit tests structurally cannot see. |
-| 4.4 | **[EXISTS] TASK-0022** — frontend UI tiered test coverage | After the API floor exists. |
-| 4.5 | **[EXISTS] TASK-0044** — Python version reconciliation | Docs say 3.9 / `typing.Optional`; runtime is **3.11.9**, `biotite` needs ≥3.10. Shared root docs. Cheap — do before the next standards meeting so the stated rules are true. |
+| # | Task | Why now | Status |
+|---|---|---|---|
+| 4.1 | **[EXISTS] TASK-0021** — backend API test baseline | Smoke floor: `/api/health`, `/api/targets`, `/api/load` + the two documented 422s. Converts the standards commitment from *assigned* to *started*. | TODO |
+| 4.2 | **[FILED] TASK-0074 — characterization tests for `backend/analysis.py`** | Golden-output tests pinning the **current** live surface (`gnm_context`, `site_potentials`, `quantum_seed_readiness`, `connectivity_change`) *before* convergence touches it. Safety net for TASK-0066. | TODO |
+| 4.3 | **[EXISTS] TASK-0054** — SE(3) invariance regression test | The metamorphic gauge test, applied to **both** trees. Catches the class of bug unit tests structurally cannot see. | TODO |
+| 4.4 | **[EXISTS] TASK-0022** — frontend UI tiered test coverage | After the API floor exists. | TODO |
+| 4.5 | **[EXISTS] TASK-0044** — Python version reconciliation | Docs say 3.9 / `typing.Optional`; runtime is **3.11.9**, `biotite` needs ≥3.10. Shared root docs. Cheap — do before the next standards meeting so the stated rules are true. | TODO |
 
 ---
 
@@ -121,17 +142,17 @@ modules have **zero** tests, including `analysis.py` (646 lines).
 This is what the submission is actually judged on. Everything above exists to make these
 numbers *defensible*; this phase produces them.
 
-| # | Task | Why |
-|---|---|---|
-| 5.1 | **[NEW] TASK-0079 — end-to-end challenge run** | Produce the three **required deliverables** for every mandatory target (KRAS 4OBE→6OIM, BCR-ABL1 1OPL→5MO4, Myosin, + c-Myc): the **N×N connectivity matrix**, the **top-5 ranked hit list**, and the **methodological report**. Currently no single command produces them. This is the submission artifact. |
-| 5.2 | **[NEW] TASK-0082 — competence map synthesis** | The per-target floor / ceiling / headroom table — **the strategic differentiator**. "We close X% of the gap knowing the answer would close, on these targets; ~0 on those, and here is why." A per-target honest NO is a publishable result, not a failure to hide. |
-| 5.3 | **[EXISTS] TASK-0068** — NISQ noise-model simulation | Directly scored ("noise resilience"): Trotterized simulation under gate noise, testing whether ENAQT is more noise-robust than coherent CTQW. Needs `coarse.py` (done) for qubit feasibility. |
-| 5.4 | **[EXISTS] TASK-0015** — holo-direction module | LRT / PRS / two-state ANM / NMFF, gated by cumulative overlap. |
-| 5.5 | **[NEW] TASK-0075 — knob-spread reporting for the overlap gate** | Per INVARIANCE_PROTOCOL: cutoff / variant / `k` / reference are **KNOBs, not gauge**. On a toy case the same motion swung **0.067–0.860** across an 18-combo grid, flipping go/no-go in 15 of 18. The gate must emit a **spread** and return `UNSTABLE` when knobs decide the verdict — never a point estimate. |
-| 5.6 | **[EXISTS] TASK-0046** — ceiling coordinate-descent search | Completes the floor/ceiling/headroom triple. |
-| 5.7 | **[NEW] TASK-0080 — c-Myc / 1NKP application** | Required minimum-set target with **no holo ground truth** — scored on consensus + theoretical docking viability. Needs its own handling: no AUC, no ceiling; report prediction + confidence honestly. |
-| 5.8 | **[NEW] TASK-0081 — generalization set (ASD targets)** | The brief **highly encourages** extra targets to demonstrate robustness/scalability. Pull 2–4 from the Allosteric Database with known sites. Cheap once 5.1 is a one-command run; directly feeds "Technical Approach / Innovation". |
-| 5.9 | **[EXISTS] TASK-0037** — H11/H12 anisotropic not implemented | Known gap in the operator register. |
+| # | Task | Why | Status |
+|---|---|---|---|
+| 5.1 | **[FILED] TASK-0079 — end-to-end challenge run** | Produce the three **required deliverables** for every mandatory target (KRAS 4OBE→6OIM, BCR-ABL1 1OPL→5MO4, Myosin, + c-Myc): the **N×N connectivity matrix**, the **top-5 ranked hit list**, and the **methodological report**. Currently no single command produces them. This is the submission artifact. | TODO |
+| 5.2 | **[FILED] TASK-0082 — competence map synthesis** | The per-target floor / ceiling / headroom table — **the strategic differentiator**. "We close X% of the gap knowing the answer would close, on these targets; ~0 on those, and here is why." A per-target honest NO is a publishable result, not a failure to hide. | TODO |
+| 5.3 | **[EXISTS] TASK-0068** — NISQ noise-model simulation | Directly scored ("noise resilience"): Trotterized simulation under gate noise, testing whether ENAQT is more noise-robust than coherent CTQW. Needs `coarse.py` (done) for qubit feasibility. | TODO (claimed by Implementer A, 07-12 00:25 — not yet moved) |
+| 5.4 | **[EXISTS] TASK-0015** — holo-direction module | LRT / PRS / two-state ANM / NMFF, gated by cumulative overlap. | TODO |
+| 5.5 | **[FILED] TASK-0075 — knob-spread reporting for the overlap gate** | Per INVARIANCE_PROTOCOL: cutoff / variant / `k` / reference are **KNOBs, not gauge**. On a toy case the same motion swung **0.067–0.860** across an 18-combo grid, flipping go/no-go in 15 of 18. The gate must emit a **spread** and return `UNSTABLE` when knobs decide the verdict — never a point estimate. | TODO |
+| 5.6 | **[EXISTS] TASK-0046** — ceiling coordinate-descent search | Completes the floor/ceiling/headroom triple. | TODO |
+| 5.7 | **[FILED] TASK-0080 — c-Myc / 1NKP application** | Required minimum-set target with **no holo ground truth** — scored on consensus + theoretical docking viability. Needs its own handling: no AUC, no ceiling; report prediction + confidence honestly. | TODO |
+| 5.8 | **[FILED] TASK-0081 — generalization set (ASD targets)** | The brief **highly encourages** extra targets to demonstrate robustness/scalability. Pull 2–4 from the Allosteric Database with known sites. Cheap once 5.1 is a one-command run; directly feeds "Technical Approach / Innovation". | TODO |
+| 5.9 | **[EXISTS] TASK-0037** — H11/H12 anisotropic not implemented | Known gap in the operator register. | TODO |
 
 ---
 
@@ -141,12 +162,12 @@ The reframing: these are not a lightweight PoC. They **trigger, execute, and sho
 research. The artifact contract is what lets that happen without dragging the research
 machinery into the web tier.
 
-| # | Task | Why |
-|---|---|---|
-| 6.1 | **[NEW] TASK-0083 — result artifact contract** ⚠️ **decide EARLY** | Define the versioned artifact `allostery` emits and `backend` consumes: N×N connectivity matrix (NPZ), ranked residues + scores, per-target verdict (GO / NO / **UNSTABLE**) with knob-spread, floor/ceiling/headroom, frozen-config **hash**, provenance. This one decision keeps `backend` free of `allostery` imports and unblocks frontend work **in parallel** with the science. Filed early even though 6.2–6.4 are late. |
-| 6.2 | **[NEW] TASK-0084 — backend results API** | ADD-only endpoints serving precomputed artifacts (`/api/results/{target}`, `/api/connectivity/{target}`, `/api/verdict/{target}`). **No science in the request path** — read, validate against the contract, serve. Respects convention 4 and the Render cold-start budget. |
-| 6.3 | **[NEW] TASK-0085 — frontend research visualization** | The scored "interpretability / 3D visualization" objective: top-5 predicted pockets on the 3Dmol structure, the **N×N connectivity heatmap**, the competence panel (floor / method / ceiling bars), and an explicit **UNSTABLE** state when the knobs decide the verdict. Honesty rendered, not hidden. |
-| 6.4 | **[NEW] TASK-0086 — execution/trigger path** | Decide and implement how a run is launched: offline batch producing artifacts (**preferred** — no compute in the request path, works on free-tier Render) vs. an async job queue. Records the decision; the artifact contract makes either viable. |
+| # | Task | Why | Status |
+|---|---|---|---|
+| 6.1 | **[FILED] TASK-0083 — result artifact contract** ⚠️ **decide EARLY** | Define the versioned artifact `allostery` emits and `backend` consumes: N×N connectivity matrix (NPZ), ranked residues + scores, per-target verdict (GO / NO / **UNSTABLE**) with knob-spread, floor/ceiling/headroom, frozen-config **hash**, provenance. This one decision keeps `backend` free of `allostery` imports and unblocks frontend work **in parallel** with the science. Filed early even though 6.2–6.4 are late. | TODO |
+| 6.2 | **[FILED] TASK-0084 — backend results API** | ADD-only endpoints serving precomputed artifacts (`/api/results/{target}`, `/api/connectivity/{target}`, `/api/verdict/{target}`). **No science in the request path** — read, validate against the contract, serve. Respects convention 4 and the Render cold-start budget. | TODO |
+| 6.3 | **[FILED] TASK-0085 — frontend research visualization** | The scored "interpretability / 3D visualization" objective: top-5 predicted pockets on the 3Dmol structure, the **N×N connectivity heatmap**, the competence panel (floor / method / ceiling bars), and an explicit **UNSTABLE** state when the knobs decide the verdict. Honesty rendered, not hidden. | TODO |
+| 6.4 | **[FILED] TASK-0086 — execution/trigger path** | Decide and implement how a run is launched: offline batch producing artifacts (**preferred** — no compute in the request path, works on free-tier Render) vs. an async job queue. Records the decision; the artifact contract makes either viable. | TODO |
 
 ---
 
@@ -156,13 +177,22 @@ machinery into the web tier.
 Finish it, apply it to the scaffold, and **freeze scaffold-as-product work** — the
 lock/registry/packaging/ripeness tooling scores zero on the challenge rubric.
 
-Keep here: 0024.x, 0026.x, 0042, 0060, 0061, 0062, 0065, 0069.
+Keep here: 0024.001, 0024.002, 0026, 0026.002, 0026.003, 0026.004 (**In Progress**,
+Toolsmith, claimed 07-06 21:14), 0042, 0060, 0061, 0062, 0065, 0069 (claimed by
+Implementer B 07-12 00:50, not yet moved).
 Cheap, real product cleanups: 0034, 0036, 0038, 0039, **0041** (Haken–Strobl `solve_ivp`
-success check — a real robustness bug), 0049.
+success check — a real robustness bug), 0049. All TODO unless noted otherwise above.
+
+*Not tracked in the Phases 0–6 progress tracker above — this bucket is explicitly
+lower priority and must not displace it (see this phase's own heading).*
 
 ---
 
-## New tasks to create — one-liner intents
+## Task files created from this plan (2026-07-12, commit `9fdeb2f`) — one-liner intents
+
+All 17 below now exist under `.ai/tasks/TODO/` (except TASK-0070, moved to
+`.ai/tasks/IN_PROGRESS/` the same session). This section is kept as authorship record;
+current status lives in the per-phase tables above and in `.ai/COMMON.md`.
 
 **Correctness**
 - **TASK-0070 — Pocket label exclusion assembly.** Add the `build_labels` step assembling `pocket & ~functional & ~terminal`, assert `pocket ∩ active_site == ∅`, record an explicit KRAS Cys12 in/out decision, and give the exclusion **one named seam-owner** so it stops falling between `labels`/`protocol`/`analysis`.
