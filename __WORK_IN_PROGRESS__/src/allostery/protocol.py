@@ -106,12 +106,34 @@ def assert_readable(target_name: str) -> None:
 # call these, not labels.py/superpose.py directly, for FROZEN-path code.
 # ---------------------------------------------------------------------------
 
-def get_pocket_mask(apo, holo, target_name: str, ligand_code, cutoff: float = 4.5):
-    """Gated labels.holo_pocket_mask."""
-    assert_readable(target_name)
-    from .labels import holo_pocket_mask
+def get_pocket_mask(apo, holo, target_name: str, target_config: dict, cutoff: float = 4.5):
+    """Gated, *assembled* pocket label -- `labels.build_labels(...).pocket`
+    (excludes active_site/terminal), not `labels.holo_pocket_mask`'s raw
+    ligand-contact mask.
 
-    return holo_pocket_mask(apo, holo, ligand_code, cutoff=cutoff)
+    TASK-0070/SEAM-0003: consuming the raw mask directly (this function's
+    previous implementation) was the defect this fixes -- "labels owns
+    ingredients, protocol gates them, analysis consumes the raw mask" is
+    exactly the failure `SEAM_PROTOCOL.md` uses as its own motivating
+    example. Takes `target_config` (not a bare `ligand_code`) so it now
+    matches `get_functional_indices`/`get_superpose_report`'s existing
+    signature shape -- this function was the odd one out before.
+    """
+    assert_readable(target_name)
+    from .labels import build_labels
+
+    return build_labels(apo, holo, target_config, cutoff=cutoff).pocket
+
+
+def get_labels(apo, holo, target_name: str, target_config: dict, cutoff: float = 4.5, terminal_fraction: float = 0.05):
+    """Gated `labels.build_labels` -- the full assembled `Labels` object
+    (pocket, pocket_raw, active_site, terminal, provenance), for callers
+    that need more than just the final pocket mask `get_pocket_mask`
+    returns."""
+    assert_readable(target_name)
+    from .labels import build_labels
+
+    return build_labels(apo, holo, target_config, cutoff=cutoff, terminal_fraction=terminal_fraction)
 
 
 def get_functional_indices(coords, ligand_groups, target_name: str, target_config: dict, cutoff: float = 4.5):

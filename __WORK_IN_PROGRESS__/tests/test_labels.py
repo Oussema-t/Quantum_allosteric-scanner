@@ -14,6 +14,7 @@ import pytest
 from allostery.labels import (
     LigandGroup,
     _contact_residue_indices,
+    build_labels,
     functional_indices,
     holo_pocket_mask,
     ligand_groups_from_atomgroup,
@@ -344,3 +345,136 @@ class TestHoloPocketMaskHeavyAtomPath:
         # residue 6's own Calpha (in COORDS) is nowhere near far_point --
         # confirms the hit came from the heavy-atom path, not Calpha.
         assert np.linalg.norm(COORDS[6] - far_point) > 4.5
+
+
+# ---------------------------------------------------------------------------
+# TASK-0070 / SEAM-0003 -- build_labels' assembly + exclusion invariant
+# ---------------------------------------------------------------------------
+
+class TestBuildLabels:
+    def test_excludes_functional_overlap_from_pocket(self):
+        """The exact SEAM-0003 case: the drug ligand's raw contact set
+        overlaps the functional (orthosteric) ligand's -- the assembled
+        pocket must exclude the overlap, not just the non-overlapping
+        functional residues."""
+        apo = _Struct(COORDS, np.arange(1, N + 1), _SEQ3)
+        # drug ligand near residues 4,5,6; functional ligand near residue 5
+        # (deliberately overlapping with the drug contact, like KRAS Cys12
+        # sitting in both the MOV covalent-contact set and the GDP-contact
+        # functional set).
+        drug = LigandGroup("LIG", 501, "A", np.array([COORDS[5]]), 1)
+        func = LigandGroup("FUNC", 502, "A", np.array([COORDS[5]]), 1)
+        holo = _Struct(COORDS, np.arange(1, N + 1), _SEQ3, [drug, func])
+
+        labels = build_labels(apo, holo, {"drug_ligand": "LIG", "func_ligand": ["FUNC"]}, cutoff=4.5)
+
+        assert labels.pocket_raw[5]     # raw contact hit, before exclusion
+        assert labels.active_site[5]    # also a functional-contact hit
+        assert not labels.pocket[5]     # excluded from the final label
+        assert not (labels.pocket & labels.active_site).any()
+        assert not (labels.pocket & labels.terminal).any()
+
+    def test_disjoint_functional_and_drug_leaves_pocket_populated(self):
+        apo = _Struct(COORDS, np.arange(1, N + 1), _SEQ3)
+        drug = LigandGroup("LIG", 501, "A", np.array([COORDS[5]]), 1)
+        func = LigandGroup("FUNC", 502, "A", np.array([COORDS[10]]), 1)
+        holo = _Struct(COORDS, np.arange(1, N + 1), _SEQ3, [drug, func])
+
+        labels = build_labels(apo, holo, {"drug_ligand": "LIG", "func_ligand": ["FUNC"]}, cutoff=4.5)
+
+        assert labels.pocket is not None and labels.pocket.any()
+        assert not (labels.pocket & labels.active_site).any()
+
+    def test_no_drug_ligand_gives_none_pocket_not_a_crash(self):
+        apo = _Struct(COORDS, np.arange(1, N + 1), _SEQ3)
+        func = LigandGroup("FUNC", 502, "A", np.array([COORDS[10]]), 1)
+        holo = _Struct(COORDS, np.arange(1, N + 1), _SEQ3, [func])
+
+        labels = build_labels(apo, holo, {"func_ligand": ["FUNC"]}, cutoff=4.5)
+
+        assert labels.pocket is None
+        assert labels.pocket_raw is None
+        assert labels.active_site.any()  # functional side still resolves
+
+    def test_provenance_and_drug_ligand_recorded(self):
+        apo = _Struct(COORDS, np.arange(1, N + 1), _SEQ3)
+        drug = LigandGroup("LIG", 501, "A", np.array([COORDS[5]]), 1)
+        func = LigandGroup("FUNC", 502, "A", np.array([COORDS[10]]), 1)
+        holo = _Struct(COORDS, np.arange(1, N + 1), _SEQ3, [drug, func])
+
+        labels = build_labels(apo, holo, {"drug_ligand": "LIG", "func_ligand": ["FUNC"]}, cutoff=4.5)
+
+        assert labels.drug_ligand == "LIG"
+        assert labels.functional_provenance == "func_ligand-contact:FUNC"
+
+
+# ---------------------------------------------------------------------------
+# Real-target checks (KRAS_G12C, BCR_ABL1) -- skipped where prody/network is
+# unavailable. TASK-0070's own Acceptance Scenario: assert the exclusion
+# invariant holds on real benchmark targets, and record the KRAS Cys12
+# in/out decision explicitly rather than by omission.
+# ---------------------------------------------------------------------------
+
+def _load_real_target(apo_id, holo_id, chains):
+    from allostery.clean import clean
+    import prody
+
+    prody.confProDy(verbosity="none")
+    apo = clean(apo_id, chains=chains)
+    holo = clean(holo_id, chains=chains)
+    holo_struct = prody.parsePDB(holo_id, compressed=False).select(
+        " or ".join(f"chain {c}" for c in chains)
+    )
+    holo.ligand_groups = ligand_groups_from_atomgroup(holo_struct)
+    holo.heavy_atom_coords, holo.heavy_atom_seq_index = protein_heavy_atoms_by_residue(
+        holo_struct, chains, holo.resnums
+    )
+    return apo, holo
+
+
+def test_kras_g12c_real_cys12_excluded():
+    """TASK-0070's recorded Cys12 decision: sotorasib (MOV) is covalently
+    anchored at Cys12, so Cys12 lands in `pocket_raw` -- but Cys12 is also
+    a GDP-contact (functional/active-site) residue, so it is excluded by
+    the *general* `~active_site` rule, not a KRAS-specific special case.
+    `targets.yaml`'s own literature note ("EXCLUDE Cys12/P-loop") is
+    satisfied automatically. Verified here against real 4OBE apo / 6OIM
+    holo data (2026-07-12), not assumed."""
+    pytest.importorskip("prody")
+    try:
+        apo, holo = _load_real_target("4OBE", "6OIM", ["A"])
+    except Exception as exc:
+        pytest.skip(f"real-structure fetch unavailable in this environment: {exc!r}")
+
+    labels = build_labels(apo, holo, {"drug_ligand": "MOV", "func_ligand": ["GDP"]}, cutoff=4.5)
+
+    cys12_idx = np.where(apo.resnums == 12)[0]
+    assert len(cys12_idx) == 1
+    i = cys12_idx[0]
+
+    assert labels.pocket_raw[i], "expected Cys12 in the raw MOV-contact set (it's the covalent anchor)"
+    assert labels.active_site[i], "expected Cys12 in the GDP-contact functional set"
+    assert not labels.pocket[i], "Cys12 must be excluded from the final assembled pocket"
+    assert not (labels.pocket & labels.active_site).any()
+    assert not (labels.pocket & labels.terminal).any()
+    assert labels.pocket.sum() > 0, "exclusion should not have emptied the whole pocket"
+
+
+def test_bcr_abl1_real_exclusion_invariant_holds():
+    """Second independent real target (not just KRAS) for the exclusion
+    invariant, per this task's own review -- confirms the fix generalizes
+    rather than being tuned to one benchmark."""
+    pytest.importorskip("prody")
+    try:
+        apo, holo = _load_real_target("1OPL", "5MO4", ["A"])
+    except Exception as exc:
+        pytest.skip(f"real-structure fetch unavailable in this environment: {exc!r}")
+
+    labels = build_labels(apo, holo, {"drug_ligand": "AY7", "func_ligand": ["NIL"]}, cutoff=4.5)
+
+    assert labels.pocket is not None and labels.pocket.any()
+    assert not (labels.pocket & labels.active_site).any()
+    assert not (labels.pocket & labels.terminal).any()
+    # the exclusion must have actually removed something on this target too
+    # (not a no-op that happens to pass because nothing overlapped).
+    assert labels.pocket.sum() < labels.pocket_raw.sum()

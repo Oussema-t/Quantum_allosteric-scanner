@@ -22,6 +22,7 @@ from allostery.protocol import (  # noqa: E402
     current_context,
     frozen_context,
     get_functional_indices,
+    get_labels,
     get_pocket_mask,
     get_superpose_report,
     leave_one_protein_out,
@@ -53,10 +54,24 @@ class _Struct:
 
 
 def _apo_holo_with_ligand():
+    """Two disjoint ligands -- LIG (drug, near residue index 5) and FUNC
+    (functional/orthosteric, near residue index 10) -- so
+    `get_pocket_mask`'s assembled label (TASK-0070) has a real,
+    non-overlapping active_site to exclude instead of falling through to
+    the top-degree fallback, which on this 12-residue synthetic helix
+    happens to swallow index 5 whole (verified empirically while writing
+    this fixture)."""
     apo = _Struct(COORDS, resnums=list(range(1, N + 1)), resnames=_SEQ3)
-    ligand = LigandGroup("LIG", 501, "A", np.array([COORDS[5]]), 1)
-    holo = _Struct(COORDS.copy(), resnums=list(range(1, N + 1)), resnames=_SEQ3, ligand_groups=[ligand])
+    drug_ligand = LigandGroup("LIG", 501, "A", np.array([COORDS[5]]), 1)
+    func_ligand = LigandGroup("FUNC", 502, "A", np.array([COORDS[10]]), 1)
+    holo = _Struct(
+        COORDS.copy(), resnums=list(range(1, N + 1)), resnames=_SEQ3,
+        ligand_groups=[drug_ligand, func_ligand],
+    )
     return apo, holo
+
+
+_TARGET_CONFIG = {"drug_ligand": "LIG", "func_ligand": ["FUNC"]}
 
 
 # ---------------------------------------------------------------------------
@@ -109,18 +124,39 @@ class TestGatedAccessors:
         apo, holo = _apo_holo_with_ligand()
         with frozen_context("T1"):
             with pytest.raises(LeakageError):
-                get_pocket_mask(apo, holo, "T1", "LIG")
+                get_pocket_mask(apo, holo, "T1", _TARGET_CONFIG)
 
     def test_get_pocket_mask_succeeds_in_ceiling_context(self):
         apo, holo = _apo_holo_with_ligand()
         with ceiling_context():
-            mask = get_pocket_mask(apo, holo, "T1", "LIG")
+            mask = get_pocket_mask(apo, holo, "T1", _TARGET_CONFIG)
         assert mask is not None and mask.any()
 
     def test_get_pocket_mask_succeeds_unguarded(self):
         apo, holo = _apo_holo_with_ligand()
-        mask = get_pocket_mask(apo, holo, "T1", "LIG")
+        mask = get_pocket_mask(apo, holo, "T1", _TARGET_CONFIG)
         assert mask is not None
+
+    def test_get_pocket_mask_returns_assembled_not_raw(self):
+        """TASK-0070: get_pocket_mask must return the assembled (active-
+        site/terminal-excluded) pocket, not labels.holo_pocket_mask's raw
+        ligand-contact mask -- the defect this task fixes."""
+        apo, holo = _apo_holo_with_ligand()
+        from allostery.labels import build_labels
+
+        mask = get_pocket_mask(apo, holo, "T1", _TARGET_CONFIG)
+        expected = build_labels(apo, holo, _TARGET_CONFIG).pocket
+        np.testing.assert_array_equal(mask, expected)
+
+    def test_get_labels_gated(self):
+        apo, holo = _apo_holo_with_ligand()
+        with frozen_context("T1"):
+            with pytest.raises(LeakageError):
+                get_labels(apo, holo, "T1", _TARGET_CONFIG)
+
+        labels = get_labels(apo, holo, "T1", _TARGET_CONFIG)
+        assert labels.pocket is not None and labels.pocket.any()
+        assert not (labels.pocket & labels.active_site).any()
 
     def test_get_functional_indices_gated(self):
         apo, holo = _apo_holo_with_ligand()
@@ -145,7 +181,7 @@ class TestGatedAccessors:
     def test_gate_only_blocks_the_named_target_not_others(self):
         apo, holo = _apo_holo_with_ligand()
         with frozen_context("OTHER_TARGET"):
-            mask = get_pocket_mask(apo, holo, "T1", "LIG")  # T1 is not blocked
+            mask = get_pocket_mask(apo, holo, "T1", _TARGET_CONFIG)  # T1 is not blocked
         assert mask is not None
 
 
@@ -210,8 +246,8 @@ class TestLeaveOneProteinOut:
         for _train, held_out in leave_one_protein_out(targets):
             with frozen_context({held_out}):
                 with pytest.raises(LeakageError):
-                    get_pocket_mask(apo, holo, held_out, "LIG")
+                    get_pocket_mask(apo, holo, held_out, _TARGET_CONFIG)
             # frozen_context has exited -- scoring against the true label
             # is legitimate here, not a firewall bypass.
-            mask = get_pocket_mask(apo, holo, held_out, "LIG")
+            mask = get_pocket_mask(apo, holo, held_out, _TARGET_CONFIG)
             assert mask is not None

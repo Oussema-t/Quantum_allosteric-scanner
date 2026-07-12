@@ -388,3 +388,108 @@ def functional_indices(
     A = contact_matrix(coords, cutoff=9.0, weight="binary")
     degree = A.sum(axis=1)
     return np.argsort(-degree)[:5], "top-degree fallback"
+
+
+# ---------------------------------------------------------------------------
+# Assembly -- the actual pocket label (TASK-0070, SEAM-0003)
+# ---------------------------------------------------------------------------
+#
+# Oldest live defect this closes (EXECUTION_PLAN.md Phase 0, item 0.1):
+# nothing assembled `pocket & ~functional & ~terminal` -- labels.py owned
+# the three ingredients (holo_pocket_mask, functional_indices,
+# terminal_mask), protocol.py gated access to them, and analysis.py scored
+# whatever raw mask a caller handed it. Each piece was individually
+# correct and tested; the composition was never assembled, so the
+# exclusion invariant `pocket ∩ (functional ∪ terminal) == ∅` had no
+# function anywhere that actually executed it (SEAM-0003, seeded directly
+# from SEAM_PROTOCOL.md's own motivating example -- this exact gap).
+
+@dataclass
+class Labels:
+    """The final, assembled pocket label plus every ingredient that went
+    into it -- the single object downstream code (protocol.py's gate,
+    analysis.py's scoring) should consume instead of a raw, unexcluded
+    mask."""
+
+    pocket: np.ndarray | None       # (N,) bool over apo residues, excludes active_site + terminal; None if undetermined (no resolvable drug ligand)
+    pocket_raw: np.ndarray | None   # (N,) bool, the ligand-contact mask BEFORE exclusion (diagnostics only -- never score against this)
+    active_site: np.ndarray         # (N,) bool -- the functional/catalytic seed set (functional_indices, as a mask)
+    terminal: np.ndarray            # (N,) bool -- terminal_mask's output
+    functional_provenance: str      # functional_indices' own provenance string (e.g. "func_ligand-contact:GDP")
+    drug_ligand: str | None         # the allosteric ligand code used for pocket_raw, or None if unresolved
+
+
+def build_labels(
+    apo,
+    holo,
+    target_config: dict,
+    cutoff: float = 4.5,
+    terminal_fraction: float = 0.05,
+) -> Labels:
+    """Assemble the final pocket label: `pocket_raw & ~active_site & ~terminal`.
+
+    This is the one function that actually executes SEAM-0003's invariant
+    (`pocket ∩ (functional ∪ terminal) == ∅`) rather than leaving it as a
+    docstring claim -- asserted below, not just documented, so a future
+    regression here fails loudly instead of silently shipping an
+    unexcluded label.
+
+    `func_ligand` contacts (the active site) are excluded even when they
+    also happen to be near the allosteric ligand -- this is what resolves
+    TASK-0070's KRAS Cys12 decision: Cys12 is the covalent anchor for
+    sotorasib (MOV), so it appears in `pocket_raw`, but it is *also* a
+    GDP-contact residue (`targets.yaml`'s own literature note: "EXCLUDE
+    Cys12/P-loop"), so it is excluded here by the same general rule that
+    excludes every other active-site residue -- no special-casing needed,
+    confirmed empirically against real KRAS_G12C data (4OBE/6OIM) in this
+    task rather than assumed (`tests/test_labels.py::
+    TestBuildLabels::test_kras_g12c_real_cys12_excluded`).
+
+    Uses `holo.heavy_atom_coords`/`.heavy_atom_seq_index` for both the
+    pocket and active-site contact geometry when present on `holo` (same
+    optional attributes `holo_pocket_mask`/`functional_indices` already
+    accept), falling back to the Calpha-only approximation otherwise.
+    """
+    n = len(apo.resnums)
+    ligand_code = target_config.get("drug_ligand")
+    heavy_atom_coords = getattr(holo, "heavy_atom_coords", None)
+    heavy_atom_seq_index = getattr(holo, "heavy_atom_seq_index", None)
+
+    pocket_raw = (
+        holo_pocket_mask(apo, holo, ligand_code, cutoff=cutoff) if ligand_code else None
+    )
+
+    func_idx, provenance = functional_indices(
+        apo.coords,
+        holo.ligand_groups,
+        target_config,
+        cutoff=cutoff,
+        heavy_atom_coords=heavy_atom_coords,
+        heavy_atom_seq_index=heavy_atom_seq_index,
+    )
+    active_site = np.zeros(n, dtype=bool)
+    active_site[func_idx] = True
+    terminal = terminal_mask(n, terminal_fraction)
+
+    if pocket_raw is None:
+        pocket = None
+    else:
+        pocket = pocket_raw & ~active_site & ~terminal
+        assert not (pocket & active_site).any(), (
+            "SEAM-0003 invariant violated: assembled pocket intersects "
+            "active_site -- this must never happen, the exclusion above "
+            "is exactly what prevents it."
+        )
+        assert not (pocket & terminal).any(), (
+            "SEAM-0003 invariant violated: assembled pocket intersects "
+            "the terminal mask."
+        )
+
+    return Labels(
+        pocket=pocket,
+        pocket_raw=pocket_raw,
+        active_site=active_site,
+        terminal=terminal,
+        functional_provenance=provenance,
+        drug_ligand=ligand_code,
+    )
