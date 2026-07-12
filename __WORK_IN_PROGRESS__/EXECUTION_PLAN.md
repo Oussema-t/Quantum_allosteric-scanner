@@ -16,7 +16,7 @@ re-check there (or regenerate this table) before trusting it for dispatch decisi
 
 | Done | In Progress | TODO | Total |
 |---|---|---|---|
-| 0 | 1 (TASK-0070) | 34 | 35 |
+| 2 (TASK-0070, TASK-0052) | 0 | 33 | 35 |
 
 **To refresh this snapshot:** each task file's own `- Status:` line is authoritative
 (`.ai/COMMON.md`'s registry mirrors it). One-line check for any ID:
@@ -57,14 +57,17 @@ Defects in *shipped, reviewed, tested* code. Everything downstream inherits them
 
 | # | Task | Why now | Status |
 |---|---|---|---|
-| 0.1 | **[FILED] TASK-0070 — pocket label exclusion assembly** | **Oldest live defect.** Nothing assembles `pocket & ~functional & ~terminal`; `labels` owns ingredients, `protocol` gates them, `analysis` consumes the raw mask. Survived four reviews *because no task owns it* — it is a seam, not a module. Blocks 0.2, 0.3, and every honest AUC. | **In Progress** (Implementer A, claimed 07-12 10:25) |
-| 0.2 | **[EXISTS] TASK-0052** — reconcile leakage-gate contract | Gate is green on self-validating guards but its 3 contract tests are still `xfail`. Acceptance for TASK-0004/0006 was **0 xfail**. Needs 0.1 to bind `build_labels`. | TODO (claimed by Implementer A, 07-12 09:07 — not yet moved) |
+| 0.1 | **[FILED] TASK-0070 — pocket label exclusion assembly** | **Oldest live defect.** Nothing assembles `pocket & ~functional & ~terminal`; `labels` owns ingredients, `protocol` gates them, `analysis` consumes the raw mask. Survived four reviews *because no task owns it* — it is a seam, not a module. Blocks 0.2, 0.3, and every honest AUC. | **Done** (commit `5970bc5`). `build_labels()` landed in `labels.py`, asserts the exclusion invariant; `protocol.get_pocket_mask` now returns the assembled label, not the raw mask. KRAS Cys12 decision recorded: excluded via the general `~active_site` rule, no special-casing needed (verified against real 4OBE/6OIM data). |
+| 0.2 | **[EXISTS] TASK-0052** — reconcile leakage-gate contract | Gate is green on self-validating guards but its 3 contract tests are still `xfail`. Acceptance for TASK-0004/0006 was **0 xfail**. Needs 0.1 to bind `build_labels`. | **Done** (commit `fb9a2eb`). All 3 CONTRACT stubs rewritten against the real API (0 xfail, 12/12 passing both under `pytest` and standalone). `SEAM-0003` closed to VERIFIED. Real gap found verifying `frozen_context`/`assert_readable` vs. the `_SealedLabels` reference spec — it's an opt-in/cooperative gate, not a hard data-seal (`labels.py`/`superpose.py` called directly bypass it) — filed as **TASK-0087**, not fixed here (out of this task's scope). |
 | 0.3 | **[EXISTS] TASK-0047** — foundation review gap bridging | Commits the network-gated KRAS integration test (apo 4OBE / holo 6OIM). The 21/21 match is still a **docstring claim**. | TODO (claimed by Reviewer A, 07-07 — stale, re-claimable) |
 | 0.4 | **[EXISTS] TASK-0063** — `functional_indices` gate parameter gap | Plumbing so a FROZEN caller reaches `functional_indices` without bypassing the gate. Same seam as 0.1 — do together. | TODO |
 
 > **Decision required inside 0.1:** KRAS **Cys12** — in or out of the pocket label?
 > `targets.yaml` says exclude; sotorasib (MOV) is covalent at Cys12 so it enters the
 > MOV-derived contact set. Pick one and record it. Do not inherit it by omission.
+> **Resolved:** excluded, via the general `~active_site` rule (Cys12 is also a GDP-contact
+> functional residue, so the exclusion falls out automatically — no KRAS-specific case
+> needed). See TASK-0070's Open Questions for the full verification.
 
 ---
 
