@@ -61,6 +61,21 @@
 - None — targets and deliverables are named explicitly in the plan;
   scope is otherwise determined by whatever Phase 0/1 land with.
 
+**Cross-link added by TASK-0056's review (2026-07-12), additive only —
+does not touch this task's claim/TODO:** [[SEAM-0008]] (`report.py`'s
+`verdict_template` expects a flat results schema — `AUC_apo_Hnew_default`
+etc. — that nothing in `analysis.py` currently produces; only
+`test_report.py`'s hand-built fixture has ever exercised it) was reassigned
+here, since this task's own "orchestrating the already-Done pipeline
+stages... into one run" is the actual assembly step the seam is waiting
+on. When wiring `analysis.py`'s output into `report.verdict_template`,
+build the mapping from `analysis.py`'s real (nested) return shapes —
+`benchmark()` → `{"H_new_default": metric_pack, "H10_disorder_suppressed":
+metric_pack}`, `ablation()` → `{"L_only": ..., "B": ..., ...}` per-term
+packs, `quantum_vs_classical()`, `apo_holo_consistency()` — not a shape
+guessed independently; add the seam-test there once real, and flip
+`SEAM-0008` to `VERIFIED`.
+
 ## Done
 
 (not yet)

@@ -190,6 +190,63 @@ class TestClassifyFailureFloor:
         assert result == NO_SIGNAL_IN_APO
 
 
+class TestClassifyFailureRealBaselineFloor:
+    """SEAM-0011 (TASK-0056's review): `floor_scores` is designed to accept
+    real `baselines.py` output, not just a hand-built stand-in array --
+    TestClassifyFailureFloor above never actually calls `baselines.py`, so
+    nothing proved the real composition works end-to-end. Both types are
+    trivially compatible ((N,) float arrays), so this isn't a shape bug --
+    but the *composition* itself was untested until now.
+
+    Coords: residues 0-2 form a tight triangle (mutual degree 3, since
+    residue 3 sits close enough to join the clique too); residues 4-9 sit
+    30 units apart from everything (degree 0). Residue 3 is a deliberate
+    confound -- labelled non-pocket but degree-indistinguishable from the
+    true pocket -- so `degree_centrality` is a genuinely imperfect floor
+    (not a strawman AUC=1.0 that nothing could ever beat), matching what a
+    real structural baseline actually looks like.
+    """
+
+    COORDS = np.array([
+        [0.0, 0.0, 0.0], [1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [1.0, 1.0, 0.0],
+        [30.0, 0.0, 0.0], [60.0, 0.0, 0.0], [90.0, 0.0, 0.0],
+        [120.0, 0.0, 0.0], [150.0, 0.0, 0.0], [180.0, 0.0, 0.0],
+    ])
+    LABELS = np.array([1, 1, 1, 0, 0, 0, 0, 0, 0, 0])
+
+    def _floor(self):
+        from allostery.baselines import degree_centrality
+
+        return degree_centrality(self.COORDS, cutoff=3.0)
+
+    def test_real_degree_centrality_is_an_imperfect_floor(self):
+        """Sanity check on the fixture itself: degree_centrality must NOT
+        already be a perfect (AUC=1.0) separator, or the "beats the floor"
+        assertion below would be untestable by construction."""
+        from allostery.metrics import auc
+
+        floor = self._floor()
+        assert list(floor) == [3.0, 3.0, 3.0, 3.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        floor_auc = auc(floor, self.LABELS)
+        assert floor_auc < 1.0, "fixture must be an imperfect floor, not a strawman"
+
+    def test_scorer_that_resolves_the_confound_beats_the_real_floor(self):
+        """A scorer that correctly separates residue 3 (the confound) from
+        the true pocket -- something degree_centrality structurally cannot
+        do, since 3 is degree-identical to 0/1/2 -- genuinely beats the
+        real floor, not a hand-built one."""
+        floor = self._floor()
+        resolves_confound = np.array([10.0, 9.0, 8.0, 1.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0])
+        result = classify_failure(resolves_confound, self.LABELS, floor_scores=floor)
+        assert result == NO_FAILURE_DETECTED
+
+    def test_scorer_no_better_than_the_real_floor_is_flagged(self):
+        """The floor compared against itself cannot beat itself."""
+        floor = self._floor()
+        result = classify_failure(floor, self.LABELS, floor_scores=floor)
+        assert result == BEATS_CHANCE_NOT_FLOOR
+
+
 class TestPermutationNullLeakDetector:
     """TASK-0071: port of test_leakage_gate.py's GATE-B4 permutation null
     (the "verified reference implementation" EXECUTION_PLAN.md Phase 1.4

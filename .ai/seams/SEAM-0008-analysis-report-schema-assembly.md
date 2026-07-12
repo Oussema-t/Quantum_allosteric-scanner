@@ -3,8 +3,7 @@
 - units: `analysis.py` (`benchmark`, `ablation`, `quantum_vs_classical`, `apo_holo_consistency`) -> *no assembly step exists* -> `report.verdict_template` (expects a flat `results` dict: `AUC_apo_Hnew_default`, `AUC_apo_H10_baseline`, `AUC_apo_Hnew_optimised`, `AUC_holo_Hnew_optimised`, `AUC_ctqw_mean`, `AUC_heat_mean`, `most_impactful_term`, `least_impactful_term`, `mean_rho_apo_holo`, `mean_jacc20`)
 - invariant: the `results` dict `verdict_template` renders is actually assembled from
   real `analysis.py` output, not a shape that merely happens to satisfy the tests
-- owner: [[TASK-0056]] (existing Phase 4 review task, covers `report.py`; cross-linked
-  here rather than filing a duplicate — see note below)
+- owner: [[TASK-0079]] (reassigned by [[TASK-0056]]'s review, 2026-07-12 — see below)
 - seam-test: not yet written
 - status: OPEN
 - provenance: found by [[TASK-0053]]'s sweep (2026-07-11). Grepped every one of
@@ -26,3 +25,20 @@
   answer this exact question to do its job — pre-loading this finding there so
   whoever picks it up doesn't have to rediscover it, per this task's own "cite
   evidence, don't silently reconcile" rule.
+
+  **Resolved by [[TASK-0056]]'s review (2026-07-12): this is not a `report.py` bug,
+  and the fix does not belong in `report.py`.** `report.py`'s own module docstring
+  already states, correctly and deliberately: "renders prose/lists from an
+  already-assembled results dict; it does not compute the underlying numbers
+  (that's `analysis.py`'s job)." Writing an assembly function inside `report.py`
+  itself (or inside `analysis.py`, out of this review's scope) risks guessing at a
+  shape disconnected from how the real pipeline will actually be orchestrated.
+  The genuine owner is **[[TASK-0079]]** (end-to-end challenge run, Phase 5.1) —
+  its own Intent Contract already states "In Scope: orchestrating the already-Done
+  pipeline stages (`labels`, `protocol`, `select`, `analysis`, `diagnostics`,
+  `report`, `baselines`, `pathways`, `coarse`, `viz`) into one run per target" —
+  which *is* the assembly step this seam is waiting on. Currently claimed and
+  in-progress (Implementer A, 2026-07-12 13:43) — cross-linked directly into that
+  task's own file so this isn't missed. Status stays **OPEN**, not flipped to a
+  documented non-issue, since the invariant genuinely isn't satisfied yet — it's
+  correctly re-scoped, not resolved.
