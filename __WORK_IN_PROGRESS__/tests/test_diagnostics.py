@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 from allostery.diagnostics import (
+    BEATS_CHANCE_NOT_FLOOR,
     INSUFFICIENT_RESOLUTION,
     LABEL_SUSPECT,
     NO_FAILURE_DETECTED,
@@ -151,3 +152,35 @@ class TestClassifyFailure:
         labels = np.array([1, 1, 0, 0, 0, 0, 0, 0, 0, 0])
         scores = np.array([10.0, 9.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0])
         assert classify_failure(scores, labels) == NO_FAILURE_DETECTED
+
+
+class TestClassifyFailureFloor:
+    """TASK-0058 (closes SEAM-0005): floor_scores beats-floor check."""
+
+    LABELS = np.array([1, 1, 0, 0, 0, 0, 0, 0, 0, 0])
+    # AUC=1.0 (perfect separation)
+    NEAR_PERFECT = np.array([10.0, 9.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0])
+    # AUC=0.75 (beats chance, clearly short of near-perfect)
+    MEDIOCRE = np.array([8.0, 7.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 9.0, 10.0])
+
+    def test_beats_chance_and_beats_floor_is_no_failure_detected(self):
+        result = classify_failure(self.NEAR_PERFECT, self.LABELS, floor_scores=self.MEDIOCRE)
+        assert result == NO_FAILURE_DETECTED
+
+    def test_beats_chance_but_loses_to_floor_is_beats_chance_not_floor(self):
+        result = classify_failure(self.MEDIOCRE, self.LABELS, floor_scores=self.NEAR_PERFECT)
+        assert result == BEATS_CHANCE_NOT_FLOOR
+
+    def test_floor_scores_none_is_unchanged_from_pre_seam_0005_behavior(self):
+        """Explicit floor_scores=None, not just omitted -- regression guard
+        against the `is not None` branch ever being taken for the default."""
+        result = classify_failure(self.NEAR_PERFECT, self.LABELS, floor_scores=None)
+        assert result == NO_FAILURE_DETECTED
+
+    def test_floor_check_only_applies_after_chance_check(self):
+        """A score that doesn't even beat chance is NO_SIGNAL_IN_APO
+        regardless of the floor -- floor comparison must not run first."""
+        chance_scores = np.array([1.0, 0.0, 1.0, 0.0])
+        chance_labels = np.array([1, 1, 0, 0])
+        result = classify_failure(chance_scores, chance_labels, floor_scores=self.MEDIOCRE[:4])
+        assert result == NO_SIGNAL_IN_APO

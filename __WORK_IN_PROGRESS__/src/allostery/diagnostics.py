@@ -109,6 +109,7 @@ NO_SIGNAL_IN_APO = "NO_SIGNAL_IN_APO"
 LABEL_SUSPECT = "LABEL_SUSPECT"
 OPERATOR_DEGENERATE = "OPERATOR_DEGENERATE"
 INSUFFICIENT_RESOLUTION = "INSUFFICIENT_RESOLUTION"
+BEATS_CHANCE_NOT_FLOOR = "BEATS_CHANCE_NOT_FLOOR"
 NO_FAILURE_DETECTED = "NO_FAILURE_DETECTED"
 
 FAILURE_CATEGORIES = (
@@ -116,6 +117,7 @@ FAILURE_CATEGORIES = (
     LABEL_SUSPECT,
     OPERATOR_DEGENERATE,
     INSUFFICIENT_RESOLUTION,
+    BEATS_CHANCE_NOT_FLOOR,
     NO_FAILURE_DETECTED,
 )
 
@@ -129,6 +131,7 @@ def classify_failure(
     auc_chance_tol: float = 0.05,
     n_large: int = LARGE_N_THRESHOLD,
     diag_dominance_threshold: float = DIAG_DOMINANCE_THRESHOLD,
+    floor_scores: np.ndarray | None = None,
 ) -> str:
     """Classify why a scoring result looks poor.
 
@@ -153,7 +156,17 @@ def classify_failure(
        statistically indistinguishable from chance: a legitimate,
        reportable negative result (`PLAN.md`'s "gates before build"
        framing).
-    5. `NO_FAILURE_DETECTED` -- none of the above; not a notebook category,
+    5. `BEATS_CHANCE_NOT_FLOOR` (SEAM-0005) -- the score clears the chance
+       bar above but does not beat `floor_scores`, the strongest trivial
+       structural baseline available for this target (`baselines.py`,
+       caller's choice which baseline). Only checked once chance is
+       already cleared -- a result that doesn't even beat chance is
+       `NO_SIGNAL_IN_APO` regardless of the floor. Skipped entirely when
+       `floor_scores` is `None` (the default), which keeps every existing
+       call site byte-identical to pre-SEAM-0005 behavior. Matches
+       `PLAN.md`'s "a ceiling that node degree also reaches is structure,
+       not your method" bar.
+    6. `NO_FAILURE_DETECTED` -- none of the above; not a notebook category,
        added so this function is total over well-scoring inputs too.
     """
     diag = None
@@ -175,5 +188,10 @@ def classify_failure(
     score_auc = _auc(np.asarray(scores), labels_arr)
     if np.isnan(score_auc) or abs(score_auc - 0.5) < auc_chance_tol:
         return NO_SIGNAL_IN_APO
+
+    if floor_scores is not None:
+        floor_auc = _auc(np.asarray(floor_scores), labels_arr)
+        if not np.isnan(floor_auc) and score_auc <= floor_auc:
+            return BEATS_CHANCE_NOT_FLOOR
 
     return NO_FAILURE_DETECTED

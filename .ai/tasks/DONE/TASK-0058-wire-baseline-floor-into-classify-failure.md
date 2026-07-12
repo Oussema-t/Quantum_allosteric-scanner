@@ -6,7 +6,7 @@
 - Title: Give `diagnostics.py::classify_failure` a `floor_scores` parameter and a
   beats-floor check, so "signal" means "beats the strongest trivial structural
   baseline," not merely "beats chance"
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Source: [[SEAM-0005]] (`.ai/seams/SEAM-0005-verdict-signal-vs-baseline-floor.md`),
   filed per that record's own instruction once TASK-0011 (`baselines.py`) landed.
@@ -97,4 +97,40 @@ None
 
 ## Done
 
-(not yet)
+- `floor_scores: np.ndarray | None = None` added to `classify_failure`'s
+  signature (keyword-only, after the existing keyword params, matching
+  this module's convention). Default `None` preserves byte-identical
+  behavior — verified by an explicit regression test, not just by
+  omission (`test_floor_scores_none_is_unchanged_from_pre_seam_0005_behavior`).
+- New closed-set category `BEATS_CHANCE_NOT_FLOOR`, added to
+  `FAILURE_CATEGORIES`. Checked after the existing chance check and
+  before `NO_FAILURE_DETECTED`, per the Intent Contract's ordering —
+  verified by `test_floor_check_only_applies_after_chance_check` (a
+  chance-level score returns `NO_SIGNAL_IN_APO` regardless of a
+  passed-in floor, floor check never reached).
+  Comparison is `score_auc <= floor_auc` (a tie does not count as
+  beating the floor).
+- `test_seam_0005_baseline_floor.py`'s `xfail(strict=True)` removed; the
+  test now passes for real, unchanged apart from the marker/docstring
+  (per the task's own instruction, "no changes to the test itself").
+- Two new direct unit tests added to `test_diagnostics.py`
+  (`TestClassifyFailureFloor`): beats-chance-and-floor →
+  `NO_FAILURE_DETECTED`; beats-chance-not-floor → `BEATS_CHANCE_NOT_FLOOR`
+  — both with hand-verified AUCs (0.75 mediocre vs. 1.0 near-perfect),
+  computed and checked before being hardcoded into the assertions, not
+  guessed.
+- `SEAM-0005` flipped to `VERIFIED`
+  (`.ai/seams/SEAM-0005-verdict-signal-vs-baseline-floor.md`), per this
+  task's own record and not auto-flipped from elsewhere.
+- Full local run: `python3 .ai/tools/pytest_local.py wip-all --json` →
+  398 passed, 0 failed (one pre-existing `xpass` elsewhere in the suite,
+  unrelated to this task, not investigated here — out of scope).
+- Not done, deliberately: `report.py::verdict_template`'s separate
+  meaningful/marginal/noise-level classification (Out Of Scope above);
+  no benchmark-orchestration code was added to actually call
+  `baselines.py` and pass its output into `classify_failure` for a real
+  target — this task only makes the function *capable* of the
+  comparison, per its own Out Of Scope.
+- **Staging/commit deferred** — held per the user's manual Stage-Commit-Queue
+  coordination (this thread was 3rd in queue at claim time); code and
+  tests are complete and locally green, not yet staged.

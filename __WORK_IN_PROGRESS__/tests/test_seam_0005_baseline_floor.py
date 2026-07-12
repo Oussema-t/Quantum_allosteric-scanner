@@ -13,14 +13,10 @@ in the composition, which is exactly what makes it a seam per
 `SEAM_PROTOCOL.md`'s own definition ("If a unit test on either side could
 catch it, it is not a seam-test").
 
-xfail(strict=True): `classify_failure` currently has no floor-awareness at
-all -- no parameter accepts a baseline/floor score to compare against, so
-this test's `floor_scores=` call fails with TypeError today. That failure
-*is* the seam being OPEN, made executable instead of left as a table row.
-This test should start passing, with no changes to the test itself, once
-a future task wires floor-comparison into `classify_failure` (owner:
-[[TASK-0011]] per the seam record; no dedicated follow-up task filed yet
-as of this test's authorship -- file one before closing this seam).
+Closed by TASK-0058: `classify_failure` now accepts `floor_scores` and
+returns `BEATS_CHANCE_NOT_FLOOR` when the method clears chance but not the
+floor. This test needed no changes from its xfail-authorship version --
+the failure it encoded was the seam itself, not the test.
 """
 import numpy as np
 import pytest
@@ -36,16 +32,6 @@ def _chain_coords(n: int = 12, spacing: float = 2.0) -> np.ndarray:
     ])
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "SEAM-0005 (open): classify_failure has no floor-awareness -- it "
-        "only checks beats-chance (AUC~0.5), never compares against "
-        "baselines.py's structural floor. Encodes the seam's target "
-        "invariant; should start passing once classify_failure accepts a "
-        "floor score to compare against."
-    ),
-)
 def test_beating_chance_but_not_the_surface_floor_is_not_no_failure_detected():
     coords = _chain_coords(12, spacing=2.0)
     # Labels concentrated on the two lowest-degree (chain-end) residues --

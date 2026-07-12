@@ -16,7 +16,7 @@ re-check there (or regenerate this table) before trusting it for dispatch decisi
 
 | Done | In Progress | TODO | Total |
 |---|---|---|---|
-| 3 (TASK-0070, TASK-0052, TASK-0047) | 0 | 32 | 35 |
+| 4 (TASK-0070, TASK-0052, TASK-0047, TASK-0058) | 0 | 31 | 35 |
 
 **To refresh this snapshot:** each task file's own `- Status:` line is authoritative
 (`.ai/COMMON.md`'s registry mirrors it). One-line check for any ID:
@@ -79,7 +79,7 @@ triviality floor. `baselines.py` now exists — wire it in.
 
 | # | Task | Why now | Status |
 |---|---|---|---|
-| 1.1 | **[EXISTS] TASK-0058** — wire baseline floor into `classify_failure` | Turns "beats chance" into "beats degree / betweenness / distance-to-active". Without it **no verdict the pipeline emits is honest.** | TODO |
+| 1.1 | **[EXISTS] TASK-0058** — wire baseline floor into `classify_failure` | Turns "beats chance" into "beats degree / betweenness / distance-to-active". Without it **no verdict the pipeline emits is honest.** | **Done**. `floor_scores` param + new `BEATS_CHANCE_NOT_FLOOR` category added to `classify_failure`, checked after the existing chance check, before `NO_FAILURE_DETECTED`; `floor_scores=None` default verified byte-identical to prior behavior. `SEAM-0005` closed to VERIFIED. `test_seam_0005_baseline_floor.py`'s `xfail` removed, passes for real; 4 new direct unit tests in `test_diagnostics.py`. 398 passed, 0 failed. |
 | 1.2 | **[EXISTS] TASK-0055** — `optimised` AUC freeze-provenance check | Verifies headline AUCs come from the frozen/DEV path, not the old label-tuned notebook route. If not, the report layer silently re-imports the §8 leak. | TODO |
 | 1.3 | **[EXISTS] TASK-0064** — wire unsupervised score into frozen loop | Completes the label-free selection path. | TODO |
 | 1.4 | **[FILED] TASK-0071 — permutation-null leak detector** | The firewall *prevents* known leak vectors; nothing *detects* an unforeseen one. Shuffle labels, re-run, flag anything still scoring. Home: `diagnostics.py`. Verified reference implementation exists. | TODO |
