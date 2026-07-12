@@ -27,10 +27,12 @@ from allostery.protocol import (  # noqa: E402
     get_pocket_mask,
     get_superpose_report,
     leave_one_protein_out,
+    run_frozen_verdict,
     select_frozen_config,
     stamp_provenance,
     verify_frozen_stamp,
 )
+from allostery.diagnostics import FAILURE_CATEGORIES  # noqa: E402
 from allostery.select import unsupervised_score  # noqa: E402
 
 
@@ -400,3 +402,157 @@ class TestLeaveOneProteinOut:
             # is legitimate here, not a firewall bypass.
             mask = get_pocket_mask(apo, holo, held_out, _TARGET_CONFIG)
             assert mask is not None
+
+
+# ---------------------------------------------------------------------------
+# run_frozen_verdict (TASK-0079.003)
+# ---------------------------------------------------------------------------
+
+_VERDICT_BFACTORS = np.full(N, 20.0)
+_VERDICT_LABELS = np.zeros(N, dtype=bool)
+_VERDICT_LABELS[[3, 4, 5]] = True
+
+
+def _verdict_candidates():
+    path_H = laplacian(_path_adjacency(N))
+    star_H = laplacian(_star_adjacency(N))
+    return [
+        {"H": path_H, "source": 0, "t": 5.0},
+        {"H": star_H, "source": 0, "t": 5.0},
+    ]
+
+
+class TestRunFrozenVerdict:
+    def test_blocks_a_poisoned_candidate_builder(self):
+        """Same 'poisoned builder' pattern as TestSelectFrozenConfig --
+        candidate *construction* must run inside the gate this function
+        opens, not just the scoring that follows."""
+        apo, holo = _apo_holo_with_ligand()
+
+        def poisoned_build():
+            get_pocket_mask(apo, holo, "T1", _TARGET_CONFIG)  # leaky read
+            return _verdict_candidates()
+
+        with pytest.raises(LeakageError):
+            run_frozen_verdict(
+                "T1", poisoned_build, COORDS, _VERDICT_BFACTORS, 0,
+                _VERDICT_LABELS, t_max=5.0, n_steps=50,
+            )
+
+    def test_does_not_block_a_different_targets_read(self):
+        apo, holo = _apo_holo_with_ligand()
+
+        def build():
+            get_pocket_mask(apo, holo, "OTHER_TARGET", _TARGET_CONFIG)
+            return _verdict_candidates()
+
+        result = run_frozen_verdict(
+            "T1", build, COORDS, _VERDICT_BFACTORS, 0,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50,
+        )
+        assert verify_frozen_stamp(result) is True
+
+    def test_returns_a_verifiably_stamped_result(self):
+        result = run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50,
+        )
+        assert verify_frozen_stamp(result) is True
+
+    def test_gate_releases_after_the_call_returns(self):
+        run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50,
+        )
+        assert_readable("T1")  # must not raise -- block released on return
+
+    def test_composes_with_dot001_assembly(self):
+        result = run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50,
+        )
+        for key in (
+            "AUC_apo_Hnew_default", "AUC_apo_H10_baseline",
+            "AUC_apo_Hnew_optimised", "AUC_ctqw_mean", "AUC_heat_mean",
+            "most_impactful_term", "least_impactful_term",
+        ):
+            assert key in result
+
+    def test_optimised_auc_traces_to_the_winning_candidate_not_a_fixed_one(self):
+        """AUC_apo_Hnew_optimised must come from quantum_vs_classical on
+        the winning candidate's own H -- swapping which candidate wins
+        (star vs. path) must change the number, proving it is not
+        silently reusing benchmark()'s fixed H_new_default value."""
+        result = run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50,
+        )
+        winner_H = _verdict_candidates()[result["_winner_index"]]["H"]
+        from allostery.analysis import quantum_vs_classical
+
+        expected = quantum_vs_classical(
+            winner_H, 0, _VERDICT_LABELS, t_max=5.0, n_steps=50,
+        )["ctqw"]["AUC"]
+        assert result["AUC_apo_Hnew_optimised"] == pytest.approx(expected)
+
+    def test_diagnosis_and_winner_metadata_present(self):
+        result = run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50,
+        )
+        assert result["_diagnosis"] in FAILURE_CATEGORIES
+        assert result["_winner_index"] in (0, 1)
+        assert isinstance(result["_winner_score"], float)
+
+    def test_floor_scores_feeds_into_diagnosis(self):
+        """A floor identical to the winning config's own score always
+        satisfies classify_failure's `score_auc <= floor_auc` -- so
+        re-running with floor_scores set to the actual winner's own
+        occupation vector must flip a NO_FAILURE_DETECTED baseline to
+        BEATS_CHANCE_NOT_FLOOR (SEAM-0005), proving floor_scores is
+        actually threaded through to classify_failure, not silently
+        dropped. Skipped if the baseline itself isn't a clean pass (a
+        legitimate NO_SIGNAL_IN_APO/LABEL_SUSPECT result on this small
+        synthetic fixture wouldn't reach the floor check at all, per
+        classify_failure's own documented check order)."""
+        from allostery.analysis import quantum_vs_classical
+        from allostery.diagnostics import BEATS_CHANCE_NOT_FLOOR, NO_FAILURE_DETECTED
+
+        baseline = run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50,
+        )
+        if baseline["_diagnosis"] != NO_FAILURE_DETECTED:
+            pytest.skip(f"baseline diagnosis was {baseline['_diagnosis']!r}, not a clean pass")
+
+        winner_H = _verdict_candidates()[baseline["_winner_index"]]["H"]
+        winner_occ = quantum_vs_classical(winner_H, 0, t_max=5.0, n_steps=50)["ctqw"]
+
+        result = run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50,
+            floor_scores=winner_occ,
+        )
+        assert result["_diagnosis"] == BEATS_CHANCE_NOT_FLOOR
+
+    def test_holo_side_omitted_without_holo_inputs(self):
+        result = run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50,
+        )
+        assert "AUC_holo_Hnew_optimised" not in result
+        assert "mean_rho_apo_holo" not in result
+        assert "mean_jacc20" not in result
+
+    def test_holo_side_populated_when_supplied(self):
+        holo_H = laplacian(_path_adjacency(N))
+        idx = np.arange(N)
+        result = run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50,
+            holo_H=holo_H, holo_source=0, holo_labels=_VERDICT_LABELS,
+            apo_idx=idx, holo_idx=idx,
+        )
+        assert "AUC_holo_Hnew_optimised" in result
+        assert "mean_rho_apo_holo" in result
+        assert "mean_jacc20" in result

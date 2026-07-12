@@ -304,3 +304,143 @@ def select_frozen_config(build_candidates, held_out_target: str) -> dict:
     winner["index"] = best_i
     winner["score"] = float(scores[best_i])
     return winner
+
+
+# ---------------------------------------------------------------------------
+# FROZEN-gated per-target verdict pipeline (TASK-0079.003)
+# ---------------------------------------------------------------------------
+
+def _finite_or_none(value):
+    import numpy as np
+
+    return value if value is not None and np.isfinite(value) else None
+
+
+def run_frozen_verdict(
+    target_name: str,
+    candidates_builder,
+    coords,
+    bfactors,
+    source,
+    labels,
+    *,
+    cutoff: float = 10.0,
+    alpha: float = 0.3,
+    terminal_fraction: float = 0.05,
+    n_low_modes: int = 10,
+    t_max: float = 15.0,
+    n_steps: int = 500,
+    floor_scores=None,
+    holo_H=None,
+    holo_source=None,
+    holo_labels=None,
+    apo_idx=None,
+    holo_idx=None,
+    consistency_k: int = 20,
+) -> dict:
+    """Select an operator/parameter config for `target_name` blind to its
+    labels, then score and stamp the result -- the safety-critical core of
+    the end-to-end run (TASK-0079.003) that wires `select_frozen_config`
+    (TASK-0064), `analysis.py`'s scoring functions (TASK-0008) and
+    `assemble_verdict_results` (TASK-0079.001), `diagnostics.classify_failure`
+    (TASK-0058/0071), and `stamp_provenance` (TASK-0088) together for the
+    first time.
+
+    `labels` (the target's true, already-assembled pocket mask) is a plain
+    array the caller already holds -- obtaining it is the caller's job
+    (typically `labels.build_labels`, called directly and un-gated, per
+    this module's own "not a retroactive lock on labels.py's own direct
+    callers" boundary). This function never calls a gated accessor itself;
+    the only thing its `frozen_context` polices is `candidates_builder` --
+    a builder that reads `target_name`'s pocket/holo label via
+    `get_pocket_mask`/`get_labels`/`get_functional_indices`/
+    `get_superpose_report` raises `LeakageError`, same "poisoned builder"
+    pattern `test_protocol.py::TestSelectFrozenConfig` already establishes.
+
+    `benchmark()`/`ablation()` never accept an external H -- both always
+    build their own default-parameter operators internally -- so they run
+    here as the *default*-parameter comparison
+    (`AUC_apo_Hnew_default`/`AUC_apo_H10_baseline`), never "the winning
+    config". Only `quantum_vs_classical`, which does accept an H, runs
+    against the winning candidate's `H`/`source` (falling back to this
+    call's own `source`/`t_max` only if the winning candidate omits
+    them) -- its `"ctqw"` AUC becomes `AUC_apo_Hnew_optimised`.
+
+    Holo-side numbers (`AUC_holo_Hnew_optimised`, `mean_rho_apo_holo`,
+    `mean_jacc20`) are computed only if the caller supplies `holo_H`
+    (built from the same operator recipe as the winning apo candidate --
+    reconstructing one here would mean inventing a new search space, out
+    of this function's scope per TASK-0079.003's own Intent Contract)
+    plus `holo_source`/`holo_labels`; `apo_idx`/`holo_idx` additionally
+    gate the apo<->holo consistency computation. Omitted entirely, not
+    raised, when holo inputs aren't supplied -- matches
+    `assemble_verdict_results`'s own per-key-optional philosophy.
+
+    Returns the stamped, `.001`-assembled `results` dict, plus
+    `results["_diagnosis"]` (`diagnostics.classify_failure`'s verdict on
+    the winning config's own apo-side score -- a target indistinguishable
+    from chance, or worse than `floor_scores` if supplied, is flagged
+    here rather than silently rendered as a clean verdict) and
+    `results["_winner_index"]`/`results["_winner_score"]` (the winning
+    candidate's position and `unsupervised_score` value, for audit).
+    """
+    from .analysis import (
+        ablation,
+        apo_holo_consistency,
+        assemble_verdict_results,
+        benchmark,
+        quantum_vs_classical,
+    )
+    from .diagnostics import classify_failure
+
+    with frozen_context({target_name}):
+        winner = select_frozen_config(candidates_builder, target_name)
+
+        bench = benchmark(
+            coords, bfactors, source, labels,
+            cutoff=cutoff, t_max=t_max, n_steps=n_steps,
+        )
+        abl = ablation(
+            coords, bfactors, source, labels,
+            cutoff=cutoff, alpha=alpha, terminal_fraction=terminal_fraction,
+            n_low_modes=n_low_modes, t_max=t_max, n_steps=n_steps,
+        )
+        qvc = quantum_vs_classical(
+            winner["H"], winner.get("source", source), labels,
+            t_max=winner.get("t", t_max), n_steps=n_steps,
+        )
+
+        diagnosis = classify_failure(
+            qvc["ctqw"]["occ"], labels, H=winner["H"], bfactors=bfactors,
+            floor_scores=floor_scores,
+        )
+
+        consistency = None
+        auc_holo_optimised = None
+        if holo_H is not None and holo_labels is not None:
+            holo_qvc = quantum_vs_classical(
+                holo_H, holo_source, holo_labels,
+                t_max=winner.get("t", t_max), n_steps=n_steps,
+            )
+            auc_holo_optimised = _finite_or_none(holo_qvc["ctqw"]["AUC"])
+            if apo_idx is not None and holo_idx is not None:
+                consistency = apo_holo_consistency(
+                    qvc["ctqw"]["occ"], holo_qvc["ctqw"]["occ"],
+                    apo_idx, holo_idx, k=consistency_k,
+                )
+
+        assembled = assemble_verdict_results(
+            benchmark_out=bench,
+            ablation_out=abl,
+            qvc_out=qvc,
+            consistency_out=consistency,
+            auc_apo_optimised=_finite_or_none(qvc["ctqw"]["AUC"]),
+            auc_holo_optimised=auc_holo_optimised,
+        )
+        assembled["_diagnosis"] = diagnosis
+        assembled["_winner_index"] = winner["index"]
+        assembled["_winner_score"] = winner["score"]
+
+        stamped = stamp_provenance(assembled)
+
+    return stamped
