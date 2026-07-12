@@ -10,6 +10,14 @@ pdb_cache/
 outputs/
 *.pdb
 
+# TASK-0079 end-to-end run outputs (__WORK_IN_PROGRESS__/scripts/run_challenge.py):
+# regeneratable per-target connectivity matrix / hit list / report / verdict,
+# up to several MB each (dense N x N .npz). Numbers are already transcribed
+# into the git-tracked __WORK_IN_PROGRESS__/RESULTS.md narrative. Revisit once
+# TASK-0083 (the real result-artifact contract) decides the permanent
+# storage/versioning strategy -- this is the interim decision, not that one.
+__WORK_IN_PROGRESS__/results/
+
 # OS / editor
 .DS_Store
 .vscode/
