@@ -16,7 +16,7 @@ re-check there (or regenerate this table) before trusting it for dispatch decisi
 
 | Done | In Progress | TODO | Total |
 |---|---|---|---|
-| 9 (TASK-0070, TASK-0052, TASK-0047, TASK-0058, TASK-0063, TASK-0055, TASK-0064, TASK-0071, TASK-0056) | 0 | 26 | 35 |
+| 10 (TASK-0070, TASK-0052, TASK-0047, TASK-0058, TASK-0063, TASK-0055, TASK-0064, TASK-0071, TASK-0056, TASK-0067) | 0 | 25 | 35 |
 
 **To refresh this snapshot:** each task file's own `- Status:` line is authoritative
 (`.ai/COMMON.md`'s registry mirrors it). One-line check for any ID:
@@ -94,7 +94,7 @@ pinned*. **Resolve the constant before extracting the helper.**
 
 | # | Task | Why in this order | Status |
 |---|---|---|---|
-| 2.1 | **[EXISTS] TASK-0067** — GNM cutoff + weight-scheme benchmark | **Confirmed live divergence:** `backend` uses **8.0 Å**; `hamiltonians.py` defaults to **10.0 Å** (12.0 for some variants). *The app and the research pipeline currently answer the same question differently.* Extracting a helper first would make the wrong number official. | TODO |
+| 2.1 | **[EXISTS] TASK-0067** — GNM cutoff + weight-scheme benchmark | **Confirmed live divergence:** `backend` uses **8.0 Å**; `hamiltonians.py` defaults to **10.0 Å** (12.0 for some variants). *The app and the research pipeline currently answer the same question differently.* Extracting a helper first would make the wrong number official. | **Done.** Real benchmark (`analysis.gnm_cutoff_weight_sweep`, heat-kernel scoring) run against KRAS_G12C + BCR_ABL1 (CARDIAC_MYOSIN excluded — `targets.yaml` itself flags its apo structure's data quality as unresolved; MYC_MAX excluded — no pocket to score). **Primary run is APO-only** — the operator/heat-kernel computation reads `apo.coords` exclusively; `holo` is used only to derive the ground-truth pocket label via `build_labels`, never blended into the topology. A **second, separate HOLO run** (holo-native coords + holo-native labels, per explicit user request for comparison) was added: the apo/holo AUC gap is tiny (KRAS +0.009, BCR_ABL1 -0.020) — an order of magnitude smaller than the cutoff/weight-scheme spread (0.164), meaning near-chance performance is not an apo-vs-holo artifact; the ceiling for this operator family is genuinely low on these targets, holo topology in hand or not. **Cutoff: no significant difference** across 7.5/8.0/10.0 Å (mean AUC 0.42-0.43, within noise) — `backend`'s 8.0 Å default does not need to change. **Weight scheme: harmonic modestly but consistently beats binary/gaussian** (wins 3/3 per-cutoff, ~0.11-0.16 AUC), not acted on (n=2 too thin to justify changing `H8_gnm`'s convention). All AUCs near/below chance, consistent with `PLAN.md`'s documented near-chance finding for these targets. 3 synthetic tests + 1 real network-gated benchmark test (apo+holo), 424 passed, 0 failed. |
 | 2.2 | **[EXISTS] TASK-0066** — shared Kirchhoff + DCC helper | Extract binary-Kirchhoff context + DCC + z-score; port into both trees (not cross-imported), one test suite. **Must land 2.1's chosen constant.** | TODO |
 | 2.3 | **[FILED] TASK-0072 — golden-value cross-tree drift test** | The anti-drift mechanism 2.2 needs: fix a reference structure, assert both trees produce **numerically identical** output. Without it "ported" decays back into "duplicated" — exactly how 8.0 vs 10.0 happened. | TODO |
 | 2.4 | **[EXISTS] TASK-0040** — potentials shared GNM context | Same family as 2.2. | TODO |

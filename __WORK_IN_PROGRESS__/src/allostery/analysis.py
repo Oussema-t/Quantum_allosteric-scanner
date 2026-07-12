@@ -290,3 +290,55 @@ def dephasing_sweep(
         "is_flat": bool(auc_range < flat_threshold) if np.isfinite(auc_range) else None,
         "flat_threshold": flat_threshold,
     }
+
+
+# ---------------------------------------------------------------------------
+# TASK-0067 -- GNM cutoff + contact-weight-scheme benchmark
+#
+# Resolves the three-way cutoff divergence TASK-0018's decision doc found:
+# backend/analysis.py::gnm_context uses 8.0 A, hamiltonians.H8_gnm defaults
+# to 7.5 A, potentials.py's GNM callers (_gnm_msf/V_R/V_C/V_M) pass 10.0 A --
+# none benchmarked. H8_gnm itself is fixed to weight="binary" by convention
+# (the classical GNM Kirchhoff definition); this sweep generalises that to
+# every weighting scheme hamiltonians.contact_matrix already exposes
+# (binary/gaussian/exponential/harmonic/invdist), building the same
+# combinatorial-Laplacian family H8_gnm builds, parameterised by both knobs
+# at once rather than hand-rolling a new operator.
+# ---------------------------------------------------------------------------
+
+def gnm_cutoff_weight_sweep(
+    coords: np.ndarray,
+    source,
+    labels: np.ndarray,
+    cutoffs=(7.5, 8.0, 10.0),
+    weight_schemes=("binary", "gaussian", "exponential", "harmonic", "invdist"),
+    t_max: float = 15.0,
+) -> dict:
+    """Score every (cutoff, weight_scheme) combination's GNM-Kirchhoff
+    Laplacian against `labels`, scored from `source` via the classical
+    heat kernel.
+
+    `heat`, not `time_averaged_ctqw`, is the deliberate choice here:
+    propagators.py's own docstring states a single heat evaluation at
+    `t_max` is "already representative" (no oscillation to average out,
+    unlike CTQW) -- this sweep is comparing *operator construction*
+    (cutoff x weight), not propagator choice, so the cheaper single-eval
+    classical kernel is the right tool, not a shortcut that changes what's
+    being measured. `laplacian(W, normalised=False)` is always PSD for any
+    non-negative `W`, satisfying `heat`'s own precondition regardless of
+    which weight scheme built `W`.
+
+    Returns `{(cutoff, weight_scheme): metric_pack, ...}` -- reuses this
+    module's own `_metric_pack` (AUC + P@k + E@k), not a new score format.
+    """
+    from .hamiltonians import contact_matrix, laplacian
+    from .propagators import heat
+
+    results = {}
+    for cutoff in cutoffs:
+        for scheme in weight_schemes:
+            W = contact_matrix(coords, cutoff=cutoff, weight=scheme)
+            L = laplacian(W, normalised=False)
+            occ = heat(L, t_max, source=source)
+            results[(cutoff, scheme)] = _metric_pack(occ, labels)
+    return results

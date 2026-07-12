@@ -25,6 +25,7 @@ from allostery.analysis import (  # noqa: E402
     apo_holo_consistency,
     benchmark,
     dephasing_sweep,
+    gnm_cutoff_weight_sweep,
     quantum_vs_classical,
     spectral_enrichment,
 )
@@ -185,6 +186,44 @@ class TestDephasingSweep:
         )
         assert np.all(np.isnan(result["auc"]))
         assert result["is_flat"] is None
+
+
+# ---------------------------------------------------------------------------
+# gnm_cutoff_weight_sweep (TASK-0067)
+# ---------------------------------------------------------------------------
+
+class TestGnmCutoffWeightSweep:
+    def test_returns_one_metric_pack_per_combination(self):
+        result = gnm_cutoff_weight_sweep(
+            COORDS, source=0, labels=LABELS,
+            cutoffs=(7.5, 10.0), weight_schemes=("binary", "gaussian"), t_max=5.0,
+        )
+        assert set(result) == {
+            (7.5, "binary"), (7.5, "gaussian"), (10.0, "binary"), (10.0, "gaussian"),
+        }
+        for pack in result.values():
+            assert "AUC" in pack
+            assert pack["occ"].shape == (N,)
+
+    def test_default_grid_covers_all_three_live_cutoffs_and_five_schemes(self):
+        """The three cutoffs actually in production use (backend 8.0,
+        H8_gnm 7.5, potentials.py 10.0 -- TASK-0018's finding) and all five
+        contact_matrix weight schemes must all be swept by default, not a
+        subset a caller has to remember to ask for."""
+        result = gnm_cutoff_weight_sweep(COORDS, source=0, labels=LABELS, t_max=5.0)
+        cutoffs_seen = {c for c, _ in result}
+        schemes_seen = {s for _, s in result}
+        assert cutoffs_seen == {7.5, 8.0, 10.0}
+        assert schemes_seen == {"binary", "gaussian", "exponential", "harmonic", "invdist"}
+        assert len(result) == 15
+
+    def test_all_combinations_are_finite_and_non_degenerate_on_a_connected_helix(self):
+        result = gnm_cutoff_weight_sweep(
+            COORDS, source=0, labels=LABELS,
+            cutoffs=(10.0,), weight_schemes=("binary", "harmonic", "invdist"), t_max=5.0,
+        )
+        for pack in result.values():
+            assert np.isfinite(pack["AUC"])
 
 
 # ---------------------------------------------------------------------------
