@@ -22,6 +22,8 @@ diagnostics can introspect H alone, with no separate coords/adjacency input.
 """
 from __future__ import annotations
 
+from typing import Callable
+
 import numpy as np
 
 from .metrics import auc as _auc, eff_rank as _eff_rank
@@ -195,3 +197,112 @@ def classify_failure(
             return BEATS_CHANCE_NOT_FLOOR
 
     return NO_FAILURE_DETECTED
+
+
+# ---------------------------------------------------------------------------
+# Permutation-null leak detector (TASK-0071)
+#
+# Port of `__WORK_IN_PROGRESS__/tests/test_leakage_gate.py`'s GATE-B4 --
+# that file's own docstring names it "the load-bearing detector" and its
+# module docstring states the design axiom this ports verbatim: "a leak
+# is anything that keeps scoring above chance when the labels are
+# randomized... regardless of *where* the leak entered." Until this task,
+# that reference implementation existed only as a self-validating
+# meta-test fixture ("GATE-B4's permutation_null... [is] this file's own
+# reference implementation... not a claim that protocol.py has [it]",
+# test_leakage_gate.py:79-83) -- never wired into the production package.
+# `PERM_LEAK_THRESHOLD` is ported at the same value (0.60), not re-derived,
+# since it is validated in that file by `test_meta_permutation_detector_
+# discriminates` against both a real honest scorer and a deliberately
+# leaky one.
+#
+# The firewall (protocol.py) *prevents* known leak vectors structurally;
+# this detector *catches* an unforeseen one empirically, by actually
+# re-running the scorer on shuffled labels rather than trusting that every
+# leak path was anticipated -- the two are complementary, not redundant
+# (EXECUTION_PLAN.md Phase 1.4).
+# ---------------------------------------------------------------------------
+
+PERM_LEAK_THRESHOLD = 0.60  # ported verbatim from GATE-B4
+
+
+def permutation_null(
+    scorer: Callable[[np.ndarray, np.ndarray], np.ndarray],
+    coords: np.ndarray,
+    labels: np.ndarray,
+    n_perm: int = 200,
+    seed: int = 1,
+) -> dict:
+    """Re-run `scorer` on `n_perm` shuffles of `labels`, breaking any real
+    label-structure relationship while leaving `coords` untouched.
+
+    `scorer` takes `(coords, labels)` and returns a `(N,)` score array --
+    deliberately re-invoked per permutation (not scored once and reused)
+    so a leak baked into the scorer itself (e.g. one that reads labels
+    directly, not just an upstream mislabeling) is caught too; this is
+    why the reference implementation and this port both take a callable,
+    not a precomputed score array like `classify_failure`'s `scores`.
+
+    Returns `{"auc_true": float, "perm_mean": float, "perm_ci": (lo, hi),
+    "n_perm": int}`. `perm_ci` is the 2.5/97.5 percentile band over the
+    permutation AUCs (matches GATE-B4's own reporting, not just the mean).
+    Non-finite (`NaN`) permutation AUCs -- possible in principle though not
+    from permutation alone, since shuffling preserves the positive/negative
+    label counts -- are excluded from `perm_mean`/`perm_ci`; if every
+    permutation is non-finite both are `NaN`.
+    """
+    rng = np.random.default_rng(seed)
+    labels = np.asarray(labels)
+
+    auc_true = _auc(np.asarray(scorer(coords, labels)), labels)
+
+    perm_aucs = np.empty(n_perm)
+    for i in range(n_perm):
+        y = rng.permutation(labels)
+        perm_aucs[i] = _auc(np.asarray(scorer(coords, y)), y)
+
+    finite = perm_aucs[np.isfinite(perm_aucs)]
+    if len(finite) == 0:
+        perm_mean = float("nan")
+        perm_ci = (float("nan"), float("nan"))
+    else:
+        perm_mean = float(finite.mean())
+        lo, hi = np.percentile(finite, [2.5, 97.5])
+        perm_ci = (float(lo), float(hi))
+
+    return {
+        "auc_true": float(auc_true),
+        "perm_mean": perm_mean,
+        "perm_ci": perm_ci,
+        "n_perm": n_perm,
+    }
+
+
+def detect_permutation_leak(
+    scorer: Callable[[np.ndarray, np.ndarray], np.ndarray],
+    coords: np.ndarray,
+    labels: np.ndarray,
+    n_perm: int = 200,
+    seed: int = 1,
+    threshold: float = PERM_LEAK_THRESHOLD,
+) -> dict:
+    """`permutation_null`, plus the flagging decision (GATE-B4's own
+    `PERM_LEAK_THRESHOLD` gate: `perm_mean > threshold` => "label
+    side-channel", a leak the firewall did not anticipate).
+
+    Callable alongside `classify_failure`/`operator_diagnostics` as this
+    module's third diagnostic entry point -- a catch-all *detector*
+    backstopping `protocol.py`'s *preventive* DEV/FROZEN firewall, not a
+    replacement for it (this task's own Intent Contract).
+
+    Returns `permutation_null`'s dict plus `"threshold": float` and
+    `"leak_detected": bool | None` (`None` only if every permutation AUC
+    was non-finite, i.e. `perm_mean` itself is `NaN` -- undetermined, not
+    a clean pass).
+    """
+    result = permutation_null(scorer, coords, labels, n_perm=n_perm, seed=seed)
+    result["threshold"] = threshold
+    result["leak_detected"] = (
+        None if np.isnan(result["perm_mean"]) else bool(result["perm_mean"] > threshold)
+    )
+    return result

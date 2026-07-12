@@ -12,10 +12,14 @@ from allostery.diagnostics import (
     NO_FAILURE_DETECTED,
     NO_SIGNAL_IN_APO,
     OPERATOR_DEGENERATE,
+    PERM_LEAK_THRESHOLD,
     classify_failure,
+    detect_permutation_leak,
     operator_diagnostics,
+    permutation_null,
 )
 from allostery.hamiltonians import build_H_new
+from allostery.propagators import time_averaged_ctqw
 
 
 def _helix_coords(n: int = 10, offset: float = 0.0) -> np.ndarray:
@@ -184,3 +188,99 @@ class TestClassifyFailureFloor:
         chance_labels = np.array([1, 1, 0, 0])
         result = classify_failure(chance_scores, chance_labels, floor_scores=self.MEDIOCRE[:4])
         assert result == NO_SIGNAL_IN_APO
+
+
+class TestPermutationNullLeakDetector:
+    """TASK-0071: port of test_leakage_gate.py's GATE-B4 permutation null
+    (the "verified reference implementation" EXECUTION_PLAN.md Phase 1.4
+    points to). Both acceptance scenarios use this package's own real
+    production scorer (build_H_new + time_averaged_ctqw), not a synthetic
+    stand-in -- a stronger check than the reference's own toy GNM scorer,
+    and avoids KRAS_G12C (this package's only network-gated real target),
+    which PLAN.md documents as scoring *near chance even honestly*, i.e.
+    not a case with "known real signal" as the acceptance scenario
+    requires."""
+
+    N = 20
+
+    @staticmethod
+    def _helix_coords(n):
+        theta = np.arange(n) * (100.0 * np.pi / 180.0)
+        return np.column_stack([
+            2.3 * np.cos(theta), 2.3 * np.sin(theta), 1.5 * np.arange(n, dtype=float),
+        ])
+
+    @classmethod
+    def _honest_scorer(cls, coords, labels):
+        """Real production pipeline. Never reads `labels` -- topology
+        (+ B-factor/terminal/rigidity/covariance/low-mode potentials) and
+        a fixed propagation source only."""
+        bfac = np.full(len(coords), 20.0)
+        H = build_H_new(coords, bfac, cutoff=10.0)
+        return time_averaged_ctqw(H, t_max=15.0, source=0, n_steps=200)
+
+    @staticmethod
+    def _leaky_scorer(coords, labels):
+        """Peeks at whatever labels it is handed -- the failure mode this
+        detector exists to catch (matches test_leakage_gate.py's own
+        leaky_scorer construction)."""
+        rng = np.random.default_rng(0)
+        return labels.astype(float) + rng.normal(0.0, 0.01, size=len(labels))
+
+    def test_honest_scorer_permuted_scores_center_on_chance_with_real_score_an_outlier(self):
+        """Acceptance scenario 1: known real signal -- permuted-score
+        distribution centers on chance, real score is a clear outlier."""
+        coords = self._helix_coords(self.N)
+        labels = np.zeros(self.N, dtype=bool)
+        labels[[1, 2, 3]] = True  # spatially close to the fixed source (0)
+
+        result = permutation_null(self._honest_scorer, coords, labels, n_perm=100, seed=1)
+
+        assert result["auc_true"] > 0.65, f"honest scorer has no real signal ({result['auc_true']:.3f})"
+        assert abs(result["perm_mean"] - 0.5) < 0.1, f"perm_mean not centered on chance ({result['perm_mean']:.3f})"
+        assert result["perm_mean"] < PERM_LEAK_THRESHOLD
+
+    def test_honest_scorer_is_not_flagged_as_a_leak(self):
+        coords = self._helix_coords(self.N)
+        labels = np.zeros(self.N, dtype=bool)
+        labels[[1, 2, 3]] = True
+
+        result = detect_permutation_leak(self._honest_scorer, coords, labels, n_perm=100, seed=1)
+        assert result["leak_detected"] is False
+
+    def test_synthetic_leak_deliberately_introduced_is_flagged(self):
+        """Acceptance scenario 2: a scorer that reads labels directly
+        (simulating a DEV/FROZEN-split bypass the firewall didn't
+        anticipate) must be flagged -- permuted scores stay elevated
+        because the scorer tracks whatever labels it's handed, permuted
+        or not."""
+        coords = self._helix_coords(self.N)
+        labels = np.zeros(self.N, dtype=bool)
+        labels[[1, 2, 3]] = True
+
+        result = detect_permutation_leak(self._leaky_scorer, coords, labels, n_perm=100, seed=1)
+        assert result["perm_mean"] > 0.90, f"detector missed a blatant leak ({result['perm_mean']:.3f})"
+        assert result["leak_detected"] is True
+
+    def test_returns_expected_keys_and_ci_ordering(self):
+        coords = self._helix_coords(self.N)
+        labels = np.zeros(self.N, dtype=bool)
+        labels[[1, 2, 3]] = True
+
+        result = detect_permutation_leak(self._honest_scorer, coords, labels, n_perm=50, seed=1)
+        assert set(result) == {"auc_true", "perm_mean", "perm_ci", "n_perm", "threshold", "leak_detected"}
+        lo, hi = result["perm_ci"]
+        assert lo <= hi
+        assert result["threshold"] == PERM_LEAK_THRESHOLD
+
+    def test_custom_threshold_is_respected(self):
+        coords = self._helix_coords(self.N)
+        labels = np.zeros(self.N, dtype=bool)
+        labels[[1, 2, 3]] = True
+
+        result = detect_permutation_leak(
+            self._honest_scorer, coords, labels, n_perm=50, seed=1, threshold=0.0,
+        )
+        # An absurdly low threshold trivially flags even the honest scorer --
+        # confirms `threshold` is actually wired through, not ignored.
+        assert result["leak_detected"] is True
