@@ -8,7 +8,7 @@
   parameters — FROZEN-path callers are silently forced onto the coarser
   Cα-only contact approximation with no way to opt into the more accurate
   path without bypassing the firewall.
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Source: TASK-0048 Phase 3 review, P2 finding —
   [`REVIEW-2026-07-11-phase3-protocol-select.md`](../../reviews/REVIEW-2026-07-11-phase3-protocol-select.md).
@@ -67,10 +67,10 @@ None
 
 ## TODO
 
-- [ ] Widen `get_functional_indices`'s signature per above (pick `**kwargs`
+- [x] Widen `get_functional_indices`'s signature per above (pick `**kwargs`
       or explicit-complete, document the choice inline).
-- [ ] Add the new heavy-atom-divergence regression test.
-- [ ] Run `test_protocol.py`/`test_select.py` to confirm no regression.
+- [x] Add the new heavy-atom-divergence regression test.
+- [x] Run `test_protocol.py`/`test_select.py` to confirm no regression.
 
 ## Dependency
 
@@ -87,4 +87,31 @@ None
 
 ## Done
 
-(not yet)
+- `protocol.get_functional_indices` now takes `**kwargs` and forwards them
+  to `labels.functional_indices`, per the recommended pattern
+  (`get_superpose_report`'s existing `**kwargs` shape) — chosen over an
+  explicit-complete parameter list precisely because `functional_indices`
+  had already grown once (the heavy-atom params) since this gate was
+  first written, and an explicit list would just relocate the same class
+  of gap to the next parameter addition.
+- New regression test,
+  `test_protocol.py::TestGatedAccessors::test_get_functional_indices_forwards_heavy_atom_params`:
+  same synthetic construction as `test_labels.py::TestContactResidueIndicesHeavyAtomFix`
+  (a Cα 6.0 Å from a ligand — outside the 4.5 Å default cutoff — vs. a
+  heavy atom on the same residue sitting on top of it), but called
+  through the gated `protocol.get_functional_indices` wrapper instead of
+  `labels.functional_indices` directly, so it would fail if the gate ever
+  drops the parameters again even though `labels.py`'s own tests would
+  still pass. Confirmed the two paths genuinely diverge:
+  `"top-degree fallback"` without the heavy-atom kwargs vs.
+  `"func_ligand-contact:FUNC"` with them.
+- `test_protocol.py` (24/24) and `test_select.py` (14/14) both pass
+  unchanged — 38/38 combined, no regression.
+- Installed `matplotlib` into the shared `.venv` (was missing, blocking
+  whole-suite collection via `pytest_local.py all` on two unrelated files
+  — `test_viz.py`/`test_seam_0006_pathways_viz.py`, TASK-0014's own gap,
+  already filed as TASK-0069). Purely additive — unblocks the whitelisted
+  test runner for every thread, doesn't touch any other package.
+- No change to `labels.functional_indices` itself, `get_pocket_mask`, or
+  `get_superpose_report` (already forward their full signature, confirmed
+  by this task's Out Of Scope note).

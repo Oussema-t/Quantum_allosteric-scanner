@@ -169,6 +169,37 @@ class TestGatedAccessors:
         )
         assert len(idx) > 0
 
+    def test_get_functional_indices_forwards_heavy_atom_params(self):
+        """TASK-0063: get_functional_indices must forward heavy_atom_coords/
+        heavy_atom_seq_index to labels.functional_indices, not silently drop
+        them -- confirmed by a case where the two approximations actually
+        diverge (same construction as test_labels.py::
+        TestContactResidueIndicesHeavyAtomFix, exercised through the gated
+        protocol.py wrapper instead of labels.py directly, so this fails if
+        the gate ever drops the parameters again even though labels.py's own
+        tests would still pass)."""
+        # residue 0's Calpha sits 6.0 A from the func ligand (outside the
+        # default 4.5 A contact cutoff); a heavy atom on that same residue
+        # sits right on top of it.
+        ca_coords = np.array([[6.0, 0.0, 0.0], [50.0, 0.0, 0.0]])
+        func_ligand = LigandGroup("FUNC", 502, "A", np.array([[0.0, 0.0, 0.0]]), 1)
+        target_config = {"func_ligand": ["FUNC"]}
+
+        idx_default, prov_default = get_functional_indices(
+            ca_coords, [func_ligand], "T1", target_config,
+        )
+        assert prov_default == "top-degree fallback"  # Calpha-only misses the contact
+
+        heavy_coords = np.array([[6.0, 0.0, 0.0], [0.2, 0.0, 0.0], [50.0, 0.0, 0.0]])
+        heavy_seq_idx = np.array([0, 0, 1])  # first two heavy atoms both belong to residue 0
+        idx_heavy, prov_heavy = get_functional_indices(
+            ca_coords, [func_ligand], "T1", target_config,
+            heavy_atom_coords=heavy_coords, heavy_atom_seq_index=heavy_seq_idx,
+        )
+        assert prov_heavy == "func_ligand-contact:FUNC"
+        assert list(idx_heavy) == [0]
+        assert prov_default != prov_heavy  # the two approximations genuinely diverge
+
     def test_get_superpose_report_gated(self):
         apo, holo = _apo_holo_with_ligand()
         with frozen_context("T1"):

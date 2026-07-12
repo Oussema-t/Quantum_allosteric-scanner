@@ -136,12 +136,21 @@ def get_labels(apo, holo, target_name: str, target_config: dict, cutoff: float =
     return build_labels(apo, holo, target_config, cutoff=cutoff, terminal_fraction=terminal_fraction)
 
 
-def get_functional_indices(coords, ligand_groups, target_name: str, target_config: dict, cutoff: float = 4.5):
-    """Gated labels.functional_indices."""
+def get_functional_indices(coords, ligand_groups, target_name: str, target_config: dict, cutoff: float = 4.5, **kwargs):
+    """Gated labels.functional_indices.
+
+    Forwards **kwargs (e.g. heavy_atom_coords/heavy_atom_seq_index) so a
+    FROZEN-path caller can reach every parameter labels.functional_indices
+    accepts without ever bypassing this gate -- same **kwargs pass-through
+    pattern as get_superpose_report, chosen over an explicit-but-fragile
+    parameter list (TASK-0063): functional_indices has already grown once
+    since this gate was first written, and **kwargs is immune to that
+    class of drift recurring.
+    """
     assert_readable(target_name)
     from .labels import functional_indices
 
-    return functional_indices(coords, ligand_groups, target_config, cutoff=cutoff)
+    return functional_indices(coords, ligand_groups, target_config, cutoff=cutoff, **kwargs)
 
 
 def get_superpose_report(apo, holo, target_name: str, target_config: dict, **kwargs):
