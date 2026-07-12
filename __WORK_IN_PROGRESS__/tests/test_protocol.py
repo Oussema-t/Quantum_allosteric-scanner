@@ -13,6 +13,7 @@ _SRC = Path(__file__).resolve().parent.parent / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
+from allostery.hamiltonians import laplacian  # noqa: E402
 from allostery.labels import LigandGroup  # noqa: E402
 from allostery.protocol import (  # noqa: E402
     LeakageError,
@@ -26,7 +27,9 @@ from allostery.protocol import (  # noqa: E402
     get_pocket_mask,
     get_superpose_report,
     leave_one_protein_out,
+    select_frozen_config,
 )
+from allostery.select import unsupervised_score  # noqa: E402
 
 
 def _helix_coords(n: int) -> np.ndarray:
@@ -214,6 +217,76 @@ class TestGatedAccessors:
         with frozen_context("OTHER_TARGET"):
             mask = get_pocket_mask(apo, holo, "T1", _TARGET_CONFIG)  # T1 is not blocked
         assert mask is not None
+
+
+# ---------------------------------------------------------------------------
+# select_frozen_config (TASK-0064, closes SEAM-0009)
+# ---------------------------------------------------------------------------
+
+def _path_adjacency(n: int) -> np.ndarray:
+    A = np.zeros((n, n))
+    for i in range(n - 1):
+        A[i, i + 1] = A[i + 1, i] = 1.0
+    return A
+
+
+def _star_adjacency(n: int) -> np.ndarray:
+    A = np.zeros((n, n))
+    for i in range(1, n):
+        A[0, i] = A[i, 0] = 1.0
+    return A
+
+
+class TestSelectFrozenConfig:
+    def test_picks_the_real_unsupervised_score_winner(self):
+        """The winner must trace to unsupervised_score's actual ranking,
+        not e.g. always-pick-first -- per SEAM-0009's own note that
+        absence-of-leak alone is necessary but not sufficient evidence the
+        wiring is real. Path vs. star (N=10, source=0, t=5.0) is a known,
+        maximally-discriminating case (scores [-1, 1], star wins) --
+        checked empirically before being hardcoded here, not guessed."""
+        n = 10
+        path_H = laplacian(_path_adjacency(n))
+        star_H = laplacian(_star_adjacency(n))
+        candidates = [
+            {"H": path_H, "source": 0, "t": 5.0},
+            {"H": star_H, "source": 0, "t": 5.0},
+        ]
+
+        winner = select_frozen_config(lambda: candidates, "T1")
+
+        direct_scores = unsupervised_score(candidates)
+        assert winner["index"] == int(direct_scores.argmax()) == 1
+        assert winner["score"] == pytest.approx(direct_scores[1])
+        assert winner["H"] is star_H  # caller's own keys survive untouched
+
+    def test_blocks_a_candidate_builder_that_reads_the_held_out_target(self):
+        """Candidate *construction*, not just scoring, must run inside the
+        frozen_context -- unsupervised_score itself never touches labels,
+        so only gating the scoring call could never catch a leaky builder.
+        A poisoned builder that reads T1's assembled pocket via the gated
+        accessor must raise, proving the gate actually wraps construction."""
+        apo, holo = _apo_holo_with_ligand()
+
+        def poisoned_build():
+            get_pocket_mask(apo, holo, "T1", _TARGET_CONFIG)  # leaky read
+            return [{"H": np.eye(4), "source": 0, "t": 1.0}]
+
+        with pytest.raises(LeakageError):
+            select_frozen_config(poisoned_build, "T1")
+
+    def test_does_not_block_a_different_targets_read(self):
+        """The gate is scoped to held_out_target only -- a builder reading
+        some other, non-held-out target must succeed (mirrors
+        test_gate_only_blocks_the_named_target_not_others)."""
+        apo, holo = _apo_holo_with_ligand()
+
+        def build():
+            get_pocket_mask(apo, holo, "OTHER_TARGET", _TARGET_CONFIG)
+            return [{"H": np.eye(4), "source": 0, "t": 1.0}]
+
+        winner = select_frozen_config(build, "T1")
+        assert winner["index"] == 0
 
 
 # ---------------------------------------------------------------------------

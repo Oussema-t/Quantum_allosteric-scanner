@@ -16,7 +16,7 @@ re-check there (or regenerate this table) before trusting it for dispatch decisi
 
 | Done | In Progress | TODO | Total |
 |---|---|---|---|
-| 6 (TASK-0070, TASK-0052, TASK-0047, TASK-0058, TASK-0063, TASK-0055) | 0 | 29 | 35 |
+| 7 (TASK-0070, TASK-0052, TASK-0047, TASK-0058, TASK-0063, TASK-0055, TASK-0064) | 0 | 28 | 35 |
 
 **To refresh this snapshot:** each task file's own `- Status:` line is authoritative
 (`.ai/COMMON.md`'s registry mirrors it). One-line check for any ID:
@@ -81,7 +81,7 @@ triviality floor. `baselines.py` now exists — wire it in.
 |---|---|---|---|
 | 1.1 | **[EXISTS] TASK-0058** — wire baseline floor into `classify_failure` | Turns "beats chance" into "beats degree / betweenness / distance-to-active". Without it **no verdict the pipeline emits is honest.** | **Done**. `floor_scores` param + new `BEATS_CHANCE_NOT_FLOOR` category added to `classify_failure`, checked after the existing chance check, before `NO_FAILURE_DETECTED`; `floor_scores=None` default verified byte-identical to prior behavior. `SEAM-0005` closed to VERIFIED. `test_seam_0005_baseline_floor.py`'s `xfail` removed, passes for real; 4 new direct unit tests in `test_diagnostics.py`. 398 passed, 0 failed. |
 | 1.2 | **[EXISTS] TASK-0055** — `optimised` AUC freeze-provenance check | Verifies headline AUCs come from the frozen/DEV path, not the old label-tuned notebook route. If not, the report layer silently re-imports the §8 leak. | **Done.** Finding: the leak is real, not hypothetical — `verdict_template`'s `provenance="frozen"` is a free-text keyword with no read of `protocol.current_context()` anywhere in `report.py`; confirmed empirically (outside any `frozen_context`, a claimed-frozen render suppresses the DEV banner regardless). `SEAM-0004` left **OPEN** (evidence recorded, not auto-flipped VERIFIED) with a cross-module seam-test (`xfail(strict=True)`, same convention as SEAM-0005 pre-fix). Fix itself out of scope, filed as **TASK-0088** (unclaimed) — same precedent as TASK-0052 → TASK-0087. |
-| 1.3 | **[EXISTS] TASK-0064** — wire unsupervised score into frozen loop | Completes the label-free selection path. | TODO |
+| 1.3 | **[EXISTS] TASK-0064** — wire unsupervised score into frozen loop | Completes the label-free selection path. | **Done.** `protocol.select_frozen_config(build_candidates, held_out_target)` added -- takes a *callable*, not a pre-built candidate list, so both construction and scoring run inside `frozen_context`, catching a leaky candidate-builder, not just a leaky scoring call. Lives in `protocol.py` itself, alongside the other gated accessors. `SEAM-0009` closed to VERIFIED (2 seam-tests). `INV-0004` seeded for `select.py`'s reported quantities, `TASK-0089` filed as its owner. 405 passed (was 402). |
 | 1.4 | **[FILED] TASK-0071 — permutation-null leak detector** | The firewall *prevents* known leak vectors; nothing *detects* an unforeseen one. Shuffle labels, re-run, flag anything still scoring. Home: `diagnostics.py`. Verified reference implementation exists. | TODO |
 | 1.5 | **[EXISTS] TASK-0056** — phase-4 review (diagnostics/report/baselines/pathways) | Same lens the phase-3 review applied, on the four newest modules. | TODO |
 

@@ -9,16 +9,19 @@
   label-touching) path — the whole reason TASK-0007 exists is to be *the*
   legitimate FROZEN-path selection mechanism, per its own Intent Contract
   ("what keeps selection legitimate inside `protocol.py`'s FROZEN loop")
-- owner: [[TASK-0064]] (new, filed by TASK-0048's Phase 3 review)
-- seam-test: not yet written — cannot be written for real until a real
-  call site exists (same precedent as SEAM-0006 pointing at not-yet-landed
-  `viz.py`); when TASK-0064 starts, it should assert that a FROZEN-loop
-  config-selection step actually calls `unsupervised_score` (or an
-  equivalent label-free ranking) rather than merely not calling any gated
-  `protocol.get_*` accessor (the latter is necessary but not sufficient —
-  a selection step could still pick a config by some other unreviewed,
-  possibly-leaky heuristic and this seam would stay silent).
-- status: OPEN
+- owner: [[TASK-0064]] (Done)
+- seam-test: `test_protocol.py::TestSelectFrozenConfig` — two tests, not one,
+  per this record's own "necessary but not sufficient" warning:
+  `test_picks_the_real_unsupervised_score_winner` (the selected config
+  traces to `unsupervised_score`'s actual ranking, cross-checked against a
+  direct ungated call — a known-discriminating path-vs-star case, computed
+  empirically, not guessed) and
+  `test_blocks_a_candidate_builder_that_reads_the_held_out_target` (a
+  poisoned candidate-*builder* that reads the held-out target's pocket via
+  a gated accessor raises `LeakageError` — proves the gate wraps
+  construction, not just the scoring call, which alone could never catch
+  this since `unsupervised_score` never touches labels).
+- status: VERIFIED
 - provenance: found during TASK-0048's Phase 3 review (2026-07-11) while
   checking the Intent Contract's cross-task item "`select.py`'s
   `unsupervised_score` is actually meant to run inside
@@ -37,3 +40,17 @@
   isolation. Not found by TASK-0053's sweep (2026-07-11, same day) — that
   sweep's own scope was TASK-0003-0012 but its four named cross-unit flows
   did not include this one; this record closes that gap.
+- **Closed 2026-07-12 by [[TASK-0064]]**: `protocol.select_frozen_config`
+  added — a `build_candidates` callable (not a pre-built list) is invoked
+  *inside* `frozen_context({held_out_target})`, then scored via
+  `unsupervised_score`, so a leaky candidate-construction routine is
+  caught, not just a leaky scoring call. Wiring lives in `protocol.py`
+  itself (not `analysis.py` or a new module) — consistent with `protocol.py`
+  already owning every other FROZEN-gated composition (`get_pocket_mask`,
+  `get_functional_indices`, `get_superpose_report`), and with
+  `leave_one_protein_out`'s own docstring already describing exactly this
+  call shape. Full suite: 405 passed (was 402), 1 pre-existing xfail, 1
+  pre-existing xpass (unrelated, not investigated here). Missing
+  `.ai/invariants/` GAUGE/KNOB/SIGNAL table for `select.py`'s reported
+  quantities (flagged in TASK-0064's own Constraints) filed separately as
+  [[TASK-0089]], not built as part of this seam closure.
