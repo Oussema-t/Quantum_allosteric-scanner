@@ -10,7 +10,7 @@
   reported `AUC_apo_Hnew_optimised`/`AUC_holo_Hnew_optimised` values were
   genuinely produced under `protocol.py`'s frozen-config discipline, not
   just labeled that way by whatever caller assembled the report
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Claimed By: —
 - Claimed At: —
@@ -66,12 +66,12 @@ None
 
 ## TODO
 
-- [ ] Trace `provenance` from every producer call site through to
+- [x] Trace `provenance` from every producer call site through to
       `report.py`'s consumption of it.
-- [ ] Determine whether `provenance="frozen"` is structurally gated by
+- [x] Determine whether `provenance="frozen"` is structurally gated by
       `protocol.py`'s state machine or is a free-text label.
-- [ ] Write the cross-module seam-test.
-- [ ] Update `SEAM-0004` (from [[TASK-0050]]) to `VERIFIED` (with the
+- [x] Write the cross-module seam-test.
+- [x] Update `SEAM-0004` (from [[TASK-0050]]) to `VERIFIED` (with the
       seam-test as evidence) or leave `OPEN` with the finding documented,
       whichever the test result actually shows.
 
@@ -89,4 +89,38 @@ None
 
 ## Done
 
-(not yet)
+- Traced `provenance` end-to-end: `report.py::verdict_template(results,
+  *, provenance: str = "dev")` (`report.py:115`) is a plain caller-supplied
+  keyword. Confirmed zero calls to `protocol.current_context()` anywhere
+  in `report.py`, and `protocol.frozen_context` returns a `ProtocolContext`
+  that nothing in `report.py` ever consumes.
+- **Finding: the invariant does NOT hold.** `provenance="frozen"` is a
+  free-text label, not structurally gated by `protocol.py`'s state
+  machine — confirmed empirically, not just by inspection: outside any
+  `frozen_context` (`protocol.current_context().mode == "unguarded"`),
+  `verdict_template({"AUC_apo_Hnew_optimised": 0.9}, provenance="frozen")`
+  renders with no DEV banner. A DEV/ceiling number can currently be
+  presented as the frozen submission verdict undetected — the exact
+  "§8 leak" scenario `SEAM_PROTOCOL.md`'s seed table warns about.
+- Cross-module seam-test written:
+  `test_seam_0004_auc_freeze_provenance.py` —
+  `test_provenance_frozen_claim_requires_having_been_inside_frozen_context`
+  (`xfail(strict=True)`, encodes the desired invariant, fails today
+  exactly as the finding above predicts) + a positive-control test
+  documenting the same gap from the other side. Both pass/xfail as
+  designed (`1 passed, 1 xfailed`).
+- `SEAM-0004` updated with this evidence — **left `OPEN`** (not
+  auto-flipped to `VERIFIED`; the seam is confirmed broken, not closed),
+  per the Intent Contract's own "both are a valid, useful outcome"
+  framing.
+- Per Out Of Scope, the fix itself was **not** implemented here — filed
+  as **TASK-0088** (structurally gate the provenance claim, e.g. a
+  `protocol.stamp_provenance()` helper only callable from inside
+  `frozen_context`), unclaimed, same precedent as TASK-0052 → TASK-0087.
+- Full local run: `python3 .ai/tools/pytest_local.py wip-all --json` →
+  399 passed, 1 xfailed (this task's own SEAM-0004 test, expected), 1
+  xpassed (pre-existing, unrelated, not investigated — out of scope),
+  0 failed.
+- **Staging/commit deferred** — held per the user's manual
+  Stage-Commit-Queue coordination (2nd in queue at completion time); code
+  and tests are complete and locally green, not yet staged.
