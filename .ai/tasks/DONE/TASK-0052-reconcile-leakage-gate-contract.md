@@ -10,7 +10,7 @@
   the file into the test runner, then reconcile the contract against
   reality — implement the missing assembly step or rewrite the contract
   tests against the real API, whichever is correct once actually checked.
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Claimed By: —
 - Claimed At: —
@@ -102,27 +102,79 @@
 
 None
 
-## TODO
+## TODO (resolved 2026-07-12, Implementer A)
 
 - [x] Relocate the file.
 - [x] Diff the file's CONTRACT section against the real `labels.py`/
       `protocol.py` APIs (`grep -n "^def |^class "` both files) —
       confirmed `build_labels`/`Labels`/`FrozenConfig`/`lopo` do not
       exist under those names.
-- [ ] Add a `pytest_local.py` preset for this file (or fold into
+- [x] Add a `pytest_local.py` preset for this file (or fold into
       `wip-all` — confirm it doesn't need network access by default; the
       3 contract stubs' network-gated real-target checks should follow
       the same `pytest.importorskip("prody")` pattern TASK-0005 already
       uses, not a hard dependency).
-- [ ] Decide + implement (a) vs (b) above for the `build_labels` gap.
-- [ ] Fix the `lopo` -> `leave_one_protein_out` rename.
-- [ ] Verify `frozen_context`/`assert_readable` equivalence to the
+  - Already inside `wip-all`'s scan (the file lives under
+    `__WORK_IN_PROGRESS__/tests/`) — no new preset needed, confirmed by
+    running `pytest_local.py wip-all` and seeing it collected. The
+    network-gated real-target test does not import `pytest` at all (the
+    file supports standalone `python test_leakage_gate.py` execution per
+    its own docstring, so `pytest.importorskip` would break that mode) —
+    uses a local `_skip()` helper (try/except around the prody import and
+    the fetch) that degrades gracefully in both run modes instead.
+- [x] Decide + implement (a) vs (b) above for the `build_labels` gap.
+  - (a), already landed by TASK-0070 (this task's own named dependency).
+  - This task rewrote the CONTRACT header comment block to describe the
+    *real* API (`target_config: dict`, not `allosteric_ligand`/
+    `func_ligands` positional args) instead of leaving the original
+    (now-known-wrong) assumption in place — "docstring ≠ contract" cuts
+    both ways; a stale contract comment is exactly the smell
+    `SEAM_PROTOCOL.md` warns about.
+- [x] Fix the `lopo` -> `leave_one_protein_out` rename.
+  - Done in `test_protocol_lopo_seals_heldout_labels`, rewritten to
+    exercise the real mechanism (`leave_one_protein_out` +
+    `frozen_context` + `assert_readable`) rather than a bare rename of an
+    unused import.
+- [x] Verify `frozen_context`/`assert_readable` equivalence to the
       `FrozenConfig`/`_SealedLabels` reference spec; report any real gap
       found rather than assuming equivalence.
-- [ ] Run the full file, report per-test pass/fail.
-- [ ] Update `SEAM-0003`'s status (from [[TASK-0050]]) once the assembly
+  - **Real gap found, not assumed equivalent.** `_SealedLabels` wraps the
+    *data itself* (`__array__`/`__getitem__` both raise) — no caller,
+    however written, can read a sealed array. `protocol.py`'s
+    `frozen_context`/`assert_readable` is an **opt-in, cooperative**
+    gate: it only blocks reads that go through `protocol.get_pocket_mask`/
+    `get_labels`/`get_functional_indices`/`get_superpose_report`.
+    FROZEN-path code that imports `labels.py`/`superpose.py` directly
+    bypasses it entirely, with no error — a caller-discipline requirement,
+    not a structural guarantee. `protocol.py`'s own module docstring
+    already says this is deliberate scope ("an opt-in firewall... not a
+    retroactive lock"), but that line is honest about *scope*, not about
+    whether the resulting weaker guarantee was a reviewed risk acceptance
+    or an unexamined gap — TASK-0006's own Open Question left this exact
+    question unanswered ("Should the leakage guard be enforced by static
+    wrapping... or by a lint-style check?"). Filed [[TASK-0087]] to
+    resolve it explicitly (harden to a real data-seal, or document the
+    weaker guarantee as an accepted trust boundary) rather than silently
+    closing this task on "different design, probably fine."
+- [x] Run the full file, report per-test pass/fail.
+  - Both modes, all 12 tests, 0 xfail (down from 3):
+    `pytest tests/test_leakage_gate.py -v` -> 12 passed. Standalone
+    `python test_leakage_gate.py` (its own docstring's other supported
+    invocation) -> `12 passed, 0 failed`, including the two real
+    network-gated checks (`test_labels_allosteric_ligand_only` actually
+    fetched 1OPL/5MO4 and resolved AY7, did not skip).
+  - Full suite (`python3 .ai/tools/pytest_local.py wip-all`, minus
+    `test_viz.py`/`test_seam_0006_pathways_viz.py` — TASK-0014's own
+    concurrent, unrelated `matplotlib` gap): 370 passed (368 -> 370, the
+    2 tests this task fixed), 1 pre-existing xfail, 1 pre-existing xpass,
+    no regressions.
+- [x] Update `SEAM-0003`'s status (from [[TASK-0050]]) once the assembly
       step lands — `OPEN` -> `VERIFIED` only if a seam-test actually
       passes, not on landing alone.
+  - Done: `.ai/seams/SEAM-0003-pocket-excludes-functional-terminal.md`
+    updated to `VERIFIED`, listing the real passing seam-test plus the
+    corroborating `test_labels.py::TestBuildLabels` tests (synthetic
+    overlapping case + two independent real targets).
 
 ## Dependency
 
@@ -141,10 +193,48 @@ None
   reinvention that happens to cover similar ground? Neither TASK-0004 nor
   TASK-0006's Done sections mention the leakage-gate file at all (checked
   — zero hits), so this is genuinely unknown, not just undocumented.
+  - **Resolved:** independent reinvention, not a reviewed match — and not
+    fully equivalent (see TODO section: real gap found, TASK-0087 filed).
+    `FrozenConfig`'s three GATE-B1 mechanics tests (immutable-after-freeze,
+    no-eval-before-freeze, hash-is-fingerprint) remain valid as
+    pipeline-agnostic reference tests in their own right — they were never
+    claiming to test `protocol.py` directly (no CONTRACT stub referenced
+    `FrozenConfig` by name), so nothing needed fixing there.
 - If `build_labels()` is added (option a), should it live in `labels.py`
   itself or in a new thin `assembly.py`? Recommend `labels.py` — it's a
   composition of that module's own existing functions, not a new concern.
+  - **Resolved by TASK-0070:** lives in `labels.py`, as recommended.
 
 ## Done
 
-(not yet)
+- `test_leakage_gate.py`'s CONTRACT header comment rewritten to describe
+  the real `labels.py`/`protocol.py` API (was describing an API that
+  never shipped) — "docstring ≠ contract" applies to this file's own
+  header too, not just to `labels.py`/`protocol.py`'s docstrings.
+- All 3 CONTRACT stub tests rewritten to call the real API for real (no
+  more `except Exception: return _xfail(...)` branches):
+  - `test_labels_allosteric_ligand_only` — real network-gated BCR_ABL1
+    check (1OPL apo / 5MO4 holo), `target_config={"drug_ligand": "AY7",
+    "func_ligand": ["NIL"]}` (AY7 is the real RCSB code the original
+    "ASCIMINIB" placeholder was superseded by, TASK-0003) — passes for
+    real, not skipped, in this environment.
+  - `test_labels_alignment_not_resnum` — new synthetic +19-offset test
+    (fast, no network) confirming `build_labels`' sequence-alignment
+    mapping, not resnum equality, is what actually runs end-to-end.
+  - `test_protocol_lopo_seals_heldout_labels` — rewritten around the real
+    `leave_one_protein_out` + `frozen_context` + `assert_readable`
+    mechanism, confirming the GATE-B2 guarantee (held-out label
+    unreadable during selection) holds for real, through the actual
+    firewall.
+- `SEAM-0003` closed to `VERIFIED` with the passing seam-test named.
+- Real gap found and filed as [[TASK-0087]]: `protocol.py`'s firewall is
+  an opt-in/cooperative gate, not a hard data-seal like the reference
+  `_SealedLabels` — direct `labels.py`/`superpose.py` calls bypass it
+  with no error. Not fixed in this task (Out Of Scope: this task
+  reconciles the contract test, not the firewall's own design) — recorded
+  and handed off explicitly rather than silently assumed equivalent.
+- Full file: 12/12 passing under both `pytest` and standalone `python
+  test_leakage_gate.py` (this file's own two documented invocation
+  modes), 0 xfail. Full suite: 370 passed (368 -> 370), 1 pre-existing
+  xfail, 1 pre-existing xpass, no regressions (excluding TASK-0014's own
+  unrelated `matplotlib` collection gap in two other files).

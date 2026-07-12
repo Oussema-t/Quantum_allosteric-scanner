@@ -20,36 +20,67 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
+from pathlib import Path
+
 import numpy as np
 from sklearn.metrics import roc_auc_score
+
+_SRC = Path(__file__).resolve().parent.parent / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
 
 RNG = np.random.default_rng(0)
 
 # ===========================================================================
-# CONTRACT — what labels.py (TASK-0004) and protocol.py (TASK-0006) must expose
+# CONTRACT — reconciled against the real shipped API (TASK-0052, 2026-07-12)
 # ===========================================================================
-# labels.build_labels(apo, holo, allosteric_ligand, func_ligands,
-#                      contact_cutoff=4.5, exclude_active_site=True) -> Labels
-#   Labels.pocket        : (N,) bool over APO residues
-#   Labels.active_site   : (N,) bool (excluded from pocket by construction)
-#   Labels.provenance    : dict(ligand=<3-letter>, contacts=[...], alignment=...)
-#   Rules: derive from the ALLOSTERIC ligand only (never func_ligand);
-#          map apo<->holo by sequence ALIGNMENT not resnum equality;
-#          pocket & active_site == empty set.
+# This section originally *assumed* an API (`build_labels(apo, holo,
+# allosteric_ligand, func_ligands, ...)`, `protocol.FrozenConfig`,
+# `protocol.lopo`) before labels.py (TASK-0004) / protocol.py (TASK-0006)
+# shipped. Reading the live tree found real discrepancies (SEAM-0003) --
+# this is what actually exists, and the 3 CONTRACT tests below now call it
+# for real rather than xfail-ing against a stale assumption:
 #
-# protocol.FrozenConfig(params: dict)
-#   .freeze() -> self         (idempotent; sets .hash; further mutation raises)
-#   mutation after freeze     -> raises RuntimeError
-#   .require_frozen()         -> raises if used before freeze
-#   .hash                     : sha256 of canonical params (goes in the report)
+# labels.build_labels(apo, holo, target_config: dict,
+#                      cutoff=4.5, terminal_fraction=0.05) -> Labels
+#   Labels.pocket             : (N,) bool over APO residues, or None if the
+#                                allosteric ligand didn't resolve
+#   Labels.pocket_raw         : (N,) bool, pocket BEFORE exclusion (diagnostic only)
+#   Labels.active_site        : (N,) bool -- the functional/catalytic seed
+#                                set (excluded from pocket by construction)
+#   Labels.functional_provenance / .drug_ligand : str / str|None
+#   target_config keys used: "drug_ligand" (the allosteric ligand code --
+#   never derives from func_ligand), "func_ligand" (list of codes to exclude)
+#   Rules (asserted inside build_labels itself, TASK-0070/SEAM-0003):
+#     pocket & active_site == empty set; pocket & terminal == empty set.
+#     apo<->holo mapping is sequence ALIGNMENT (holo_pocket_mask's
+#     Needleman-Wunsch), never resnum equality.
 #
-# protocol.lopo(proteins, select_fn, eval_fn) -> per-fold results
-#   For held-out p: select_fn is called on the OTHER proteins only; p's labels
-#   are wrapped so ANY access during selection raises (GATE-B2).
+# protocol.frozen_context(blocked_targets) / protocol.ceiling_context()
+#   Context managers (not a FrozenConfig object) -- see TASK-0006. No
+#   `.freeze()`/`.hash`/`.require_frozen()` exists; the equivalent
+#   guarantee (reject use before/after the wrong phase) is "no active
+#   context = unguarded" plus assert_readable's runtime raise. This file's
+#   own FrozenConfig class below is kept as the reference mechanics spec
+#   (GATE-B1's three unit tests are pipeline-agnostic and still valid on
+#   their own terms) but it is NOT what protocol.py actually implements --
+#   see this task's Done section for the explicit equivalence check
+#   against `_SealedLabels`/GATE-B2 below, including a real gap found.
 #
-# protocol.permutation_null(pipeline, labels, n_perm) -> (auc_true, perm_mean, ci95)
-# protocol.floor_baselines(structure, active_site) -> {name: scores}
-# protocol.ceiling_supervised(structure, labels) -> auc   (leaky by design)
+# protocol.leave_one_protein_out(targets) -> yields (train, held_out)
+#   Does NOT itself wrap/seal held_out's labels (TASK-0006's own docstring:
+#   "composability over magic") -- the caller brackets selection in
+#   `with frozen_context({held_out}): ...`; reading held_out's label via
+#   protocol.py's gated accessors (get_pocket_mask/get_labels/
+#   get_functional_indices/get_superpose_report) inside that block raises
+#   LeakageError. This is GATE-B2's real mechanism, verified below.
+#
+# protocol.permutation_null / floor_baselines / ceiling_supervised — none
+# of these exist under those names; GATE-B4's permutation_null and GATE-C's
+# floor_baselines are this *file's own* reference implementations (used by
+# the self-validating meta-tests), not a claim that protocol.py has them.
+# No CONTRACT test in this file assumed otherwise, so nothing to fix here.
 # ===========================================================================
 
 
@@ -273,40 +304,123 @@ def test_method_cannot_beat_its_own_supervised_ceiling():
 
 
 # ---------------------------------------------------------------------------
-# Contract stubs — turn green when TASK-0004 / TASK-0006 land
+# Contract tests — reconciled against the real API (TASK-0052, 2026-07-12)
 # ---------------------------------------------------------------------------
-def _xfail(reason):
-    print(f"  XFAIL (expected until implemented): {reason}")
+# Not xfail stubs anymore: each of the 3 tests below calls the real
+# allostery.labels/protocol code. The only thing that may still legitimately
+# skip is real RCSB access (network/prody) -- _skip mirrors the file's own
+# custom __main__ runner (only AssertionError is treated as FAIL; anything
+# printed-and-returned reads as PASS), kept dependency-light (no pytest
+# import) so `python test_leakage_gate.py` standalone still works per this
+# file's own docstring, not just `pytest test_leakage_gate.py`.
+def _skip(reason):
+    print(f"  SKIP (real-structure fetch unavailable): {reason}")
+
+
+def _load_real_target(apo_id, holo_id, chains):
+    from allostery.clean import clean
+    from allostery.labels import ligand_groups_from_atomgroup, protein_heavy_atoms_by_residue
+    import prody
+
+    prody.confProDy(verbosity="none")
+    apo = clean(apo_id, chains=chains)
+    holo = clean(holo_id, chains=chains)
+    holo_struct = prody.parsePDB(holo_id, compressed=False).select(
+        " or ".join(f"chain {c}" for c in chains)
+    )
+    holo.ligand_groups = ligand_groups_from_atomgroup(holo_struct)
+    holo.heavy_atom_coords, holo.heavy_atom_seq_index = protein_heavy_atoms_by_residue(
+        holo_struct, chains, holo.resnums
+    )
+    return apo, holo
 
 
 def test_labels_allosteric_ligand_only():
-    """BCR-ABL1: label from asciminib, NEVER nilotinib (NIL)."""
+    """BCR-ABL1: label from asciminib (AY7), NEVER nilotinib (NIL) -- the
+    original bug (`labels.pick_drug`'s own docstring names it: "that
+    heuristic is exactly what produced the original BCR_ABL1 bug"). Real
+    network-gated check against 1OPL(apo)/5MO4(holo); ASCIMINIB was
+    v2-doc-era shorthand for a since-resolved RCSB code (AY7,
+    config/targets.yaml, TASK-0003) -- using the placeholder name here
+    would be testing a value that was never real, not the actual bug."""
     try:
-        from allostery.labels import build_labels
-    except Exception:
-        return _xfail("labels.build_labels — TASK-0004")
-    lab = build_labels(apo="1OPL", holo="5MO4",
-                       allosteric_ligand="ASCIMINIB", func_ligands=["NIL"])
-    assert lab.provenance["ligand"] != "NIL", "picked orthosteric nilotinib (the old bug)"
+        import prody  # noqa: F401
+    except ImportError as exc:
+        return _skip(f"prody not installed: {exc!r}")
+
+    from allostery.labels import build_labels
+
+    try:
+        apo, holo = _load_real_target("1OPL", "5MO4", ["A"])
+    except Exception as exc:
+        return _skip(f"{exc!r}")
+
+    lab = build_labels(apo, holo, {"drug_ligand": "AY7", "func_ligand": ["NIL"]})
+    assert lab.drug_ligand == "AY7", "did not resolve the allosteric ligand explicitly"
+    assert lab.pocket is not None, "AY7 not found in holo -- pocket undetermined"
     assert (lab.pocket & lab.active_site).sum() == 0, "active-site residues leaked into pocket"
     assert 3 <= lab.pocket.sum() <= 0.15 * len(lab.pocket), "pocket size implausible"
 
 
 def test_labels_alignment_not_resnum():
-    """A +19 renumber (ABL1 1a/1b hazard) must not move the physical label."""
-    try:
-        from allostery.labels import build_labels  # noqa: F401
-    except Exception:
-        return _xfail("labels alignment-invariance — TASK-0004")
-    raise AssertionError("implement: label same physical residues under +19 renumber")
+    """A +19 residue-number offset between apo/holo (the ABL1 1a/1b
+    hazard, SYSTEMS_allosteric_corrected_v2.md) must not move the
+    physical pocket label -- confirms build_labels' sequence-alignment
+    mapping (not resnum equality) is what actually runs end-to-end, not
+    just exercised in holo_pocket_mask's own unit tests in isolation.
+    Synthetic (fast, no network): resnum equality would look for apo
+    resnum 501+ (doesn't exist) and silently return an all-False mask
+    instead of the correct physical residues."""
+    from allostery.labels import LigandGroup, build_labels
+
+    class _Struct:
+        def __init__(self, coords, resnums, resnames, ligand_groups=None):
+            self.coords = coords
+            self.resnums = np.asarray(resnums)
+            self.resnames = list(resnames)
+            self.ligand_groups = ligand_groups or []
+
+    n = 12
+    theta = np.arange(n) * (100.0 * np.pi / 180.0)
+    coords = np.column_stack([2.3 * np.cos(theta), 2.3 * np.sin(theta), 1.5 * np.arange(n, dtype=float)])
+    seq3 = ["ALA", "ARG", "ASN", "ASP", "CYS", "GLN", "GLU", "GLY", "HIS", "ILE", "LEU", "LYS"]
+
+    apo = _Struct(coords, np.arange(1, n + 1), seq3)
+
+    offset = 19
+    drug = LigandGroup("LIG", 501, "A", np.array([coords[5]]), 1)
+    func = LigandGroup("FUNC", 502, "A", np.array([coords[10]]), 1)
+    holo = _Struct(coords, np.arange(1 + offset, n + 1 + offset), seq3, [drug, func])
+
+    labels = build_labels(apo, holo, {"drug_ligand": "LIG", "func_ligand": ["FUNC"]}, cutoff=4.5)
+
+    assert labels.pocket is not None, "ligand contact resolution failed"
+    assert labels.pocket[5], "physical residue 5 not labelled under a +19 holo renumber"
+    assert not (labels.pocket & labels.active_site).any()
 
 
 def test_protocol_lopo_seals_heldout_labels():
-    try:
-        from allostery.protocol import lopo  # noqa: F401
-    except Exception:
-        return _xfail("protocol.lopo held-out isolation — TASK-0006")
-    raise AssertionError("implement: fold p's labels must trip the tripwire in select_fn")
+    """GATE-B2's real mechanism: leave_one_protein_out + frozen_context +
+    assert_readable -- not a _SealedLabels wrapper object (see this task's
+    Done section for the explicit equivalence check, including the one
+    real gap found: protocol.py's gate is opt-in/cooperative, not a hard
+    data seal like _SealedLabels below). Confirms the actual guarantee:
+    for held-out p, reading p's label during the with frozen_context
+    block raises."""
+    from allostery.protocol import LeakageError, assert_readable, frozen_context, leave_one_protein_out
+
+    proteins = ["A", "B", "C"]
+    for train, held_out in leave_one_protein_out(proteins):
+        assert held_out not in train, "held-out protein leaked into its own training fold"
+        with frozen_context({held_out}):
+            try:
+                assert_readable(held_out)
+            except LeakageError:
+                pass
+            else:
+                raise AssertionError(
+                    f"held-out protein {held_out!r}'s label was readable during selection"
+                )
 
 
 # ---------------------------------------------------------------------------
