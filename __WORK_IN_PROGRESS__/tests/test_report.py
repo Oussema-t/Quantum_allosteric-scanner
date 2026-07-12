@@ -5,6 +5,7 @@ Validation.
 import numpy as np
 import pytest
 
+from allostery import protocol
 from allostery.report import hit_list, jaccard_stability, verdict_template
 
 
@@ -84,8 +85,20 @@ class TestVerdictTemplate:
         assert "NOT THE FROZEN SUBMISSION VERDICT" in text
 
     def test_frozen_provenance_has_no_banner(self):
-        text = verdict_template(self.FULL_RESULTS, provenance="frozen")
+        """TASK-0088: provenance="frozen" alone is no longer sufficient --
+        results must also carry a stamp actually issued by
+        protocol.stamp_provenance from inside a real frozen_context."""
+        with protocol.frozen_context({"SOME_HELD_OUT_TARGET"}):
+            stamped = protocol.stamp_provenance(self.FULL_RESULTS)
+        text = verdict_template(stamped, provenance="frozen")
         assert "NOT THE FROZEN SUBMISSION VERDICT" not in text
+
+    def test_frozen_provenance_without_a_stamp_still_shows_banner(self):
+        """The pre-TASK-0088 behavior (plain provenance="frozen", no
+        stamp) is now the leaky case SEAM-0004 named -- must render with
+        the banner, not without it."""
+        text = verdict_template(self.FULL_RESULTS, provenance="frozen")
+        assert "NOT THE FROZEN SUBMISSION VERDICT" in text
 
     def test_headline_section_present(self):
         text = verdict_template(self.FULL_RESULTS, provenance="frozen")

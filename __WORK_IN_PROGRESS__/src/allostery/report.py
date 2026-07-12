@@ -112,6 +112,15 @@ def jaccard_stability(hit_lists_across_runs: Sequence[Sequence[int]]) -> dict:
 # Sec.15/16 -- honest verdict + decision-support recommendation
 # ---------------------------------------------------------------------------
 
+def _has_valid_frozen_stamp(results: dict) -> bool:
+    """Local import: report.py otherwise has no dependency on protocol.py,
+    and this keeps that the common case (most call sites never touch the
+    frozen path at all)."""
+    from .protocol import verify_frozen_stamp
+
+    return verify_frozen_stamp(results)
+
+
 def verdict_template(results: dict, *, provenance: str = "dev") -> str:
     """Render Sec.15's headline verdict + Sec.16's parameterized 5-point
     recommendation from an already-assembled `results` dict.
@@ -125,12 +134,20 @@ def verdict_template(results: dict, *, provenance: str = "dev") -> str:
     raising, since a caller may not have every upstream analysis available
     for a given target.
 
-    `provenance` must be exactly `"frozen"` (matches
-    `protocol.py::ProtocolRoster`'s lowercase vocabulary) for this to be
-    quoted as the actual submission verdict -- this task's own Constraints
-    require a dev/ceiling number never be silently presented as a frozen
-    result, so any other value prepends a loud banner making the
-    distinction impossible to miss.
+    `provenance` must be exactly `"frozen"` **and** `results` must carry a
+    valid stamp from `protocol.stamp_provenance` (TASK-0088, closes
+    SEAM-0004) for this to render as the clean submission verdict --
+    `provenance="frozen"` alone is not trusted, since it is a plain
+    caller-supplied string a DEV/ceiling result could claim just as
+    easily. The stamp is issued at computation time, inside the
+    `frozen_context` that produced the numbers, and verified here at
+    render time (almost always outside that context by then) -- see
+    `protocol.stamp_provenance`'s own docstring for why a naive
+    "check `current_context()` at render time" design does not work.
+    Any other case (provenance not `"frozen"`, no stamp, or a forged
+    `results["_frozen_stamp"]` value never actually issued by
+    `stamp_provenance`) prepends a loud banner making the distinction
+    impossible to miss.
 
     Renders only the four data-driven recommendation lines from cell 60;
     that cell's fifth bullet ("Keep V_B and V_T as cheap priors...") is
@@ -138,7 +155,7 @@ def verdict_template(results: dict, *, provenance: str = "dev") -> str:
     out of this module's scope per this task's own Intent Contract.
     """
     lines = []
-    if provenance != "frozen":
+    if not (provenance == "frozen" and _has_valid_frozen_stamp(results)):
         lines.append(_DEV_BANNER.rstrip("\n"))
 
     def fmt(key):

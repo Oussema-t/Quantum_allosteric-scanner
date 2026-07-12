@@ -2,13 +2,16 @@
 
 - units: `protocol` (frozen/dev state machine) -> report producer call site -> `report.verdict_template` (gates on `provenance`)
 - invariant: a report tagged `provenance == "frozen"` was actually produced under `protocol.py`'s frozen-config discipline, not just labeled that way
-- owner: [[TASK-0055]]
+- owner: [[TASK-0055]] verified the gap; [[TASK-0088]] fixed it.
 - seam-test: `__WORK_IN_PROGRESS__/tests/test_seam_0004_auc_freeze_provenance.py` —
-  `test_provenance_frozen_claim_requires_having_been_inside_frozen_context`,
-  `xfail(strict=True)` (the gap is confirmed real, not closed; kept `xfail` rather than
-  a red test, same convention TASK-0058 used for SEAM-0005 before its fix landed), plus a
-  positive-control test documenting the same gap from the other side.
-- status: OPEN (confirmed, not closed — see below)
+  three tests, all passing: `test_provenance_frozen_claim_requires_having_been_inside_frozen_context`
+  (unstamped `provenance="frozen"` still renders the banner),
+  `test_provenance_frozen_from_inside_frozen_context_is_the_intended_clean_case`
+  (a real `protocol.stamp_provenance` stamp, rendered after the context has
+  already exited, is honored), `test_forged_stamp_string_is_rejected` (a
+  hand-written `"_frozen_stamp"` value never issued by `stamp_provenance`
+  is rejected, proving the check is a real token lookup, not key presence).
+- status: VERIFIED
 - provenance: seeded from `SEAM_PROTOCOL.md`'s own table at adoption ([[TASK-0050]],
   2026-07-11). Confirmed `report.py:141-142` does gate on `provenance != "frozen"` (prepends a
   DEV banner), and the module comment (line 30-31) states the vocabulary is meant to match
@@ -31,3 +34,18 @@
   `protocol.py`'s state machine, e.g. threading `ProtocolContext` through instead of a
   free string) is deliberately **not** implemented here — this task verifies and makes
   the gap executable, a follow-up task should decide and implement the fix.
+  **Closed 2026-07-12 by [[TASK-0088]]**: `protocol.stamp_provenance(results) -> dict`
+  raises unless `current_context().mode == "frozen"`, and issues a token (tracked in a
+  module-level `_issued_frozen_stamps` set) recorded under `results["_frozen_stamp"]`.
+  `protocol.verify_frozen_stamp(results)` checks the token was actually issued, not just
+  present. `report.verdict_template` now requires both `provenance == "frozen"` **and**
+  a valid stamp to render unbannered — plain `provenance="frozen"` (the leak) and a
+  hand-forged `"_frozen_stamp"` value both still render with the banner. Chosen over
+  threading `ProtocolContext` itself through to render time (this record's own
+  originally-sketched alternative) because rendering happens almost always *after* the
+  computing context has exited (`report.py`'s own docstring: "renders from an
+  already-assembled results dict") — a stamp issued at computation time and verified
+  later survives that gap; a context object captured at render time would not exist by
+  then. `test_report.py`'s one test that asserted the old (leaky) behavior was updated to
+  stamp its result, per this task's own Constraints ("only the frozen-claim path changes
+  shape"); every other `test_report.py` DEV-path test is unchanged.

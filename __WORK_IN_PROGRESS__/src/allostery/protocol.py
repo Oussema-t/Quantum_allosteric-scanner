@@ -102,6 +102,57 @@ def assert_readable(target_name: str) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Provenance stamping (TASK-0088, closes SEAM-0004)
+# ---------------------------------------------------------------------------
+# report.verdict_template renders from an already-assembled results dict,
+# almost always *after* the computation's frozen_context has already
+# exited -- so verdict_template reading current_context() at render time
+# cannot work (see TASK-0088's own "Before implementing" note). Instead,
+# stamp_provenance() issues an unforgeable-in-practice token *at
+# computation time*, inside the context, that survives into the results
+# dict for later verification at render time.
+
+_issued_frozen_stamps: set = set()
+
+
+def stamp_provenance(results: dict) -> dict:
+    """Mark `results` as having been produced from inside an active
+    frozen_context. Raises RuntimeError if called when
+    `current_context().mode != "frozen"` -- this is the only function
+    that can issue a valid stamp, so a caller cannot fake one by hand-
+    writing the same dict key (a plain `results["_frozen_stamp"] = "x"`
+    produces a token `verify_frozen_stamp` has never issued, so it is
+    rejected the same as no stamp at all).
+
+    Returns a shallow copy of `results` with `"_frozen_stamp"` set --
+    does not mutate the caller's dict in place.
+    """
+    ctx = current_context()
+    if ctx.mode != "frozen":
+        raise RuntimeError(
+            "stamp_provenance() called outside an active frozen_context "
+            f"(current mode: {ctx.mode!r}) -- a provenance stamp can only "
+            "be issued from inside `with frozen_context(...):`, at "
+            "computation time, not guessed or asserted after the fact."
+        )
+    import secrets
+
+    token = secrets.token_hex(16)
+    _issued_frozen_stamps.add(token)
+    stamped = dict(results)
+    stamped["_frozen_stamp"] = token
+    return stamped
+
+
+def verify_frozen_stamp(results: dict) -> bool:
+    """True iff `results` carries a stamp actually issued by
+    `stamp_provenance` from inside a real `frozen_context` -- not merely
+    the presence of a `"_frozen_stamp"` key with any value."""
+    token = results.get("_frozen_stamp")
+    return token is not None and token in _issued_frozen_stamps
+
+
+# ---------------------------------------------------------------------------
 # Gated accessors -- select.py (TASK-0007) / analysis.py (TASK-0008) must
 # call these, not labels.py/superpose.py directly, for FROZEN-path code.
 # ---------------------------------------------------------------------------

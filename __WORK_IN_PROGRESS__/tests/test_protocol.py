@@ -28,6 +28,8 @@ from allostery.protocol import (  # noqa: E402
     get_superpose_report,
     leave_one_protein_out,
     select_frozen_config,
+    stamp_provenance,
+    verify_frozen_stamp,
 )
 from allostery.select import unsupervised_score  # noqa: E402
 
@@ -287,6 +289,49 @@ class TestSelectFrozenConfig:
 
         winner = select_frozen_config(build, "T1")
         assert winner["index"] == 0
+
+
+# ---------------------------------------------------------------------------
+# stamp_provenance / verify_frozen_stamp (TASK-0088, closes SEAM-0004)
+# ---------------------------------------------------------------------------
+
+class TestProvenanceStamp:
+    def test_raises_outside_frozen_context(self):
+        assert current_context().mode == "unguarded"
+        with pytest.raises(RuntimeError):
+            stamp_provenance({"AUC_apo_Hnew_optimised": 0.9})
+
+    def test_raises_inside_ceiling_context_too(self):
+        """Only mode == "frozen" counts -- ceiling_context is a different
+        phase (leakage is explicitly the goal there), not a substitute."""
+        with ceiling_context():
+            with pytest.raises(RuntimeError):
+                stamp_provenance({"AUC_apo_Hnew_optimised": 0.9})
+
+    def test_stamped_results_verify_true(self):
+        with frozen_context("T1"):
+            stamped = stamp_provenance({"AUC_apo_Hnew_optimised": 0.9})
+        assert verify_frozen_stamp(stamped) is True
+
+    def test_does_not_mutate_the_input_dict(self):
+        original = {"AUC_apo_Hnew_optimised": 0.9}
+        with frozen_context("T1"):
+            stamped = stamp_provenance(original)
+        assert "_frozen_stamp" not in original
+        assert stamped is not original
+
+    def test_forged_token_does_not_verify(self):
+        assert verify_frozen_stamp({"_frozen_stamp": "not-a-real-token"}) is False
+
+    def test_missing_stamp_does_not_verify(self):
+        assert verify_frozen_stamp({"AUC_apo_Hnew_optimised": 0.9}) is False
+
+    def test_two_stamps_are_distinct_tokens(self):
+        with frozen_context("T1"):
+            a = stamp_provenance({"x": 1})
+            b = stamp_provenance({"x": 2})
+        assert a["_frozen_stamp"] != b["_frozen_stamp"]
+        assert verify_frozen_stamp(a) and verify_frozen_stamp(b)
 
 
 # ---------------------------------------------------------------------------

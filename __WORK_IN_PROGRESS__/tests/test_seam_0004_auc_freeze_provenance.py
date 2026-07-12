@@ -14,26 +14,16 @@ composition -- exactly what makes it a seam per `SEAM_PROTOCOL.md`'s own
 definition ("If a unit test on either side could catch it, it is not a
 seam-test").
 
-xfail(strict=True): confirmed by direct read (TASK-0055) --
-`verdict_template(results, *, provenance="dev")` is a plain keyword with
-no call to `protocol.current_context()` anywhere in `report.py`, and
-`frozen_context` returns nothing `verdict_template` ever consumes. This
-test asserts the invariant SEAM-0004 requires; it fails today because no
-structural tie exists between the two sides, confirmed empirically here
-(not just by code inspection): outside any `frozen_context`
-(`protocol.current_context().mode == "unguarded"`), a caller can pass
-`provenance="frozen"` and the DEV banner is incorrectly suppressed. This
-is exactly the "re-imports the notebook's Sec.8 leak" scenario
-`SEAM_PROTOCOL.md`'s own seed table warns about.
-
-Should start passing, unchanged, once a follow-up task makes
-`provenance="frozen"` structurally gated by `protocol.py`'s state machine
--- see SEAM-0004 for status and the follow-up task once filed.
+Closed by TASK-0088: `protocol.stamp_provenance`/`verify_frozen_stamp` add
+an unforgeable-in-practice token, issued only from inside a real
+`frozen_context`, that `verdict_template` now requires (in addition to
+`provenance="frozen"`) before rendering unbannered. The first test below
+needed no change from its `xfail`-authorship version once the fix landed
+(same convention TASK-0058 used for SEAM-0005) -- the failure it encoded
+was the seam itself, not the test.
 """
 import sys
 from pathlib import Path
-
-import pytest
 
 _SRC = Path(__file__).resolve().parent.parent / "src"
 if str(_SRC) not in sys.path:
@@ -43,16 +33,6 @@ from allostery import protocol  # noqa: E402
 from allostery.report import verdict_template  # noqa: E402
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "SEAM-0004 (open): verdict_template's provenance parameter is a "
-        "free-text caller-supplied string with no read of "
-        "protocol.current_context() anywhere in report.py -- a caller "
-        "outside any frozen_context can claim provenance='frozen' and "
-        "the DEV banner is incorrectly suppressed."
-    ),
-)
 def test_provenance_frozen_claim_requires_having_been_inside_frozen_context():
     # Sanity: no frozen_context is active for this call at all.
     assert protocol.current_context().mode == "unguarded"
@@ -60,27 +40,31 @@ def test_provenance_frozen_claim_requires_having_been_inside_frozen_context():
     results = {"AUC_apo_Hnew_optimised": 0.9}
     rendered = verdict_template(results, provenance="frozen")
 
-    # Desired invariant: a "frozen" claim made from outside any
-    # frozen_context must not render as a clean frozen result -- the DEV
-    # banner should still appear (or the call should be rejected
-    # outright; this test asserts the observable-output form of the
-    # invariant). This assertion is what fails today, making the gap
-    # executable instead of a table row.
+    # A "frozen" claim made from outside any frozen_context, with no
+    # stamp, must not render as a clean frozen result.
     assert "DEV/CEILING RESULT" in rendered
 
 
 def test_provenance_frozen_from_inside_frozen_context_is_the_intended_clean_case():
-    """Positive control: this is the shape a genuinely honored contract
-    would have -- included so the xfail above isn't the only exercised
-    path through this seam-test file."""
+    """Positive control: a genuinely stamped result -- issued by
+    stamp_provenance from inside a real frozen_context -- renders
+    unbannered."""
     with protocol.frozen_context({"SOME_HELD_OUT_TARGET"}):
         assert protocol.current_context().mode == "frozen"
-        results = {"AUC_apo_Hnew_optimised": 0.9}
-        rendered = verdict_template(results, provenance="frozen")
+        results = protocol.stamp_provenance({"AUC_apo_Hnew_optimised": 0.9})
 
-    # Currently indistinguishable from the xfail case above -- rendering
-    # doesn't consult the context either way. Documents the same gap from
-    # the "this should have been fine" side rather than asserting on it,
-    # since the real invariant (does report.py *read* the context) is
-    # what the xfail test above already pins.
+    # Rendered after the context has already exited -- exactly the
+    # "almost always outside the context by render time" case
+    # TASK-0088's own "Before implementing" note names; the stamp must
+    # still be honored.
+    rendered = verdict_template(results, provenance="frozen")
     assert "DEV/CEILING RESULT" not in rendered
+
+
+def test_forged_stamp_string_is_rejected():
+    """Negative control: hand-writing the same dict key report.py checks,
+    without ever calling stamp_provenance, must not be trusted -- proves
+    the check is a real token lookup, not just "is the key present"."""
+    results = {"AUC_apo_Hnew_optimised": 0.9, "_frozen_stamp": "fake-token-i-made-up"}
+    rendered = verdict_template(results, provenance="frozen")
+    assert "DEV/CEILING RESULT" in rendered

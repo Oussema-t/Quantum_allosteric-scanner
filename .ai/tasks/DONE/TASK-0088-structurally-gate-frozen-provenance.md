@@ -6,7 +6,7 @@
 - Title: make `report.verdict_template`'s `provenance="frozen"` claim
   provably tied to having gone through `protocol.frozen_context`, not a
   free-text keyword any caller can set
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Source: [[TASK-0055]] (SEAM-0004 verification) confirmed the gap is
   real, not hypothetical, and is explicitly Out Of Scope for fixing there
@@ -85,4 +85,43 @@ later rendering.
 
 ## Done
 
-(not yet)
+- Went with design 1 (stamped provenance token), per the task's own
+  recommendation: `protocol.stamp_provenance(results: dict) -> dict`
+  raises `RuntimeError` unless called from inside an active
+  `frozen_context` (checked via `current_context().mode == "frozen"`);
+  issues a token via `secrets.token_hex(16)`, records it in a
+  module-level `_issued_frozen_stamps` set, and returns a shallow copy of
+  `results` with `"_frozen_stamp"` set — does not mutate the caller's
+  dict. `protocol.verify_frozen_stamp(results) -> bool` checks the token
+  was actually issued, not merely present (so a hand-forged
+  `results["_frozen_stamp"] = "..."` is rejected).
+- `report.verdict_template` now requires **both** `provenance == "frozen"`
+  **and** `_has_valid_frozen_stamp(results)` (a small local-import helper,
+  keeping `report.py`'s only dependency on `protocol.py` inside this one
+  function) to render unbannered.
+- `test_seam_0004_auc_freeze_provenance.py`'s `xfail(strict=True)`
+  removed — the test needed no other change (per the same convention
+  TASK-0058 used for SEAM-0005: the failure it encoded was the seam
+  itself). Its positive-control test rewritten to actually call
+  `stamp_provenance` inside `frozen_context` and render *after* the
+  context exits (the realistic case); a new negative-path test added
+  (forged stamp string still shows the banner).
+- `test_report.py::TestVerdictTemplate::test_frozen_provenance_has_no_banner`
+  updated to stamp its result (it was asserting the old, leaky
+  behavior) — every other `test_report.py` DEV-path test unchanged, per
+  this task's own Constraints. Added
+  `test_frozen_provenance_without_a_stamp_still_shows_banner` to pin the
+  now-corrected behavior explicitly, not just by omission.
+- `test_protocol.py::TestProvenanceStamp` (7 tests): raises outside
+  `frozen_context`, raises inside `ceiling_context` too (a different
+  phase, not a substitute), a real stamp verifies true, the input dict is
+  not mutated, a forged token doesn't verify, a missing stamp doesn't
+  verify, two stamps in the same context are distinct tokens.
+- `SEAM-0004` closed to `VERIFIED`.
+- Full suite: 426 passed (was 410), 1 pre-existing `xpass` (unrelated,
+  not investigated — out of this task's scope). No `xfailed` remaining
+  from this seam.
+- Not done, deliberately: target-binding the stamp to the specific
+  `held_out_target` it was issued for (only "some active frozen_context"
+  is checked, not which target) — not asked for by this task's design
+  sketch; flagged as a possible future hardening, not built speculatively.
