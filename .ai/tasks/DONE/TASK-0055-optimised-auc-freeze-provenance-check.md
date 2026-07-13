@@ -124,3 +124,19 @@ None
 - **Staging/commit deferred** — held per the user's manual
   Stage-Commit-Queue coordination (2nd in queue at completion time); code
   and tests are complete and locally green, not yet staged.
+
+**Update 2026-07-13, closure confirmed:** the "left `OPEN`" line above
+describes SEAM-0004's state *at this task's own completion* — do not read
+it as current. **TASK-0088 (Done, commit `6c164d4`) closed SEAM-0004 to
+`VERIFIED`**: `protocol.stamp_provenance`/`verify_frozen_stamp` now gate
+`provenance == "frozen"` behind an unforgeable-in-practice token issued
+only from inside a real `frozen_context`; `report.verdict_template`
+requires both. Re-verified independently and live in this session (not
+just re-reading task files): a naive `provenance="frozen"` claim with no
+stamp still renders the DEV banner, a hand-forged `_frozen_stamp` value
+is rejected, and a real stamp issued inside `frozen_context` and rendered
+after context exit renders unbannered.
+`tests/test_seam_0004_auc_freeze_provenance.py` now has 3 passing tests
+(no `xfail`) — the seam-test this task wrote was extended, not replaced,
+by TASK-0088. No further action against this task; the TASK-0055 →
+TASK-0088 → SEAM-0004 chain is complete.
