@@ -229,8 +229,14 @@ def verdict_template(results: dict, *, provenance: str = "dev") -> str:
             else "within graph-kernel noise -- CTQW does NOT add biological "
                  "information beyond the operator"
         )
+        # TASK-0095 / REVIEW-2026-07-13 (P1-B): "AUC_heat_mean" is
+        # propagators.ground_state_relaxation's score on H_new, an
+        # indefinite operator -- NOT a diffusion process. Keep this line's
+        # wording accurate; the old framing here was a false physical claim
+        # on every H_new run.
         lines.append(
-            f"2) CTQW vs classical heat on H_new (same operator): "
+            f"2) CTQW vs ground-state relaxation on H_new (same operator, "
+            f"not a classical-diffusion comparison -- see TASK-0095): "
             f"DAUC = {diff_qc:+.3f}  ({verdict_qc})."
         )
 

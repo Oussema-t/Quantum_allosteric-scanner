@@ -18,7 +18,7 @@ import pytest
 import networkx as nx
 from scipy.spatial.distance import cdist
 
-from allostery.propagators import ctqw, heat, time_averaged_ctqw
+from allostery.propagators import ctqw, ground_state_relaxation, time_averaged_ctqw
 from allostery.hamiltonians import (
     contact_matrix,
     laplacian,
@@ -519,7 +519,7 @@ class TestHelixPropagators:
     def test_heat_t0_delta(self, helix_graph):
         """Heat kernel at t=0 must be a delta function on the source."""
         _, _, L, _ = helix_graph
-        p = heat(L, t=0.0, source=self.SOURCE)
+        p = ground_state_relaxation(L, t=0.0, source=self.SOURCE)
         assert abs(p[self.SOURCE] - 1.0) < 1e-10, f"p[source] = {p[self.SOURCE]}"
         assert p[self.SOURCE - 1] < 1e-10
         assert p[self.SOURCE + 1] < 1e-10
@@ -547,7 +547,7 @@ class TestHelixPropagators:
     def test_heat_short_time_locality(self, helix_graph):
         """Heat kernel at t=0.1: mean P at graph-distance 1 > mean P at distance 2."""
         _, _, L, G = helix_graph
-        p = heat(L, t=0.1, source=self.SOURCE)
+        p = ground_state_relaxation(L, t=0.1, source=self.SOURCE)
         lengths = nx.single_source_shortest_path_length(G, self.SOURCE)
         dist1 = [v for v, d in lengths.items() if d == 1]
         dist2 = [v for v, d in lengths.items() if d == 2]
@@ -568,7 +568,7 @@ class TestHelixPropagators:
         """
         _, _, L, _ = helix_graph
         N = L.shape[0]
-        p = heat(L, t=1000.0, source=self.SOURCE)
+        p = ground_state_relaxation(L, t=1000.0, source=self.SOURCE)
         np.testing.assert_allclose(p, np.full(N, 1.0 / N), atol=1e-3,
                                    err_msg="Heat kernel did not converge to 1/N")
 
@@ -579,6 +579,6 @@ class TestHelixPropagators:
         """Heat convergence to 1/N holds regardless of starting residue."""
         _, _, L, _ = helix_graph
         N = L.shape[0]
-        p = heat(L, t=1000.0, source=source)
+        p = ground_state_relaxation(L, t=1000.0, source=source)
         np.testing.assert_allclose(p, np.full(N, 1.0 / N), atol=1e-3,
                                    err_msg=f"Heat did not reach 1/N from source={source}")

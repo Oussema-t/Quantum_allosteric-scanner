@@ -185,4 +185,14 @@ class TestVerdictTemplate:
         text = verdict_template({}, provenance="frozen")
         assert "N/A" in text
         assert "Operator gain over H10 baseline" not in text
-        assert "CTQW vs classical heat" not in text
+        assert "CTQW vs ground-state relaxation" not in text
+
+    def test_line_2_never_claims_classical_diffusion(self):
+        """TASK-0095 / REVIEW-2026-07-13 P1-B: the AUC_heat_mean side of
+        this comparison is propagators.ground_state_relaxation's score on
+        (usually indefinite) H_new, not classical diffusion -- the report
+        must never say so, with or without a full results dict."""
+        text = verdict_template(self.FULL_RESULTS, provenance="frozen")
+        assert "classical heat" not in text
+        assert "classical diffusion" not in text
+        assert "CTQW vs ground-state relaxation" in text

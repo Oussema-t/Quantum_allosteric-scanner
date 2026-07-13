@@ -5,7 +5,7 @@
 - ID: TASK-0016
 - Title: Add a test confirming `heat()` either raises or is documented as
   unsupported when given `H_new`'s indefinite spectrum
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Source: `.claude/improvements/test_coverage.md` ("Missing: Propagators"
   section) explicitly says this test is "**Not yet in TASKS.md — must be
@@ -100,4 +100,32 @@
 
 ## Done
 
-(not yet)
+**Closed 2026-07-13, superseded by TASK-0095** (found while that task was
+in progress -- same gap, independently discovered 9 days earlier and never
+picked up). REVIEW-2026-07-13-proximity-confound-and-propagator-
+semantics.md's finding P1-B executed exactly this scenario for real against
+`build_H_new` and found the *docstring-only* status quo (this task's
+Option 3, "partially in place" per the note below) was insufficient in
+practice: `heat()` silently returned `H_new`'s ground-state density,
+mistaken for a real classical-diffusion comparison in `RESULTS.md`.
+
+TASK-0095 resolved this with a hybrid of Option 1 and Option 3: renamed
+`heat` -> `ground_state_relaxation` (name states what it actually computes
+for any `H`), and added `_warn_if_indefinite` -- a `UserWarning` by default
+when `min(eigvalsh(H)) < -tol` (Option 2's "clip with a warning" spirit,
+without the clip -- the computation itself is unchanged, only silence is
+removed), with an opt-in `strict=True` to raise (Option 1) for a call site
+that wants a hard guarantee. Test coverage:
+`tests/test_ground_state_relaxation_guard.py` -- guard fires on
+`build_H_new`'s real indefinite spectrum, does not fire on a genuine PSD
+Laplacian (`H2_combinatorial_laplacian`), `strict=True` raises instead of
+warning, and the guard is purely diagnostic (output identical whether or
+not the warning is observed/suppressed). This directly satisfies this
+task's own Acceptance Scenarios and Planned Validation (deterministic test
+on a known-indefinite Hamiltonian, exercising the chosen behavior).
+
+Not implemented as a separate task/file -- doing so here would have
+duplicated TASK-0095's own scope by definition (same function, same call
+sites, same finding). Cross-referenced instead, per this session's
+established pattern for a small, cheap closure discovered as a byproduct
+of other work (mirrors TASK-0037 -> TASK-0096 in `EXECUTION_PLAN.md`).

@@ -4,15 +4,37 @@ All propagators take a Hamiltonian H (N×N, real symmetric) and return an
 occupation probability vector p of shape (N,) with p.sum() ≈ 1.
 
 Three propagators (same H, different physics):
-  ctqw        – Continuous-Time Quantum Walk: exp(−iHt), coherent.
-  heat        – Classical heat / diffusion kernel: exp(−Ht).
-  haken_strobl – Open-system CTQW with dephasing: Lindblad master equation.
+  ctqw                   – Continuous-Time Quantum Walk: exp(−iHt), coherent.
+  ground_state_relaxation – exp(−Ht) applied to an initial distribution.
+                            **Classical diffusion only when H is positive-
+                            semidefinite** (e.g. a combinatorial/GNM
+                            Laplacian) -- on an indefinite operator (e.g.
+                            `H_new`, whose V_R/V_C/V_M terms contribute
+                            negative diagonals by design) this is imaginary-
+                            time Schrodinger evolution and converges to the
+                            operator's ground-state density, not a diffusion
+                            process. See TASK-0095 /
+                            `REVIEW-2026-07-13-proximity-confound-and-
+                            propagator-semantics.md` (finding P1-B): this
+                            function was formerly named `heat` and its
+                            docstring asserted diffusion semantics
+                            unconditionally, which is false for indefinite H
+                            -- `Spearman(old-heat(H_new, t=20), |ground
+                            state|^2) = 0.998` on real data. Renamed rather
+                            than split in two, since the *computation* is
+                            identical either way; only the physical
+                            interpretation depends on H's spectrum, which is
+                            why `_warn_if_indefinite` below makes that
+                            dependency visible instead of silent.
+  haken_strobl            – Open-system CTQW with dephasing: Lindblad master
+                            equation.
 
 The dephasing sweep in Phase 0a tests that AUC is flat across gamma values,
 confirming coherence adds nothing beyond topology for these protein graphs.
 """
 from __future__ import annotations
 
+import warnings
 from typing import Sequence, Union
 
 import numpy as np
@@ -73,23 +95,72 @@ def ctqw(
     return p
 
 
-def heat(
+def _warn_if_indefinite(w: np.ndarray, tol: float, strict: bool, fn_name: str) -> None:
+    """Guard for TASK-0095 / REVIEW-2026-07-13 finding P1-B: `exp(-Ht)` is
+    classical diffusion only when `H` is positive-semidefinite. Called with
+    `H`'s already-computed eigenvalues `w` (never re-decomposes).
+
+    Default (`strict=False`) emits a `UserWarning` rather than raising --
+    computing `ground_state_relaxation` on an indefinite H (e.g. `H_new`) is
+    a legitimate, deliberate operation (TASK-0091's re-filed question is
+    exactly "what does this compute on `H_new`"), so this must not break
+    existing callers. What it must never do again is let that computation
+    pass *silently* as if it were diffusion -- the loud diagnostic is the
+    fix, not a hard block. `strict=True` raises instead, for a call site
+    that specifically wants to assert diffusion semantics and treat a
+    violation as a bug.
+    """
+    min_eig = float(w.min())
+    if min_eig >= -tol:
+        return
+    message = (
+        f"{fn_name}: H is indefinite (min eigenvalue {min_eig:.3g} < -{tol:.0e}) -- "
+        "exp(-Ht) is NOT classical diffusion here, it evolves toward H's "
+        "ground-state density (TASK-0095, REVIEW-2026-07-13 finding P1-B). "
+        "Do not report this output as a diffusion/classical-heat comparison."
+    )
+    if strict:
+        raise ValueError(message)
+    warnings.warn(message, UserWarning, stacklevel=3)
+
+
+def ground_state_relaxation(
     H: np.ndarray,
     t: float,
     source: Source = 0,
+    *,
+    strict: bool = False,
+    tol: float = 1e-9,
 ) -> np.ndarray:
-    """Heat-kernel (classical diffusion) occupation at time t.
+    """`exp(-Ht)` applied to an initial distribution over `source`.
 
     p_j(t) = [e^{−Ht} p0]_j, p0 uniform over `source` index/indices.
 
-    H should be a positive-semidefinite Laplacian. The result is clipped to
-    non-negative and re-normalised to handle floating-point noise.
+    **This is classical diffusion only when `H` is positive-semidefinite**
+    (a combinatorial/GNM Laplacian, or any operator with no negative
+    eigenvalues). On an indefinite `H` (e.g. `H_new`, whose V_R/V_C/V_M
+    potential terms contribute negative diagonals), this converges to the
+    density of `H`'s ground state as `t` grows -- a real, well-defined
+    quantity, just not a diffusion process. See this module's docstring and
+    TASK-0095 for the finding that motivated this name (formerly `heat`,
+    which asserted diffusion semantics unconditionally).
+
+    By default, an indefinite `H` triggers a `UserWarning` (`_warn_if_
+    indefinite`) rather than silently proceeding -- pass `strict=True` to
+    raise instead. Either way the *numeric* output for a genuinely
+    positive-semidefinite `H` is unchanged from the original `heat`.
+
+    The result is clipped to non-negative and re-normalised to handle
+    floating-point noise (this clipping is what previously masked a
+    13-order-of-magnitude L1-norm divergence on indefinite `H` -- the
+    warning above is the fix for that, not a change to the clipping itself).
 
     Returns
     -------
     p : (N,) non-negative array summing to 1.
     """
     w, v = np.linalg.eigh(H)
+    _warn_if_indefinite(w, tol, strict, "ground_state_relaxation")
     coeffs = _classical_initial_weights(v, source)
     exp_w = np.exp(-w * t)
     col = v @ (exp_w * coeffs)

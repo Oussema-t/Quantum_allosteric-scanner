@@ -17,12 +17,14 @@ Tests
 9. eff_rank_spectrum       – eff_rank of flat spectrum = N; spiked spectrum ≈ 1
 10. normalised_laplacian   – Eigenvalues in [0, 2]; zero mode exists
 """
+import warnings
+
 import numpy as np
 import pytest
 import networkx as nx
 from scipy.special import jv as bessel_j
 
-from allostery.propagators import ctqw, heat, haken_strobl
+from allostery.propagators import ctqw, ground_state_relaxation, haken_strobl
 from allostery.hamiltonians import laplacian
 from allostery.metrics import eff_rank
 
@@ -189,14 +191,22 @@ def test_haken_strobl_trace():
 
 @pytest.mark.parametrize("t", [0.1, 1.0, 5.0, 20.0])
 def test_heat_kernel_conservation(t):
-    """Heat kernel: p ≥ 0 and sum ≈ 1 (Laplacian convention)."""
+    """Heat kernel: p >= 0 and sum ~= 1 (Laplacian convention).
+
+    `L = laplacian(A)` is a combinatorial Laplacian -- always PSD -- so this
+    genuinely exercises `ground_state_relaxation` (formerly `heat`,
+    TASK-0095) in its classical-diffusion regime; the indefinite-operator
+    guard must not fire here (see `test_ground_state_relaxation_guard.py`
+    for the indefinite case)."""
     N = 12
     G = nx.barabasi_albert_graph(N, 2, seed=7)
     A = nx.adjacency_matrix(G).toarray().astype(float)
     L = laplacian(A)
 
     for source in range(N):
-        p = heat(L, t, source=source)
+        with warnings.catch_warnings():
+            warnings.simplefilter("error")
+            p = ground_state_relaxation(L, t, source=source)
         assert (p >= -1e-10).all(), f"Negative heat kernel entry at t={t}, source={source}"
         assert abs(p.sum() - 1.0) < 1e-8, f"Heat sum ≠ 1 at t={t}, source={source}"
 

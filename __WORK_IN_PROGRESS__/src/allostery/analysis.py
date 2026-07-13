@@ -48,7 +48,7 @@ def _metric_pack(occ: np.ndarray, labels: np.ndarray, ks=(5, 10, 20)) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Sec.10 -- quantum-walk vs classical-heat head-to-head (same H)
+# Sec.10 -- CTQW vs ground-state relaxation head-to-head (same H)
 # ---------------------------------------------------------------------------
 
 def quantum_vs_classical(
@@ -58,24 +58,40 @@ def quantum_vs_classical(
     t_max: float = 15.0,
     n_steps: int = 500,
 ) -> dict:
-    """CTQW vs classical heat-kernel on the *same* Hamiltonian H.
+    """CTQW vs `propagators.ground_state_relaxation` on the *same* H.
+
+    **Not a coherent-vs-diffusive comparison when `H` is indefinite** (e.g.
+    `H_new` -- see TASK-0095 / REVIEW-2026-07-13 finding P1-B).
+    `ground_state_relaxation` (formerly named after the diffusion process it
+    is only sometimes computing) behaves as a diffusion kernel only when `H`
+    is positive-semidefinite; on `H_new` it converges to the operator's
+    ground-state density instead. This function still computes a real,
+    useful comparison either way (does the coherent time-average differ
+    from the operator's own ground-state-localized limit?) -- it was the
+    *name* this module used to describe the second side that was wrong, not
+    the computation. Callers must check `H`'s spectrum before describing the
+    "heat" side of this dict as a diffusion process or as "quantum vs
+    classical" (the renamed propagator warns by default when `H` is
+    indefinite).
 
     CTQW is coherent/oscillatory (no decay), so it is compared via its
     time-average over [0, t_max] (`propagators.time_averaged_ctqw`) -- a
-    single-time snapshot would be an arbitrary phase pick. The heat kernel
-    monotonically relaxes toward a stationary distribution, so a single
-    evaluation at t_max (`propagators.heat`) is already representative and
-    does not need the same averaging (there is no analogous
-    time-averaged-heat helper in propagators.py by design, not by
-    omission).
+    single-time snapshot would be an arbitrary phase pick. A single
+    evaluation of `ground_state_relaxation` at t_max is representative of
+    its long-time behaviour either way (monotonic relaxation if `H` is PSD;
+    convergence to the ground state otherwise), so it does not need the
+    same averaging (there is no analogous time-averaged helper in
+    propagators.py by design, not by omission).
 
     Returns a dict with "ctqw" and "heat" sub-dicts (each a metric pack, or
-    just the occupation vector if `labels` is None).
+    just the occupation vector if `labels` is None) -- key names kept as
+    short internal labels, not a physics claim; see the correction above
+    for what "heat" actually means when `H` is indefinite.
     """
-    from .propagators import time_averaged_ctqw, heat
+    from .propagators import time_averaged_ctqw, ground_state_relaxation
 
     occ_ctqw = time_averaged_ctqw(H, t_max, source=source, n_steps=n_steps)
-    occ_heat = heat(H, t_max, source=source)
+    occ_heat = ground_state_relaxation(H, t_max, source=source)
 
     if labels is None:
         return {"ctqw": occ_ctqw, "heat": occ_heat}
@@ -410,30 +426,32 @@ def gnm_cutoff_weight_sweep(
     t_max: float = 15.0,
 ) -> dict:
     """Score every (cutoff, weight_scheme) combination's GNM-Kirchhoff
-    Laplacian against `labels`, scored from `source` via the classical
-    heat kernel.
+    Laplacian against `labels`, scored from `source` via a genuine
+    diffusion kernel (this call site's `L` is always PSD, see below).
 
-    `heat`, not `time_averaged_ctqw`, is the deliberate choice here:
-    propagators.py's own docstring states a single heat evaluation at
-    `t_max` is "already representative" (no oscillation to average out,
-    unlike CTQW) -- this sweep is comparing *operator construction*
-    (cutoff x weight), not propagator choice, so the cheaper single-eval
-    classical kernel is the right tool, not a shortcut that changes what's
-    being measured. `laplacian(W, normalised=False)` is always PSD for any
-    non-negative `W`, satisfying `heat`'s own precondition regardless of
-    which weight scheme built `W`.
+    `ground_state_relaxation` (formerly `heat`, TASK-0095), not
+    `time_averaged_ctqw`, is the deliberate choice here: propagators.py's
+    own docstring states a single evaluation at `t_max` is "already
+    representative" (no oscillation to average out, unlike CTQW) -- this
+    sweep is comparing *operator construction* (cutoff x weight), not
+    propagator choice, so the cheaper single-eval kernel is the right tool,
+    not a shortcut that changes what's being measured. `laplacian(W,
+    normalised=False)` is always PSD for any non-negative `W`, so this call
+    site's diffusion-kernel framing is accurate (unlike `H_new`, there is no
+    indefinite-operator concern here regardless of which weight scheme
+    built `W` -- `ground_state_relaxation`'s guard will not fire).
 
     Returns `{(cutoff, weight_scheme): metric_pack, ...}` -- reuses this
     module's own `_metric_pack` (AUC + P@k + E@k), not a new score format.
     """
     from .hamiltonians import contact_matrix, laplacian
-    from .propagators import heat
+    from .propagators import ground_state_relaxation
 
     results = {}
     for cutoff in cutoffs:
         for scheme in weight_schemes:
             W = contact_matrix(coords, cutoff=cutoff, weight=scheme)
             L = laplacian(W, normalised=False)
-            occ = heat(L, t_max, source=source)
+            occ = ground_state_relaxation(L, t_max, source=source)
             results[(cutoff, scheme)] = _metric_pack(occ, labels)
     return results
