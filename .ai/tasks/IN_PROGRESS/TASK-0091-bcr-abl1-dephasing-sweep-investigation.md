@@ -8,7 +8,7 @@
   detects distal allosteric pockets — not just proximal ones — on
   BCR_ABL1's real 0.731 result, **with TASK-0094's proximity floor
   applied**.
-- Status: TODO
+- Status: In Progress
 - Owner: Implementer
 - Source: **Re-filed 2026-07-13** per
   `__WORK_IN_PROGRESS__/REVIEW-2026-07-13-proximity-confound-and-propagator-semantics.md`,
