@@ -26,15 +26,25 @@ It gates every current headline number and every task downstream of one (5.2/5.3
 below, each annotated). **Do not report, or build further on, any AUC in the current
 `RESULTS.md` as allosteric signal until it clears TASK-0094's proximity floor.**
 
-## Progress tracker (Phases 0–6 + 1B, the scored/critical-path work — 42 tasks)
+**Addendum, same day, prompted by a direct user question:** an end-to-end audit (traced
+`run_frozen_verdict` down to every function it calls) found that **no reported number in
+this pipeline currently depends on quantum phase/coherence at all** — `ctqw`/`haken_strobl`
+are correctly implemented, real quantum evolutions, but every scored AUC is built only from
+`time_averaged_ctqw` (phase-averaged by construction) and `ground_state_relaxation`
+(real-valued, no oscillation). This is a risk to the submission's core "quantum" premise,
+not just a labeling gap — see **TASK-0099** (Phase 1B.8), filed to wire the
+already-implemented-but-never-reported `dephasing_sweep` into the scored path.
 
-**Snapshot as of 2026-07-13 — this is a point-in-time copy, not a live view.**
-`.ai/COMMON.md`'s Active Work Registry is the canonical, continuously-updated source —
-re-check there (or regenerate this table) before trusting it for dispatch decisions.
+## Progress tracker (Phases 0–6 + 1B, the scored/critical-path work — 43 tasks)
+
+**Snapshot as of 2026-07-13 (later same day) — this is a point-in-time copy, not a live
+view.** `.ai/COMMON.md`'s Active Work Registry is the canonical, continuously-updated
+source — re-check there (or regenerate this table) before trusting it for dispatch
+decisions.
 
 | Done | In Progress | TODO | Total |
 |---|---|---|---|
-| 13 (TASK-0070, TASK-0052, TASK-0047, TASK-0058, TASK-0063, TASK-0055, TASK-0064, TASK-0071, TASK-0056, TASK-0067, TASK-0079, TASK-0074, TASK-0066) | 0 | 29 | 42 |
+| 16 (TASK-0070, TASK-0052, TASK-0047, TASK-0058, TASK-0063, TASK-0055, TASK-0064, TASK-0071, TASK-0056, TASK-0067, TASK-0079, TASK-0074, TASK-0066, TASK-0094, TASK-0095, TASK-0097 [uncommitted]) | 0 | 27 | 43 |
 
 **To refresh this snapshot:** each task file's own `- Status:` line is authoritative
 (`.ai/COMMON.md`'s registry mirrors it). One-line check for any ID:
@@ -116,13 +126,14 @@ below matches the review's own "Sequencing" section exactly — do not reorder.
 
 | # | Task | Why in this order | Status |
 |---|---|---|---|
-| 1B.1 | **[FILED] TASK-0094 — proximity baselines into the floor** | **Do this first.** Add `euclid_from_seed_centroid`/`hop_from_seed` to `baselines.py`, wire into `floor_scores`/`classify_failure`, re-run all mandatory targets. Real evidence: a pure distance baseline (AUC 0.966) beats CTQW (0.914) on a proximal pocket; both collapse on a distal one. **Decides whether we have a result at all.** | TODO |
-| 1B.2 | **[FILED] TASK-0095 — correct propagator semantics** | Cheap, and stops a false physical claim from propagating into the submission. `heat(H_new)` is `H_new`'s ground-state density (Spearman 0.998 vs `\|ground state\|²`), not classical diffusion — rename, guard against indefinite operators, correct `RESULTS.md`/report framing. | TODO |
-| 1B.3 | **[FILED] TASK-0096 — delete or implement phantom H11/H12** | Cheap, removes an audit liability. Both verified (`np.allclose`) identical to `H6`/unweighted-contact Laplacian despite docstrings claiming anisotropic weighting. Independent of 1B.1/1B.2, can run in parallel with them. | TODO |
-| 1B.4 | **[RE-FILED] TASK-0091 — does `H_new`'s ground state localize on *distal* pockets?** | The one open scientific question from the review that is not proximity in disguise. Original dephasing-sweep framing **retracted** (structurally could not converge to `heat(H_new)`'s value — see 1B.2). Re-filed to test BCR_ABL1's real 0.731 directly against 1B.1's proximity floor. **Hard blocked on 1B.1 and 1B.2.** | TODO |
-| 1B.5 | **[UPDATED] TASK-0093 — KRAS AUC reconciliation, now against the proximity floor** | The 8.0 vs 10.0 Å cutoff changes the contact graph's distance-decay from the seed — a candidate mechanism for the AUC gap that has nothing to do with real allosteric sensitivity. Every factorial combination must now be checked against 1B.1's floor, not just chance. **Hard blocked on 1B.1.** | TODO |
-| 1B.6 | **[FILED] TASK-0097 — name the "quantum metric" honestly** | `time_averaged_ctqw` is the decoherent/infinite-time-average limit (a spectral overlap quantity), not a coherent walk. Reporting honesty; can run in parallel with 1B.7 once 1B.1–1B.3 land. | TODO |
+| 1B.1 | **[FILED] TASK-0094 — proximity baselines into the floor** | **Do this first.** Add `euclid_from_seed_centroid`/`hop_from_seed` to `baselines.py`, wire into `floor_scores`/`classify_failure`, re-run all mandatory targets. Real evidence: a pure distance baseline (AUC 0.966) beats CTQW (0.914) on a proximal pocket; both collapse on a distal one. **Decides whether we have a result at all.** | **Done** (commits `8d7370b`/`b217c21`). `classify_failure`'s floor now takes the **max** across `degree_centrality`/`euclid_from_seed_centroid`/`hop_from_seed`. Real re-run: KRAS_G12C (0.779) does **not** clear the floor (euclid baseline alone scores 0.798) → `BEATS_CHANCE_NOT_FLOOR`, confirming the review's suspicion. BCR_ABL1 stays `NO_SIGNAL_IN_APO`. CARDIAC_MYOSIN clears the floor but `INSUFFICIENT_RESOLUTION` fires first. |
+| 1B.2 | **[FILED] TASK-0095 — correct propagator semantics** | Cheap, and stops a false physical claim from propagating into the submission. `heat(H_new)` is `H_new`'s ground-state density (Spearman 0.998 vs `\|ground state\|²`), not classical diffusion — rename, guard against indefinite operators, correct `RESULTS.md`/report framing. | **Done.** Renamed `heat`→`ground_state_relaxation` everywhere; added `_warn_if_indefinite` guard (warn by default, `strict=True` raises); corrected `analysis.py`/`report.py`/`RESULTS.md` framing (BCR_ABL1's old claim struck through, marked `[CORRECTED]`, per this doc's own no-silent-overwrite convention). Verified no numeric change on genuinely-PSD operators against an independent `scipy.linalg.expm` reference. |
+| 1B.3 | **[FILED] TASK-0096 — delete or implement phantom H11/H12** | Cheap, removes an audit liability. Both verified (`np.allclose`) identical to `H6`/unweighted-contact Laplacian despite docstrings claiming anisotropic weighting. Independent of 1B.1/1B.2, can run in parallel with them. | TODO (claimed by Implementer A, 07-13 15:29 — not yet moved) |
+| 1B.4 | **[RE-FILED] TASK-0091 — does `H_new`'s ground state localize on *distal* pockets?** | The one open scientific question from the review that is not proximity in disguise. Original dephasing-sweep framing **retracted** (structurally could not converge to `heat(H_new)`'s value — see 1B.2). Re-filed to test BCR_ABL1's real 0.731 directly against 1B.1's proximity floor. **Hard blocked on 1B.1 and 1B.2 — both now Done, unblocked.** | TODO |
+| 1B.5 | **[UPDATED] TASK-0093 — KRAS AUC reconciliation, now against the proximity floor** | The 8.0 vs 10.0 Å cutoff changes the contact graph's distance-decay from the seed — a candidate mechanism for the AUC gap that has nothing to do with real allosteric sensitivity. Every factorial combination must now be checked against 1B.1's floor, not just chance. **Hard blocked on 1B.1 — now Done, unblocked.** | TODO |
+| 1B.6 | **[FILED] TASK-0097 — name the "quantum metric" honestly** | `time_averaged_ctqw` is the decoherent/infinite-time-average limit (a spectral overlap quantity), not a coherent walk. Reporting honesty; can run in parallel with 1B.7 once 1B.1–1B.3 land. | **Done, uncommitted** (per-thread decision — pending its turn in the commit queue). `[NOTE]` disclosure added to `verdict_template` before any AUC renders; second methodology paragraph added to `RESULTS.md`; 3 new tests including a durable `RESULTS.md`-content check. |
 | 1B.7 | **[FILED] TASK-0098 — amend INVARIANCE_PROTOCOL's SIGNAL class** | Protocol-level generalization: SIGNAL must beat the domain's strongest trivial confounder (distance-from-seed here), not just chance. Third instance of the same unexecuted-gauge-symmetry pattern (after SE(3) rotation, SU(2)/Clifford-frame) — see the review's Meta section. Can run in parallel with 1B.6. | TODO |
+| 1B.8 | **[FILED] TASK-0099 — wire a genuine coherence metric into the scored verdict** | Audit (2026-07-13, prompted by a direct user question against 1B.6's finding) confirmed: **nothing phase-dependent currently reaches any reported AUC.** `ctqw`/`haken_strobl` are correctly implemented, real quantum evolutions — but every scored number traces only to `time_averaged_ctqw`/`ground_state_relaxation`, both phase-averaged. `dephasing_sweep` exists, is tested, and has **zero call sites** in the reported pipeline. Promote it (calibrated γ, all 3 mandatory targets, checked against 1B.1's floor) so at least one reported number would change under phase randomization. **Hard blocked on 1B.1 — now Done, unblocked.** | TODO |
 
 **Non-finding, recorded so it isn't re-litigated:** the review also tested whether
 ground-state localization (`heat`) is *immune* to the proximity confound, as an external
@@ -263,7 +274,12 @@ current status lives in the per-phase tables above and in `.ai/COMMON.md`.
 - **TASK-0098 — Amend INVARIANCE_PROTOCOL's SIGNAL class.** Must beat the domain's
   strongest trivial confounder (distance-from-seed), not just chance.
 - **TASK-0091 (re-filed) / TASK-0093 (updated)** — see Phase 1B above; both hard-blocked
-  on TASK-0094.
+  on TASK-0094 (now Done, unblocked).
+- **TASK-0099 (later same day) — wire a coherence metric into the scored verdict.** Filed
+  per direct user question after auditing TASK-0097's finding: promote `dephasing_sweep`
+  (implemented, tested, never wired into the reported path) into the verdict schema for
+  all 3 mandatory targets, checked against TASK-0094's proximity floor, so at least one
+  reported number would change under phase randomization.
 
 **Correctness**
 - **TASK-0070 — Pocket label exclusion assembly.** Add the `build_labels` step assembling `pocket & ~functional & ~terminal`, assert `pocket ∩ active_site == ∅`, record an explicit KRAS Cys12 in/out decision, and give the exclusion **one named seam-owner** so it stops falling between `labels`/`protocol`/`analysis`.
