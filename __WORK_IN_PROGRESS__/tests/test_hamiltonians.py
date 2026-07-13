@@ -37,6 +37,7 @@ from allostery.hamiltonians import (
     H11_anisotropic_mechanical,
     H12_anm_scalarised,
     H13_3N_anm_hessian,
+    H14_anm_pinv_trace,
 )
 from allostery.metrics import ipr, spectral_gap, check_degree_correlation
 
@@ -227,6 +228,116 @@ class TestH1toH13Smoke:
         assert (w >= -1e-10).all()
         nullity = int((np.abs(w) < 1e-8).sum())
         assert nullity >= 3, f"H13 nullity={nullity}, expected >= 3 (translations)"
+
+
+# ---------------------------------------------------------------------------
+# TASK-0096 · H11/H12 must be genuinely distinct from H6/unweighted Laplacian
+# ---------------------------------------------------------------------------
+
+class TestH11H12AreNotPhantoms:
+    """REVIEW-2026-07-13 finding P2-A: H11 was body-identical to H6, and H12's
+    edge weight (`dot(unit_r, unit_r)`) was always 1.0, making it identical to
+    the unweighted-contact Laplacian. TASK-0096 replaced both bodies with a
+    verbatim port of `notebooks/H_new_engineering (4) CLEAN.ipynb` cell 11's
+    `HamiltonianFactory.H11_anisotropic_mechanical` /
+    `.H12_anm_scalarized`. Confirms the fix actually diverges numerically, on
+    a non-trivial (non-colinear) fixture -- not just that the functions run
+    without error."""
+
+    def test_h11_diverges_from_h6_exponential_decay(self):
+        coords = _helix_coords(30)
+        H11 = H11_anisotropic_mechanical(coords, cutoff=10.0)
+        H6 = H6_exponential_decay(coords, cutoff=10.0)
+        assert not np.allclose(H11, H6), (
+            "H11 must differ from H6 now that the ported formula multiplies "
+            "in an extra 1/d^2 harmonic term"
+        )
+
+    def test_h12_diverges_from_unweighted_laplacian(self):
+        coords = _helix_coords(30)
+        H12 = H12_anm_scalarised(coords, cutoff=10.0)
+        H2 = H2_combinatorial_laplacian(coords, cutoff=10.0)
+        assert not np.allclose(H12, H2), (
+            "H12 must differ from the unweighted-contact Laplacian now that "
+            "edge weight is the local-SVD directional alignment, not a "
+            "constant 1.0"
+        )
+
+    def test_h12_diverges_from_h6_exponential_decay(self):
+        coords = _helix_coords(30)
+        H12 = H12_anm_scalarised(coords, cutoff=10.0)
+        H6 = H6_exponential_decay(coords, cutoff=10.0)
+        assert not np.allclose(H12, H6)
+
+    def test_h12_weight_depends_on_local_neighbourhood_shape(self):
+        """The defining property the old H12 could never have: the edge
+        (0 -> 1) is at the identical distance (3.0 A) in both fixtures below,
+        yet gets a very different weight, because residue 0's *other*
+        neighbours (which set its dominant local displacement axis via SVD)
+        differ between the two cases. Distance-only operators (H2/H6) cannot
+        distinguish these; the old `dot(r, r) == 1.0` body couldn't either."""
+        # Neighbour 1 fixed along +x at distance 3.0 in both cases; residue
+        # 0's *other* neighbours (2, 3) are what differs.
+        coords_a = np.array([
+            [0.0, 0.0, 0.0],
+            [3.0, 0.0, 0.0],
+            [0.0, 0.3, 0.0],
+            [0.0, -0.3, 0.0],
+        ])
+        coords_b = np.array([
+            [0.0, 0.0, 0.0],
+            [3.0, 0.0, 0.0],
+            [0.0, 4.0, 0.0],
+            [0.0, -4.0, 0.0],
+        ])
+
+        H12_a = H12_anm_scalarised(coords_a, cutoff=10.0)
+        H12_b = H12_anm_scalarised(coords_b, cutoff=10.0)
+        assert not np.isclose(H12_a[0, 1], H12_b[0, 1]), (
+            "same-distance edge (0, 1) must get different H12 weight once "
+            "residue 0's other neighbours change its dominant local axis"
+        )
+
+
+class TestH14AnmPinvTrace:
+    """H14_anm_pinv_trace -- repo-original research extension (NOT a notebook
+    port; the notebook has no such operator). Global ANM cross-correlation
+    reduction (Bahar, Atilgan & Erman 1997; Atilgan et al. 2001):
+    Trace([H13^+]_ij), the trace of each 3x3 block of the Moore-Penrose
+    pseudo-inverse of the real anisotropic 3N x 3N Hessian. Kept alongside
+    H12 (not as a replacement) at the user's explicit request, to let the
+    operator sweep judge empirically whether the *global* elastic-network
+    coupling clears the proximity floor where the *local* H12 formula and
+    H6/H10 do not (TASK-0096 follow-up)."""
+
+    def test_diverges_from_h2_and_h6(self):
+        coords = _helix_coords(20)
+        H14 = H14_anm_pinv_trace(coords, cutoff=10.0)
+        H2 = H2_combinatorial_laplacian(coords, cutoff=10.0)
+        H6 = H6_exponential_decay(coords, cutoff=10.0)
+        assert not np.allclose(H14, H2)
+        assert not np.allclose(H14, H6)
+
+    def test_symmetric_psd_with_nullity(self):
+        coords = _helix_coords(20)
+        H14 = H14_anm_pinv_trace(coords, cutoff=10.0)
+        assert H14.shape == (20, 20)
+        assert np.allclose(H14, H14.T)
+        w = np.linalg.eigvalsh(H14)
+        assert (w >= -1e-8).all(), f"H14 has eigenvalue {w.min():.3e} < -1e-8"
+        nullity = int((np.abs(w) < 1e-8).sum())
+        assert nullity >= 1
+
+    def test_has_nonzero_long_range_coupling(self):
+        """The property H12's local formula cannot have: nonzero weight
+        between residues that are not direct contact-graph neighbours,
+        because the pseudo-inverse of the whole elastic network transmits
+        coupling through the structure, not just along direct edges."""
+        coords = _helix_coords(20)
+        H14 = H14_anm_pinv_trace(coords, cutoff=10.0)
+        A = contact_matrix(coords, cutoff=10.0, weight="binary")
+        non_edges = (A == 0) & ~np.eye(20, dtype=bool)
+        assert np.abs(H14[non_edges]).max() > 1e-9
 
 
 # ---------------------------------------------------------------------------

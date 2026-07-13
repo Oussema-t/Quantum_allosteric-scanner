@@ -7,7 +7,7 @@
   `H6_exponential_decay`; `H12_anm_scalarised`'s `k_ij` is always exactly
   `1.0` regardless of geometry, making it a duplicate of
   `H2_combinatorial_laplacian`
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Source: review of all `Bartosz`/`bchmura`-authored commits, 2026-07-05
   session — High-severity finding #1
@@ -87,4 +87,14 @@ convention 2: port science from the research notebook, cite the section).
 
 ## Done
 
-(not yet)
+Superseded and closed by **TASK-0096** (filed from the same finding,
+re-surfaced by REVIEW-2026-07-13 P2-A, because this task was still open
+with both phantom operators still live in `hamiltonians.py`). TASK-0096
+did the notebook check this task's own "Before implementing" note called
+for, found real original formulas for both `H11_anisotropic_mechanical`
+and `H12_anm_scalarised` in `notebooks/H_new_engineering (4) CLEAN.ipynb`
+cell 11, ported them verbatim, and added regression tests proving
+divergence from their former duplicate-of-H6/H2 bodies. Full
+implementation record, validation, and the decision rationale (implement
+rather than delete) live in TASK-0096's own Done section — not duplicated
+here.

@@ -161,26 +161,67 @@ def H10_disorder_suppressed(
 def H11_anisotropic_mechanical(
     coords: np.ndarray, cutoff: float = 10.0, alpha: float = 0.3
 ) -> np.ndarray:
-    """Anisotropic elastic: weight edges by dot-product of unit displacement."""
-    W = contact_matrix(coords, cutoff=cutoff, weight="exponential", alpha=alpha)
+    """Combined exponential x inverse-square-distance edge weighting.
+
+    TASK-0096 (REVIEW-2026-07-13 finding P2-A): the previous body was
+    body-identical to `H6_exponential_decay`. Ported verbatim (not
+    reinvented, per CLAUDE.md convention 2) from
+    `notebooks/H_new_engineering (4) CLEAN.ipynb`, cell 11,
+    `HamiltonianFactory.H11_anisotropic_mechanical`: edge weight is the
+    *product* of the exponential-decay term (H6) and a harmonic
+    (1/d²) term, giving a sharper distance falloff ("stiffer" short-range
+    coupling) than either alone. Despite the name, this notebook formula
+    carries no direction/orientation vector -- it is not actually
+    anisotropic in the geometric sense; that mismatch between name and
+    formula predates this port and is reproduced here faithfully rather
+    than invented around, per the source-of-truth convention.
+    """
+    diff = coords[:, np.newaxis, :] - coords[np.newaxis, :, :]
+    dist = np.sqrt((diff ** 2).sum(axis=2))
+    mask = (dist < cutoff) & (dist > 0)
+    W = mask * np.exp(-alpha * dist) * (1.0 / (dist ** 2 + 1e-2))
     return laplacian(W, normalised=False)
 
 
 def H12_anm_scalarised(coords: np.ndarray, cutoff: float = 10.0) -> np.ndarray:
-    """Scalar trace of the 3N ANM Hessian projected onto N×N Cα space."""
+    """Local-anisotropy coupling: each edge weighted by how well its unit
+    displacement aligns with its source residue's own dominant local
+    displacement axis.
+
+    TASK-0096 (REVIEW-2026-07-13 finding P2-A): the previous body computed
+    `k_ij = dot(unit_r, unit_r)`, which is 1.0 for every edge by
+    construction (the code's own comment already said so) -- no anisotropy
+    survived. Ported verbatim (not reinvented, per CLAUDE.md convention 2)
+    from `notebooks/H_new_engineering (4) CLEAN.ipynb`, cell 11,
+    `HamiltonianFactory.H12_anm_scalarized`: for residue i, take the SVD of
+    its neighbours' displacement vectors to get the dominant local axis
+    (first right-singular vector), then weight each edge (i, j) by
+    `|unit(i->j) . axis_i|`. This is genuinely anisotropic and local (it is
+    what the pre-fix docstring's "dot-product of unit displacement" was
+    describing, dotted against a *second*, independently-derived vector --
+    unlike the old `dot(r, r)` self-product) -- residues i and i' can be
+    the same distance from a shared neighbour j yet get different coupling
+    if their local neighbourhoods point in different directions.
+    Residues with fewer than 3 contacts (SVD needs >=3 points) get zero
+    coupling on all their edges.
+    """
     N = len(coords)
-    K = np.zeros((N, N))
     diff = coords[:, np.newaxis, :] - coords[np.newaxis, :, :]
-    dist2 = (diff ** 2).sum(axis=2)
-    mask = (np.sqrt(dist2) < cutoff) & (dist2 > 0)
+    dist = np.sqrt((diff ** 2).sum(axis=2))
+    T = ((dist < cutoff) & (dist > 0)).astype(float)
+    unit = diff / (dist[..., np.newaxis] + 1e-12)
+
+    coup = np.zeros((N, N))
     for i in range(N):
-        for j in range(i + 1, N):
-            if mask[i, j]:
-                r = diff[i, j] / np.sqrt(dist2[i, j])
-                k_ij = np.dot(r, r)  # = 1.0 for unit vector; trace variant
-                K[i, j] = k_ij
-                K[j, i] = k_ij
-    return laplacian(K, normalised=False)
+        neighbours = np.where(T[i] > 0)[0]
+        if len(neighbours) < 3:
+            continue
+        _, _, Vt = np.linalg.svd(diff[i, neighbours], full_matrices=False)
+        axis_i = Vt[0]
+        coup[i, neighbours] = np.abs(unit[i, neighbours] @ axis_i)
+
+    W = 0.5 * (coup + coup.T)
+    return laplacian(W, normalised=False)
 
 
 def H13_3N_anm_hessian(coords: np.ndarray, cutoff: float = 10.0) -> np.ndarray:
@@ -202,6 +243,41 @@ def H13_3N_anm_hessian(coords: np.ndarray, cutoff: float = 10.0) -> np.ndarray:
                 H[si:si+3, si:si+3] -= H_block
                 H[sj:sj+3, sj:sj+3] -= H_block
     return H
+
+
+def H14_anm_pinv_trace(coords: np.ndarray, cutoff: float = 10.0) -> np.ndarray:
+    """Global ANM cross-correlation reduction: scalarise the real 3N × 3N
+    anisotropic Hessian (`H13`) by pseudo-inverting it and taking the trace
+    of each 3×3 residue-pair block.
+
+    Repo-original research extension (TASK-0096 follow-up), NOT a notebook
+    port -- `notebooks/H_new_engineering (4) CLEAN.ipynb` has no such
+    operator; do not cite it as ported science. Kept alongside (not instead
+    of) the notebook-faithful `H12_anm_scalarised` at the user's explicit
+    request, so the operator sweep can judge empirically whether *global*
+    elastic-network coupling clears the proximity floor (REVIEW-2026-07-13
+    P1-A / TASK-0094) where the local formulas do not: `Trace([H13^+]_ij)`
+    is the standard ANM covariance/cross-correlation quantity (Bahar,
+    Atilgan & Erman 1997; Atilgan et al. 2001) -- unlike a local per-edge
+    measure, two residues can be geometrically close yet mechanically
+    decoupled (opposite sides of a rigid hinge), or geometrically distant
+    yet strongly coupled through the elastic network, so this can carry
+    nonzero weight between non-contacting residue pairs. If this operator
+    does not beat the floor either, that is evidence worth recording (and
+    then dropping it), not grounds for silently deleting it first.
+    """
+    N = len(coords)
+    H = H13_3N_anm_hessian(coords, cutoff=cutoff)
+    w, v = np.linalg.eigh(H)
+    tol = 1e-8 * max(np.abs(w).max(), 1.0)
+    nz = w > tol                                      # drop rigid-body zero modes
+    winv = np.where(nz, 1.0 / np.where(nz, w, 1.0), 0.0)
+    Hpinv = (v * winv) @ v.T                           # (3N, 3N)
+
+    C = np.einsum("ikjk->ij", Hpinv.reshape(N, 3, N, 3))
+    W = np.abs(C)
+    np.fill_diagonal(W, 0.0)
+    return laplacian(W, normalised=False)
 
 
 # ---------------------------------------------------------------------------
