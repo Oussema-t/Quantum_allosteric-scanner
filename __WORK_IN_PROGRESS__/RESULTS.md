@@ -47,6 +47,18 @@ apo topology?"). Where holo-side numbers appear below they are always
 explicitly framed as a **diagnostic upper bound**, never as "the real
 signal" or a substitute for the apo prediction.
 
+**Second methodology note, same scope [TASK-0097, REVIEW-2026-07-13
+finding P2-B]**: every `AUC_ctqw_mean`/`AUC_apo_Hnew_*` number below is
+computed via `propagators.time_averaged_ctqw` — the decoherent/infinite-
+time-average limit of the walk (`Sum_k |v_k(j)|^2 |v_k(source)|^2`, a
+spectral overlap between eigenvector components at the source and each
+residue), **not a coherent quantum-walk snapshot**. All phase/coherence
+information is averaged out by construction. This is consistent with,
+not contradicted by, this repo's own flat-dephasing-sweep finding for
+KRAS_G12C, and is a legitimate methodological choice — but it means the
+headline "quantum metric" throughout this document is a spectral-overlap
+quantity, stated here rather than left for a reader to discover.
+
 ### KRAS_G12C
 
 | Quantity | Value |

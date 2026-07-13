@@ -198,6 +198,22 @@ def verdict_template(results: dict, *, provenance: str = "dev") -> str:
         "HEADLINE VERDICT",
         "=" * 72,
     ]
+    # TASK-0097 / REVIEW-2026-07-13 (P2-B): every AUC below is computed
+    # from propagators.time_averaged_ctqw -- the decoherent/infinite-time
+    # average of the walk (Sum_k |v_k(j)|^2 |v_k(source)|^2, a spectral
+    # overlap between eigenvector components at the source and each
+    # residue), not a coherent quantum-walk snapshot. All phase/coherence
+    # information is averaged out by construction -- consistent with this
+    # repo's own flat-dephasing-sweep finding, not an inconsistency to
+    # explain away, but a claim a judge should be told, not left to find.
+    lines.append(
+        "[NOTE] AUC values below use the decoherent/time-averaged CTQW "
+        "limit (a spectral overlap between source and residue eigenvector "
+        "components), not a coherent quantum-walk snapshot -- all phase "
+        "information is averaged out by construction. See TASK-0097 / "
+        "REVIEW-2026-07-13 finding P2-B."
+    )
+    lines.append("")
     for key in (
         "AUC_apo_Hnew_default", "AUC_apo_H10_baseline",
         "AUC_apo_Hnew_optimised", "AUC_holo_Hnew_optimised",

@@ -145,6 +145,26 @@ class TestVerdictTemplate:
         assert "HEADLINE VERDICT" in text
         assert "AUC_apo_Hnew_optimised" in text
 
+    def test_decoherent_limit_disclosure_present_before_the_auc_values(self):
+        """TASK-0097 / REVIEW-2026-07-13 P2-B: a reader must encounter the
+        "this is the decoherent/time-averaged limit, not a coherent walk"
+        disclosure alongside the AUC numbers, not buried in a code comment
+        only -- and specifically *before* the values, not after."""
+        text = verdict_template(self.FULL_RESULTS, provenance="frozen")
+        assert "decoherent" in text
+        assert "not a coherent quantum-walk snapshot" in text
+
+        headline_idx = text.index("HEADLINE VERDICT")
+        disclosure_idx = text.index("decoherent")
+        first_value_idx = text.index("AUC_apo_Hnew_default")
+        assert headline_idx < disclosure_idx < first_value_idx
+
+    def test_decoherent_limit_disclosure_present_even_with_no_results(self):
+        """The disclosure is about what the metric *is*, not about which
+        keys happen to be populated -- must render unconditionally."""
+        text = verdict_template({}, provenance="frozen")
+        assert "decoherent" in text
+
     def test_meaningful_gain_classification(self):
         text = verdict_template(self.FULL_RESULTS, provenance="frozen")
         assert "(meaningful)" in text  # 0.75-0.60=0.15 > 0.05
@@ -196,3 +216,28 @@ class TestVerdictTemplate:
         assert "classical heat" not in text
         assert "classical diffusion" not in text
         assert "CTQW vs ground-state relaxation" in text
+
+
+class TestResultsMdDecoherentDisclosure:
+    """TASK-0097 / REVIEW-2026-07-13 P2-B, Acceptance Scenario: a reader of
+    RESULTS.md's AUC tables must encounter the decoherent-limit disclosure
+    before or alongside the numbers, not buried in a code comment only.
+    Turns this task's own "manual review" Planned Validation into a durable
+    check, same practice as TASK-0095's grep-based framing test."""
+
+    def test_disclosure_present_before_the_first_auc_table(self):
+        from pathlib import Path
+
+        results_md = Path(__file__).resolve().parent.parent / "RESULTS.md"
+        assert results_md.exists()
+        text = results_md.read_text()
+
+        assert "decoherent" in text
+        assert "not a coherent quantum-walk snapshot" in text
+
+        disclosure_idx = text.index("decoherent")
+        first_table_idx = text.index("### KRAS_G12C")
+        assert disclosure_idx < first_table_idx, (
+            "decoherent-limit disclosure must appear before the first AUC "
+            "table, not after it"
+        )
