@@ -133,6 +133,15 @@ and safely re-runnable, not a single monolithic all-or-nothing script:
   plus a full 3-target run with the resulting tables committed (or
   referenced) as this task's evidence, matching TASK-0079.005's own
   "not mockable, run for real" precedent.
+- **Amended 2026-07-13, per `REVIEW-2026-07-13c` (CTQW trapping
+  mechanism):** the Tier-1 table must include a **transport diagnostic**
+  per operator — ⟨hop from seed⟩ or participation ratio at a fixed t —
+  alongside AUC and floor-clearance, not AUC alone. The review found
+  `H_new`'s AUC-proximity correlation is caused by disorder-induced
+  transport localization (a mechanism, not just a description); a bare
+  AUC/floor table cannot distinguish "transports and finds signal" from
+  "traps and finds geometry." This is now part of Tier 1's own reporting
+  contract, not a separate follow-up.
 
 ## Dependency
 

@@ -107,6 +107,13 @@ explaining, not dismissing in either direction.
   reconciled.
 - **Hard blocked on TASK-0094** (proximity floor, added 2026-07-13) — the
   factorial table's conclusions are not trustworthy without it.
+- [[TASK-0106]] (added 2026-07-13) — `REVIEW-2026-07-13c` gives a
+  mechanistic reason to expect `H10`/`H2`-family operators to beat
+  `H_new` on distal pockets (transport localization caused by `H_new`'s
+  diagonal potentials). This task's own BCR_ABL1 sign (`H10`=0.558 vs
+  `H_new`=0.525, previously read as noise) may be the same effect on a
+  different target — read TASK-0106's real-data result before finalizing
+  this task's own reconciliation.
 
 ## Open Questions
 

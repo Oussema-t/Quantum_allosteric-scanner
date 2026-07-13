@@ -119,6 +119,17 @@ TASK-0097 documents the gap; this task is the substantive response.
 - Related to TASK-0097 (name the metric honestly) — that task documents
   the gap this task fills; do TASK-0097 first or alongside, not as a
   substitute for this task.
+- **Resequenced 2026-07-13 behind [[TASK-0105]]**, per
+  `REVIEW-2026-07-13b` (§4, §7 T-C): the review reframes the entire
+  coherence question from "does dephasing recover a specific AUC" (killed
+  as ill-posed — Haken-Strobl's γ→∞ limit is diagonal-vs-off-diagonal
+  incommensurate with GSR) to "does dephasing produce a real,
+  proximity-floor-clearing interior-γ transport optimum on real targets."
+  TASK-0105 answers that question first; this task's own
+  `dephasing_sweep` wiring should consume TASK-0105's result (which γ
+  range and which target(s) actually show an effect worth wiring) rather
+  than proceed on this task's pre-review framing. Do not start this task
+  before TASK-0105 lands.
 - Reuses `analysis.dephasing_sweep` (TASK-0008, Done, already
   implemented and tested on KRAS) and
   `test_kras_g12c_dephasing_flat_survives_kappa_calibration`'s

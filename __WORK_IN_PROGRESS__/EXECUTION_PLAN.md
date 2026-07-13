@@ -35,16 +35,51 @@ are correctly implemented, real quantum evolutions, but every scored AUC is buil
 not just a labeling gap — see **TASK-0099** (Phase 1B.8), filed to wire the
 already-implemented-but-never-reported `dephasing_sweep` into the scored path.
 
-## Progress tracker (Phases 0–6 + 1B, the scored/critical-path work — 46 tasks)
+## ⚠️ 2026-07-13(b)/(c) correction — supersedes part of 1B.4, resequences 1B.8
 
-**Snapshot as of 2026-07-13 (later same day) — this is a point-in-time copy, not a live
-view.** `.ai/COMMON.md`'s Active Work Registry is the canonical, continuously-updated
-source — re-check there (or regenerate this table) before trusting it for dispatch
-decisions.
+Two further same-day reviews **directly revise 1B.4's own conclusion**, which currently
+reads "real, floor-clearing result" for BCR_ABL1's `ground_state_relaxation`=0.7315.
+
+`REVIEW-2026-07-13b-operator-falsification-negative-controls.md`, executed as a 2×2 control
+matrix (well location × coupling strength, varied independently on a constructed dumbbell
+network), found GSR **tracks the well, not the coupling** — it scores the *decoy* lobe 1.000
+and the truly-coupled lobe 0.000 when the two cues are put in conflict. **The number stands;
+the causal claim does not.** BCR_ABL1's 0.7315 is real, floor-clearing, and genuinely
+distal — but it is evidence of a soft, well-connected *structural prior* (a cryptic-pocket
+signature), not of allosteric signal propagation from the active site. Filed:
+**TASK-0103** (permanent negative-control test, the regression that would have caught this)
+and **TASK-0104** (re-frame the claim in `RESULTS.md`/1B.4 itself — do not retract the
+number). The review also identifies dephasing-assisted transport (ENAQT, `haken_strobl`) as
+the one surviving genuinely-quantum, genuinely coupling-tracking signal, with a measured
+interior-γ optimum on synthetic disordered networks — filed **TASK-0105**, which
+**resequences TASK-0099 behind it** (1B.8 below is corrected to reflect this).
+
+`REVIEW-2026-07-13c-ctqw-trapping-mechanism.md` (verifying a colleague's hypothesis)
+explains the *mechanism* behind the original 07-13 proximity confound (P1-A): `H_new`'s
+diagonal potentials (V_B/V_T/V_R/V_C/V_M) cause Anderson-like transport localization in
+CTQW — the walk never leaves the seed's first contact shell (participation ratio 0.024 vs.
+0.414 on the bare Laplacian). Proximity-like scoring is *caused* by this, not merely
+correlated with it. On a synthetic distal pocket, transport-preserving operators (`H10`,
+`H2`) score 0.58–0.59 AUC where `H_new` scores 0.12 (anti-correlated) — with a real-data
+sign match already sitting in `RESULTS.md` (BCR_ABL1: `H10`=0.558 vs `H_new`=0.525,
+previously read as noise in 1B.5/TASK-0093). Filed **TASK-0106**, the explicit real-data
+reproduction gate the review requires before this changes any claim. Also amends **1B.10**
+(TASK-0101 must report a transport diagnostic, not AUC alone) and flags **1B.5**
+(TASK-0093 should read TASK-0106's result before finalizing).
+
+**Neither review is a basis to reselect the submission operator** — that remains
+Tier-2-gated per **TASK-0100** (1B.9), unaffected by either finding.
+
+## Progress tracker (Phases 0–6 + 1B, the scored/critical-path work — 50 tasks)
+
+**Snapshot as of 2026-07-13 (later same day, post-07-13b/c) — this is a point-in-time copy,
+not a live view.** `.ai/COMMON.md`'s Active Work Registry is the canonical,
+continuously-updated source — re-check there (or regenerate this table) before trusting it
+for dispatch decisions.
 
 | Done | In Progress | TODO | Total |
 |---|---|---|---|
-| 19 (TASK-0070, TASK-0052, TASK-0047, TASK-0058, TASK-0063, TASK-0055, TASK-0064, TASK-0071, TASK-0056, TASK-0067, TASK-0079, TASK-0074, TASK-0066, TASK-0094, TASK-0095, TASK-0097, TASK-0096, TASK-0100, TASK-0091) | 0 | 27 | 46 |
+| 19 (TASK-0070, TASK-0052, TASK-0047, TASK-0058, TASK-0063, TASK-0055, TASK-0064, TASK-0071, TASK-0056, TASK-0067, TASK-0079, TASK-0074, TASK-0066, TASK-0094, TASK-0095, TASK-0097, TASK-0096, TASK-0100, TASK-0091) | 0 | 31 (+4: TASK-0103, TASK-0104, TASK-0105, TASK-0106) | 50 |
 
 **To refresh this snapshot:** each task file's own `- Status:` line is authoritative
 (`.ai/COMMON.md`'s registry mirrors it). One-line check for any ID:
@@ -129,14 +164,18 @@ below matches the review's own "Sequencing" section exactly — do not reorder.
 | 1B.1 | **[FILED] TASK-0094 — proximity baselines into the floor** | **Do this first.** Add `euclid_from_seed_centroid`/`hop_from_seed` to `baselines.py`, wire into `floor_scores`/`classify_failure`, re-run all mandatory targets. Real evidence: a pure distance baseline (AUC 0.966) beats CTQW (0.914) on a proximal pocket; both collapse on a distal one. **Decides whether we have a result at all.** | **Done** (commits `8d7370b`/`b217c21`). `classify_failure`'s floor now takes the **max** across `degree_centrality`/`euclid_from_seed_centroid`/`hop_from_seed`. Real re-run: KRAS_G12C (0.779) does **not** clear the floor (euclid baseline alone scores 0.798) → `BEATS_CHANCE_NOT_FLOOR`, confirming the review's suspicion. BCR_ABL1 stays `NO_SIGNAL_IN_APO`. CARDIAC_MYOSIN clears the floor but `INSUFFICIENT_RESOLUTION` fires first. |
 | 1B.2 | **[FILED] TASK-0095 — correct propagator semantics** | Cheap, and stops a false physical claim from propagating into the submission. `heat(H_new)` is `H_new`'s ground-state density (Spearman 0.998 vs `\|ground state\|²`), not classical diffusion — rename, guard against indefinite operators, correct `RESULTS.md`/report framing. | **Done.** Renamed `heat`→`ground_state_relaxation` everywhere; added `_warn_if_indefinite` guard (warn by default, `strict=True` raises); corrected `analysis.py`/`report.py`/`RESULTS.md` framing (BCR_ABL1's old claim struck through, marked `[CORRECTED]`, per this doc's own no-silent-overwrite convention). Verified no numeric change on genuinely-PSD operators against an independent `scipy.linalg.expm` reference. |
 | 1B.3 | **[FILED] TASK-0096 — delete or implement phantom H11/H12** | Cheap, removes an audit liability. Both verified (`np.allclose`) identical to `H6`/unweighted-contact Laplacian despite docstrings claiming anisotropic weighting. Independent of 1B.1/1B.2, can run in parallel with them. | **Done.** Decision: implement both (per-operator call, not both-implement/both-delete by default) — a sweep proving them useless is itself a useful result. Both ported verbatim from `notebooks/H_new_engineering (4) CLEAN.ipynb` (never-ported real formulas, distinct from H6/unweighted-Laplacian). Added `H14_anm_pinv_trace` (new research operator, global-ANM analogue to H12's local one) explicitly so a future sweep — see 1B.9/1B.10 — can judge them empirically. |
-| 1B.4 | **[RE-FILED] TASK-0091 — does `H_new`'s ground state localize on *distal* pockets?** | The one open scientific question from the review that is not proximity in disguise. Original dephasing-sweep framing **retracted** (structurally could not converge to `heat(H_new)`'s value — see 1B.2). Re-filed to test BCR_ABL1's real 0.731 directly against 1B.1's proximity floor. **Hard blocked on 1B.1 and 1B.2 — both now Done, unblocked.** | **Done — real, floor-clearing result.** BCR_ABL1's `ground_state_relaxation`=0.7315 clears the proximity floor decisively (max floor 0.565, margin +0.166) — the widest floor-clearing margin of any mandatory target so far, on a genuinely distal (~32 Å) pocket. But localization is diffuse: 0/30 top-k hit-list precision; enrichment only visible in aggregate (median 20.1st percentile rank vs. 50th by chance). **Caveat raised 2026-07-13, see TASK-0102**: whether this reflects real active-site coupling or a seed-independent artifact of `H`'s ground state (which, at large `t·gap`, becomes shape-independent of the seed by construction) has not yet been checked — do not read 0.7315 as confirmed allosteric signal until TASK-0102 lands. |
-| 1B.5 | **[UPDATED] TASK-0093 — KRAS AUC reconciliation, now against the proximity floor** | The 8.0 vs 10.0 Å cutoff changes the contact graph's distance-decay from the seed — a candidate mechanism for the AUC gap that has nothing to do with real allosteric sensitivity. Every factorial combination must now be checked against 1B.1's floor, not just chance. **Hard blocked on 1B.1 — now Done, unblocked.** | TODO |
+| 1B.4 | **[RE-FILED] TASK-0091 — does `H_new`'s ground state localize on *distal* pockets?** | The one open scientific question from the review that is not proximity in disguise. Original dephasing-sweep framing **retracted** (structurally could not converge to `heat(H_new)`'s value — see 1B.2). Re-filed to test BCR_ABL1's real 0.731 directly against 1B.1's proximity floor. **Hard blocked on 1B.1 and 1B.2 — both now Done, unblocked.** | **Done — real, floor-clearing result, causal claim superseded 2026-07-13(b).** BCR_ABL1's `ground_state_relaxation`=0.7315 clears the proximity floor decisively (max floor 0.565, margin +0.166) on a genuinely distal (~32 Å) pocket; localization is diffuse (0/30 top-k hit precision, aggregate enrichment only). **The causal claim is now corrected, not retracted**: `REVIEW-2026-07-13b` (2×2 well×coupling control matrix) shows this quantity tracks the well, not the coupling — a structural-prior/cryptic-pocket signature, not allosteric communication. See **TASK-0103** (the negative-control test) and **TASK-0104** (the `RESULTS.md` re-frame). TASK-0102's seed-invariance caveat (below) is a separate, already-Done check and stands as-is. |
+| 1B.5 | **[UPDATED] TASK-0093 — KRAS AUC reconciliation, now against the proximity floor** | The 8.0 vs 10.0 Å cutoff changes the contact graph's distance-decay from the seed — a candidate mechanism for the AUC gap that has nothing to do with real allosteric sensitivity. Every factorial combination must now be checked against 1B.1's floor, not just chance. **Hard blocked on 1B.1 — now Done, unblocked.** | TODO. **Amended 2026-07-13(c)**: `REVIEW-2026-07-13c` gives a mechanistic reason (CTQW transport localization from `H_new`'s diagonal potentials) to expect this same pattern on BCR_ABL1 too (`H10`=0.558 vs `H_new`=0.525, previously read as noise) — read **TASK-0106**'s real-data reproduction before finalizing this task's own reconciliation. |
 | 1B.6 | **[FILED] TASK-0097 — name the "quantum metric" honestly** | `time_averaged_ctqw` is the decoherent/infinite-time-average limit (a spectral overlap quantity), not a coherent walk. Reporting honesty; can run in parallel with 1B.7 once 1B.1–1B.3 land. | **Done** (commit `bc41f09`). `[NOTE]` disclosure added to `verdict_template` before any AUC renders; second methodology paragraph added to `RESULTS.md`; 3 new tests including a durable `RESULTS.md`-content check. |
 | 1B.7 | **[FILED] TASK-0098 — amend INVARIANCE_PROTOCOL's SIGNAL class** | Protocol-level generalization: SIGNAL must beat the domain's strongest trivial confounder (distance-from-seed here), not just chance. Third instance of the same unexecuted-gauge-symmetry pattern (after SE(3) rotation, SU(2)/Clifford-frame) — see the review's Meta section. Can run in parallel with 1B.6. | TODO |
-| 1B.8 | **[FILED] TASK-0099 — wire a genuine coherence metric into the scored verdict** | Audit (2026-07-13, prompted by a direct user question against 1B.6's finding) confirmed: **nothing phase-dependent currently reaches any reported AUC.** `ctqw`/`haken_strobl` are correctly implemented, real quantum evolutions — but every scored number traces only to `time_averaged_ctqw`/`ground_state_relaxation`, both phase-averaged. `dephasing_sweep` exists, is tested, and has **zero call sites** in the reported pipeline. Promote it (calibrated γ, all 3 mandatory targets, checked against 1B.1's floor) so at least one reported number would change under phase randomization. **Hard blocked on 1B.1 — now Done, unblocked.** | TODO |
+| 1B.8 | **[FILED] TASK-0099 — wire a genuine coherence metric into the scored verdict** | Audit (2026-07-13, prompted by a direct user question against 1B.6's finding) confirmed: **nothing phase-dependent currently reaches any reported AUC.** `ctqw`/`haken_strobl` are correctly implemented, real quantum evolutions — but every scored number traces only to `time_averaged_ctqw`/`ground_state_relaxation`, both phase-averaged. `dephasing_sweep` exists, is tested, and has **zero call sites** in the reported pipeline. Promote it (calibrated γ, all 3 mandatory targets, checked against 1B.1's floor) so at least one reported number would change under phase randomization. **Hard blocked on 1B.1 — now Done, unblocked.** | **Resequenced 2026-07-13(b) — do NOT start yet.** `REVIEW-2026-07-13b` shows this task's own framing ("does dephasing recover a specific AUC") is exactly the ill-posed question the review's §4 dismantles. **Now blocked on TASK-0105** (ENAQT γ-sweep on real targets, measuring transport magnitude/interior-optimum shape) — TASK-0099 should wire whatever TASK-0105 actually finds, not proceed on its pre-review framing. |
 | 1B.9 | **[FILED] TASK-0100 — decide the operator-sweep architecture** (Architect decision) | We have 14 named operators (1B.3 added `H14`) but no harness ever runs more than 2 (`H_new`/`H10`) against a real target. Routed to the Architect per explicit user instruction — "otherwise I do not understand how we would possibly pass the challenge." | **Done.** Decided: library fn `analysis.operator_sweep` + thin `scripts/sweep_operators.py`, **not** `run_challenge.py` (keeps the submission orchestrator a reported decision, not a search — same line already drawn for TASK-0046). Two-tier rating: **Tier 1** (descriptive — floor-cleared + AUC + apo/holo consistency, no frozen-gate) vs. **Tier 2** (selection — replacing `H_new`/`H10` as submission operator — hard-gated through `select_frozen_config`/`leave_one_protein_out`, N=3 flagged as thin). Three operator tiers: **A** (`H_new`, `H10`, `H14` — selection-eligible) vs. **B** (`H1`-`H9`, `H11`-`H13` — descriptive-only, never intended as submission candidates). Floor-failing operators recorded, not deleted (Tier A failing all 3 targets disqualifies it from Tier 2; Tier B failing is just recorded context). **Resequencing resolved**: TASK-0091/TASK-0093/TASK-0099 confirmed NOT blocked — none is an operator-selection act, all diagnose the already-chosen `H_new`. |
 | 1B.10 | **[FILED] TASK-0101 — operator sweep Tier-1 harness** | Executes 1B.9's decision: `analysis.operator_sweep` + `scripts/sweep_operators.py`, all 14+2 operators × 3 mandatory targets, Tier-1 (descriptive) only — no operator selection. **Amended 2026-07-13**: scores each operator through **both** `time_averaged_ctqw` and `ground_state_relaxation` (16 ops × 2 propagators × 3 targets = 96 cells, per 1B.4's finding that propagator choice — not just operator choice — was what separated BCR_ABL1's chance and floor-clearing results) — and must run **in chunkable, resumable, parallelizable parts** (`--target`/`--operator`/`--propagator` filters, per-cell files, `--force` to recompute one suspicious cell, `--aggregate` to merge partial runs from multiple machines). | TODO |
 | 1B.11 | **[FILED] TASK-0102 — is 1B.4's finding seed-dependent, or a fixed-minimum artifact?** | User's question, 2026-07-13: does `ground_state_relaxation` genuinely couple to the seed, or does `exp(-Ht)` at `t_max=15` simply converge to `H`'s global ground state regardless of source — meaning "the minimum has to be somewhere, and on BCR_ABL1 it happens to sit nearer the pocket"? Real-data seed-invariance check first (cheap, reuses 1B.4's cached data), then a synthetic discriminating network (engineered minimum away-from vs. coupled-to a "drug site") if needed. Not blocking, but 1B.10's ground-state column should be read alongside this task's finding. | TODO |
+| 1B.12 | **[FILED] TASK-0103 — dumbbell 2×2 negative-control test suite** | Permanent, synthetic (no PDB/network) regression test implementing `REVIEW-2026-07-13b`'s well×coupling control matrix — the test that would have caught 1B.4's causal misattribution. Asserts `ground_state_relaxation` follows the well, `ctqw`/transport follows the coupling. **No dependency — start anytime.** | TODO |
+| 1B.13 | **[FILED] TASK-0104 — re-frame the GSR/BCR_ABL1 claim** | `RESULTS.md`/1B.4's text currently frames 0.7315 as (diffuse) allosteric signal. Correct to "apo-computable structural prior for cryptic pockets," citing TASK-0103's evidence. **Number unchanged, claim corrected — cheap.** | TODO |
+| 1B.14 | **[FILED] TASK-0105 — ENAQT γ-sweep on real targets** | Replaces the killed dephasing question underneath TASK-0099 (1B.8). Measure transport magnitude vs. γ ∈ [10⁻⁴, 10²] on all 3 mandatory targets; report interior-optimum presence and enhancement ratio over the coherent walk, not AUC recovery. Per `REVIEW-2026-07-13c`, sweep across `H_new`/`H10`/`H2` — not `H_new` alone, or a null result may reflect that operator's own transport localization rather than an absence of ENAQT. **"The single highest scientific upside in the repo" per the review. No dependency — start anytime.** | TODO |
+| 1B.15 | **[FILED] TASK-0106 — reproduce the CTQW-trapping finding on real BCR_ABL1 data** | `REVIEW-2026-07-13c`'s synthetic finding (transport-preserving operators beat `H_new` on a distal pocket by a wide margin) is a mechanism test only — this task is the real-data gate the review requires before it changes any claim. Predicts `H10`/`H2`/`H_new`(reduced λ) beat `H_new`'s recorded 0.525 on BCR_ABL1 and clear its 0.565 floor. Tier-1 descriptive only, per TASK-0100 — does not itself justify reselecting the submission operator. | TODO |
 
 **Non-finding, recorded so it isn't re-litigated:** the review also tested whether
 ground-state localization (`heat`) is *immune* to the proximity confound, as an external
@@ -298,6 +337,25 @@ current status lives in the per-phase tables above and in `.ai/COMMON.md`.
   question; holo comparison extended to the ground-state propagator, with the caveat that
   holo agreement alone doesn't discriminate a shared static artifact from real signal).
 
+### 2026-07-13(b)/(c) batch — from REVIEW-2026-07-13b (well-vs-coupling falsification) and REVIEW-2026-07-13c (CTQW trapping mechanism)
+
+- **TASK-0103 — Dumbbell 2×2 negative-control test suite.** Permanent, synthetic regression
+  test for the well×coupling confound; the test that would have caught 1B.4's causal
+  misattribution. No dependency.
+- **TASK-0104 — Re-frame the GSR/BCR_ABL1 claim.** `RESULTS.md`/1B.4 corrected from
+  "allosteric signal" to "structural prior for cryptic pockets" — number unchanged.
+- **TASK-0105 — ENAQT γ-sweep on real targets.** Replaces TASK-0099's pre-review framing;
+  measures transport magnitude and interior-γ-optimum shape across `H_new`/`H10`/`H2`, not
+  AUC recovery of any one operator.
+- **TASK-0106 — Reproduce the CTQW-trapping finding on real BCR_ABL1 data.** The explicit
+  real-data gate `REVIEW-2026-07-13c` requires before its synthetic finding (transport
+  operators beat `H_new` on a distal pocket) changes any claim.
+- **Resequenced**: TASK-0099 now blocked on TASK-0105 (was: unblocked). **Amended**:
+  TASK-0101 (1B.10) must report a transport diagnostic (⟨hop⟩/participation ratio), not AUC
+  alone; TASK-0093 (1B.5) should read TASK-0106 before finalizing.
+- Both review files relocated `__WORK_IN_PROGRESS__/` → `.ai/reviews/`, the established
+  home for `REVIEW-*.md` (matches `REVIEW-2026-07-07`/`-07-11`/`-07-12` already there).
+
 **Correctness**
 - **TASK-0070 — Pocket label exclusion assembly.** Add the `build_labels` step assembling `pocket & ~functional & ~terminal`, assert `pocket ∩ active_site == ∅`, record an explicit KRAS Cys12 in/out decision, and give the exclusion **one named seam-owner** so it stops falling between `labels`/`protocol`/`analysis`.
 - **TASK-0071 — Permutation-null leak detector.** Add a label-permutation null to `diagnostics.py` as the catch-all leakage *detector* backstopping the *preventive* firewall: shuffle labels, re-run, flag any score still above chance.
@@ -331,9 +389,10 @@ current status lives in the per-phase tables above and in `.ai/COMMON.md`.
 
 ## Critical path to 15 Sept
 
-**0.1 → 0.2 → 1.1 → 1.2 → 5.1 → [1B.1 → 1B.2 → 1B.3 → (1B.4, 1B.5)] → 5.2 → 6.1** — the
-minimum chain that yields *one leakage-clean, floor-anchored, honestly-reported result*,
-packaged in the artifact contract so it can be shown.
+**0.1 → 0.2 → 1.1 → 1.2 → 5.1 → [1B.1 → 1B.2 → 1B.3 → (1B.4, 1B.5)] → 1B.12 → (1B.14,
+1B.15) → 1B.13 → 5.2 → 6.1** — the minimum chain that yields *one leakage-clean,
+floor-anchored, mechanism-understood, honestly-reported result*, packaged in the artifact
+contract so it can be shown.
 
 **Updated 2026-07-13:** 5.1 is Done, but its output is not yet trustworthy as reported —
 Phase 1B is now load-bearing on the critical path, inserted between 5.1 and 5.2. **1B.1
@@ -341,10 +400,24 @@ Phase 1B is now load-bearing on the critical path, inserted between 5.1 and 5.2.
 "decides whether we have a result." Do not let Phase 2/3/4 (team-standards track) or the
 rest of Phase 5 (5.3/5.4/5.6/5.8, all gated) draw attention away from it.
 
+**Updated 2026-07-13(b)/(c):** 1B.4's own result is now itself gated — its causal claim,
+not its number, is under revision. **1B.12 (TASK-0103) and 1B.14 (TASK-0105) have no
+dependencies and should run immediately, in parallel** — they are the cheapest, most
+falsifiable next steps in the entire plan. 1B.15 (TASK-0106) is the real-data gate before
+1B.5/1B.13 can be finalized honestly. 1B.13 (TASK-0104, the `RESULTS.md` correction) is
+nearly free and should land as soon as 1B.12 gives it something to cite. None of this
+reopens Tier-2 operator selection (TASK-0100) — that gate is unaffected.
+
 **Retraction on record:** earlier guidance (pre-2026-07-13) to prioritize TASK-0091 as
 filed is withdrawn — see Phase 1B.4. Its dephasing-sweep framing could not have answered
 the question it was built to answer (TASK-0095's finding), and would have produced a
 plausible, confidently-wrong causal claim if run as originally scoped.
+
+**Second retraction on record, 2026-07-13(b):** 1B.4's own Done conclusion ("real,
+floor-clearing... genuinely distal signal") is likewise not to be read as evidence of
+allosteric communication until 1B.13 lands — it is real, floor-clearing evidence of a
+*structural prior*, a different and more modest claim. Do not let this row's original
+wording propagate into `RESULTS.md` or a submission draft unmodified.
 
 Decide **6.1 (artifact contract) early** even though 6.2–6.4 are late: it is the seam
 between research and delivery, and fixing it now lets the frontend and the science advance
