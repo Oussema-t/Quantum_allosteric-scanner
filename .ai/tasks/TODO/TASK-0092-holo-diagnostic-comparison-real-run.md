@@ -113,6 +113,29 @@ whoever picks this up:**
 
 - None yet.
 
+## Addendum (2026-07-13, per user question) — extend to `ground_state_relaxation` for BCR_ABL1 specifically
+
+User asked whether it makes sense to compare against holo structures in
+light of TASK-0091's BCR_ABL1 finding (`ground_state_relaxation` clears
+the proximity floor, AUC 0.7315). **Yes — add this as an explicit,
+additional cell in this task's scope**, alongside the existing
+`AUC_holo_Hnew_optimised` (CTQW) comparison: compute
+`ground_state_relaxation`'s holo-side AUC for BCR_ABL1 the same way,
+using holo-native labels/coords per this task's existing recipe.
+
+**Important interpretive caveat, so this isn't over-read once computed**
+(cross-references TASK-0102, filed the same day): if apo and holo
+`ground_state_relaxation` occupancy patterns agree closely, that is
+**not**, by itself, strong evidence the apo finding is real — a static
+artifact of `H_new`'s potential-term composition (independent of the
+seed, per TASK-0102's concern) would plausibly reproduce on holo too,
+since apo and holo share nearly the same fold. Holo agreement is
+necessary-but-not-sufficient corroboration; the seed-invariance check in
+TASK-0102 is the more direct discriminator. Holo *disagreement*, or a
+localization shift specifically toward the pocket upon ligand binding,
+would be more informative — the kind of thing worth reporting explicitly
+either way, not silently folded into a single pass/fail.
+
 ## Done
 
 (not yet)
