@@ -9,7 +9,7 @@
   essentially fixed, seed-independent feature of the structure that
   merely happens to sit closer to the pocket than to the active site on
   this one protein.
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Source: user question, 2026-07-13 — "is it possible that the ground
   state relaxation 'accidentally' is localised somewhere near the distal
@@ -147,4 +147,84 @@ the accidental-minimum hypothesis, restated in exact linear-algebra terms.
 
 ## Done
 
-(not yet)
+**Real-data check, 2026-07-13.** Reused TASK-0091's cached `H_new`/coords/
+labels for BCR_ABL1 (no re-fetch, no re-selection — total runtime ~3
+seconds, since the expensive part of TASK-0091 was `select_frozen_config`,
+never needed here). One `eigh` decomposition, reused across every seed
+choice per this task's own cheapest-first ordering.
+
+**Part (b) first (explains (a)):** `H_new`'s spectral gap
+`w[1]-w[0] = 0.1933`; `exp(-gap * t_max=15.0) = 0.055`. The ground mode
+(`v_0`) carries ~94.5% of the relative weight at `t_max=15.0`, the first
+excited mode (`v_1`) the remaining ~5.5% — **partially converged, not
+fully**. This predicts exactly the pattern found in (a): a result mostly
+set by the fixed `v_0` shape (hence broadly similar across most seeds),
+with a real but smaller `v_1` contribution that flips the outcome
+qualitatively for seeds whose overlap with `v_1` happens to be large
+enough.
+
+**Part (a) — decisive, not ambiguous:**
+
+- 6-seed correlation check (real active site, 1 antipodal, 4 arbitrary
+  single-residue): occupation patterns cluster into two nearly-orthogonal
+  groups. `{real_active_site, random_1, random_3}` mutually correlate at
+  Pearson **0.998-0.9999**; `{antipodal, random_0}` mutually correlate at
+  **1.0000** with each other but **-0.014 to -0.018** with the first
+  group. `random_2` is a distinct third pattern (0.23 with group 1,
+  -0.03 with group 2). **This alone rules out literal seed-independence**
+  (correlation ≈ 1 across every seed, the task's own bright-line test) —
+  different seeds genuinely produce different occupation *shapes*.
+- But: AUC-vs-pocket does **not** track this clustering the way "real
+  coupling" would predict. `random_2` (only 0.23 correlated with the real
+  seed's occupation *pattern*) still scores AUC=0.7251 — nearly identical
+  to the real seed's 0.7315. Broader 40-seed random sample (single
+  residues, `rng=42`, same cached `H`): mean AUC=0.6734, median=0.7272,
+  **75.0% of arbitrary seeds clear TASK-0091/0094's real proximity floor
+  (0.5652)**, **70.0% land within 0.02 of the real active site's own AUC
+  (0.7315)**, and **20.0% of arbitrary seeds score higher than the real
+  active site does.**
+
+**Conclusion (explicit, per this task's own Planned Validation and Open
+Question guidance — not a silent threshold call):** the correlation
+evidence is genuinely mixed (not the clean "≈1 everywhere" the task
+anticipated for the invalidating case), but the **practical** question
+this task exists to answer — does BCR_ABL1's real active site produce an
+AUC that anything resembling a *typical* arbitrary seed would not — is
+answered clearly: **no.** A strong majority (70-75%) of arbitrary,
+biologically-uninformed single-residue seeds reproduce comparable
+floor-clearing performance against the *same* pocket label. The good AUC
+is predominantly a property of `H_new`'s fixed ground-state shape
+(consistent with the 94.5%-ground-mode-weight finding in (b)), not
+evidence of active-site-to-pocket coupling specific to the true active
+site. **TASK-0091's 0.7315 must not be read as confirmed allosteric
+signal** — this directly confirms the user's original "potential minimum
+has to be somewhere" concern, with real numbers on real data, though via
+a more nuanced statistical mechanism (majority-share high-AUC outcome
+from ground-mode dominance, not literal 100% seed-invariance) than the
+task's own anticipated bright-line case.
+
+**Part (c) (synthetic discriminating network): not built.** Per this
+task's own Constraints ("build only if (a) is ambiguous, or to
+corroborate a clear (a) result") — (a) is decisive on its own (a 75%
+floor-clearing rate among arbitrary seeds is not a borderline number
+needing a synthetic ground-truth corroboration to interpret). Flagging,
+not building: a future task could still construct the positive/negative-
+control synthetic network described in this task's Intent Contract (c) if
+someone wants a fully-controlled mechanistic demonstration for the
+methodological report itself (pedagogical value, not additional
+evidential need) — not filed as a follow-up here since no concrete
+consumer has asked for it yet.
+
+**Correction propagated, not silently edited:** `RESULTS.md`'s TASK-0091
+finding corrected in place (marked, not deleted, per this project's
+no-silent-overwrite convention) rather than editing `TASK-0091`'s own
+task file, per this task's Constraints.
+
+**Answers this task's own Open Question** (partial-seed-dependence
+threshold): resolved by using AUC-outcome frequency (does a majority of
+arbitrary seeds match the real seed's performance) as the practically
+relevant statistic, rather than the raw occupation-correlation number
+alone — correlation told us seeds differ in *shape*, but AUC-frequency is
+what tells us whether the real seed's *result* is special. Recommend this
+combined framing (correlation + outcome-frequency) for any future
+seed-invariance check on this codebase, rather than correlation alone.

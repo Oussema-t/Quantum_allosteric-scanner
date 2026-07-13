@@ -257,6 +257,29 @@ future per-target ranking-metric decision must check hit-list precision
 separately from AUC, not assume one implies the other. Full numbers and
 methodology: `.ai/tasks/DONE/TASK-0091-bcr-abl1-dephasing-sweep-investigation.md`.
 
+**[CORRECTED 2026-07-13, TASK-0102 — do not read the paragraphs above as
+confirmed allosteric signal]** The finding above is corrected, not
+retracted: the 0.7315 number and the floor-clearing margin are real and
+unchanged. What changes is whether that margin means what the "not
+proximity in disguise" framing above implies. **TASK-0102 tested whether
+BCR_ABL1's real active site is actually special**, by rerunning
+`ground_state_relaxation` on the same real, cached `H_new` from 40
+arbitrary, biologically-uninformed single-residue seeds: **75.0% also
+clear the same proximity floor**, 70.0% land within 0.02 of the real
+active site's own AUC, and 20.0% score *higher* than the true active site
+does. Mechanistically explained by `H_new`'s spectral gap at this run's
+`t_max=15.0`: the ground eigenmode carries ~94.5% of the relative weight
+(`exp(-gap*t_max)=0.055`), so most seeds' results are dominated by
+`H_new`'s fixed ground-state shape rather than by genuine signal
+transport from wherever propagation started. **The good AUC is
+predominantly a property of the operator's ground state, not evidence of
+active-site-to-pocket coupling specific to the true active site** — this
+confirms, with real numbers, the "potential minimum has to be somewhere on
+the protein" concern raised about this exact result. Full numbers and the
+correlation-clustering detail (occupation *shape* does vary meaningfully
+by seed, even though the resulting AUC mostly does not — a genuinely
+nuanced result, not simple seed-independence): `.ai/tasks/DONE/TASK-0102-ground-state-relaxation-seed-invariance-test.md`.
+
 ### CARDIAC_MYOSIN
 
 | Quantity | Value |
@@ -380,7 +403,7 @@ hide.
 
 | # | Question | Status | Task |
 |---|---|---|---|
-| 1 | Does BCR_ABL1's `ground_state_relaxation` score (0.731) survive TASK-0094's proximity floor? | **resolved 2026-07-13: yes, decisively (+0.166 margin)** — but the localization is diffuse (0/30 top-k precision), not sharp; see BCR_ABL1 section above for the full picture | [[TASK-0091]] |
+| 1 | Does BCR_ABL1's `ground_state_relaxation` score (0.731) survive TASK-0094's proximity floor, and does clearing it mean anything? | **resolved 2026-07-13: clears the floor (+0.166) but does not mean active-site coupling** — 75% of arbitrary seeds also clear it (TASK-0102); the margin is real but not seed-specific. See BCR_ABL1 section above for the full picture. | [[TASK-0091]], [[TASK-0102]] |
 | 2 | What do the holo-side diagnostic numbers show for all three targets, and does the tiny apo/holo gap TASK-0067 found for the bare operator hold for the full `H_new` pipeline? | untested | [[TASK-0092]] |
 | 3 | Which methodology difference (cutoff / pocket-label definition / source definition) explains KRAS_G12C's 0.779 vs. this repo's own previously-asserted 0.3–0.7 band? | open, but downgraded 2026-07-13 — no longer bears on whether KRAS shows real signal (it does not, either way; see TASK-0094) | [[TASK-0093]] |
 | 4 | Does CARDIAC_MYOSIN's or KRAS_G12C's high AUC share a common cause beyond CARDIAC_MYOSIN's already-explained large-N flag? | **resolved 2026-07-13**: yes for KRAS (proximity, TASK-0094); CARDIAC_MYOSIN's floor-clearance is independent of KRAS's (it clears the proximity floor, its issue is purely the large-N flag) | [[TASK-0094]] |
