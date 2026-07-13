@@ -8,15 +8,33 @@ physics core. Ordering is by **dependency and risk**, not task number.
 Legend: **[EXISTS]** = filed before this plan · **[FILED]** = created *from* this plan
 (TASK-0070–0086, all 17 filed 2026-07-12, commit `9fdeb2f`) — no `[NEW]` remains outstanding.
 
-## Progress tracker (Phases 0–6, the scored/critical-path work — 35 tasks)
+## ⚠️ 2026-07-13 correction — read before dispatching anything in Phase 5
 
-**Snapshot as of 2026-07-12, 10:30 — this is a point-in-time copy, not a live view.**
+`__WORK_IN_PROGRESS__/REVIEW-2026-07-13-proximity-confound-and-propagator-semantics.md`
+found, **executed against real code** (not inferred), that the headline AUCs TASK-0079.005
+produced (`RESULTS.md`) are confounded by distance-from-seed: on a synthetic reproduction,
+a pure Euclidean-distance baseline (AUC 0.966) **beats** the CTQW score (0.914) on a
+proximal pocket, and both collapse on a distal one. Cross-target, the one mandatory target
+with a genuinely *distal* pocket (BCR_ABL1) is the one at chance — the signature of a
+proximity detector on a challenge whose premise is *distal* regulation. A second, separate
+finding shows `propagators.heat` on `H_new` is not classical diffusion (it returns
+`H_new`'s ground-state density; the retracted TASK-0091 dephasing-sweep framing rested on
+this misunderstanding).
+
+**New blocking phase inserted below: [Phase 1B](#phase-1b--proximity-confound--propagator-semantics-correction-blocking-2026-07-13).**
+It gates every current headline number and every task downstream of one (5.2/5.3/5.4/5.6/5.8
+below, each annotated). **Do not report, or build further on, any AUC in the current
+`RESULTS.md` as allosteric signal until it clears TASK-0094's proximity floor.**
+
+## Progress tracker (Phases 0–6 + 1B, the scored/critical-path work — 42 tasks)
+
+**Snapshot as of 2026-07-13 — this is a point-in-time copy, not a live view.**
 `.ai/COMMON.md`'s Active Work Registry is the canonical, continuously-updated source —
 re-check there (or regenerate this table) before trusting it for dispatch decisions.
 
 | Done | In Progress | TODO | Total |
 |---|---|---|---|
-| 13 (TASK-0070, TASK-0052, TASK-0047, TASK-0058, TASK-0063, TASK-0055, TASK-0064, TASK-0071, TASK-0056, TASK-0067, TASK-0079, TASK-0074, TASK-0066) | 0 | 22 | 35 |
+| 13 (TASK-0070, TASK-0052, TASK-0047, TASK-0058, TASK-0063, TASK-0055, TASK-0064, TASK-0071, TASK-0056, TASK-0067, TASK-0079, TASK-0074, TASK-0066) | 0 | 29 | 42 |
 
 **To refresh this snapshot:** each task file's own `- Status:` line is authoritative
 (`.ai/COMMON.md`'s registry mirrors it). One-line check for any ID:
@@ -87,6 +105,33 @@ triviality floor. `baselines.py` now exists — wire it in.
 
 ---
 
+## Phase 1B — Proximity confound & propagator-semantics correction (BLOCKING, 2026-07-13)
+
+Inserted after `__WORK_IN_PROGRESS__/REVIEW-2026-07-13-proximity-confound-and-propagator-semantics.md`
+found that TASK-0079.005's real headline AUCs are confounded by distance-from-seed, and
+that TASK-0091's original framing rested on a false premise about `propagators.heat`'s
+semantics. **This phase gates every current headline number** (see banner at the top of
+this document) and supersedes the original Phase 5 framing wherever noted. Sequencing
+below matches the review's own "Sequencing" section exactly — do not reorder.
+
+| # | Task | Why in this order | Status |
+|---|---|---|---|
+| 1B.1 | **[FILED] TASK-0094 — proximity baselines into the floor** | **Do this first.** Add `euclid_from_seed_centroid`/`hop_from_seed` to `baselines.py`, wire into `floor_scores`/`classify_failure`, re-run all mandatory targets. Real evidence: a pure distance baseline (AUC 0.966) beats CTQW (0.914) on a proximal pocket; both collapse on a distal one. **Decides whether we have a result at all.** | TODO |
+| 1B.2 | **[FILED] TASK-0095 — correct propagator semantics** | Cheap, and stops a false physical claim from propagating into the submission. `heat(H_new)` is `H_new`'s ground-state density (Spearman 0.998 vs `\|ground state\|²`), not classical diffusion — rename, guard against indefinite operators, correct `RESULTS.md`/report framing. | TODO |
+| 1B.3 | **[FILED] TASK-0096 — delete or implement phantom H11/H12** | Cheap, removes an audit liability. Both verified (`np.allclose`) identical to `H6`/unweighted-contact Laplacian despite docstrings claiming anisotropic weighting. Independent of 1B.1/1B.2, can run in parallel with them. | TODO |
+| 1B.4 | **[RE-FILED] TASK-0091 — does `H_new`'s ground state localize on *distal* pockets?** | The one open scientific question from the review that is not proximity in disguise. Original dephasing-sweep framing **retracted** (structurally could not converge to `heat(H_new)`'s value — see 1B.2). Re-filed to test BCR_ABL1's real 0.731 directly against 1B.1's proximity floor. **Hard blocked on 1B.1 and 1B.2.** | TODO |
+| 1B.5 | **[UPDATED] TASK-0093 — KRAS AUC reconciliation, now against the proximity floor** | The 8.0 vs 10.0 Å cutoff changes the contact graph's distance-decay from the seed — a candidate mechanism for the AUC gap that has nothing to do with real allosteric sensitivity. Every factorial combination must now be checked against 1B.1's floor, not just chance. **Hard blocked on 1B.1.** | TODO |
+| 1B.6 | **[FILED] TASK-0097 — name the "quantum metric" honestly** | `time_averaged_ctqw` is the decoherent/infinite-time-average limit (a spectral overlap quantity), not a coherent walk. Reporting honesty; can run in parallel with 1B.7 once 1B.1–1B.3 land. | TODO |
+| 1B.7 | **[FILED] TASK-0098 — amend INVARIANCE_PROTOCOL's SIGNAL class** | Protocol-level generalization: SIGNAL must beat the domain's strongest trivial confounder (distance-from-seed here), not just chance. Third instance of the same unexecuted-gauge-symmetry pattern (after SE(3) rotation, SU(2)/Clifford-frame) — see the review's Meta section. Can run in parallel with 1B.6. | TODO |
+
+**Non-finding, recorded so it isn't re-litigated:** the review also tested whether
+ground-state localization (`heat`) is *immune* to the proximity confound, as an external
+reviewer had proposed. It is **not** — `heat`'s synthetic distal-pocket AUC is 0.048, as
+anti-correlated as CTQW's 0.035. BCR_ABL1's real 0.731 remains a genuine, unexplained
+result that 1B.4 must test, not an already-proven exception.
+
+---
+
 ## Phase 2 — Pin the physics so the trees cannot drift (the real "dedup")
 
 Dedup means *one implementation of each shared primitive, ported into both trees, numbers
@@ -145,17 +190,24 @@ modules have **zero** tests, including `analysis.py` (646 lines).
 This is what the submission is actually judged on. Everything above exists to make these
 numbers *defensible*; this phase produces them.
 
+> **⚠️ 2026-07-13:** rows 5.2/5.3/5.4/5.6/5.8 below consume or extend 5.1's headline AUCs,
+> which [Phase 1B](#phase-1b--proximity-confound--propagator-semantics-correction-blocking-2026-07-13)
+> found are confounded by distance-from-seed. Each is annotated **(gated pending Phase
+> 1B)** — do not start until TASK-0094 (and, for 5.3, TASK-0095's corrected propagator
+> semantics) land. Their own Status stays TODO; the gate is a dependency note, not a
+> status change.
+
 | # | Task | Why | Status |
 |---|---|---|---|
-| 5.1 | **[FILED] TASK-0079 — end-to-end challenge run** (split into **.001–.005** subtasks 2026-07-12) | Produce the three **required deliverables** for every mandatory target (KRAS 4OBE→6OIM, BCR-ABL1 1OPL→5MO4, CARDIAC_MYOSIN; MYC_MAX deferred to TASK-0080): the **N×N connectivity matrix**, the **top-5 ranked hit list**, and the **methodological report**. Currently no single command produces them. This is the submission artifact. | **Done** — all 5 subtasks landed (`.004` found+filed **TASK-0090**, a real `select.py` multi-index-source crash, worked around not fixed inline). **`.005`'s live run against all 3 mandatory targets is complete** — every deliverable produced and Acceptance-Scenario-checked for real, against live RCSB data. The run surfaced **4 real scientific findings**, none fixed inline, three spawning their own investigation tasks — the full narrative, numbers, and open-questions index now live in **`__WORK_IN_PROGRESS__/RESULTS.md`**, a durable science-facing record kept independent of task status (read that file for the science, not this row). Headline: KRAS_G12C (AUC 0.779) and CARDIAC_MYOSIN (AUC 0.786, but honestly self-flagged `INSUFFICIENT_RESOLUTION` for N=950>800) both scored well above this repo's documented "near chance" expectation, while BCR_ABL1 (AUC 0.525, `NO_SIGNAL_IN_APO`) matched it — except BCR_ABL1's classical heat kernel scored 0.731 on the *same* operator, a large CTQW-vs-heat gap not yet explained. Follow-ups: **TASK-0093** (reconcile KRAS's AUC vs. this repo's own prior 0.3–0.7 assertion for the same target), **TASK-0091** (calibrated dephasing sweep on BCR_ABL1, testing whether decoherence recovers CTQW's lost signal), **TASK-0092** (wire the holo-side diagnostic upper bound into the real run, currently `N/A`). |
-| 5.2 | **[FILED] TASK-0082 — competence map synthesis** | The per-target floor / ceiling / headroom table — **the strategic differentiator**. "We close X% of the gap knowing the answer would close, on these targets; ~0 on those, and here is why." A per-target honest NO is a publishable result, not a failure to hide. | TODO |
-| 5.3 | **[EXISTS] TASK-0068** — NISQ noise-model simulation | Directly scored ("noise resilience"): Trotterized simulation under gate noise, testing whether ENAQT is more noise-robust than coherent CTQW. Needs `coarse.py` (done) for qubit feasibility. | TODO (claimed by Implementer A, 07-12 00:25 — not yet moved) |
-| 5.4 | **[EXISTS] TASK-0015** — holo-direction module | LRT / PRS / two-state ANM / NMFF, gated by cumulative overlap. | TODO |
+| 5.1 | **[FILED] TASK-0079 — end-to-end challenge run** (split into **.001–.005** subtasks 2026-07-12) | Produce the three **required deliverables** for every mandatory target (KRAS 4OBE→6OIM, BCR-ABL1 1OPL→5MO4, CARDIAC_MYOSIN; MYC_MAX deferred to TASK-0080): the **N×N connectivity matrix**, the **top-5 ranked hit list**, and the **methodological report**. Currently no single command produces them. This is the submission artifact. | **Done, but headline numbers ⚠️ provisionally confounded — see Phase 1B.** All 5 subtasks landed (`.004` found+filed **TASK-0090**, a real `select.py` multi-index-source crash, worked around not fixed inline). **`.005`'s live run against all 3 mandatory targets is complete** — every deliverable produced and Acceptance-Scenario-checked for real, against live RCSB data. Full narrative in **`__WORK_IN_PROGRESS__/RESULTS.md`**. Headline: KRAS_G12C (AUC 0.779) and CARDIAC_MYOSIN (AUC 0.786, self-flagged `INSUFFICIENT_RESOLUTION`) both scored above this repo's "near chance" expectation, while BCR_ABL1 (AUC 0.525, `NO_SIGNAL_IN_APO`) matched it — except BCR_ABL1's classical heat kernel scored 0.731 on the *same* operator. **REVIEW-2026-07-13 found this pattern (adjacent pockets score well, the one distal pocket is at chance) is the signature of a proximity detector** — none of these AUCs may be reported as allosteric signal until TASK-0094's proximity floor clears them (Phase 1B). Follow-ups reframed: **TASK-0093** (updated, now against the proximity floor), **TASK-0091** (re-filed, dephasing-sweep framing retracted), **TASK-0092** (unaffected, still open). |
+| 5.2 | **[FILED] TASK-0082 — competence map synthesis** | The per-target floor / ceiling / headroom table — **the strategic differentiator**. "We close X% of the gap knowing the answer would close, on these targets; ~0 on those, and here is why." A per-target honest NO is a publishable result, not a failure to hide. | TODO **(gated pending Phase 1B — floor/ceiling/headroom numbers are meaningless until proximity-cleared)** |
+| 5.3 | **[EXISTS] TASK-0068** — NISQ noise-model simulation | Directly scored ("noise resilience"): Trotterized simulation under gate noise, testing whether ENAQT is more noise-robust than coherent CTQW. Needs `coarse.py` (done) for qubit feasibility. | TODO (claimed by Implementer A, 07-12 00:25 — not yet moved) **(gated pending Phase 1B — built on an unconfirmed headline result)** |
+| 5.4 | **[EXISTS] TASK-0015** — holo-direction module | LRT / PRS / two-state ANM / NMFF, gated by cumulative overlap. | TODO **(gated pending Phase 1B)** |
 | 5.5 | **[FILED] TASK-0075 — knob-spread reporting for the overlap gate** | Per INVARIANCE_PROTOCOL: cutoff / variant / `k` / reference are **KNOBs, not gauge**. On a toy case the same motion swung **0.067–0.860** across an 18-combo grid, flipping go/no-go in 15 of 18. The gate must emit a **spread** and return `UNSTABLE` when knobs decide the verdict — never a point estimate. | TODO |
-| 5.6 | **[EXISTS] TASK-0046** — ceiling coordinate-descent search | Completes the floor/ceiling/headroom triple. | TODO |
+| 5.6 | **[EXISTS] TASK-0046** — ceiling coordinate-descent search | Completes the floor/ceiling/headroom triple. | TODO **(gated pending Phase 1B, feeds 5.2)** |
 | 5.7 | **[FILED] TASK-0080 — c-Myc / 1NKP application** | Required minimum-set target with **no holo ground truth** — scored on consensus + theoretical docking viability. Needs its own handling: no AUC, no ceiling; report prediction + confidence honestly. | TODO |
-| 5.8 | **[FILED] TASK-0081 — generalization set (ASD targets)** | The brief **highly encourages** extra targets to demonstrate robustness/scalability. Pull 2–4 from the Allosteric Database with known sites. Cheap once 5.1 is a one-command run; directly feeds "Technical Approach / Innovation". | TODO |
-| 5.9 | **[EXISTS] TASK-0037** — H11/H12 anisotropic not implemented | Known gap in the operator register. | TODO |
+| 5.8 | **[FILED] TASK-0081 — generalization set (ASD targets)** | The brief **highly encourages** extra targets to demonstrate robustness/scalability. Pull 2–4 from the Allosteric Database with known sites. Cheap once 5.1 is a one-command run; directly feeds "Technical Approach / Innovation". | TODO **(gated pending Phase 1B — no point generalizing a proximity detector)** |
+| 5.9 | **[EXISTS] TASK-0037** — H11/H12 anisotropic not implemented | Known gap in the operator register. | Superseded by **TASK-0096** (Phase 1B.3) — same finding, now with a concrete fix-or-delete task |
 
 ---
 
@@ -197,6 +249,22 @@ All 17 below now exist under `.ai/tasks/TODO/` (except TASK-0070, moved to
 `.ai/tasks/IN_PROGRESS/` the same session). This section is kept as authorship record;
 current status lives in the per-phase tables above and in `.ai/COMMON.md`.
 
+### 2026-07-13 batch — from REVIEW-2026-07-13-proximity-confound-and-propagator-semantics.md
+
+- **TASK-0094 — Proximity baselines into the floor.** `euclid_from_seed_centroid`/
+  `hop_from_seed` into `baselines.py`, wired into `floor_scores`/`classify_failure`;
+  re-run all mandatory targets. Blocks every current headline number.
+- **TASK-0095 — Correct propagator semantics.** Rename `heat`→`ground_state_relaxation`
+  (or equivalent), guard against indefinite-operator misuse, correct all downstream framing.
+- **TASK-0096 — Delete or implement phantom H11/H12.** Both verified identical to
+  H6/unweighted-Laplacian despite docstring claims of anisotropic weighting.
+- **TASK-0097 — Name the quantum metric honestly.** `time_averaged_ctqw` is the decoherent
+  spectral-overlap limit, not a coherent walk — say so in the report.
+- **TASK-0098 — Amend INVARIANCE_PROTOCOL's SIGNAL class.** Must beat the domain's
+  strongest trivial confounder (distance-from-seed), not just chance.
+- **TASK-0091 (re-filed) / TASK-0093 (updated)** — see Phase 1B above; both hard-blocked
+  on TASK-0094.
+
 **Correctness**
 - **TASK-0070 — Pocket label exclusion assembly.** Add the `build_labels` step assembling `pocket & ~functional & ~terminal`, assert `pocket ∩ active_site == ∅`, record an explicit KRAS Cys12 in/out decision, and give the exclusion **one named seam-owner** so it stops falling between `labels`/`protocol`/`analysis`.
 - **TASK-0071 — Permutation-null leak detector.** Add a label-permutation null to `diagnostics.py` as the catch-all leakage *detector* backstopping the *preventive* firewall: shuffle labels, re-run, flag any score still above chance.
@@ -230,14 +298,27 @@ current status lives in the per-phase tables above and in `.ai/COMMON.md`.
 
 ## Critical path to 15 Sept
 
-**0.1 → 0.2 → 1.1 → 1.2 → 5.1 → 5.2 → 6.1** — the minimum chain that yields
-*one leakage-clean, floor-anchored, honestly-reported result*, packaged in the artifact
-contract so it can be shown.
+**0.1 → 0.2 → 1.1 → 1.2 → 5.1 → [1B.1 → 1B.2 → 1B.3 → (1B.4, 1B.5)] → 5.2 → 6.1** — the
+minimum chain that yields *one leakage-clean, floor-anchored, honestly-reported result*,
+packaged in the artifact contract so it can be shown.
+
+**Updated 2026-07-13:** 5.1 is Done, but its output is not yet trustworthy as reported —
+Phase 1B is now load-bearing on the critical path, inserted between 5.1 and 5.2. **1B.1
+(TASK-0094) is the single highest-priority open task in this plan**: per the review, it
+"decides whether we have a result." Do not let Phase 2/3/4 (team-standards track) or the
+rest of Phase 5 (5.3/5.4/5.6/5.8, all gated) draw attention away from it.
+
+**Retraction on record:** earlier guidance (pre-2026-07-13) to prioritize TASK-0091 as
+filed is withdrawn — see Phase 1B.4. Its dephasing-sweep framing could not have answered
+the question it was built to answer (TASK-0095's finding), and would have produced a
+plausible, confidently-wrong causal claim if run as originally scoped.
 
 Decide **6.1 (artifact contract) early** even though 6.2–6.4 are late: it is the seam
 between research and delivery, and fixing it now lets the frontend and the science advance
-in parallel instead of serially.
+in parallel instead of serially. This is unaffected by the 2026-07-13 correction — the
+artifact contract's shape (GO/NO/UNSTABLE + knob-spread) already accommodates "this AUC is
+geometry, not signal" as a reportable outcome.
 
 Phase 2/3/4 (dedup, graduation, backend floor) is the **team-standards** track — real, and
 the cutoff divergence makes it a *correctness* issue rather than hygiene — but it must not
-preempt the Phase 0–1 chain if time gets short.
+preempt the Phase 0–1 chain, and now must not preempt Phase 1B either, if time gets short.

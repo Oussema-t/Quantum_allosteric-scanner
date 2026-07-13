@@ -15,6 +15,20 @@
   numbers for the *same* target — not a hypothesis, a measured fact that
   needs an explanation before either number is trusted as "the" KRAS_G12C
   result.
+- **Updated 2026-07-13** per
+  `__WORK_IN_PROGRESS__/REVIEW-2026-07-13-proximity-confound-and-propagator-semantics.md`
+  (finding P1-A): the review supplies a **candidate mechanism** this task
+  did not have when originally filed — the 8.0 Å vs 10.0 Å cutoff changes
+  the contact graph, which changes the walk's distance-decay profile
+  from the seed. Since KRAS_G12C's pocket sits **adjacent** to the active
+  site (SII-P, per the review's cross-target table), a tighter/looser
+  cutoff could shift the AUC purely by changing how proximity-correlated
+  the score is — independent of any real change in allosteric
+  sensitivity. **This task's factorial isolation (cutoff / pocket-label /
+  source) must now be run against TASK-0094's proximity floor, not just
+  against chance/degree** — a combination that "explains" the AUC gap by
+  cutoff alone is not informative if the resulting AUC never clears the
+  proximity floor at any cutoff. Hard-blocked on TASK-0094 landing first.
 
 ### The discrepancy (the load-bearing fact this task exists to resolve)
 
@@ -63,6 +77,13 @@ explaining, not dismissing in either direction.
     Invariance-Protocol-adjacent discipline: report the actual spread
     across the tested combinations, don't collapse to one number
     prematurely.
+  - **Added 2026-07-13**: for every combination in the factorial table,
+    also report whether that combination's AUC clears TASK-0094's
+    proximity floor (`euclid_from_seed_centroid`/`hop_from_seed`), not
+    just chance. A combination that raises AUC without clearing the
+    proximity floor should be reported as "raises apparent signal by
+    making the score more proximity-correlated," not as evidence of real
+    allosteric sensitivity.
 - Out Of Scope: deciding which methodology is "correct" for the
   submission — that is a downstream decision for whoever owns the
   competence-map/artifact-contract work ([[TASK-0082]]/[[TASK-0083]]),
@@ -84,6 +105,8 @@ explaining, not dismissing in either direction.
   `test_kras_g12c_real_target_near_chance_and_flat_dephasing`
   (`test_analysis.py`) — the two real, tested reference points being
   reconciled.
+- **Hard blocked on TASK-0094** (proximity floor, added 2026-07-13) — the
+  factorial table's conclusions are not trustworthy without it.
 
 ## Open Questions
 
