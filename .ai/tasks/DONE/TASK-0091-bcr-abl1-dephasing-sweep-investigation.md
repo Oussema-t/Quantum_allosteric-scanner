@@ -8,7 +8,7 @@
   detects distal allosteric pockets — not just proximal ones — on
   BCR_ABL1's real 0.731 result, **with TASK-0094's proximity floor
   applied**.
-- Status: In Progress
+- Status: Done
 - Owner: Implementer
 - Source: **Re-filed 2026-07-13** per
   `__WORK_IN_PROGRESS__/REVIEW-2026-07-13-proximity-confound-and-propagator-semantics.md`,
@@ -125,4 +125,79 @@ premise (P1-B). Kept verbatim for audit trail only.
 
 ## Done
 
-(not yet)
+**Real run, 2026-07-13** — real network fetch (1OPL apo / 5MO4 holo), real
+`run_frozen_verdict` (paying its full `select_frozen_config`/
+`unsupervised_score` selection cost, ~20-25 CPU-minutes across two runs —
+not cached/guessed), reusing `scripts/run_challenge.py`'s own
+`_load_apo_holo`/`_make_candidates_builder` directly rather than
+re-deriving the recipe by hand. Session-local script (not committed),
+cached intermediate results (`winner_H`/`occ_heat`/floor arrays) to
+`/tmp/.../task_0091_cache.npz` for any follow-up without repaying the
+selection cost.
+
+**Reproduction check (exact):** `AUC_ctqw_mean=0.5250`,
+`AUC_heat_mean=0.7315` (matches `RESULTS.md`'s recorded 0.731),
+`_diagnosis=NO_SIGNAL_IN_APO`, winner=`H_new_default` — confirms this run
+reconstructs TASK-0079.005's original result, not a different one.
+
+**Question 1 answered: does 0.731 clear the proximity floor? YES, decisively.**
+
+| Floor candidate | AUC | Ground-state (0.7315) clears it by |
+|---|---|---|
+| `degree_centrality` | 0.4933 | +0.2381 |
+| `euclid_from_seed_centroid` | 0.5412 | +0.1902 |
+| `hop_from_seed` (strongest) | 0.5652 | +0.1663 |
+
+This is the widest floor-clearing margin measured for any mandatory
+target's headline number so far — contrast with KRAS_G12C's own apo
+`AUC_ctqw_mean` (0.779), which **failed** to clear its own floor
+(max floor 0.798, TASK-0094's Done section). `ground_state_relaxation`'s
+0.731 is real, floor-beating signal on a genuinely distal (~32 Å
+seed-to-pocket) target — not proximity in disguise, on this evidence.
+
+**Question 2 answered: is the localization actually on the pocket? YES in
+aggregate, NO at hit-list sharpness — diffuse, not sharp, and this matters.**
+
+- Top-5/top-10/top-20/top-30 ranked residues by `ground_state_relaxation`
+  occupation: **0 of 16 pocket residues in any of them.** The exact
+  residues a "top-5 hit list" deliverable would report (390, 389, 388,
+  342, 341) sit 12.6-17.1 A from the pocket centroid — closer than the
+  seed (32.3 A) but not on the pocket.
+- The AUC is nonetheless real and not an artifact: pocket residues' ranks
+  span the 8.6th-54.8th percentile of the full 451-residue ranking,
+  median 20.1st percentile (vs. 50th expected by chance) -- genuine,
+  broad-based enrichment. Precision@50 = 6%, precision@75 = 31% (vs. ~3.5%
+  base rate at either cutoff under a null ranking) -- enrichment becomes
+  visible only once the net is cast wide.
+- Nearest-neighbor check: the top-20-occupation cluster (centered near
+  resnums 341-343/365-366/388-390) sits close (5.2-11.3 A) to *one side*
+  of the 16-residue pocket (351-363, 448-456) but far (14.6-18.9 A) from
+  the other side (481-487) -- consistent with the ground state
+  highlighting an approach/entrance region adjacent to part of the
+  myristoyl site, not the full binding pocket.
+
+**Conclusion (explicit, per this task's own Planned Validation):**
+BCR_ABL1's ground-state localization is a **real, floor-clearing,
+genuinely distal signal** -- the strongest, most decisive floor-clearance
+of any mandatory-target number measured this session, and not explained
+by any of the three proximity baselines. But it is a **diffuse regional
+enrichment, not a sharp discovery** -- a hit-list built from
+`ground_state_relaxation`'s top-5/10/20/30 would completely miss the
+labeled pocket despite the good AUC. Report both halves together, always:
+"floor-clearing distal signal" without the hit-list caveat would be
+oversold; "0/5 top hits" without the AUC/rank context would bury a real
+finding. Neither number alone is the honest headline.
+
+**Practical consequence, explicitly out of this task's own scope (per
+Intent Contract) but flagged for whoever picks it up:** switching the
+challenge's reported "top-5 ranked hit list" from CTQW's occupation to
+`ground_state_relaxation`'s would **not** improve BCR_ABL1's hit list
+(still 0/5) even though it would improve the reported AUC -- these are
+different deliverables responding differently to the same operator. Any
+future task proposing to swap the ranking metric per-target based on AUC
+alone must check hit-list precision separately, not assume AUC gains
+transfer.
+
+**Answers the Open Question above:** a mechanistic "why" (ground-state
+vs. time-averaged CTQW) is not established by this task -- flagging, not
+speculating, per this task's own instruction not to speculate inline.

@@ -227,6 +227,36 @@ it. `ground_state_relaxation`'s 0.731 (above) is the one number on this
 target that is not explained by proximity — TASK-0091 (re-filed) tests
 it directly against this same floor.
 
+**[RESOLVED 2026-07-13, TASK-0091]** It clears the floor, decisively —
+the widest floor-clearing margin measured for any mandatory target this
+session — but the localization is diffuse, not sharp, and both halves
+must be reported together. Real run (fresh 1OPL/5MO4 fetch, real
+`run_frozen_verdict`, not cached): `ground_state_relaxation`=0.7315 vs.
+floor candidates `degree_centrality`=0.4933, `euclid_from_seed_centroid`
+=0.5412, `hop_from_seed`=0.5652 — clears the strongest by **+0.166**.
+Contrast KRAS_G12C above, which *failed* to clear its own floor by
+-0.019. This is real, floor-beating signal on a genuinely distal
+(~32 A seed-to-pocket) target, not proximity in disguise.
+
+But: the top-5/10/20/30 ranked residues by `ground_state_relaxation`
+occupation contain **zero** of the 16 labeled pocket residues — a
+top-5 hit-list deliverable built from this score would completely miss
+the pocket despite the good AUC. The signal is real but broad: pocket
+residues' ranks span the 8.6th-54.8th percentile of the full 451-residue
+ranking (median 20.1st percentile vs. 50th under chance), with
+enrichment only becoming visible by top-50/top-75 (6%/31% of the pocket
+found, vs. ~3.5% expected by chance at either cutoff). The nearest
+top-20-occupation residues sit close (5-11 A) to one side of the pocket
+(351-363, 448-456) but far (15-19 A) from the other side (481-487) —
+consistent with highlighting an approach region adjacent to part of the
+myristoyl site, not the full site. **Practical consequence, flagged not
+acted on here:** switching the reported top-5 hit list from CTQW's
+occupation to `ground_state_relaxation`'s would not improve BCR_ABL1's
+hit list (still 0/5) even though it would improve the reported AUC — a
+future per-target ranking-metric decision must check hit-list precision
+separately from AUC, not assume one implies the other. Full numbers and
+methodology: `.ai/tasks/DONE/TASK-0091-bcr-abl1-dephasing-sweep-investigation.md`.
+
 ### CARDIAC_MYOSIN
 
 | Quantity | Value |
@@ -350,7 +380,7 @@ hide.
 
 | # | Question | Status | Task |
 |---|---|---|---|
-| 1 | Why does BCR_ABL1's `ground_state_relaxation` score (0.731, `H_new`'s ground-state density — not a diffusion process, TASK-0095) outperform CTQW (0.525) on the identical operator, and does it survive TASK-0094's proximity floor? (Calibrated dephasing cannot "recover" this number — see the retraction above.) | untested | [[TASK-0091]] |
+| 1 | Does BCR_ABL1's `ground_state_relaxation` score (0.731) survive TASK-0094's proximity floor? | **resolved 2026-07-13: yes, decisively (+0.166 margin)** — but the localization is diffuse (0/30 top-k precision), not sharp; see BCR_ABL1 section above for the full picture | [[TASK-0091]] |
 | 2 | What do the holo-side diagnostic numbers show for all three targets, and does the tiny apo/holo gap TASK-0067 found for the bare operator hold for the full `H_new` pipeline? | untested | [[TASK-0092]] |
 | 3 | Which methodology difference (cutoff / pocket-label definition / source definition) explains KRAS_G12C's 0.779 vs. this repo's own previously-asserted 0.3–0.7 band? | open, but downgraded 2026-07-13 — no longer bears on whether KRAS shows real signal (it does not, either way; see TASK-0094) | [[TASK-0093]] |
 | 4 | Does CARDIAC_MYOSIN's or KRAS_G12C's high AUC share a common cause beyond CARDIAC_MYOSIN's already-explained large-N flag? | **resolved 2026-07-13**: yes for KRAS (proximity, TASK-0094); CARDIAC_MYOSIN's floor-clearance is independent of KRAS's (it clears the proximity floor, its issue is purely the large-N flag) | [[TASK-0094]] |
