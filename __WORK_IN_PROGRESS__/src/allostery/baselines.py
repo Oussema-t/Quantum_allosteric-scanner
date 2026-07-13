@@ -79,6 +79,74 @@ def betweenness_centrality(coords: np.ndarray, cutoff: float = 10.0) -> np.ndarr
 
 
 # ---------------------------------------------------------------------------
+# Proximity-to-seed baselines (TASK-0094, REVIEW-2026-07-13 finding P1-A)
+# ---------------------------------------------------------------------------
+#
+# The propagator is always seeded at the functional/active-site set
+# (`analysis.py`'s `source` argument), and the pocket label is "residues
+# near the allosteric ligand, minus the active site" -- so a score that
+# does nothing but measure proximity-to-seed already reproduces most of
+# the signal (REVIEW-2026-07-13, real numbers on a synthetic 170-residue
+# globule, cutoff 8.0 A, 6-residue seed cluster):
+#   Spearman(time_averaged_ctqw occupation, -Euclidean distance from seed)
+#     = +0.853; Spearman(CTQW, -hop distance) = +0.880; on a pocket placed
+#   *adjacent* to the seed, the pure distance baseline (AUC 0.966) beats
+#   CTQW itself (0.914). Before this task, `baselines.py` had no proximity
+#   baseline at all -- `classify_failure`'s only floor was
+#   `degree_centrality`, which is not the confounding variable. These two
+#   functions are that floor; see `diagnostics.classify_failure`'s
+#   `floor_scores` and `scripts/run_challenge.py`'s floor computation for
+#   where they are actually applied.
+
+def euclid_from_seed_centroid(coords: np.ndarray, source) -> np.ndarray:
+    """Negative Euclidean distance from the seed-residue centroid, (n,).
+
+    `source` is a scalar index or a sequence of indices (this package's
+    standard multi-index seed convention, `propagators.py`/`pathways.py`'s
+    `_source_indices`) -- the centroid of all seed residues, not just the
+    first. Negated so "closer to the seed = higher score", matching this
+    module's existing convention (`surface_baseline`'s `-degree`).
+    """
+    idx = np.atleast_1d(np.asarray(source, dtype=int))
+    centroid = coords[idx].mean(axis=0)
+    dist = np.linalg.norm(coords - centroid, axis=1)
+    return -dist
+
+
+def hop_from_seed(coords: np.ndarray, source, cutoff: float = 10.0) -> np.ndarray:
+    """Negative graph-hop (BFS) distance from the seed set, on the same
+    binary contact-graph convention this module's other centrality
+    baselines use (`degree_centrality`/`betweenness_centrality`), (n,).
+
+    BFS logic ported from (not imported -- private helper, `select.py`'s
+    own module boundary) `select.py::_hop_distances_from_source`, adapted
+    to this module's `coords`+`cutoff` signature (matching its siblings)
+    and to a multi-index seed (BFS from every seed residue at once, so
+    hop distance is "nearest seed member", not "distance from one
+    representative index"). Unreachable residues (a disconnected
+    component) get a hop distance of `n_residues + 1` -- a finite,
+    well-defined penalty rather than -1/inf/NaN, so this stays directly
+    usable by `metrics.auc` without a caller-side NaN check, unlike
+    `_hop_distances_from_source`'s `-1` convention (that function is
+    consumed by `ballistic_exponent`, which explicitly excludes
+    unreachable nodes itself; this one has no such caller, so it cannot
+    rely on the same downstream handling).
+    """
+    import networkx as nx
+
+    idx = np.atleast_1d(np.asarray(source, dtype=int))
+    A = contact_matrix(coords, cutoff=cutoff, weight="binary")
+    G = nx.from_numpy_array(A)
+    n = len(coords)
+    dist = np.full(n, float(n + 1))
+    for i in idx.tolist():
+        for node, d in nx.single_source_shortest_path_length(G, i).items():
+            if d < dist[node]:
+                dist[node] = float(d)
+    return -dist
+
+
+# ---------------------------------------------------------------------------
 # External baselines -- fpocket (real wrapper; binary-based, apo-computable)
 # ---------------------------------------------------------------------------
 

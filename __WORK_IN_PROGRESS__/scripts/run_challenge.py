@@ -61,7 +61,7 @@ _SRC = Path(__file__).resolve().parent.parent / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
-from allostery.baselines import degree_centrality  # noqa: E402
+from allostery.baselines import degree_centrality, euclid_from_seed_centroid, hop_from_seed  # noqa: E402
 from allostery.clean import clean_from_config, load_target_config  # noqa: E402
 from allostery.hamiltonians import build_H_new, build_H10  # noqa: E402
 from allostery.labels import (  # noqa: E402
@@ -169,7 +169,16 @@ def run_target(target_name: str, output_dir: Path) -> dict:
                 "build_labels returned an empty active_site mask"
             )
         source = int(np.sort(active_site_idx)[0])
-        floor_scores = degree_centrality(apo.coords, cutoff=cutoff)
+        # TASK-0094 (REVIEW-2026-07-13 P1-A): degree_centrality alone is not
+        # the confounding variable -- proximity to the propagation seed is.
+        # classify_failure takes the max AUC across all three, so a target
+        # must beat the strongest trivial explanation available, not just
+        # graph degree.
+        floor_scores = [
+            degree_centrality(apo.coords, cutoff=cutoff),
+            euclid_from_seed_centroid(apo.coords, source),
+            hop_from_seed(apo.coords, source, cutoff=cutoff),
+        ]
         candidates_builder = _make_candidates_builder(apo, source, cutoff)
 
         result = run_frozen_verdict(

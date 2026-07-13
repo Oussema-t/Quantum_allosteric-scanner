@@ -89,6 +89,44 @@ reference-set overlap), and 0.51–0.53 is corroborated (a real, previously
 verified regression test). This is a genuine methodology-sensitivity
 question, independent of which number eventually ships.
 
+**[RESOLVED 2026-07-13, TASK-0094 — REVIEW-2026-07-13 finding P1-A
+confirmed]** This section's `_diagnosis` above (`NO_FAILURE_DETECTED`,
+"cleared... the `degree_centrality` floor") is now **superseded, not
+merely re-interpreted**: the review found, and this task confirmed,
+that `degree_centrality` was never the confounding variable —
+proximity to the propagation seed is. Two proximity baselines
+(`baselines.euclid_from_seed_centroid`/`hop_from_seed`) were added and
+wired into the floor as "beat the strongest of all three candidates,
+not just degree." Recomputed against the identical real data (AUC still
+exactly 0.779 — nothing about the scoring itself changed, only the
+floor it is checked against):
+
+| Floor candidate | AUC |
+|---|---|
+| `degree_centrality` | 0.482 |
+| `euclid_from_seed_centroid` | **0.798** |
+| `hop_from_seed` | 0.781 |
+
+**0.779 does not clear 0.798.** New `_diagnosis`: `BEATS_CHANCE_NOT_FLOOR`.
+Per the review's own hard, non-negotiable acceptance criterion, **this
+number must now be reported as geometry, not allosteric signal.** The
+top-5 hit-list overlap with `pocket_full[4.5]` (above) is real, but is
+the expected behavior of a proximity detector on a pocket that happens
+to sit near the seed — not evidence the method found anything beyond
+that.
+
+This also **resolves** the TASK-0093 discrepancy immediately above, in a
+more consequential way than either candidate methodology delta could
+have: it no longer matters which of the three deltas (cutoff / pocket-
+label definition / source definition) explains 0.779 vs. the previously-
+asserted 0.51–0.7 band, because **neither number was ever floor-cleared
+signal** once proximity is controlled for — 0.779 fails the real floor,
+and 0.51–0.7 was already at chance. TASK-0093 remains open as a
+narrower, still-real question (why do the two apo-only numbers differ
+at all), but it no longer bears on whether KRAS_G12C shows real
+allosteric signal from this pipeline: **it does not, under either
+number.**
+
 ### BCR_ABL1
 
 | Quantity | Value |
@@ -132,6 +170,20 @@ generalizes. TASK-0091 runs this for real, reusing the KRAS test's exact
 calibration recipe (`calibrate_kappa` → `mode_energetics` →
 `gamma_scale`).
 
+**[OBSERVED 2026-07-13, TASK-0094]** BCR_ABL1's `_diagnosis` above
+(`NO_SIGNAL_IN_APO`) is unchanged by the proximity floor — CTQW's 0.525
+never cleared chance, so the floor comparison never runs regardless of
+what the floor is. But the floor candidates themselves are informative
+here: `degree_centrality`=0.493, `euclid_from_seed_centroid`=0.541,
+`hop_from_seed`=0.565 — **all three are also near chance.** This
+corroborates (does not merely repeat) the "genuinely distal" framing
+already used for this target: unlike KRAS_G12C, where proximity alone
+nearly matches the method's score, BCR_ABL1's myristoyl pocket is far
+enough from the seed that *even a pure proximity detector* cannot find
+it. `ground_state_relaxation`'s 0.731 (above) is the one number on this
+target that is not explained by proximity — TASK-0091 (re-filed) tests
+it directly against this same floor.
+
 ### CARDIAC_MYOSIN
 
 | Quantity | Value |
@@ -167,6 +219,18 @@ two different mechanisms (a human-written data-quality note and an
 automated resolution-threshold check) converging on the same caution
 about this target.
 
+**[OBSERVED 2026-07-13, TASK-0094]** `classify_failure` never reaches
+the floor check for this target (`INSUFFICIENT_RESOLUTION` short-circuits
+first), so its `_diagnosis` is unaffected by the new floor — but the
+numbers are worth recording since they were computed anyway:
+`degree_centrality`=0.630, `euclid_from_seed_centroid`=0.749,
+`hop_from_seed`=0.764. **0.786 would clear all three** if the large-N
+flag did not short-circuit first. This does not un-flag the result (the
+resolution caveat above is independent and still applies), but it means
+CARDIAC_MYOSIN's number, unlike KRAS's, is not *also* explainable by the
+proximity confound — its open question remains the large-N/ANM-channel
+caveat specifically, not geometry.
+
 ### Cross-target pattern worth naming, not yet a hypothesis with a test attached
 
 **[OBSERVED]** Two of three targets (KRAS_G12C 0.779, CARDIAC_MYOSIN
@@ -179,6 +243,43 @@ CARDIAC_MYOSIN's high scores share any *other* common cause (e.g. the
 `enm_cutoff=8.0` used uniformly by this run, vs. the 10.0 default older
 tests used) is exactly what TASK-0093 isolates for KRAS; it has not been
 checked for CARDIAC_MYOSIN and is not claimed here.
+
+### Proximity floor applied (TASK-0094, 2026-07-13) — [RESOLVED] the pattern above *is* the confound
+
+**[RESOLVED]** `REVIEW-2026-07-13-proximity-confound-and-propagator-
+semantics.md` finding P1-A hypothesized that the cross-target pattern
+above ("two good scores, one at chance") was the signature of a
+proximity-to-seed detector, not an allosteric one, and set a hard,
+non-negotiable acceptance criterion: *a target's AUC may only be
+reported as signal if it clears a real proximity floor, not merely
+chance and degree.* `baselines.euclid_from_seed_centroid`/`hop_from_seed`
+were added, wired into `classify_failure`'s floor (now the max AUC
+across `{degree_centrality, euclid_from_seed_centroid, hop_from_seed}`,
+not `degree_centrality` alone), and all three mandatory targets were
+re-run against the identical apo data (no AUC changed — only the floor
+they are checked against did):
+
+| Target | AUC | Floor-cleared? | `_diagnosis` |
+|---|---|---|---|
+| KRAS_G12C | 0.779 | **No** (max floor 0.798) | `BEATS_CHANCE_NOT_FLOOR` |
+| BCR_ABL1 | 0.525 | N/A — never clears chance | `NO_SIGNAL_IN_APO` |
+| CARDIAC_MYOSIN | 0.786 | Yes (max floor 0.764) — moot, N=950 flag fires first | `INSUFFICIENT_RESOLUTION` |
+
+**Zero of three mandatory targets currently ship a floor-cleared,
+resolution-clean apo-only AUC.** Per the review's acceptance criterion,
+this is the honest headline of this pipeline's current state, not a
+setback to be minimized: KRAS_G12C's apparent signal is geometry
+(proximity to the seed), BCR_ABL1 was already at chance, and
+CARDIAC_MYOSIN's favorable floor-clearance is undermined by an
+independent, already-flagged data-quality problem. This is exactly the
+"gates before build" framing `PLAN.md` calls for — a well-evidenced "our
+apo-only pipeline does not yet show real distal signal on the mandatory
+set" is the legitimate, reportable result of this run, not a failure to
+paper over. It also directly blocks (per TASK-0094's own Dependency
+section) every downstream task that would have consumed these AUCs as
+established signal — TASK-0082 (competence map), TASK-0068 (NISQ sim),
+TASK-0015 (holo-direction), TASK-0046 (ceiling search), TASK-0081
+(generalization set) — until a method clears this floor for real.
 
 ### Diagnostic upper bound not yet computed
 
@@ -208,8 +309,9 @@ hide.
 |---|---|---|---|
 | 1 | Why does BCR_ABL1's classical heat kernel (0.731) outperform CTQW (0.525) on the identical operator — and does calibrated dephasing recover it? | untested | [[TASK-0091]] |
 | 2 | What do the holo-side diagnostic numbers show for all three targets, and does the tiny apo/holo gap TASK-0067 found for the bare operator hold for the full `H_new` pipeline? | untested | [[TASK-0092]] |
-| 3 | Which methodology difference (cutoff / pocket-label definition / source definition) explains KRAS_G12C's 0.779 vs. this repo's own previously-asserted 0.3–0.7 band? | untested | [[TASK-0093]] |
-| 4 | Does CARDIAC_MYOSIN's or KRAS_G12C's high AUC share a common cause beyond CARDIAC_MYOSIN's already-explained large-N flag? | not yet formulated as a testable hypothesis | none filed |
+| 3 | Which methodology difference (cutoff / pocket-label definition / source definition) explains KRAS_G12C's 0.779 vs. this repo's own previously-asserted 0.3–0.7 band? | open, but downgraded 2026-07-13 — no longer bears on whether KRAS shows real signal (it does not, either way; see TASK-0094) | [[TASK-0093]] |
+| 4 | Does CARDIAC_MYOSIN's or KRAS_G12C's high AUC share a common cause beyond CARDIAC_MYOSIN's already-explained large-N flag? | **resolved 2026-07-13**: yes for KRAS (proximity, TASK-0094); CARDIAC_MYOSIN's floor-clearance is independent of KRAS's (it clears the proximity floor, its issue is purely the large-N flag) | [[TASK-0094]] |
+| 5 | Does any mandatory target's apo-only AUC clear a real proximity floor (not just chance/degree)? | **resolved 2026-07-13: no — zero of three** (KRAS fails the floor, BCR_ABL1 fails chance, CARDIAC_MYOSIN's clearance is moot under the large-N flag) | [[TASK-0094]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

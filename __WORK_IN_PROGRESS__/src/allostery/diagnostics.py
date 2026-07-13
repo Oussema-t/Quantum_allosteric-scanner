@@ -133,7 +133,7 @@ def classify_failure(
     auc_chance_tol: float = 0.05,
     n_large: int = LARGE_N_THRESHOLD,
     diag_dominance_threshold: float = DIAG_DOMINANCE_THRESHOLD,
-    floor_scores: np.ndarray | None = None,
+    floor_scores=None,
 ) -> str:
     """Classify why a scoring result looks poor.
 
@@ -158,16 +158,24 @@ def classify_failure(
        statistically indistinguishable from chance: a legitimate,
        reportable negative result (`PLAN.md`'s "gates before build"
        framing).
-    5. `BEATS_CHANCE_NOT_FLOOR` (SEAM-0005) -- the score clears the chance
-       bar above but does not beat `floor_scores`, the strongest trivial
-       structural baseline available for this target (`baselines.py`,
-       caller's choice which baseline). Only checked once chance is
-       already cleared -- a result that doesn't even beat chance is
-       `NO_SIGNAL_IN_APO` regardless of the floor. Skipped entirely when
-       `floor_scores` is `None` (the default), which keeps every existing
-       call site byte-identical to pre-SEAM-0005 behavior. Matches
-       `PLAN.md`'s "a ceiling that node degree also reaches is structure,
-       not your method" bar.
+    5. `BEATS_CHANCE_NOT_FLOOR` (SEAM-0005, widened by TASK-0094) -- the
+       score clears the chance bar above but does not beat `floor_scores`.
+       `floor_scores` accepts either a single `(N,)` array (original
+       SEAM-0005 shape, unchanged) or several stacked as `(k, N)`/a
+       sequence of `(N,)` arrays (TASK-0094, REVIEW-2026-07-13 P1-A) --
+       when several are given, the floor is the *maximum* AUC among them,
+       i.e. "beats the single strongest trivial baseline available", not
+       an average or the first one. This is the fix for `degree_centrality`
+       alone being an insufficient floor: it does not measure proximity to
+       the propagation seed, the confound the review found dominates the
+       actual scores (`baselines.euclid_from_seed_centroid`/
+       `hop_from_seed`). Only checked once chance is already cleared -- a
+       result that doesn't even beat chance is `NO_SIGNAL_IN_APO`
+       regardless of the floor. Skipped entirely when `floor_scores` is
+       `None` (the default), which keeps every existing call site
+       byte-identical to pre-SEAM-0005 behavior. Matches `PLAN.md`'s "a
+       ceiling that node degree also reaches is structure, not your
+       method" bar.
     6. `NO_FAILURE_DETECTED` -- none of the above; not a notebook category,
        added so this function is total over well-scoring inputs too.
     """
@@ -192,8 +200,11 @@ def classify_failure(
         return NO_SIGNAL_IN_APO
 
     if floor_scores is not None:
-        floor_auc = _auc(np.asarray(floor_scores), labels_arr)
-        if not np.isnan(floor_auc) and score_auc <= floor_auc:
+        floor_stack = np.asarray(floor_scores)
+        candidates = [floor_stack] if floor_stack.ndim == 1 else list(floor_stack)
+        floor_aucs = [_auc(np.asarray(c), labels_arr) for c in candidates]
+        finite_floor_aucs = [a for a in floor_aucs if not np.isnan(a)]
+        if finite_floor_aucs and score_auc <= max(finite_floor_aucs):
             return BEATS_CHANCE_NOT_FLOOR
 
     return NO_FAILURE_DETECTED

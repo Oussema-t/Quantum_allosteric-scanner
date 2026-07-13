@@ -190,6 +190,47 @@ class TestClassifyFailureFloor:
         assert result == NO_SIGNAL_IN_APO
 
 
+class TestClassifyFailureMultipleFloors:
+    """TASK-0094 (REVIEW-2026-07-13 P1-A): `floor_scores` widened to accept
+    several stacked candidates, floor = max AUC among them -- a single
+    `degree_centrality` floor is not the confounding variable the review
+    found (proximity-to-seed), so "beats the floor" must mean "beats the
+    strongest of all trivial baselines available", not just one of them.
+    """
+
+    LABELS = np.array([1, 1, 0, 0, 0, 0, 0, 0, 0, 0])
+    NEAR_PERFECT = np.array([10.0, 9.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0])  # AUC=1.0
+    MEDIOCRE = np.array([8.0, 7.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 9.0, 10.0])       # AUC=0.75
+    WEAK = np.array([5.0, 4.0, 6.0, 7.0, 3.0, 2.0, 1.0, 8.0, 9.0, 10.0])           # weaker still
+
+    def test_sequence_of_floors_uses_the_strongest_one(self):
+        """A score beating the weak floors but not the strong one must
+        still be flagged -- the max, not the first or the mean, governs."""
+        result = classify_failure(
+            self.MEDIOCRE, self.LABELS,
+            floor_scores=[self.WEAK, self.NEAR_PERFECT],
+        )
+        assert result == BEATS_CHANCE_NOT_FLOOR
+
+    def test_2d_array_of_floors_behaves_the_same_as_a_list(self):
+        stacked = np.vstack([self.WEAK, self.NEAR_PERFECT])
+        result = classify_failure(self.MEDIOCRE, self.LABELS, floor_scores=stacked)
+        assert result == BEATS_CHANCE_NOT_FLOOR
+
+    def test_score_beating_every_floor_is_no_failure_detected(self):
+        result = classify_failure(
+            self.NEAR_PERFECT, self.LABELS,
+            floor_scores=[self.WEAK, self.MEDIOCRE],
+        )
+        assert result == NO_FAILURE_DETECTED
+
+    def test_single_array_floor_still_works_unchanged(self):
+        """Backward compatibility: a plain (N,) array (pre-TASK-0094 shape)
+        is still accepted and behaves exactly as before."""
+        result = classify_failure(self.MEDIOCRE, self.LABELS, floor_scores=self.NEAR_PERFECT)
+        assert result == BEATS_CHANCE_NOT_FLOOR
+
+
 class TestClassifyFailureRealBaselineFloor:
     """SEAM-0011 (TASK-0056's review): `floor_scores` is designed to accept
     real `baselines.py` output, not just a hand-built stand-in array --
