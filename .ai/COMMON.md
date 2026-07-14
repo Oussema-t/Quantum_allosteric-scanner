@@ -200,6 +200,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0104 | Re-frame BCR_ABL1 GSR=0.731 claim in RESULTS.md from "allosteric signal propagation" to "apo-computable structural prior" — number unchanged, claim corrected; from REVIEW-2026-07-13b T-B | Implementer | TODO | P0 | 2026-07-13 | — | — | `.ai/tasks/TODO/TASK-0104-reframe-gsr-bcr-abl1-claim.md` |
 | TASK-0105 | ENAQT gamma-sweep on real mandatory targets — interior-optimum transport measurement (not AUC recovery), reframes the killed dephasing question; from REVIEW-2026-07-13b T-C, "highest scientific upside in the repo" | Implementer | TODO | P0 | 2026-07-13 | — | — | `.ai/tasks/TODO/TASK-0105-enaqt-gamma-sweep-real-targets.md` |
 | TASK-0106 | Reproduce the CTQW-trapping finding (REVIEW-2026-07-13c) on real BCR_ABL1 data — H10/H2 vs H_new(lambda=0.25) vs H_new(default) distal-pocket AUC + transport diagnostic, checked against the proximity floor | Implementer | TODO | P0 | 2026-07-13 | — | — | `.ai/tasks/TODO/TASK-0106-ctqw-trapping-real-data-reproduction.md` |
+| TASK-9701 | scratch row for validating TASK-0107 resolve subcommand (will be removed) | Toolsmith | TODO | P9 | 2026-07-14 | — | — | `.ai/tasks/TODO/TASK-9701-scratch-resolve-repro.md` |
 
 ## Current Rules
 
