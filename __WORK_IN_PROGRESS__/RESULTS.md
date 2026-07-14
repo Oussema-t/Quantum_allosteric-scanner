@@ -280,6 +280,53 @@ correlation-clustering detail (occupation *shape* does vary meaningfully
 by seed, even though the resulting AUC mostly does not — a genuinely
 nuanced result, not simple seed-independence): `.ai/tasks/DONE/TASK-0102-ground-state-relaxation-seed-invariance-test.md`.
 
+**[FALSIFIED-AND-REFRAMED 2026-07-14, TASK-0104 — see
+`REVIEW-2026-07-13b-operator-falsification-negative-controls.md` and
+`.ai/tasks/TODO/TASK-0103-dumbbell-negative-control-suite.md` (the
+regression test, passing)]** TASK-0102 (above) showed the 0.731 result is
+mostly seed-independent; this correction supplies the **mechanistic
+reason why**, via a decisive controlled experiment rather than a
+statistical pattern over real-target seeds. A synthetic 2x2 control
+matrix (44-node dumbbell: an active-site lobe bridged, by equal-length
+paths, to a "true" coupled site and a decoy — well depth and bridge
+coupling strength varied *independently*, so the two cues can be forced
+to disagree) shows `ground_state_relaxation` **tracks the location of a
+potential well, not the strength of coupling from the active site**: when
+the well and the strong coupling are on opposite lobes, GSR scores the
+*coupled* lobe 0.000 and the *decoy* (well-bearing, weakly-coupled) lobe
+1.000 — the opposite of what a communication measure would do.
+`time_averaged_ctqw`, tested on the identical synthetic construction,
+does the reverse: it tracks the coupling and ignores the well. This is
+not a difference of degree — it is a clean double dissociation,
+regression-tested and passing (`test_dumbbell_negative_control.py`,
+`TestDumbbellNegativeControl::test_c2_c3_is_a_clean_double_dissociation`
+and the four single-cell assertions either side of it).
+
+**The number does not change; the claim attached to it does.** The
+corrected claim, replacing every prior "allosteric signal propagation" or
+"communication from the active site" framing attached to this result:
+
+> Allosteric pockets tend to coincide with soft, low-coordination
+> regions. This is an apo-computable structural prior, detectable
+> without reference to the active site.
+
+This is a **cryptic-pocket-detection** claim — a legitimate, useful,
+independently-defensible finding about *where soft/deep regions of the
+apo structure sit* — and it addresses a **different** challenge
+objective (structural-prior / pocket-druggability characterization) than
+signal propagation does. It should be read and reported as such, in its
+own section of any future submission narrative, not folded into the
+CTQW/ENAQT communication story. `ground_state_relaxation`'s status in
+this project's operator register (per the review's own falsification
+template, Sec.5): **RETAINED-NARROWED** — falsified as a communication
+detector, retained as a structural-prior detector.
+
+The "classical heat vs. quantum CTQW" framing this document already
+corrected once (TASK-0095, above) remains void for an added reason
+beyond the naming/semantics fix: per the review's Sec.3, it was never a
+meaningful classical/quantum comparison to begin with, regardless of
+what either side is called.
+
 ### CARDIAC_MYOSIN
 
 | Quantity | Value |
@@ -291,11 +338,16 @@ nuanced result, not simple seed-independence): `.ai/tasks/DONE/TASK-0102-ground-
 | `_diagnosis` | **`INSUFFICIENT_RESOLUTION`** |
 | apo residue count (N) | **950** |
 
-**[OBSERVED]** Unlike BCR_ABL1, CTQW and heat agree closely here
-(0.786 vs 0.790, gap −0.003, "noise-level") — both propagators concur,
-neither dominates. Hit-list resnums: 706, 89, 88, 704, 87 (two tight
-pairs); no independent reference pocket set exists for this target to
-cross-check against.
+**[OBSERVED]** Unlike BCR_ABL1, CTQW and `ground_state_relaxation` agree
+closely here (0.786 vs 0.790, gap −0.003, "noise-level") — both
+propagators concur, neither dominates. Given the well-vs-coupling
+falsification above, agreement here is not itself evidence either
+propagator is measuring communication on this target — it means the two
+different quantities happen to coincide, which the dumbbell control
+matrix's C1 cell ("cues agree") already showed is the *uninformative*
+case, not a discriminating one. Hit-list resnums: 706, 89, 88, 704, 87
+(two tight pairs); no independent reference pocket set exists for this
+target to cross-check against.
 
 **[OBSERVED, not a hypothesis]** `classify_failure` flags this result
 `INSUFFICIENT_RESOLUTION` because apo N=950 exceeds `LARGE_N_THRESHOLD=800`
@@ -403,7 +455,7 @@ hide.
 
 | # | Question | Status | Task |
 |---|---|---|---|
-| 1 | Does BCR_ABL1's `ground_state_relaxation` score (0.731) survive TASK-0094's proximity floor, and does clearing it mean anything? | **resolved 2026-07-13: clears the floor (+0.166) but does not mean active-site coupling** — 75% of arbitrary seeds also clear it (TASK-0102); the margin is real but not seed-specific. See BCR_ABL1 section above for the full picture. | [[TASK-0091]], [[TASK-0102]] |
+| 1 | Does BCR_ABL1's `ground_state_relaxation` score (0.731) survive TASK-0094's proximity floor, and does clearing it mean anything? | **resolved 2026-07-14: clears the floor (+0.166), is largely seed-independent (TASK-0102), and a controlled negative-control experiment shows the mechanism is well-depth, not active-site coupling (TASK-0103/TASK-0104, `REVIEW-2026-07-13b`)** — the number is real; the causal claim is now "apo-computable structural prior for cryptic pockets," not allosteric signal. See BCR_ABL1 section above for the full picture. | [[TASK-0091]], [[TASK-0102]], [[TASK-0103]], [[TASK-0104]] |
 | 2 | What do the holo-side diagnostic numbers show for all three targets, and does the tiny apo/holo gap TASK-0067 found for the bare operator hold for the full `H_new` pipeline? | untested | [[TASK-0092]] |
 | 3 | Which methodology difference (cutoff / pocket-label definition / source definition) explains KRAS_G12C's 0.779 vs. this repo's own previously-asserted 0.3–0.7 band? | open, but downgraded 2026-07-13 — no longer bears on whether KRAS shows real signal (it does not, either way; see TASK-0094) | [[TASK-0093]] |
 | 4 | Does CARDIAC_MYOSIN's or KRAS_G12C's high AUC share a common cause beyond CARDIAC_MYOSIN's already-explained large-N flag? | **resolved 2026-07-13**: yes for KRAS (proximity, TASK-0094); CARDIAC_MYOSIN's floor-clearance is independent of KRAS's (it clears the proximity floor, its issue is purely the large-N flag) | [[TASK-0094]] |

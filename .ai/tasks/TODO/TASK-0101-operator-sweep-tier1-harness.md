@@ -10,7 +10,9 @@
   that runs it across all 3 mandatory targets (KRAS_G12C, BCR_ABL1,
   CARDIAC_MYOSIN) and writes a reported table. **Tier-1 (descriptive)
   only — no operator selection.**
-- Status: TODO
+- Status: In Progress (implementation + pinning check Done; full 3-target
+  x 16-operator x 2-propagator sweep running in background, see Done
+  section)
 - Owner: Implementer
 - Source: TASK-0100's Architect decision (Done, 2026-07-13) — resolves
   where the sweep lives (library function + thin script, not
@@ -176,4 +178,77 @@ and safely re-runnable, not a single monolithic all-or-nothing script:
 
 ## Done
 
-(not yet)
+**Implementation, real pinning check, and synthetic tests are Done. The
+full 96-cell real-data sweep is running in the background as of
+2026-07-14 06:39 (session-local, not yet complete) — this section will
+be finalized once it lands; do not treat the sweep as complete from this
+section alone, check `results/<target>/operator_sweep.md` on disk.**
+
+- `analysis.operator_sweep(coords, bfactors, source, pocket_label,
+  floor_scores, cutoff, operators=None, propagators=("ctqw",
+  "ground_state"), t_max=15.0, n_steps=500)` — a uniform three-arg
+  `(coords, bfactors, cutoff) -> H` registry (`_operator_registry`) with
+  one explicit lambda adapter per operator, not a generic dispatch, per
+  this task's own Constraint. Reuses `diagnostics.classify_failure` for
+  floor-clearing (no new comparison invented) and
+  `REVIEW-2026-07-13c`'s own participation-ratio transport diagnostic
+  (`_transport_participation_ratio`, PR/N).
+- **16 operators, not 14+1**: `H1`-`H9`, `H10` (=`H10_disorder_suppressed`),
+  `H11`-`H14`, `H_new` (=`build_H_new`), `build_H10` — the last two
+  entries deliberately duplicate `H_new`/`H10`'s underlying computation
+  under their submission-facing names, per this task's own "H1-H14,
+  build_H_new, build_H10" enumeration (96 = 16 x 2 x 3 only holds this
+  way). Verified `H10`/`build_H10` produce numerically identical AUCs on
+  real data (see pinning run below) — a free consistency check that the
+  alias is faithful.
+- **Tier A = {H10, H14, H_new, build_H10}, Tier B = the other 12** — per
+  TASK-0100 Sec.3's three *conceptual* candidates (H_new, H10, H14),
+  spread across 4 registry rows because H10 has two names.
+- **H13's 3N x 3N shape mismatch is caught explicitly, not left to fail
+  silently** — checked directly while implementing: a 3N-length matrix
+  indexed by an N-length source/pocket-label array would **not** crash,
+  it would silently score against the wrong coordinate-flattened index
+  space and produce a shape-valid but physically meaningless number. Added
+  an explicit `H.shape[0] != len(coords)` guard that raises before any
+  propagator runs, caught by the per-cell `try/except` and recorded as an
+  honest error row for both propagators. Regression-tested directly
+  (`test_h13_shape_mismatch_is_caught_not_raised`).
+- 9 synthetic unit tests in `test_analysis.py::TestOperatorSweep` (all 16
+  operators present, tier assignment, H13 error handling, H10/build_H10
+  agreement, operator/propagator filters, unknown-operator handling,
+  floor-clearing precedence, transport_pr bounds, apo/holo N/A pending
+  TASK-0092).
+- `scripts/sweep_operators.py` — chunked/resumable per this task's own
+  hard requirement: each cell writes to its own
+  `results/<target>/sweep_cells/<operator>__<propagator>.json`
+  immediately; re-running skips existing cells by default; `--force`
+  (composed with `--target`/`--operator`/`--propagator`) recomputes only
+  the selected subset; `--aggregate` (or no filters at all) renders
+  `results/<target>/operator_sweep.md` from whatever cell files exist,
+  computing nothing. Reuses `run_challenge.py`'s own `_load_apo_holo` —
+  not reimplemented. Network-fetch caching relies on prody's existing
+  local PDB cache (`pdb_cache/`, already gitignored in this repo) rather
+  than a new caching layer — a proportionate choice, documented in the
+  script's own `_prepare_target` docstring, not a silent omission.
+- **Real pinning check (this task's own Acceptance Scenario) — passes
+  exactly**: `python scripts/sweep_operators.py --target KRAS_G12C
+  --operator H_new H10 --propagator ctqw ground_state` against live
+  4OBE/6OIM reproduces `AUC(H_new, ctqw) = 0.7792494481236203` — matches
+  the already-established real run's `0.779` to full float precision,
+  confirming the new harness is not silently diverging from
+  already-validated ground truth.
+- Full local run (synthetic suite, before the real sweep was launched):
+  `python3 .ai/tools/pytest_local.py wip-all --json` → 524 passed, 1
+  xpassed (pre-existing, unrelated), 0 failed.
+- **Staging/commit deliberately skipped** — explicit user instruction
+  this session ("Do NOT git add or git commit anything — leave the stage
+  empty. I'm orchestrating which package ships when").
+
+### Still outstanding for this task
+
+- The full 3-target x 16-operator x 2-propagator background sweep
+  finishing and being read for real (transport_pr vs AUC vs floor
+  pattern across the whole register — the actual point of Tier 1).
+- This task's own `Status:` line stays `In Progress` until that sweep
+  completes and its table is reviewed here, not flipped to `Done` on the
+  implementation + pinning check alone.

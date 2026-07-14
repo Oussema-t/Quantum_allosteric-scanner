@@ -455,3 +455,176 @@ def gnm_cutoff_weight_sweep(
             occ = ground_state_relaxation(L, t_max, source=source)
             results[(cutoff, scheme)] = _metric_pack(occ, labels)
     return results
+
+
+# ---------------------------------------------------------------------------
+# TASK-0101 -- Tier-1 operator sweep (TASK-0100's architecture decision)
+#
+# 16 named operators (H1-H14, H_new, build_H10) x 2 propagators (ctqw,
+# ground_state) -- descriptive measurement only, no frozen gate (nothing
+# is being selected, per TASK-0100 Sec.2's Tier-1/Tier-2 split). Tier
+# labels (A: submission candidates; B: baseline/ablation family) per
+# TASK-0100 Sec.3. `build_H10` is deliberately registered *alongside*
+# `H10` (both resolve to `H10_disorder_suppressed`, `build_H10` via its
+# own convenience-alias signature) -- redundant by design, per TASK-0101's
+# own "H1-H14, build_H_new, build_H10" enumeration (16 operators, not 15);
+# agreement between the two rows is itself a small, free consistency
+# check on the alias.
+# ---------------------------------------------------------------------------
+
+_TIER_A_OPERATORS = frozenset({"H10", "H14", "H_new", "build_H10"})
+
+
+def _operator_registry() -> dict:
+    """name -> (tier, build_fn); build_fn(coords, bfactors, cutoff) -> H.
+
+    One uniform three-argument call convention for every operator,
+    regardless of which arguments the underlying `hamiltonians.py`
+    function actually takes (`H1`-`H8`/`H11`-`H13` ignore `bfactors`;
+    `H9`/`H10`/`H_new`/`build_H10` need it) -- each lambda is the explicit
+    adapter, not a generic dispatch that would force one signature onto
+    all fourteen (this task's own Constraint).
+    """
+    from .hamiltonians import (
+        H1_unweighted_adjacency, H2_combinatorial_laplacian, H3_normalised_laplacian,
+        H4_powered_normalised, H5_gaussian_elastic, H6_exponential_decay, H7_harmonic,
+        H8_gnm, H9_bfactor_regularised, H10_disorder_suppressed, H11_anisotropic_mechanical,
+        H12_anm_scalarised, H13_3N_anm_hessian, H14_anm_pinv_trace, build_H_new, build_H10,
+    )
+
+    return {
+        "H1": ("B", lambda coords, bfactors, cutoff: H1_unweighted_adjacency(coords, cutoff=cutoff)),
+        "H2": ("B", lambda coords, bfactors, cutoff: H2_combinatorial_laplacian(coords, cutoff=cutoff)),
+        "H3": ("B", lambda coords, bfactors, cutoff: H3_normalised_laplacian(coords, cutoff=cutoff)),
+        "H4": ("B", lambda coords, bfactors, cutoff: H4_powered_normalised(coords, cutoff=cutoff)),
+        "H5": ("B", lambda coords, bfactors, cutoff: H5_gaussian_elastic(coords, cutoff=cutoff)),
+        "H6": ("B", lambda coords, bfactors, cutoff: H6_exponential_decay(coords, cutoff=cutoff)),
+        "H7": ("B", lambda coords, bfactors, cutoff: H7_harmonic(coords, cutoff=cutoff)),
+        "H8": ("B", lambda coords, bfactors, cutoff: H8_gnm(coords, cutoff=cutoff)),
+        "H9": ("B", lambda coords, bfactors, cutoff: H9_bfactor_regularised(coords, bfactors, cutoff=cutoff)),
+        "H10": ("A", lambda coords, bfactors, cutoff: H10_disorder_suppressed(coords, bfactors, cutoff=cutoff)),
+        "H11": ("B", lambda coords, bfactors, cutoff: H11_anisotropic_mechanical(coords, cutoff=cutoff)),
+        "H12": ("B", lambda coords, bfactors, cutoff: H12_anm_scalarised(coords, cutoff=cutoff)),
+        "H13": ("B", lambda coords, bfactors, cutoff: H13_3N_anm_hessian(coords, cutoff=cutoff)),
+        "H14": ("A", lambda coords, bfactors, cutoff: H14_anm_pinv_trace(coords, cutoff=cutoff)),
+        "H_new": ("A", lambda coords, bfactors, cutoff: build_H_new(coords, bfactors, cutoff=cutoff)),
+        "build_H10": ("A", lambda coords, bfactors, cutoff: build_H10(coords, bfactors, cutoff=cutoff)),
+    }
+
+
+def _transport_participation_ratio(p) -> float:
+    """PR/N of an occupation vector -- REVIEW-2026-07-13c's own transport
+    diagnostic (Sec.1's disorder-sweep table), reused here rather than
+    inventing a second one. 1.0 = fully delocalised (uniform over all N
+    residues); ~1/N = fully localised (trapped at the seed)."""
+    p = np.asarray(p, dtype=float)
+    n = len(p)
+    ssq = float(np.sum(p ** 2))
+    return 1.0 / (n * ssq) if ssq > 0 else float("nan")
+
+
+def operator_sweep(
+    coords: np.ndarray,
+    bfactors: np.ndarray,
+    source,
+    pocket_label: np.ndarray,
+    floor_scores,
+    cutoff: float = 10.0,
+    operators=None,
+    propagators=("ctqw", "ground_state"),
+    t_max: float = 15.0,
+    n_steps: int = 500,
+) -> list:
+    """Score every named operator, through every named propagator, against
+    `pocket_label` and TASK-0094's proximity floor. Tier-1 (descriptive)
+    only -- no `frozen_context`, nothing is being selected (TASK-0100
+    Sec.2's own line: "pure measurement... `leave_one_protein_out` is not
+    required").
+
+    `operators`: iterable of registry names, or `None` for all 16.
+    `propagators`: iterable of `{"ctqw", "ground_state"}`.
+
+    An individual cell's failure (e.g. `H13`'s 3N x 3N shape, incompatible
+    with residue-indexed scoring -- checked explicitly below, not left to
+    silently mis-index) is caught and recorded as its own error row; it
+    does not abort the rest of the sweep (this task's own Acceptance
+    Scenario).
+
+    Returns a list of row-dicts: `operator`, `tier` ("A"/"B"), `propagator`,
+    `auc`, `floor_cleared` (bool, via `diagnostics.classify_failure` --
+    reuses the existing chance-then-floor precedence, not a new
+    comparison), `diagnosis`, `transport_pr` (participation ratio / N,
+    REVIEW-2026-07-13c's transport diagnostic), `apo_holo_consistency`
+    (always `None`/N/A here -- TASK-0092 not yet landed, per this task's
+    own Intent Contract), `error` (`None` on success).
+    """
+    from .diagnostics import NO_FAILURE_DETECTED, classify_failure
+    from .metrics import auc as _auc_fn
+    from .propagators import ground_state_relaxation as _gsr_fn
+    from .propagators import time_averaged_ctqw as _ctqw_fn
+
+    propagator_fns = {
+        "ctqw": lambda H, source_: _ctqw_fn(H, t_max, source=source_, n_steps=n_steps),
+        "ground_state": lambda H, source_: _gsr_fn(H, t_max, source=source_),
+    }
+
+    registry = _operator_registry()
+    op_names = list(operators) if operators is not None else list(registry)
+    prop_names = list(propagators)
+    n_residues = len(coords)
+
+    rows = []
+    for op_name in op_names:
+        if op_name not in registry:
+            for prop_name in prop_names:
+                rows.append({
+                    "operator": op_name, "tier": None, "propagator": prop_name,
+                    "auc": None, "floor_cleared": None, "diagnosis": None,
+                    "transport_pr": None, "apo_holo_consistency": None,
+                    "error": f"unknown operator {op_name!r}",
+                })
+            continue
+
+        tier, build_fn = registry[op_name]
+        try:
+            H = build_fn(coords, bfactors, cutoff)
+            if H.shape[0] != n_residues or H.shape[1] != n_residues:
+                raise ValueError(
+                    f"{op_name} returned a {H.shape} operator, incompatible with "
+                    f"{n_residues} residues -- likely a 3N-dimensional Hessian "
+                    "(the H13 family): cannot be indexed by residue without a "
+                    "reduction this task does not invent (out of scope, harness "
+                    "not new physics)"
+                )
+        except Exception as exc:
+            for prop_name in prop_names:
+                rows.append({
+                    "operator": op_name, "tier": tier, "propagator": prop_name,
+                    "auc": None, "floor_cleared": None, "diagnosis": None,
+                    "transport_pr": None, "apo_holo_consistency": None,
+                    "error": f"{type(exc).__name__}: {exc}",
+                })
+            continue
+
+        for prop_name in prop_names:
+            try:
+                if prop_name not in propagator_fns:
+                    raise ValueError(f"unknown propagator {prop_name!r}")
+                p = propagator_fns[prop_name](H, source)
+                auc_val = float(_auc_fn(p, pocket_label))
+                diagnosis = classify_failure(p, pocket_label, floor_scores=floor_scores)
+                rows.append({
+                    "operator": op_name, "tier": tier, "propagator": prop_name,
+                    "auc": auc_val, "floor_cleared": diagnosis == NO_FAILURE_DETECTED,
+                    "diagnosis": diagnosis,
+                    "transport_pr": _transport_participation_ratio(p),
+                    "apo_holo_consistency": None, "error": None,
+                })
+            except Exception as exc:
+                rows.append({
+                    "operator": op_name, "tier": tier, "propagator": prop_name,
+                    "auc": None, "floor_cleared": None, "diagnosis": None,
+                    "transport_pr": None, "apo_holo_consistency": None,
+                    "error": f"{type(exc).__name__}: {exc}",
+                })
+    return rows

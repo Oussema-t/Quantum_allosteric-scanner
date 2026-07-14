@@ -27,9 +27,11 @@ from allostery.analysis import (  # noqa: E402
     benchmark,
     dephasing_sweep,
     gnm_cutoff_weight_sweep,
+    operator_sweep,
     quantum_vs_classical,
     spectral_enrichment,
 )
+from allostery.baselines import degree_centrality, euclid_from_seed_centroid, hop_from_seed  # noqa: E402
 from allostery.report import verdict_template  # noqa: E402
 from allostery.hamiltonians import (  # noqa: E402
     H2_combinatorial_laplacian,
@@ -226,6 +228,125 @@ class TestGnmCutoffWeightSweep:
         )
         for pack in result.values():
             assert np.isfinite(pack["AUC"])
+
+
+# ---------------------------------------------------------------------------
+# operator_sweep (TASK-0101)
+# ---------------------------------------------------------------------------
+
+class TestOperatorSweep:
+    FLOOR_SOURCE = 0
+
+    @classmethod
+    def _floor_scores(cls, cutoff=10.0):
+        return [
+            degree_centrality(COORDS, cutoff=cutoff),
+            euclid_from_seed_centroid(COORDS, cls.FLOOR_SOURCE),
+            hop_from_seed(COORDS, cls.FLOOR_SOURCE, cutoff=cutoff),
+        ]
+
+    def test_default_sweep_covers_all_16_operators_x_2_propagators(self):
+        rows = operator_sweep(
+            COORDS, BFACTORS, self.FLOOR_SOURCE, LABELS, self._floor_scores(),
+            cutoff=10.0, t_max=5.0, n_steps=50,
+        )
+        assert len(rows) == 32
+        operators_seen = {r["operator"] for r in rows}
+        assert operators_seen == {
+            "H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H10",
+            "H11", "H12", "H13", "H14", "H_new", "build_H10",
+        }
+        propagators_seen = {r["propagator"] for r in rows}
+        assert propagators_seen == {"ctqw", "ground_state"}
+
+    def test_tier_a_operators_are_exactly_h10_h14_hnew_buildh10(self):
+        rows = operator_sweep(
+            COORDS, BFACTORS, self.FLOOR_SOURCE, LABELS, self._floor_scores(),
+            cutoff=10.0, t_max=5.0, n_steps=50,
+        )
+        tier_a = {r["operator"] for r in rows if r["tier"] == "A"}
+        tier_b = {r["operator"] for r in rows if r["tier"] == "B"}
+        assert tier_a == {"H10", "H14", "H_new", "build_H10"}
+        assert tier_b == {"H1", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9", "H11", "H12", "H13"}
+
+    def test_h13_shape_mismatch_is_caught_not_raised(self):
+        """H13 returns a 3N x 3N Hessian -- must be recorded as an error
+        row for both propagators, must not crash the whole sweep (this
+        task's own Acceptance Scenario)."""
+        rows = operator_sweep(
+            COORDS, BFACTORS, self.FLOOR_SOURCE, LABELS, self._floor_scores(),
+            cutoff=10.0, t_max=5.0, n_steps=50,
+        )
+        h13_rows = [r for r in rows if r["operator"] == "H13"]
+        assert len(h13_rows) == 2
+        for r in h13_rows:
+            assert r["error"] is not None
+            assert r["auc"] is None
+        # every other operator still produced a real result
+        non_h13 = [r for r in rows if r["operator"] != "H13"]
+        assert all(r["error"] is None for r in non_h13)
+
+    def test_h10_and_build_h10_agree_exactly(self):
+        """build_H10 is a convenience alias for H10_disorder_suppressed --
+        registered as a separate row deliberately (TASK-0101's own 16-name
+        enumeration), so this is a free consistency check that the alias
+        is faithful."""
+        rows = operator_sweep(
+            COORDS, BFACTORS, self.FLOOR_SOURCE, LABELS, self._floor_scores(),
+            cutoff=10.0, operators=["H10", "build_H10"], t_max=5.0, n_steps=50,
+        )
+        by_key = {(r["operator"], r["propagator"]): r["auc"] for r in rows}
+        assert by_key[("H10", "ctqw")] == pytest.approx(by_key[("build_H10", "ctqw")])
+        assert by_key[("H10", "ground_state")] == pytest.approx(by_key[("build_H10", "ground_state")])
+
+    def test_operators_filter_restricts_the_sweep(self):
+        rows = operator_sweep(
+            COORDS, BFACTORS, self.FLOOR_SOURCE, LABELS, self._floor_scores(),
+            cutoff=10.0, operators=["H_new"], propagators=["ctqw"], t_max=5.0, n_steps=50,
+        )
+        assert len(rows) == 1
+        assert rows[0]["operator"] == "H_new"
+        assert rows[0]["propagator"] == "ctqw"
+
+    def test_unknown_operator_name_is_an_error_row_not_a_crash(self):
+        rows = operator_sweep(
+            COORDS, BFACTORS, self.FLOOR_SOURCE, LABELS, self._floor_scores(),
+            cutoff=10.0, operators=["NOT_A_REAL_OPERATOR"], t_max=5.0, n_steps=50,
+        )
+        assert len(rows) == 2  # one per propagator
+        assert all(r["error"] is not None for r in rows)
+
+    def test_floor_cleared_reuses_classify_failure_precedence(self):
+        """A result that beats chance but not the floor must not be
+        marked floor_cleared -- reuses diagnostics.classify_failure,
+        does not invent a second comparison."""
+        rows = operator_sweep(
+            COORDS, BFACTORS, self.FLOOR_SOURCE, LABELS, self._floor_scores(),
+            cutoff=10.0, t_max=5.0, n_steps=50,
+        )
+        for r in rows:
+            if r["error"] is not None:
+                continue
+            if r["floor_cleared"]:
+                assert r["diagnosis"] == "NO_FAILURE_DETECTED"
+            else:
+                assert r["diagnosis"] != "NO_FAILURE_DETECTED"
+
+    def test_transport_pr_is_bounded_in_unit_interval(self):
+        rows = operator_sweep(
+            COORDS, BFACTORS, self.FLOOR_SOURCE, LABELS, self._floor_scores(),
+            cutoff=10.0, operators=["H2", "H_new"], t_max=5.0, n_steps=50,
+        )
+        for r in rows:
+            assert r["error"] is None
+            assert 0.0 < r["transport_pr"] <= 1.0 + 1e-9
+
+    def test_apo_holo_consistency_is_always_none_pending_task_0092(self):
+        rows = operator_sweep(
+            COORDS, BFACTORS, self.FLOOR_SOURCE, LABELS, self._floor_scores(),
+            cutoff=10.0, operators=["H_new"], t_max=5.0, n_steps=50,
+        )
+        assert all(r["apo_holo_consistency"] is None for r in rows)
 
 
 # ---------------------------------------------------------------------------

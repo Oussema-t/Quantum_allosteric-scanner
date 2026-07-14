@@ -9,10 +9,10 @@
   operators that measure *coupling* (communication from the active site) from
   operators that measure *well depth* (a structural prior) when the two cues
   are forced to disagree.
-- Status: TODO
+- Status: Done
 - Owner: Implementer
-- Claimed By: —
-- Claimed At: —
+- Claimed By: Implementer B (this thread)
+- Claimed At: 2026-07-13 23:10
 - Source: `REVIEW-2026-07-13b` (Reviewer Opus thread), §7 Tier 1, item **T-A**
   — "do immediately, unblocks everything." Numbering assigned by this
   (Architect/Planner) thread per the review's own instruction.
@@ -72,13 +72,13 @@ None
 
 ## TODO
 
-- [ ] Implement the dumbbell network construction (synthetic, seeded).
-- [ ] Implement the 4-cell matrix (C1-C4) with well/coupling varied
+- [x] Implement the dumbbell network construction (synthetic, seeded).
+- [x] Implement the 4-cell matrix (C1-C4) with well/coupling varied
       independently.
-- [ ] Assert `ground_state_relaxation` follows the well; `ctqw`/CTQW-family
+- [x] Assert `ground_state_relaxation` follows the well; `ctqw`/CTQW-family
       follows the coupling.
-- [ ] Run across ≥5 seeds, report mean AUC per cell per operator.
-- [ ] Register this as the reusable negative-control harness other
+- [x] Run across ≥5 seeds, report mean AUC per cell per operator.
+- [x] Register this as the reusable negative-control harness other
       operator falsification tasks (T-D, T-E) will reuse — don't let a
       second copy of the dumbbell construction get written independently.
 
@@ -96,4 +96,47 @@ None
 
 ## Done
 
-(not yet)
+- New permanent module: `__WORK_IN_PROGRESS__/tests/test_dumbbell_negative_control.py`.
+  Public, reusable `build_dumbbell_network(well_lobe, strong_lobe, *,
+  well_depth=5.0, seed=0)` and `auc_to_drug(H, propagator, t=20.0)` —
+  future falsification tasks (T-D `mode_coparticipation`, T-E register
+  sweep) import these directly, not a second copy.
+- Construction verified empirically before locking in assertions (per
+  this session's own established practice — nothing hardcoded from the
+  review without re-derivation):
+  - **Found and fixed a real bug in the first prototype**: intra-lobe
+    edges and bridge anchors were fully deterministic (a bare clique,
+    fixed anchor node 0), so "averaging over 5 seeds" silently averaged
+    five identical numbers. Fixed by randomizing intra-lobe edge weights
+    (`uniform(0.7, 1.3)`) and each lobe's bridge-anchor node per seed.
+    Regression-guarded directly:
+    `TestBuildDumbbellNetwork::test_seeds_actually_vary_the_network`.
+  - `well_depth=5.0` chosen empirically, not guessed: swept {3, 5, 8} and
+    confirmed the C2/C3 double dissociation is robust across all three
+    (0.000/1.000 and 1.000/0.000 respectively, exactly). C1 (the review's
+    own "uninformative" cell) showed non-monotonic CTQW sensitivity to
+    well depth (0.163 -> 0.104 -> 0.758) — a real, resonance-like
+    artifact of coherent dynamics interacting with a deep trap, not a
+    construction bug; consistent with the review's own framing that C1
+    cannot discriminate the confound, so it is asserted only loosely.
+- **Reproduced the review's decisive double dissociation cleanly**:
+  - C2 (well=DECOY, strong coupling=DRUG): GSR mean AUC(->DRUG) = 0.000,
+    CTQW mean AUC(->DRUG) = 1.000 (5 seeds).
+  - C3 (well=DRUG, strong coupling=DECOY): GSR mean AUC(->DRUG) = 1.000,
+    CTQW mean AUC(->DRUG) = 0.000 (5 seeds).
+  - C4 (no well, equal coupling): both propagators land near chance once
+    real seed-to-seed variance exists (GSR 0.565, CTQW 0.614 — the review
+    itself only claims "all ≈ chance," not a precise value; asserted with
+    a loose `|AUC-0.5|<0.3` bound for exactly that reason).
+- `metrics.auc` (this repo's own wrapper) used for scoring, not raw
+  `sklearn.roc_auc_score`, matching this codebase's "reuse, don't
+  reinvent" convention.
+- 10 tests, all passing. `ground_state_relaxation`'s `_warn_if_indefinite`
+  `UserWarning` fires as expected on every well-bearing cell (confirms
+  the test is genuinely exercising the indefinite-H path the review's
+  finding is about, not a problem to silence).
+- Full local run: `python3 .ai/tools/pytest_local.py wip-all --json` →
+  507 passed, 1 xpassed (pre-existing, unrelated), 0 failed.
+- **Staging/commit deliberately skipped** — explicit user instruction
+  this session ("Do NOT git add or git commit anything — leave the stage
+  empty. I'm orchestrating which package ships when").
