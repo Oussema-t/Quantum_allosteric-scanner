@@ -11,7 +11,7 @@
   (anti-correlated) and a pure proximity baseline scores exactly 0. This
   task is the **real-data gate** the review itself requires before that
   finding changes any claim.
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Claimed By: —
 - Claimed At: —
@@ -108,4 +108,68 @@ None
 
 ## Done
 
-(not yet)
+- 2026-07-14, Implementer A. Added `__WORK_IN_PROGRESS__/scripts/
+  ctqw_trapping_reproduction.py`: `run_bcr_abl1_reproduction(lam_reduced=
+  0.25)` fetches real BCR_ABL1 (1OPL/5MO4), scores `time_averaged_ctqw`
+  through `H10_disorder_suppressed`, `H2_combinatorial_laplacian`,
+  `H_new` at reduced λ, and `H_new` default, against the real labeled
+  pocket, checked against TASK-0094's proximity floor, plus the review's
+  own transport diagnostic (`metrics.ipr` as participation-ratio/N — the
+  same quantity `select.py::focusing`'s own docstring already establishes
+  as valid on an L1-normalised occupation vector, reused rather than a
+  new formula invented — and occupation-weighted mean hop-from-seed, via
+  `-baselines.hop_from_seed`).
+- `H_new` at "λ=0.25" implemented as a uniform external scale on
+  `build_H_new`'s own five default per-term coefficients (`lam_B=1.0,
+  lam_T=2.0, lam_R=1.0, lam_C=0.5, lam_M=0.5` → all ×0.25), matching the
+  review's own `H(λ) = L_norm + λ·ΣV` construction (one multiplier on the
+  combined potential block, not a re-tuning of individual terms) —
+  verified by test, not just described (`quarter - bare == 0.25*(full -
+  bare)` exactly).
+- **Seed-convention finding (real, not anticipated when this task was
+  filed):** first attempt used the full active-site residue set as
+  source (defensible on its own, and `time_averaged_ctqw` supports
+  multi-index natively) — this reproduced the trapping *mechanism*
+  (`H_new` markedly more localized than `H10`/`H2`) but gave a
+  **completely different AUC picture** from `RESULTS.md`'s existing
+  0.525/0.558 numbers, including a sign flip (`H_new` scoring *highest*
+  of all four operators, 0.567). Switched to the single, sorted-first
+  active-site index — `run_challenge.py`'s own established convention,
+  the exact seeding those existing numbers were computed with — and
+  confirmed this reproduces `AUC_apo_Hnew_default`=0.525 and
+  `AUC_apo_H10_baseline`=0.558 **exactly**, byte-for-byte, before trusting
+  any of the new numbers. This is the correct, comparable answer to what
+  this task asks; the multi-index run is reported as a separate,
+  real finding about seed-definition sensitivity, not discarded.
+- **Real-data result (full detail in `RESULTS.md`, BCR_ABL1 section,
+  dated 2026-07-14):**
+  - Trapping mechanism reproduces cleanly: `H_new`'s PR/N (0.299) is
+    5-6x `H10`/`H2`'s (0.056/0.054); `H_new`'s ⟨hop⟩ (0.89) is a quarter
+    of theirs (3.96/4.46) — confirmed in **both** seed conventions
+    (direction unchanged, magnitudes differ).
+  - The predicted AUC consequence reproduces **only for `H10`**
+    (0.558 > 0.525, the exact existing gap, now confirmed real not
+    noise) — **not** for `H2` (0.389, lower) or reduced-λ `H_new`
+    (0.463, lower — reducing the trapping potential made this operator
+    *worse* here, the opposite of the review's synthetic prediction).
+  - **None of the four operators clear the real proximity floor
+    (0.565).** `H10`'s edge over `H_new` is real but not yet
+    distinguishable from a proximity-driven result.
+  - Verdict: **mixed, reported as such** — the mechanism (trapping) is
+    robust and real on this target; its consequence for pocket-finding
+    is not uniform across operators and is sensitive to a
+    seed-definition choice (`INVARIANCE_PROTOCOL.md`: "which residue(s)
+    count as the seed" was an implicit, previously-unexamined GAUGE
+    choice — this task is the first place it visibly flipped a sign).
+    Per this task's own Constraints ("report the result whichever way it
+    comes out"), this is not softened toward either the review's
+    prediction or a clean falsification.
+- Tests: `test_ctqw_trapping_reproduction.py` (6 cases) — `λ=1` exactly
+  matches default `build_H_new`; `λ=0` gives the bare Laplacian; the
+  λ-scaling is verified linear on the potential block, not just at the
+  endpoints; transport-diagnostic edge cases (fully localized, uniform,
+  a 2-node case with a known 1-hop answer).
+- Validation: `.venv/bin/python3 -m pytest -q __WORK_IN_PROGRESS__/tests/
+  test_ctqw_trapping_reproduction.py` — 6 passed. Real run output saved
+  to `__WORK_IN_PROGRESS__/results_task0106/BCR_ABL1/reproduction.json`
+  (the final, single-index-seed canonical run).

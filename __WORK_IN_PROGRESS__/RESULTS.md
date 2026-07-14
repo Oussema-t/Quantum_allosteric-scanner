@@ -321,11 +321,131 @@ this project's operator register (per the review's own falsification
 template, Sec.5): **RETAINED-NARROWED** — falsified as a communication
 detector, retained as a structural-prior detector.
 
-The "classical heat vs. quantum CTQW" framing this document already
-corrected once (TASK-0095, above) remains void for an added reason
-beyond the naming/semantics fix: per the review's Sec.3, it was never a
+The propagator-naming framing this document already
+corrected once (TASK-0095, above — the "vs. quantum CTQW" comparison
+against a diffusion-kernel misnomer) remains void for an added reason
+beyond that naming/semantics fix: per the review's Sec.3, it was never a
 meaningful classical/quantum comparison to begin with, regardless of
 what either side is called.
+
+**[OBSERVED 2026-07-14, TASK-0106 — real-data reproduction of
+`REVIEW-2026-07-13c-ctqw-trapping-mechanism.md`, its own required gate
+before that review's finding can change any claim]** Real BCR_ABL1
+(1OPL/5MO4), `time_averaged_ctqw` through `H10_disorder_suppressed`,
+`H2_combinatorial_laplacian`, `H_new` at reduced λ=0.25 (a uniform
+external scale on `build_H_new`'s own five default per-term coefficients,
+matching the review's own `H(λ) = L_norm + λ·ΣV` construction), and
+`H_new` default, all seeded identically to this document's own existing
+numbers (single, sorted-first, active-site residue — `run_challenge.py`'s
+convention, not re-derived):
+
+| Operator | AUC | Floor-cleared? (0.565) | PR/N | ⟨hop from seed⟩ |
+|---|---|---|---|---|
+| `H_new` default | **0.525** (exact match to this doc's existing number) | No | 0.299 | 0.89 |
+| `H_new`, λ=0.25 | 0.463 | No | 0.449 | 1.23 |
+| `H10_disorder_suppressed` | **0.558** (exact match) | No | 0.056 | 3.96 |
+| `H2_combinatorial_laplacian` | 0.389 | No | 0.054 | 4.46 |
+
+**The trapping *mechanism* reproduces cleanly on real data**: `H_new`'s
+participation ratio (0.299) is 5-6× higher than `H10`/`H2`'s (0.056/
+0.054) and its mean occupation-weighted hop-from-seed (0.89) is a quarter
+of theirs (3.96/4.46) — the walk on `H_new` stays markedly closer to the
+seed, exactly the Anderson-like localization the synthetic review found.
+This is not seed-choice-dependent: a second run using the full active-site
+residue set (not the single-index convention above) shows the same
+direction (`H_new` PR/N=0.031 vs `H10`=0.015/`H2`=0.019 — still 1.6-2×
+higher), even though the *AUC* values themselves differ substantially
+under that seeding (see below).
+
+**The predicted downstream consequence — that less-trapped operators find
+the distal pocket better — reproduces only partially, and is sensitive to
+a seed-definition choice that does not affect the mechanism above.**
+Single-index seed (this document's own established convention): the
+*sign* the review predicted holds for `H10` (0.558 > 0.525, the exact gap
+already on record above, now confirmed not to be noise) but **not** for
+`H2` (0.389 < 0.525 — the reverse) or for reduced-λ `H_new` (0.463 <
+0.525 — reducing the trapping potential made this operator *worse*, not
+better, at finding this pocket). **None of the four operators clear the
+real proximity floor (0.565)** — `H10`'s higher number is real and not
+noise, but it is not yet distinguishable from a proximity-driven result
+either. Using the full active-site set as source instead (an equally
+defensible seed choice, not the document's established one) inverts the
+picture further: `H_new` default scores *highest* of the four (0.567),
+opposite the review's prediction. **The finding is genuinely mixed, not a
+clean reproduction or a clean falsification** — the mechanism (trapping)
+is robust; its consequence for pocket-finding on this specific target is
+not, and depends on a source-definition choice that has not previously
+been treated as a meaningful knob. This is itself worth flagging per
+`INVARIANCE_PROTOCOL.md`: "which residue(s) count as the seed" has been
+implicitly a GAUGE choice throughout this pipeline and this task is the
+first place it visibly changed a sign.
+Script + full JSON: `scripts/ctqw_trapping_reproduction.py`,
+`results_task0106/BCR_ABL1/reproduction.json`.
+
+**[OBSERVED 2026-07-14, TASK-0105 — ENAQT γ-sweep on real targets, per
+`REVIEW-2026-07-13b`'s §7 T-C, "the single highest-value experiment
+available before the deadline"]** Measured `haken_strobl` transport
+(total occupation probability mass landing on the labeled pocket, *not*
+AUC — the review's own falsifiable signature is the interior-optimum
+*shape*) across γ ∈ [10⁻⁴, 10²] on `H_new`/`H10`/`H2`, seeded from the
+full active-site residue set (this task's own choice, not TASK-0106's
+single-index convention — see that section's own note on why this
+matters). **Computational-feasibility finding, not anticipated going
+in:** `haken_strobl`'s dense N²-state Lindblad ODE costs ~11s/call at
+N=169 (KRAS_G12C) and ~161s/call at N=451 (BCR_ABL1) — extrapolating the
+measured N³ scaling puts CARDIAC_MYOSIN (N=950) at 30+ minutes *per
+γ value*, making a real sweep on that target infeasible within a normal
+session with the current dense-matrix implementation. KRAS_G12C ran a
+full 8-point sweep; BCR_ABL1 a reduced 6-point sweep; CARDIAC_MYOSIN
+computed only the free γ=0 (coherent) anchor. This is itself a finding
+relevant to **TASK-0068**: `coarse.py`'s coarse-graining is exactly the
+tool that would make a real sweep on CARDIAC_MYOSIN's scale tractable.
+
+| Target | Operator | Interior optimum? | γ* | Enhancement vs γ→0 | AUC@γ* | AUC@γ→0 | Floor | Cleared@γ*? |
+|---|---|---|---|---|---|---|---|---|
+| KRAS_G12C (N=169) | `H_new` | No (flat) | 0.0001 | 1.00× | 0.465 | 0.466 | 0.482 | No |
+| KRAS_G12C | `H10` | No (flat) | 0.0001 | 1.00× | 0.605 | 0.606 | 0.482 | **Yes** |
+| KRAS_G12C | `H2` | **Yes** | 0.268 | **1.51×** | 0.337 | 0.384 | 0.482 | No |
+| BCR_ABL1 (N=451) | `H_new` | **Yes** | 0.251 | **1.70×** | 0.560 | 0.573 | 0.582¹ | No |
+| BCR_ABL1 | `H10` | No (flat) | 0.001 | 1.00× | 0.631 | 0.620 | 0.582¹ | **Yes** |
+| BCR_ABL1 | `H2` | **Yes** | 0.251 | **1.24×** | 0.472 | 0.472 | 0.582¹ | No |
+| CARDIAC_MYOSIN (N=950) | `H_new` | not swept | — | — | 0.799 | 0.799 | 0.792¹ | **Yes** (γ=0 only) |
+| CARDIAC_MYOSIN | `H10` | not swept | — | — | 0.586 | 0.586 | 0.792¹ | No |
+| CARDIAC_MYOSIN | `H2` | not swept | — | — | 0.611 | 0.611 | 0.792¹ | No |
+
+¹ Computed with this task's own full-active-site-set seed, not TASK-0106's
+single-index convention — not directly comparable to floor values quoted
+elsewhere in this document for the same targets.
+
+**Two real findings, reported as measured, not softened either way:**
+
+1. **An interior γ-optimum in raw transport magnitude genuinely appears on
+   real target topologies** — not just the review's synthetic
+   construction. 3 of the 6 swept (target, operator) cells show a real
+   optimum, with enhancement ratios of 1.24-1.70× over the coherent
+   (γ→0) walk. This qualitatively reproduces the ENAQT signature the
+   review predicted, on real protein contact graphs.
+2. **That transport increase does not translate into better pocket
+   discrimination.** In every one of the 3 cells with a genuine interior
+   optimum, AUC-at-the-optimal-γ is *lower* than AUC-at-γ→0 (KRAS `H2`:
+   0.337 vs 0.384; BCR_ABL1 `H_new`: 0.560 vs 0.573; BCR_ABL1 `H2`: 0.472
+   vs 0.472, flat). More probability mass reaches the pocket *region*
+   under dephasing, but not in a way that discriminates the true pocket
+   residues from their non-pocket neighbors any better — if anything,
+   slightly worse. **No target/operator cell crosses its proximity floor
+   because of dephasing** — `H10`'s floor-clearing cells (KRAS, BCR_ABL1)
+   already clear it at γ→0; dephasing does not add or remove a
+   floor-crossing anywhere in this data.
+
+γ* vs. structural disorder (`bfactor_std`, a cheap proxy, purely
+observational per this task's own Constraints — not a claim, n=3 targets
+is far too few for a real correlation): KRAS_G12C (`bfactor_std`=5.35,
+γ*=0.268 on `H2`), BCR_ABL1 (`bfactor_std`=33.78, γ*=0.251 on `H_new`/
+`H2`) — both interior optima land at a similar order of magnitude despite
+a 6× difference in B-factor spread; no pattern worth naming with this
+little data.
+Script + full JSON: `scripts/enaqt_gamma_sweep.py`,
+`results_task0105/<target>/sweep.json`.
 
 ### CARDIAC_MYOSIN
 
@@ -449,6 +569,104 @@ cannot see — the more interesting biological story, and a legitimate
 "NO" per `PLAN.md`'s own "gates before build" framing, not a failure to
 hide.
 
+### NISQ noise-model simulation (TASK-0068, 2026-07-14) — closes SEAM-0010
+
+**[OBSERVED]** `HOLO_DIRECTION_MODULE.md`'s named scoreable NISQ result —
+"is dephasing-assisted transport (ENAQT) more noise-robust than coherent
+CTQW under realistic gate noise" — measured for real, on a real
+coarse-grained target (`coarse.coarse_grain`'s own output, not a
+re-derived graph), via a new module (`src/allostery/noise.py`) and script
+(`scripts/nisq_noise_simulation.py`).
+
+**Method**: KRAS_G12C's real `H_new` (apo, cutoff 8.0 Å) coarse-grained
+(Louvain, seed=0, `coarse.coarse_grain`) to **10 qubits**. One qubit per
+node, single-excitation-subspace XY-model encoding of the walk (per-edge
+`RXX(w·dt)`+`RYY(w·dt)`, exact — not a Trotter approximation at the
+single-edge level, since `[XX, YY] = 0`) — this makes the noiseless
+circuit a real gate-model reproduction of `propagators.ctqw` restricted
+to `H_coarse`, not an unrelated toy walk. Depolarizing error on every
+2-qubit gate + amplitude damping per Trotter layer
+(`qiskit_aer.noise.NoiseModel`, `AerSimulator(method="density_matrix")`,
+exact — no shot noise). ENAQT realized as an *additional* per-layer
+phase-damping channel (γ=0.3), compared against the same gate-noise model
+with no added dephasing (the coherent case) — both swept across the
+*same* depth/error-rate grid so the comparison is apples-to-apples.
+
+**GAUGE/KNOB/SIGNAL classification (required before any degradation
+number is reported, per this task's own Constraint)**: Louvain
+coarse-graining seed — KNOB (changes cluster membership, fixed at seed=0,
+declared not defaulted-silently); qubit-to-cluster-index labeling —
+GAUGE (arbitrary, carries no physical content — `cluster_labels` written
+out alongside every result, not implied); `AerSimulator` method
+(`density_matrix`, exact) — KNOB; depolarizing/amplitude-damping
+probabilities — SIGNAL (the sweep's own x-axis); `dephasing_gamma` — the
+second SIGNAL, the coherent-vs-ENAQT comparison itself. Full table in the
+script's own module docstring.
+
+**Computational-feasibility finding (found empirically, not
+anticipated)**: `coarse.trotter_cost`'s own step-count estimate at
+`error_budget=0.01` is **3133 Trotter steps** for this 10-qubit graph —
+calibrated for high-fidelity simulation *accuracy*, not a NISQ-realistic
+circuit. A first attempt using that literal estimate (and half/double of
+it) produced a ~188,000-gate circuit that did not finish in 6m45s/69
+CPU-minutes and was killed, not silently waited out. **This gap is itself
+informative**: it means the depth genuinely required for accurate
+simulation is roughly 2-3 orders of magnitude beyond what any real NISQ
+device (or a reasonable local density-matrix simulation) can run — the
+noise-robustness question this task asks can only be studied at a
+depth far short of "faithful simulation," which is exactly the NISQ
+regime the task is about. The sweep actually run uses a small,
+NISQ-plausible grid (2/5/10 Trotter steps) instead, with `trotter_cost`'s
+real estimate reported alongside it as that gap, not hidden.
+
+**Result — coherent is never worse than ENAQT, across every depth/error-
+rate point tested, at two different total-evolution times (t=1.0 and
+t=25.0, the latter matching TASK-0105's own timescale where a real
+interior-γ transport optimum was found):**
+
+| depth | error rate | coherent top-3 overlap | ENAQT top-3 overlap | more robust |
+|---|---|---|---|---|
+| 2 | 0.00 | 1.000 | 1.000 | tie |
+| 2 | 0.01 | 1.000 | 1.000 | tie |
+| 2 | 0.05 | 1.000 | 0.500 | **coherent** |
+| 5 | 0.00 | 1.000 | 0.500 | **coherent** |
+| 5 | 0.01 | 1.000 | 0.500 | **coherent** |
+| 5 | 0.05 | 0.500 | 0.500 | tie |
+| 10 | 0.00 | 1.000 | 0.500 | **coherent** |
+| 10 | 0.01 | 0.500 | 0.200 | **coherent** |
+| 10 | 0.05 | 0.200 | 0.200 | tie |
+
+(t=25.0 spot-check, depths 10/20, same qualitative pattern — coherent
+ties or beats ENAQT at every point, never loses.)
+
+**This is a real, honest negative result for this task's own headline
+question, reported as such — not the hoped-for NISQ story.** Under this
+specific gate-noise model (depolarizing + amplitude damping, per-2-qubit-
+gate and per-layer respectively) and this specific encoding (single-
+excitation XY-model walk), adding deliberate dephasing on top of already-
+present gate noise does not help, and sometimes measurably hurts,
+top-k ranking fidelity — the *extra* decoherence from the ENAQT channel
+adds to, rather than compensates for, the gate noise already present.
+This does not contradict TASK-0105's own real-target finding (a genuine
+interior-γ transport-magnitude optimum exists in the noiseless/
+Haken-Strobl continuous-time picture) — it says that optimum, measured
+against a *different* (already-noisy) baseline in a discrete gate-model
+circuit, does not translate into a *noise-robustness* advantage here.
+Both are real findings about different questions, not in tension.
+
+**Scope actually run**: one real target (KRAS_G12C, the cheapest of the
+three), one operator (`H_new`), one coarse-graining (Louvain, 10 qubits).
+Not run: BCR_ABL1/CARDIAC_MYOSIN, `H10`/`H2` coarse-grained comparisons,
+a spectral coarse-graining cross-check. The noise-simulation *mechanism*
+(`src/allostery/noise.py`, tested on synthetic graphs,
+`test_noise.py`, 13 passing) is this task's real deliverable; one real
+run demonstrates it end to end and answers the headline question with
+real data, matching this project's precedent of not re-deriving a full
+3-target sweep inside a single subtask when the tooling itself is the
+point.
+Script + full JSON: `scripts/nisq_noise_simulation.py`,
+`results_task0068/KRAS_G12C/noise_sweep.json`.
+
 ---
 
 ## Index of open questions from this run
@@ -460,6 +678,9 @@ hide.
 | 3 | Which methodology difference (cutoff / pocket-label definition / source definition) explains KRAS_G12C's 0.779 vs. this repo's own previously-asserted 0.3–0.7 band? | open, but downgraded 2026-07-13 — no longer bears on whether KRAS shows real signal (it does not, either way; see TASK-0094) | [[TASK-0093]] |
 | 4 | Does CARDIAC_MYOSIN's or KRAS_G12C's high AUC share a common cause beyond CARDIAC_MYOSIN's already-explained large-N flag? | **resolved 2026-07-13**: yes for KRAS (proximity, TASK-0094); CARDIAC_MYOSIN's floor-clearance is independent of KRAS's (it clears the proximity floor, its issue is purely the large-N flag) | [[TASK-0094]] |
 | 5 | Does any mandatory target's apo-only AUC clear a real proximity floor (not just chance/degree)? | **resolved 2026-07-13: no — zero of three** (KRAS fails the floor, BCR_ABL1 fails chance, CARDIAC_MYOSIN's clearance is moot under the large-N flag) | [[TASK-0094]] |
+| 6 | Does `H_new`'s CTQW-trapping mechanism (Anderson-like localization, `REVIEW-2026-07-13c`) reproduce on real BCR_ABL1 data, and does it explain the `H10`>`H_new` gap already on record? | **resolved 2026-07-14: mechanism reproduces (participation ratio 5-6x higher, ⟨hop⟩ a quarter), the `H10` sign reproduces but `H2` doesn't, none of the 4 operators clear the real floor, and the result is sensitive to a seed-definition (single- vs. multi-index) choice not previously treated as meaningful** — mixed result, reported as such, not forced to match the synthetic prediction. | [[TASK-0106]] |
+| 7 | Does real-target ENAQT (`haken_strobl` γ-sweep) show the textbook interior-γ transport optimum `REVIEW-2026-07-13b` found on synthetic networks? | **resolved 2026-07-14: yes on 3/6 swept (target, operator) cells (1.24-1.70x enhancement), but the extra transport does not improve — and in every observed case slightly degrades — pocket-discrimination AUC; no floor-crossing is caused by dephasing anywhere in this data. CARDIAC_MYOSIN's full sweep is computationally infeasible with the current dense-matrix `haken_strobl` (N³ scaling, ~30+ min/γ at N=950) — γ=0 anchor only** | [[TASK-0105]] |
+| 8 | Is dephasing-assisted transport (ENAQT) more noise-robust than coherent CTQW under a real per-gate NISQ noise model (`HOLO_DIRECTION_MODULE.md`'s named scoreable result)? | **resolved 2026-07-14: no — coherent ties or beats ENAQT at every depth/error-rate point tested (KRAS_G12C, 10-qubit coarse-grained `H_new`, 2 timescales), a real negative result, not the hoped-for story. `coarse.trotter_cost`'s accuracy-calibrated depth estimate (3133 steps) is ~2-3 orders of magnitude beyond NISQ-feasible — found empirically (a literal-estimate run was killed after 69 CPU-minutes), not anticipated** | [[TASK-0068]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

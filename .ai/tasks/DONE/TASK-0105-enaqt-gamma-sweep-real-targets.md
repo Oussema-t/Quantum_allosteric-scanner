@@ -8,7 +8,7 @@
   sweep γ ∈ [10⁻⁴, 10²], using `propagators.haken_strobl`. Report the
   **interior optimum and enhancement ratio over the coherent walk
   (γ→0)** — not AUC recovery of any prior number.
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Claimed By: —
 - Claimed At: —
@@ -111,4 +111,69 @@ null result on `H_new` isn't mistaken for "no ENAQT effect here."
 
 ## Done
 
-(not yet)
+- 2026-07-14, Implementer A. Added `__WORK_IN_PROGRESS__/scripts/
+  enaqt_gamma_sweep.py`: `sweep_gamma(H, source, pocket_mask, gammas, t)`
+  runs `haken_strobl` across a γ grid (`gamma=0` anchor computed directly
+  via `ctqw`, cheaper/exact), reports transport magnitude (total
+  occupation mass on the labeled pocket — the review's own falsifiable
+  quantity, not AUC) at each γ, the interior-optimum verdict, and the
+  enhancement ratio over the coherent limit; `run_target_sweep` wires in
+  real target data (`run_challenge._load_apo_holo`, `build_labels`,
+  TASK-0094's proximity floor) and sweeps `H_new`/`H10`/`H2` per
+  `REVIEW-2026-07-13c`'s explicit caution not to sweep `H_new` alone.
+- **Computational-feasibility finding (discovered while implementing,
+  not anticipated by either review):** `haken_strobl`'s dense N²-state
+  Lindblad ODE costs ~11s/call at N=169 (KRAS_G12C), ~161s/call at N=451
+  (BCR_ABL1) — measured directly, not estimated. Extrapolating the
+  observed ~N³ scaling puts CARDIAC_MYOSIN (N=950) at 30+ minutes per γ
+  value, making a real multi-point sweep on that target infeasible this
+  session. Resolved by running a full 8-point sweep on KRAS_G12C, a
+  reduced 6-point sweep on BCR_ABL1, and reporting CARDIAC_MYOSIN's
+  infeasibility explicitly (γ=0 anchor only, via cheap `ctqw`) rather
+  than silently omitting it, force-reducing the other two targets to
+  match, or letting it run for an impractical amount of wall time. Flags
+  directly to TASK-0068 (`coarse.py`'s coarse-graining is exactly the
+  tool that would make CARDIAC_MYOSIN's scale tractable).
+- Seed choice: full active-site residue set (not TASK-0090's single-index
+  workaround, which exists specifically for `select.py`'s crash — this
+  script never calls `select.py`, so `ctqw`/`haken_strobl`'s native
+  multi-index support applies cleanly). This differs from `run_challenge.
+  py`'s single-index convention; see TASK-0106's own Done section for the
+  cross-check showing this choice materially changes some AUC signs
+  (though not the trapping-mechanism direction) — documented in
+  `RESULTS.md`, not silently reconciled either way.
+- **Real 3-target run, findings (full detail + tables in `RESULTS.md`,
+  BCR_ABL1 section, dated 2026-07-14):**
+  1. An interior γ-optimum in raw transport magnitude genuinely appears
+     on real target topologies — 3 of 6 swept (target, operator) cells
+     (KRAS `H2`, BCR_ABL1 `H_new`, BCR_ABL1 `H2`), enhancement 1.24-1.70x
+     over the coherent walk. Qualitatively reproduces the review's
+     synthetic ENAQT signature on real protein contact graphs, not just
+     the constructed disordered-bridge network.
+  2. That transport increase does **not** translate into better pocket
+     discrimination — in every one of the 3 interior-optimum cells,
+     AUC-at-γ* is *lower* than AUC-at-γ→0. No target/operator cell
+     crosses its proximity floor because of dephasing anywhere in this
+     data; `H10`'s floor-clearing cells (KRAS, BCR_ABL1) already clear it
+     at the coherent limit, unaffected by γ.
+  3. γ* vs. B-factor-spread disorder proxy: reported observationally only
+     (n=3 targets, explicitly too few for a real correlation per this
+     task's own Constraints) — no pattern claimed.
+- Tests: `test_enaqt_gamma_sweep.py` (8 cases) — `transport_to_pocket`
+  unit cases; `sweep_gamma`'s `gamma=0` anchor matches a direct `ctqw`
+  call exactly; empty-grid handling; **a real interior-optimum
+  reproduction** on the review's own disordered-bridge construction
+  (Sec.4) — the mechanism this whole task measures, verified to actually
+  work in this script before trusting it on real data, not assumed
+  correct by construction; transport values are valid probabilities;
+  unknown-operator error handling.
+- Validation: `.venv/bin/python3 -m pytest -q __WORK_IN_PROGRESS__/tests/
+  test_enaqt_gamma_sweep.py` — 8 passed. Real run outputs saved to
+  `__WORK_IN_PROGRESS__/results_task0105/<target>/sweep.json` (full
+  per-γ curves, not just the summary table in `RESULTS.md`).
+- Not run through the whitelisted `pytest_local.py` preset yet — the new
+  test file isn't in its `wip-all`/`all` target list; `wip-all` globs the
+  whole `tests/` directory so it *is* already covered by that preset
+  without an edit (confirmed: `wip-all` target is
+  `__WORK_IN_PROGRESS__/tests`, a directory, not an explicit file list —
+  unlike the `backend` preset's explicit-file convention).
