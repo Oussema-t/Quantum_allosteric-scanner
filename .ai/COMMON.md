@@ -24,7 +24,7 @@ Central coordination hub for the repo-local agent scaffold.
 - memory policy: `.ai/memory/README.md`
 - addressed questions (per-role, lifecycle-foldered): `.ai/memory/questions/`
 - backend selection: `.ai/reference/BACKEND_SELECTION.md`
-- claim/lock tool (TASK-0024, TASK-0027, TASK-0028, TASK-0029): `.ai/tools/claim.py` — `claim`/`release`/`status`/`sync`/`move`/`commit-guard`/`stage`, see "Current Rules" below
+- claim/lock tool (TASK-0024, TASK-0027, TASK-0028, TASK-0029, TASK-0107): `.ai/tools/claim.py` — `claim`/`release`/`status`/`sync`/`move`/`resolve`/`commit-guard`/`stage`, see "Current Rules" below
 - command hygiene (TASK-0025): `.github/instructions/tooling/command-hygiene.instructions.md` — one command per call, no chains/pipes; `.claude/skills/command-hygiene/` is the applied procedure
 - roadmap / phase-gated plan: `.ai/tasks/PLANS/PLAN.md`
 - weekly timeline overlay: `.ai/tasks/PLANS/PLAN-01.07.26.md`
@@ -200,7 +200,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0104 | Re-frame BCR_ABL1 GSR=0.731 claim in RESULTS.md from "allosteric signal propagation" to "apo-computable structural prior" — number unchanged, claim corrected; from REVIEW-2026-07-13b T-B | Implementer | TODO | P0 | 2026-07-13 | — | — | `.ai/tasks/TODO/TASK-0104-reframe-gsr-bcr-abl1-claim.md` |
 | TASK-0105 | ENAQT gamma-sweep on real mandatory targets — interior-optimum transport measurement (not AUC recovery), reframes the killed dephasing question; from REVIEW-2026-07-13b T-C, "highest scientific upside in the repo" | Implementer | TODO | P0 | 2026-07-13 | — | — | `.ai/tasks/TODO/TASK-0105-enaqt-gamma-sweep-real-targets.md` |
 | TASK-0106 | Reproduce the CTQW-trapping finding (REVIEW-2026-07-13c) on real BCR_ABL1 data — H10/H2 vs H_new(lambda=0.25) vs H_new(default) distal-pocket AUC + transport diagnostic, checked against the proximity floor | Implementer | TODO | P0 | 2026-07-13 | — | — | `.ai/tasks/TODO/TASK-0106-ctqw-trapping-real-data-reproduction.md` |
-| TASK-9701 | scratch row for validating TASK-0107 resolve subcommand (will be removed) | Toolsmith | TODO | P9 | 2026-07-14 | — | — | `.ai/tasks/TODO/TASK-9701-scratch-resolve-repro.md` |
+| TASK-0107 | `claim.py resolve` — on-disk backend adapter for the catalogued `workflow.task.resolve` capability: explicit canonical resolution value (`RESOLUTION_VOCABULARY.md`), moves to DONE, stages task file + `COMMON.md` row by default, `--no-stage` opt-out via `git reset` | Toolsmith | Done | P2 | 2026-07-14 | Toolsmith (this thread) | 2026-07-14 19:32 | `.ai/tasks/DONE/TASK-0107-claim-resolve-subcommand.md` |
 
 ## Current Rules
 

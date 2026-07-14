@@ -425,6 +425,26 @@ def _parse_row(line):
     return cols
 
 
+def _apply_registry_row_update(lines, task_id, new_status, new_path):
+    # type: (object, str, str, str) -> object
+    """Pure per-row transform shared by `update_registry_row` (writes the
+    live working-tree file) and `_stage_registry_row_only` (applies the
+    same single-row edit to an arbitrary baseline, e.g. the index's
+    current blob, for surgical staging). Returns (new_lines, changed)."""
+    changed = False
+    new_lines = []
+    for line in lines:
+        cols = _parse_row(line)
+        if cols is not None and cols[0] == task_id:
+            if cols[3] != new_status or cols[8] != new_path:
+                cols[3] = new_status
+                cols[8] = new_path
+                line = "| " + " | ".join(cols) + " |\n"
+                changed = True
+        new_lines.append(line)
+    return new_lines, changed
+
+
 def update_registry_row(task_id, new_status, new_path):
     # type: (str, str, str) -> bool
     """Rewrite only the Status (index 3) and Path (index 8) cells for
@@ -440,23 +460,59 @@ def update_registry_row(task_id, new_status, new_path):
     with open(COMMON_MD, "r") as f:
         lines = f.readlines()
 
-    changed = False
-    new_lines = []
-    for line in lines:
-        cols = _parse_row(line)
-        if cols is not None and cols[0] == task_id:
-            if cols[3] != new_status or cols[8] != new_path:
-                cols[3] = new_status
-                cols[8] = new_path
-                line = "| " + " | ".join(cols) + " |\n"
-                changed = True
-        new_lines.append(line)
+    new_lines, changed = _apply_registry_row_update(lines, task_id, new_status, new_path)
 
     if changed:
         with _common_md_lock():
             with open(COMMON_MD, "w") as f:
                 f.writelines(new_lines)
     return changed
+
+
+def _stage_registry_row_only(task_id, new_status, new_path):
+    # type: (str, str, str) -> bool
+    """Stage *only* task_id's row change in .ai/COMMON.md, never the whole
+    file. A plain `git add .ai/COMMON.md` would sweep in any other
+    thread's unrelated unstaged edits sitting in that same shared file --
+    confirmed as a real failure mode during TASK-0107's own validation,
+    exactly the whole-file collision this scaffold's COMMON.md tooling
+    (TASK-0017/0024) exists to avoid. Builds a blob from the index's
+    current COMMON.md content with only this one row's cells replaced,
+    and stages that blob directly via `update-index --cacheinfo` --
+    mirrors the manual surgical-staging technique already used by hand
+    for shared-file commits this session. Returns True if a row was
+    found and staged, False otherwise (no row for task_id, or unchanged)."""
+    common_md_rel = os.path.relpath(COMMON_MD, REPO_ROOT)
+    show = subprocess.run(
+        ["git", "show", ":%s" % common_md_rel],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+    )
+    if show.returncode != 0:
+        return False
+
+    base_lines = show.stdout.splitlines(keepends=True)
+    new_lines, changed = _apply_registry_row_update(base_lines, task_id, new_status, new_path)
+    if not changed:
+        return False
+
+    blob_sha = subprocess.run(
+        ["git", "hash-object", "-w", "--path=%s" % common_md_rel, "--stdin"],
+        cwd=REPO_ROOT,
+        input="".join(new_lines),
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+    subprocess.run(
+        ["git", "update-index", "--cacheinfo", "100644,%s,%s" % (blob_sha, common_md_rel)],
+        cwd=REPO_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return True
 
 
 def cmd_sync(args):
@@ -532,37 +588,31 @@ STATE_TO_STATUS = {"TODO": "TODO", "IN_PROGRESS": "In Progress", "DONE": "Done"}
 STATUS_LINE_RE = re.compile(r"^- Status:.*$", re.MULTILINE)
 
 
-def cmd_move(args):
-    task_id = normalize_task_id(args.task_id)
-    if not is_task_id(task_id):
-        print(
-            "error: move only operates on TASK-XXXX[.NNN] ids, not special "
-            "resources like %s" % task_id,
-            file=sys.stderr,
-        )
-        return 1
-
-    target_state = args.target_state
+def _claim_gate(task_id, claimant, force, reason, verb):
+    # type: (str, str, bool, object, str) -> bool
+    """Shared claim-mismatch check for move/resolve. Prints and returns
+    False on refusal; True to proceed (after printing a warning, if any).
+    `verb` ("moving"/"resolving") only affects message wording."""
     lock = read_lock(task_id)
-    if lock is not None and lock["claimant"] != args.as_:
-        if not args.force:
+    if lock is not None and lock["claimant"] != claimant:
+        if not force:
             print(
                 "error: %s already claimed by %r at %s (use --force --reason "
                 "TEXT to override if you judge this stale)"
                 % (task_id, lock["claimant"], lock["claimed_at"]),
                 file=sys.stderr,
             )
-            return 1
-        if not args.reason:
+            return False
+        if not reason:
             print(
                 "error: --force requires --reason (a short note on why the "
                 "existing claim is being overridden)",
                 file=sys.stderr,
             )
-            return 1
+            return False
         print(
-            "warning: moving %s despite a claim mismatch (held by %r), "
-            "reason: %s" % (task_id, lock["claimant"], args.reason),
+            "warning: %s %s despite a claim mismatch (held by %r), "
+            "reason: %s" % (verb, task_id, lock["claimant"], reason),
             file=sys.stderr,
         )
     elif lock is None:
@@ -571,12 +621,24 @@ def cmd_move(args):
             % task_id,
             file=sys.stderr,
         )
+    return True
 
+
+def _perform_transition(task_id, target_state, keep_claim, content_transform):
+    # type: (str, str, bool, object) -> object
+    """Shared relocate + registry-sync + claim-release logic used by both
+    `move` and `resolve`. `content_transform(content, src_path) -> (new_content,
+    changed)` is applied to the task file's current content before any
+    physical move -- `move` uses it for the Status-line rewrite alone;
+    `resolve` folds in the Resolution/Resolution-Note lines too, as one
+    read-modify-write. Returns None on a fatal find_task_file error (already
+    printed), or a dict with `error` plus enough state for the caller to
+    build its own report/staging behavior on top."""
     try:
         current_state, filename = find_task_file(task_id)
     except SystemExit as exc:
         print(exc, file=sys.stderr)
-        return 1
+        return None
 
     src_path = os.path.join(TASKS_DIR, current_state, filename)
     dst_path = os.path.join(TASKS_DIR, target_state, filename)
@@ -586,28 +648,12 @@ def cmd_move(args):
     with open(src_path, "r") as f:
         content = f.read()
 
-    target_status_text = STATE_TO_STATUS[target_state]
-    status_match = STATUS_LINE_RE.search(content)
-    current_status_text = (
-        status_match.group(0)[len("- Status:") :].strip() if status_match else None
-    )
-    need_status_rewrite = current_status_text != target_status_text
+    new_content, content_changed = content_transform(content, src_path)
+    if content_changed:
+        with open(src_path, "w") as f:
+            f.write(new_content)
+
     need_file_move = current_state != target_state
-
-    if need_status_rewrite:
-        if status_match is None:
-            print(
-                "warning: no '- Status:' line found in %s -- Status not rewritten"
-                % src_path,
-                file=sys.stderr,
-            )
-        else:
-            new_content = STATUS_LINE_RE.sub(
-                "- Status: %s" % target_status_text, content, count=1
-            )
-            with open(src_path, "w") as f:
-                f.write(new_content)
-
     final_rel = src_rel
 
     if need_file_move:
@@ -638,16 +684,16 @@ def cmd_move(args):
                 "retrying" % (src_rel, dst_rel, exc),
                 file=sys.stderr,
             )
-            return 1
+            return {"error": True}
         final_rel = dst_rel
 
     # `git mv`/a plain rename carries over the index's existing blob for the
     # path rather than re-reading the working tree -- so any content written
-    # above (the Status rewrite) or already sitting unstaged on disk before
-    # this call (e.g. prior edits the caller made) would otherwise land in
-    # the index as stale. Re-add the final path so the staged blob always
-    # matches what's actually on disk post-move (mirrors commit-guard's
-    # disk-vs-expect verification, per Q-0002).
+    # above or already sitting unstaged on disk before this call (e.g. prior
+    # edits the caller made) would otherwise land in the index as stale.
+    # Re-add the final path so the staged blob always matches what's
+    # actually on disk post-move (mirrors commit-guard's disk-vs-expect
+    # verification, per Q-0002).
     final_tracked = (
         subprocess.run(
             ["git", "ls-files", "--error-unmatch", final_rel],
@@ -665,27 +711,214 @@ def cmd_move(args):
             text=True,
         )
 
+    target_status_text = STATE_TO_STATUS[target_state]
     registry_path_cell = "`%s`" % dst_rel.replace(os.sep, "/")
     registry_changed = update_registry_row(task_id, target_status_text, registry_path_cell)
 
+    lock = read_lock(task_id)
     released = False
-    if target_state == "DONE" and lock is not None and not args.keep_claim:
+    if target_state == "DONE" and lock is not None and not keep_claim:
         os.remove(lock_path(task_id))
         released = True
 
-    if not need_file_move and not need_status_rewrite and not registry_changed:
-        print("%s already in %s with Status: %s -- no-op" % (task_id, target_state, target_status_text))
+    return {
+        "error": False,
+        "src_rel": src_rel,
+        "final_rel": final_rel,
+        "final_tracked": final_tracked,
+        "need_file_move": need_file_move,
+        "content_changed": content_changed,
+        "registry_changed": registry_changed,
+        "registry_path_cell": registry_path_cell,
+        "released": released,
+        "target_status_text": target_status_text,
+    }
+
+
+def cmd_move(args):
+    task_id = normalize_task_id(args.task_id)
+    if not is_task_id(task_id):
+        print(
+            "error: move only operates on TASK-XXXX[.NNN] ids, not special "
+            "resources like %s" % task_id,
+            file=sys.stderr,
+        )
+        return 1
+
+    target_state = args.target_state
+    if not _claim_gate(task_id, args.as_, args.force, args.reason, "moving"):
+        return 1
+
+    def _status_only(content, src_path):
+        target_status_text = STATE_TO_STATUS[target_state]
+        status_match = STATUS_LINE_RE.search(content)
+        current_status_text = (
+            status_match.group(0)[len("- Status:") :].strip() if status_match else None
+        )
+        if current_status_text == target_status_text:
+            return content, False
+        if status_match is None:
+            print(
+                "warning: no '- Status:' line found in %s -- Status not rewritten"
+                % src_path,
+                file=sys.stderr,
+            )
+            return content, False
+        return (
+            STATUS_LINE_RE.sub("- Status: %s" % target_status_text, content, count=1),
+            True,
+        )
+
+    result = _perform_transition(task_id, target_state, args.keep_claim, _status_only)
+    if result is None or result["error"]:
+        return 1
+
+    if not result["need_file_move"] and not result["content_changed"] and not result["registry_changed"]:
+        print(
+            "%s already in %s with Status: %s -- no-op"
+            % (task_id, target_state, result["target_status_text"])
+        )
     else:
         print(
             "moved %s -> %s (Status: %s)%s%s"
             % (
                 task_id,
                 target_state,
-                target_status_text,
-                ", registry updated" if registry_changed else "",
-                ", claim released" if released else "",
+                result["target_status_text"],
+                ", registry updated" if result["registry_changed"] else "",
+                ", claim released" if result["released"] else "",
             )
         )
+    return 0
+
+
+# -------------------------------------------------------------- resolve ----
+
+# Mirrors .ai/reference/RESOLUTION_VOCABULARY.md's "Task Resolution Values"
+# table exactly -- kept in sync by hand, not parsed from the markdown.
+RESOLUTION_VALUES = (
+    "done",
+    "fixed",
+    "wont-do",
+    "duplicate",
+    "obsolete",
+    "not-reproducible",
+    "moved",
+)
+RESOLUTION_LINE_RE = re.compile(r"^- Resolution:.*$", re.MULTILINE)
+RESOLUTION_NOTE_LINE_RE = re.compile(r"^- Resolution Note:.*$", re.MULTILINE)
+
+
+def cmd_resolve(args):
+    task_id = normalize_task_id(args.task_id)
+    if not is_task_id(task_id):
+        print(
+            "error: resolve only operates on TASK-XXXX[.NNN] ids, not "
+            "special resources like %s" % task_id,
+            file=sys.stderr,
+        )
+        return 1
+
+    if args.resolution not in RESOLUTION_VALUES:
+        print(
+            "error: %r is not a canonical resolution value -- must be one "
+            "of: %s (see .ai/reference/RESOLUTION_VOCABULARY.md)"
+            % (args.resolution, ", ".join(RESOLUTION_VALUES)),
+            file=sys.stderr,
+        )
+        return 1
+
+    if not _claim_gate(task_id, args.as_, args.force, args.reason, "resolving"):
+        return 1
+
+    def _resolve_content(content, src_path):
+        changed = False
+        target_status_text = STATE_TO_STATUS["DONE"]
+        status_match = STATUS_LINE_RE.search(content)
+        current_status_text = (
+            status_match.group(0)[len("- Status:") :].strip() if status_match else None
+        )
+        if current_status_text != target_status_text:
+            if status_match is None:
+                print(
+                    "warning: no '- Status:' line found in %s -- Status not "
+                    "rewritten" % src_path,
+                    file=sys.stderr,
+                )
+            else:
+                content = STATUS_LINE_RE.sub(
+                    "- Status: %s" % target_status_text, content, count=1
+                )
+                changed = True
+
+        resolution_line = "- Resolution: %s" % args.resolution
+        res_match = RESOLUTION_LINE_RE.search(content)
+        if res_match is None:
+            status_match = STATUS_LINE_RE.search(content)
+            if status_match is None:
+                print(
+                    "warning: no '- Status:' line found in %s -- Resolution "
+                    "line not inserted, append it by hand" % src_path,
+                    file=sys.stderr,
+                )
+            else:
+                insert_at = status_match.end()
+                content = content[:insert_at] + "\n" + resolution_line + content[insert_at:]
+                changed = True
+        elif res_match.group(0) != resolution_line:
+            content = RESOLUTION_LINE_RE.sub(resolution_line, content, count=1)
+            changed = True
+
+        if args.note:
+            note_line = "- Resolution Note: %s" % args.note
+            note_match = RESOLUTION_NOTE_LINE_RE.search(content)
+            if note_match is None:
+                res_match = RESOLUTION_LINE_RE.search(content)
+                if res_match is not None:
+                    insert_at = res_match.end()
+                    content = content[:insert_at] + "\n" + note_line + content[insert_at:]
+                    changed = True
+            elif note_match.group(0) != note_line:
+                content = RESOLUTION_NOTE_LINE_RE.sub(note_line, content, count=1)
+                changed = True
+
+        return content, changed
+
+    result = _perform_transition(task_id, "DONE", args.keep_claim, _resolve_content)
+    if result is None or result["error"]:
+        return 1
+
+    if args.no_stage:
+        # `git mv` stages both sides of the rename (removes src_rel, adds
+        # final_rel) -- resetting only final_rel would leave src_rel's
+        # deletion still staged. Reset both unconditionally; when no move
+        # happened, src_rel == final_rel and this is a harmless no-op repeat.
+        reset_paths = sorted(set([result["src_rel"], result["final_rel"]]))
+        subprocess.run(
+            ["git", "reset", "--"] + reset_paths,
+            cwd=REPO_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        stage_note = ", not staged (--no-stage)"
+    else:
+        if result["registry_changed"]:
+            _stage_registry_row_only(
+                task_id, result["target_status_text"], result["registry_path_cell"]
+            )
+        stage_note = ", staged"
+
+    print(
+        "resolved %s -> DONE (Resolution: %s)%s%s%s"
+        % (
+            task_id,
+            args.resolution,
+            ", registry updated" if result["registry_changed"] else "",
+            stage_note,
+            ", claim released" if result["released"] else "",
+        )
+    )
     return 0
 
 
@@ -869,6 +1102,33 @@ def build_parser():
         help="do not auto-release the claim when moving to DONE (default: release)",
     )
     p_move.set_defaults(func=cmd_move)
+
+    p_resolve = sub.add_parser(
+        "resolve",
+        help="resolve a task to DONE with an explicit canonical resolution value, staged by default",
+    )
+    p_resolve.add_argument("task_id")
+    p_resolve.add_argument(
+        "resolution",
+        help="canonical value from .ai/reference/RESOLUTION_VOCABULARY.md "
+        "(done/fixed/wont-do/duplicate/obsolete/not-reproducible/moved)",
+    )
+    p_resolve.add_argument("--note", help="optional free-text resolution note")
+    p_resolve.add_argument("--as", dest="as_", required=True, metavar="LABEL", help="claimant label, always required")
+    p_resolve.add_argument("--force", action="store_true", help="override a claim mismatch")
+    p_resolve.add_argument("--reason", help="required with --force")
+    p_resolve.add_argument(
+        "--keep-claim",
+        action="store_true",
+        help="do not auto-release the claim on resolve (default: release)",
+    )
+    p_resolve.add_argument(
+        "--no-stage",
+        action="store_true",
+        help="leave the on-disk changes correct but unstage them (git reset "
+        "the task file, skip staging .ai/COMMON.md) -- default is to stage both",
+    )
+    p_resolve.set_defaults(func=cmd_resolve)
 
     p_guard = sub.add_parser(
         "commit-guard",
