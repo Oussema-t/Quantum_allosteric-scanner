@@ -499,6 +499,56 @@ CARDIAC_MYOSIN's number, unlike KRAS's, is not *also* explainable by the
 proximity confound — its open question remains the large-N/ANM-channel
 caveat specifically, not geometry.
 
+**[CORRECTED 2026-07-15]** The `LARGE_N_THRESHOLD=800` claim just above
+("above that size, the anisotropic ANM channel is expected to dominate a
+scalar operator") was checked directly against its cited source
+(`notebooks/H_new_engineering (4) CLEAN.ipynb` cell 56) and found to have
+**no derivation anywhere** — that inline comment is the entire
+justification given, with no formula, citation, or measurement of
+scalar-vs-anisotropic divergence as a function of N in the notebook or
+this codebase. It was an unfalsified physics claim, not a derived
+threshold, and it disqualified CARDIAC_MYOSIN — a mandatory challenge
+target — with no argument for why N=950 specifically breaks the model.
+Per explicit user direction (2026-07-14): reframed `diagnostics.py`'s
+threshold as what it actually is, a **computational-scaling ceiling**
+(dense `eigh`/`eigvalsh` is O(N³); 1000 is chosen only to sit just above
+CARDIAC_MYOSIN's real N with headroom, exactly as arbitrary as 800 was,
+now documented as such rather than dressed up as principled — see the
+constant's own comment in `diagnostics.py` for the full account), not a
+claim about model validity at this size. Real data recomputed
+end-to-end (`scripts/run_challenge.py --target CARDIAC_MYOSIN`,
+`scripts/sweep_operators.py --target CARDIAC_MYOSIN --force`):
+
+- **AUC values are unchanged** (0.786 / 0.766 / 0.790, hit list
+  unchanged: 706, 89, 88, 704, 87) — this correction only changed which
+  diagnosis check the identical numbers are subjected to.
+- `_diagnosis` changes from `INSUFFICIENT_RESOLUTION` to
+  **`NO_FAILURE_DETECTED`** — 0.786 genuinely clears the proximity floor
+  (max 0.764, already computed above) now that the large-N short-circuit
+  no longer fires first.
+- **This is what the "Zero of three" headline below now looks like
+  corrected** — see that section's own `[CORRECTED 2026-07-15]` note.
+- Full 32-cell operator × propagator sweep re-run under the corrected
+  threshold (`results/CARDIAC_MYOSIN/operator_sweep.md`): 14 of 30 valid
+  cells (H13's 2 cells still error, unrelated 3N-shape issue) now clear
+  the floor, **11 of them via `ctqw`** — `H2`, `H3`, `H4`, `H5`, `H6`,
+  `H8`, `H10`, `H11`, `H12`, `H_new`, `build_H10`, all `ctqw`, all
+  `NO_FAILURE_DETECTED`. This directly contradicts the operator-sweep
+  register's previous headline ("zero of 96 cells clear the floor via
+  `ctqw`", TASK-0101) — that claim was built on CARDIAC_MYOSIN data that
+  was silently disqualified by the same uncited threshold. See
+  `.ai/tasks/DONE/TASK-0101-operator-sweep-tier1-harness.md`'s own
+  addendum for the corrected register-wide count.
+
+**What this correction does NOT resolve**: the *separate*,
+independent 5TBY cryo-EM data-quality caveat two paragraphs above (20 Å
+resolution, multi-chain assembly, `targets.yaml`'s own "NOT resolved...
+trusting the apo Cα graph uncritically" warning) is untouched by this
+fix and remains a real, open concern — this correction retires the
+large-N/ANM-channel claim specifically, not every caveat CARDIAC_MYOSIN
+carries. Do not read this block as "CARDIAC_MYOSIN is now fully
+vindicated."
+
 ### Cross-target pattern worth naming, not yet a hypothesis with a test attached
 
 **[OBSERVED]** Two of three targets (KRAS_G12C 0.779, CARDIAC_MYOSIN
@@ -548,6 +598,34 @@ section) every downstream task that would have consumed these AUCs as
 established signal — TASK-0082 (competence map), TASK-0068 (NISQ sim),
 TASK-0015 (holo-direction), TASK-0046 (ceiling search), TASK-0081
 (generalization set) — until a method clears this floor for real.
+
+**[CORRECTED 2026-07-15]** CARDIAC_MYOSIN's "moot, N=950 flag fires
+first" row above is superseded — see the CARDIAC_MYOSIN section's own
+`[CORRECTED 2026-07-15]` block (`LARGE_N_THRESHOLD` had no derivation,
+corrected 800→1000). Re-run against identical apo data:
+
+| Target | AUC | Floor-cleared? | `_diagnosis` |
+|---|---|---|---|
+| CARDIAC_MYOSIN | 0.786 | **Yes** (max floor 0.764) | `NO_FAILURE_DETECTED` |
+
+**One of three mandatory targets now ships a floor-cleared,
+resolution-clean apo-only AUC** — CARDIAC_MYOSIN, via `H_new`, both
+propagators (`AUC_ctqw_mean`=0.786, `AUC_heat_mean`=0.790). KRAS_G12C
+and BCR_ABL1's rows above are unaffected by this correction (neither
+result depended on `LARGE_N_THRESHOLD`) and stand as originally
+reported. **This does not retroactively validate every downstream task
+this section blocked** — CARDIAC_MYOSIN still carries its independent
+5TBY cryo-EM data-quality caveat (unresolved 20 Å structure), and the
+tasks named above (TASK-0082/0068/0015/0046/0081) were scoped and, in
+several cases, already executed against the *old* "zero of three"
+premise — whoever picks those back up should check whether this
+correction changes their scope, not assume it does or doesn't.
+`.ai/tasks/DONE/TASK-0101-operator-sweep-tier1-harness.md` also needs
+its own "zero of 96 cells clear via ctqw" headline corrected (11 of
+CARDIAC_MYOSIN's cells now clear via `ctqw` alone) — flagged there, not
+fixed here, since that finding fed directly into
+`REVIEW-2026-07-13c`'s CTQW-trapping conclusion and correcting it is a
+scientific-synthesis decision, not a documentation fix.
 
 ### Diagnostic upper bound not yet computed
 

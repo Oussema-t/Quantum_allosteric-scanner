@@ -349,6 +349,35 @@ class TestOperatorSweep:
         )
         assert all(r["apo_holo_consistency"] is None for r in rows)
 
+    def test_disconnected_operator_is_flagged_operator_degenerate(self):
+        """Regression guard: an earlier version of operator_sweep did not
+        pass H/bfactors into classify_failure at all, which silently
+        disabled its OPERATOR_DEGENERATE and INSUFFICIENT_RESOLUTION
+        checks -- found by reading the real 96-cell sweep's own output
+        (CARDIAC_MYOSIN, N=950>800, came back NO_FAILURE_DETECTED instead
+        of INSUFFICIENT_RESOLUTION), not by inspection alone."""
+        cluster_a = _helix_coords(6)
+        theta = np.arange(6) * (100.0 * np.pi / 180.0)
+        cluster_b = np.column_stack([
+            1000.0 + 2.3 * np.cos(theta), 2.3 * np.sin(theta), 1.5 * np.arange(6, dtype=float),
+        ])
+        coords = np.vstack([cluster_a, cluster_b])
+        bfac = np.full(12, 20.0)
+        labels = np.zeros(12, dtype=bool)
+        labels[[7, 8]] = True
+        source = 0
+        floor_scores = [
+            degree_centrality(coords, cutoff=10.0),
+            euclid_from_seed_centroid(coords, source),
+            hop_from_seed(coords, source, cutoff=10.0),
+        ]
+        rows = operator_sweep(
+            coords, bfac, source, labels, floor_scores,
+            cutoff=10.0, operators=["H_new", "H2"], t_max=5.0, n_steps=50,
+        )
+        assert all(r["diagnosis"] == "OPERATOR_DEGENERATE" for r in rows)
+        assert all(r["floor_cleared"] is False for r in rows)
+
 
 # ---------------------------------------------------------------------------
 # consensus_ranking (TASK-0080 -- c-Myc/1NKP no-ground-truth handling)

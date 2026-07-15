@@ -29,7 +29,36 @@ import numpy as np
 from .metrics import auc as _auc, eff_rank as _eff_rank
 
 # notebook cell 56 thresholds, ported verbatim
-LARGE_N_THRESHOLD = 800
+#
+# LARGE_N_THRESHOLD -- CORRECTED 2026-07-14 (user-identified finding, no
+# task number assigned yet, see the follow-up constants-audit task filed
+# the same day). The ported value was 800, with the comment "anisotropic
+# ANM channel may dominate" -- checked directly against
+# `notebooks/H_new_engineering (4) CLEAN.ipynb` cell 56, its only source:
+# that comment is the *entire* justification given there too. No formula,
+# no citation, no measurement of scalar-vs-anisotropic divergence as a
+# function of N anywhere in the notebook or this codebase. It is an
+# unfalsified physics claim, not a derived threshold -- and CARDIAC_MYOSIN
+# (N=950), a mandatory challenge target, is disqualified by it with no
+# argument for why 950 residues specifically breaks the model.
+#
+# Reframed as what it actually is: a **computational-scaling ceiling**,
+# not a claim about model validity. `operator_diagnostics`/`classify_
+# failure` are built on dense `np.linalg.eigh`/`eigvalsh` (O(N^3)); this
+# is the largest N this pipeline has been run against and is known to
+# complete in practical time (CARDIAC_MYOSIN's own real sweep, TASK-0101,
+# ~50 min including several O(N^3)/O(N) operators) -- not a size beyond
+# which the *science* is known to break down, which nothing in this repo
+# or the notebook has ever measured. 1000 is chosen only to sit just
+# above CARDIAC_MYOSIN's real N (950) with a little headroom, per
+# explicit user direction -- it is exactly as arbitrary as 800 was, and
+# is documented as such here rather than dressed up as principled. If a
+# real anisotropy-divergence measurement is ever built (comparing this
+# scalar operator's predictions against the real 3N ANM Hessian,
+# `hamiltonians.H13_3N_anm_hessian`/`H14_anm_pinv_trace` already exist for
+# exactly this), replace this with that, cited properly, per this
+# project's own "don't invent formulas, cite the section" convention.
+LARGE_N_THRESHOLD = 1000
 DIAG_DOMINANCE_THRESHOLD = 3.0
 
 
@@ -85,7 +114,13 @@ def operator_diagnostics(
     if b_all_zero:
         notes.append("V_B disabled (B==0)")
     if N > n_large:
-        notes.append(f"very large N ({N}>{n_large}) -- anisotropic ANM channel may dominate")
+        notes.append(
+            f"N={N} exceeds {n_large}, the largest size this pipeline has been "
+            "run against in practical time (O(N^3) eigendecomposition cost) -- "
+            "a computational-scaling ceiling, not a claim that the model is "
+            "invalid at this size (no such claim has been measured; see this "
+            "module's own LARGE_N_THRESHOLD comment)"
+        )
     if diag_over_offdiag > diag_dominance_threshold:
         notes.append("diagonal potential dominates; collapses to ~diagonal")
     if n_components > 1:
@@ -149,11 +184,20 @@ def classify_failure(
     2. `LABEL_SUSPECT` -- `labels` has no positives or no negatives, so AUC
        is undefined (mirrors `metrics.auc`'s own NaN-return convention and
        notebook cell 56's "no pocket label -- cannot score" note).
-    3. `INSUFFICIENT_RESOLUTION` -- notebook cell 56's data-quality notes:
-       an all-zero B-factor column, or N above the large-protein threshold
-       where the anisotropic ANM channel is expected to dominate a scalar
-       operator. Checked ahead of the score itself: these invalidate a
-       result even if it happens to look fine.
+    3. `INSUFFICIENT_RESOLUTION` -- notebook cell 56's data-quality notes,
+       bundling two genuinely different concerns under one label (not
+       renamed to keep this a documentation-only correction, see
+       `LARGE_N_THRESHOLD`'s own comment for the full finding): (a) an
+       all-zero B-factor column -- a real data-quality problem, `V_B` is
+       silently inert; (b) N above `LARGE_N_THRESHOLD` -- a computational-
+       scaling ceiling (this pipeline has not been run/validated past that
+       size in practical time), corrected 2026-07-14 from the notebook's
+       original, uncited claim that this size *itself* invalidates the
+       model ("anisotropic ANM channel may dominate" -- checked directly
+       against the notebook, that comment was never derived or measured
+       anywhere). Checked ahead of the score itself: both invalidate
+       trusting a result even if it happens to look fine, for different
+       reasons.
     4. `NO_SIGNAL_IN_APO` -- everything above checks out, but the score is
        statistically indistinguishable from chance: a legitimate,
        reportable negative result (`PLAN.md`'s "gates before build"

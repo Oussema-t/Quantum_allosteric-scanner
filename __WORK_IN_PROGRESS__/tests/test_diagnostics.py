@@ -84,11 +84,16 @@ class TestOperatorDiagnostics:
         assert not any("V_B disabled" in n for n in diag["notes"])
 
     def test_large_n_flagged(self):
+        """Note wording corrected 2026-07-14: LARGE_N_THRESHOLD's original
+        "anisotropic ANM channel may dominate" claim had no derivation
+        anywhere (checked directly against its cited notebook source) --
+        the note now describes a computational-scaling ceiling, not an
+        unmeasured model-validity claim."""
         coords = _helix_coords(10)
         bfac = np.full(10, 20.0)
         H = build_H_new(coords, bfac, cutoff=10.0)
         diag = operator_diagnostics(H, bfactors=bfac, n_large=5)
-        assert any("very large N" in n for n in diag["notes"])
+        assert any("exceeds" in n and "computational-scaling ceiling" in n for n in diag["notes"])
 
     def test_diagonal_dominance_flagged(self):
         """Hand-built H: huge diagonal, tiny off-diagonal contact term."""

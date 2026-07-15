@@ -31,8 +31,23 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
+import time
 from pathlib import Path
+
+# Must run before `import numpy` (this file's or any transitively-imported
+# allostery module's) -- BLAS reads these at first use, not reconfigurable
+# after. Found 2026-07-14: two uncapped processes (this script +
+# run_challenge.py) run concurrently on a 16-core box each spawned BLAS
+# threads across all cores, oversubscribing 2-4x and slowing a 32-cell
+# sweep from an observed ~50 min/32-cells (TASK-0101's original single-job
+# run) to ~50 min/cell. 4 is not derived from anything -- it is chosen so
+# up to 4 concurrent heavy jobs (this repo runs several agent threads
+# against the same machine) stay within 16 cores without starving each
+# other; override with the env var directly if a caller wants otherwise.
+for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS", "VECLIB_MAXIMUM_THREADS"):
+    os.environ.setdefault(_v, "4")
 
 import numpy as np
 
@@ -56,6 +71,10 @@ DEFAULT_TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 ALL_OPERATORS = list(_operator_registry())
 ALL_PROPAGATORS = ["ctqw", "ground_state"]
 DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results"
+
+
+def _log(msg: str) -> None:
+    print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
 
 
 def _cell_path(output_dir: Path, target: str, operator: str, propagator: str) -> Path:
@@ -130,32 +149,47 @@ def run_sweep(
             print(f"{target_name}: all requested cells already computed, skipping fetch")
             continue
 
+        _log(f"{target_name}: preparing (fetch + clean + labels)...")
+        prep_start = time.monotonic()
         try:
             coords, bfactors, source, pocket_label, floor_scores, cutoff = _prepare_target(target_name)
         except Exception as exc:
             print(f"{target_name}: SKIP (target-level failure): {exc!r}")
             continue
+        _log(f"{target_name}: prepared in {time.monotonic() - prep_start:.1f}s -- {len(pending)} cell(s) pending")
 
-        for op_name, prop_name in pending:
+        total = len(pending)
+        cell_durations: list[float] = []
+        for i, (op_name, prop_name) in enumerate(pending, start=1):
             cell_path = _cell_path(output_dir, target_name, op_name, prop_name)
             if cell_path.exists() and not force:
                 skipped.append(cell_path)
                 continue
 
+            cell_start = time.monotonic()
             rows = operator_sweep(
                 coords, bfactors, source, pocket_label, floor_scores,
                 cutoff=cutoff, operators=[op_name], propagators=[prop_name],
                 t_max=T_MAX, n_steps=N_STEPS,
             )
+            duration = time.monotonic() - cell_start
+            cell_durations.append(duration)
+
             row = rows[0]
             cell_path.parent.mkdir(parents=True, exist_ok=True)
             with open(cell_path, "w") as f:
                 json.dump(row, f, indent=2)
             written.append(cell_path)
-            print(
-                f"{target_name} {op_name} {prop_name}: "
+
+            mean_duration = sum(cell_durations) / len(cell_durations)
+            remaining = total - i
+            eta = f"{mean_duration * remaining / 60:.0f} min" if remaining else "0 min"
+            _log(
+                f"[{target_name} {i}/{total}] {op_name} {prop_name}: "
                 f"AUC={row['auc']} floor_cleared={row['floor_cleared']} "
-                f"diagnosis={row['diagnosis']} err={row['error']}"
+                f"diagnosis={row['diagnosis']} err={row['error']} "
+                f"-- took {duration:.1f}s, avg {mean_duration:.1f}s/cell, "
+                f"ETA {eta} for {remaining} remaining cell(s) in this target"
             )
 
     return written, skipped

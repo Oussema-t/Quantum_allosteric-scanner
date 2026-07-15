@@ -51,9 +51,18 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
+import time
 import traceback
 from pathlib import Path
+
+# See sweep_operators.py's identical block for why: must run before
+# `import numpy`, caps this process's BLAS threads so concurrent heavy
+# jobs on this shared machine don't oversubscribe and stall each other
+# (found 2026-07-14 running this script alongside sweep_operators.py).
+for _v in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS", "VECLIB_MAXIMUM_THREADS"):
+    os.environ.setdefault(_v, "4")
 
 import numpy as np
 
@@ -75,6 +84,10 @@ from allostery.pathways import edge_propensity, edge_propensity_to_matrix  # noq
 from allostery.propagators import time_averaged_ctqw  # noqa: E402
 from allostery.protocol import run_frozen_verdict  # noqa: E402
 from allostery.report import assemble_hit_list, no_ground_truth_report, verdict_template  # noqa: E402
+
+def _log(msg: str) -> None:
+    print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
+
 
 DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results"
 DEFAULT_CUTOFF = 10.0  # analysis.py's own default, used only if a target's config omits enm_cutoff
@@ -136,7 +149,7 @@ def _jsonify(d: dict) -> dict:
     return out
 
 
-def run_target_no_ground_truth(target_name: str, target_config: dict, output_dir: Path) -> dict:
+def run_target_no_ground_truth(target_name: str, target_config: dict, output_dir: Path, run_start: float) -> dict:
     """TASK-0080: c-Myc/1NKP branch -- `holo_pdb: null`,
     `allosteric_pocket_exists: false`. No AUC, no ceiling, no proximity
     floor -- none of those are computable without a labeled holo pocket,
@@ -157,7 +170,11 @@ def run_target_no_ground_truth(target_name: str, target_config: dict, output_dir
     import prody
 
     target_dir = output_dir / target_name
+
+    _log(f"{target_name}: [no-ground-truth path] fetching + cleaning apo...")
+    t0 = time.monotonic()
     apo = clean_from_config(target_name, role="apo")
+    _log(f"{target_name}: apo ready in {time.monotonic() - t0:.1f}s (N={len(apo.resnums)})")
     cutoff = float(target_config.get("enm_cutoff", DEFAULT_CUTOFF))
     pocket_cutoff = float(target_config.get("pocket_contact_cutoff", DEFAULT_POCKET_CUTOFF))
 
@@ -168,30 +185,43 @@ def run_target_no_ground_truth(target_name: str, target_config: dict, output_dir
     # as a bug this branch works around. func_ligand=["DNA"] never matches
     # an empty ligand_groups list.
     active_idx, provenance = functional_indices(apo.coords, [], target_config, cutoff=pocket_cutoff)
+    _log(f"{target_name}: seed resolved via {provenance!r} ({len(active_idx)} residues)")
 
+    _log(f"{target_name}: consensus ranking across 4 operators (H_new/H10/H2/H14, "
+         f"the expensive eigendecomposition stage)...")
+    t0 = time.monotonic()
     consensus = consensus_ranking(apo.coords, apo.bfactors, active_idx, cutoff=cutoff, t_max=T_MAX, n_steps=N_STEPS, k=5)
+    _log(f"{target_name}: consensus ranking done in {time.monotonic() - t0:.1f}s")
 
+    _log(f"{target_name}: fetching local PDB + running fpocket for docking viability...")
+    t0 = time.monotonic()
     prody.confProDy(verbosity="none")
     try:
         pdb_path = prody.fetchPDB(target_config["apo_pdb"], compressed=False)
         docking = fpocket_baseline(pdb_path) if pdb_path else {"error": "prody.fetchPDB returned no local path"}
     except Exception as exc:
         docking = {"error": f"could not fetch a local PDB file for fpocket: {exc!r}"}
+    _log(f"{target_name}: docking viability done in {time.monotonic() - t0:.1f}s -- "
+         f"{'error: ' + docking['error'] if 'error' in docking else str(len(docking.get('pockets', []))) + ' pocket(s)'}")
 
     # Connectivity matrix: the consensus operator with the highest total
     # cross-operator agreement contribution (H_new_default, this pipeline's
     # own primary operator elsewhere) -- one concrete propagation graph for
     # the matrix deliverable; the *ranking* deliverable (hit list) is the
     # actual consensus-across-operators output, not this single matrix.
+    _log(f"{target_name}: building connectivity matrix...")
+    t0 = time.monotonic()
     H_new = build_H_new(apo.coords, apo.bfactors, cutoff=cutoff)
     propensity = edge_propensity(H_new, active_idx)
     matrix = edge_propensity_to_matrix(propensity, n=len(apo.resnums))
+    _log(f"{target_name}: connectivity matrix done in {time.monotonic() - t0:.1f}s")
 
     hit_indices = np.asarray(consensus["consensus_ranked_indices"])
     hit_scores = consensus["mean_occupancy"][hit_indices]
 
     report_text = no_ground_truth_report(target_name, consensus, docking, resnums=apo.resnums)
 
+    _log(f"{target_name}: writing deliverables to {target_dir}...")
     target_dir.mkdir(parents=True, exist_ok=True)
     np.savez(target_dir / "connectivity_matrix.npz", matrix=matrix, resnums=apo.resnums)
     with open(target_dir / "hit_list.json", "w") as f:
@@ -212,6 +242,7 @@ def run_target_no_ground_truth(target_name: str, target_config: dict, output_dir
             "docking": docking,
         }, f, indent=2)
 
+    _log(f"{target_name}: DONE (no-ground-truth path) in {time.monotonic() - run_start:.1f}s total")
     return {"target": target_name, "ok": True, "diagnosis": "NO_GROUND_TRUTH"}
 
 
@@ -225,6 +256,7 @@ def run_target(target_name: str, output_dir: Path) -> dict:
     Returns a small status dict for the caller's summary.
     """
     target_dir = output_dir / target_name
+    run_start = time.monotonic()
     try:
         target_config = load_target_config(target_name)
 
@@ -234,14 +266,20 @@ def run_target(target_name: str, output_dir: Path) -> dict:
         # ValueError). Route to the dedicated no-ground-truth branch
         # before any holo-dependent call is attempted, not after one fails.
         if target_config.get("holo_pdb") is None:
-            return run_target_no_ground_truth(target_name, target_config, output_dir)
+            return run_target_no_ground_truth(target_name, target_config, output_dir, run_start)
 
         cutoff = float(target_config.get("enm_cutoff", DEFAULT_CUTOFF))
         pocket_cutoff = float(target_config.get("pocket_contact_cutoff", DEFAULT_POCKET_CUTOFF))
 
+        _log(f"{target_name}: fetching + cleaning apo/holo...")
+        t0 = time.monotonic()
         apo, holo = _load_apo_holo(target_name, target_config)
+        _log(f"{target_name}: apo/holo ready in {time.monotonic() - t0:.1f}s (N={len(apo.resnums)})")
 
+        _log(f"{target_name}: building labels...")
+        t0 = time.monotonic()
         labels_obj = build_labels(apo, holo, target_config, cutoff=pocket_cutoff)
+        _log(f"{target_name}: labels built in {time.monotonic() - t0:.1f}s")
         if labels_obj.pocket is None:
             raise RuntimeError(
                 f"no resolvable drug_ligand for {target_name!r} -- "
@@ -271,12 +309,15 @@ def run_target(target_name: str, output_dir: Path) -> dict:
         ]
         candidates_builder = _make_candidates_builder(apo, source, cutoff)
 
+        _log(f"{target_name}: running frozen verdict (candidate selection + scoring, the expensive eigendecomposition stage)...")
+        t0 = time.monotonic()
         result = run_frozen_verdict(
             target_name, candidates_builder,
             apo.coords, apo.bfactors, source, labels_obj.pocket,
             cutoff=cutoff, t_max=T_MAX, n_steps=N_STEPS,
             floor_scores=floor_scores,
         )
+        _log(f"{target_name}: frozen verdict done in {time.monotonic() - t0:.1f}s -- diagnosis={result.get('_diagnosis')}")
 
         winner_H = candidates_builder()[result["_winner_index"]]["H"]
         winner_occ = time_averaged_ctqw(winner_H, T_MAX, source=source, n_steps=N_STEPS)
@@ -300,12 +341,14 @@ def run_target(target_name: str, output_dir: Path) -> dict:
         with open(target_dir / "verdict.json", "w") as f:
             json.dump(_jsonify(result), f, indent=2)
 
+        _log(f"{target_name}: DONE in {time.monotonic() - run_start:.1f}s total")
         return {"target": target_name, "ok": True, "diagnosis": result.get("_diagnosis")}
 
     except Exception as exc:
         target_dir.mkdir(parents=True, exist_ok=True)
         with open(target_dir / "error.txt", "w") as f:
             f.write(f"{target_name}: FAILED\n\n{traceback.format_exc()}")
+        _log(f"{target_name}: FAILED after {time.monotonic() - run_start:.1f}s -- {exc!r}")
         return {"target": target_name, "ok": False, "error": str(exc)}
 
 

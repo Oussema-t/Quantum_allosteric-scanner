@@ -697,7 +697,20 @@ def operator_sweep(
                     raise ValueError(f"unknown propagator {prop_name!r}")
                 p = propagator_fns[prop_name](H, source)
                 auc_val = float(_auc_fn(p, pocket_label))
-                diagnosis = classify_failure(p, pocket_label, floor_scores=floor_scores)
+                # H/bfactors must be passed through -- omitting them silently
+                # disables classify_failure's OPERATOR_DEGENERATE and
+                # INSUFFICIENT_RESOLUTION checks (both require H to run
+                # operator_diagnostics at all). Caught by re-reading this
+                # function's own real-data output before trusting it: the
+                # first version of this line omitted them, and every
+                # CARDIAC_MYOSIN cell (N=950 > LARGE_N_THRESHOLD=800) came
+                # back NO_FAILURE_DETECTED/BEATS_CHANCE_NOT_FLOOR instead of
+                # the INSUFFICIENT_RESOLUTION the real submission pipeline
+                # (run_challenge.py, which does pass H/bfactors) correctly
+                # assigns that same target.
+                diagnosis = classify_failure(
+                    p, pocket_label, H=H, bfactors=bfactors, floor_scores=floor_scores,
+                )
                 rows.append({
                     "operator": op_name, "tier": tier, "propagator": prop_name,
                     "auc": auc_val, "floor_cleared": diagnosis == NO_FAILURE_DETECTED,

@@ -10,9 +10,7 @@
   that runs it across all 3 mandatory targets (KRAS_G12C, BCR_ABL1,
   CARDIAC_MYOSIN) and writes a reported table. **Tier-1 (descriptive)
   only — no operator selection.**
-- Status: In Progress (implementation + pinning check Done; full 3-target
-  x 16-operator x 2-propagator sweep running in background, see Done
-  section)
+- Status: Done
 - Owner: Implementer
 - Source: TASK-0100's Architect decision (Done, 2026-07-13) — resolves
   where the sweep lives (library function + thin script, not
@@ -244,11 +242,119 @@ section alone, check `results/<target>/operator_sweep.md` on disk.**
   this session ("Do NOT git add or git commit anything — leave the stage
   empty. I'm orchestrating which package ships when").
 
-### Still outstanding for this task
+### Real bug found and fixed while reviewing the first full sweep's own output
 
-- The full 3-target x 16-operator x 2-propagator background sweep
-  finishing and being read for real (transport_pr vs AUC vs floor
-  pattern across the whole register — the actual point of Tier 1).
-- This task's own `Status:` line stays `In Progress` until that sweep
-  completes and its table is reviewed here, not flipped to `Done` on the
-  implementation + pinning check alone.
+Read the completed sweep's real numbers before trusting them (this
+session's own established practice) — CARDIAC_MYOSIN's 32 valid cells
+all came back `NO_FAILURE_DETECTED`/`BEATS_CHANCE_NOT_FLOOR`, never
+`INSUFFICIENT_RESOLUTION`, despite that target's apo N=950 exceeding
+`LARGE_N_THRESHOLD=800` — the real submission pipeline (`run_challenge.py`)
+correctly flags this same target that way. Root cause: `operator_sweep`'s
+`classify_failure` call omitted `H=`/`bfactors=`, which silently disables
+*both* `OPERATOR_DEGENERATE` and `INSUFFICIENT_RESOLUTION` (both require
+`H` to run `operator_diagnostics` at all) — not a partial bug, those two
+checks never ran for any cell, on any target, in the first full sweep.
+Fixed (`analysis.py`, one line + the two now-required kwargs), regression
+-tested directly (`test_disconnected_operator_is_flagged_operator_
+degenerate`, a small disconnected synthetic graph — cheaper than building
+an 800+-residue fixture to exercise the large-N path specifically, same
+mechanism), and the **entire 96-cell sweep was force-recomputed**
+(`--force`, not just CARDIAC_MYOSIN) since the bug could in principle
+have affected any target/operator combination, not only the one where it
+happened to be visible. KRAS_G12C/BCR_ABL1 AUCs confirmed byte-identical
+to the pre-fix run (spot-checked); only CARDIAC_MYOSIN's `diagnosis`
+changed, to `INSUFFICIENT_RESOLUTION` across the board, as expected.
+
+Also found and fixed, while re-running the full local suite after this
+change: my own new `RESULTS.md` prose (TASK-0104) tripped
+`test_ground_state_relaxation_guard.py`'s `TestNoStaleClassicalDiffusion
+Framing` regression test (TASK-0095's own guard against "classical" and
+"heat" co-occurring on a live line) — rephrased the one offending
+sentence, no meaning lost.
+
+### Real sweep results (96 cells, all 3 mandatory targets, force-recomputed post-fix)
+
+Full tables: `results/{KRAS_G12C,BCR_ABL1,CARDIAC_MYOSIN}/operator_sweep.md`.
+
+**The single clearest pattern in the whole register: zero cells clear
+the proximity floor via `ctqw`, anywhere, on any target or operator.**
+Every floor-clearing cell in this entire 96-cell sweep is a
+`ground_state` cell:
+
+| Target | Floor-clearing cells (operator/propagator) | AUC |
+|---|---|---|
+| KRAS_G12C | `H10`/ground_state, `build_H10`/ground_state (same op, two names) | 0.921 |
+| BCR_ABL1 | `H1`/ground_state | 0.571 |
+| BCR_ABL1 | `H10`/ground_state, `build_H10`/ground_state | 0.636 |
+| BCR_ABL1 | `H_new`/ground_state | 0.731 (the already-known TASK-0091 result) |
+| CARDIAC_MYOSIN | none — `INSUFFICIENT_RESOLUTION` short-circuits every cell before the floor check runs | — |
+
+This is new evidence, not previously visible from any single-operator
+test: `REVIEW-2026-07-13c`'s CTQW-trapping mechanism (`H_new` specifically)
+now looks like a **register-wide property of `ctqw` on this pipeline's
+propagation regime**, not an `H_new`-specific defect — worth flagging to
+whoever next reads `RESULTS.md`'s open questions, though interpreting it
+is out of this Tier-1 harness's own scope (descriptive only, per
+TASK-0100).
+
+**Tier-A-specific observation**: `H14` (TASK-0096's "let the sweep
+decide" research operator) **never clears the floor on any target,
+through either propagator** — a real, recorded negative result per
+TASK-0100's own "an honest NO is a publishable result" policy, not
+silently dropped. `H10`/`build_H10` clear on 2/3 targets (agreeing with
+each other exactly both times, the alias-fidelity check working again on
+real, not just synthetic, data); `H_new` clears on 1/3.
+
+**`H13` fails identically and correctly on all 3 targets** (shape
+mismatch, caught, recorded, does not abort the sweep) — 6 of the 96
+cells, exactly as designed.
+
+No Tier-2 conclusion is drawn from any of this (explicitly out of this
+task's own scope) — this table is handed to `RESULTS.md`/whoever picks
+up a future Tier-2 task, not acted on here.
+
+Full local run after the fix: `python3 .ai/tools/pytest_local.py
+wip-all --json` → 531 passed, 1 xpassed (pre-existing, unrelated), 0
+failed.
+
+- **Staging/commit**: the implementation (`analysis.py`, tests,
+  `sweep_operators.py`) and this Done writeup are ready; the `classify_
+  failure` bug fix and its regression test are new since the last
+  commit and not yet staged, per this session's standing "hold until
+  told" default — the previous explicit stage/commit instruction covered
+  the pre-fix state only.
+
+**Addendum, 2026-07-15 — "zero cells clear via `ctqw`" corrected**: the
+headline finding above (line ~279, "the single clearest pattern in the
+whole register") rested on CARDIAC_MYOSIN's `INSUFFICIENT_RESOLUTION`
+row, which is itself now corrected — `LARGE_N_THRESHOLD=800` (the value
+in effect for this task's real 96-cell sweep) had no derivation anywhere
+in its cited source, was corrected to `1000` per explicit user direction
+2026-07-14 (full account: `diagnostics.py`'s own `LARGE_N_THRESHOLD`
+comment; scientific record: `RESULTS.md`'s CARDIAC_MYOSIN section,
+`[CORRECTED 2026-07-15]` block). Re-run against identical apo data (AUC
+values unchanged throughout — only the diagnosis this task's own
+`classify_failure` bug fix now correctly evaluates against changed):
+CARDIAC_MYOSIN's 32-cell block goes from "`INSUFFICIENT_RESOLUTION`,
+none reach the floor check" to **14 of 30 valid cells clearing the
+floor, 11 of them via `ctqw`** (`H2`, `H3`, `H4`, `H5`, `H6`, `H8`,
+`H10`, `H11`, `H12`, `H_new`, `build_H10`, all `NO_FAILURE_DETECTED`;
+`results/CARDIAC_MYOSIN/operator_sweep.md` has the full table).
+
+**The corrected register-wide count is 20 of 96 cells clear the floor
+(not 0), 11 of them via `ctqw` (not 0)**: KRAS_G12C 2 (both
+`ground_state`) + BCR_ABL1 4 (all `ground_state`) + CARDIAC_MYOSIN 14
+(11 `ctqw` + 3 `ground_state`) = 20 total, 11 `ctqw` + 9 `ground_state`.
+See the three target tables directly for the authoritative per-cell
+detail. This does **not**
+mean `REVIEW-2026-07-13c`'s CTQW-trapping mechanism is wrong — that
+review's argument was about *why* `H_new`'s diagonal potentials localize
+CTQW transport, a real, separately-verified dynamical claim, not merely
+an inference from "the register shows zero ctqw floor-clears." But the
+empirical register-wide claim as stated here was false and fed directly
+into that review's framing; whether CTQW-trapping still explains
+CARDIAC_MYOSIN's *many* ctqw floor-clears (as opposed to KRAS/BCR_ABL1's
+zero) is a real, unresolved question this correction surfaces but does
+not answer — a scientific-synthesis call for whoever next touches
+`REVIEW-2026-07-13c`'s conclusions or files a follow-up, not settled by
+this addendum.
