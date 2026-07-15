@@ -72,6 +72,38 @@ before any expensive optimization is run.
 
 ---
 
+## Status update, 2026-07-15 — the KRAS warning sign was confirmed, and a scope gap found
+
+This file predicted, on 2026-06-21, that "the ceiling may be at the floor for KRAS." That
+is now a measured result, not a warning sign: **TASK-0046** (Done, 2026-07-14) ran the real
+ceiling search and found KRAS_G12C's ceiling AUC = 0.5239-0.5250 — **below** that target's
+own proximity floor (0.798, TASK-0094). Per `P-0002` (`.ai/memory/shared/pitfalls.md`), this
+is the first real case of `ceiling < floor`, a case this file's own framing did not
+anticipate (the "What the ceiling result tells you" table above has no row for it — every
+row assumes `ceiling >= floor`). Two follow-up tasks now qualify how settled this is:
+**TASK-0116** (is 60 random trials over ~8 dimensions enough search density to trust the
+negative reading?) and **TASK-0117** (the search used `t_max=15`/`n_steps=500` with no
+validity check — the exact gap TASK-0108/0109/0110 exist to close). Until both land, read
+KRAS's ceiling number as "below floor, but not yet fully validated as such," not settled.
+
+**Real scope gap found the same day, not previously flagged**: this file's own "Minimum
+set" below explicitly names H8, H13 (or its projection), and degree centrality as required
+ceiling candidates alongside `H_new`. **TASK-0046 only ever searched `H_new`'s own 8-parameter
+DOF** — no other operator was run through the ceiling search. The H13-vs-H_new comparison
+this file calls "required for scientific rigor" (HYP-P5, `physics.md`) has still never been
+run. No task currently owns closing this gap; TASK-0116 is about search *density* within
+`H_new`'s space, not the missing-operators gap described here — the two should not be
+conflated when scoping whatever picks this up next.
+
+Separately, a live cross-check (2026-07-15, while preparing that day's task batch) found
+`ceiling.py` and `run_challenge.py` seed CTQW from **different conventions for the same
+active site** — the former uses the full multi-residue array, the latter reduces to one
+representative residue (a TASK-0090 crash workaround, not a physics choice). See
+`physics.md`'s new cross-cutting finding on seed cardinality — this affects how comparable
+TASK-0046's ceiling number is to `run_challenge.py`'s own reported 0.779 in the first place.
+
+---
+
 ## Which operator to use for the ceiling search
 
 The ceiling should be measured with **every operator candidate** (H_new, H13 projection,

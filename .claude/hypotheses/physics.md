@@ -179,6 +179,79 @@ diffusion kernel for all practical purposes on these graphs. The choice between
 
 ---
 
+## Status update, 2026-07-15 — Phase 1B closed the loop on P6/P7/P8; P1/P5 remain open gaps
+
+This file was last touched 2026-06-21, before three weeks of real, executed findings
+(Phase 1B in `EXECUTION_PLAN.md`, TASK-0091 through TASK-0117). Recording what actually
+happened against each hypothesis below, rather than leaving this file to read as still
+speculative when several of these are now settled:
+
+- **HYP-P8 is now strongly supported, not just plausible.** Independent evidence from three
+  separate tasks converges on the same conclusion: (1) **TASK-0093** — KRAS_G12C's own
+  headline AUC (0.7792) does **not** clear its own proximity floor (0.7976, margin -0.018)
+  in a full 2×2×2 factorial re-check; zero of 8 methodology combinations clear it. (2)
+  **TASK-0102** — BCR_ABL1's `ground_state_relaxation`=0.7315 is reproduced by 70-75% of
+  biologically-arbitrary single-residue seeds (40-seed sample), because the score is
+  dominated by `H_new`'s fixed ground-state shape (94.5% of relative weight at `t_max=15`),
+  not by real active-site-to-pocket coupling. (3) **REVIEW-2026-07-13c/TASK-0106** — `H_new`'s
+  diagonal potentials cause Anderson-like CTQW localization near the seed (participation
+  ratio 5-6x lower than transport-preserving operators), mechanically producing
+  proximity-like scoring rather than detecting real distal signal. **Practical reading: as
+  of 2026-07-15, no mandatory target's headline AUC survives as confirmed allosteric
+  signal** — KRAS fails its own floor, BCR_ABL1's GSR is a ground-mode/structural-prior
+  artifact (TASK-0104's correction), CARDIAC_MYOSIN self-flags `INSUFFICIENT_RESOLUTION`.
+  This is this project's actual current headline finding, not a caveat on one.
+- **HYP-P7 is refined, not simply confirmed.** **TASK-0105**'s real 3-target ENAQT sweep
+  found the interior-γ transport optimum genuinely reproduces on real protein contact
+  graphs (3 of 6 swept cells, 1.24-1.7x enhancement over the coherent limit) — coherence
+  *does* measurably change transport magnitude. But in every one of those cells, AUC-at-γ*
+  is *lower* than AUC-at-γ→0: the extra transport does not translate into better pocket
+  discrimination anywhere in the real data. So the corrected claim is narrower than the
+  original: not "coherence adds nothing measurable," but "coherence changes transport, and
+  that change has not been shown to help — or hurt — pocket-finding on any target tested."
+  `dephasing_sweep` still has zero call sites in the scored verdict path (TASK-0099, still
+  TODO, correctly resequenced behind TASK-0105 which is now Done).
+- **HYP-P6 is now the subject of a dedicated, filed task set, not an open aside.**
+  TASK-0108/0109/0110 (filed 2026-07-15, TASK-0109/0110 still TODO) directly build the
+  `check_convergence` validity gate and Optuna floor/ceiling scan this hypothesis calls
+  for — this file's own 2026-06-21 "to test: sweep t_max 1 to 200" prescription is now a
+  real, scoped task rather than a discussion note.
+- **HYP-P1 is weakened, not yet formally falsified.** The operator-sweep register
+  (TASK-0101, 96 cells) and the cutoff/weight-scheme benchmark (TASK-0067) both show
+  near-chance AUCs once proximity is controlled for, across nearly every operator in the
+  register — including the ones most directly built around slow-GNM-mode participation
+  (`V_M`, `H_new`). No task has yet run the clean ablation this hypothesis's own "To test"
+  section calls for (rigid vs. multi-domain vs. IDP benchmark, checking whether AUC drop is
+  domain-restricted) — still open, now more urgent given how much of the operator register
+  is failing on these specific 3 targets.
+- **HYP-P5 (H13 ceiling) is still completely untested — a real, currently unfiled gap.**
+  `ceiling.md`'s own text calls the H13-vs-H_new ceiling comparison "required for scientific
+  rigor." **TASK-0046's real ceiling search (Done, 2026-07-14) only searched `H_new`'s own
+  8-parameter DOF** (`lam_B, lam_T, lam_R, lam_C, lam_M, alpha, cutoff, n_low_modes`) — H13
+  was never included as a candidate operator, despite `ceiling.md`'s "Minimum set" section
+  explicitly naming it alongside H8 and degree centrality. TASK-0116 (filed 2026-07-15)
+  flags the *search density* of that same run (60 random trials, ~8 dimensions) as thin
+  evidence for a negative claim — a different, narrower gap than "H13 was never in the
+  candidate set at all." **No task currently owns this specific gap** — worth filing before
+  claiming the ceiling comparison settled either way.
+- **New, cross-cutting finding not anticipated by any hypothesis above: seed cardinality is
+  an unexamined GAUGE choice that flips signs.** TASK-0093 found that narrowing the CTQW
+  source from the full active-site residue array to `run_challenge.py`'s single
+  lowest-index-residue workaround (a TASK-0090 crash fix, not a physics choice) is *the*
+  dominant driver of KRAS_G12C's AUC — moving it from ~0.44-0.53 (array) to ~0.78-0.82
+  (scalar) — a bigger swing than any of the three variables (cutoff/pocket-label/frame)
+  this task was originally scoped to test. TASK-0106 independently hit the same seam on
+  BCR_ABL1 (full-array seed flips `H_new` from lowest-scoring to *highest*-scoring of four
+  operators, AUC 0.567 vs. the established 0.525). `ceiling.py` and `run_challenge.py` were
+  separately found (2026-07-15, per `EXECUTION_PLAN.md`'s note preparing the 5bbcdc4 batch)
+  to already use these two different conventions for the *same* active site, unnoticed
+  until then. Per `INVARIANCE_PROTOCOL.md`, "which residue(s) count as the seed" is a GAUGE
+  choice that has never been classified or registered — **no `INV-XXXX` record and no owning
+  task currently exist for this**, despite it now being implicated in two separate headline
+  reconciliations. Cross-referenced in [[Q-0003]] but not yet resolved into its own task.
+
+---
+
 ## HYP-P8 · For several targets, the apo contact graph does not contain the allosteric pocket signal at all
 
 **From the discussion:**
