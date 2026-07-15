@@ -232,25 +232,32 @@ targets:
     quarantine: false
     enm_cutoff: 8.0
     pocket_contact_cutoff: 4.5
-    drug_ligand: 892   # candidate from backend/systems.py; NOT RCSB-rechecked this pass
+    drug_ligand: "892"
     func_ligand: ["pTyr / active-site Cys215 (descriptive marker, not a ligand code)"]
-    status: draft
-    verified: false
-    confidence: 0.70
+    status: verified
+    verified: true
+    confidence: 0.85
     disease: Metabolic/Diabetes
     target_class: Phosphatase
     site_name: Allosteric BB site (alpha7)
     objective: "Allosteric site ~20 A from catalytic Cys215 (alpha3/alpha7, BB-series)."
     warnings:
-      - "drug_ligand '892' is backend/systems.py's already-resolved value
-         (there marked verified=True with a populated pocket), carried
-         here as a candidate only — TASK-0003 did not independently
-         re-check it against RCSB, so it stays draft/unverified per this
-         task's own scope, same as the other 10 ASD entries."
+      - "RCSB-reconfirmed 2026-07-15 (TASK-0081): 1SUG (apo) and 1T49 (holo)
+         both resolve to chain A; 1T49's hetero records confirm '892' is
+         present (plus MG). drug_ligand '892' promoted from
+         backend/systems.py candidate to independently RCSB-verified."
+      - "Real bug found running this target (2026-07-15, TASK-0081):
+         'drug_ligand: 892' unquoted parses as a YAML integer, not a
+         string -- labels.holo_pocket_mask's `g.resname == ligand_code`
+         comparison then always fails (resname is a string) with no
+         error, just a silent empty pocket -> build_labels raises
+         'no resolvable drug_ligand'. Quoted here ('\"892\"'); this is the
+         only numeric-only drug_ligand code in this file (checked via
+         grep), so no other entry was silently affected the same way."
     source: >
       SYSTEMS_allosteric_corrected_v2.md (2026-06-21, objective/warnings) +
-      backend/systems.py (candidate drug_ligand). Not RCSB-rechecked by
-      TASK-0003.
+      backend/systems.py (candidate drug_ligand), independently
+      RCSB-reconfirmed by TASK-0081 (2026-07-15).
 
   GLUCOKINASE:
     apo_pdb: 1V4S
@@ -276,6 +283,15 @@ targets:
       - "drug_ligand 'TK1' is backend/systems.py's already-resolved value
          (there marked verified=True with a populated pocket), carried
          here as a candidate only, not independently RCSB-rechecked."
+      - "RCSB-checked 2026-07-15 (TASK-0081): BOTH source docs were right,
+         for different structures -- apo 1V4S has only chain A; holo 3H1V
+         has only chain X. TK1 confirmed present in 3H1V's hetero records.
+         This is a real schema gap (targets.yaml's single `chains` field
+         can't express 'apo chain A maps to holo chain X'), not a
+         resolvable data conflict -- not used for TASK-0081's generalization
+         run for this reason; raised to Code Reviewer,
+         .ai/memory/questions/code-reviewer/open/Q-0001-...md, rather than
+         guessed at or silently worked around here."
     source: >
       SYSTEMS_allosteric_corrected_v2.md (2026-06-21, objective) +
       backend/systems.py (candidate drug_ligand). Not RCSB-rechecked by
@@ -324,20 +340,34 @@ targets:
   CASPASE7:
     apo_pdb: 1F1J
     holo_pdb: 1SHL
-    chains: null   # v2: "VERIFY"
+    chains: ["A", "B"]
     keep_nucleic: false
     quarantine: false
     enm_cutoff: 8.0
     pocket_contact_cutoff: 4.5
-    drug_ligand: null   # v2: "FICA?" — unconfirmed
+    drug_ligand: FXN
     func_ligand: ["substrate"]
-    status: draft
-    verified: false
-    confidence: 0.50
+    status: verified
+    verified: true
+    confidence: 0.75
     target_class: Protease (oligomeric)
     site_name: Allosteric dimer-interface site (FICA)
     objective: "Allosteric dimer-interface site (FICA)."
-    source: "SYSTEMS_allosteric_corrected_v2.md (2026-06-21). Not RCSB-rechecked."
+    warnings:
+      - "RCSB-reconfirmed 2026-07-15 (TASK-0081): chains=[A,B] used (not a
+         single chain) because this target's own allostery is explicitly
+         inter-subunit (dimer interface) -- both chains loaded is a
+         requirement for a meaningful pocket here, not an arbitrary
+         choice. 1F1J (apo) has 4 chains (A-D, likely two AB dimer copies
+         in the asymmetric unit); 1SHL (holo) has chains A,B. drug_ligand
+         resolved to 'FXN' (real hetero record in 1SHL) -- v2's own guess
+         'FICA?' was unconfirmed and may be the same compound's literature
+         name rather than its RCSB code; FXN is what the real structure
+         contains, used as-is rather than reconciling the two names."
+    source: >
+      SYSTEMS_allosteric_corrected_v2.md (2026-06-21, objective), chains
+      and drug_ligand independently RCSB-reconfirmed by TASK-0081
+      (2026-07-15).
 
   HEMOGLOBIN:
     apo_pdb: 2HHB
@@ -384,6 +414,13 @@ targets:
       - "Periplasmic/TM signaling protein; 'allosteric pocket' is the
          aspartate site at a dimer interface. Transmembrane context may
          not suit a soluble-domain ENM. Lower priority, per v2."
+      - "RCSB-checked 2026-07-15 (TASK-0081): 1VLT has ZERO hetero ligand
+         records at all (prody 'hetero and not water' selection is empty)
+         -- no bound aspartate detected in this specific holo structure,
+         contrary to v2's 'Asp?' guess. Not used for TASK-0081's
+         generalization run for this reason -- either 1VLT is the wrong
+         holo PDB for this claim or the ligand needs sourcing a different
+         way; not resolved here, this entry stays draft/unconfirmed."
     source: "SYSTEMS_allosteric_corrected_v2.md (2026-06-21). Not RCSB-rechecked."
 
   GLYCOGEN_PHOSPHORYLASE:

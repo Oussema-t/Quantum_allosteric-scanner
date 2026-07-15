@@ -25,6 +25,7 @@ from allostery.analysis import (  # noqa: E402
     apo_holo_consistency,
     assemble_verdict_results,
     benchmark,
+    consensus_ranking,
     dephasing_sweep,
     gnm_cutoff_weight_sweep,
     operator_sweep,
@@ -347,6 +348,50 @@ class TestOperatorSweep:
             cutoff=10.0, operators=["H_new"], t_max=5.0, n_steps=50,
         )
         assert all(r["apo_holo_consistency"] is None for r in rows)
+
+
+# ---------------------------------------------------------------------------
+# consensus_ranking (TASK-0080 -- c-Myc/1NKP no-ground-truth handling)
+# ---------------------------------------------------------------------------
+
+class TestConsensusRanking:
+    def test_returns_expected_keys_and_shapes(self):
+        out = consensus_ranking(COORDS, BFACTORS, source=0, cutoff=10.0, t_max=5.0, n_steps=50, k=5)
+        assert set(out) == {
+            "operators", "occupancy", "top_k_per_operator", "consensus_count",
+            "mean_occupancy", "consensus_ranked_indices", "n_operators", "k",
+        }
+        assert out["n_operators"] == 4
+        assert len(out["operators"]) == 4
+        assert out["consensus_count"].shape == (N,)
+        assert out["mean_occupancy"].shape == (N,)
+        assert len(out["consensus_ranked_indices"]) == 5
+
+    def test_no_auc_or_labels_needed(self):
+        # Signature-level check: consensus_ranking never takes a `labels`
+        # argument at all -- this is the point (TASK-0080's whole reason
+        # to exist is scoring with no pocket ground truth available).
+        import inspect
+        params = inspect.signature(consensus_ranking).parameters
+        assert "labels" not in params
+
+    def test_consensus_count_bounded_by_operator_count(self):
+        out = consensus_ranking(COORDS, BFACTORS, source=0, cutoff=10.0, t_max=5.0, n_steps=50, k=5)
+        assert out["consensus_count"].min() >= 0
+        assert out["consensus_count"].max() <= out["n_operators"]
+
+    def test_k_larger_than_n_clamps(self):
+        out = consensus_ranking(COORDS, BFACTORS, source=0, cutoff=10.0, t_max=5.0, n_steps=50, k=10_000)
+        assert out["k"] == N
+        assert len(out["consensus_ranked_indices"]) == N
+
+    def test_ranking_prefers_higher_consensus_count_over_mean_occupancy(self):
+        out = consensus_ranking(COORDS, BFACTORS, source=0, cutoff=10.0, t_max=5.0, n_steps=50, k=5)
+        ranked = out["consensus_ranked_indices"]
+        counts = out["consensus_count"][ranked]
+        # consensus_count must be non-increasing along the ranked list --
+        # the primary sort key, mean_occupancy only breaks ties within it.
+        assert np.all(np.diff(counts) <= 0)
 
 
 # ---------------------------------------------------------------------------

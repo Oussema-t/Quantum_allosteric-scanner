@@ -1,0 +1,99 @@
+# Q-0003 Does the ceiling-below-floor finding change the floor/ceiling/headroom framing itself?
+
+## Context
+
+- ID: Q-0003 (architect-planner addressee folder)
+- Status: Open
+- Addressee: Architect/Planner
+- Raised By: Implementer C, 2026-07-15
+- Related: [[TASK-0046]] (ceiling coordinate-descent search, Done),
+  [[TASK-0082]] (competence map synthesis, in progress), [[TASK-0094]]
+  (proximity floor, Done). Shared-memory pitfall filed alongside this
+  question: `.ai/memory/shared/pitfalls.md` P-0002.
+
+## Question
+
+KRAS_G12C's real ceiling (a 60-trial random search over `H_new`'s entire
+physical-scalar space, answer key in hand throughout, CTQW propagation)
+scores 0.5239–0.5250 AUC — **below** that same target's proximity floor
+(0.798). Every point in the searched parameter space, evaluated against
+the real labeled pocket, loses to a baseline that only knows distance
+from the seed. This is not "actual doesn't clear floor" (TASK-0093's
+already-reported finding) — it is "the best case of the entire operator
+family, fully informed, doesn't clear floor either."
+
+Two questions this raises that are above my pay grade as the implementer
+who found it:
+
+1. **Does this call the floor/ceiling/headroom framing itself into
+   question for `H_new`/CTQW on this target** — i.e. is "headroom" a
+   meaningful quantity to keep reporting for KRAS_G12C at all, given the
+   denominator (`ceiling - floor`) is negative? Or is this scoped to
+   KRAS_G12C specifically (BCR_ABL1's ceiling, 0.6118, *does* clear its
+   own floor, 0.565 — just barely, and the *actual* pipeline result,
+   0.525, does not) and the framework is fine elsewhere?
+2. **Does a ceiling this low change how confidently Phase 2's "gates
+   before build" logic should be read for KRAS_G12C** — `PLAN.md`'s own
+   framing treats a low optimized-AUC (~0.53, already documented) as
+   evidence the answer isn't recoverable from apo topology via this
+   operator family. This finding is stronger than that: it shows the
+   *entire searched space* is dominated by geometry, not just the
+   default point. Is that worth promoting from "consistent with the
+   existing near-chance finding" to its own headline claim in whatever
+   document ends up being the submission's central narrative?
+
+## Background
+
+TASK-0046 (this session, 2026-07-14/15) ported notebook §8's
+"interpretable parameter optimization" (a blind random search over
+`(lam_B, lam_T, lam_R, lam_C, lam_M, alpha, cutoff, n_low_modes)`, 60
+trials, seed=7) into `ceiling.ceiling_search`, run inside
+`protocol.ceiling_context()`. Real KRAS_G12C cross-check:
+`AUC_apo` at the best of 60 trials = 0.5239–0.5250 (two independent real
+runs, tiny floating-point/BLAS-threading divergence between them, not a
+methodology difference — both squarely "near chance", matching
+`PLAN.md`'s own pre-existing qualitative finding "optimized AUC_apo on
+KRAS ~= 0.53"). TASK-0094's real proximity floor for this same target
+(same apo data, same source, same cutoff) is 0.798
+(`euclid_from_seed_centroid`/`hop_from_seed`/`degree_centrality`, the
+max of the three).
+
+This was discovered while assembling TASK-0082's competence map (the
+floor/ceiling/actual/headroom table) — `headroom = (actual - floor) /
+(ceiling - floor)` produces a negative-denominator, meaningless fraction
+for KRAS_G12C when computed mechanically. Filed as its own pitfall
+(P-0002) rather than silently patched into a number, per this session's
+own discipline. TASK-0082 itself is proceeding by reporting this
+explicitly (no fraction, the finding stated in words) for KRAS_G12C's
+row — this question is about whether that's *also* the right call for
+how the finding gets framed in whatever narrative document the
+submission ultimately uses, which is an Architect-level source-of-truth
+decision, not an implementer one.
+
+**Update, same day, discovered after this question was drafted**: a
+separate Architect/Critic-overlay pass (`REVIEW-2026-07-15-execution-
+plan-gap-audit.md`, `REVIEW-2026-07-15b-ceiling-search-methodology.md`)
+independently reached this exact task and filed two directly relevant
+gaps — [[TASK-0116]] (the 60-trial blind random search this finding
+rests on is weak evidence for a *negative* claim specifically, though
+adequate for a positive one) and [[TASK-0117]] (the ceiling search
+shares every other headline AUC's unvalidated `t_max`/`n_steps`), plus
+[[TASK-0112]] (no CI on any number in this competence map at all). None
+of the three retract the ceiling-below-floor number; they change how
+confidently it can be framed. `COMPETENCE_MAP.md` (`__WORK_IN_PROGRESS__/`)
+has been updated to carry this caveat inline everywhere the finding is
+stated. **This softens question 1 above**: the answer may simply be
+"wait for TASK-0116/0117, then re-ask" rather than a framing decision
+to make now on the current evidence. Still worth an explicit answer,
+since "wait" vs. "the null-result framing is fine even under this much
+search-coverage uncertainty" are different Architect-level calls with
+different implications for what the submission draft can safely claim
+in the meantime.
+
+## Answer
+
+(empty — Status: Open)
+
+## Action
+
+(empty until answered)

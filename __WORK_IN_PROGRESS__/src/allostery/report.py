@@ -271,3 +271,95 @@ def verdict_template(results: dict, *, provenance: str = "dev") -> str:
         )
 
     return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
+# TASK-0080 -- no-ground-truth report (c-Myc/1NKP: allosteric_pocket_exists=false)
+# ---------------------------------------------------------------------------
+
+def _consensus_confidence_statement(consensus: dict) -> str:
+    """Honest, qualitative confidence read of a `analysis.consensus_ranking`
+    result -- no AUC exists here to attach a number to, so the statement is
+    about *operator agreement*, the only holo-free signal this report has."""
+    counts = consensus["consensus_count"]
+    n_ops = consensus["n_operators"]
+    max_agree = int(counts.max()) if len(counts) else 0
+    if max_agree == n_ops:
+        return (
+            f"high -- at least one residue appears in all {n_ops} operators' "
+            f"own top-{consensus['k']}, independent of any labeled pocket"
+        )
+    if max_agree >= max(2, n_ops - 1):
+        return f"moderate -- best cross-operator agreement is {max_agree}/{n_ops}"
+    return (
+        f"low -- no residue clears {max_agree}/{n_ops} operator agreement; "
+        "the prediction is operator-dependent, not convergent, and should be "
+        "read as exploratory, not a confident hit list"
+    )
+
+
+def no_ground_truth_report(
+    target_name: str,
+    consensus: dict,
+    docking: dict,
+    *,
+    resnums: np.ndarray | None = None,
+    reason: str = "no holo/bound structure exists for this allosteric question",
+) -> str:
+    """Render TASK-0080's no-AUC/no-ceiling report for a target with no
+    labeled holo pocket (`config/targets.yaml`'s `allosteric_pocket_exists:
+    false`, `holo_pdb: null` -- c-Myc/1NKP is the only such mandatory
+    target). Never attempts to compute or render `AUC`/ceiling/floor keys
+    -- `verdict_template` is the wrong renderer for this target and is not
+    reused with missing keys silently blank; this is a distinct report
+    shape stating explicitly *why* those numbers are absent, per this
+    task's own Constraint ("the absence of ground truth is itself
+    information to surface").
+
+    `consensus` is `analysis.consensus_ranking`'s output (cross-operator
+    agreement, this target's only holo-free confidence signal).
+    `docking` is `baselines.fpocket_baseline`'s output -- rendered
+    whichever way it comes back, including its graceful `{"error": ...}`
+    degradation (fpocket is not installed in this repo's dev/CI
+    environment; that absence is reported honestly, not masked as "no
+    pockets found").
+    """
+    lines = [
+        f"=== {target_name} -- NO GROUND TRUTH ===",
+        "",
+        f"No AUC, no ceiling, and no proximity-floor check are computed or",
+        f"reported for this target: {reason}. This is this target's own",
+        "documented status (config/targets.yaml), not a scoring failure or",
+        "an omission -- per this project's own convention, an honest NO is",
+        "reported explicitly, not silently dropped.",
+        "",
+        f"Consensus prediction across {consensus['n_operators']} independent "
+        f"operators ({', '.join(consensus['operators'])}), top-{consensus['k']}:",
+    ]
+    for rank, idx in enumerate(consensus["consensus_ranked_indices"], start=1):
+        label = int(resnums[idx]) if resnums is not None else int(idx)
+        agree = int(consensus["consensus_count"][idx])
+        occ = float(consensus["mean_occupancy"][idx])
+        lines.append(
+            f"  {rank}. residue {label} -- {agree}/{consensus['n_operators']} "
+            f"operators agree (top-{consensus['k']}), mean occupancy={occ:.4f}"
+        )
+    lines += [
+        "",
+        f"Confidence: {_consensus_confidence_statement(consensus)}",
+        "",
+        "Theoretical docking viability (fpocket):",
+    ]
+    if "error" in docking:
+        lines.append(f"  unavailable -- {docking['error']}")
+    else:
+        pockets = docking.get("pockets", [])
+        if not pockets:
+            lines.append("  fpocket ran but found no druggable cavities.")
+        else:
+            for p in pockets[:5]:
+                lines.append(
+                    f"  pocket {p.get('id')}: score={p.get('score')}, "
+                    f"druggability_score={p.get('druggability_score')}"
+                )
+    return "\n".join(lines)

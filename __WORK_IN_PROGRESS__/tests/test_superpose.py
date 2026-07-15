@@ -24,6 +24,7 @@ from allostery.superpose import (  # noqa: E402
     common_residues_by_resnum,
     cryptic_openness_gate,
     cumulative_overlap,
+    cumulative_overlap_gate,
     geometric_pocket_mask,
     kabsch_align,
     kabsch_apply,
@@ -325,6 +326,132 @@ class TestCumulativeOverlap:
         _, eigvecs = anm_modes(COORDS, cutoff=10.0, n_modes=5)
         with pytest.raises(ValueError):
             cumulative_overlap(np.zeros(7), eigvecs, np.arange(N))
+
+
+# ---------------------------------------------------------------------------
+# TASK-0075 -- knob-spread go/no-go gate (Acceptance Scenarios)
+# ---------------------------------------------------------------------------
+#
+# A larger synthetic helix than the module's own N=12 (below, GATE_N=20) --
+# needed for a real, non-contrived knob-sensitivity: at N=12 the ANM mode
+# spectrum is too coarse for cutoff/n_modes to meaningfully reorder which
+# subspace delta_r projects onto. delta_r is constructed as a mix of the
+# first two cutoff=10.0 modes plus fixed-seed noise (same recipe
+# TestCumulativeOverlap's own tests already use for a controlled-overlap
+# delta_r) -- real physics, not a rigged verdict: the resulting spread
+# (CO ~= 0.31 to ~0.86 across the swept grid, verified by direct
+# computation before writing these assertions) happens to flip a
+# threshold near the middle of that range, which is what a real
+# knob-sensitive case looks like. This is a fresh construction, not a
+# byte-for-byte reproduction of the plan's originally-cited 0.067-0.860/
+# 15-of-18 numbers -- those live in .ai/reference/INVARIANCE_PROTOCOL.md:76
+# ("2-domain toy", rc x variant x k = 18 combos) as a summary statistic
+# only, no coordinates or code checked in to rebuild the exact case. A
+# literal 2-domain-hinge reconstruction was attempted first and did not
+# reach that severity (stayed in a narrow 0.42-0.45 band); this simpler
+# single-helix construction is the fallback that does exercise a real,
+# if smaller (1/12 vs the documented 15/18), knob-driven flip -- see
+# TASK-0075's own Done section for the full account of both attempts.
+
+GATE_N = 20
+GATE_COORDS = _helix_coords(GATE_N)
+GATE_COMMON_IDX = np.arange(GATE_N)
+
+
+def _gate_delta_r():
+    _, eigvecs10 = anm_modes(GATE_COORDS, cutoff=10.0, n_modes=3 * GATE_N - 6)
+    rng = np.random.default_rng(3)
+    noise = rng.normal(size=3 * GATE_N)
+    noise = noise / np.linalg.norm(noise)
+    return 0.6 * eigvecs10[:, 0] + 0.3 * eigvecs10[:, 1] + 0.5 * noise
+
+
+GATE_DELTA_R = _gate_delta_r()
+GATE_CUTOFFS = (8.0, 10.0, 12.0)
+GATE_N_MODES = (2, 5, 10, 20)
+
+
+class TestCumulativeOverlapGate:
+    def test_low_threshold_gives_decisive_go(self):
+        out = cumulative_overlap_gate(
+            GATE_DELTA_R, GATE_COMMON_IDX, {"apo": GATE_COORDS},
+            cutoffs=GATE_CUTOFFS, n_modes_list=GATE_N_MODES, co_threshold=0.3,
+        )
+        assert out["verdict"] == "GO"
+        assert out["n_go"] == out["n_combos"]
+
+    def test_high_threshold_gives_decisive_no_go(self):
+        out = cumulative_overlap_gate(
+            GATE_DELTA_R, GATE_COMMON_IDX, {"apo": GATE_COORDS},
+            cutoffs=GATE_CUTOFFS, n_modes_list=GATE_N_MODES, co_threshold=0.95,
+        )
+        assert out["verdict"] == "NO_GO"
+        assert out["n_go"] == 0
+
+    def test_mid_threshold_gives_unstable_not_a_point_estimate(self):
+        """Acceptance Scenario: a knob-sensitive case must return UNSTABLE,
+        never a single GO or NO-GO."""
+        out = cumulative_overlap_gate(
+            GATE_DELTA_R, GATE_COMMON_IDX, {"apo": GATE_COORDS},
+            cutoffs=GATE_CUTOFFS, n_modes_list=GATE_N_MODES, co_threshold=0.5,
+        )
+        assert out["verdict"] == "UNSTABLE"
+        assert 0 < out["n_go"] < out["n_combos"]
+        assert out["spread"] > 0.3  # real, substantial knob sensitivity
+
+    def test_all_agreeing_case_reports_narrow_spread_alongside_verdict(self):
+        """Acceptance Scenario: when combinations agree, the gate returns a
+        decisive verdict *plus* the (narrow) spread -- not a bare verdict
+        with the evidence discarded."""
+        out = cumulative_overlap_gate(
+            GATE_DELTA_R, GATE_COMMON_IDX, {"apo": GATE_COORDS},
+            cutoffs=GATE_CUTOFFS, n_modes_list=GATE_N_MODES, co_threshold=0.3,
+        )
+        assert out["verdict"] == "GO"
+        assert "spread" in out and "co_min" in out and "co_max" in out
+        assert out["spread"] == pytest.approx(out["co_max"] - out["co_min"])
+
+    def test_reference_conformer_choice_is_a_real_swept_knob(self):
+        """A second reference structure (a perturbed conformer) is
+        actually used, not silently ignored -- part of this task's own
+        named (cutoff x variant x k x reference) grid."""
+        rng = np.random.default_rng(9)
+        perturbed = GATE_COORDS + rng.normal(scale=0.3, size=GATE_COORDS.shape)
+        out = cumulative_overlap_gate(
+            GATE_DELTA_R, GATE_COMMON_IDX,
+            {"apo": GATE_COORDS, "apo_alt_conformer": perturbed},
+            cutoffs=GATE_CUTOFFS, n_modes_list=GATE_N_MODES, co_threshold=0.5,
+        )
+        assert out["n_combos"] == 2 * len(GATE_CUTOFFS) * len(GATE_N_MODES)
+        refs_seen = {g["reference"] for g in out["grid"]}
+        assert refs_seen == {"apo", "apo_alt_conformer"}
+
+    def test_grid_is_the_full_evidence_not_just_the_summary(self):
+        out = cumulative_overlap_gate(
+            GATE_DELTA_R, GATE_COMMON_IDX, {"apo": GATE_COORDS},
+            cutoffs=GATE_CUTOFFS, n_modes_list=GATE_N_MODES, co_threshold=0.5,
+        )
+        assert len(out["grid"]) == out["n_combos"]
+        for combo in out["grid"]:
+            assert set(combo) == {"reference", "cutoff", "n_modes", "co", "go"}
+
+    def test_disconnected_reference_graph_recorded_not_crashed(self):
+        cluster_a = _helix_coords(6)
+        cluster_b = _helix_coords(6) + np.array([1000.0, 1000.0, 1000.0])
+        disconnected = np.vstack([cluster_a, cluster_b])
+        common_idx = np.arange(12)
+        delta_r = np.zeros(3 * 12)
+        delta_r[0] = 1.0
+        out = cumulative_overlap_gate(
+            delta_r, common_idx, {"disconnected": disconnected},
+            cutoffs=(10.0,), n_modes_list=(5,), co_threshold=0.5,
+        )
+        assert out["grid"][0]["go"] is None
+        assert np.isnan(out["grid"][0]["co"])
+        # every combo degenerate -> nothing to call GO, per this function's
+        # own "no finite combo => NO_GO" fallback (never silently UNSTABLE
+        # or GO on zero evidence)
+        assert out["verdict"] == "NO_GO"
 
 
 # ---------------------------------------------------------------------------

@@ -7,7 +7,7 @@ import pytest
 
 from allostery import protocol
 from allostery.labels import Labels
-from allostery.report import assemble_hit_list, hit_list, jaccard_stability, verdict_template
+from allostery.report import assemble_hit_list, hit_list, jaccard_stability, no_ground_truth_report, verdict_template
 
 
 class TestHitList:
@@ -241,3 +241,60 @@ class TestResultsMdDecoherentDisclosure:
             "decoherent-limit disclosure must appear before the first AUC "
             "table, not after it"
         )
+
+
+# ---------------------------------------------------------------------------
+# no_ground_truth_report (TASK-0080 -- c-Myc/1NKP)
+# ---------------------------------------------------------------------------
+
+def _synth_consensus(n=6, k=3):
+    consensus_count = np.array([4, 4, 2, 1, 0, 0])
+    mean_occupancy = np.array([0.30, 0.25, 0.15, 0.10, 0.10, 0.10])
+    order = np.lexsort((-mean_occupancy, -consensus_count))[:k]
+    return {
+        "operators": ["H_new_default", "H10_disorder_suppressed", "H2_combinatorial_laplacian", "H14_anm_pinv_trace"],
+        "occupancy": {},
+        "top_k_per_operator": {},
+        "consensus_count": consensus_count,
+        "mean_occupancy": mean_occupancy,
+        "consensus_ranked_indices": order,
+        "n_operators": 4,
+        "k": k,
+    }
+
+
+class TestNoGroundTruthReport:
+    def test_never_mentions_auc_or_ceiling(self):
+        text = no_ground_truth_report("MYC_MAX", _synth_consensus(), {"error": "fpocket binary not found on PATH"})
+        assert "AUC" not in text.replace("No AUC", "")  # the one deliberate mention is the disclosure itself
+        assert "no auc" in text.lower()
+
+    def test_states_the_reason_explicitly(self):
+        text = no_ground_truth_report(
+            "MYC_MAX", _synth_consensus(), {"error": "x"},
+            reason="no holo/bound structure exists for this allosteric question",
+        )
+        assert "no holo/bound structure exists" in text
+
+    def test_renders_consensus_ranked_hits_with_resnums(self):
+        resnums = np.array([101, 102, 103, 104, 105, 106])
+        text = no_ground_truth_report("MYC_MAX", _synth_consensus(), {"error": "x"}, resnums=resnums)
+        assert "residue 101" in text
+        assert "residue 102" in text
+        assert "4/4" in text
+
+    def test_high_confidence_when_all_operators_agree(self):
+        text = no_ground_truth_report("MYC_MAX", _synth_consensus(), {"error": "x"})
+        assert "Confidence: high" in text
+
+    def test_docking_error_rendered_honestly_not_hidden(self):
+        text = no_ground_truth_report(
+            "MYC_MAX", _synth_consensus(), {"error": "fpocket binary not found on PATH"},
+        )
+        assert "unavailable -- fpocket binary not found on PATH" in text
+
+    def test_docking_pockets_rendered_when_present(self):
+        docking = {"pockets": [{"id": 1, "score": 0.7, "druggability_score": 0.5}]}
+        text = no_ground_truth_report("MYC_MAX", _synth_consensus(), docking)
+        assert "pocket 1" in text
+        assert "druggability_score=0.5" in text

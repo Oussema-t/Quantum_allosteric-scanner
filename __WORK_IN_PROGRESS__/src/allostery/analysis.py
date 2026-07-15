@@ -458,6 +458,91 @@ def gnm_cutoff_weight_sweep(
 
 
 # ---------------------------------------------------------------------------
+# TASK-0080 -- consensus ranking (no-ground-truth targets, e.g. c-Myc/1NKP)
+# ---------------------------------------------------------------------------
+
+_CONSENSUS_DEFAULT_OPERATORS = (
+    "H_new_default", "H10_disorder_suppressed", "H2_combinatorial_laplacian", "H14_anm_pinv_trace",
+)
+
+
+def consensus_ranking(
+    coords: np.ndarray,
+    bfactors: np.ndarray,
+    source,
+    *,
+    cutoff: float = 10.0,
+    t_max: float = 15.0,
+    n_steps: int = 500,
+    k: int = 10,
+) -> dict:
+    """Holo-free confidence signal for targets with no labeled pocket to
+    score AUC against (`TASK-0080`'s c-Myc/1NKP case: `allosteric_pocket_
+    exists: false`, `holo_pdb: null`). Adapts
+    `HOLO_DIRECTION_MODULE.md` Step 5's "consensus across perturbations"
+    idea (*"is the predicted pocket the same region across [an ensemble]?
+    Stable region = real resolving power; smear across the surface =
+    none. Computable with no holo at all."*) from an ensemble of
+    admissible apo deformations (`TASK-0015`, not built) to an ensemble
+    of already-built, already-tested operator families on the *same*
+    fixed apo topology -- the same holo-free spirit (no AUC, no labeled
+    pocket, anywhere in this function), a real and available substitute,
+    not that task's own scope.
+
+    Runs `time_averaged_ctqw` through each of `H_new_default`,
+    `H10_disorder_suppressed`, `H2_combinatorial_laplacian`, and
+    `H14_anm_pinv_trace` (Tier A/B mix per `TASK-0100`'s own operator
+    tiering, not just the two candidates `benchmark()` compares) from the
+    same `source` seed, and reports, per residue, how many of the 4
+    operators' own top-`k` sets include it (`consensus_count`) plus the
+    mean occupancy across operators (a tie-breaker within a consensus
+    tier, not the primary signal -- agreement across independently-built
+    operators is the actual claim here, not any single operator's score).
+
+    Returns `{"operators", "occupancy", "top_k_per_operator",
+    "consensus_count", "mean_occupancy", "consensus_ranked_indices",
+    "n_operators", "k"}`. `consensus_ranked_indices` is the top-`k`
+    residues ordered by `(consensus_count desc, mean_occupancy desc)`.
+    """
+    from .hamiltonians import H2_combinatorial_laplacian, H14_anm_pinv_trace, build_H10, build_H_new
+    from .propagators import time_averaged_ctqw
+
+    operators = {
+        "H_new_default": build_H_new(coords, bfactors, cutoff=cutoff),
+        "H10_disorder_suppressed": build_H10(coords, bfactors, cutoff=cutoff),
+        "H2_combinatorial_laplacian": H2_combinatorial_laplacian(coords, cutoff=cutoff),
+        "H14_anm_pinv_trace": H14_anm_pinv_trace(coords, cutoff=cutoff),
+    }
+
+    n = len(coords)
+    k_eff = min(k, n)
+    occupancy: dict = {}
+    top_k_per_operator: dict = {}
+    consensus_count = np.zeros(n, dtype=int)
+    for name, H in operators.items():
+        occ = time_averaged_ctqw(H, t_max, source=source, n_steps=n_steps)
+        occupancy[name] = occ
+        top_k = np.argsort(-occ)[:k_eff]
+        top_k_per_operator[name] = sorted(int(i) for i in top_k)
+        consensus_count[top_k] += 1
+
+    mean_occupancy = np.mean(np.stack(list(occupancy.values())), axis=0)
+    order = np.lexsort((-mean_occupancy, -consensus_count))
+    consensus_ranked_indices = order[:k_eff]
+
+    return {
+        "operators": list(operators.keys()),
+        "occupancy": occupancy,
+        "top_k_per_operator": top_k_per_operator,
+        "consensus_count": consensus_count,
+        "mean_occupancy": mean_occupancy,
+        "consensus_ranked_indices": consensus_ranked_indices,
+        "n_operators": len(operators),
+        "k": k_eff,
+    }
+
+
+# ---------------------------------------------------------------------------
 # TASK-0101 -- Tier-1 operator sweep (TASK-0100's architecture decision)
 #
 # 16 named operators (H1-H14, H_new, build_H10) x 2 propagators (ctqw,

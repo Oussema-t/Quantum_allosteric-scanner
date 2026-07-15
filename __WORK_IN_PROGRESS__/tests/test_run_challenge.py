@@ -68,7 +68,7 @@ def _synthetic_apo_holo():
 
 
 _TARGET_CONFIG = {
-    "drug_ligand": "LIG", "func_ligand": ["FUNC"],
+    "drug_ligand": "LIG", "func_ligand": ["FUNC"], "holo_pdb": "SYNTH_HOLO",
     "enm_cutoff": 10.0, "pocket_contact_cutoff": 4.5,
 }
 

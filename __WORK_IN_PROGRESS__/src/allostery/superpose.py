@@ -330,6 +330,102 @@ def cumulative_overlap(delta_r: np.ndarray, eigvecs: np.ndarray, common_idx: np.
 
 
 # ---------------------------------------------------------------------------
+# TASK-0075 -- knob-spread go/no-go gate over cumulative_overlap
+# ---------------------------------------------------------------------------
+
+def cumulative_overlap_gate(
+    delta_r: np.ndarray,
+    common_idx: np.ndarray,
+    reference_coords: dict,
+    *,
+    cutoffs=(8.0, 10.0, 12.0),
+    n_modes_list=(10, 20, 30),
+    co_threshold: float = 0.5,
+) -> dict:
+    """GO / NO_GO / UNSTABLE verdict on HOLO_DIRECTION_MODULE.md's Step 2
+    barrier-penetrability test, swept over the knobs
+    `INVARIANCE_PROTOCOL.md`/`INV-0001` name as KNOB-not-GAUGE: ANM
+    `cutoff`, mode count `n_modes`, and reference-conformer choice (which
+    structure's ANM modes `delta_r` is projected onto -- `reference_coords`
+    is `{name: coords}`, e.g. `{"apo": apo.coords}` or several candidate
+    reference conformers).
+
+    No single-point-estimate version of this gate exists anywhere in this
+    codebase to preserve compatibility with (checked directly: `superpose.
+    cumulative_overlap` itself returns only the raw, unthresholded CO(m)
+    curve; `run_superpose` never applies a threshold to it) -- this is the
+    first verdict built on top of it, built spread-aware from the start
+    per this task's own Intent Contract, not upgraded from a prior
+    point-estimate implementation.
+
+    **`(cutoff x variant x k x reference)` from this task's own Context**
+    collapses to `(cutoff x n_modes x reference)` here: no ANM "variant"
+    axis (an alternate Hessian weighting scheme, analogous to
+    `hamiltonians.py`'s `H1`-`H14` operator family) exists anywhere in
+    `anm_modes`/`H13_3N_anm_hessian` to sweep -- confirmed by reading both
+    functions, not assumed. Flagged as a real, currently-absent knob
+    rather than silently dropped or invented; a future `anm_variant`
+    parameter on `anm_modes` would extend this gate's grid with one more
+    nested loop, no restructuring needed.
+
+    `delta_r`/`common_idx` are held fixed across the sweep -- Tama-
+    Sanejouand's Δr is the *observed* apo->holo displacement, not itself a
+    knob; only the ANM modes it is projected onto (cutoff/n_modes/which
+    reference structure) vary. CO(m) is read at `m = n_modes` (the last
+    entry of `cumulative_overlap`'s cumulative curve, i.e. "all swept
+    modes included") for each combination.
+
+    Verdict: `GO` if every combination's CO clears `co_threshold`, `NO_GO`
+    if none do, `UNSTABLE` if the threshold decision depends on which
+    combination was run -- per this task's Acceptance Scenarios, a mixed
+    grid must never collapse to a single GO/NO-GO point estimate.
+
+    Returns `{"verdict", "co_min", "co_max", "spread", "n_combos",
+    "n_go", "threshold", "grid"}` -- `grid` is the full per-combination
+    list (`reference`/`cutoff`/`n_modes`/`co`/`go`), the actual evidence
+    behind the verdict, not just the summary.
+    """
+    grid = []
+    for ref_name, coords in reference_coords.items():
+        for cutoff in cutoffs:
+            for n_modes in n_modes_list:
+                try:
+                    eigvals, eigvecs = anm_modes(coords, cutoff=cutoff, n_modes=n_modes)
+                except ValueError:
+                    # Disconnected contact graph at this cutoff -- a real,
+                    # reportable combination outcome, not a crash (mirrors
+                    # this module's own "record, don't hide" convention
+                    # for cryptic_openness_gate's unmeasurable residues).
+                    grid.append(dict(reference=ref_name, cutoff=cutoff, n_modes=n_modes,
+                                      co=float("nan"), go=None))
+                    continue
+                co_curve = cumulative_overlap(delta_r, eigvecs, common_idx)
+                co_final = float(co_curve[-1]) if len(co_curve) else float("nan")
+                go = bool(co_final >= co_threshold) if np.isfinite(co_final) else None
+                grid.append(dict(reference=ref_name, cutoff=cutoff, n_modes=n_modes, co=co_final, go=go))
+
+    finite = [g for g in grid if g["go"] is not None]
+    if not finite:
+        return dict(verdict="NO_GO", co_min=float("nan"), co_max=float("nan"), spread=float("nan"),
+                    n_combos=len(grid), n_go=0, threshold=co_threshold, grid=grid)
+
+    cos = [g["co"] for g in finite]
+    co_min, co_max = min(cos), max(cos)
+    n_go = sum(1 for g in finite if g["go"])
+    if n_go == len(finite):
+        verdict = "GO"
+    elif n_go == 0:
+        verdict = "NO_GO"
+    else:
+        verdict = "UNSTABLE"
+
+    return dict(
+        verdict=verdict, co_min=co_min, co_max=co_max, spread=co_max - co_min,
+        n_combos=len(grid), n_go=n_go, threshold=co_threshold, grid=grid,
+    )
+
+
+# ---------------------------------------------------------------------------
 # kappa calibration + per-mode elastic energy / relaxation timescale
 # ---------------------------------------------------------------------------
 

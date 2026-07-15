@@ -8,7 +8,7 @@
   both reports) using `protocol.run_frozen_verdict`'s already-supported
   `holo_H`/`holo_source`/`holo_labels`/`apo_idx`/`holo_idx` kwargs, which
   [[TASK-0079.004]]'s orchestrator deliberately left unwired.
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Source: [[TASK-0079.005]]'s first real end-to-end run, and the
   discussion that followed it (2026-07-12) — read that task's Done
@@ -138,4 +138,100 @@ either way, not silently folded into a single pass/fail.
 
 ## Done
 
-(not yet)
+**Implemented as its own script** (`__WORK_IN_PROGRESS__/scripts/holo_diagnostic_comparison.py`),
+not a modification of `run_challenge.py` (per Out Of Scope). Two-pass per
+target, both real `run_frozen_verdict` calls: pass 1 (apo only) discovers
+the real winning candidate for this fresh run; pass 2 supplies
+`holo_H` (built from the *same* operator recipe as pass 1's winner, via
+a name->builder map, not assumed to always be `H_new`), `holo_source`,
+`holo_labels` (via TASK-0067's own `_holo_native_labels`, imported
+directly from `test_gnm_cutoff_weight_benchmark.py`, not re-derived),
+and `apo_idx`/`holo_idx` (`superpose.align_apo_holo`). Pass 2 asserts it
+re-selects the same winner as pass 1 (selection is blind/deterministic,
+no RNG in `select.py`'s scoring path) as a live self-check. Real network
++ real compute, both mandatory targets with holo ground truth.
+
+Output: `__WORK_IN_PROGRESS__/results_task0092/{KRAS_G12C,BCR_ABL1}/{verdict.json,report.txt}`
+(gitignored `results_*/`, TASK-0094's own precedent).
+
+### KRAS_G12C
+
+| Quantity | Value |
+|---|---|
+| `AUC_apo_Hnew_optimised` | 0.7792 |
+| `AUC_holo_Hnew_optimised` | 0.6980 |
+| `mean_rho_apo_holo` | 0.7301 |
+| `mean_jacc20` | 0.25 |
+
+Winner: `H_new_default`, cutoff=8.0 (both passes agreed).
+
+**Interpretation:** gap is small and in the *unexpected* direction --
+holo AUC (0.698) is **lower** than apo AUC (0.779), not higher. Per this
+task's (a)/(b) framework, a small gap points to explanation (b)
+(propagator/operator is the bottleneck, not apo's information content)
+-- but here it points more precisely to "apo's score is not obviously
+information-starved relative to holo's own topology fed to the same
+operator", which is consistent with (though does not on its own decide)
+REVIEW-2026-07-13's P1-A finding that KRAS's 0.779 is substantially a
+proximity/geometry artifact: proximity-to-seed structure is present in
+both apo and holo topologies alike, so a proximity-dominated score
+doesn't necessarily improve when given the "better" (holo) topology.
+`mean_rho_apo_holo`=0.73 (moderately high rank agreement) and
+`mean_jacc20`=0.25 (modest top-20 overlap) are consistent with "same
+general regions light up in both frames," not a sharp holo-specific
+localization. **Does not by itself resolve TASK-0093/TASK-0094's
+proximity-confound question** -- reported as a data point for that
+question, not a substitute for it.
+
+### BCR_ABL1
+
+| Quantity | Value |
+|---|---|
+| `AUC_apo_Hnew_optimised` (CTQW) | 0.5250 |
+| `AUC_holo_Hnew_optimised` (CTQW) | 0.5857 |
+| `mean_rho_apo_holo` | 0.9710 |
+| `mean_jacc20` | 0.60 |
+
+Winner: `H_new_default`, cutoff=8.0 (both passes agreed).
+
+**Interpretation:** CTQW gap is small (+0.061) and both sides sit near
+chance (0.525 apo, 0.586 holo) -- explanation (b): the propagator
+itself (CTQW on `H_new`) is the bottleneck, not apo's information
+content, since even holo's own topology barely moves the needle through
+the same operator. This is independent, real-data corroboration for
+REVIEW-2026-07-13c's CTQW-trapping hypothesis (Anderson-like
+localization at the seed's first contact shell) -- consistent with, but
+not a substitute for, TASK-0106's own dedicated real-data gate.
+
+### Addendum -- `ground_state_relaxation` holo-side AUC for BCR_ABL1
+
+| Quantity | Value |
+|---|---|
+| `ground_state_relaxation` AUC, apo (`AUC_heat_mean`) | 0.7315 |
+| `ground_state_relaxation` AUC, holo | 0.7394 |
+
+Reproduces TASK-0091's apo finding (0.7315) exactly on this fresh run.
+Holo and apo GSR AUCs are **very close** (0.7394 vs 0.7315, Δ=0.008) --
+per this task's own Addendum caveat, this is the "static artifact"
+signature, not the "localization shift toward the pocket upon ligand
+binding" signature: if GSR were picking up a real ligand-induced
+conformational change, holo (which has the ligand) would be expected to
+diverge from apo, not track it this closely, especially compared to
+CTQW's own apo/holo gap on the same operator (0.061) which is larger
+than GSR's (0.008) despite CTQW being the propagator with markedly
+*lower* absolute AUC. **This holo agreement is necessary-but-not-
+sufficient corroboration only, per the Addendum's own explicit
+instruction** -- it does not independently confirm BCR_ABL1's GSR
+finding is a real communication signal rather than a static structural-
+prior artifact of `H_new`'s potential-term composition (the same
+concern TASK-0102/REVIEW-2026-07-13b's dumbbell negative-control raised
+and, per `0b0323d`'s commit message, already found evidence for: GSR
+tracks the well, not the coupling). This result is consistent with,
+not contradictory to, that finding.
+
+### Failure-explanation summary
+
+| Target | Gap (holo - apo, CTQW) | Explanation |
+|---|---|---|
+| KRAS_G12C | -0.081 (holo *lower*) | Neither (a) nor (b) cleanly -- apo is not information-starved relative to holo; consistent with a proximity-dominated score present in both frames (P1-A). |
+| BCR_ABL1 | +0.061 (small) | (b) -- propagator/operator (CTQW) is the bottleneck, not apo's information content. Real-data corroboration for the CTQW-trapping mechanism (REVIEW-2026-07-13c), pending TASK-0106's dedicated gate. |

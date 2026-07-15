@@ -19,11 +19,17 @@ from allostery.clean import load_target_config  # noqa: E402
 CONFIG_PATH = Path(__file__).resolve().parent.parent / "config" / "targets.yaml"
 
 MANDATORY_TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN", "MYC_MAX"]
+# PTP1B/CASPASE7 promoted to `verified` by TASK-0081 (2026-07-15):
+# independently RCSB-reconfirmed (real chain IDs, real hetero ligand
+# records checked directly, not trusted from either source doc) and run
+# for real through the end-to-end pipeline as this project's ASD
+# generalization set -- no longer draft/unverified.
+ASD_VERIFIED_TARGETS = ["PTP1B", "CASPASE7"]
 ASD_DRAFT_TARGETS = [
-    "PTP1B", "GLUCOKINASE", "ATCase", "CASPASE1", "CASPASE7", "HEMOGLOBIN",
+    "GLUCOKINASE", "ATCase", "CASPASE1", "HEMOGLOBIN",
     "TAR_RECEPTOR", "GLYCOGEN_PHOSPHORYLASE", "PFK", "GROEL_SUBUNIT",
 ]
-ALL_TARGETS = MANDATORY_TARGETS + ASD_DRAFT_TARGETS
+ALL_TARGETS = MANDATORY_TARGETS + ASD_VERIFIED_TARGETS + ASD_DRAFT_TARGETS
 
 # The central rule from SYSTEMS_allosteric_corrected_v2.md: no field that
 # would require a hand-transcribed residue number belongs in this file.
@@ -85,6 +91,19 @@ def test_draft_targets_are_not_verified():
         cfg = load_target_config(name, config_path=CONFIG_PATH)
         assert cfg["status"] == "draft"
         assert cfg["verified"] is False
+
+
+def test_asd_verified_targets_are_verified_with_resolvable_drug_ligand():
+    for name in ASD_VERIFIED_TARGETS:
+        cfg = load_target_config(name, config_path=CONFIG_PATH)
+        assert cfg["status"] == "verified"
+        assert cfg["verified"] is True
+        assert cfg["chains"] is not None
+        assert cfg["drug_ligand"] is not None
+        assert isinstance(cfg["drug_ligand"], str)  # TASK-0081: PTP1B's
+        # unquoted `892` silently parsed as a YAML int and never matched
+        # any real ligand resname -- guard against the same class of bug
+        # recurring for any future verified numeric-only ligand code.
 
 
 # --- RCSB-reconfirmed facts (2026-07-06), pinned as regression checks ---

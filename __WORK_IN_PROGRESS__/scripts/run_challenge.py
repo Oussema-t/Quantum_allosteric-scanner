@@ -61,18 +61,20 @@ _SRC = Path(__file__).resolve().parent.parent / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
-from allostery.baselines import degree_centrality, euclid_from_seed_centroid, hop_from_seed  # noqa: E402
+from allostery.analysis import consensus_ranking  # noqa: E402
+from allostery.baselines import degree_centrality, euclid_from_seed_centroid, fpocket_baseline, hop_from_seed  # noqa: E402
 from allostery.clean import clean_from_config, load_target_config  # noqa: E402
 from allostery.hamiltonians import build_H_new, build_H10  # noqa: E402
 from allostery.labels import (  # noqa: E402
     build_labels,
+    functional_indices,
     ligand_groups_from_atomgroup,
     protein_heavy_atoms_by_residue,
 )
 from allostery.pathways import edge_propensity, edge_propensity_to_matrix  # noqa: E402
 from allostery.propagators import time_averaged_ctqw  # noqa: E402
 from allostery.protocol import run_frozen_verdict  # noqa: E402
-from allostery.report import assemble_hit_list, verdict_template  # noqa: E402
+from allostery.report import assemble_hit_list, no_ground_truth_report, verdict_template  # noqa: E402
 
 DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results"
 DEFAULT_CUTOFF = 10.0  # analysis.py's own default, used only if a target's config omits enm_cutoff
@@ -134,6 +136,85 @@ def _jsonify(d: dict) -> dict:
     return out
 
 
+def run_target_no_ground_truth(target_name: str, target_config: dict, output_dir: Path) -> dict:
+    """TASK-0080: c-Myc/1NKP branch -- `holo_pdb: null`,
+    `allosteric_pocket_exists: false`. No AUC, no ceiling, no proximity
+    floor -- none of those are computable without a labeled holo pocket,
+    which this target's own config declares does not exist. Consensus
+    ranking across 4 independent operators (`analysis.consensus_ranking`)
+    plus `baselines.fpocket_baseline`'s theoretical docking viability are
+    this target's entire holo-free evidence, per this task's own Intent
+    Contract ("no AUC, no ceiling; report prediction + confidence
+    honestly").
+
+    Still produces the same three physical deliverable *files* as the
+    normal path (connectivity matrix, hit list, report) so downstream
+    consumers (TASK-0082's competence map, the frontend) have a
+    consistent per-target output shape to read -- their *content* is
+    honestly different (no `verdict.json` `_diagnosis`/AUC keys; the
+    hit list is consensus-ranked, not AUC-validated).
+    """
+    import prody
+
+    target_dir = output_dir / target_name
+    apo = clean_from_config(target_name, role="apo")
+    cutoff = float(target_config.get("enm_cutoff", DEFAULT_CUTOFF))
+    pocket_cutoff = float(target_config.get("pocket_contact_cutoff", DEFAULT_POCKET_CUTOFF))
+
+    # No ligand_groups exist for this target (no holo, no bound-ligand
+    # structure fetched at all) -- functional_indices' own documented
+    # tier-2 fallback (top-5 contact-degree residues, "least informative,
+    # signals no resolvable functional ligand") fires here by design, not
+    # as a bug this branch works around. func_ligand=["DNA"] never matches
+    # an empty ligand_groups list.
+    active_idx, provenance = functional_indices(apo.coords, [], target_config, cutoff=pocket_cutoff)
+
+    consensus = consensus_ranking(apo.coords, apo.bfactors, active_idx, cutoff=cutoff, t_max=T_MAX, n_steps=N_STEPS, k=5)
+
+    prody.confProDy(verbosity="none")
+    try:
+        pdb_path = prody.fetchPDB(target_config["apo_pdb"], compressed=False)
+        docking = fpocket_baseline(pdb_path) if pdb_path else {"error": "prody.fetchPDB returned no local path"}
+    except Exception as exc:
+        docking = {"error": f"could not fetch a local PDB file for fpocket: {exc!r}"}
+
+    # Connectivity matrix: the consensus operator with the highest total
+    # cross-operator agreement contribution (H_new_default, this pipeline's
+    # own primary operator elsewhere) -- one concrete propagation graph for
+    # the matrix deliverable; the *ranking* deliverable (hit list) is the
+    # actual consensus-across-operators output, not this single matrix.
+    H_new = build_H_new(apo.coords, apo.bfactors, cutoff=cutoff)
+    propensity = edge_propensity(H_new, active_idx)
+    matrix = edge_propensity_to_matrix(propensity, n=len(apo.resnums))
+
+    hit_indices = np.asarray(consensus["consensus_ranked_indices"])
+    hit_scores = consensus["mean_occupancy"][hit_indices]
+
+    report_text = no_ground_truth_report(target_name, consensus, docking, resnums=apo.resnums)
+
+    target_dir.mkdir(parents=True, exist_ok=True)
+    np.savez(target_dir / "connectivity_matrix.npz", matrix=matrix, resnums=apo.resnums)
+    with open(target_dir / "hit_list.json", "w") as f:
+        json.dump({
+            "indices": hit_indices.tolist(),
+            "resnums": apo.resnums[hit_indices].tolist(),
+            "scores": hit_scores.tolist(),
+            "consensus_count": consensus["consensus_count"][hit_indices].tolist(),
+        }, f, indent=2)
+    with open(target_dir / "report.txt", "w") as f:
+        f.write(report_text)
+    with open(target_dir / "verdict.json", "w") as f:
+        json.dump({
+            "no_ground_truth": True,
+            "reason": "holo_pdb is null / allosteric_pocket_exists: false",
+            "operators": consensus["operators"],
+            "consensus_count": consensus["consensus_count"].tolist(),
+            "docking": docking,
+        }, f, indent=2)
+
+    return {"target": target_name, "ok": True, "diagnosis": "NO_GROUND_TRUTH"}
+
+
 def run_target(target_name: str, output_dir: Path) -> dict:
     """Run the full pipeline for one target.
 
@@ -146,6 +227,15 @@ def run_target(target_name: str, output_dir: Path) -> dict:
     target_dir = output_dir / target_name
     try:
         target_config = load_target_config(target_name)
+
+        # TASK-0080: a target with no holo structure at all (c-Myc/1NKP)
+        # cannot go through the AUC/ceiling path below -- _load_apo_holo
+        # itself raises on a null holo_pdb (clean_from_config's own
+        # ValueError). Route to the dedicated no-ground-truth branch
+        # before any holo-dependent call is attempted, not after one fails.
+        if target_config.get("holo_pdb") is None:
+            return run_target_no_ground_truth(target_name, target_config, output_dir)
+
         cutoff = float(target_config.get("enm_cutoff", DEFAULT_CUTOFF))
         pocket_cutoff = float(target_config.get("pocket_contact_cutoff", DEFAULT_POCKET_CUTOFF))
 
