@@ -65,6 +65,20 @@ def _classical_initial_weights(v: np.ndarray, source: Source) -> np.ndarray:
     return v[idx, :].sum(axis=0) / len(idx)
 
 
+def _ctqw_from_eigh(w: np.ndarray, v: np.ndarray, t: float, source: Source) -> np.ndarray:
+    """CTQW occupation at time `t`, given `H`'s already-computed
+    eigendecomposition `(w, v)` -- the shared post-`eigh` evolution
+    formula `ctqw`/`time_averaged_ctqw` both need (TASK-0111). Never
+    called directly by anything outside this module; `ctqw` computes
+    `(w, v)` itself for a single call, `time_averaged_ctqw` computes it
+    once and reuses it across its whole time grid."""
+    coeffs = _quantum_initial_coeffs(v, source)
+    amplitudes = v @ (np.exp(-1j * w * t) * coeffs)
+    p = np.abs(amplitudes) ** 2
+    p /= p.sum() + 1e-300  # normalise against floating-point drift
+    return p
+
+
 def ctqw(
     H: np.ndarray,
     t: float,
@@ -88,11 +102,7 @@ def ctqw(
     p : (N,) non-negative array summing to 1.
     """
     w, v = np.linalg.eigh(H)
-    coeffs = _quantum_initial_coeffs(v, source)
-    amplitudes = v @ (np.exp(-1j * w * t) * coeffs)
-    p = np.abs(amplitudes) ** 2
-    p /= p.sum() + 1e-300  # normalise against floating-point drift
-    return p
+    return _ctqw_from_eigh(w, v, t, source)
 
 
 def _warn_if_indefinite(w: np.ndarray, tol: float, strict: bool, fn_name: str) -> None:
@@ -233,9 +243,17 @@ def time_averaged_ctqw(
     """Time-average of CTQW occupation from 0 to t_max.
 
     Useful as a parameter-free (decoherent-limit) baseline.
+
+    Computes `eigh(H)` once and reuses it across the whole `n_steps` time
+    grid (TASK-0111) -- `H` does not change across this loop, so calling
+    `ctqw` directly here (which would recompute `eigh(H)` on every one of
+    `n_steps` iterations) was pure redundant work with no effect on the
+    result; this is a performance fix only, not a behavior change (see
+    `test_propagators.py::TestTimeAveragedCtqwEighCaching`).
     """
+    w, v = np.linalg.eigh(H)
     times = np.linspace(0.0, t_max, n_steps)
     acc = np.zeros(H.shape[0])
     for t in times:
-        acc += ctqw(H, t, source=source)
+        acc += _ctqw_from_eigh(w, v, t, source)
     return acc / n_steps
