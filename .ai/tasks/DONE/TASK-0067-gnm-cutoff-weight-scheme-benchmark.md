@@ -271,3 +271,15 @@
   424 passed, 1 xpassed (pre-existing, unrelated), 0 failed (re-run after
   adding the holo comparison; count unchanged since it extends the
   existing real-target test rather than adding a new one).
+
+**Addendum, 2026-07-15 (`REVIEW-2026-07-15-execution-plan-gap-audit.md`
+finding #2, `TASK-0113`)**: this task's own "Caveat, stated plainly"
+above already flags that the benchmark "used the raw GNM Kirchhoff only
+(no potential terms, single-source classical heat propagation)," not
+`H_new`/`time_averaged_ctqw` — the operator pair that actually produces
+every headline AUC in `RESULTS.md`. That caveat was correctly stated
+here but never carried forward: `EXECUTION_PLAN.md`'s Phase 2.1 progress
+row records "backend's 8.0 Å default does not need to change" without
+repeating the scope limit, which reads as covering the headline operator
+when it doesn't. Filed `TASK-0113` to re-run this same cutoff/weight
+question against `H_new` directly rather than reopening this task.

@@ -126,6 +126,15 @@ None
 - Where the new `optuna` dependency manifest should live — flagged in
   [[TASK-0108]]'s shared Constraints as a real gap (no existing
   research-package manifest), not pre-decided here.
+- **Added 2026-07-15, `REVIEW-2026-07-15b-ceiling-search-methodology.md`
+  finding #1:** [[TASK-0116]] wants the same kind of real-optimizer
+  upgrade this task brings for CTQW's numerical parameters, but applied
+  to `ceiling.py`'s `H_new` physical-weight space instead — explicitly
+  out of *this* task's scope (see Out Of Scope above). Once this task's
+  Optuna wiring/dependency manifest lands and is proven on real targets,
+  [[TASK-0116]] can likely reuse it directly rather than standing up a
+  second Optuna integration point. Not a reason to widen this task's own
+  scope now — flagged for whoever picks up TASK-0116 next.
 
 ## Done
 

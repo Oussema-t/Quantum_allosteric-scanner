@@ -157,3 +157,14 @@ Wrote the remaining piece rather than duplicating TASK-0070's coverage.
 - **Not yet staged or committed** — holding per explicit instruction
   (second in the stage-commit queue at time of writing); this Done
   section and the DONE-folder move are filesystem-only, no `git add`.
+
+**Addendum, 2026-07-15 (`REVIEW-2026-07-15-execution-plan-gap-audit.md`
+finding #3, `TASK-0114`)**: the pinned `{9, 10, 11, ..., 100, 103}`
+recovery this task locked in above uses `holo_pocket_mask`'s default
+4.5 Å ligand-contact cutoff and has never been checked for sensitivity
+to that choice — i.e. whether 4.0 Å or 5.0 Å would recover a
+meaningfully different residue set, which would mean this pinned
+fixture sits near a threshold cliff rather than a stable regression
+anchor. Filed separately as `TASK-0114` (real per-target sensitivity
+sweep, cross-checked directly against this test's own KRAS_G12C
+fixture) rather than reopening this task.

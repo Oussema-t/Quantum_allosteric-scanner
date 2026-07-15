@@ -119,6 +119,13 @@ None
 - [[TASK-0103]] — reuse its synthetic-network construction helper rather
   than writing a second one, if applicable to this task's battery.
 - Feeds [[TASK-0110]] (informs what parameter range to search).
+- Feeds [[TASK-0117]] (`REVIEW-2026-07-15b-ceiling-search-methodology.md`
+  finding #2) — once `check_convergence` exists, TASK-0117 applies it
+  to `ceiling.consistency_score`'s fixed `t_max=15`/`n_steps=500`
+  defaults, the values TASK-0046's real KRAS_G12C ceiling run (60
+  trials, N=169) already used with no validity check. TASK-0117 is
+  hard-blocked on this task landing first; do not treat its convergence
+  criterion as informal or start TASK-0117 early on an ad hoc check.
 
 ## Open Questions
 

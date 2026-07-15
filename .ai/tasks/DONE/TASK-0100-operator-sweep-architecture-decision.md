@@ -234,3 +234,14 @@ scoped into TASK-0101 — whether it's ever warranted depends on what
 Tier 1 actually shows (if no Tier A operator meaningfully beats `H_new`,
 there is nothing to select), so it is left for a future task, filed only
 if Tier 1's results justify it.
+
+**Addendum, 2026-07-15 (`REVIEW-2026-07-15-execution-plan-gap-audit.md`
+finding #4, `TASK-0115`)**: this decision's Tier-2 gate
+(`frozen_context`/`leave_one_protein_out`) prevents *code-level*
+multiple-comparisons abuse — an un-gated sweep picking the
+best-scoring operator against real labels. It does not, and cannot,
+gate a related but distinct risk: the ~15 *human* review cycles this
+project has run, each looking at the same 3 targets' true labels before
+deciding what to rename, re-scope, or re-frame. `TASK-0115` names that
+risk and ties any claim's finality to `TASK-0081`'s generalization set
+— complementary to this task's code-level gate, not a duplicate of it.
