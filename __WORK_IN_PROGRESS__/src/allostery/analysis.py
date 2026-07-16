@@ -197,6 +197,7 @@ def assemble_verdict_results(
     ablation_out: dict | None = None,
     qvc_out: dict | None = None,
     consistency_out: dict | None = None,
+    coherence_out: dict | None = None,
     *,
     auc_apo_optimised: float | None = None,
     auc_holo_optimised: float | None = None,
@@ -231,6 +232,12 @@ def assemble_verdict_results(
     e.g. an all-positive or all-negative label mask) is treated as missing,
     not rendered as the literal string `"nan"` -- consistent with
     `verdict_template`'s `"N/A"` styling for every other absent value.
+
+    `coherence_out` (TASK-0099) is `coherence_sensitivity`'s output --
+    contributes `coherence_auc_range`, `coherence_auc_at_gamma0`, and
+    `coherence_classification` (`COHERENCE_NOT_SIGNIFICANT` /
+    `COHERENCE_DEPENDENT_SIGNAL`), the formal answer to "would the reported
+    verdict change if quantum coherence were randomized away."
     """
     def _finite_or_none(value):
         return value if np.isfinite(value) else None
@@ -278,6 +285,17 @@ def assemble_verdict_results(
         v = consistency_out.get("top_k_jaccard")
         if v is not None and np.isfinite(v):
             results["mean_jacc20"] = v
+
+    if coherence_out is not None:
+        v = coherence_out.get("auc_range")
+        if v is not None and np.isfinite(v):
+            results["coherence_auc_range"] = v
+        v = coherence_out.get("auc_at_gamma0")
+        if v is not None and np.isfinite(v):
+            results["coherence_auc_at_gamma0"] = v
+        v = coherence_out.get("classification")
+        if v is not None:
+            results["coherence_classification"] = v
 
     return results
 
@@ -365,6 +383,7 @@ def dephasing_sweep(
     flat_threshold: float = 0.05,
     rtol: float = 1e-6,
     atol: float = 1e-8,
+    return_occ: bool = False,
 ) -> dict:
     """AUC(omega) via Haken-Strobl dephasing (`propagators.haken_strobl`),
     scored with `metrics.auc` (this task's own Constraint: reuse, don't
@@ -381,25 +400,156 @@ def dephasing_sweep(
     call -- the defaults are tight (accurate) but slow at protein scale
     (~20s per gamma at N~170 residues); loosen them for a fast sanity
     sweep, tighten them for a number you intend to publish.
+
+    `return_occ=True` additionally returns the raw per-gamma occupation
+    vectors under key `"occ"` (list of `(N,)` arrays, aligned to
+    `omega_range`) -- needed by callers that must run further per-point
+    diagnostics beyond the scalar AUC this function already returns (e.g.
+    `coherence_sensitivity`'s proximity-floor check, TASK-0099). Off by
+    default -- existing callers keep the identical return shape.
     """
     from .propagators import haken_strobl
     from .metrics import auc as _auc
 
     omega_range = np.asarray(omega_range, dtype=float)
     labels_int = np.asarray(labels).astype(int)
-    aucs = np.array([
-        _auc(haken_strobl(H, t_max, gamma=float(w), source=source, rtol=rtol, atol=atol), labels_int)
+    occs = [
+        haken_strobl(H, t_max, gamma=float(w), source=source, rtol=rtol, atol=atol)
         for w in omega_range
-    ])
+    ]
+    aucs = np.array([_auc(occ, labels_int) for occ in occs])
     finite = aucs[np.isfinite(aucs)]
     auc_range = float(finite.max() - finite.min()) if len(finite) else float("nan")
 
-    return {
+    result = {
         "omega": omega_range,
         "auc": aucs,
         "auc_range": auc_range,
         "is_flat": bool(auc_range < flat_threshold) if np.isfinite(auc_range) else None,
         "flat_threshold": flat_threshold,
+    }
+    if return_occ:
+        result["occ"] = occs
+    return result
+
+
+# ---------------------------------------------------------------------------
+# TASK-0099 -- wire dephasing_sweep into the reported verdict path
+# ---------------------------------------------------------------------------
+
+def coherence_sensitivity(
+    H: np.ndarray,
+    bfactors: np.ndarray,
+    source,
+    labels: np.ndarray,
+    gamma_scale: float,
+    *,
+    floor_scores=None,
+    t_max: float = 15.0,
+    multipliers=(0.0, 0.5, 1.0, 2.0),
+    flat_threshold: float = 0.05,
+    rtol: float = 1e-6,
+    atol: float = 1e-8,
+) -> dict:
+    """Formal coherence-sensitivity verdict: wires `dephasing_sweep`
+    (already implemented, previously never called from `protocol.py` or
+    `report.py` -- TASK-0099's own finding) into a proximity-floor-gated,
+    classified quantity fit for `assemble_verdict_results`.
+
+    `gamma_scale` is the caller-supplied *calibrated* dephasing rate --
+    `1 / mean(mode_energetics(...)["relaxation_time"][:20])`, from
+    `superpose.calibrate_kappa` + `superpose.anm_modes` +
+    `superpose.mode_energetics`, exactly
+    `test_kras_g12c_dephasing_flat_survives_kappa_calibration`'s
+    already-validated recipe (this task's own Intent Contract). Computed by
+    the caller, not here -- keeps this module decoupled from superpose.py,
+    matching its existing convention of taking already-derived scalars/
+    arrays as input, not raw structures.
+
+    `multipliers` default `(0, 0.5, 1, 2)` -- the Intent Contract's stated
+    minimum sweep. `gamma=0` is evaluated via the exact, cheap `ctqw` limit
+    rather than paying for `haken_strobl`'s ODE solver at gamma=0 (reuses
+    TASK-0105's own established optimization, `enaqt_gamma_sweep.
+    sweep_gamma`, rather than re-deriving it).
+
+    `flat_threshold` reuses `dephasing_sweep`'s own already-documented 0.05
+    default as the significance bar -- this task's own Open Question ("what
+    threshold separates COHERENCE_NOT_SIGNIFICANT from
+    COHERENCE_DEPENDENT_SIGNAL") is resolved by reusing that existing,
+    already-justified constant (KRAS's own empirical range is ~0.0035, well
+    inside it) rather than inventing a second, undocumented magic number.
+
+    `floor_scores` (TASK-0094): every swept gamma's occupation vector is run
+    through `diagnostics.classify_failure` (H/bfactors passed through,
+    matching `operator_sweep`'s own established call convention) -- a
+    non-flat AUC range that never changes which side of the proximity floor
+    the result lands on is `COHERENCE_NOT_SIGNIFICANT` (geometry-confounded,
+    not oversold as a quantum finding, per this task's own Acceptance
+    Scenario); one that does is `COHERENCE_DEPENDENT_SIGNAL`. `floor_scores
+    =None` skips the floor gate and returns `classification=None` for a
+    non-flat sweep (unresolved, not silently assumed insignificant) --
+    real per-target verdict runs must always supply it.
+
+    Returns `{"gammas", "auc", "auc_range", "is_flat", "flat_threshold",
+    "auc_at_gamma0", "diagnoses", "floor_cleared", "classification"}`.
+    """
+    from .diagnostics import NO_FAILURE_DETECTED, classify_failure
+    from .metrics import auc as _auc
+    from .propagators import ctqw
+
+    multipliers = np.asarray(sorted(multipliers), dtype=float)
+    gammas = gamma_scale * multipliers
+    labels_int = np.asarray(labels).astype(int)
+    nonzero_mask = gammas > 0
+
+    occs = [None] * len(gammas)
+    zero_idx = np.where(~nonzero_mask)[0]
+    if len(zero_idx):
+        occ0 = ctqw(H, t_max, source=source)
+        for i in zero_idx:
+            occs[i] = occ0
+
+    nz_idx = np.where(nonzero_mask)[0]
+    if len(nz_idx):
+        sweep = dephasing_sweep(
+            H, gammas[nz_idx], labels, source=source, t_max=t_max,
+            flat_threshold=flat_threshold, rtol=rtol, atol=atol, return_occ=True,
+        )
+        for i, occ in zip(nz_idx, sweep["occ"]):
+            occs[i] = occ
+
+    aucs = np.array([_auc(occ, labels_int) for occ in occs])
+    finite = aucs[np.isfinite(aucs)]
+    auc_range = float(finite.max() - finite.min()) if len(finite) else float("nan")
+    is_flat = bool(auc_range < flat_threshold) if np.isfinite(auc_range) else None
+
+    diagnoses = [
+        classify_failure(occ, labels, H=H, bfactors=bfactors, floor_scores=floor_scores)
+        for occ in occs
+    ]
+    floor_cleared = [d == NO_FAILURE_DETECTED for d in diagnoses]
+
+    if is_flat is None:
+        classification = None
+    elif is_flat:
+        classification = "COHERENCE_NOT_SIGNIFICANT"
+    elif floor_scores is None:
+        classification = None
+    elif len(set(floor_cleared)) > 1:
+        classification = "COHERENCE_DEPENDENT_SIGNAL"
+    else:
+        classification = "COHERENCE_NOT_SIGNIFICANT"
+
+    return {
+        "gammas": gammas.tolist(),
+        "auc": aucs.tolist(),
+        "auc_range": auc_range,
+        "is_flat": is_flat,
+        "flat_threshold": flat_threshold,
+        "auc_at_gamma0": float(aucs[zero_idx[0]]) if len(zero_idx) else None,
+        "diagnoses": diagnoses,
+        "floor_cleared": floor_cleared,
+        "classification": classification,
     }
 
 

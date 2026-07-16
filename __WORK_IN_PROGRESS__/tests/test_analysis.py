@@ -25,6 +25,7 @@ from allostery.analysis import (  # noqa: E402
     apo_holo_consistency,
     assemble_verdict_results,
     benchmark,
+    coherence_sensitivity,
     consensus_ranking,
     dephasing_sweep,
     gnm_cutoff_weight_sweep,
@@ -191,6 +192,118 @@ class TestDephasingSweep:
         )
         assert np.all(np.isnan(result["auc"]))
         assert result["is_flat"] is None
+
+    def test_return_occ_false_by_default(self):
+        L = H2_combinatorial_laplacian(COORDS, cutoff=10.0)
+        result = dephasing_sweep(L, [0.0, 0.5], LABELS, source=0, t_max=5.0, rtol=1e-3, atol=1e-5)
+        assert "occ" not in result
+
+    def test_return_occ_true_adds_one_vector_per_omega(self):
+        L = H2_combinatorial_laplacian(COORDS, cutoff=10.0)
+        result = dephasing_sweep(
+            L, [0.0, 0.5], LABELS, source=0, t_max=5.0, rtol=1e-3, atol=1e-5, return_occ=True
+        )
+        assert len(result["occ"]) == 2
+        assert result["occ"][0].shape == (N,)
+        assert result["occ"][1].shape == (N,)
+
+
+# ---------------------------------------------------------------------------
+# coherence_sensitivity (TASK-0099 -- formal dephasing_sweep verdict wiring)
+# ---------------------------------------------------------------------------
+
+class TestCoherenceSensitivity:
+    def test_gamma_zero_point_matches_direct_ctqw(self):
+        from allostery.propagators import ctqw
+        from allostery.metrics import auc as _auc
+
+        H = H2_combinatorial_laplacian(COORDS, cutoff=10.0)
+        out = coherence_sensitivity(
+            H, BFACTORS, source=0, labels=LABELS, gamma_scale=0.01,
+            t_max=5.0, multipliers=(0.0,), rtol=1e-3, atol=1e-5,
+        )
+        expected = _auc(ctqw(H, 5.0, source=0), LABELS.astype(int))
+        assert out["auc_at_gamma0"] == pytest.approx(expected)
+        assert out["gammas"] == [0.0]
+
+    def test_one_diagnosis_per_gamma_point(self):
+        H = H2_combinatorial_laplacian(COORDS, cutoff=10.0)
+        out = coherence_sensitivity(
+            H, BFACTORS, source=0, labels=LABELS, gamma_scale=0.05,
+            t_max=5.0, rtol=1e-3, atol=1e-5,
+        )
+        assert len(out["diagnoses"]) == len(out["floor_cleared"]) == len(out["gammas"]) == 4
+
+    def test_flat_sweep_without_floor_scores_is_not_significant(self):
+        # gamma_scale ~ 0 keeps every swept gamma essentially coherent --
+        # AUC barely moves, this module's own "coherence adds ~nothing"
+        # finding reproduced on the synthetic fixture too. is_flat alone
+        # is enough to classify NOT_SIGNIFICANT, no floor needed.
+        H = H2_combinatorial_laplacian(COORDS, cutoff=10.0)
+        out = coherence_sensitivity(
+            H, BFACTORS, source=0, labels=LABELS, gamma_scale=1e-6,
+            t_max=5.0, rtol=1e-3, atol=1e-5,
+        )
+        assert out["is_flat"] is True
+        assert out["classification"] == "COHERENCE_NOT_SIGNIFICANT"
+
+    def test_non_flat_sweep_without_floor_scores_is_unresolved(self, monkeypatch):
+        H = H2_combinatorial_laplacian(COORDS, cutoff=10.0)
+        occ_hi = LABELS.astype(float)      # AUC = 1.0
+        occ_lo = (~LABELS).astype(float)   # AUC = 0.0
+        monkeypatch.setattr("allostery.propagators.ctqw", lambda H, t, source=0: occ_hi)
+        monkeypatch.setattr(
+            "allostery.propagators.haken_strobl",
+            lambda H, t, gamma, source=0, rtol=1e-6, atol=1e-8: occ_lo,
+        )
+        out = coherence_sensitivity(
+            H, BFACTORS, source=0, labels=LABELS, gamma_scale=1.0, t_max=5.0,
+        )
+        assert out["is_flat"] is False
+        # no floor_scores supplied -- geometry confound can't be ruled out,
+        # so this must NOT be silently assumed insignificant either.
+        assert out["classification"] is None
+
+    def test_floor_gate_promotes_to_dependent_signal_when_status_flips(self, monkeypatch):
+        H = H2_combinatorial_laplacian(COORDS, cutoff=10.0)
+        occ_hi = LABELS.astype(float)      # AUC = 1.0, clears a 0.5 floor
+        occ_lo = (~LABELS).astype(float)   # AUC = 0.0, does not
+        monkeypatch.setattr("allostery.propagators.ctqw", lambda H, t, source=0: occ_hi)
+        monkeypatch.setattr(
+            "allostery.propagators.haken_strobl",
+            lambda H, t, gamma, source=0, rtol=1e-6, atol=1e-8: occ_lo,
+        )
+        floor_scores = np.full(N, 5.0)  # constant score -> AUC 0.5 exactly
+        out = coherence_sensitivity(
+            H, BFACTORS, source=0, labels=LABELS, gamma_scale=1.0, t_max=5.0,
+            floor_scores=floor_scores,
+        )
+        assert out["auc_range"] == pytest.approx(1.0)
+        assert out["floor_cleared"] == [True, False, False, False]
+        assert out["classification"] == "COHERENCE_DEPENDENT_SIGNAL"
+
+    def test_floor_gate_stays_not_significant_when_status_never_flips(self, monkeypatch):
+        # occ_mid clears the same 0.5 floor as occ_hi (AUC ~0.833 vs 1.0) --
+        # the raw AUC moves a lot (not flat) but never changes which side
+        # of the floor the result lands on, so this is the "confounded by
+        # geometry" case, not a real coherence-dependent finding.
+        H = H2_combinatorial_laplacian(COORDS, cutoff=10.0)
+        occ_hi = LABELS.astype(float)
+        occ_mid = LABELS.astype(float).copy()
+        occ_mid[3] = 0.0  # one of the three pocket residues ties the negatives
+        monkeypatch.setattr("allostery.propagators.ctqw", lambda H, t, source=0: occ_hi)
+        monkeypatch.setattr(
+            "allostery.propagators.haken_strobl",
+            lambda H, t, gamma, source=0, rtol=1e-6, atol=1e-8: occ_mid,
+        )
+        floor_scores = np.full(N, 5.0)  # constant score -> AUC 0.5 exactly
+        out = coherence_sensitivity(
+            H, BFACTORS, source=0, labels=LABELS, gamma_scale=1.0, t_max=5.0,
+            floor_scores=floor_scores,
+        )
+        assert out["auc_range"] > out["flat_threshold"]
+        assert all(out["floor_cleared"])
+        assert out["classification"] == "COHERENCE_NOT_SIGNIFICANT"
 
 
 # ---------------------------------------------------------------------------
@@ -436,15 +549,22 @@ class TestAssembleVerdictResults:
         occ = np.abs(np.random.default_rng(0).normal(size=N))
         idx = np.arange(N)
         consistency = apo_holo_consistency(occ, occ, idx, idx, k=20)
-        return bench, abl, qvc, consistency
+        # gamma_scale ~0 -> flat sweep -> classification resolves without
+        # needing floor_scores wired through this synthetic fixture too.
+        coherence = coherence_sensitivity(
+            L, BFACTORS, source=0, labels=LABELS, gamma_scale=1e-6,
+            t_max=5.0, rtol=1e-3, atol=1e-5,
+        )
+        return bench, abl, qvc, consistency, coherence
 
     def test_full_assembly_populates_every_verdict_template_key(self):
-        bench, abl, qvc, consistency = self._real_outputs()
+        bench, abl, qvc, consistency, coherence = self._real_outputs()
         results = assemble_verdict_results(
             benchmark_out=bench,
             ablation_out=abl,
             qvc_out=qvc,
             consistency_out=consistency,
+            coherence_out=coherence,
             auc_apo_optimised=0.55,
             auc_holo_optimised=0.60,
         )
@@ -454,18 +574,20 @@ class TestAssembleVerdictResults:
             "AUC_ctqw_mean", "AUC_heat_mean",
             "most_impactful_term", "least_impactful_term",
             "mean_rho_apo_holo", "mean_jacc20",
+            "coherence_auc_range", "coherence_auc_at_gamma0", "coherence_classification",
         }
         assert expected_keys <= set(results)
         for key in expected_keys:
             assert results[key] is not None
 
     def test_render_has_no_na_for_any_populated_key(self):
-        bench, abl, qvc, consistency = self._real_outputs()
+        bench, abl, qvc, consistency, coherence = self._real_outputs()
         results = assemble_verdict_results(
             benchmark_out=bench,
             ablation_out=abl,
             qvc_out=qvc,
             consistency_out=consistency,
+            coherence_out=coherence,
             auc_apo_optimised=0.55,
             auc_holo_optimised=0.60,
         )
@@ -473,7 +595,7 @@ class TestAssembleVerdictResults:
         assert "N/A" not in rendered
 
     def test_most_impactful_term_is_v_prefixed_and_not_l_only(self):
-        _, abl, _, _ = self._real_outputs()
+        _, abl, _, _, _ = self._real_outputs()
         results = assemble_verdict_results(ablation_out=abl)
         assert results["most_impactful_term"].startswith("V_")
         assert results["least_impactful_term"].startswith("V_")
@@ -481,9 +603,16 @@ class TestAssembleVerdictResults:
 
     def test_every_argument_is_independently_omittable(self):
         assert assemble_verdict_results() == {}
-        bench, _, _, _ = self._real_outputs()
+        bench, _, _, _, _ = self._real_outputs()
         results = assemble_verdict_results(benchmark_out=bench)
         assert set(results) == {"AUC_apo_Hnew_default", "AUC_apo_H10_baseline"}
+
+    def test_coherence_out_populates_only_its_own_keys(self):
+        _, _, _, _, coherence = self._real_outputs()
+        results = assemble_verdict_results(coherence_out=coherence)
+        assert set(results) == {
+            "coherence_auc_range", "coherence_auc_at_gamma0", "coherence_classification",
+        }
 
     def test_optimised_aucs_pass_through_directly_not_from_benchmark(self):
         results = assemble_verdict_results(auc_apo_optimised=0.77, auc_holo_optimised=0.81)
@@ -622,3 +751,55 @@ def test_kras_g12c_dephasing_flat_survives_kappa_calibration():
     )
     assert sweep["auc_range"] < 0.05
     assert sweep["is_flat"] is True
+
+
+def test_kras_g12c_coherence_sensitivity_reproduces_kappa_calibration():
+    """TASK-0099 Acceptance Scenario 3: the formal `coherence_sensitivity`
+    wiring (used by `assemble_verdict_results`/`verdict_template`) must
+    reproduce (or closely match) the already-validated ~0.0035 AUC range
+    above, on the same real target and the same calibration recipe -- not
+    a fresh, silently-diverging computation. Also exercises the
+    TASK-0094 proximity-floor gate end to end on real data: an
+    unambiguously flat sweep must classify COHERENCE_NOT_SIGNIFICANT."""
+    pytest.importorskip("prody")
+    from allostery.clean import clean
+    from allostery.labels import ligand_groups_from_atomgroup, holo_pocket_mask, functional_indices
+    from allostery.superpose import align_apo_holo, calibrate_kappa, anm_modes, mode_energetics
+
+    try:
+        apo = clean("4OBE", chains=["A"])
+        holo = clean("6OIM", chains=["A"])
+    except Exception as exc:
+        pytest.skip(f"real-structure fetch unavailable in this environment: {exc!r}")
+
+    import prody
+
+    prody.confProDy(verbosity="none")
+    holo_struct = prody.parsePDB("6OIM", compressed=False).select("chain A")
+    holo.ligand_groups = ligand_groups_from_atomgroup(holo_struct)
+
+    holo_src_idx, _ = functional_indices(holo.coords, holo.ligand_groups, {"func_ligand": ["GDP"]})
+    alignment = align_apo_holo(apo, holo)
+    holo_to_apo = dict(zip(alignment.holo_idx.tolist(), alignment.apo_idx.tolist()))
+    apo_src_idx = np.array([holo_to_apo[i] for i in holo_src_idx if i in holo_to_apo])
+    pocket_mask = holo_pocket_mask(apo, holo, "MOV", cutoff=4.5)
+
+    kappa = calibrate_kappa(apo.coords, apo.b_mean, cutoff=10.0)
+    eigvals, eigvecs = anm_modes(apo.coords, cutoff=10.0, n_modes=20)
+    common_idx = np.arange(len(apo.coords))
+    energetics = mode_energetics(np.zeros(3 * len(common_idx)), eigvals, eigvecs, common_idx, kappa)
+    gamma_scale = 1.0 / np.mean(energetics["relaxation_time"][:20])
+
+    H_new = build_H_new(apo.coords, apo.bfactors, cutoff=10.0)
+    floor_scores = [
+        degree_centrality(apo.coords, cutoff=10.0),
+        euclid_from_seed_centroid(apo.coords, apo_src_idx),
+        hop_from_seed(apo.coords, apo_src_idx, cutoff=10.0),
+    ]
+    out = coherence_sensitivity(
+        H_new, apo.bfactors, apo_src_idx, pocket_mask, gamma_scale,
+        floor_scores=floor_scores, t_max=8.0, rtol=1e-3, atol=1e-5,
+    )
+    assert out["auc_range"] < 0.05
+    assert out["is_flat"] is True
+    assert out["classification"] == "COHERENCE_NOT_SIGNIFICANT"

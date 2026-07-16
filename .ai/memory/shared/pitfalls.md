@@ -59,3 +59,37 @@ Add repeated failure patterns, false assumptions, or tool traps that should not 
   > floor` before reporting headroom" lesson stands regardless; whether *this specific
   instance* (`ceiling < floor` for KRAS_G12C) survives denser search / validated
   propagator parameters is now separately tracked by those two tasks, not yet resolved.
+
+## P-0003 — Spot-check a new metric's own KNOB parameters before shipping its classification, not just its unit tests
+
+- Pattern: a newly-wired reported quantity passes its own synthetic + real-target
+  unit tests (correct arithmetic, correct wiring into the schema) and gets treated
+  as done, without checking whether its *classification* (not just its output value)
+  is stable across the project's already-known-live KNOBs (`t_max`, seed/source
+  cardinality) — the exact gap [[INVARIANCE_PROTOCOL]] exists to close, but easy
+  to skip when a task's own Intent Contract didn't explicitly demand it.
+- Evidence (this repo, [[TASK-0099]], 2026-07-16): `coherence_sensitivity` (wiring
+  `dephasing_sweep` into the verdict schema) landed with passing tests using
+  `t_max=8` copied from an older, pre-review test's recipe — not re-derived or
+  cross-checked. `REVIEW-panel-2026-07-16-v2` (written independently, same day)
+  flagged `t_max` as an unfixed, unregistered gauge project-wide ("a precondition
+  for the physics, not hygiene"). Direct spot-check on real KRAS_G12C data across
+  `t_max ∈ {8, 25, 100}` (12x range) found: the *classification*
+  (`COHERENCE_NOT_SIGNIFICANT`) held at every point, but the *absolute* per-gamma
+  AUC's chance/floor diagnosis did not (`BEATS_CHANCE_NOT_FLOOR` at `t=8` vs.
+  `NO_SIGNAL_IN_APO` at `t=25`/`100`) — the task's own narrow claim survived; a
+  claim about the raw numbers would not have. The default was corrected to
+  `t=25` (matching [[TASK-0105]]'s already-established, unrelated-task
+  precedent for the exact same propagator) on this basis.
+- Corollary: passing tests verify the *mechanism* is wired correctly; they do not
+  verify the *conclusion* is robust to the project's own known-unstable knobs
+  unless a test specifically sweeps them. A metric can be correctly computed and
+  still report a conclusion that only holds at one arbitrary, uninvestigated
+  parameter value.
+- How to apply: before reporting a new classification/verdict quantity as done,
+  identify which of the project's already-known KNOBs (check open reviews and
+  `.ai/invariants/` first) plausibly touch its inputs, and spot-check the
+  *classification*, not just the value, across a real (not synthetic-only) range
+  before trusting it — cheap when the target is small (KRAS_G12C: ~1-20s/call),
+  and the check itself becomes the KNOB row in that quantity's `INV-XXXX` record
+  ([[INV-0005]] here) rather than a one-off comment.

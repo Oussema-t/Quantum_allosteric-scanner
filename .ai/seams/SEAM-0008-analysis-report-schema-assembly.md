@@ -49,3 +49,15 @@
   task's own file so this isn't missed. Status stays **OPEN**, not flipped to a
   documented non-issue, since the invariant genuinely isn't satisfied yet — it's
   correctly re-scoped, not resolved.
+
+  **Extended 2026-07-16 by [[TASK-0099]]:** `assemble_verdict_results` gained a
+  fifth optional argument, `coherence_out` (`analysis.coherence_sensitivity`'s
+  output), contributing three new flat keys to the same assembled schema --
+  `coherence_auc_range`, `coherence_auc_at_gamma0`, `coherence_classification`.
+  `verdict_template` renders all three in its existing headline block plus a
+  new 5th decision-support line. Same seam, same invariant, wider schema --
+  covered by the same `TestAssembleVerdictResults` class (extended, not a new
+  test file): `_real_outputs` now builds a real `coherence_out` too, and the
+  two existing "no `N/A` when everything is populated" tests were widened to
+  include it rather than left to silently pass on a narrower schema. Status
+  unchanged: **VERIFIED**.

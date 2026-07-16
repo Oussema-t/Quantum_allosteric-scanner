@@ -747,6 +747,121 @@ Script + full JSON: `scripts/nisq_noise_simulation.py`,
 
 ---
 
+### Coherence sensitivity wired into the verdict (TASK-0099, 2026-07-16)
+
+**Question**: `dephasing_sweep` (Haken-Strobl AUC-vs-γ) was implemented and
+tested (KRAS_G12C only, `test_kras_g12c_dephasing_flat_survives_kappa_
+calibration`) but had **zero call sites** in `protocol.py`/`report.py` --
+every AUC in every `RESULTS.md` entry above is built exclusively from
+`time_averaged_ctqw` (phase-averaged by construction) and
+`ground_state_relaxation` (real exponential, no oscillation). Switching
+off quantum coherence entirely would not have changed a single reported
+number. This task formalizes the answer: `analysis.coherence_sensitivity`
+wires a calibrated dephasing sweep (γ from `superpose.calibrate_kappa` +
+`anm_modes` + `mode_energetics`'s `relaxation_time`, swept at
+`{0, 0.5, 1, 2} × gamma_scale`) into `assemble_verdict_results`/
+`verdict_template`, gated against TASK-0094's proximity floor
+(`classify_failure`, reused not reinvented) so a raw-AUC wiggle that never
+changes the floor-cleared verdict is reported as geometry-confounded, not
+oversold as a quantum finding. Classification is `COHERENCE_NOT_SIGNIFICANT`
+(auc_range < 0.05, `dephasing_sweep`'s own already-documented flat
+threshold, reused rather than inventing a second magic number) or
+`COHERENCE_DEPENDENT_SIGNAL` (non-flat AND the floor-cleared status
+actually flips somewhere in the sweep).
+
+**KRAS_G12C — real result (active-site multi-index source,
+target-config `enm_cutoff`, `H_new`, t_max=25 -- see clock-robustness
+note below):**
+
+| γ (rad, calibrated) | AUC | diagnosis |
+|---|---|---|
+| 0 (coherent) | 0.4658 | NO_SIGNAL_IN_APO |
+| 0.00706 | 0.4570 | NO_SIGNAL_IN_APO |
+| 0.01412 | 0.4573 | NO_SIGNAL_IN_APO |
+| 0.02824 | 0.4525 | NO_SIGNAL_IN_APO |
+
+`auc_range = 0.0132`, `is_flat = True`, floor = 0.482 (max of degree /
+euclid-from-seed / hop-from-seed baselines) → **`COHERENCE_NOT_SIGNIFICANT`**.
+KRAS_G12C doesn't even clear chance here (all four points
+`NO_SIGNAL_IN_APO`), consistent with this target's own already-established
+near-chance default-parameter result. A second cross-check using the
+GDP-functional-site single/multi-index source (matching
+`test_kras_g12c_dephasing_flat_survives_kappa_calibration`'s own
+convention exactly, different `gamma_scale=0.0202` from a hardcoded
+`cutoff=10.0`, t_max=8) gives `auc_range=0.0076`, same conclusion — the
+finding is not an artifact of one particular source convention.
+
+**Clock-robustness check (2026-07-16, prompted by
+`REVIEW-panel-2026-07-16-v2` Sec.2.2 -- "`t_max=15` is unfixed and too
+short... a precondition for the physics, not hygiene," and TASK-0108/0109's
+formal convergence check is still TODO):** the script originally used
+`t_max=8` (copied from the pre-review KRAS-only dephasing test, not
+re-derived). Spot-checked directly against real KRAS_G12C data at
+`t_max ∈ {8, 25, 100}` (25 matches TASK-0105's own already-established
+"long enough to reach each gamma's long-time regime" convention for this
+same `haken_strobl` sweep; 100 is a 12x-wider control):
+
+| t_max | auc_range | is_flat | classification |
+|---|---|---|---|
+| 8 | 0.0155 | True | COHERENCE_NOT_SIGNIFICANT |
+| 25 | 0.0132 | True | COHERENCE_NOT_SIGNIFICANT |
+| 100 | 0.0247 | True | COHERENCE_NOT_SIGNIFICANT |
+
+The **coherence-sensitivity conclusion is robust to the clock choice** —
+`t_max=25` was adopted as the script's primary reported value on this
+basis (not `t=8`). Note this does *not* resolve the review's broader
+point: the *absolute* per-gamma AUC's chance/floor diagnosis does shift
+with `t_max` (e.g. some points read `BEATS_CHANCE_NOT_FLOOR` at `t=8` vs.
+`NO_SIGNAL_IN_APO` at `t=25`/`100`) — that general AUC-vs-clock gauge
+problem is real, applies project-wide, and is explicitly out of this
+task's scope (TASK-0108/0109's job). What TASK-0099 can and does claim is
+narrower and holds regardless: *varying γ at a fixed, reasonable t_max
+never changes the outcome*, at every t_max tested.
+
+**Seed-gauge caveat (`REVIEW-panel-2026-07-16-v2` Sec.2.1):** the review
+flags source/seed cardinality (single residue vs. full active-site array)
+as an unfixed gauge worth up to ±0.3 AUC project-wide, with no registered
+invariant. This task's own cross-check above (active-site array vs.
+GDP-functional single/multi-index) used two different, real seed
+conventions and got the same `COHERENCE_NOT_SIGNIFICANT` conclusion under
+both — reassuring for this specific question, but not a resolution of the
+project-wide gauge issue, which remains a separate, unaddressed P0 item
+(seed-convention invariant registration + a unified floor/ceiling/actual
+re-run) outside this task's scope.
+
+**BCR_ABL1 / CARDIAC_MYOSIN — blocked, not silently skipped:**
+`superpose.calibrate_kappa`/`anm_modes` `raise ValueError` unless *exactly*
+6 near-zero rigid-body ANM modes are found (TASK-0005's own hardening).
+BCR_ABL1 finds 7, CARDIAC_MYOSIN finds 10 — both raise before `gamma_scale`
+can be computed, at the target-config `enm_cutoff` for each. TASK-0005's
+own Done section already predicted this exact failure mode ("a genuinely
+multi-chain/floppy-linker target... might legitimately have more than 6
+near-zero-but-not-exactly-zero modes... worth revisiting this strictness
+once a multi-chain target is actually run through this module") — filed as
+[[TASK-0128]] rather than patched inline here (root cause -- genuine
+floppiness vs. an actual disconnected contact graph vs. a numerical
+threshold artifact -- is undetermined and `calibrate_kappa` is TASK-0005's
+owned module, out of this task's scope to silently loosen). Both targets
+report `error: "expected exactly 6 near-zero rigid-body ANM modes, found
+7/10..."` (caught, not crashed) rather than any `coherence_classification`
+value — an honest "not run", not a guessed or omitted result. See
+`scripts/coherence_sensitivity_scan.py`.
+
+**Verdict-template rendering**: a new line 5 ("Coherence sensitivity...")
+renders whenever `coherence_auc_range`/`coherence_classification` are
+present, alongside the existing 4 decision-support lines — visible in the
+same report a judge reads, not an internal-only computation.
+
+Script: `scripts/coherence_sensitivity_scan.py`. Tests:
+`test_analysis.py::TestCoherenceSensitivity` (7 synthetic cases, including
+2 that force the floor-gate's flip/no-flip branches via monkeypatched
+propagators) + `test_kras_g12c_coherence_sensitivity_reproduces_kappa_
+calibration` (real data, reproduces the ~0.0035-order-of-magnitude flat
+finding through the new formal wiring, not a fresh silently-diverging
+computation).
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -760,6 +875,7 @@ Script + full JSON: `scripts/nisq_noise_simulation.py`,
 | 7 | Does real-target ENAQT (`haken_strobl` γ-sweep) show the textbook interior-γ transport optimum `REVIEW-2026-07-13b` found on synthetic networks? | **resolved 2026-07-14: yes on 3/6 swept (target, operator) cells (1.24-1.70x enhancement), but the extra transport does not improve — and in every observed case slightly degrades — pocket-discrimination AUC; no floor-crossing is caused by dephasing anywhere in this data. CARDIAC_MYOSIN's full sweep is computationally infeasible with the current dense-matrix `haken_strobl` (N³ scaling, ~30+ min/γ at N=950) — γ=0 anchor only** | [[TASK-0105]] |
 | 8 | Is dephasing-assisted transport (ENAQT) more noise-robust than coherent CTQW under a real per-gate NISQ noise model (`HOLO_DIRECTION_MODULE.md`'s named scoreable result)? | **resolved 2026-07-14: no — coherent ties or beats ENAQT at every depth/error-rate point tested (KRAS_G12C, 10-qubit coarse-grained `H_new`, 2 timescales), a real negative result, not the hoped-for story. `coarse.trotter_cost`'s accuracy-calibrated depth estimate (3133 steps) is ~2-3 orders of magnitude beyond NISQ-feasible — found empirically (a literal-estimate run was killed after 69 CPU-minutes), not anticipated** | [[TASK-0068]] |
 | 9 | Does a fully-informed ceiling search (answer key in hand, entire `H_new` physical-scalar space) beat each mandatory target's proximity floor — i.e. is there any real headroom in this operator family? | **resolved 2026-07-15: no for KRAS_G12C — the ceiling itself (0.524, 60 real trials) is *below* its own floor (0.798), the strongest form of negative result this framework can express. BCR_ABL1's ceiling (0.612) does clear its floor (0.565) but the shipped actual result (0.525) does not. CARDIAC_MYOSIN's ceiling (0.819) clears its floor (0.764, 40.7% headroom) but this is moot — `INSUFFICIENT_RESOLUTION` fires first. Full synthesis: `COMPETENCE_MAP.md`.** | [[TASK-0046]], [[TASK-0082]] |
+| 10 | Would the reported verdict change for any mandatory target if quantum coherence were randomized away — i.e. is `dephasing_sweep`'s "coherence adds ~nothing" finding actually wired into what a judge reads? | **resolved 2026-07-16: no for KRAS_G12C, formally — `auc_range=0.0132` at t_max=25 (spot-checked robust across t_max in {8,25,100} per REVIEW-panel-2026-07-16-v2 Sec.2.2's clock concern; also robust across two seed conventions per Sec.2.1), flat, floor-gated `COHERENCE_NOT_SIGNIFICANT`. BCR_ABL1/CARDIAC_MYOSIN blocked on a pre-existing, already-anticipated `calibrate_kappa` limitation (exactly-6-near-zero-mode assertion fails at n_zero=7/10) — filed as [[TASK-0128]], not silently skipped. The project-wide seed/clock gauge problem itself (Sec.2.1/2.2) remains unresolved outside this task's narrower scope.** | [[TASK-0099]], [[TASK-0128]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

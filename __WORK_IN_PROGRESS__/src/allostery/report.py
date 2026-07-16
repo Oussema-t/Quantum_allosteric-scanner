@@ -158,10 +158,11 @@ def verdict_template(results: dict, *, provenance: str = "dev") -> str:
     AUC_apo_Hnew_default, AUC_apo_H10_baseline, AUC_apo_Hnew_optimised,
     AUC_holo_Hnew_optimised, AUC_ctqw_mean, AUC_heat_mean,
     most_impactful_term, least_impactful_term, mean_rho_apo_holo,
-    mean_jacc20 -- each optional; a missing key renders "N/A" in the
-    headline block and skips its dependent recommendation line rather than
-    raising, since a caller may not have every upstream analysis available
-    for a given target.
+    mean_jacc20, coherence_auc_range, coherence_auc_at_gamma0,
+    coherence_classification -- each optional; a missing key renders "N/A"
+    in the headline block and skips its dependent recommendation line
+    rather than raising, since a caller may not have every upstream
+    analysis available for a given target.
 
     `provenance` must be exactly `"frozen"` **and** `results` must carry a
     valid stamp from `protocol.stamp_provenance` (TASK-0088, closes
@@ -220,6 +221,7 @@ def verdict_template(results: dict, *, provenance: str = "dev") -> str:
         "AUC_ctqw_mean", "AUC_heat_mean",
         "most_impactful_term", "least_impactful_term",
         "mean_rho_apo_holo", "mean_jacc20",
+        "coherence_auc_range", "coherence_auc_at_gamma0", "coherence_classification",
     ):
         lines.append(f"  {key:30s} : {fmt(key)}")
 
@@ -268,6 +270,25 @@ def verdict_template(results: dict, *, provenance: str = "dev") -> str:
         lines.append(
             f"4) Apo<->holo Spearman rho on occupation (mean over labelled "
             f"systems) = {rho:+.2f} ; top-20 Jaccard = {jacc20:.2f}.  {transfer}."
+        )
+
+    # TASK-0099: does the reported verdict change if quantum coherence is
+    # randomized away? See analysis.coherence_sensitivity.
+    coherence_range = results.get("coherence_auc_range")
+    coherence_class = results.get("coherence_classification")
+    if coherence_range is not None and coherence_class is not None:
+        verdict_coh = (
+            "coherence changes the score AND crosses the proximity floor "
+            "-- a genuine ENAQT-relevant signal"
+            if coherence_class == "COHERENCE_DEPENDENT_SIGNAL"
+            else "AUC is insensitive to coherence (calibrated dephasing-rate "
+                 "sweep) -- ranking power comes from graph topology, not "
+                 "quantum phase"
+        )
+        lines.append(
+            f"5) Coherence sensitivity (calibrated Haken-Strobl gamma-sweep): "
+            f"AUC range = {coherence_range:.4f}  ({coherence_class}) -- "
+            f"{verdict_coh}."
         )
 
     return "\n".join(lines)
