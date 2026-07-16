@@ -8,6 +8,39 @@ physics core. Ordering is by **dependency and risk**, not task number.
 Legend: **[EXISTS]** = filed before this plan · **[FILED]** = created *from* this plan
 (TASK-0070–0086, all 17 filed 2026-07-12, commit `9fdeb2f`) — no `[NEW]` remains outstanding.
 
+## ⚠️ 2026-07-16 correction — supersedes Phase 1B's own headline reversals; read this first
+
+`.ai/reviews/REVIEW-panel-2026-07-16-v2.md` (multidisciplinary panel, reconciling two
+adversarial reviews of Phase 1B's own conclusions) found that **every current
+floor/ceiling/actual number is gauge-contaminated by three unfixed physical units**, and
+neither the existing negative claim ("KRAS is a proximity detector," "ceiling below floor")
+nor a competing positive claim floated by another thread ("+0.042 headroom") is supported —
+both splice numbers across incompatible conventions. The three unfixed units:
+
+1. **The seed** — `run_challenge.py` uses a single residue (a TASK-0090 crash workaround);
+   `ceiling_search_batched.py` uses the full active-site array. Worth ≈±0.3 AUC on real
+   data (KRAS: 0.78 scalar vs. 0.45 array), and it moves the *floor* together with the
+   *score* — collapsing the site to one point manufactures the very proximity confound it
+   appears to reveal. **No `INV-XXXX` record owns this.**
+2. **The clock** — `t_max=15` is applied identically to every operator regardless of energy
+   scale; at that t, even a disorder-free walk has barely left the seed.
+3. **The potential's scale** — the five diagonal terms are not commensurate (`V_R`=88.8% of
+   variance, `V_C`/`V_M`=0.1% each) — a normalization bug, not a modeling choice.
+
+**Independently, and more fundamentally**: the panel's own executed check shows a bare,
+disorder-free normalized Laplacian seeded at one residue correlates with distance-from-seed
+at ρ=+0.83 and never drops below ~0.5 at *any* propagation time. **No Hamiltonian in this
+register can clear a proximity floor while the scored quantity is "occupation seeded at the
+active site" — the fix is a different observable, not a better operator.**
+
+**New blocking phase inserted below: [Phase 1C](#phase-1c--panel-review-v2-gauge-fixes--observable-correction-blocking-2026-07-16).**
+It supersedes Phase 1B's own headline framing wherever the two disagree (see each Phase 1C
+row for the specific correction) and gates every floor/ceiling/actual number in
+`COMPETENCE_MAP.md`/`RESULTS.md` until the P0 items land. Tasks filed: **TASK-0118–0127**
+(10 new), plus **TASK-0090 escalated to P0** (root cause of the seed confound) and
+**TASK-0106 flagged** (a backwards PR-direction narrative bug in its own Done section, not
+yet re-derived). Full detail, evidence, and priority ordering: `.ai/reviews/REVIEW-panel-2026-07-16-v2.md`.
+
 ## ⚠️ 2026-07-13 correction — read before dispatching anything in Phase 5
 
 `__WORK_IN_PROGRESS__/REVIEW-2026-07-13-proximity-confound-and-propagator-semantics.md`
@@ -70,28 +103,28 @@ reproduction gate the review requires before this changes any claim. Also amends
 **Neither review is a basis to reselect the submission operator** — that remains
 Tier-2-gated per **TASK-0100** (1B.9), unaffected by either finding.
 
-## Progress tracker (Phases 0–6 + 1B, the scored/critical-path work — 50 tasks)
+## Progress tracker (Phases 0–6 + 1B + 1C, the scored/critical-path work — 76 IDs referenced)
 
-**Reconciled 2026-07-15** by cross-checking every `TASK-00xx` ID referenced anywhere in the
+**Reconciled 2026-07-16** by cross-checking every `TASK-00xx` ID referenced anywhere in the
 phase tables below against its actual location in `.ai/tasks/{DONE,TODO,IN_PROGRESS}/`
-(script-verified, not hand-counted) — this replaces the 2026-07-13 snapshot, which had
-drifted 9 tasks stale (0068/0093/0102/0105/0106/0046/0080/0081/0082 all showed TODO in
-per-row Status columns despite being Done on disk; all 9 rows corrected in place above).
-`.ai/COMMON.md`'s Active Work Registry remains the canonical, continuously-updated source —
-re-check there (or re-run the cross-check) before trusting this table for dispatch
-decisions; it will drift again as soon as the next task lands.
+(script-verified, not hand-counted) — supersedes the 2026-07-15 snapshot (which itself
+replaced a 2026-07-13 one that had drifted 9 tasks stale). This update reflects Phase 1C's
+10 new tasks (TASK-0118–0127, filed from `.ai/reviews/REVIEW-panel-2026-07-16-v2.md`) and
+TASK-0099 landing Done the same day. `.ai/COMMON.md`'s Active Work Registry remains the
+canonical, continuously-updated source — re-check there (or re-run the cross-check) before
+trusting this table for dispatch decisions; it will drift again as soon as the next task
+lands.
 
 | Done | In Progress | TODO | Total distinct IDs referenced |
 |---|---|---|---|
-| 38 (TASK-0004, 0018, 0037, 0046, 0047, 0050, 0052, 0055, 0056, 0058, 0063, 0064, 0066, 0067, 0068, 0070, 0071, 0074, 0075, 0079, 0080, 0081, 0082, 0088, 0091, 0092, 0093, 0094, 0095, 0096, 0097, 0100, 0101, 0102, 0103, 0104, 0105, 0106) | 1 (TASK-0023) | 26 (TASK-0015, 0021, 0022, 0040, 0044, 0054, 0072, 0073, 0076, 0077, 0078, 0083, 0084, 0085, 0086, 0087, 0089, 0090, 0098, 0099, 0112, 0113, 0114, 0115, 0116, 0117) | 65 |
+| 39 (TASK-0004, 0018, 0037, 0046, 0047, 0050, 0052, 0055, 0056, 0058, 0063, 0064, 0066, 0067, 0068, 0070, 0071, 0074, 0075, 0079, 0080, 0081, 0082, 0088, 0091, 0092, 0093, 0094, 0095, 0096, 0097, 0099, 0100, 0101, 0102, 0103, 0104, 0105, 0106) | 1 (TASK-0023) | 36 (TASK-0015, 0021, 0022, 0040, 0044, 0054, 0072, 0073, 0076, 0077, 0078, 0083, 0084, 0085, 0086, 0087, 0089, 0090, 0098, 0108, 0112, 0113, 0114, 0115, 0116, 0117, 0118, 0119, 0120, 0121, 0122, 0123, 0124, 0125, 0126, 0127) | 76 |
 
-**Note on the "65" vs. the original "50":** the plan's scope has genuinely grown since
-2026-07-12 (Phase 1B alone added ~20 IDs: TASK-0091–0106, plus TASK-0108–0117 from the
-2026-07-15 gap audits) — this is not a counting error, the tracked surface is larger than
-when this table was first written. TASK-0004/0018/0037/0050/0088/0090 are referenced in
-prose (superseded-by notes, architectural-premise citations) rather than owning a live
-Status cell of their own; included above for completeness of the cross-check, not because
-they're separate open/closed rows.
+**Note on the growing total:** the plan's scope keeps genuinely growing, not drifting —
+Phase 1B added ~20 IDs (TASK-0091–0106), the 2026-07-15 gap audits added TASK-0108–0117,
+and Phase 1C (this update) adds TASK-0118–0127. TASK-0004/0018/0037/0050/0088/0090 are
+referenced in prose (superseded-by notes, architectural-premise citations, or — for 0090 —
+an escalated dependency) rather than owning a distinct live Status cell of their own;
+included above for completeness of the cross-check, not because they're separate rows.
 
 **To refresh this snapshot:** each task file's own `- Status:` line is authoritative
 (`.ai/COMMON.md`'s registry mirrors it). One-line check for any ID:
@@ -180,7 +213,7 @@ below matches the review's own "Sequencing" section exactly — do not reorder.
 | 1B.5 | **[UPDATED] TASK-0093 — KRAS AUC reconciliation, now against the proximity floor** | The 8.0 vs 10.0 Å cutoff changes the contact graph's distance-decay from the seed — a candidate mechanism for the AUC gap that has nothing to do with real allosteric sensitivity. Every factorial combination must now be checked against 1B.1's floor, not just chance. **Hard blocked on 1B.1 — now Done, unblocked.** | **Done.** Full 2×2×2 factorial (cutoff × pocket-label × source), read against TASK-0106's real-data result as planned. **Zero of 8 combinations clear the proximity floor** — including the real run's own headline 0.7792 (floor 0.7976, margin -0.018). **New dominant driver found, not one of the 3 originally-scoped variables**: seed cardinality (full active-site array vs. `run_challenge.py`'s single-index workaround) swings AUC from ~0.44-0.53 to ~0.78-0.82 on its own — bigger than the cutoff/pocket-label/frame axes this task was filed to test. See `physics.md`'s new cross-cutting seed-gauge finding. |
 | 1B.6 | **[FILED] TASK-0097 — name the "quantum metric" honestly** | `time_averaged_ctqw` is the decoherent/infinite-time-average limit (a spectral overlap quantity), not a coherent walk. Reporting honesty; can run in parallel with 1B.7 once 1B.1–1B.3 land. | **Done** (commit `bc41f09`). `[NOTE]` disclosure added to `verdict_template` before any AUC renders; second methodology paragraph added to `RESULTS.md`; 3 new tests including a durable `RESULTS.md`-content check. |
 | 1B.7 | **[FILED] TASK-0098 — amend INVARIANCE_PROTOCOL's SIGNAL class** | Protocol-level generalization: SIGNAL must beat the domain's strongest trivial confounder (distance-from-seed here), not just chance. Third instance of the same unexecuted-gauge-symmetry pattern (after SE(3) rotation, SU(2)/Clifford-frame) — see the review's Meta section. Can run in parallel with 1B.6. | TODO |
-| 1B.8 | **[FILED] TASK-0099 — wire a genuine coherence metric into the scored verdict** | Audit (2026-07-13, prompted by a direct user question against 1B.6's finding) confirmed: **nothing phase-dependent currently reaches any reported AUC.** `ctqw`/`haken_strobl` are correctly implemented, real quantum evolutions — but every scored number traces only to `time_averaged_ctqw`/`ground_state_relaxation`, both phase-averaged. `dephasing_sweep` exists, is tested, and has **zero call sites** in the reported pipeline. Promote it (calibrated γ, all 3 mandatory targets, checked against 1B.1's floor) so at least one reported number would change under phase randomization. **Hard blocked on 1B.1 — now Done, unblocked.** | **Resequenced 2026-07-13(b) — do NOT start yet.** `REVIEW-2026-07-13b` shows this task's own framing ("does dephasing recover a specific AUC") is exactly the ill-posed question the review's §4 dismantles. **Now blocked on TASK-0105** (ENAQT γ-sweep on real targets, measuring transport magnitude/interior-optimum shape) — TASK-0099 should wire whatever TASK-0105 actually finds, not proceed on its pre-review framing. |
+| 1B.8 | **[FILED] TASK-0099 — wire a genuine coherence metric into the scored verdict** | Audit (2026-07-13, prompted by a direct user question against 1B.6's finding) confirmed: **nothing phase-dependent currently reaches any reported AUC.** `ctqw`/`haken_strobl` are correctly implemented, real quantum evolutions — but every scored number traces only to `time_averaged_ctqw`/`ground_state_relaxation`, both phase-averaged. `dephasing_sweep` exists, is tested, and has **zero call sites** in the reported pipeline. Promote it (calibrated γ, all 3 mandatory targets, checked against 1B.1's floor) so at least one reported number would change under phase randomization. **Hard blocked on 1B.1 — now Done, unblocked.** | **Done, 2026-07-16.** `analysis.coherence_sensitivity` wired into `assemble_verdict_results`/`verdict_template` (3 new headline keys + a decision-support prose line). Real 3-target attempt: **KRAS_G12C** — flat sweep (`auc_range`=0.0155), doesn't even clear chance → `COHERENCE_NOT_SIGNIFICANT`, cross-checked under a second independent source convention. **BCR_ABL1/CARDIAC_MYOSIN — blocked, not silently skipped**: `calibrate_kappa`/`anm_modes` require exactly 6 rigid-body ANM modes; BCR_ABL1 has 7, CARDIAC_MYOSIN has 10 — both raise. TASK-0005 had already predicted this exact failure mode for multi-chain/floppy-linker targets; now actually hit. Filed **[[TASK-0128]]** to resolve the root cause. |
 | 1B.9 | **[FILED] TASK-0100 — decide the operator-sweep architecture** (Architect decision) | We have 14 named operators (1B.3 added `H14`) but no harness ever runs more than 2 (`H_new`/`H10`) against a real target. Routed to the Architect per explicit user instruction — "otherwise I do not understand how we would possibly pass the challenge." | **Done.** Decided: library fn `analysis.operator_sweep` + thin `scripts/sweep_operators.py`, **not** `run_challenge.py` (keeps the submission orchestrator a reported decision, not a search — same line already drawn for TASK-0046). Two-tier rating: **Tier 1** (descriptive — floor-cleared + AUC + apo/holo consistency, no frozen-gate) vs. **Tier 2** (selection — replacing `H_new`/`H10` as submission operator — hard-gated through `select_frozen_config`/`leave_one_protein_out`, N=3 flagged as thin). Three operator tiers: **A** (`H_new`, `H10`, `H14` — selection-eligible) vs. **B** (`H1`-`H9`, `H11`-`H13` — descriptive-only, never intended as submission candidates). Floor-failing operators recorded, not deleted (Tier A failing all 3 targets disqualifies it from Tier 2; Tier B failing is just recorded context). **Resequencing resolved**: TASK-0091/TASK-0093/TASK-0099 confirmed NOT blocked — none is an operator-selection act, all diagnose the already-chosen `H_new`. **Follow-up 2026-07-15:** this decision's Tier-2 gate stops code-level multiple-comparisons abuse; it can't gate the ~15 human review cycles this project has already run against the same 3 targets — see TASK-0115, complementary to this gate, not a duplicate. |
 | 1B.10 | **[FILED] TASK-0101 — operator sweep Tier-1 harness** | Executes 1B.9's decision: `analysis.operator_sweep` + `scripts/sweep_operators.py`, all 14+2 operators × 3 mandatory targets, Tier-1 (descriptive) only — no operator selection. **Amended 2026-07-13**: scores each operator through **both** `time_averaged_ctqw` and `ground_state_relaxation` (16 ops × 2 propagators × 3 targets = 96 cells, per 1B.4's finding that propagator choice — not just operator choice — was what separated BCR_ABL1's chance and floor-clearing results) — and must run **in chunkable, resumable, parallelizable parts** (`--target`/`--operator`/`--propagator` filters, per-cell files, `--force` to recompute one suspicious cell, `--aggregate` to merge partial runs from multiple machines). | **Done.** Real 96-cell sweep complete (KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN). Found+fixed a real bug in `operator_sweep`: `classify_failure` was called without `H`/`bfactors`, silently disabling `OPERATOR_DEGENERATE`/`INSUFFICIENT_RESOLUTION` for every cell. Separately, **2026-07-15**: `LARGE_N_THRESHOLD=800` (in effect for the first full sweep) was found to have no derivation anywhere in its cited notebook source and was corrected to 1000 per explicit user direction (full account: `diagnostics.py`'s own comment). Both fixes force-recomputed together. **Register-wide finding**: 20 of 96 cells clear TASK-0094's proximity floor, 11 of them via `ctqw` — all 11 on CARDIAC_MYOSIN (`H2`/`H3`/`H4`/`H5`/`H6`/`H8`/`H10`/`H11`/`H12`/`H_new`/`build_H10`, all `NO_FAILURE_DETECTED`); the other 9 floor-clears (KRAS_G12C 2 + BCR_ABL1 4 + CARDIAC_MYOSIN's remaining 3) are all `ground_state`. Whether `REVIEW-2026-07-13c`'s CTQW-trapping mechanism still explains CARDIAC_MYOSIN's many ctqw floor-clears (vs. KRAS/BCR_ABL1's zero) is unresolved — flagged, not answered, by this task. `H14` never clears the floor anywhere (real negative result, recorded not dropped). Tier-2 selection explicitly not attempted, per this task's own scope. Full detail: `.ai/tasks/DONE/TASK-0101-operator-sweep-tier1-harness.md`, `RESULTS.md`'s CARDIAC_MYOSIN section. |
 | 1B.11 | **[FILED] TASK-0102 — is 1B.4's finding seed-dependent, or a fixed-minimum artifact?** | User's question, 2026-07-13: does `ground_state_relaxation` genuinely couple to the seed, or does `exp(-Ht)` at `t_max=15` simply converge to `H`'s global ground state regardless of source — meaning "the minimum has to be somewhere, and on BCR_ABL1 it happens to sit nearer the pocket"? Real-data seed-invariance check first (cheap, reuses 1B.4's cached data), then a synthetic discriminating network (engineered minimum away-from vs. coupled-to a "drug site") if needed. Not blocking, but 1B.10's ground-state column should be read alongside this task's finding. | **Done.** Genuinely mixed evidence, resolved to a clear practical answer: a 6-seed correlation check shows real seeds *do* produce different occupation shapes (rules out literal seed-independence), but a broader 40-seed sample shows 70-75% of arbitrary, biologically-uninformed seeds clear the proximity floor and land within 0.02 of the real active site's own AUC (0.7315) — the score is dominated by `H_new`'s fixed ground-state shape (94.5% of relative weight at `t_max=15`), not active-site-specific coupling. **TASK-0091's 0.7315 must not be read as confirmed allosteric signal.** Synthetic discriminating network (part c) not built — not needed, per this task's own "build only if ambiguous" constraint. |
@@ -194,6 +227,49 @@ ground-state localization (`heat`) is *immune* to the proximity confound, as an 
 reviewer had proposed. It is **not** — `heat`'s synthetic distal-pocket AUC is 0.048, as
 anti-correlated as CTQW's 0.035. BCR_ABL1's real 0.731 remains a genuine, unexplained
 result that 1B.4 must test, not an already-proven exception.
+
+---
+
+## Phase 1C — Panel review v2: gauge fixes + observable correction (BLOCKING, 2026-07-16)
+
+Inserted after `.ai/reviews/REVIEW-panel-2026-07-16-v2.md` reconciled two adversarial
+reviews of Phase 1B's own conclusions and found the seed/clock/potential-scale gauges
+unfixed underneath every headline number. **This phase supersedes Phase 1B's own framing
+wherever the two disagree** (each row states the correction) and gates every
+floor/ceiling/actual number until the P0 rows land. Sequencing follows the review's own §5
+priority ordering (P0 → P1 → P2) — do not reorder without a stated reason.
+
+| # | Task | Why in this order | Status |
+|---|---|---|---|
+| 1C.1 | **[ESCALATED] TASK-0090 — fix `select.py`'s multi-index crash** | Root cause of the seed confound: `run_challenge.py`'s single-residue seed exists *because* of this bug. Hard-blocks 1C.2. Escalated from ordinary backlog to P0 by the panel review — do not defer further. | TODO |
+| 1C.2 | **[FILED] TASK-0118 — fix the seed gauge; register invariant; re-run floor/ceiling/actual** | The panel's #1 priority. Single vs. array seeding: occupation Spearman only 0.61, real KRAS swing 0.78→0.45. **Retracts "ceiling below floor" as `undetermined→recomputed`, not a new positive** — the competing "+0.042 headroom" claim splices two different runs and is equally unsupported. Corrects `COMPETENCE_MAP.md` directly. **Hard blocked on 1C.1.** | TODO |
+| 1C.3 | **[FILED] TASK-0119 — fix the clock: per-operator `t*` from spectral gap** | `t_max=15` isn't comparable across operators and is too short (disorder-free walk still concentrated near seed, PR≈9/169). **Corrects Phase 1B's/REVIEW-13c's own trapping claim in the other direction**: the panel's gauge-fixed re-run shows `H_new`'s localization is real and survives (PR 1.3→3.8 vs. bare Laplacian's 14.7→83.7) — not a units artifact as an adversarial review argued. Also fixes a backwards PR-direction narrative bug in TASK-0106's own Done section. | TODO |
+| 1C.4 | **[FILED] TASK-0120 — learnability gate (HYP-P8)** | "The highest information-per-hour experiment available" per the panel — Kabsch + RMSD + Tama-Sanejouand overlap, one afternoon, no quantum, no dependency. If KRAS's Switch-II pocket proves largely absent from apo topology, that reframes the whole submission as a finding rather than a failure. **Run regardless of 1C.2/1C.3's outcome — do not sequence behind them.** | TODO |
+| 1C.5 | **[EXISTS] TASK-0112 — wire `block_bootstrap_ci` into every headline AUC** | Panel P0-4. Every reversal this week (0.779/0.798, 0.525/0.565, ceiling/floor) is a bare point estimate on 16-21 positives; expect several to become "indistinguishable," which is more defensible than a false precision. | TODO |
+| 1C.6 | **[FILED] TASK-0121 — renormalize the 5-term potential** | `V_R`=88.8% of variance, `V_C`/`V_M`=0.1% each — a normalization bug, not physics. Retro-explains 3 previously-reported "findings" (`most_impactful_term=V_R`, ground state on low-diagonal residues, failure to beat degree centrality). **Distinct from the proximity confound** (occupation↔degree ρ=only 0.20) — this fix alone will not resolve 1C.2/1C.8. | TODO |
+| 1C.7 | **[FILED] TASK-0122 — build `mode_coparticipation`** | Proposed by REVIEW-13b §6, never built. Least-confounded observable on a *clean* Laplacian (\|ρ\|≈0.18) but *worse* than CTQW on the current disordered `H_new` (\|ρ\|≈0.50). **Hard blocked on 1C.6** — do not build/evaluate before the potential is renormalized. | TODO |
+| 1C.8 | **[FILED] TASK-0123 — distance-stratified evaluation** | Whole-graph AUC structurally cannot distinguish "found the pocket" from "found distance" (§2.3's own table: ρ(occ,−dist) never below ~0.5 at any t). Distance-matched-decoy AUC is the only way a real signal inside a confounded shell becomes visible. No dependency, can start immediately. | TODO |
+| 1C.9 | **[FILED] TASK-0124 — re-anchor or retire CARDIAC_MYOSIN** | The only current positive (0.786, floor-cleared) rests on 5TBY — a 20 Å docked homology model with non-crystallographic B-factors and unverified chain assignment. If it doesn't survive scrutiny, the submission currently has **zero** clean positives across all 3 mandatory targets. | TODO |
+| 1C.10 | **[FILED] TASK-0126 — H13 (or its N×N projection) through the ceiling search** | `.claude/hypotheses/ceiling.md`'s own "minimum set" calls this required; TASK-0046 never ran it. Independently flagged by this Architect/Planner thread the same day, before the panel review confirmed it. | TODO |
+| 1C.11 | **[FILED] TASK-0127 — extend the ASD generalization set; make it the reported headline** | Mitigates ~15 human review cycles over the same 3 answer keys — `frozen_context` gates code-level multiple comparisons, nothing gates the reviewers. **Soft-blocked on 1C.2/1C.3/1C.6** — running this against a still-gauge-contaminated pipeline just reproduces the same undetermined state on more targets. | TODO |
+| 1C.12 | **[FILED] TASK-0125 — verify c-Myc/1NKP resnum numbering** | `keep_nucleic: true` risks the hit list silently reporting DNA nucleotide indices as residues — cheap check, real reputational risk if wrong ("a referee will spot 'residue 943' instantly"). | TODO |
+| 1C.13 | **[EXISTS] TASK-0054 — SE(3) invariance regression** | Panel P2-12, re-affirmed as still relevant alongside the other gauge fixes. | TODO |
+
+**What this phase explicitly does NOT conclude (per the review's own corrections, do not
+re-litigate)**: `mode_coparticipation` does not work as a standalone fix (1C.7 depends on
+1C.6); potential renormalization does not by itself fix the proximity confound (1C.6 ≠
+1C.8); the CTQW-trapping mechanism is real and gauge-robust, not a clock artifact (1C.3
+corrects the *comparison*, not the *localization finding*); and fixing the seed gauge
+produces `undetermined`, not a new positive (1C.2's own scope explicitly forbids reporting
+a "+0.042" style claim).
+
+**Strengths the panel confirmed independently worth foregrounding in the submission,
+not fixing**: the falsification apparatus itself (proximity floor, dumbbell matrix,
+permutation null, GAUGE/KNOB/SIGNAL protocol) generalizes past this challenge and is the
+actual Innovation claim; the 6C1H validation-table correction (proof the challenge's own
+Table 1 lacks mavacamten) is currently "buried in a YAML comment" and should be promoted to
+a headline in `RESULTS.md` — no task filed for this, it's a reporting/framing change for
+whoever assembles the final submission narrative, not a science task.
 
 ---
 
@@ -454,9 +530,23 @@ before TASK-0116/0117 land.
 ## Critical path to 15 Sept
 
 **0.1 → 0.2 → 1.1 → 1.2 → 5.1 → [1B.1 → 1B.2 → 1B.3 → (1B.4, 1B.5)] → 1B.12 → (1B.14,
-1B.15) → 1B.13 → 5.2 → 6.1** — the minimum chain that yields *one leakage-clean,
-floor-anchored, mechanism-understood, honestly-reported result*, packaged in the artifact
+1B.15) → 1B.13 → [1C.1 → 1C.2, 1C.3 (parallel), 1C.4 (parallel, no dep)] → 1C.5 → 5.2 →
+6.1** — the minimum chain that yields *one leakage-clean, floor-anchored,
+mechanism-understood, gauge-fixed, honestly-reported result*, packaged in the artifact
 contract so it can be shown.
+
+**Updated 2026-07-16:** Phase 1C is now load-bearing, inserted between Phase 1B and 5.2 —
+Phase 1B's own headline reversals ("KRAS is a proximity detector," "ceiling below floor")
+are themselves gauge-contaminated and not yet reportable as written. **1C.1 (TASK-0090) is
+the single highest-priority open task in this plan**: it hard-blocks 1C.2, and 1C.2 is what
+lets `COMPETENCE_MAP.md` be corrected from an unsupported negative claim to an honest
+`undetermined→recomputed`. **1C.4 (TASK-0120, the learnability gate) has no dependency and
+should run in parallel immediately** — per the panel, "the highest information-per-hour
+experiment available," one afternoon, no quantum required. **1C.5 (TASK-0112, bootstrap
+CI) should land alongside 1C.2/1C.3** so the re-run's own numbers ship with error bars the
+first time, not as a follow-up correction to a second point estimate. 5.2 (competence map)
+must not be re-read as settled until at least 1C.2 lands — its current text already states
+"ceiling below floor" as its strongest evidence, which this phase retracts.
 
 **Updated 2026-07-13:** 5.1 is Done, but its output is not yet trustworthy as reported —
 Phase 1B is now load-bearing on the critical path, inserted between 5.1 and 5.2. **1B.1

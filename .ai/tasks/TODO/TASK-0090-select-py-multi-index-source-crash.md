@@ -77,10 +77,28 @@
 - [[TASK-0007]] (`select.py`, Done) — the module with the bug.
 - [[TASK-0079.004]] — found this while implementing it; that script's own
   single-seed workaround becomes deletable once this is fixed.
+- **Blocks [[TASK-0118]]** (added 2026-07-16, per
+  `.ai/reviews/REVIEW-panel-2026-07-16-v2.md` §2.1, §5 P0-1).
 
 ## Open Questions
 
 - None yet.
+
+## Priority update, 2026-07-16
+
+**Escalated to P0 — highest-priority open task in the plan.** The panel
+review found that this task's own crash workaround (`run_challenge.py`'s
+single-residue seed, in place *because* this bug forced it) is
+independently the dominant driver behind two separate headline
+reconciliations this week: TASK-0093's KRAS_G12C AUC swing (~0.44-0.53
+array vs. ~0.78-0.82 scalar) and TASK-0106's BCR_ABL1 operator-ranking
+sign flip (`H_new` lowest-scoring under the scalar convention, highest
+under the array). The panel's own executed check: single-vs-array
+seeding gives occupation Spearman only **0.61** even on synthetic data.
+Both the "KRAS is a proximity detector" and "ceiling below floor" claims
+are gauge-contaminated by this exact workaround and cannot be asserted
+as written until it's fixed. **Do not defer this task further** — it is
+the hard dependency for [[TASK-0118]], which cannot start without it.
 
 ## Done
 

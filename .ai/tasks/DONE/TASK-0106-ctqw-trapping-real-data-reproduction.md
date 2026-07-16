@@ -164,6 +164,23 @@ None
     Per this task's own Constraints ("report the result whichever way it
     comes out"), this is not softened toward either the review's
     prediction or a clean falsification.
+- **Correction flagged 2026-07-16** (`.ai/reviews/REVIEW-panel-2026-07-16-v2.md`
+  §2.2): `_transport_participation_ratio` = `1/(N·Σp²)` — **high PR means
+  delocalized, low PR means localized.** This Done section's own numbers
+  (`H_new` PR/N=0.299 vs. `H10`/`H2`'s 0.056/0.054 — `H_new` is the
+  *higher* value) are reported above alongside language ("markedly more
+  localized," line ~133) that reads the higher value as more localized —
+  backwards for this metric as defined. The panel's own independent,
+  gauge-fixed re-measurement (normalizing each operator by its hopping
+  scale) still finds `H_new` genuinely more localized than `H10`/bare
+  Laplacian (PR 1.3→3.8 vs. 14.7→83.7 and 23.5→48 across t=15→1500) — so
+  the underlying **localization conclusion itself is not in question**,
+  only whether *this task's own* PR/N numbers and narrative direction are
+  internally consistent with each other. Not resolved here — re-checking
+  which of (the reported PR/N values) or (the localized/delocalized
+  prose) is the actual error is [[TASK-0119]]'s job, done alongside its
+  own clock-gauge re-run, not silently corrected in this file without
+  re-deriving the numbers.
 - Tests: `test_ctqw_trapping_reproduction.py` (6 cases) — `λ=1` exactly
   matches default `build_H_new`; `λ=0` gives the bare Laplacian; the
   λ-scaling is verified linear on the potential block, not just at the
