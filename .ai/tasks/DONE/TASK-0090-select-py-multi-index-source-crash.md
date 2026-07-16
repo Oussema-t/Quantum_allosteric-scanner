@@ -10,8 +10,10 @@
   own docstring precedent ("focusing"/"source_specificity" both support a
   multi-index seed, mirroring `propagators.py`'s "a multi-index source is
   a uniform mass split" convention) implying the whole module does.
-- Status: TODO
+- Status: Done
 - Owner: Implementer
+- Claimed By: Implementer A (this thread)
+- Claimed At: 2026-07-16 21:21
 - Source: found while implementing TASK-0079.004 (the end-to-end
   orchestrator). `protocol.run_frozen_verdict`'s `candidates_builder`
   naturally wants to offer `select_frozen_config` the same seed
@@ -102,4 +104,74 @@ the hard dependency for [[TASK-0118]], which cannot start without it.
 
 ## Done
 
-(not yet)
+- 2026-07-16, Implementer A. Root cause confirmed by direct execution
+  before fixing (this task's own reproduction snippet): `ballistic_exponent`
+  alone does **not** crash on a multi-index `source` -- `_hop_distances_
+  from_source`'s `frontier = [source]` wraps the whole array as one list
+  element, so `adjacency[node]` runs on a 2-row fancy-indexed slice and
+  silently computes a garbage neighbor set (a wrong-answer bug, not a
+  raised exception). The actual crash in this task's own documented
+  reproduction traces to `source_specificity`'s `others = np.array([i for
+  i in range(N) if i != source])` -- `i != source` on an array `source`
+  raises exactly `ValueError: The truth value of an array...` inside
+  `unsupervised_score`'s per-candidate loop.
+- **Correction to this task's own Intent Contract**: `source_specificity`
+  was marked Out Of Scope ("already correct, use time_averaged_ctqw which
+  handles multi-index natively") -- checked by execution, found false, and
+  fixed anyway rather than left broken because a stale scope note said not
+  to touch it. `focusing` (no `source` parameter) is unaffected and
+  genuinely untouched, matching the rest of that Out Of Scope note.
+- Fixed `select.py`:
+  - `_hop_distances_from_source(H, source)`: `source` normalized via
+    `np.atleast_1d(np.asarray(source, dtype=int))`, `dist[source_idx] = 0`,
+    `frontier = list(source_idx)` -- a standard multi-source BFS (each
+    node's distance = min hop-count to *any* seed), scalar path
+    byte-identical by construction (`np.atleast_1d(3).tolist() == [3]`).
+  - `ballistic_exponent`: signature widened to the same `Source =
+    Union[int, Sequence[int]]` alias (mirrors `propagators.Source`,
+    defined locally rather than cross-imported, matching this module's
+    existing decoupling convention); body unchanged, `ctqw`/
+    `_hop_distances_from_source` already handle it.
+  - `source_specificity`: `others` exclusion set rebuilt via
+    `excluded = set(np.atleast_1d(source).tolist())` + membership test,
+    replacing the scalar-only `i != source` comparison. Scalar behavior
+    identical by construction.
+- Tests: `test_select.py::TestMultiIndexSource` (9 new cases) -- multi-source
+  BFS correctness (min-over-seeds on a path graph), single-element-array
+  matches scalar (both `_hop_distances_from_source` and
+  `ballistic_exponent`), scalar behavior unchanged (explicit
+  `np.arange(N)` check), `source_specificity` no longer crashes + its own
+  exclusion-set edge case, and this task's own Context reproduction
+  verbatim (12-node path, `source=np.array([2, 3])`) now returns a finite
+  score instead of raising. `test_protocol.py::TestSelectFrozenConfig::
+  test_picks_a_winner_with_a_real_multi_index_source` -- the
+  `unsupervised_score`/`select_frozen_config` end-to-end test this task's
+  own Planned Validation named. All existing `test_select.py`
+  (14 pre-existing) and `test_protocol.py` tests pass unmodified --
+  `.venv/bin/python3 -m pytest -q test_select.py test_protocol.py` ->
+  68 passed.
+- **Planned Validation's real-data check**: confirmed the crash workaround
+  in `run_challenge.py` (`source = int(np.sort(active_site_idx)[0])`,
+  its own module docstring citing this task) is now genuinely removable
+  -- ran `select.unsupervised_score` on real KRAS_G12C data with the
+  **full** 18-residue active-site array (`labels_obj.active_site`, not the
+  single-index workaround) through `H_new`/`H10` candidates: returned
+  `[3.0, -3.0]`, finite and differentiated, no crash (4.3s). **Did not
+  edit `run_challenge.py` itself** -- that file has another thread's
+  own in-progress, uncommitted changes (+137 lines, unrelated), and
+  actually changing the pipeline's live seed convention is explicitly
+  [[TASK-0118]]'s job (this task unblocks it, per the 2026-07-16 Priority
+  update, rather than duplicating its "declare one convention, re-run
+  floor/ceiling/actual" scope here).
+- Not run through `pytest_local.py wip-all` this session (targeted files
+  only, to avoid re-triggering the multi-session-contention hang
+  investigated earlier this session).
+- Documents updated post-completion, per explicit user request: `EXECUTION_
+  PLAN.md`'s Phase 1C.1/1C.2 rows (Done + unblocked), its critical-path
+  paragraph, and its progress-tracker ID snapshot (0090 moved Done, 0128
+  added TODO, 76→77); [[SEAM-0009]] extended (a 3rd seam-test, the real
+  multi-index consumption path, still VERIFIED); [[INV-0004]] gained a new
+  KNOB row (scalar-vs-multi-index source, newly characterizable, still
+  OPEN -- the actual spread measurement is [[TASK-0118]]'s job); TASK-0118's
+  own file updated to reflect it is now unblocked, not still waiting on
+  this task.

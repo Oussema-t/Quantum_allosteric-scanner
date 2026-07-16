@@ -54,3 +54,15 @@
   `.ai/invariants/` GAUGE/KNOB/SIGNAL table for `select.py`'s reported
   quantities (flagged in TASK-0064's own Constraints) filed separately as
   [[TASK-0089]], not built as part of this seam closure.
+
+  **Extended 2026-07-16 by [[TASK-0090]]:** `select_frozen_config`'s own
+  consumption path had never been exercised with a multi-index `source` --
+  the real shape `run_challenge.py` wants to offer (`labels.Labels.
+  active_site`, typically several residues) but couldn't, because
+  `select.py`'s scoring path crashed on it (root-caused to
+  `source_specificity`, not `ballistic_exponent` as that task's own filing
+  first assumed -- checked by execution). Fixed in `select.py`; a third
+  seam-test added, `test_picks_a_winner_with_a_real_multi_index_source`,
+  proving this seam's own real-consumer path (not just `unsupervised_score`
+  in isolation) now accepts and correctly ranks multi-index-source
+  candidates. Status unchanged: **VERIFIED**.

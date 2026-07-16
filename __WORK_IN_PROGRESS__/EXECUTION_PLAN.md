@@ -103,28 +103,31 @@ reproduction gate the review requires before this changes any claim. Also amends
 **Neither review is a basis to reselect the submission operator** — that remains
 Tier-2-gated per **TASK-0100** (1B.9), unaffected by either finding.
 
-## Progress tracker (Phases 0–6 + 1B + 1C, the scored/critical-path work — 76 IDs referenced)
+## Progress tracker (Phases 0–6 + 1B + 1C, the scored/critical-path work — 77 IDs referenced)
 
 **Reconciled 2026-07-16** by cross-checking every `TASK-00xx` ID referenced anywhere in the
 phase tables below against its actual location in `.ai/tasks/{DONE,TODO,IN_PROGRESS}/`
 (script-verified, not hand-counted) — supersedes the 2026-07-15 snapshot (which itself
 replaced a 2026-07-13 one that had drifted 9 tasks stale). This update reflects Phase 1C's
-10 new tasks (TASK-0118–0127, filed from `.ai/reviews/REVIEW-panel-2026-07-16-v2.md`) and
-TASK-0099 landing Done the same day. `.ai/COMMON.md`'s Active Work Registry remains the
+10 new tasks (TASK-0118–0127, filed from `.ai/reviews/REVIEW-panel-2026-07-16-v2.md`),
+TASK-0099 landing Done the same day, and (later the same day) **TASK-0090 landing Done**
+(1C.1) plus **TASK-0128 filed** (a `calibrate_kappa` blocker found while running TASK-0099,
+unrelated to Phase 1C). `.ai/COMMON.md`'s Active Work Registry remains the
 canonical, continuously-updated source — re-check there (or re-run the cross-check) before
 trusting this table for dispatch decisions; it will drift again as soon as the next task
 lands.
 
 | Done | In Progress | TODO | Total distinct IDs referenced |
 |---|---|---|---|
-| 39 (TASK-0004, 0018, 0037, 0046, 0047, 0050, 0052, 0055, 0056, 0058, 0063, 0064, 0066, 0067, 0068, 0070, 0071, 0074, 0075, 0079, 0080, 0081, 0082, 0088, 0091, 0092, 0093, 0094, 0095, 0096, 0097, 0099, 0100, 0101, 0102, 0103, 0104, 0105, 0106) | 1 (TASK-0023) | 36 (TASK-0015, 0021, 0022, 0040, 0044, 0054, 0072, 0073, 0076, 0077, 0078, 0083, 0084, 0085, 0086, 0087, 0089, 0090, 0098, 0108, 0112, 0113, 0114, 0115, 0116, 0117, 0118, 0119, 0120, 0121, 0122, 0123, 0124, 0125, 0126, 0127) | 76 |
+| 40 (TASK-0004, 0018, 0037, 0046, 0047, 0050, 0052, 0055, 0056, 0058, 0063, 0064, 0066, 0067, 0068, 0070, 0071, 0074, 0075, 0079, 0080, 0081, 0082, 0088, 0090, 0091, 0092, 0093, 0094, 0095, 0096, 0097, 0099, 0100, 0101, 0102, 0103, 0104, 0105, 0106) | 1 (TASK-0023) | 36 (TASK-0015, 0021, 0022, 0040, 0044, 0054, 0072, 0073, 0076, 0077, 0078, 0083, 0084, 0085, 0086, 0087, 0089, 0098, 0108, 0112, 0113, 0114, 0115, 0116, 0117, 0118, 0119, 0120, 0121, 0122, 0123, 0124, 0125, 0126, 0127, 0128) | 77 |
 
 **Note on the growing total:** the plan's scope keeps genuinely growing, not drifting —
 Phase 1B added ~20 IDs (TASK-0091–0106), the 2026-07-15 gap audits added TASK-0108–0117,
-and Phase 1C (this update) adds TASK-0118–0127. TASK-0004/0018/0037/0050/0088/0090 are
-referenced in prose (superseded-by notes, architectural-premise citations, or — for 0090 —
-an escalated dependency) rather than owning a distinct live Status cell of their own;
-included above for completeness of the cross-check, not because they're separate rows.
+Phase 1C (2026-07-16) added TASK-0118–0127, and the same day's TASK-0099/TASK-0090 work
+added TASK-0128. TASK-0004/0018/0037/0050/0088 are referenced in prose (superseded-by
+notes, architectural-premise citations) rather than owning a distinct live Status cell of
+their own; TASK-0090 now owns 1C.1's Status cell directly (Done). Included above for
+completeness of the cross-check, not because they're all separate rows.
 
 **To refresh this snapshot:** each task file's own `- Status:` line is authoritative
 (`.ai/COMMON.md`'s registry mirrors it). One-line check for any ID:
@@ -241,8 +244,8 @@ priority ordering (P0 → P1 → P2) — do not reorder without a stated reason.
 
 | # | Task | Why in this order | Status |
 |---|---|---|---|
-| 1C.1 | **[ESCALATED] TASK-0090 — fix `select.py`'s multi-index crash** | Root cause of the seed confound: `run_challenge.py`'s single-residue seed exists *because* of this bug. Hard-blocks 1C.2. Escalated from ordinary backlog to P0 by the panel review — do not defer further. | TODO |
-| 1C.2 | **[FILED] TASK-0118 — fix the seed gauge; register invariant; re-run floor/ceiling/actual** | The panel's #1 priority. Single vs. array seeding: occupation Spearman only 0.61, real KRAS swing 0.78→0.45. **Retracts "ceiling below floor" as `undetermined→recomputed`, not a new positive** — the competing "+0.042 headroom" claim splices two different runs and is equally unsupported. Corrects `COMPETENCE_MAP.md` directly. **Hard blocked on 1C.1.** | TODO |
+| 1C.1 | **[ESCALATED] TASK-0090 — fix `select.py`'s multi-index crash** | Root cause of the seed confound: `run_challenge.py`'s single-residue seed exists *because* of this bug. Hard-blocks 1C.2. Escalated from ordinary backlog to P0 by the panel review — do not defer further. | **Done (2026-07-16).** Fixed `_hop_distances_from_source` (multi-source BFS; was silently *wrong*, not crashing) and `source_specificity`'s `others` exclusion set (the actual crash site — this task's own Intent Contract had wrongly marked that function "already correct", checked by execution and fixed anyway). Real KRAS_G12C validation: full 18-residue active-site array through `unsupervised_score`, no crash, finite differentiated scores. `run_challenge.py`'s workaround itself intentionally left in place — removing it is 1C.2's job, not duplicated here. |
+| 1C.2 | **[FILED] TASK-0118 — fix the seed gauge; register invariant; re-run floor/ceiling/actual** | The panel's #1 priority. Single vs. array seeding: occupation Spearman only 0.61, real KRAS swing 0.78→0.45. **Retracts "ceiling below floor" as `undetermined→recomputed`, not a new positive** — the competing "+0.042 headroom" claim splices two different runs and is equally unsupported. Corrects `COMPETENCE_MAP.md` directly. | **Unblocked (1C.1 landed 2026-07-16) — ready to start.** |
 | 1C.3 | **[FILED] TASK-0119 — fix the clock: per-operator `t*` from spectral gap** | `t_max=15` isn't comparable across operators and is too short (disorder-free walk still concentrated near seed, PR≈9/169). **Corrects Phase 1B's/REVIEW-13c's own trapping claim in the other direction**: the panel's gauge-fixed re-run shows `H_new`'s localization is real and survives (PR 1.3→3.8 vs. bare Laplacian's 14.7→83.7) — not a units artifact as an adversarial review argued. Also fixes a backwards PR-direction narrative bug in TASK-0106's own Done section. | TODO |
 | 1C.4 | **[FILED] TASK-0120 — learnability gate (HYP-P8)** | "The highest information-per-hour experiment available" per the panel — Kabsch + RMSD + Tama-Sanejouand overlap, one afternoon, no quantum, no dependency. If KRAS's Switch-II pocket proves largely absent from apo topology, that reframes the whole submission as a finding rather than a failure. **Run regardless of 1C.2/1C.3's outcome — do not sequence behind them.** | TODO |
 | 1C.5 | **[EXISTS] TASK-0112 — wire `block_bootstrap_ci` into every headline AUC** | Panel P0-4. Every reversal this week (0.779/0.798, 0.525/0.565, ceiling/floor) is a bare point estimate on 16-21 positives; expect several to become "indistinguishable," which is more defensible than a false precision. | TODO |
@@ -537,8 +540,10 @@ contract so it can be shown.
 
 **Updated 2026-07-16:** Phase 1C is now load-bearing, inserted between Phase 1B and 5.2 —
 Phase 1B's own headline reversals ("KRAS is a proximity detector," "ceiling below floor")
-are themselves gauge-contaminated and not yet reportable as written. **1C.1 (TASK-0090) is
-the single highest-priority open task in this plan**: it hard-blocks 1C.2, and 1C.2 is what
+are themselves gauge-contaminated and not yet reportable as written. **1C.1 (TASK-0090)
+landed 2026-07-16** — `select.py`'s multi-index crash is fixed and validated on real
+KRAS_G12C data; **1C.2 (TASK-0118) is now the single highest-priority open task in this
+plan**, unblocked and ready to start: it is what
 lets `COMPETENCE_MAP.md` be corrected from an unsupported negative claim to an honest
 `undetermined→recomputed`. **1C.4 (TASK-0120, the learnability gate) has no dependency and
 should run in parallel immediately** — per the panel, "the highest information-per-hour

@@ -9,7 +9,16 @@ here is computable from `H` (the Hamiltonian) and a seed index alone.
 """
 from __future__ import annotations
 
+from typing import Sequence, Union
+
 import numpy as np
+
+# Mirrors propagators.Source exactly (TASK-0090) -- kept as a local alias
+# rather than a cross-module import, matching this codebase's convention of
+# each module staying decoupled from the internals of the ones it calls
+# (only lazy, function-local `from .propagators import ...` calls elsewhere
+# in this file).
+Source = Union[int, Sequence[int]]
 
 
 def focusing(P: np.ndarray) -> float:
@@ -35,7 +44,7 @@ def _hellinger_distance(p: np.ndarray, q: np.ndarray) -> float:
 
 def source_specificity(
     H: np.ndarray,
-    source: int,
+    source: Source,
     t_max: float,
     n_steps: int = 500,
     n_alt: int = 20,
@@ -61,13 +70,22 @@ def source_specificity(
     (`n_steps` eigendecompositions) -- exhaustive is fine for the small
     synthetic graphs in this module's own tests, but would be expensive on a
     real, few-hundred-residue protein Hamiltonian.
+
+    `source` may be a scalar or a multi-index array/sequence (TASK-0090) --
+    `time_averaged_ctqw` already handles both natively; this function's own
+    `others` exclusion set previously assumed a scalar (`i != source` raises
+    `ValueError: The truth value of an array...` for a multi-index `source`,
+    the actual crash TASK-0090's own reproduction hits -- despite that
+    task's Intent Contract marking this function "already correct", which
+    was checked by execution and found false, not assumed).
     """
     from .propagators import time_averaged_ctqw
 
     if rng is None:
         rng = np.random.default_rng(42)
     N = H.shape[0]
-    others = np.array([i for i in range(N) if i != source])
+    excluded = set(np.atleast_1d(source).tolist())
+    others = np.array([i for i in range(N) if i not in excluded])
     n_alt = min(n_alt, len(others))
     if n_alt == 0:
         return float("nan")
@@ -83,7 +101,7 @@ def source_specificity(
     return float(np.mean(dists))
 
 
-def _hop_distances_from_source(H: np.ndarray, source: int) -> np.ndarray:
+def _hop_distances_from_source(H: np.ndarray, source: Source) -> np.ndarray:
     """BFS hop-distance from `source` over H's off-diagonal sparsity pattern.
 
     The diagonal potentials in `hamiltonians.build_H_new` (V_B, V_T, V_R,
@@ -94,13 +112,23 @@ def _hop_distances_from_source(H: np.ndarray, source: int) -> np.ndarray:
     `ballistic_exponent` needs no separate coords/adjacency input and stays
     computable from the operator alone.
 
+    `source` may be a scalar or a multi-index array/sequence (TASK-0090) --
+    a standard multi-source BFS, frontier seeded from every index at once,
+    each node's distance the min hop-count to *any* seed. Previously
+    `frontier = [source]` wrapped an entire array `source` as a single list
+    element instead of seeding one frontier entry per index -- silently
+    wrong (not a crash: `adjacency[node]` on a 2-row fancy-indexed array
+    still runs, just computes garbage neighbor indices), the "hidden
+    wrong-shape state" this task's own Context section already named.
+
     Returns an (N,) int array; unreachable nodes (disconnected graph) get -1.
     """
     N = H.shape[0]
     adjacency = np.abs(H - np.diag(np.diag(H))) > 1e-12
     dist = np.full(N, -1, dtype=int)
-    dist[source] = 0
-    frontier = [source]
+    source_idx = np.atleast_1d(np.asarray(source, dtype=int))
+    dist[source_idx] = 0
+    frontier = list(source_idx)
     d = 0
     while frontier:
         d += 1
@@ -116,7 +144,7 @@ def _hop_distances_from_source(H: np.ndarray, source: int) -> np.ndarray:
 
 def ballistic_exponent(
     H: np.ndarray,
-    source: int,
+    source: Source,
     t_values: np.ndarray | None = None,
 ) -> float:
     """Spread-vs-time scaling exponent: fits spread(t) ~ t^alpha.
@@ -129,7 +157,8 @@ def ballistic_exponent(
     localized/trapped (or saturated -- see below).
 
     Label-free and needs only `H` and the seed: hop distances come from
-    `_hop_distances_from_source`, occupation from `propagators.ctqw`.
+    `_hop_distances_from_source`, occupation from `propagators.ctqw` (both
+    already support a multi-index `source`, TASK-0090).
 
     Nodes unreachable from `source` (disconnected graph) are excluded from
     the spread calculation, not treated as infinitely far.

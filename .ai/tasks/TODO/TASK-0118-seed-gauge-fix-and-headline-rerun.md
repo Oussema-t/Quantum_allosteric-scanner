@@ -16,6 +16,14 @@
   panel's single highest-priority item ("reverses the central claim").
 - Priority: **P0 — this week.** Blocks every floor/ceiling/actual number
   currently in `COMPETENCE_MAP.md`/`RESULTS.md`.
+- **Dependency status, 2026-07-16: [[TASK-0090]] landed.** `select.py`'s
+  `_hop_distances_from_source`/`ballistic_exponent` (multi-source BFS) and
+  `source_specificity` (the actual crash site -- not `ballistic_exponent`
+  as first assumed, checked by execution) are fixed and validated against
+  real KRAS_G12C data (full 18-residue active-site array through
+  `unsupervised_score`, finite differentiated scores, no crash). This task
+  is now **unblocked and ready to start** -- the "claim TASK-0090 as this
+  task's own first step" fallback in In Scope below no longer applies.
 
 ## Intent Contract
 

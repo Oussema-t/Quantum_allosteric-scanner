@@ -14,6 +14,7 @@ import pytest
 
 from allostery.hamiltonians import laplacian
 from allostery.select import (
+    _hop_distances_from_source,
     ballistic_exponent,
     focusing,
     source_specificity,
@@ -154,3 +155,83 @@ class TestUnsupervisedScore:
         ]
         scores = unsupervised_score(candidates)
         assert scores[0] != pytest.approx(scores[1])
+
+
+# ---------------------------------------------------------------------------
+# TASK-0090 -- multi-index `source` support
+#
+# Reproduces the exact crash TASK-0090's own Context section documents
+# (`unsupervised_score([{"H": H, "source": np.array([2, 3]), "t": 5.0}])`
+# raised `ValueError: The truth value of an array...`), plus the separate,
+# previously-silent wrong-answer bug in `ballistic_exponent`/
+# `_hop_distances_from_source` (didn't crash, just returned a number
+# computed from a garbage BFS frontier). Also covers `source_specificity`,
+# which TASK-0090's own Intent Contract marked "Out Of Scope... already
+# correct" -- checked by execution, not assumed, and found to crash on
+# exactly the same kind of multi-index `source` (its `others` exclusion set
+# used a bare `i != source` scalar comparison) -- fixed here too rather than
+# left broken because a stale scope note said not to touch it.
+# ---------------------------------------------------------------------------
+
+class TestMultiIndexSource:
+    def test_hop_distances_multi_source_is_min_over_seeds(self):
+        # 10-node (H_PATH) path, seeds at {2, 3}: node 0 is 2 hops from
+        # seed 2 (its nearest seed); node 9 is 6 hops from seed 3.
+        dist = _hop_distances_from_source(H_PATH, np.array([2, 3]))
+        assert dist[2] == 0 and dist[3] == 0
+        assert dist[0] == 2
+        assert dist[9] == 6
+        assert dist[1] == 1 and dist[4] == 1  # one hop from either seed
+
+    def test_hop_distances_single_element_array_matches_scalar(self):
+        scalar = _hop_distances_from_source(H_PATH, 4)
+        array = _hop_distances_from_source(H_PATH, np.array([4]))
+        np.testing.assert_array_equal(scalar, array)
+
+    def test_hop_distances_scalar_behavior_unchanged(self):
+        # Byte-identical to the pre-fix scalar path (TASK-0090's own
+        # Constraint) -- a plain, hand-computed BFS on a 10-node path from
+        # node 0.
+        dist = _hop_distances_from_source(H_PATH, 0)
+        np.testing.assert_array_equal(dist, np.arange(N))
+
+    def test_ballistic_exponent_multi_index_does_not_crash_and_is_finite(self):
+        result = ballistic_exponent(H_PATH, np.array([2, 3]))
+        assert np.isfinite(result)
+
+    def test_ballistic_exponent_single_element_array_matches_scalar(self):
+        scalar = ballistic_exponent(H_PATH, 4)
+        array = ballistic_exponent(H_PATH, np.array([4]))
+        assert array == pytest.approx(scalar)
+
+    def test_source_specificity_multi_index_does_not_crash(self):
+        # This is TASK-0090's own documented Context reproduction's actual
+        # crash site (not ballistic_exponent) -- see class docstring.
+        result = source_specificity(H_PATH, np.array([2, 3]), t_max=10.0, n_alt=5)
+        assert np.isfinite(result)
+
+    def test_source_specificity_excludes_every_seed_from_alternatives(self):
+        # A regression for the fixed `others` set: with N=10 and a 2-index
+        # seed, at most 8 alternatives exist -- n_alt=9 must clamp, not
+        # accidentally include a seed residue as its own "alternative".
+        result = source_specificity(H_PATH, np.array([2, 3]), t_max=10.0, n_alt=9)
+        assert np.isfinite(result)
+
+    def test_unsupervised_score_reproduces_and_fixes_task_0090s_own_repro(self):
+        """Verbatim reproduction from TASK-0090's Context section (path
+        adjacency, 12 nodes, source=np.array([2, 3])) -- previously raised
+        ValueError, must now return one finite score."""
+        H = laplacian(_path_adjacency(12))
+        scores = unsupervised_score([{"H": H, "source": np.array([2, 3]), "t": 5.0}])
+        assert scores.shape == (1,)
+        assert np.isfinite(scores[0])
+
+    def test_unsupervised_score_multi_index_candidate_among_scalar_candidates(self):
+        candidates = [
+            {"H": H_PATH, "source": 0, "t": 10.0},
+            {"H": H_PATH, "source": np.array([2, 3]), "t": 10.0},
+            {"H": H_STAR, "source": 0, "t": 10.0},
+        ]
+        scores = unsupervised_score(candidates)
+        assert scores.shape == (3,)
+        assert np.all(np.isfinite(scores))

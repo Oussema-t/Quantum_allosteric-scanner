@@ -264,6 +264,29 @@ class TestSelectFrozenConfig:
         assert winner["score"] == pytest.approx(direct_scores[1])
         assert winner["H"] is star_H  # caller's own keys survive untouched
 
+    def test_picks_a_winner_with_a_real_multi_index_source(self):
+        """TASK-0090: `select_frozen_config`'s real end-to-end path (not
+        just `unsupervised_score` in isolation) must accept a multi-index
+        `source` -- the actual candidate shape `protocol.run_frozen_verdict`
+        wants to offer (`labels.Labels.active_site`, typically several
+        residues), the reason TASK-0079.004 had to route around this
+        module with a single-representative-seed workaround in the first
+        place (see TASK-0090's own Context)."""
+        n = 10
+        path_H = laplacian(_path_adjacency(n))
+        star_H = laplacian(_star_adjacency(n))
+        candidates = [
+            {"H": path_H, "source": np.array([0, 1]), "t": 5.0},
+            {"H": star_H, "source": np.array([0, 1]), "t": 5.0},
+        ]
+
+        winner = select_frozen_config(lambda: candidates, "T1")
+
+        direct_scores = unsupervised_score(candidates)
+        assert np.all(np.isfinite(direct_scores))
+        assert winner["index"] == int(direct_scores.argmax())
+        assert winner["score"] == pytest.approx(direct_scores[winner["index"]])
+
     def test_blocks_a_candidate_builder_that_reads_the_held_out_target(self):
         """Candidate *construction*, not just scoring, must run inside the
         frozen_context -- unsupervised_score itself never touches labels,
