@@ -12,7 +12,12 @@
 
 - `t`/`t_max`/`n_steps` (propagation time and resolution fed to `time_averaged_ctqw`
   inside `focusing`/`source_specificity`) — not characterized as a spread over a
-  grid. **OPEN.**
+  grid. **OPEN for this call site specifically** — [[TASK-0109]] characterizes
+  `propagators.py`'s own `t_max`/`n_steps` KNOBs directly ([[INV-0005]]:
+  `check_convergence`/`min_adequate_t_max`/`min_adequate_n_steps`, synthetic
+  power-law battery), but does not itself audit whether `focusing`/
+  `source_specificity`'s specific call sites use adequate values — that
+  remains this row's own open question, now with a tool available to answer it.
 - `n_alt`, `rng` (how many alternate sources `source_specificity` samples, and with
   what randomness) — not characterized. **OPEN.**
 - `t_values` (`ballistic_exponent`'s time grid for the log-log fit) — not

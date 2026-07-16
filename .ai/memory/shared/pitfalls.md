@@ -93,3 +93,32 @@ Add repeated failure patterns, false assumptions, or tool traps that should not 
   before trusting it — cheap when the target is small (KRAS_G12C: ~1-20s/call),
   and the check itself becomes the KNOB row in that quantity's `INV-XXXX` record
   ([[INV-0005]] here) rather than a one-off comment.
+
+## P-0004 — A `t→infinity` reference built from `|eigenvector|^2` silently assumes a sign that isn't there
+
+- Pattern: writing a "true limit" test oracle for an `exp(-Ht)`-style relaxation by
+  squaring the dominant eigenvector's components (`v[:,0]**2`, always non-negative,
+  looks like a safe probability-density construction) instead of using what the real
+  propagator actually computes and clips.
+- Evidence (this repo, [[TASK-0109]], 2026-07-15): `ground_state_relaxation`'s real
+  `t->infinity` limit is `clip(v[:,0] * <v_0|p0>, 0, None)`, renormalized — the
+  *sign* of the overlap `<v_0|p0>` (which half of the eigenvector survives clipping)
+  matters, and squaring throws that information away. A convergence-battery script's
+  own test oracle used `v[:,0]**2` and produced an apparently-impossible result (total
+  -variation distance to the "true" state *plateauing* around 0.31 instead of decaying
+  to 0 as `t` grew) for every case where the overlap happened to be negative — read
+  at first glance as a possible defect in `ground_state_relaxation` itself. Direct
+  check (`ground_state_relaxation(H, t=1000)` against both candidate references)
+  showed TV=0.31 against the squared reference and TV=7e-17 (machine precision)
+  against the sign-correct one — the propagator was right; the test oracle was wrong.
+- Corollary: whenever a "ground truth" reference for a relaxation/imaginary-time
+  propagator is built independently of the function under test, re-derive it from the
+  *same* formula the propagator actually evaluates (including any clip/sign step),
+  not from a property (non-negativity, normalization) that merely looks sufficient.
+  An eigenvector is only defined up to an overall sign — do not assume a convenient
+  one.
+- How to apply: before trusting an "analytic"/"true-limit" oracle in a new test,
+  check it against the real function's own output at an extreme parameter value
+  (very large `t`, very small `tol`, etc.) on at least one concrete case — the
+  agreement (or lack of it) is cheap to check and catches exactly this class of bug
+  before it's read as a finding about the code under test rather than the test itself.

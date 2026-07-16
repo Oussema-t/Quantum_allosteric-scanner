@@ -119,7 +119,7 @@ lands.
 
 | Done | In Progress | TODO | Total distinct IDs referenced |
 |---|---|---|---|
-| 40 (TASK-0004, 0018, 0037, 0046, 0047, 0050, 0052, 0055, 0056, 0058, 0063, 0064, 0066, 0067, 0068, 0070, 0071, 0074, 0075, 0079, 0080, 0081, 0082, 0088, 0090, 0091, 0092, 0093, 0094, 0095, 0096, 0097, 0099, 0100, 0101, 0102, 0103, 0104, 0105, 0106) | 1 (TASK-0023) | 36 (TASK-0015, 0021, 0022, 0040, 0044, 0054, 0072, 0073, 0076, 0077, 0078, 0083, 0084, 0085, 0086, 0087, 0089, 0098, 0108, 0112, 0113, 0114, 0115, 0116, 0117, 0118, 0119, 0120, 0121, 0122, 0123, 0124, 0125, 0126, 0127, 0128) | 77 |
+| 41 (TASK-0004, 0018, 0037, 0046, 0047, 0050, 0052, 0055, 0056, 0058, 0063, 0064, 0066, 0067, 0068, 0070, 0071, 0074, 0075, 0079, 0080, 0081, 0082, 0088, 0090, 0091, 0092, 0093, 0094, 0095, 0096, 0097, 0099, 0100, 0101, 0102, 0103, 0104, 0105, 0106, 0109) | 1 (TASK-0023) | 36 (TASK-0015, 0021, 0022, 0040, 0044, 0054, 0072, 0073, 0076, 0077, 0078, 0083, 0084, 0085, 0086, 0087, 0089, 0098, 0108, 0112, 0113, 0114, 0115, 0116, 0117, 0118, 0119, 0120, 0121, 0122, 0123, 0124, 0125, 0126, 0127, 0128) | 78 |
 
 **Note on the growing total:** the plan's scope keeps genuinely growing, not drifting —
 Phase 1B added ~20 IDs (TASK-0091–0106), the 2026-07-15 gap audits added TASK-0108–0117,
@@ -488,6 +488,10 @@ existing tasks/rows they affect rather than left standalone:
   `consistency_score`'s `t_max=15`/`n_steps=500` are the exact literals TASK-0108/0109/0110
   exist to validate; TASK-0046's real 60-trial KRAS_G12C run used them unchecked. Hard-blocked
   on TASK-0109. Both TASK-0116/0117 cross-linked into 5.6 (TASK-0046) and 5.2 (TASK-0082).
+  **TASK-0109 landed Done 2026-07-15**: `propagators.check_convergence`/`min_adequate_t_max`/
+  `min_adequate_n_steps` exist and are tested (`tests/test_propagator_convergence.py`) —
+  TASK-0117 is now unblocked on the tool existing, but applying it to `ceiling.consistency_
+  score`'s real `t_max=15`/`n_steps=500` literals is still TASK-0117's own job, not done here.
 
 **Note, same day, found while preparing this batch for shipping**: a live cross-check of
 TASK-0116 against `run_challenge.py` (the actual source of the reported 0.779) found the
