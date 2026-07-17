@@ -53,6 +53,21 @@ claiming that candidate via the same O_EXCL primitive `claim` uses,
 retrying upward on a lost race instead of racing again on the next
 candidate.
 
+Extended for TASK-0065: `scq-enter`/`scq-leave` implement a Stage-Commit-
+Queue (SCQ) -- a gitignored, per-ticket-file FIFO queue for the
+GIT-COMMIT resource. A thread proactively publishes its intended file
+list and a prepared commit message any time it knows enough (not only
+after being refused GIT-COMMIT); `status GIT-COMMIT` (and the
+no-argument full listing) shows the whole ordered queue. Visibility
+only -- nothing enforces queue order, `claim GIT-COMMIT` behaves exactly
+as before. Entries are `SCQ-XXXX.lock` files reusing the existing
+`.ai/tasks/.locks/*.lock` gitignore glob as-is. Re-entering as the same
+claimant updates that claimant's ticket in place. An entry is
+automatically removed once that same claimant successfully claims
+GIT-COMMIT. Ticket ids reuse `reserve-next`'s generalized
+allocate-with-retry logic (now parameterized by prefix, shared with
+TASK-XXXX allocation) rather than a second allocator.
+
 No third-party dependencies -- stdlib only.
 
 Usage:
@@ -60,12 +75,15 @@ Usage:
     claim.py claim        GIT-COMMIT "Toolsmith (this thread)" [--force --reason TEXT --hitl-override]
     claim.py reserve-next --as "Toolsmith (this thread)" [--note TEXT] [--dry-run] [--quiet]
     claim.py release      TASK-0024 [--claimant TEXT] [--strict]
-    claim.py status       [TASK-0024]
+    claim.py status       [TASK-0024 | GIT-COMMIT | SCQ-0001]
     claim.py sync         [--dry-run] [--check]
     claim.py commit-guard --expect PATH [PATH ...]
     claim.py commit-guard --expect-empty
     claim.py move         TASK-0024 IN_PROGRESS --as "Toolsmith (this thread)" [--force --reason TEXT] [--keep-claim]
+    claim.py resolve      TASK-0024 done --as "Toolsmith (this thread)" [--note TEXT] [--no-stage]
     claim.py stage        --expect PATH [PATH ...]
+    claim.py scq-enter    --as "Toolsmith (this thread)" --files PATH [PATH ...] --message TEXT [--message-file PATH]
+    claim.py scq-leave    SCQ-0001 --as "Toolsmith (this thread)" [--strict]
 """
 
 import argparse
@@ -235,16 +253,27 @@ def cmd_claim(args):
             json.dump(data, f, indent=2)
             f.write("\n")
         os.replace(tmp, path)
+        redeemed = _redeem_scq_entry(args.claimant) if task_id == "GIT-COMMIT" else None
         print(
-            "claimed %s for %r (overrode previous claim by %r, reason: %s)"
-            % (task_id, args.claimant, existing["claimant"], args.reason)
+            "claimed %s for %r (overrode previous claim by %r, reason: %s)%s"
+            % (
+                task_id, args.claimant, existing["claimant"], args.reason,
+                ", SCQ entry %s redeemed" % redeemed if redeemed else "",
+            )
         )
         return 0
     else:
         with os.fdopen(fd, "w") as f:
             json.dump(data, f, indent=2)
             f.write("\n")
-        print("claimed %s for %r at %s" % (task_id, args.claimant, data["claimed_at"]))
+        redeemed = _redeem_scq_entry(args.claimant) if task_id == "GIT-COMMIT" else None
+        print(
+            "claimed %s for %r at %s%s"
+            % (
+                task_id, args.claimant, data["claimed_at"],
+                ", SCQ entry %s redeemed" % redeemed if redeemed else "",
+            )
+        )
         return 0
 
 
@@ -253,20 +282,64 @@ def cmd_claim(args):
 RESERVE_NEXT_MAX_ATTEMPTS = 50
 
 
-def _highest_top_level_number(task_ids):
-    # type: (List[str]) -> int
-    """Highest TASK-XXXX main number across an iterable of task-id-like strings.
+def _highest_numbered(prefix, ids):
+    # type: (str, List[str]) -> int
+    """Highest `<prefix>-NNNN` main number across an iterable of id-like
+    strings (generalized from TASK-0045's TASK-XXXX-only version -- now
+    shared by `reserve-next` (prefix "TASK") and `scq-enter` (prefix
+    "SCQ"), TASK-0065).
 
     Dotted subtask ids (TASK-0026.004) contribute their main number (26),
     never their sub number -- a subtask never raises the ceiling a new
-    top-level task must clear.
+    top-level id must clear. SCQ tickets never have a dotted suffix, so
+    the same pattern is a no-op restriction for them.
     """
+    pat = re.compile(r"^%s-(\d+)(?:\.\d+)?$" % re.escape(prefix))
     highest = 0
-    for raw in task_ids:
-        match = TASK_ID_RE.search(raw)
+    for raw in ids:
+        match = pat.match(raw)
         if match:
             highest = max(highest, int(match.group(1)))
     return highest
+
+
+def _existing_lock_names():
+    # type: () -> List[str]
+    if not os.path.isdir(LOCKS_DIR):
+        return []
+    return [name[: -len(".lock")] for name in os.listdir(LOCKS_DIR) if name.endswith(".lock")]
+
+
+def _allocate_numbered_lock(prefix, disk_highest, data_without_id, id_field):
+    # type: (str, int, dict, str) -> Optional[str]
+    """Atomically allocate the next unused `<prefix>-NNNN` id.
+
+    Generalized TASK-0045 allocator (was TASK-XXXX-only): candidate is
+    max(disk_highest, highest existing `<prefix>-NNNN.lock`) + 1, claimed
+    via the same O_EXCL primitive `claim` uses, retrying upward on a lost
+    race. Writes `data_without_id` plus `{id_field: allocated_id}` to the
+    new lock file. Returns the allocated id, or None if
+    RESERVE_NEXT_MAX_ATTEMPTS is exhausted (caller reports the error --
+    this stays silent so both TASK and SCQ callers can word their own
+    message).
+    """
+    candidate = max(disk_highest, _highest_numbered(prefix, _existing_lock_names())) + 1
+    os.makedirs(LOCKS_DIR, exist_ok=True)
+    for _ in range(RESERVE_NEXT_MAX_ATTEMPTS):
+        new_id = "%s-%04d" % (prefix, candidate)
+        path = lock_path(new_id)
+        data = dict(data_without_id)
+        data[id_field] = new_id
+        try:
+            fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+        except FileExistsError:
+            candidate += 1
+            continue
+        with os.fdopen(fd, "w") as f:
+            json.dump(data, f, indent=2)
+            f.write("\n")
+        return new_id
+    return None
 
 
 def cmd_reserve_next(args):
@@ -280,15 +353,11 @@ def cmd_reserve_next(args):
     exists), then claims the candidate via the same O_EXCL primitive
     cmd_claim uses, retrying upward on a lost race instead of racing again.
     """
-    on_disk_max = _highest_top_level_number(disk_task_ids().keys())
-    lock_max = 0
-    if os.path.isdir(LOCKS_DIR):
-        lock_max = _highest_top_level_number(
-            name[: -len(".lock")] for name in os.listdir(LOCKS_DIR) if name.endswith(".lock")
-        )
-    candidate = max(on_disk_max, lock_max) + 1
+    on_disk_max = _highest_numbered("TASK", disk_task_ids().keys())
 
     if args.dry_run:
+        lock_max = _highest_numbered("TASK", _existing_lock_names())
+        candidate = max(on_disk_max, lock_max) + 1
         print(
             "TASK-%04d (preview only -- not reserved; this can go stale if "
             "another thread reserves first. Run without --dry-run to "
@@ -296,38 +365,25 @@ def cmd_reserve_next(args):
         )
         return 0
 
-    os.makedirs(LOCKS_DIR, exist_ok=True)
-    for _ in range(RESERVE_NEXT_MAX_ATTEMPTS):
-        task_id = "TASK-%04d" % candidate
-        path = lock_path(task_id)
-        data = {
-            "task_id": task_id,
-            "claimant": args.claimant,
-            "claimed_at": now_str(),
-            "note": args.note,
-            "reserved": True,
-        }
-        try:
-            fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
-        except FileExistsError:
-            candidate += 1
-            continue
-        with os.fdopen(fd, "w") as f:
-            json.dump(data, f, indent=2)
-            f.write("\n")
-        if args.quiet:
-            print(task_id)
-        else:
-            print("reserved %s for %r at %s" % (task_id, args.claimant, data["claimed_at"]))
-        return 0
-
-    print(
-        "error: could not find an available id after %d attempts starting "
-        "from TASK-%04d -- something is wrong beyond normal contention"
-        % (RESERVE_NEXT_MAX_ATTEMPTS, candidate),
-        file=sys.stderr,
+    task_id = _allocate_numbered_lock(
+        "TASK",
+        on_disk_max,
+        {"claimant": args.claimant, "claimed_at": now_str(), "note": args.note, "reserved": True},
+        "task_id",
     )
-    return 1
+    if task_id is None:
+        print(
+            "error: could not find an available id after %d attempts -- "
+            "something is wrong beyond normal contention" % RESERVE_NEXT_MAX_ATTEMPTS,
+            file=sys.stderr,
+        )
+        return 1
+    if args.quiet:
+        print(task_id)
+    else:
+        lock = read_lock(task_id)
+        print("reserved %s for %r at %s" % (task_id, args.claimant, lock["claimed_at"]))
+    return 0
 
 
 # -------------------------------------------------------------- release ----
@@ -354,6 +410,26 @@ def cmd_release(args):
 
 def cmd_status(args):
     if args.task_id:
+        raw = args.task_id.strip().upper()
+        if raw.startswith("SCQ-"):
+            # TASK-0065: direct single-ticket view (doubles as "scq-show" --
+            # normalize_task_id would otherwise mis-parse "SCQ-0001" as
+            # TASK-0001 via its bare-digit search, silently checking the
+            # wrong resource, so this is handled before that call.
+            data = read_lock(raw)
+            if data is None:
+                print("%s: no such SCQ entry" % raw)
+                return 0
+            print(
+                "%s: %r entered %s -- files: %s"
+                % (raw, data["claimant"], data.get("entered_at", "?"), ", ".join(data.get("files", [])))
+            )
+            print("message: %s" % data.get("message", ""))
+            if data.get("message_body"):
+                print("--- prepared message ---")
+                print(data["message_body"])
+            return 0
+
         task_id = normalize_task_id(args.task_id)
         lock = read_lock(task_id)
         if lock is None:
@@ -363,13 +439,15 @@ def cmd_status(args):
                 "%s: claimed by %r at %s"
                 % (task_id, lock["claimant"], lock["claimed_at"])
             )
+        if task_id == "GIT-COMMIT":
+            _print_scq_queue()
         return 0
 
     os.makedirs(LOCKS_DIR, exist_ok=True)
     lock_ids = sorted(
         name[: -len(".lock")]
         for name in os.listdir(LOCKS_DIR)
-        if name.endswith(".lock")
+        if name.endswith(".lock") and not name.startswith("SCQ-")
     )
     on_disk = disk_task_ids()
     if not lock_ids:
@@ -384,6 +462,7 @@ def cmd_status(args):
             "%s: claimed by %r at %s%s"
             % (task_id, lock["claimant"], lock["claimed_at"], dangling)
         )
+    _print_scq_queue()
     return 0
 
 
@@ -1034,6 +1113,149 @@ def cmd_stage(args):
     return 0
 
 
+# ------------------------------------------------------------------ scq ----
+# TASK-0065: Stage-Commit-Queue. Entries are SCQ-XXXX.lock files under the
+# same LOCKS_DIR as task/GIT-COMMIT locks, reusing the existing
+# `.ai/tasks/.locks/*.lock` .gitignore glob as-is -- no new ignore rule.
+# One file per entry (never a single shared queue file) so concurrent
+# entrants can't race on the same write, the same reasoning this scaffold
+# already applied to .ai/COMMON.md (see Q-0002, TASK-0107's own validation).
+
+def _scq_lock_names():
+    # type: () -> List[str]
+    """Sorted `SCQ-XXXX.lock` filenames currently in LOCKS_DIR (ticket order)."""
+    if not os.path.isdir(LOCKS_DIR):
+        return []
+    return sorted(name for name in os.listdir(LOCKS_DIR) if name.startswith("SCQ-") and name.endswith(".lock"))
+
+
+def _scq_entries():
+    # type: () -> List[dict]
+    """All current SCQ entries, ordered by ticket number ascending (FIFO)."""
+    entries = []
+    for name in _scq_lock_names():
+        data = read_lock(name[: -len(".lock")])
+        if data is not None:
+            entries.append(data)
+    return entries
+
+
+def _files_preview(files, limit=5):
+    # type: (List[str], int) -> str
+    if len(files) <= limit:
+        return ", ".join(files)
+    return ", ".join(files[:limit]) + " (+%d more)" % (len(files) - limit)
+
+
+def _print_scq_queue():
+    entries = _scq_entries()
+    if not entries:
+        return
+    print("Stage-Commit-Queue (SCQ):")
+    for e in entries:
+        print(
+            "  %s: %r entered %s -- files: %s -- %s"
+            % (
+                e.get("ticket", "?"),
+                e.get("claimant", "?"),
+                e.get("entered_at", "?"),
+                _files_preview(e.get("files", [])),
+                e.get("message", ""),
+            )
+        )
+
+
+def _redeem_scq_entry(claimant):
+    # type: (str) -> Optional[str]
+    """Remove claimant's own SCQ entry, if any, after it successfully
+    claims GIT-COMMIT. The entry's purpose (signal intent to commit soon)
+    is fulfilled once the lock is actually held, whether or not the
+    claimant was first in the queue -- this doesn't enforce turn order,
+    it just clears a redeemed entry. Returns the removed ticket, or None.
+    """
+    for name in _scq_lock_names():
+        ticket = name[: -len(".lock")]
+        data = read_lock(ticket)
+        if data is not None and data.get("claimant") == claimant:
+            os.remove(lock_path(ticket))
+            return ticket
+    return None
+
+
+def cmd_scq_enter(args):
+    message_body = None
+    if args.message_file:
+        if not os.path.exists(args.message_file):
+            print("error: --message-file %s does not exist" % args.message_file, file=sys.stderr)
+            return 1
+        with open(args.message_file, "r") as f:
+            message_body = f.read()
+
+    # Re-entering as the same claimant updates that claimant's existing
+    # ticket in place rather than allocating a second one.
+    for name in _scq_lock_names():
+        ticket = name[: -len(".lock")]
+        existing = read_lock(ticket)
+        if existing is not None and existing.get("claimant") == args.as_:
+            data = {
+                "ticket": ticket,
+                "claimant": args.as_,
+                "entered_at": existing.get("entered_at", now_str()),
+                "updated_at": now_str(),
+                "files": args.files,
+                "message": args.message,
+                "message_body": message_body,
+            }
+            with open(lock_path(ticket), "w") as f:
+                json.dump(data, f, indent=2)
+                f.write("\n")
+            print("updated %s for %r (%d file(s))" % (ticket, args.as_, len(args.files)))
+            return 0
+
+    ticket = _allocate_numbered_lock(
+        "SCQ",
+        0,
+        {
+            "claimant": args.as_,
+            "entered_at": now_str(),
+            "files": args.files,
+            "message": args.message,
+            "message_body": message_body,
+        },
+        "ticket",
+    )
+    if ticket is None:
+        print(
+            "error: could not find an available SCQ ticket after %d attempts"
+            % RESERVE_NEXT_MAX_ATTEMPTS,
+            file=sys.stderr,
+        )
+        return 1
+    print("entered %s for %r (%d file(s))" % (ticket, args.as_, len(args.files)))
+    return 0
+
+
+def cmd_scq_leave(args):
+    ticket = args.ticket.strip().upper()
+    if not ticket.startswith("SCQ-"):
+        print("error: scq-leave only operates on SCQ-XXXX tickets, not %r" % ticket, file=sys.stderr)
+        return 1
+    path = lock_path(ticket)
+    if not os.path.exists(path):
+        print("%s is already gone" % ticket)
+        return 0
+    existing = read_lock(ticket)
+    if existing.get("claimant") != args.as_:
+        msg = "%s is claimed by %r, not %r" % (ticket, existing["claimant"], args.as_)
+        if args.strict:
+            print("error: refusing to remove -- " + msg, file=sys.stderr)
+            return 1
+        print("warning: removing an entry held by someone else -- " + msg, file=sys.stderr)
+    os.remove(path)
+    print("removed %s (was %r)" % (ticket, existing["claimant"]))
+    return 0
+
+
 def build_parser():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = p.add_subparsers(dest="command", required=True)
@@ -1163,6 +1385,35 @@ def build_parser():
         help="exact paths to stage; every path must be under .ai/ or .claude/",
     )
     p_stage.set_defaults(func=cmd_stage)
+
+    p_scq_enter = sub.add_parser(
+        "scq-enter",
+        help="publish/update a Stage-Commit-Queue entry: intended files + a prepared commit message",
+    )
+    p_scq_enter.add_argument("--as", dest="as_", required=True, metavar="LABEL", help="claimant label, always required")
+    p_scq_enter.add_argument(
+        "--files",
+        nargs="+",
+        required=True,
+        metavar="PATH",
+        help="intended files for the upcoming commit (informational only -- not staged)",
+    )
+    p_scq_enter.add_argument("--message", required=True, metavar="TEXT", help="short one-line summary shown in the queue listing")
+    p_scq_enter.add_argument(
+        "--message-file",
+        metavar="PATH",
+        help="path to the full prepared commit message, read verbatim (write it with the Write tool, never inline)",
+    )
+    p_scq_enter.set_defaults(func=cmd_scq_enter)
+
+    p_scq_leave = sub.add_parser(
+        "scq-leave",
+        help="withdraw a Stage-Commit-Queue entry",
+    )
+    p_scq_leave.add_argument("ticket")
+    p_scq_leave.add_argument("--as", dest="as_", required=True, metavar="LABEL", help="claimant label, always required")
+    p_scq_leave.add_argument("--strict", action="store_true", help="refuse instead of warn on claimant mismatch")
+    p_scq_leave.set_defaults(func=cmd_scq_leave)
 
     return p
 

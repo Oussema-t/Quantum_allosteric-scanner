@@ -7,7 +7,8 @@
   proactively declares (not just on refusal) its intended file list and a
   prepared commit message, gets a ticket, and any thread can see the
   whole ordered queue — visibility only, no ordering *enforcement*
-- Status: TODO
+- Status: Done
+- Resolution: done
 - Owner: Toolsmith
 - Claimed By: —
 - Claimed At: —
@@ -221,4 +222,49 @@
 
 ## Done
 
-(not yet)
+- Implemented `scq-enter`/`scq-leave` in `.ai/tools/claim.py`, plus
+  `status GIT-COMMIT`/`status SCQ-XXXX`/no-arg full listing changes to
+  render the queue.
+- Generalized `reserve-next`'s allocator: extracted `_highest_numbered
+  (prefix, ids)` (was TASK-only) and `_allocate_numbered_lock(prefix,
+  disk_highest, data, id_field)` (the O_EXCL-retry loop, was inlined in
+  `cmd_reserve_next`). `cmd_reserve_next` now calls the shared helper
+  with `prefix="TASK"`; `cmd_scq_enter` calls it with `prefix="SCQ"`,
+  `disk_highest=0` (tickets have no committed-file counterpart). This is
+  the generalization TASK-0062 was also going to need — done here first.
+- Entries are `SCQ-XXXX.lock` files under the existing `LOCKS_DIR`;
+  confirmed via `git check-ignore -v .ai/tasks/.locks/SCQ-0001.lock` that
+  the existing `.gitignore` line 32 (`.ai/tasks/.locks/*.lock`) already
+  covers them — no new ignore rule added.
+- Re-entering as the same claimant scans existing `SCQ-*.lock` files for
+  a matching `claimant` and overwrites that entry in place (same
+  ticket), rather than allocating a new one.
+- `_redeem_scq_entry` wired into both success branches of `cmd_claim`
+  (fresh O_EXCL claim and forced-override claim) — only triggered when
+  `task_id == "GIT-COMMIT"`; removes the claimant's own entry if present
+  and reports it in the success message.
+- Fixed a real landmine found while implementing `status`: `status
+  SCQ-0001` would otherwise have gone through `normalize_task_id`, whose
+  bare-digit search silently reinterprets it as `TASK-0001` and reports
+  on the wrong resource. `cmd_status` now special-cases an `SCQ-`
+  prefixed argument before that call, which also happens to satisfy the
+  Open Question above about a `scq-show`-equivalent (full prepared
+  message included) — no separate subcommand needed.
+- `status`'s full listing filters `SCQ-*.lock` out of the generic
+  per-lock "claimed by" loop (they're queue entries, not claims) and
+  appends the queue as its own section instead; suppressed entirely when
+  the queue is empty (no dangling header).
+- Validated (isolated scratch dir, no git repo needed since SCQ never
+  touches git): two entries in FIFO order via `status`; single-ticket
+  `status SCQ-XXXX` view including full `--message-file` body;
+  re-entering as the same claimant updates in place (ticket count
+  unchanged); claiming `GIT-COMMIT` auto-redeems the claimant's entry and
+  reports it; `scq-leave` claimant-mismatch warns by default, refuses
+  with `--strict`; `scq-leave` on an already-gone ticket is a clean
+  no-op; `scq-leave` refuses a non-`SCQ-` ticket id; missing
+  `--message-file` refuses cleanly; empty queue produces no header.
+  Regression: `reserve-next` (`--dry-run` and real) still allocates
+  sequential `TASK-XXXX` ids correctly, unaffected by the generalization.
+- Updated `.ai/reference/CAPABILITIES.md` (new `repo.commit.scq` row) and
+  `.claude/settings.json` (three-form `scq-enter`/`scq-leave` whitelist
+  entries).
