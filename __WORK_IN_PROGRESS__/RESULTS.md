@@ -899,6 +899,53 @@ report `error: "expected exactly 6 near-zero rigid-body ANM modes, found
 value — an honest "not run", not a guessed or omitted result. See
 `scripts/coherence_sensitivity_scan.py`.
 
+**[RESOLVED 2026-07-17, TASK-0128]** Root cause diagnosed directly, not
+assumed: both targets' "extra" eigenvalues sit at true machine-precision
+zero (~1e-16, indistinguishable from the 6 trivial rigid-body modes),
+then jump 5-9 orders of magnitude to the real low-frequency spectrum —
+not a smooth continuum blending into the zero cluster (rules out a
+`1e-8`-threshold numerical artifact), and the underlying scalar contact
+graph is confirmed connected (`operator_diagnostics` on the 3N Hessian:
+`n_components=1` for both) — not TASK-0005's original disconnected-graph
+bug. The corresponding eigenvectors localize almost entirely onto a
+small, compact residue segment (BCR_ABL1: ~10 residues near 198-207,
+chain A; CARDIAC_MYOSIN: all 4 extra modes on the same ~17-residue
+segment, 819-835, chain B) — the known artifact of a purely central-force
+(distance-only) ANM model: a locally under-constrained substructure can
+have exact zero-energy internal rotational modes without the structure
+being disconnected. `superpose.anm_modes`/`calibrate_kappa`'s assertion
+widened from `n_zero != 6` to `n_zero >= 6`, with the disconnected-graph
+case still caught explicitly via a connectivity check (not silently
+loosened) — TASK-0005's own original regression re-verified directly
+against real numbers (a synthetic 2-cluster graph: `n_zero=12`,
+`n_components=2`, still raises).
+
+**Both targets now calibrate and, where feasible, run**:
+
+| Target | `gamma_scale` | Sweep | `auc_range` | Classification |
+|---|---|---|---|---|
+| BCR_ABL1 | 7.41e-4 | full 4-point | 0.0050 | `COHERENCE_NOT_SIGNIFICANT` |
+| CARDIAC_MYOSIN | 9.38e-3 | γ=0 anchor only (pre-existing, unrelated `haken_strobl` cost limit — TASK-0105's own ~30+ min/call estimate at N=950, not a TASK-0128 blocker) | N/A | `INFEASIBLE_NOT_RUN` |
+
+**BCR_ABL1's conclusion matches KRAS_G12C's exactly**: flat across all 4
+swept γ values (`auc_range=0.0050`, well under the 0.05 flatness bar),
+every point floor-cleared (`NO_FAILURE_DETECTED`), `COHERENCE_NOT_
+SIGNIFICANT`. **This is now 2 of 3 mandatory targets formally confirming
+"coherence adds ~nothing," not 1 of 3** — strengthens, not just repeats,
+TASK-0099's own headline finding. (The `gamma=0`/coherent-CTQW AUC here,
+0.756, uses this script's own full-active-site-array seed convention and
+`t_max=25`, both different from several other numbers reported elsewhere
+in this document for BCR_ABL1 under the single-index/`t_max=15`
+convention — a real, already-tracked methodology axis (TASK-0118/
+TASK-0119/TASK-0129's "combined seed+clock re-run", still outstanding),
+not a new discrepancy introduced here.) CARDIAC_MYOSIN's `gamma_scale`
+now computes successfully (confirms the calibration blocker specifically
+is resolved), but its full sweep remains not-run for the separate,
+pre-existing computational-cost reason — an honest "not run" for a
+different, already-documented reason, not silently converted into a
+result it doesn't have. Full numbers: `.ai/tasks/DONE/TASK-0128-
+calibrate-kappa-exact-6-mode-assertion-blocks-multichain-targets.md`.
+
 **Verdict-template rendering**: a new line 5 ("Coherence sensitivity...")
 renders whenever `coherence_auc_range`/`coherence_classification` are
 present, alongside the existing 4 decision-support lines — visible in the
@@ -1006,6 +1053,26 @@ criterion, made precise (`superpose.learnability_verdict`): pocket RMSD
 FROM_APO`; otherwise `LEARNABLE`. Real fetch, all 3 mandatory targets
 (`scripts/learnability_gate.py`, `results_task0120/learnability_gate.json`).
 
+**[UPDATED 2026-07-18]** Cumulative overlap for BCR_ABL1/CARDIAC_MYOSIN
+was blocked at first run (below); [[TASK-0128]]'s fix to the shared
+`anm_modes` helper unblocked both the same day it was filed. Table
+below now shows the complete, real numbers for all 3 targets — the
+`blocked`/`PARTIAL_RMSD_ONLY` values immediately below this note are the
+original, at-first-run numbers, preserved per this document's own no-
+overwrite convention, not deleted now that the full picture exists.
+
+| Target | N (common) | Pocket RMSD | Background RMSD | Ratio | CO(20) | Verdict |
+|---|---|---|---|---|---|---|
+| KRAS_G12C | 169 (166) | 1.863 Å | 0.820 Å | **2.27** | **0.638** | `LEARNABLE` |
+| BCR_ABL1 | 451 (429) | 0.362 Å | 0.734 Å | **0.49** | **0.794** | `LEARNABLE` |
+| CARDIAC_MYOSIN | 950 (709) | 4.168 Å | 3.161 Å | 1.32 | **0.584** | `LEARNABLE` |
+
+**All 3 mandatory targets now classify `LEARNABLE`** — for BCR_ABL1 and
+CARDIAC_MYOSIN this confirms, rather than changes, what the RMSD half
+alone already implied (neither cleared the 1.5× ratio bar), since this
+task's kill criterion requires *both* conditions. Original at-first-run
+table (CO blocked for 2 of 3 targets) preserved below:
+
 | Target | N (common) | Pocket RMSD | Background RMSD | Ratio | CO(20) | Verdict |
 |---|---|---|---|---|---|---|
 | KRAS_G12C | 169 (166) | 1.863 Å | 0.820 Å | **2.27** | **0.638** | `LEARNABLE` |
@@ -1059,19 +1126,115 @@ the three targets, and overall alignment RMSD is 3.75 Å vs. KRAS's 1.36
 (1.32) should not be read as a clean structural-biology result the way
 KRAS/BCR_ABL1's can.
 
-**[RESOLVED] TASK-0128 blocks cumulative overlap for 2 of 3 targets, not
-worked around here.** `anm_modes`' exactly-6-near-zero-rigid-body-mode
-assertion raises on BCR_ABL1 (n_zero=7) and CARDIAC_MYOSIN (n_zero=10) —
-confirmed live, this run. That task's own scope (determine floppiness vs.
-genuine disconnection before touching the assertion) is real diagnostic
-work this task does not preempt; `scripts/learnability_gate.py` degrades
-gracefully (reports the RMSD half, marks CO `null` with the exact
-exception, `verdict="PARTIAL_RMSD_ONLY_CO_BLOCKED"`) rather than
-silently dropping the whole target or guessing a widened threshold.
+**[RESOLVED 2026-07-17, superseded by the 2026-07-18 update above]**
+TASK-0128 blocked cumulative overlap for 2 of 3 targets at this task's
+first run, not worked around here. `anm_modes`' exactly-6-near-zero-
+rigid-body-mode assertion raised on BCR_ABL1 (n_zero=7) and CARDIAC_
+MYOSIN (n_zero=10) — confirmed live, this run. That task's own scope
+(determine floppiness vs. genuine disconnection before touching the
+assertion) was real diagnostic work this task did not preempt;
+`scripts/learnability_gate.py` degraded gracefully (reported the RMSD
+half, marked CO `null` with the exact exception,
+`verdict="PARTIAL_RMSD_ONLY_CO_BLOCKED"`) rather than silently dropping
+the whole target or guessing a widened threshold.
+
+**[RESOLVED 2026-07-18]** TASK-0128 found the root cause (a genuine,
+localized central-force-ANM under-constrained-substructure artifact on
+both targets, not disconnection or numerical noise) and widened
+`anm_modes`' criterion accordingly — since that function is shared code,
+this task's own blocked cumulative-overlap computation is unblocked as a
+direct consequence, not a separate re-run. Both extra CO values (0.794,
+0.584) land above the 0.5 threshold, same qualitative conclusion the
+RMSD-only numbers already pointed to.
 
 Full detail: `.ai/tasks/DONE/TASK-0120-learnability-gate-hyp-p8.md`,
 `results_task0120/learnability_gate.json` (includes the full CO(m) curve
 for KRAS_G12C, not just the final value).
+
+---
+
+### `H_new`'s 5-term potential variance-budget renormalization (TASK-0121, 2026-07-18)
+
+**[EXECUTED, fixes a real bug]** `REVIEW-panel-2026-07-16-v2.md` §2.4 found
+that `potentials.py`'s five diagonal terms (V_B/V_T/V_R/V_C/V_M) were not
+commensurately scaled before being combined: `V_R` is a sum of three
+z-scores (measured std ~1.9 on real targets), while `V_C`/`V_M` were
+max-normalised to `[-1, 0]` (measured std ~0.06) — ~30x smaller. This made
+`V_R` alone carry **88.8%** of the combined potential's variance (`V_T`
+8.5%, `V_B` 2.5%, `V_C` 0.1%, `V_M` 0.1%) *regardless* of the `lam_*`
+weight ratio in `build_H_new` — `lam_C`/`lam_M` were unreachable knobs.
+
+This retro-explains three things this project previously reported as
+physics findings, not a normalization artifact: `most_impactful_term =
+V_R` in every prior ablation run, the ground state sitting on
+low-diagonal (high-degree) residues, and `H_new`'s failure to beat degree
+centrality (`V_R` correlates with node degree at ρ=+0.81 by construction).
+**This is a distinct confound from the proximity confound in the scored
+*output*** (CTQW occupation vs. degree correlates at only ρ=+0.20,
+per §2.3) — degree contaminates the diagonal (fixed here), proximity
+contaminates the observable (not fixed by this task; see [[TASK-0123]]).
+
+**Fix:** every term in `potentials.py` (`V_B`, `V_T`, `V_R`, `V_C`, `V_M`)
+is now z-scored (mean 0, std 1) as its final step. `build_H_new`'s
+`lam_*` defaults are re-derived to `lam_B=0.08, lam_T=0.16, lam_R=0.08,
+lam_C=0.04, lam_M=0.04` — the same 1:2:1:0.5:0.5 ratio as before, rescaled
+so `sigma(V) <= 0.2*J` is a provable guarantee for *any* target: by the
+triangle inequality on standard deviations (Minkowski), `sigma(sum lam_i *
+V_i) <= sum |lam_i|` when each `V_i` has std 1, and the symmetric
+normalized Laplacian's spectral bandwidth satisfies `J <= 2` for any
+nonnegative edge weighting — so `sum|lam_i| = 0.4 = 0.2*2` is a
+target-independent worst-case bound, not a per-target fit.
+
+**[EXECUTED] Real-data confirmation (KRAS_G12C, N=169; BCR_ABL1, N=451):**
+
+| Target | J (base Laplacian bandwidth) | σ(V) combined | 0.2·J budget | Naive variance share B/T/R/C/M |
+|---|---|---|---|---|
+| KRAS_G12C | 1.317 | 0.203 | 0.263 | 15.4% / 61.5% / 15.4% / 3.8% / 3.8% |
+| BCR_ABL1 | 1.480 | 0.227 | 0.296 | 15.4% / 61.5% / 15.4% / 3.8% / 3.8% |
+
+The variance share is structural (same on every target, since each term
+now has std 1 by construction and the share is set entirely by the
+`lam_*` ratio) — a **38x** improvement for `V_C`/`V_M` (0.1% → 3.8%) over
+the pre-fix budget, from unreachable to actually contributing. `H_new`
+remains correctly indefinite on both targets (KRAS min eig -0.101, BCR_ABL1
+min eig -0.177) — `_warn_if_indefinite` still fires as designed; this fix
+did not accidentally push the operator toward PSD.
+
+**[EXECUTED] Re-ran `analysis.ablation` on both targets** at the pipeline's
+current shipped `t_max=15.0`/`n_steps=500` (deliberately *not* also
+applying [[TASK-0119]]'s gap-based clock fix here — that is a separate,
+independent confound per this task's own scope, and mixing the two fixes
+in one measurement would make it impossible to attribute any change in
+`most_impactful_term` to renormalization specifically). **Caveat, checked
+directly, not assumed:** none of the 6 per-term operators (`L_only`, `B`,
+`T`, `R`, `C`, `M`) satisfy `check_convergence`'s AAKV criterion at these
+parameters on either target (bound exceeds tol by 2-3 orders of magnitude)
+— same pre-existing clock gap [[TASK-0110]] already quantified, unrelated
+to this fix.
+
+| Target | most_impactful_term (pre-fix, on record) | most_impactful_term (post-fix) | least_impactful_term (post-fix) |
+|---|---|---|---|
+| KRAS_G12C | V_R | **V_B** (ΔAUC +0.133) | V_R (ΔAUC +0.017) |
+| BCR_ABL1 | V_R | **V_B** (ΔAUC +0.097) | V_T (ΔAUC +0.036) |
+
+`most_impactful_term` flips from `V_R` — the term that was structurally
+inflated — to `V_B` on both real targets; `V_R` drops to the *least*
+impactful term on KRAS_G12C. This is exactly the retro-explanation
+predicted above: the ablation now measures something for the first time,
+rather than reproducing an artifact of the old scale mismatch.
+
+**Not solved by this task:** the proximity confound in the CTQW
+observable itself (§2.3) — a real-data side-measurement during this task
+(the existing `TestProximityConfoundReproduction` regression test) shows
+the renormalization *does* substantially weaken it in practice (Spearman
+ρ with Euclidean seed-distance: 0.71-0.83 pre-fix → 0.22-0.47 post-fix on
+the same 5 synthetic-globule seeds; hop-distance: 0.55-0.64 → 0.03-0.28),
+but it remains positive on every seed tested — proximity is weakened, not
+eliminated, consistent with the panel's warning not to claim this fix
+resolves the observable-side confound. `TASK-0117` (apply the convergence
+check to `ceiling.py`'s own literal `t_max=15` defaults) also remains open.
+
+Full detail: `.ai/tasks/DONE/TASK-0121-renormalize-potential-variance-budget.md`.
 
 ---
 
@@ -1088,9 +1251,10 @@ for KRAS_G12C, not just the final value).
 | 7 | Does real-target ENAQT (`haken_strobl` γ-sweep) show the textbook interior-γ transport optimum `REVIEW-2026-07-13b` found on synthetic networks? | **resolved 2026-07-14: yes on 3/6 swept (target, operator) cells (1.24-1.70x enhancement), but the extra transport does not improve — and in every observed case slightly degrades — pocket-discrimination AUC; no floor-crossing is caused by dephasing anywhere in this data. CARDIAC_MYOSIN's full sweep is computationally infeasible with the current dense-matrix `haken_strobl` (N³ scaling, ~30+ min/γ at N=950) — γ=0 anchor only** | [[TASK-0105]] |
 | 8 | Is dephasing-assisted transport (ENAQT) more noise-robust than coherent CTQW under a real per-gate NISQ noise model (`HOLO_DIRECTION_MODULE.md`'s named scoreable result)? | **resolved 2026-07-14: no — coherent ties or beats ENAQT at every depth/error-rate point tested (KRAS_G12C, 10-qubit coarse-grained `H_new`, 2 timescales), a real negative result, not the hoped-for story. `coarse.trotter_cost`'s accuracy-calibrated depth estimate (3133 steps) is ~2-3 orders of magnitude beyond NISQ-feasible — found empirically (a literal-estimate run was killed after 69 CPU-minutes), not anticipated** | [[TASK-0068]] |
 | 9 | Does a fully-informed ceiling search (answer key in hand, entire `H_new` physical-scalar space) beat each mandatory target's proximity floor — i.e. is there any real headroom in this operator family? | **resolved 2026-07-15: no for KRAS_G12C — the ceiling itself (0.524, 60 real trials) is *below* its own floor (0.798), the strongest form of negative result this framework can express. BCR_ABL1's ceiling (0.612) does clear its floor (0.565) but the shipped actual result (0.525) does not. CARDIAC_MYOSIN's ceiling (0.819) clears its floor (0.764, 40.7% headroom) but this is moot — `INSUFFICIENT_RESOLUTION` fires first. Full synthesis: `COMPETENCE_MAP.md`.** | [[TASK-0046]], [[TASK-0082]] |
-| 10 | Would the reported verdict change for any mandatory target if quantum coherence were randomized away — i.e. is `dephasing_sweep`'s "coherence adds ~nothing" finding actually wired into what a judge reads? | **resolved 2026-07-16: no for KRAS_G12C, formally — `auc_range=0.0132` at t_max=25 (spot-checked robust across t_max in {8,25,100} per REVIEW-panel-2026-07-16-v2 Sec.2.2's clock concern; also robust across two seed conventions per Sec.2.1), flat, floor-gated `COHERENCE_NOT_SIGNIFICANT`. BCR_ABL1/CARDIAC_MYOSIN blocked on a pre-existing, already-anticipated `calibrate_kappa` limitation (exactly-6-near-zero-mode assertion fails at n_zero=7/10) — filed as [[TASK-0128]], not silently skipped. The project-wide seed/clock gauge problem itself (Sec.2.1/2.2) remains unresolved outside this task's narrower scope.** | [[TASK-0099]], [[TASK-0128]] |
+| 10 | Would the reported verdict change for any mandatory target if quantum coherence were randomized away — i.e. is `dephasing_sweep`'s "coherence adds ~nothing" finding actually wired into what a judge reads? | **resolved 2026-07-16, extended 2026-07-17: no for 2 of 3 mandatory targets, formally.** KRAS_G12C: `auc_range=0.0132` at t_max=25, flat, `COHERENCE_NOT_SIGNIFICANT`. **BCR_ABL1, newly unblocked by [[TASK-0128]]: `auc_range=0.0050`, flat, every point floor-cleared, `COHERENCE_NOT_SIGNIFICANT`** — matches KRAS's conclusion exactly. CARDIAC_MYOSIN's `calibrate_kappa` blocker is resolved (TASK-0128), but its full sweep remains not-run for a separate, pre-existing `haken_strobl` computational-cost reason (γ=0 anchor only). The project-wide seed/clock gauge problem itself (Sec.2.1/2.2) remains unresolved outside this task's narrower scope.** | [[TASK-0099]], [[TASK-0128]] |
 | 11 | How far short is the shipped `t_max=15`/`n_steps=500` of `time_averaged_ctqw`'s own convergence criterion on real targets, and is reaching the corrected value practical? | **resolved 2026-07-17: 145,000x-3,950,000x short (grows with system size), and reaching it is currently uncomputable — a real call at the prescribed point did not return after 2+ hours (O(n_steps) Python loop). A capped, honestly-sampled search found real per-target ceilings instead: KRAS_G12C 0.475 (near chance, cross-checks TASK-0046's 0.525 on an independent axis), BCR_ABL1 0.583 at a *smaller* t_max=2.39 (unexploited headroom, new finding), CARDIAC_MYOSIN 0.815 (inherits that target's 5TBY caveat).** | [[TASK-0110]] |
-| 12 | Is the labeled pocket even present in the apo topology (HYP-P8), measured directly rather than inferred from other findings? | **resolved 2026-07-17, mixed and target-specific — not the clean "KRAS is cryptic" story the panel expected: KRAS_G12C classifies `LEARNABLE` (pocket RMSD 2.27x background, but cumulative overlap 0.638 — well above the 0.5 low-overlap bar — meaning the apo→holo direction IS substantially spanned by soft ANM modes, contradicting the panel's own Sec.4 prediction). BCR_ABL1's pocket moves *less* than background (ratio 0.49), consistent with its prior "apo-computable structural prior" framing (TASK-0104), not a cryptic opening. CARDIAC_MYOSIN's numbers (ratio 1.32) are confounded by its own 5TBY data-quality issue. Cumulative overlap blocked for BCR_ABL1/CARDIAC_MYOSIN by a real, separately-filed gap (`anm_modes`' rigid-body-mode assertion, [[TASK-0128]]).** | [[TASK-0120]] |
+| 12 | Is the labeled pocket even present in the apo topology (HYP-P8), measured directly rather than inferred from other findings? | **resolved 2026-07-17, extended 2026-07-18 once [[TASK-0128]] unblocked cumulative overlap for all 3 targets — all classify `LEARNABLE`, not the clean "KRAS is cryptic" story the panel expected.** KRAS_G12C: pocket RMSD 2.27x background, but cumulative overlap 0.638 — well above the 0.5 low-overlap bar — meaning the apo→holo direction IS substantially spanned by soft ANM modes, contradicting the panel's own Sec.4 prediction. BCR_ABL1: pocket moves *less* than background (ratio 0.49) and CO=0.794, consistent with its prior "apo-computable structural prior" framing (TASK-0104), not a cryptic opening. CARDIAC_MYOSIN: ratio 1.32, CO=0.584 — also `LEARNABLE`, though confounded by its own 5TBY data-quality issue and should not be read as cleanly as the other two.** | [[TASK-0120]], [[TASK-0128]] |
+| 13 | Was `most_impactful_term = V_R` (reported in every prior ablation run) a real physics finding, or an artifact of `V_R`'s ~30x-larger normalization scale vs. `V_C`/`V_M`? | **resolved 2026-07-18: artifact.** All five terms are now individually z-scored (std 1 each); `V_R`'s variance share drops from 88.8% to a structural 15.4%, and `lam_C`/`lam_M` go from unreachable (0.1% share each) to 3.8% each. Real-target ablation (KRAS_G12C, BCR_ABL1) now gives `most_impactful_term = V_B` on both, with `V_R` among the *least* impactful on KRAS_G12C. Does not by itself fix the separate proximity confound in the CTQW observable (§2.3) — measurably weakens it (ρ_euclid 0.71-0.83 → 0.22-0.47) but does not eliminate it. | [[TASK-0121]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

@@ -15,6 +15,8 @@ _SRC = Path(__file__).resolve().parent.parent / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
+from allostery.diagnostics import operator_diagnostics  # noqa: E402
+from allostery.hamiltonians import H13_3N_anm_hessian  # noqa: E402
 from allostery.labels import LigandGroup, holo_pocket_mask  # noqa: E402
 from allostery.superpose import (  # noqa: E402
     Alignment,
@@ -34,6 +36,7 @@ from allostery.superpose import (  # noqa: E402
     mode_energetics,
     pocket_cross_map,
     run_superpose,
+    _check_anm_rigid_body_nullspace,
 )
 
 
@@ -391,6 +394,66 @@ class TestAnmModes:
         coords = np.vstack([cluster_a, cluster_b])
         with pytest.raises(ValueError):
             anm_modes(coords, cutoff=10.0, n_modes=5)
+
+    def test_raises_when_fewer_than_six_zero_modes(self):
+        """TASK-0128's own unconditional case: n_zero<6 is always a bug
+        (fewer than the mandatory 3 translation + 3 rotation modes cannot
+        happen for a real ANM Hessian), independent of connectivity --
+        must still raise even though this task widened the n_zero>6 case."""
+        with pytest.raises(ValueError, match="at least 6"):
+            _check_anm_rigid_body_nullspace(
+                H=np.eye(30), w=np.concatenate([np.full(5, 1e-16), np.full(25, 1.0)]), n_zero=5,
+            )
+
+    def test_disconnected_graph_still_raises_even_with_many_zero_modes(self):
+        """TASK-0005's original regression, re-verified directly against
+        real numbers rather than just 'still raises': two disconnected
+        6-residue clusters give n_zero=12 (2x6, confirmed via eigh) and
+        n_components=2 (confirmed via operator_diagnostics) -- TASK-0128's
+        widened `n_zero>6` acceptance must not silently swallow this case."""
+        cluster_a = _helix_coords(6)
+        cluster_b = _helix_coords(6) + np.array([1000.0, 1000.0, 1000.0])
+        coords = np.vstack([cluster_a, cluster_b])
+        H = H13_3N_anm_hessian(coords, cutoff=10.0)
+        w = np.linalg.eigvalsh(H)
+        n_zero = int((w < 1e-8).sum())
+        assert n_zero == 12  # 2 independent rigid pieces, 6 trivial modes each
+        assert operator_diagnostics(H)["n_components"] == 2
+        with pytest.raises(ValueError, match="disconnected components"):
+            anm_modes(coords, cutoff=10.0, n_modes=5)
+
+    def test_connected_structure_with_more_than_six_zero_modes_does_not_raise(self):
+        """TASK-0128's actual fix target: a *connected* structure (single
+        component) can legitimately have more than 6 near-zero ANM modes --
+        a locally under-constrained substructure (here: a small 3-residue
+        cluster attached to the main body through only a thin bridge) has
+        a genuine zero-energy internal rotational mode in a purely
+        central-force ANM model, without the graph being disconnected.
+        Reproduces the real BCR_ABL1/CARDIAC_MYOSIN pattern (n_zero>6,
+        n_components==1) on a small synthetic case, not just described in
+        prose."""
+        main = _helix_coords(10)
+        sub = _helix_coords(3) + np.array([9.5, 0.0, 5.0])  # thin bridge to main
+        coords = np.vstack([main, sub])
+        H = H13_3N_anm_hessian(coords, cutoff=10.0)
+        w = np.linalg.eigvalsh(H)
+        n_zero = int((w < 1e-8).sum())
+        assert n_zero > 6  # the legitimately-floppy case this task targets
+        assert operator_diagnostics(H)["n_components"] == 1  # genuinely connected
+
+        eigvals, eigvecs = anm_modes(coords, cutoff=10.0, n_modes=5)  # must not raise
+        assert eigvals.shape[0] <= 5
+        assert eigvals.min() > 1e-8  # only real non-trivial modes returned
+
+    def test_calibrate_kappa_also_accepts_the_connected_floppy_case(self):
+        """calibrate_kappa had its own separate copy of the same check --
+        confirm the shared helper actually reaches both call sites, not
+        just anm_modes."""
+        main = _helix_coords(10)
+        sub = _helix_coords(3) + np.array([9.5, 0.0, 5.0])
+        coords = np.vstack([main, sub])
+        kappa = calibrate_kappa(coords, b_mean=20.0, cutoff=10.0)  # must not raise
+        assert kappa > 0
 
 
 # ---------------------------------------------------------------------------

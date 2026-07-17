@@ -195,3 +195,16 @@ re-deriving any alignment/ANM machinery (reused `superpose.py`
 throughout); any change to the CTQW/GSR scoring pipeline (this is a
 purely structural diagnostic, independent of operator/propagator
 choice, per this task's own Out Of Scope).
+
+**Addendum 2026-07-18**: [[TASK-0128]] fixed `anm_modes`' shared
+assertion (same day it was filed) — since this task's own blocked
+cumulative-overlap computation called that exact function, the fix
+unblocked it as a direct consequence, not a separate re-run. Re-ran
+`scripts/learnability_gate.py`: BCR_ABL1 CO(20)=0.794, CARDIAC_MYOSIN
+CO(20)=0.584, both above the 0.5 threshold — both were already
+`LEARNABLE` on the RMSD half alone, and the now-complete CO half
+confirms it rather than changing anything. **All 3 mandatory targets
+now have complete RMSD+CO numbers and all classify `LEARNABLE`.**
+`RESULTS.md`'s "Learnability gate" section and open-questions row #12
+updated additively; original at-first-run numbers preserved, not
+deleted.

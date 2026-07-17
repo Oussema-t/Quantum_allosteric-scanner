@@ -344,6 +344,68 @@ def learnability_verdict(
 # ANM modes + Tama-Sanejouand cumulative overlap
 # ---------------------------------------------------------------------------
 
+def _check_anm_rigid_body_nullspace(H: np.ndarray, w: np.ndarray, n_zero: int) -> None:
+    """TASK-0128 -- validates `n_zero`, replacing the original `!= 6`
+    hardening (TASK-0005) with the `>= 6`-plus-connectivity-check that
+    task's own Open Question anticipated ("a genuinely multi-chain/
+    floppy-linker target... might legitimately have more than 6 near-zero
+    -but-not-exactly-zero modes without being 'disconnected' in the error
+    sense -- worth revisiting this strictness once a multi-chain target is
+    actually run through this module").
+
+    That target has now actually been run: BCR_ABL1 (`n_zero=7`) and
+    CARDIAC_MYOSIN (`n_zero=10`), both real, connected structures (not the
+    disconnected-graph bug `!= 6` was built to catch). Diagnosed directly,
+    not assumed: in both cases the "extra" eigenvalues sit at true
+    machine-precision zero (~1e-16, indistinguishable from the 6 trivial
+    modes), then jump 5-9 orders of magnitude to the real low-frequency
+    spectrum -- not a smooth continuum blending into the zero cluster,
+    which rules out "numerical near-degeneracy at the 1e-8 threshold" as
+    the explanation. The corresponding eigenvectors localize almost
+    entirely onto a small, compact residue segment (BCR_ABL1: ~10
+    residues; CARDIAC_MYOSIN: all 4 extra modes on the same ~17-residue
+    segment) -- the well-known artifact of a purely central-force
+    (distance-only, no angular term) ANM model: a locally under-
+    constrained substructure (e.g. a weakly-coupled loop, or -- for
+    CARDIAC_MYOSIN specifically -- plausibly connected to that target's
+    own independently-documented 5TBY low-resolution/under-constrained
+    caveat) can have exact zero-energy internal rotational modes without
+    the structure being disconnected at all. This is genuine physical
+    (or data-quality) softness, not a bug in `eigh` or in this function.
+
+    The regression `!= 6` was actually built to catch (TASK-0005: a
+    synthetic disconnected two-cluster graph silently passing under a
+    naive `n_zero < 6` check, when it should raise) is preserved exactly:
+    a disconnected graph's `n_zero` is *always* checked against real
+    connectivity below, not just counted. `n_zero < 6` remains an
+    unconditional bug (fewer than the mandatory 3 translation + 3
+    rotation modes cannot happen for a real ANM Hessian and signals
+    something is broken upstream) and still raises immediately, no
+    connectivity check needed.
+    """
+    if n_zero < 6:
+        raise ValueError(
+            f"expected at least 6 near-zero rigid-body ANM modes (3 "
+            f"translation + 3 rotation), found {n_zero} -- fewer than the "
+            "mandatory minimum; something is broken upstream of this "
+            "eigendecomposition, not a connectivity or floppiness question."
+        )
+    if n_zero > 6:
+        from .diagnostics import operator_diagnostics
+
+        n_components = operator_diagnostics(H)["n_components"]
+        if n_components != 1:
+            raise ValueError(
+                f"found {n_zero} near-zero ANM modes (>6) AND the contact "
+                f"graph has {n_components} disconnected components (via "
+                "operator_diagnostics on this Hessian) -- this is "
+                "TASK-0005's original disconnected-graph regression "
+                "(independent rigid motion of each piece), not TASK-0128's "
+                "single-connected-structure floppiness case; do not proceed "
+                "with a single global rigid-body-nullspace assumption."
+            )
+
+
 def anm_modes(coords: np.ndarray, cutoff: float = 10.0, n_modes: int = 20):
     """Lowest `n_modes` non-trivial ANM eigenmodes (discards the near-zero
     rigid-body translation/rotation modes).
@@ -361,13 +423,7 @@ def anm_modes(coords: np.ndarray, cutoff: float = 10.0, n_modes: int = 20):
     H = H13_3N_anm_hessian(coords, cutoff=cutoff)
     w, v = np.linalg.eigh(H)
     n_zero = int((w < 1e-8).sum())
-    if n_zero != 6:
-        raise ValueError(
-            f"expected exactly 6 near-zero rigid-body ANM modes (3 "
-            f"translation + 3 rotation), found {n_zero} -- a disconnected "
-            "contact graph has extra zero modes (independent rigid motion "
-            "of each disconnected piece); check contact-graph connectivity."
-        )
+    _check_anm_rigid_body_nullspace(H, w, n_zero)
     end = min(n_zero + n_modes, len(w))
     return w[n_zero:end], v[:, n_zero:end]
 
@@ -544,11 +600,7 @@ def calibrate_kappa(coords: np.ndarray, b_mean: float, cutoff: float = 10.0, n_m
     H = H13_3N_anm_hessian(coords, cutoff=cutoff)
     w, v = np.linalg.eigh(H)
     n_zero = int((w < 1e-8).sum())
-    if n_zero != 6:
-        raise ValueError(
-            f"expected exactly 6 near-zero rigid-body ANM modes, found "
-            f"{n_zero} -- check contact-graph connectivity."
-        )
+    _check_anm_rigid_body_nullspace(H, w, n_zero)
     end = len(w) if n_modes is None else min(n_zero + n_modes, len(w))
     w_nz = w[n_zero:end]
     v_nz = v[:, n_zero:end]
