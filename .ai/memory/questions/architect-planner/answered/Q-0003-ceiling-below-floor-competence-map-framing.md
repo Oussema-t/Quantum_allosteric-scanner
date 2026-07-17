@@ -3,7 +3,7 @@
 ## Context
 
 - ID: Q-0003 (architect-planner addressee folder)
-- Status: Open
+- Status: Answered
 - Addressee: Architect/Planner
 - Raised By: Implementer C, 2026-07-15
 - Related: [[TASK-0046]] (ceiling coordinate-descent search, Done),
@@ -115,10 +115,34 @@ by this correction, just now aimed at a different number.
 
 ## Answer
 
-(empty — Status: Open. TASK-0118's update above changes the evidence this question was
-raised against; the Architect/Planner call on whether to formally close or re-scope this
-question is still outstanding.)
+**Closing, per TASK-0118's own 2026-07-16 update above.**
+
+1. **The floor/ceiling/headroom framing itself was never the problem.** It correctly
+   surfaced a real inconsistency — the negative-denominator symptom (P-0002) was the
+   framework doing its job, not evidence the framework is wrong for this operator family.
+   The actual defect was a seed-convention mismatch between two code paths
+   (`ceiling_search_batched.py`'s full array vs. `run_challenge.py`'s single-index crash
+   workaround), not a property of `H_new`/CTQW on KRAS_G12C. Keep the framing as-is going
+   forward; no redesign warranted.
+2. **Question 2 (how confidently to read a low ceiling) is moot for KRAS_G12C specifically**
+   — under the corrected, single, declared convention (TASK-0118: full active-site array,
+   incoherent mixture), the ceiling (0.5269) clears the floor (0.4818) by +0.045. There is
+   no low-ceiling-below-floor number left to read cautiously for this target. The
+   underlying TASK-0116/0117 concerns (search coverage, clock validation) still apply to
+   this *new* ceiling number, unresolved by this closure — they were never specific to the
+   old, gauge-contaminated one.
+3. **One thing this closure does not settle, flagged for whoever next touches
+   `COMPETENCE_MAP.md`**: TASK-0118's own re-run and TASK-0119's independent per-operator
+   clock fix landed concurrently and were never combined (see [[TASK-0129]], filed
+   2026-07-16/17 to do exactly that). The +0.045 KRAS_G12C margin above is real under
+   TASK-0118's seed fix alone, computed at the old shared `t_max=15` — not yet the
+   pipeline's fully gauge-fixed state. Read it as "the seed-only correction," not "the
+   final number."
 
 ## Action
 
-(empty until answered)
+No code/task-design action needed beyond what's already in flight — [[TASK-0116]]/
+[[TASK-0117]] (ceiling search coverage/clock validation, still TODO) and [[TASK-0129]]
+(combined seed+clock re-run, filed this session) carry the remaining open threads forward.
+Filed straight to `answered/`, matching [[Q-0001]]/[[Q-0002]]'s precedent for questions that
+resolve without a distinct new follow-up task of their own.

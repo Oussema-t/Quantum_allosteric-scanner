@@ -109,7 +109,7 @@ Add repeated failure patterns, false assumptions, or tool traps that should not 
   *classification*, not just the value, across a real (not synthetic-only) range
   before trusting it — cheap when the target is small (KRAS_G12C: ~1-20s/call),
   and the check itself becomes the KNOB row in that quantity's `INV-XXXX` record
-  ([[INV-0005]] here) rather than a one-off comment.
+  ([[INV-0007]] here) rather than a one-off comment.
 
 ## P-0004 — A `t→infinity` reference built from `|eigenvector|^2` silently assumes a sign that isn't there
 

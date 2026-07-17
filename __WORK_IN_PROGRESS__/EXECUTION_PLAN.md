@@ -103,23 +103,21 @@ reproduction gate the review requires before this changes any claim. Also amends
 **Neither review is a basis to reselect the submission operator** — that remains
 Tier-2-gated per **TASK-0100** (1B.9), unaffected by either finding.
 
-## Progress tracker (Phases 0–6 + 1B + 1C, the scored/critical-path work — 77 IDs referenced)
+## Progress tracker (Phases 0–6 + 1B + 1C, the scored/critical-path work — 82 IDs referenced)
 
-**Reconciled 2026-07-16** by cross-checking every `TASK-00xx` ID referenced anywhere in the
-phase tables below against its actual location in `.ai/tasks/{DONE,TODO,IN_PROGRESS}/`
-(script-verified, not hand-counted) — supersedes the 2026-07-15 snapshot (which itself
-replaced a 2026-07-13 one that had drifted 9 tasks stale). This update reflects Phase 1C's
-10 new tasks (TASK-0118–0127, filed from `.ai/reviews/REVIEW-panel-2026-07-16-v2.md`),
-TASK-0099 landing Done the same day, and (later the same day) **TASK-0090 landing Done**
-(1C.1) plus **TASK-0128 filed** (a `calibrate_kappa` blocker found while running TASK-0099,
-unrelated to Phase 1C). `.ai/COMMON.md`'s Active Work Registry remains the
-canonical, continuously-updated source — re-check there (or re-run the cross-check) before
-trusting this table for dispatch decisions; it will drift again as soon as the next task
-lands.
+**Reconciled 2026-07-17** (Architect/Planner status review) by cross-checking every
+`TASK-00xx` ID referenced anywhere in the phase tables below against its actual location in
+`.ai/tasks/{DONE,TODO,IN_PROGRESS}/` (script-verified, not hand-counted) — supersedes the
+2026-07-16 snapshot. Since that snapshot: **TASK-0108 landed Done** (the parent/coordinator
+task closed once both its subtasks, TASK-0109/0110, landed); **TASK-0129/0130 filed**
+(combined seed+clock re-run; `time_averaged_ctqw` convergence-infeasibility fix). `.ai/COMMON.md`'s
+Active Work Registry remains the canonical, continuously-updated source — re-check there
+(or re-run the cross-check) before trusting this table for dispatch decisions; it will
+drift again as soon as the next task lands.
 
 | Done | In Progress | TODO | Total distinct IDs referenced |
 |---|---|---|---|
-| 44 (TASK-0004, 0018, 0037, 0046, 0047, 0050, 0052, 0055, 0056, 0058, 0063, 0064, 0066, 0067, 0068, 0070, 0071, 0074, 0075, 0079, 0080, 0081, 0082, 0088, 0090, 0091, 0092, 0093, 0094, 0095, 0096, 0097, 0099, 0100, 0101, 0102, 0103, 0104, 0105, 0106, 0109, 0112, 0118, 0119) | 1 (TASK-0023) | 33 (TASK-0015, 0021, 0022, 0040, 0044, 0054, 0072, 0073, 0076, 0077, 0078, 0083, 0084, 0085, 0086, 0087, 0089, 0098, 0108, 0113, 0114, 0115, 0116, 0117, 0120, 0121, 0122, 0123, 0124, 0125, 0126, 0127, 0128) | 78 |
+| 47 (TASK-0004, 0005, 0018, 0037, 0046, 0047, 0050, 0052, 0055, 0056, 0058, 0063, 0064, 0066, 0067, 0068, 0070, 0071, 0074, 0075, 0079, 0080, 0081, 0082, 0088, 0090, 0091, 0092, 0093, 0094, 0095, 0096, 0097, 0099, 0100, 0101, 0102, 0103, 0104, 0105, 0106, 0108, 0109, 0110, 0112, 0118, 0119) | 1 (TASK-0023) | 34 (TASK-0015, 0021, 0022, 0040, 0044, 0054, 0072, 0073, 0076, 0077, 0078, 0083, 0084, 0085, 0086, 0087, 0089, 0098, 0113, 0114, 0115, 0116, 0117, 0120, 0121, 0122, 0123, 0124, 0125, 0126, 0127, 0128, 0129, 0130) | 82 |
 
 **Note on the growing total:** the plan's scope keeps genuinely growing, not drifting —
 Phase 1B added ~20 IDs (TASK-0091–0106), the 2026-07-15 gap audits added TASK-0108–0117,
@@ -257,6 +255,19 @@ priority ordering (P0 → P1 → P2) — do not reorder without a stated reason.
 | 1C.11 | **[FILED] TASK-0127 — extend the ASD generalization set; make it the reported headline** | Mitigates ~15 human review cycles over the same 3 answer keys — `frozen_context` gates code-level multiple comparisons, nothing gates the reviewers. **Soft-blocked on 1C.2/1C.3/1C.6** — running this against a still-gauge-contaminated pipeline just reproduces the same undetermined state on more targets. | TODO |
 | 1C.12 | **[FILED] TASK-0125 — verify c-Myc/1NKP resnum numbering** | `keep_nucleic: true` risks the hit list silently reporting DNA nucleotide indices as residues — cheap check, real reputational risk if wrong ("a referee will spot 'residue 943' instantly"). | TODO |
 | 1C.13 | **[EXISTS] TASK-0054 — SE(3) invariance regression** | Panel P2-12, re-affirmed as still relevant alongside the other gauge fixes. | TODO |
+| 1C.14 | **[FILED] TASK-0129 — combined seed+clock re-run** | 1C.2 (TASK-0118) and 1C.3 (TASK-0119) landed independently, same day, neither combined with the other — every number either reports is fixed on only one axis. **Now the single highest-priority open item**: neither `COMPETENCE_MAP.md` recompute is the pipeline's actual current state until this lands. **Hard unblocked** — both dependencies Done. | TODO |
+| 1C.15 | **[FILED] TASK-0130 — `time_averaged_ctqw`'s own convergence criterion is computationally infeasible** | TASK-0110 found `min_adequate_t_max(kind="time_averaged_ctqw")` prescribes `n_steps` in the millions on all 3 real targets — a single call didn't return after 2+ hours. Fix: compute the infinite-time closed form directly (already known to match at Spearman 0.9998) instead of chasing a bigger practical cap. Not blocking 1C.14. | TODO |
+
+**Scaffold hygiene found and fixed while reconciling this phase, 2026-07-16/17**: two
+concurrent threads (TASK-0099, TASK-0109) both claimed `INV-0005` for unrelated invariants.
+Renumbered TASK-0099's file to `INV-0007` (the propagator-time-parameters one already had
+more cross-references by full filename); fixed the two bare-`INV-0005` mentions that meant
+it (`.ai/COMMON.md`, `.ai/memory/shared/pitfalls.md`). No content changed.
+
+**[[Q-0003]] formally closed** (was left open pending this Architect/Planner call, per
+TASK-0118's own Done section): the floor/ceiling/headroom framing was never the problem —
+the negative-denominator symptom correctly surfaced the seed-convention mismatch, not a
+flaw in the framework itself. Full closure text in `.ai/memory/questions/architect-planner/answered/`.
 
 **What this phase explicitly does NOT conclude (per the review's own corrections, do not
 re-litigate)**: `mode_coparticipation` does not work as a standalone fix (1C.7 depends on
@@ -590,6 +601,16 @@ table's own numbers, TASK-0116/0117 remain open, a combined seed+clock re-run is
 outstanding, and
 CARDIAC_MYOSIN's new floor-clearing result is explicitly gated on 1C.9 (TASK-0124)'s
 still-open 5TBY data-quality question.
+
+**Updated 2026-07-16/17 (Architect/Planner status review):** the "combined seed+clock
+re-run" this section names above is now filed as **1C.14 (TASK-0129)** — currently the
+single highest-priority open task on the critical path, hard-unblocked (both dependencies
+Done). Separately, **TASK-0110** (Optuna scan, landed 2026-07-16/17) found `time_averaged_
+ctqw`'s own literature-grounded convergence criterion is computationally infeasible on
+real data (prescribed `n_steps` in the millions; a real call didn't return after 2+ hours)
+— filed as **1C.15 (TASK-0130)**, not blocking 1C.14. A scaffold hygiene defect (two
+concurrent threads both claiming `INV-0005`) was found and fixed the same pass (see Phase
+1C's own note above); **[[Q-0003]]** is formally closed.
 
 **Updated 2026-07-13:** 5.1 is Done, but its output is not yet trustworthy as reported —
 Phase 1B is now load-bearing on the critical path, inserted between 5.1 and 5.2. **1B.1

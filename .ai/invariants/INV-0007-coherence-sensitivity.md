@@ -1,4 +1,13 @@
-# INV-0005 `coherence_sensitivity`'s `coherence_auc_range`/`coherence_classification` — `analysis.py`
+# INV-0007 `coherence_sensitivity`'s `coherence_auc_range`/`coherence_classification` — `analysis.py`
+
+**Renumbered 2026-07-16/17**: filed as `INV-0005` by TASK-0099, claimed the same
+session by TASK-0109's own, unrelated `INV-0005-propagator-time-parameters.md` —
+a genuine ID collision (two concurrent threads, same number). Found and fixed
+by this Architect/Planner thread while reviewing `EXECUTION_PLAN.md`'s post-panel-review
+state; renumbered to the next free slot (`INV-0006` already taken by TASK-0118's
+seed-definition record) rather than the propagator-time-parameters file, since
+`INV-0006` and other files already cross-reference the propagator one by its
+full filename. No content changed, only the ID and this note.
 
 ## GAUGE
 
