@@ -134,11 +134,20 @@ class TestProximityConfoundReproduction:
     6-residue seed cluster) with real build_H_new + time_averaged_ctqw --
     not the review's exact RNG draw (not specified), but the same
     qualitative claim, checked as a hard regression bound rather than
-    eyeballed: proximity-to-seed strongly (Spearman > 0.5) predicts CTQW
-    occupation. Measured directly while writing this test (5 independent
-    seeds): Euclidean 0.71-0.83, hop 0.55-0.64 -- both comfortably above
-    the 0.5 bound asserted below, consistent with (if not numerically
-    identical to) the review's own +0.853/+0.880.
+    eyeballed: proximity-to-seed positively predicts CTQW occupation.
+    Originally measured (5 independent seeds, pre-TASK-0121 lam_* defaults):
+    Euclidean 0.71-0.83, hop 0.55-0.64 -- both comfortably above a 0.5 bound.
+
+    TASK-0121 (z-scored potential terms, ~12x smaller combined lam_* to hold
+    sigma(V) <= 0.2*J) measurably weakens this confound -- re-measured on the
+    same 5 seeds under the renormalized defaults: Euclidean 0.22-0.47, hop
+    0.03-0.28. Still positive (proximity is not eliminated as a confound --
+    per REVIEW-panel-2026-07-16-v2.md §2.4, renormalizing the potential does
+    not by itself fix the proximity confound in the *observable*, only the
+    degree confound in the *diagonal*) but roughly half the old magnitude.
+    Bounds below are lowered to match, not to make the test vacuous --
+    rng_seed=0 gives rho_euclid=0.373, rho_hop=0.170; margin kept for
+    cross-machine BLAS/eigh nondeterminism.
     """
 
     def _synthetic_globule(self, rng_seed: int, n: int = 170):
@@ -168,8 +177,8 @@ class TestProximityConfoundReproduction:
         rho_euclid, _ = spearmanr(occ, euclid_from_seed_centroid(coords, seed))
         rho_hop, _ = spearmanr(occ, hop_from_seed(coords, seed, cutoff=8.0))
 
-        assert rho_euclid > 0.5, f"expected a strong proximity confound, got rho={rho_euclid:.3f}"
-        assert rho_hop > 0.5, f"expected a strong proximity confound, got rho={rho_hop:.3f}"
+        assert rho_euclid > 0.25, f"expected a positive proximity confound, got rho={rho_euclid:.3f}"
+        assert rho_hop > 0.1, f"expected a positive proximity confound, got rho={rho_hop:.3f}"
 
 
 class TestFpocketBaseline:

@@ -54,6 +54,22 @@ addition unreachable by any diagonal-only operator.
 **To test:** Add V_pair, fit J under strict LOPO CV. Risk: must not test on the
 same proteins used to fit J.
 
+### Status update, 2026-07-18 — TASK-0121 (variance-budget renormalization) Done
+
+Unaffected by TASK-0121 as a hypothesis (still open, still an off-diagonal
+extension no combination of z-scored diagonal terms can reach), but its
+premise ("no combination can distinguish a buried Phe-Phe contact from a
+buried Gly-Gly contact") was previously argued on top of a diagonal sum
+where V_R alone carried 88.8% of the variance and V_C/V_M were structurally
+inert (`REVIEW-panel-2026-07-16-v2.md` §2.4). TASK-0121 z-scored all five
+terms and re-derived `lam_*` so every term is now a reachable knob
+(see `../HAMILTONIANS.md`'s Critical facts / IMP-H6 for the corrected
+variance budget). This hypothesis's own "highest-value diagonal-only
+extension" framing should be re-evaluated against the *renormalized*
+diagonal sum, not the pre-fix one -- V_pair's marginal value over a
+properly-balanced 5-term diagonal may differ from its marginal value over
+one that was effectively V_R alone.
+
 ---
 
 ## HYP-P3 · V_C (currently structural centrality) would be more predictive as true dynamic covariance
@@ -74,6 +90,20 @@ corr_score_i = L_pseudo[i, :].sum()  # mean correlation of i with all other resi
 (see IMP-H3 in `../improvements/hamiltonian_code.md`).
 
 **To test:** Ablation: H_new with true V_C vs H_new with weighted-degree V_C. Compare AUC.
+
+**Note (2026-07-18, TASK-0121):** this hypothesis's own "Current V_C" line
+above (`W_invdist.sum(axis=1)`, weighted contact degree) predates
+`potentials.py`'s current implementation, which already computes true GNM
+DCC via `_kirchhoff_eigh`/`_normalized_dcc` (see that module's own TASK-0066
+references) — this hypothesis reads as unresolved but the formula change it
+proposes already shipped at some earlier point not cross-referenced here.
+TASK-0121 did not touch V_C's formula, only its *scale* (z-scored it; it was
+previously max-normalised to [-1, 0], std ~= 0.06 on real targets, ~30x
+smaller than V_R, making `lam_C` an unreachable knob regardless of the DCC
+formula underneath it — see `../HAMILTONIANS.md`). Flagging the formula/doc
+mismatch here rather than silently rewriting this hypothesis's history,
+since confirming exactly when/why the DCC swap happened is outside this
+task's scope.
 
 ---
 

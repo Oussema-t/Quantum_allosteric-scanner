@@ -34,46 +34,70 @@ def _assert_diagonal(M: np.ndarray, n: int):
 
 
 class TestVB:
-    """V_B: B-factor penalty. Non-negative by construction (b_norm = b/mean(b))."""
+    """V_B: B-factor penalty, z-scored (TASK-0121): mean 0, std 1. High-B
+    residues score positive (penalised), low-B residues score negative
+    (mild reward) as a consequence of z-scoring, not a separate design
+    choice."""
 
     def test_shape_and_diagonal(self):
         _assert_diagonal(V_B(BFACTORS), N)
 
-    def test_non_negative(self):
-        assert (np.diag(V_B(BFACTORS)) >= 0).all()
+    def test_zscored(self):
+        d = np.diag(V_B(BFACTORS))
+        assert abs(d.mean()) < 1e-9
+        np.testing.assert_allclose(d.std(), 1.0, atol=1e-6)
 
-    def test_uniform_bfactors_normalise_to_one(self):
+    def test_higher_bfactor_scores_higher(self):
+        """Monotonic in the raw B-factor ranking, same as the pre-fix
+        b/mean(b) normalisation -- only the mean/scale changed."""
+        d = np.diag(V_B(BFACTORS))
+        order = np.argsort(BFACTORS)
+        np.testing.assert_array_equal(np.argsort(d), order)
+
+    def test_uniform_bfactors_normalise_to_zero(self):
+        """Uniform input has zero variance; `_zscore`'s `+1e-9` epsilon
+        guard against a zero std keeps this exactly zero rather than nan."""
         M = V_B(np.full(N, 42.0))
-        np.testing.assert_allclose(np.diag(M), np.ones(N), atol=1e-6)
+        np.testing.assert_allclose(np.diag(M), np.zeros(N), atol=1e-6)
 
 
 class TestVT:
-    """V_T: terminal-residue suppression. 1.0 on termini, 0.0 elsewhere."""
+    """V_T: terminal-residue suppression, z-scored (TASK-0121). Termini
+    (originally 1.0) score strictly higher than the core (originally 0.0)
+    after z-scoring; mean 0 / std 1."""
 
     def test_shape_and_diagonal(self):
         _assert_diagonal(V_T(N, terminal_fraction=0.2), N)
 
-    def test_non_negative(self):
-        assert (np.diag(V_T(N, terminal_fraction=0.2)) >= 0).all()
-
-    def test_zero_outside_terminal_residues(self):
-        """terminal_fraction=0.2 on N=10 → n_term=2: only indices 0,1,8,9 are
-        penalised; the interior 6 residues must be exactly zero."""
+    def test_zscored(self):
         d = np.diag(V_T(N, terminal_fraction=0.2))
-        np.testing.assert_allclose(d[:2], [1.0, 1.0])
-        np.testing.assert_allclose(d[-2:], [1.0, 1.0])
-        np.testing.assert_allclose(d[2:-2], np.zeros(N - 4))
+        assert abs(d.mean()) < 1e-9
+        np.testing.assert_allclose(d.std(), 1.0, atol=1e-6)
+
+    def test_termini_score_higher_than_core(self):
+        """terminal_fraction=0.2 on N=10 → n_term=2: indices 0,1,8,9 are the
+        (positive-scoring) termini; the interior 6 residues are the
+        (negative-scoring) core."""
+        d = np.diag(V_T(N, terminal_fraction=0.2))
+        termini = np.r_[d[:2], d[-2:]]
+        core = d[2:-2]
+        assert termini.min() > core.max()
+        np.testing.assert_allclose(termini, termini[0])
+        np.testing.assert_allclose(core, core[0])
 
 
 class TestVR:
-    """V_R: rigidity reward = -(z(degree) + z(clustering) - z(msf)).
-
-    Unlike V_B/V_T, this is a signed reward/penalty term (z-scores are centered
-    at zero), not a strictly non-negative penalty.
-    """
+    """V_R: rigidity reward = -(z(degree) + z(clustering) - z(msf)),
+    re-z-scored to mean 0 / std 1 (TASK-0121 -- the inner sum's own std was
+    ~1.9 on real targets, not 1, since the three components are correlated)."""
 
     def test_shape_and_diagonal(self):
         _assert_diagonal(V_R(COORDS, cutoff=10.0), N)
+
+    def test_zscored(self):
+        d = np.diag(V_R(COORDS, cutoff=10.0))
+        assert abs(d.mean()) < 1e-9
+        np.testing.assert_allclose(d.std(), 1.0, atol=1e-6)
 
     def test_mixed_sign(self):
         d = np.diag(V_R(COORDS, cutoff=10.0))
@@ -91,29 +115,37 @@ class TestVR:
 
 
 class TestVC:
-    """V_C: covariance-centrality reward via GNM DCC. Non-positive by
-    construction (returns -centrality_norm, centrality_norm in [0, 1])."""
+    """V_C: covariance-centrality reward via GNM DCC, z-scored (TASK-0121;
+    was max-normalised to [-1, 0], std ~= 0.06 on real targets -- a ~30x
+    scale mismatch against V_R that made lam_C unreachable)."""
 
     def test_shape_and_diagonal(self):
         _assert_diagonal(V_C(COORDS, cutoff=10.0), N)
 
-    def test_non_positive_and_bounded(self):
+    def test_zscored(self):
         d = np.diag(V_C(COORDS, cutoff=10.0))
-        assert (d <= 1e-12).all()
-        assert (d >= -1.0 - 1e-9).all()
+        assert abs(d.mean()) < 1e-9
+        np.testing.assert_allclose(d.std(), 1.0, atol=1e-6)
+
+    def test_high_centrality_still_rewarded_most_negative(self):
+        """Sign convention preserved: higher DCC centrality -> more negative
+        score, same ranking direction as the pre-fix -centrality_norm."""
+        d = np.diag(V_C(COORDS, cutoff=10.0))
+        assert d.argmin() != d.argmax()  # non-degenerate on this fixture
 
 
 class TestVM:
-    """V_M: low-mode participation reward. Non-positive by construction
-    (returns -part_norm, part_norm in [0, 1])."""
+    """V_M: low-mode participation reward, z-scored (TASK-0121; was
+    max-normalised to [-1, 0], std ~= 0.06 on real targets -- a ~30x scale
+    mismatch against V_R that made lam_M unreachable)."""
 
     def test_shape_and_diagonal(self):
         _assert_diagonal(V_M(COORDS, cutoff=10.0, n_modes=3), N)
 
-    def test_non_positive_and_bounded(self):
+    def test_zscored(self):
         d = np.diag(V_M(COORDS, cutoff=10.0, n_modes=3))
-        assert (d <= 1e-12).all()
-        assert (d >= -1.0 - 1e-9).all()
+        assert abs(d.mean()) < 1e-9
+        np.testing.assert_allclose(d.std(), 1.0, atol=1e-6)
 
 
 # ---------------------------------------------------------------------------

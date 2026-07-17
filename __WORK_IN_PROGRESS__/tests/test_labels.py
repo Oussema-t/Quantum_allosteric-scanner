@@ -75,11 +75,15 @@ class TestResiduesNear:
 
 class TestTerminalMask:
     def test_matches_potentials_v_t_convention(self):
+        """V_T is z-scored (TASK-0121), so its diagonal is nonzero
+        everywhere -- the shared convention with `terminal_mask` is now the
+        *sign*, not zero-ness: termini score strictly higher (positive)
+        than the core (negative)."""
         from allostery.potentials import V_T
 
         mask = terminal_mask(N, terminal_fraction=0.2)
         diag = np.diag(V_T(N, terminal_fraction=0.2))
-        np.testing.assert_array_equal(mask, diag.astype(bool))
+        np.testing.assert_array_equal(mask, diag > 0)
 
     def test_boolean_dtype_and_shape(self):
         mask = terminal_mask(N, terminal_fraction=0.2)

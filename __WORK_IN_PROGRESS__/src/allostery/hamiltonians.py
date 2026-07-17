@@ -290,11 +290,11 @@ def build_H_new(
     *,
     cutoff: float = 10.0,
     alpha: float = 0.3,
-    lam_B: float = 1.0,
-    lam_T: float = 2.0,
-    lam_R: float = 1.0,
-    lam_C: float = 0.5,
-    lam_M: float = 0.5,
+    lam_B: float = 0.08,
+    lam_T: float = 0.16,
+    lam_R: float = 0.08,
+    lam_C: float = 0.04,
+    lam_M: float = 0.04,
     terminal_fraction: float = 0.05,
     n_low_modes: int = 10,
 ) -> np.ndarray:
@@ -306,7 +306,27 @@ def build_H_new(
     bfactors     : (N,)   crystallographic B-factors.
     cutoff       : contact distance cutoff in Å.
     alpha        : exponential decay constant for contact weights.
-    lam_{B,T,R,C,M}: coupling constants for each potential term.
+    lam_{B,T,R,C,M}: coupling constants for each potential term. TASK-0121:
+        `potentials.py`'s five terms are now individually z-scored (std 1
+        each), so these weights are the *only* thing controlling each
+        term's share of the combined potential's variance -- previously
+        V_C/V_M's own max-[-1,0] normalisation made lam_C/lam_M unreachable
+        knobs (V_R alone carried 88.8% of the variance regardless of the
+        lam_* ratios, REVIEW-panel-2026-07-16-v2.md §2.4). Defaults below
+        keep the pre-fix relative ratio (B:T:R:C:M = 1:2:1:0.5:0.5, i.e.
+        "V_T penalises termini twice as hard as V_B/V_R reward/penalise
+        rigidity") but rescaled so sigma(V) <= 0.2*J is guaranteed
+        regardless of target: by the triangle inequality on standard
+        deviations (Minkowski, since each term has std 1),
+        sigma(sum lam_i * V_i) <= sum |lam_i| = 1.0 * scale. Symmetric
+        normalised-Laplacian eigenvalues lie in [0, 2] for any nonnegative
+        edge weighting (Chung 1997), so J <= 2 always -- using this
+        target-independent worst case, scale = 0.2*2 / 5 = 0.08 gives the
+        values below (lam_B=0.08, lam_T=0.16, lam_R=0.08, lam_C=0.04,
+        lam_M=0.04, sum=0.4=0.2*2). This is a provable upper bound, not a
+        per-target fit; real targets' actual J is usually well under 2, so
+        the realised sigma(V) is comfortably inside the 0.2*J budget (see
+        TASK-0121's Done section for measured per-target values).
     terminal_fraction: fraction of N-/C-terminal residues penalised by V_T.
     n_low_modes  : number of low-frequency ANM modes used by V_M.
     """

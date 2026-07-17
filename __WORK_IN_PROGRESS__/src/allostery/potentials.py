@@ -15,6 +15,17 @@ Physical motivation (see PLAN §Phase 0):
         dynamic cross-correlation (DCC) from the Kirchhoff pseudo-inverse.
   V_M – Low-mode participation reward: reward residues with high overlap
         with the slowest ANM modes (most likely to carry global signals).
+
+TASK-0121: every term below is z-scored (mean 0, std 1) as its final step,
+before `hamiltonians.build_H_new` applies the `lam_*` weights. Before this
+fix, V_B/V_T were unnormalised (mean-ratio / 0-1 mask) and V_C/V_M were
+max-normalised to [-1, 0] -- on real targets this made V_R (already an
+internal sum of 3 z-scores, sigma ~= 1.9) ~30x larger than V_C/V_M
+(sigma ~= 0.06), so V_R alone carried 88.8% of the potential's variance and
+lam_C/lam_M were unreachable knobs (REVIEW-panel-2026-07-16-v2.md §2.4).
+Z-scoring first makes every term commensurate (sigma = 1) so the `lam_*`
+weights chosen in `build_H_new` are the only thing controlling each term's
+share of the combined potential's variance.
 """
 from __future__ import annotations
 
@@ -83,29 +94,35 @@ def _gnm_msf(coords: np.ndarray, cutoff: float) -> np.ndarray:
 # ---------------------------------------------------------------------------
 
 def V_B(bfactors: np.ndarray) -> np.ndarray:
-    """Diagonal B-factor penalty.
+    """Diagonal B-factor penalty, z-scored (TASK-0121).
 
     High-B residues get a large positive diagonal → they are energetically
     penalised in the Hamiltonian, reducing their apparent connectivity.
+    Low-B residues get a negative diagonal (mild reward) as a consequence
+    of z-scoring around the mean, not a separate design choice.
 
-    Returns (N, N) diagonal matrix.
+    Returns (N, N) diagonal matrix, mean 0 / std 1.
     """
     b = bfactors.astype(float)
-    b_norm = b / (b.mean() + 1e-9)
-    return np.diag(b_norm)
+    return np.diag(_zscore(b))
 
 
 def V_T(n_residues: int, terminal_fraction: float = 0.05) -> np.ndarray:
-    """Diagonal terminal-residue suppression (uniform penalty on termini).
+    """Diagonal terminal-residue suppression, z-scored (TASK-0121).
 
-    Returns (N, N) diagonal matrix with 1.0 on terminal residues, 0 elsewhere.
+    Before z-scoring: 1.0 on terminal residues, 0.0 elsewhere. z-scoring
+    this binary mask keeps termini scoring strictly higher (worse) than
+    the core while giving the term mean 0 / std 1, commensurate with the
+    other four terms.
+
+    Returns (N, N) diagonal matrix, mean 0 / std 1.
     """
     N = n_residues
     n_term = max(1, int(N * terminal_fraction))
     mask = np.zeros(N)
     mask[:n_term] = 1.0
     mask[-n_term:] = 1.0
-    return np.diag(mask)
+    return np.diag(_zscore(mask))
 
 
 def V_R(
@@ -115,7 +132,7 @@ def V_R(
     """Rigidity reward: three-term z-score combining connectivity, local
     topology, and GNM mean-square fluctuation (matches QAS V_rigidity).
 
-    score = -(z(degree) + z(clustering) − z(msf))
+    score = -(z(degree) + z(clustering) − z(msf)), re-z-scored (TASK-0121)
 
     High degree + high clustering + low MSF → rigid hub → negative diagonal
     (lowers effective energy). The B-factor term from the old formulation is
@@ -126,7 +143,13 @@ def V_R(
     which counts triangles relative to all possible neighbor-pair edges.
     Nodes with degree < 2 get clustering = 0.
 
-    Returns (N, N) diagonal matrix.
+    The inner sum of three z-scores has std ~= 1.9 on real targets (not 1,
+    since the three components are correlated, not independent) --
+    TASK-0121 re-z-scores the combined score so V_R's std matches the other
+    four terms' std of 1 exactly, instead of assuming three z-scores summed
+    is already commensurate.
+
+    Returns (N, N) diagonal matrix, mean 0 / std 1.
     """
     from .hamiltonians import contact_matrix
 
@@ -140,7 +163,7 @@ def V_R(
     msf = _gnm_msf(coords, cutoff=cutoff)
 
     score = -(_zscore(degree) + _zscore(clust) - _zscore(msf))
-    return np.diag(score)
+    return np.diag(_zscore(score))
 
 
 def V_C(
@@ -154,15 +177,20 @@ def V_C(
     residues. This is the standard measure of allosteric coupling (Haliloglu &
     Bahar 1999) and physically distinct from a static contact centrality.
 
-    Returns (N, N) diagonal matrix (negative = reward for high DCC coupling).
+    TASK-0121: previously max-normalised to [-1, 0] (std ~= 0.06 on real
+    targets, ~30x smaller than V_R), which made lam_C an unreachable knob --
+    now z-scored like the other four terms so lam_C actually controls this
+    term's share of the combined potential's variance.
+
+    Returns (N, N) diagonal matrix, mean 0 / std 1 (negative = reward for
+    high DCC coupling).
     """
     _A, _w, U, _nz, winv = _kirchhoff_eigh(coords, cutoff)
     nDCC = _normalized_dcc(U, winv)
     np.fill_diagonal(nDCC, 0.0)                       # exclude self-coupling
 
     centrality = np.abs(nDCC).sum(axis=1)             # mean absolute DCC per residue
-    centrality_norm = centrality / (centrality.max() + 1e-9)
-    return np.diag(-centrality_norm)
+    return np.diag(-_zscore(centrality))
 
 
 def V_M(
@@ -176,7 +204,12 @@ def V_M(
     matrix, then scores each residue by its mean squared participation across
     those modes. High participation in slow modes → signal-carrying → rewarded.
 
-    Returns (N, N) diagonal matrix (negative = reward).
+    TASK-0121: previously max-normalised to [-1, 0] (std ~= 0.06 on real
+    targets, ~30x smaller than V_R), which made lam_M an unreachable knob --
+    now z-scored like the other four terms so lam_M actually controls this
+    term's share of the combined potential's variance.
+
+    Returns (N, N) diagonal matrix, mean 0 / std 1 (negative = reward).
     """
     _A, w, v, _nz, _winv = _kirchhoff_eigh(coords, cutoff)
 
@@ -186,5 +219,4 @@ def V_M(
     low_modes = v[:, idx_start:idx_end]           # (N, n_modes)
 
     participation = (low_modes ** 2).mean(axis=1)  # (N,)
-    part_norm = participation / (participation.max() + 1e-9)
-    return np.diag(-part_norm)
+    return np.diag(-_zscore(participation))

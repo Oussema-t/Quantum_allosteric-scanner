@@ -88,11 +88,27 @@ available from the structure.
 ## IMP-H6 · Promote cross-validated λ defaults into `build_H_new`
 
 **File:** `hamiltonians.py`, `build_H_new()`  
-**Current:** `lam_B=1.0, lam_T=2.0, lam_R=1.0, lam_C=0.5, lam_M=0.5` are
+**Original:** `lam_B=1.0, lam_T=2.0, lam_R=1.0, lam_C=0.5, lam_M=0.5` were
 pre-optimization guesses (the `DEFAULT_PARAMS` before any search ran in the notebook).  
-**Action:** Once Phase 3 LOPO CV is complete, aggregate the per-protein `OPT` params
-(median or cross-validated mean) and update these defaults. Document the protein set
-and CV conditions in the docstring.
+**Update, TASK-0121 (2026-07-18):** those guesses sat on top of a real
+normalization bug -- `potentials.py`'s five terms had wildly different
+natural scales (V_R sigma ~= 1.9, V_C/V_M sigma ~= 0.06, ~30x smaller), so
+V_R carried 88.8% of the potential's variance *regardless* of the `lam_*`
+ratios above, and `lam_C`/`lam_M` were unreachable knobs
+(`REVIEW-panel-2026-07-16-v2.md` §2.4). TASK-0121 z-scored all five terms
+(mean 0, std 1 each) and re-derived the defaults to
+`lam_B=0.08, lam_T=0.16, lam_R=0.08, lam_C=0.04, lam_M=0.04` (same 1:2:1:
+0.5:0.5 ratio, rescaled so `sigma(V) <= 0.2*J` provably holds for any
+target via the triangle inequality, `J<=2` being the universal symmetric-
+normalized-Laplacian spectral bound). This fixes the *scale* mismatch, not
+the *values* -- the ratio itself is still the original pre-optimization
+guess. This task's own Done section has the corrected variance budget and
+a real-target ablation re-run.  
+**Action (still open):** Once Phase 3 LOPO CV is complete, aggregate the
+per-protein `OPT` params (median or cross-validated mean) and update these
+*ratios* -- CV search should now start from a variance budget where every
+term is actually reachable, rather than searching five knobs where two were
+structurally inert.
 
 ---
 

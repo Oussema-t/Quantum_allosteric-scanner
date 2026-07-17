@@ -17,12 +17,18 @@ does not select a new submission operator; see TASK-0100 for that gate.
 
 `H_new` at "reduced lambda=0.25" (the review's own synthetic sweep point)
 is implemented here as a uniform external scale on `build_H_new`'s own
-default per-term coefficients (lam_B=1.0, lam_T=2.0, lam_R=1.0, lam_C=0.5,
-lam_M=0.5) -- i.e. `lam_X_used = 0.25 * lam_X_default` for every term,
-preserving each term's relative weight while scaling the whole diagonal-
-potential block down, matching the review's own `H(lambda) = L_norm +
-lambda*(V_B+V_T+V_R+V_C+V_M)` construction (a single external multiplier
-on the combined potential sum, not a re-tuning of the individual terms).
+default per-term coefficients -- i.e. `lam_X_used = 0.25 * lam_X_default`
+for every term, preserving each term's relative weight while scaling the
+whole diagonal-potential block down, matching the review's own
+`H(lambda) = L_norm + lambda*(V_B+V_T+V_R+V_C+V_M)` construction (a single
+external multiplier on the combined potential sum, not a re-tuning of the
+individual terms).
+
+TASK-0121: `_H_NEW_DEFAULT_LAMBDAS` below mirrors `build_H_new`'s own
+`lam_*` defaults and must be kept in sync with them -- it was
+(lam_B=1.0, lam_T=2.0, lam_R=1.0, lam_C=0.5, lam_M=0.5) before TASK-0121
+z-scored `potentials.py`'s five terms and rescaled the defaults to keep
+sigma(V) <= 0.2*J; see that task's Done section for the derivation.
 """
 from __future__ import annotations
 
@@ -57,7 +63,7 @@ N_STEPS = 500
 # build_H_new's own default per-term coefficients (hamiltonians.py) --
 # lambda=0.25 scales this whole set uniformly, per the review's own
 # H(lambda) = L_norm + lambda*(sum of V terms) construction.
-_H_NEW_DEFAULT_LAMBDAS = dict(lam_B=1.0, lam_T=2.0, lam_R=1.0, lam_C=0.5, lam_M=0.5)
+_H_NEW_DEFAULT_LAMBDAS = dict(lam_B=0.08, lam_T=0.16, lam_R=0.08, lam_C=0.04, lam_M=0.04)
 
 
 def _build_h_new_scaled(coords, bfactors, cutoff: float, lam: float):
