@@ -984,6 +984,97 @@ notes: `.ai/tasks/DONE/TASK-0110-optuna-apo-holo-parameter-scan.md`,
 
 ---
 
+## Learnability gate (HYP-P8), 2026-07-17 — TASK-0120
+
+**Is the labeled pocket even present in the apo topology, independent of
+any operator or propagator choice?** `REVIEW-panel-2026-07-16-v2.md`
+Sec.6 called this "the highest information-per-hour experiment
+available" — first real execution of `HYP-P8`
+(`.claude/hypotheses/physics.md`, filed 2026-06-21, never run until now;
+the "resolved" language in that file's own 2026-07-15 status update was
+built entirely from *indirect* evidence — seed-sensitivity/localization
+findings on other tasks — not from this direct measurement).
+
+Method: Kabsch-superpose holo onto apo (`superpose.align_apo_holo`),
+per-residue apo→holo Cα RMSD at the labeled pocket vs. background
+(non-pocket) residues (`superpose.cryptic_openness_gate` +
+`background_rmsd`, new), and Tama-Sanejouand cumulative overlap of the
+displacement onto the apo ANM's lowest 20 modes
+(`superpose.cumulative_overlap`). Classified via the panel's own kill
+criterion, made precise (`superpose.learnability_verdict`): pocket RMSD
+≥1.5× background RMSD **and** cumulative overlap <0.5 → `UNLEARNABLE_
+FROM_APO`; otherwise `LEARNABLE`. Real fetch, all 3 mandatory targets
+(`scripts/learnability_gate.py`, `results_task0120/learnability_gate.json`).
+
+| Target | N (common) | Pocket RMSD | Background RMSD | Ratio | CO(20) | Verdict |
+|---|---|---|---|---|---|---|
+| KRAS_G12C | 169 (166) | 1.863 Å | 0.820 Å | **2.27** | **0.638** | `LEARNABLE` |
+| BCR_ABL1 | 451 (429) | 0.362 Å | 0.734 Å | **0.49** | blocked ([[TASK-0128]]) | `PARTIAL_RMSD_ONLY` |
+| CARDIAC_MYOSIN | 950 (709) | 4.168 Å | 3.161 Å | 1.32 | blocked ([[TASK-0128]]) | `PARTIAL_RMSD_ONLY` |
+
+**[OBSERVED] KRAS_G12C's result directly contradicts the panel's own
+stated expectation, and is reported as such, not softened.** The panel's
+§4 biological framing calls KRAS "the textbook cryptic case" and
+predicts HYP-P8 should hold ("if HYP-P8 holds for KRAS specifically...
+the apo graph does not encode this pocket, a publishable finding").
+Measured directly: the pocket **does** displace more than background
+(ratio 2.27, clears this task's own 1.5× bar) — consistent with a
+cryptic/induced-fit opening — **but the cumulative overlap onto the
+apo ANM's soft modes is 0.638, well above the 0.5 "low overlap" bar**,
+meaning the apo→holo direction *is* substantially spanned by the
+low-frequency mode subspace. Per this task's own kill criterion (both
+conditions required), KRAS_G12C classifies `LEARNABLE`, not
+`UNLEARNABLE_FROM_APO`. This does not contradict the panel's separate,
+independent point (Switch-II is built from the catalytic region, so
+active/allosteric sites geometrically overlap on this target) — that is
+a labeling/observable-design problem, orthogonal to whether the *apo
+structure itself* spans the opening direction. The two explanations are
+not mutually exclusive, but only one of them is what this measurement
+actually tests, and the direct test says "the direction is there," not
+"the direction is absent." Whoever next reframes KRAS's failure (e.g. in
+a submission narrative) should cite *this* result for "is it in the apo
+topology" and the panel's Sec.4 point separately for "is the label even
+well-posed" — they are different claims with different evidence.
+
+**[OBSERVED] BCR_ABL1's pocket moves *less* than background (ratio
+0.49) — the opposite direction from a cryptic-opening signature, and
+consistent with, not contradicting, this project's own prior finding**
+(TASK-0102/TASK-0103/TASK-0104: `ground_state_relaxation`'s BCR_ABL1
+signal is an "apo-computable structural prior," not induced conformational
+change). A pocket that is already comparatively rigid/pre-formed in the
+apo structure is exactly what a low relative pocket RMSD would look
+like. Cumulative overlap is blocked (TASK-0128), but the RMSD half of
+the kill criterion already fails on its own (ratio <1.5, let alone the
+`≪` a cryptic case would need) — `PARTIAL_RMSD_ONLY`, and the available
+half points toward learnable/pre-formed, not cryptic.
+
+**[OBSERVED] CARDIAC_MYOSIN's numbers should be read alongside its own
+independent 5TBY data-quality caveat, not in place of it** (per this
+task's own In Scope note) — background RMSD itself is large (3.16 Å,
+vs. KRAS's 0.82 Å and BCR_ABL1's 0.73 Å), consistent with a genuinely
+floppier structure or a lower-quality alignment (only 709 of 950
+residues have a common apo/holo correspondence, the lowest coverage of
+the three targets, and overall alignment RMSD is 3.75 Å vs. KRAS's 1.36
+Å and BCR_ABL1's 0.98 Å) — this target's pocket-vs-background ratio
+(1.32) should not be read as a clean structural-biology result the way
+KRAS/BCR_ABL1's can.
+
+**[RESOLVED] TASK-0128 blocks cumulative overlap for 2 of 3 targets, not
+worked around here.** `anm_modes`' exactly-6-near-zero-rigid-body-mode
+assertion raises on BCR_ABL1 (n_zero=7) and CARDIAC_MYOSIN (n_zero=10) —
+confirmed live, this run. That task's own scope (determine floppiness vs.
+genuine disconnection before touching the assertion) is real diagnostic
+work this task does not preempt; `scripts/learnability_gate.py` degrades
+gracefully (reports the RMSD half, marks CO `null` with the exact
+exception, `verdict="PARTIAL_RMSD_ONLY_CO_BLOCKED"`) rather than
+silently dropping the whole target or guessing a widened threshold.
+
+Full detail: `.ai/tasks/DONE/TASK-0120-learnability-gate-hyp-p8.md`,
+`results_task0120/learnability_gate.json` (includes the full CO(m) curve
+for KRAS_G12C, not just the final value).
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -999,6 +1090,7 @@ notes: `.ai/tasks/DONE/TASK-0110-optuna-apo-holo-parameter-scan.md`,
 | 9 | Does a fully-informed ceiling search (answer key in hand, entire `H_new` physical-scalar space) beat each mandatory target's proximity floor — i.e. is there any real headroom in this operator family? | **resolved 2026-07-15: no for KRAS_G12C — the ceiling itself (0.524, 60 real trials) is *below* its own floor (0.798), the strongest form of negative result this framework can express. BCR_ABL1's ceiling (0.612) does clear its floor (0.565) but the shipped actual result (0.525) does not. CARDIAC_MYOSIN's ceiling (0.819) clears its floor (0.764, 40.7% headroom) but this is moot — `INSUFFICIENT_RESOLUTION` fires first. Full synthesis: `COMPETENCE_MAP.md`.** | [[TASK-0046]], [[TASK-0082]] |
 | 10 | Would the reported verdict change for any mandatory target if quantum coherence were randomized away — i.e. is `dephasing_sweep`'s "coherence adds ~nothing" finding actually wired into what a judge reads? | **resolved 2026-07-16: no for KRAS_G12C, formally — `auc_range=0.0132` at t_max=25 (spot-checked robust across t_max in {8,25,100} per REVIEW-panel-2026-07-16-v2 Sec.2.2's clock concern; also robust across two seed conventions per Sec.2.1), flat, floor-gated `COHERENCE_NOT_SIGNIFICANT`. BCR_ABL1/CARDIAC_MYOSIN blocked on a pre-existing, already-anticipated `calibrate_kappa` limitation (exactly-6-near-zero-mode assertion fails at n_zero=7/10) — filed as [[TASK-0128]], not silently skipped. The project-wide seed/clock gauge problem itself (Sec.2.1/2.2) remains unresolved outside this task's narrower scope.** | [[TASK-0099]], [[TASK-0128]] |
 | 11 | How far short is the shipped `t_max=15`/`n_steps=500` of `time_averaged_ctqw`'s own convergence criterion on real targets, and is reaching the corrected value practical? | **resolved 2026-07-17: 145,000x-3,950,000x short (grows with system size), and reaching it is currently uncomputable — a real call at the prescribed point did not return after 2+ hours (O(n_steps) Python loop). A capped, honestly-sampled search found real per-target ceilings instead: KRAS_G12C 0.475 (near chance, cross-checks TASK-0046's 0.525 on an independent axis), BCR_ABL1 0.583 at a *smaller* t_max=2.39 (unexploited headroom, new finding), CARDIAC_MYOSIN 0.815 (inherits that target's 5TBY caveat).** | [[TASK-0110]] |
+| 12 | Is the labeled pocket even present in the apo topology (HYP-P8), measured directly rather than inferred from other findings? | **resolved 2026-07-17, mixed and target-specific — not the clean "KRAS is cryptic" story the panel expected: KRAS_G12C classifies `LEARNABLE` (pocket RMSD 2.27x background, but cumulative overlap 0.638 — well above the 0.5 low-overlap bar — meaning the apo→holo direction IS substantially spanned by soft ANM modes, contradicting the panel's own Sec.4 prediction). BCR_ABL1's pocket moves *less* than background (ratio 0.49), consistent with its prior "apo-computable structural prior" framing (TASK-0104), not a cryptic opening. CARDIAC_MYOSIN's numbers (ratio 1.32) are confounded by its own 5TBY data-quality issue. Cumulative overlap blocked for BCR_ABL1/CARDIAC_MYOSIN by a real, separately-filed gap (`anm_modes`' rigid-body-mode assertion, [[TASK-0128]]).** | [[TASK-0120]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

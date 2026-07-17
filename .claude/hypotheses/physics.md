@@ -346,3 +346,51 @@ HYP-P8. The Phase 1 measurement will confirm it.
 quantum/classical walk methods are fundamentally limited on cryptic allosteric
 pockets, and the contribution of H_new design is bounded by the learnability of the
 problem, not by method quality.
+
+**Resolved 2026-07-17, TASK-0120 — the Phase 1 measurement this hypothesis
+itself called for (never run until now) is done, and the result is more
+nuanced than "HYP-P8 holds," not a clean confirmation.** Real Kabsch
+superposition + Tama-Sanejouand cumulative overlap, all 3 mandatory
+targets (method exactly as specified above, plus a background-RMSD
+comparison this file's own Step 3 implies but never made explicit —
+added as `superpose.background_rmsd`/`learnability_verdict`):
+
+- **KRAS_G12C: `LEARNABLE`, not cryptic-structural.** Pocket RMSD (1.863
+  Å) is 2.27x background (0.820 Å) -- real, differential displacement,
+  consistent with this file's own "KRAS prior" line above. But
+  cumulative overlap onto the apo ANM's lowest 20 modes is **0.638**,
+  well above a 0.5 low-overlap bar -- the apo→holo direction *is*
+  substantially spanned by the soft-mode subspace. This file's 2026-06-21
+  "KRAS prior" reasoning (large pocket RMSD + near-chance ceiling ⟹
+  consistent with HYP-P8) turns out to have skipped the actual
+  discriminating measurement (CO) and inferred cryptic-ness from RMSD
+  alone -- the direct test does not support that inference for this
+  target. See `RESULTS.md`'s own "Learnability gate" section for the
+  full cross-reference against `REVIEW-panel-2026-07-16-v2.md`'s
+  separate (and still valid) Switch-II/active-site-overlap point, which
+  this measurement neither confirms nor refutes -- a different claim.
+- **BCR_ABL1: pocket moves *less* than background** (ratio 0.49) --
+  the opposite signature from a cryptic opening, and consistent with
+  (not contradicting) this project's own "apo-computable structural
+  prior" finding for this target (TASK-0104).
+- **CARDIAC_MYOSIN**: confounded by its own independent 5TBY
+  data-quality issue (largest background RMSD of the three, lowest
+  apo/holo residue-correspondence coverage) -- not a clean read either
+  way.
+- Cumulative overlap is blocked for BCR_ABL1/CARDIAC_MYOSIN by
+  `anm_modes`' rigid-body-mode assertion (`n_zero=7`/`10` instead of 6),
+  a real, separately-filed gap ([[TASK-0128]]), not silently
+  worked around.
+
+**Practical upshot**: the 2026-07-15 status-update bullet below ("HYP-P8
+is now strongly supported") was built from *indirect* evidence about
+whether this pipeline's *scoring* finds real signal (seed artifacts,
+proximity confounds, localization) -- a different, broader claim than
+HYP-P8's own narrow structural one ("is the pocket in the apo topology
+at all"). Both can be true independently: the method may fail to find
+signal for reasons unrelated to whether the apo structure spans the
+opening direction. This measurement is the first direct test of the
+narrow claim, and for the one target the panel specifically named
+(KRAS_G12C) it does not confirm "unlearnable from apo" -- it points the
+other way. Full numbers: `RESULTS.md`,
+`.ai/tasks/DONE/TASK-0120-learnability-gate-hyp-p8.md`.

@@ -20,6 +20,7 @@ from allostery.superpose import (  # noqa: E402
     Alignment,
     align_apo_holo,
     anm_modes,
+    background_rmsd,
     calibrate_kappa,
     common_residues_by_resnum,
     cryptic_openness_gate,
@@ -29,6 +30,7 @@ from allostery.superpose import (  # noqa: E402
     kabsch_align,
     kabsch_apply,
     kabsch_fit,
+    learnability_verdict,
     mode_energetics,
     pocket_cross_map,
     run_superpose,
@@ -262,6 +264,104 @@ class TestCrypticOpennessGate:
         gate = cryptic_openness_gate(apo, holo, alignment, pocket_mask, rmsd_threshold=3.0)
         assert gate["pocket_open_in_apo"] is None
         assert np.isnan(gate["pocket_rmsd_mean"])
+
+
+class TestBackgroundRmsd:
+    """TASK-0120 -- the missing half of `cryptic_openness_gate`'s
+    comparison: how much does the *rest* of the structure move, so pocket
+    RMSD can be read relative to it, not in isolation."""
+
+    def test_moving_only_the_pocket_leaves_background_still(self):
+        apo = _Struct(COORDS, resnums=list(range(1, N + 1)), resnames=_SEQ3)
+        holo_coords = COORDS.copy()
+        holo_coords[5] += np.array([10.0, 0.0, 0.0])  # only residue 5 (pocket) moves
+        holo = _Struct(holo_coords, resnums=list(range(1, N + 1)), resnames=_SEQ3)
+
+        alignment = align_apo_holo(apo, holo)
+        pocket_mask = np.zeros(N, dtype=bool)
+        pocket_mask[5] = True
+
+        bg = background_rmsd(apo, holo, alignment, pocket_mask)
+        assert bg["n_background_residues"] == N - 1
+        assert bg["background_rmsd_mean"] < 1.0  # everything but residue 5 is unmoved
+
+    def test_global_rearrangement_shows_up_in_background_too(self):
+        """A globally flexible structure (every residue moves, not just the
+        pocket) must show a large background RMSD too -- this is exactly
+        the case `cryptic_openness_gate` alone cannot distinguish from a
+        genuinely pocket-specific opening."""
+        apo = _Struct(COORDS, resnums=list(range(1, N + 1)), resnames=_SEQ3)
+        rng = np.random.default_rng(0)
+        holo_coords = COORDS + rng.normal(0, 5.0, COORDS.shape)  # everything moves
+        holo = _Struct(holo_coords, resnums=list(range(1, N + 1)), resnames=_SEQ3)
+
+        alignment = align_apo_holo(apo, holo)
+        pocket_mask = np.zeros(N, dtype=bool)
+        pocket_mask[5] = True
+
+        bg = background_rmsd(apo, holo, alignment, pocket_mask)
+        assert bg["background_rmsd_mean"] > 2.0
+
+    def test_no_background_residues_returns_nan_not_crash(self):
+        apo = _Struct(COORDS, resnums=list(range(1, N + 1)), resnames=_SEQ3)
+        holo = _Struct(COORDS.copy(), resnums=list(range(1, N + 1)), resnames=_SEQ3)
+        alignment = align_apo_holo(apo, holo)
+        pocket_mask = np.ones(N, dtype=bool)  # everything is "pocket" -- no background
+
+        bg = background_rmsd(apo, holo, alignment, pocket_mask)
+        assert bg["n_background_residues"] == 0
+        assert np.isnan(bg["background_rmsd_mean"])
+
+
+class TestLearnabilityVerdict:
+    """TASK-0120 -- REVIEW-panel-2026-07-16-v2.md Sec.6's kill criterion:
+    pocket RMSD >> background RMSD AND low cumulative overlap ->
+    UNLEARNABLE_FROM_APO. Both conditions required, checked independently
+    below so a passing test can't hide either half being unwired."""
+
+    def test_large_relative_pocket_displacement_and_low_overlap_is_unlearnable(self):
+        result = learnability_verdict(
+            pocket_rmsd_mean=6.0, background_rmsd_mean=1.0, co_final=0.2,
+        )
+        assert result["verdict"] == "UNLEARNABLE_FROM_APO"
+        assert result["rmsd_ratio"] == 6.0
+
+    def test_large_relative_displacement_but_high_overlap_is_learnable(self):
+        """The displacement is real and large relative to background, but
+        it's *reachable* via the soft ANM modes (high CO) -- not the
+        anharmonic/cryptic case, so LEARNABLE despite the large RMSD ratio."""
+        result = learnability_verdict(
+            pocket_rmsd_mean=6.0, background_rmsd_mean=1.0, co_final=0.8,
+        )
+        assert result["verdict"] == "LEARNABLE"
+
+    def test_low_overlap_but_pocket_not_relatively_displaced_is_learnable(self):
+        """Low CO alone, without the pocket actually standing out from
+        background, must not trigger UNLEARNABLE -- could just be a
+        globally floppy structure or measurement noise."""
+        result = learnability_verdict(
+            pocket_rmsd_mean=1.1, background_rmsd_mean=1.0, co_final=0.1,
+        )
+        assert result["verdict"] == "LEARNABLE"
+
+    def test_zero_background_rmsd_does_not_crash(self):
+        result = learnability_verdict(
+            pocket_rmsd_mean=5.0, background_rmsd_mean=0.0, co_final=0.1,
+        )
+        assert result["verdict"] == "UNLEARNABLE_FROM_APO"
+        assert result["rmsd_ratio"] == float("inf")
+
+    def test_thresholds_are_reported_not_just_applied(self):
+        """The verdict dict must carry the exact thresholds used, so a
+        reader doesn't have to guess what '>>' meant for this particular
+        call -- TASK-0120's own Planned Validation ('state the numbers,
+        not just the label')."""
+        result = learnability_verdict(
+            pocket_rmsd_mean=3.0, background_rmsd_mean=1.0, co_final=0.3,
+            rmsd_ratio_threshold=2.0, co_threshold=0.4,
+        )
+        assert result["rmsd_ratio_threshold"] == 2.0
+        assert result["co_threshold"] == 0.4
 
 
 # ---------------------------------------------------------------------------

@@ -251,6 +251,95 @@ def cryptic_openness_gate(
     )
 
 
+def background_rmsd(apo, holo, alignment: Alignment, pocket_mask_apo: np.ndarray) -> dict:
+    """Per-residue apo->holo Ca displacement for the *non*-pocket
+    ("background") residues in the common correspondence set -- the
+    comparison `cryptic_openness_gate`'s own fixed-threshold verdict does
+    not provide (TASK-0120): is the pocket's displacement large in
+    absolute terms, or merely large relative to how much the rest of the
+    structure moves anyway (e.g. a globally flexible/multi-domain
+    target)? `REVIEW-panel-2026-07-16-v2.md` Sec.6's kill criterion is
+    pocket RMSD *relative to* background RMSD, not pocket RMSD alone --
+    this function supplies the missing half of that comparison, mirroring
+    `cryptic_openness_gate`'s own structure exactly (same common-set
+    restriction, same unmeasurable-residue accounting) rather than a
+    second, differently-shaped computation.
+    """
+    apo_idx, holo_idx = alignment.apo_idx, alignment.holo_idx
+    in_common = np.zeros(len(pocket_mask_apo), dtype=bool)
+    in_common[apo_idx] = True
+    background = (~pocket_mask_apo) & in_common
+
+    if not background.any():
+        return dict(
+            background_rmsd_mean=float("nan"),
+            background_rmsd_max=float("nan"),
+            n_background_residues=0,
+        )
+
+    apo_to_holo = dict(zip(apo_idx.tolist(), holo_idx.tolist()))
+    background_apo = np.where(background)[0]
+    background_holo = np.array([apo_to_holo[i] for i in background_apo])
+
+    disp = np.sqrt(
+        ((alignment.aligned_holo_coords[background_holo] - apo.coords[background_apo]) ** 2).sum(axis=1)
+    )
+
+    return dict(
+        background_rmsd_mean=float(disp.mean()),
+        background_rmsd_max=float(disp.max()),
+        n_background_residues=int(background.sum()),
+    )
+
+
+def learnability_verdict(
+    pocket_rmsd_mean: float,
+    background_rmsd_mean: float,
+    co_final: float,
+    *,
+    rmsd_ratio_threshold: float = 1.5,
+    co_threshold: float = 0.5,
+) -> dict:
+    """TASK-0120 -- `REVIEW-panel-2026-07-16-v2.md` Sec.6's learnability
+    kill criterion, made precise: **pocket RMSD >> background RMSD AND
+    low cumulative overlap -> `UNLEARNABLE_FROM_APO`**, otherwise
+    `LEARNABLE`. The panel states ">>"qualitatively; this function's own
+    choice (stated here, not hidden) is `pocket/background ratio >=
+    rmsd_ratio_threshold` (default 1.5, this task's own pick -- not
+    derived from literature, analogous in spirit to
+    `cumulative_overlap_gate`'s own `co_threshold=0.5` default, which
+    *is* reused here rather than re-chosen, since that quantity already
+    has an established convention in this codebase).
+
+    Both conditions are required, not either alone: a large pocket RMSD
+    by itself could just mean the whole structure is globally flexible
+    (background also large, ratio near 1) -- not evidence the pocket
+    specifically is cryptic. A low CO by itself does not distinguish a
+    genuinely anharmonic opening from measurement noise on an already-
+    small displacement. Requiring both is what makes this a *relative*,
+    two-independent-methods verdict rather than either measurement read
+    in isolation.
+    """
+    ratio = (
+        pocket_rmsd_mean / background_rmsd_mean
+        if background_rmsd_mean > 1e-9 else float("inf")
+    )
+    rmsd_much_greater = ratio >= rmsd_ratio_threshold
+    co_low = co_final < co_threshold
+    verdict = "UNLEARNABLE_FROM_APO" if (rmsd_much_greater and co_low) else "LEARNABLE"
+    return dict(
+        verdict=verdict,
+        pocket_rmsd_mean=pocket_rmsd_mean,
+        background_rmsd_mean=background_rmsd_mean,
+        rmsd_ratio=ratio,
+        rmsd_much_greater=rmsd_much_greater,
+        co_final=co_final,
+        co_low=co_low,
+        rmsd_ratio_threshold=rmsd_ratio_threshold,
+        co_threshold=co_threshold,
+    )
+
+
 # ---------------------------------------------------------------------------
 # ANM modes + Tama-Sanejouand cumulative overlap
 # ---------------------------------------------------------------------------
