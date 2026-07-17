@@ -181,6 +181,45 @@ None
   prose) is the actual error is [[TASK-0119]]'s job, done alongside its
   own clock-gauge re-run, not silently corrected in this file without
   re-deriving the numbers.
+- **Resolved 2026-07-16, [[TASK-0119]]**: neither the reported values nor
+  this task's narrative direction was the error — **the panel's
+  correction was itself mistaken**, based on assuming this task's
+  `participation_ratio` field followed `analysis._transport_
+  participation_ratio`'s convention. It does not. This script's own
+  `transport_diagnostics` calls `metrics.ipr` (`sum(v_i^4)/sum(v_i^2)^2`,
+  documented as "Inverse Participation Ratio of an eigenvector"), a
+  **different formula with the opposite convention**: `ipr` is HIGH for
+  localized, LOW for delocalized (verified numerically,
+  `tests/test_transport_diagnostics_convention.py`, on delta/uniform
+  extremes: `ipr(delta)=1.0`, `ipr(uniform)=1/N`) — exactly the reverse of
+  `_transport_participation_ratio`'s HIGH=delocalized. This script's own
+  docstring calling `ipr` "this codebase's own PR/N convention" is the
+  actual bug (a mislabeling, not a computation error) — it conflated two
+  differently-conventioned metrics that happen to share the phrase
+  "participation ratio." Under `ipr`'s real, correct convention, this
+  task's original prose (`H_new`'s higher value, 0.299, read as "markedly
+  more localized" than `H10`/`H2`'s 0.056/0.054) was **directionally
+  correct for the metric actually used** — nothing above needs a sign
+  flip. The field is better read as "`ipr` (localization index, high =
+  localized)" than "PR/N" going forward; not renamed here (no-silent-edit
+  convention), flagged for whoever next touches this script.
+- **Re-run under TASK-0119's per-operator clock (`t* = -ln(0.01)/gap`
+  instead of the shared `T_MAX=15.0`), same seed convention as this
+  task's own canonical run (single sorted-first active-site index — see
+  TASK-0119's own caveat about TASK-0118 landing concurrently, below)**:
+  `H_new_default` t*=23.8 (ipr 0.299→0.219, hop 0.89→1.08); `H_new_
+  λ=0.25` t*=63.6 (ipr 0.449→0.204, hop 1.23→1.84); `H10` t*=29.0 (ipr
+  0.056→0.035, hop 3.96→4.73); `H2` t*=57.8 (ipr 0.053→0.020, hop
+  4.46→5.51). **The localization conclusion survives the clock fix**:
+  even measured at each operator's own, much longer, proper convergence
+  time, `H_new`'s ipr (0.22/0.20) remains ~6-10x `H10`/`H2`'s (0.035/
+  0.020), and its hop-from-seed stays markedly lower — not a clock
+  artifact. **Separately, the AUC ranking shifts**: `H10` now clears the
+  real proximity floor (0.5652) at its own `t*` (AUC 0.568 > 0.565,
+  `floor_cleared` False→True) where it did not at the shared `t_max=15`
+  (0.558 < 0.565) — a real, small crossing, reported as its own finding,
+  not merged with the localization result. Full detail, both re-runs:
+  [[TASK-0119]]'s own Done section.
 - Tests: `test_ctqw_trapping_reproduction.py` (6 cases) — `λ=1` exactly
   matches default `build_H_new`; `λ=0` gives the bare Laplacian; the
   λ-scaling is verified linear on the potential block, not just at the

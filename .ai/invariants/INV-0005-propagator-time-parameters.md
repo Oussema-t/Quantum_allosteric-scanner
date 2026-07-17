@@ -28,13 +28,22 @@ that question.
 
 ## Status
 
-**KNOB rows characterized, not yet applied to any real default.** Relates
-directly to [[INV-0004]]'s own still-open KNOB row ("`t`/`t_max`/`n_steps`...
-fed to `time_averaged_ctqw` inside `focusing`/`source_specificity`... not
-characterized as a spread over a grid") — this record is `propagators.py`'s
-own side of that same gap; `INV-0004`'s row can now point here rather than
-stay a bare "OPEN," though `select.py`'s specific call sites are still
-unaudited by either record.
+**KNOB rows characterized; applied to a real re-run, not yet to any shipped
+default.** [[TASK-0119]] (2026-07-16) applied this record's `ground_state_
+relaxation` row to the real 96-cell operator sweep (all 3 mandatory targets)
+and TASK-0106's BCR_ABL1 trapping reproduction, via a standalone script
+(`scripts/fix_clock_operator_sweep.py`) — confirmed the ranking genuinely is
+`t_max`-sensitive on real data (most of CARDIAC_MYOSIN's `ctqw` floor-clears
+do not survive the corrected clock) and that `H_new`'s localization survives
+it. `analysis.py`/`ceiling.py`/`protocol.py`'s own shipped `t_max=15.0`
+defaults are still unchanged (see [[SEAM-0012]]'s own 2026-07-16 update) —
+this is real evidence the KNOB matters, not yet a fix to the KNOB's shipped
+value. Relates directly to [[INV-0004]]'s own still-open KNOB row
+("`t`/`t_max`/`n_steps`... fed to `time_averaged_ctqw` inside `focusing`/
+`source_specificity`... not characterized as a spread over a grid") — this
+record is `propagators.py`'s own side of that same gap; `INV-0004`'s row can
+now point here rather than stay a bare "OPEN," though `select.py`'s specific
+call sites are still unaudited by either record.
 
 ## Provenance
 

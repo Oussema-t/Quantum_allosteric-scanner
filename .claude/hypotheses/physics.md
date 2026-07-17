@@ -152,6 +152,25 @@ residues. If the ranking is stable → the result is t-insensitive. If it swings
 significantly → t must be locked to a principled value before any ceiling or LOPO
 result is reported.
 
+**Resolved 2026-07-16, TASK-0109/TASK-0119 — alternative 2 above implemented and
+tested on real data, not just proposed.** `propagators.min_adequate_t_max(kind=
+"ground_state_relaxation")` = `-ln(tol)/gap` (`gap` = `H`'s own spectral gap,
+`tol=1e-2`) — the same functional form as this hypothesis's own `t ≈ 1/Δλ`, with
+the log-tolerance constant made explicit. Applied per-operator across all 3
+mandatory targets' 96-cell sweep and TASK-0106's BCR_ABL1 reproduction (not a
+synthetic check only): the ranking **is** t-sensitive, confirming this
+hypothesis's own concern was real, not hypothetical — most of CARDIAC_MYOSIN's
+`ctqw` floor-clears (10 of 11) do not survive the corrected clock, while
+`H_new`/`H10`/`build_H10`'s do. Separately, `H_new`'s localization (the
+mechanism behind HYP-P8's proximity-like scoring, below) is confirmed to survive
+the fixed clock, not an artifact of `t_max=15` specifically. Full detail:
+`.ai/tasks/DONE/TASK-0119-fix-clock-per-operator-timescale.md`,
+`results_task0119/`. Alternative 1 (infinite-time average) remains this
+pipeline's separate, already-shipped headline convention (`time_averaged_ctqw`,
+TASK-0097); alternative 3 (mode-relaxation from apo→holo ANM projection) remains
+unexplored — not needed once alternative 2 answered the load-bearing question
+("is t currently a live, unaccounted-for confound") with a real yes.
+
 ---
 
 ## HYP-P7 · Coherence adds no signal for allosteric pocket prediction on these proteins
@@ -249,6 +268,16 @@ speculative when several of these are now settled:
   choice that has never been classified or registered — **no `INV-XXXX` record and no owning
   task currently exist for this**, despite it now being implicated in two separate headline
   reconciliations. Cross-referenced in [[Q-0003]] but not yet resolved into its own task.
+
+### Status update, 2026-07-16 — HYP-P6 closed out (superseding this bullet's "still TODO")
+
+The HYP-P6 bullet above ("TASK-0108/0109/0110... TASK-0109/0110 still TODO") is now
+stale: **TASK-0109** (built `check_convergence`/`min_adequate_t_max`, the `t ≈ 1/Δλ`
+tool this hypothesis called for) and **TASK-0119** (applied it — re-ran the 96-cell
+sweep and TASK-0106's BCR_ABL1 reproduction under per-operator `t*` instead of the
+shared `t_max=15`) are both Done. See HYP-P6's own entry above for the real finding
+(ranking is genuinely t-sensitive on CARDIAC_MYOSIN; `H_new`'s localization is not).
+TASK-0110 (Optuna scan) status not touched by this update — not this thread's work.
 
 ---
 

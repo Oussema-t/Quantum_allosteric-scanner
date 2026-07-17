@@ -36,3 +36,19 @@
   task actually re-runs a real target under a corrected `t_max`) is the
   one that closes this seam, not TASK-0109 itself (explicitly out of its
   own scope, see its Done section).
+- update 2026-07-16, [[TASK-0119]]: partial evidence gathered, status
+  left OPEN (not VERIFIED) — TASK-0119 re-ran `analysis.py`'s
+  `operator_sweep` (the 96-cell sweep) and TASK-0106's BCR_ABL1
+  reproduction under `min_adequate_t_max`'s per-operator `t*` via a
+  separate script (`scripts/fix_clock_operator_sweep.py`), not by
+  changing `operator_sweep`'s own `t_max: float = 15.0` default or wiring
+  the check into any production call path — real numbers now exist (most
+  of CARDIAC_MYOSIN's `ctqw` floor-clears do not survive the corrected
+  clock; `H_new`'s localization does), but every one of `analysis.py`'s 8
+  functions, `ceiling.py`'s 2, and `protocol.run_frozen_verdict` still
+  silently default to the uncorrected `t_max=15.0`/`n_steps=500` when
+  called normally — this seam's invariant is not yet true of the shipped
+  code, only demonstrated true of a parallel, offline re-run. TASK-0117
+  (`ceiling.py` specifically) remains this seam's owner; whoever
+  eventually wires a corrected clock into the real defaults (either task)
+  is the one that flips this to VERIFIED.
