@@ -139,6 +139,33 @@ at all), but it no longer bears on whether KRAS_G12C shows real
 allosteric signal from this pipeline: **it does not, under either
 number.**
 
+**[CORRECTED 2026-07-17, TASK-0112]** The 0.779-vs-0.798 margin above
+(0.019) was reported as a decided point-estimate verdict with no
+uncertainty attached — `diagnostics.classify_failure(return_ci=True)`
+(new, `metrics.block_bootstrap_ci`, 1000 resamples, block size 10,
+preserves spatial correlation in the residue ordering rather than a
+naive i.i.d. bootstrap) now attaches one. Real re-run, same `H_new`
+CTQW occupation, same `T_MAX=15.0` (this task does not also apply
+TASK-0119's clock fix — conflating the two would make it impossible to
+tell which change moved which number):
+
+| Quantity | AUC | 95% CI |
+|---|---|---|
+| Score (`H_new` CTQW) | 0.779 | [0.594, 0.932] |
+| Floor (`euclid_from_seed_centroid`) | 0.798 | [0.637, 0.936] |
+
+**The two intervals overlap.** `BEATS_CHANCE_NOT_FLOOR` remains the
+correct point-estimate category (this task does not change category
+names or ordering, only annotates them) — but the honest statement is
+**"statistically indistinguishable from the floor,"** not "fails the
+floor by 0.019." Both readings support the same practical conclusion
+already reached above (this is not confirmed signal), but for a
+different, more defensible reason: not because 0.779 is decisively below
+0.798, but because neither number is pinned down precisely enough, on
+this target's ~20-30 real pocket positives, to say which is larger.
+Full re-run: `scripts/bootstrap_ci_headline_rerun.py`,
+`results_task0112/headline_ci_rerun.json`.
+
 ### BCR_ABL1
 
 | Quantity | Value |
@@ -256,6 +283,31 @@ hit list (still 0/5) even though it would improve the reported AUC — a
 future per-target ranking-metric decision must check hit-list precision
 separately from AUC, not assume one implies the other. Full numbers and
 methodology: `.ai/tasks/DONE/TASK-0091-bcr-abl1-dephasing-sweep-investigation.md`.
+
+**[CORRECTED 2026-07-17, TASK-0112]** "Clears the floor, decisively" above
+was a point-estimate reading with no uncertainty attached. Real re-run
+with `diagnostics.classify_failure(return_ci=True)` (`metrics.
+block_bootstrap_ci`, same method as KRAS_G12C's correction above, same
+`T_MAX=15.0`):
+
+| Quantity | AUC | 95% CI |
+|---|---|---|
+| Score (`H_new` `ground_state_relaxation`) | 0.731 | [0.556, 0.866] |
+| Floor (`hop_from_seed`) | 0.565 | [0.425, 0.697] |
+
+**The two intervals overlap** — score CI's lower bound (0.556) sits below
+floor CI's upper bound (0.697). The +0.166 point-estimate margin, the
+widest floor-clearing margin measured for any mandatory target, is **not
+statistically decisive** on this target's real positive count. This does
+not reverse TASK-0102/TASK-0103/TASK-0104's mechanism finding below (GSR
+tracks the potential well, not active-site coupling — that conclusion
+rests on a controlled negative-control construction, not on this margin's
+statistical significance) — it removes a support this section's own
+point-estimate language leaned on ("decisively") that the data does not
+actually carry. Full re-run: `scripts/bootstrap_ci_headline_rerun.py`,
+`results_task0112/headline_ci_rerun.json`. (BCR_ABL1's CTQW-vs-floor
+comparison, 0.525 vs 0.565, was already `NO_SIGNAL_IN_APO` pre-CI and
+remains overlapping post-CI — no reversal, consistent.)
 
 **[CORRECTED 2026-07-13, TASK-0102 — do not read the paragraphs above as
 confirmed allosteric signal]** The finding above is corrected, not

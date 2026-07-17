@@ -22,11 +22,12 @@ diagnostics can introspect H alone, with no separate coords/adjacency input.
 """
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Callable
 
 import numpy as np
 
-from .metrics import auc as _auc, eff_rank as _eff_rank
+from .metrics import auc as _auc, block_bootstrap_ci as _block_bootstrap_ci, eff_rank as _eff_rank
 
 # notebook cell 56 thresholds, ported verbatim
 #
@@ -159,6 +160,39 @@ FAILURE_CATEGORIES = (
 )
 
 
+@dataclass
+class FailureClassification:
+    """TASK-0112 -- `classify_failure`'s `return_ci=True` return shape: the
+    same `category` a plain call would return, plus the uncertainty this
+    project's headline verdicts previously reported none of.
+
+    `score_ci`/`floor_ci` are `(auc, lower, upper)` from `metrics.
+    block_bootstrap_ci`, or `None` when not computed (either `return_ci`
+    was `False`, or `category` short-circuited before a real AUC existed
+    to bootstrap -- `OPERATOR_DEGENERATE`/`LABEL_SUSPECT`/
+    `INSUFFICIENT_RESOLUTION`, none of which have a well-formed
+    scores-vs-labels comparison to attach a CI to). `floor_ci` is the CI
+    of the single *winning* floor candidate (the one `category`'s own
+    `BEATS_CHANCE_NOT_FLOOR` check already selects as `max(floor_aucs)`),
+    not an average across every candidate.
+
+    `ci_overlap`: `True` if `score_ci`'s and `floor_ci`'s `[lower, upper]`
+    ranges intersect (the score is not statistically distinguishable from
+    the floor at this confidence level), `False` if they don't, `None` if
+    either CI is unavailable. This is reported *alongside* `category`, not
+    used to change it -- `category` is still the deterministic point-
+    estimate verdict this project's existing taxonomy already defines
+    (TASK-0112's own Constraint: "do not change `classify_failure`'s
+    category names or ordering... this task adds an uncertainty
+    annotation to existing verdicts, it is not a re-design of the
+    taxonomy").
+    """
+    category: str
+    score_ci: tuple | None = None
+    floor_ci: tuple | None = None
+    ci_overlap: bool | None = None
+
+
 def classify_failure(
     scores: np.ndarray,
     labels: np.ndarray,
@@ -169,7 +203,12 @@ def classify_failure(
     n_large: int = LARGE_N_THRESHOLD,
     diag_dominance_threshold: float = DIAG_DOMINANCE_THRESHOLD,
     floor_scores=None,
-) -> str:
+    return_ci: bool = False,
+    ci_n_boot: int = 1000,
+    ci_confidence: float = 0.95,
+    ci_block_size: int = 10,
+    ci_rng: np.random.Generator | None = None,
+) -> "str | FailureClassification":
     """Classify why a scoring result looks poor.
 
     Checked in this order -- rule out a diagnosable technical failure
@@ -222,7 +261,45 @@ def classify_failure(
        method" bar.
     6. `NO_FAILURE_DETECTED` -- none of the above; not a notebook category,
        added so this function is total over well-scoring inputs too.
+
+    TASK-0112: `return_ci=True` returns a `FailureClassification` (category
+    + `score_ci`/`floor_ci`/`ci_overlap`, see that dataclass's own
+    docstring) instead of the bare category string -- `return_ci=False`
+    (the default) is byte-identical to this function's pre-TASK-0112
+    behavior, every existing call site untouched. CI is only computed once
+    `scores`/`labels` are well-formed enough for `score_auc` to mean
+    anything -- `OPERATOR_DEGENERATE`/`LABEL_SUSPECT`/
+    `INSUFFICIENT_RESOLUTION` always return `score_ci=None`/`floor_ci=None`/
+    `ci_overlap=None`, a technical failure has no AUC to bootstrap. Uses
+    `metrics.block_bootstrap_ci`, documented to preserve local spatial
+    correlation in the residue ordering -- not a naive i.i.d. resample,
+    per this task's own Constraint.
     """
+    def _result(category: str, score_auc_: float | None = None,
+                floor_candidates: list | None = None, floor_aucs: list | None = None):
+        if not return_ci:
+            return category
+        score_ci = floor_ci = ci_overlap = None
+        if score_auc_ is not None:
+            score_ci = _block_bootstrap_ci(
+                np.asarray(scores), labels_arr, n_boot=ci_n_boot,
+                confidence=ci_confidence, block_size=ci_block_size, rng=ci_rng,
+            )
+            if floor_candidates and floor_aucs:
+                finite = [(a, c) for a, c in zip(floor_aucs, floor_candidates) if not np.isnan(a)]
+                if finite:
+                    _, winning = max(finite, key=lambda ac: ac[0])
+                    floor_ci = _block_bootstrap_ci(
+                        np.asarray(winning), labels_arr, n_boot=ci_n_boot,
+                        confidence=ci_confidence, block_size=ci_block_size, rng=ci_rng,
+                    )
+            if score_ci is not None and floor_ci is not None:
+                _, s_lo, s_hi = score_ci
+                _, f_lo, f_hi = floor_ci
+                if not (np.isnan(s_lo) or np.isnan(f_lo)):
+                    ci_overlap = bool(s_lo <= f_hi and f_lo <= s_hi)
+        return FailureClassification(category, score_ci, floor_ci, ci_overlap)
+
     diag = None
     if H is not None:
         diag = operator_diagnostics(
@@ -230,28 +307,33 @@ def classify_failure(
             diag_dominance_threshold=diag_dominance_threshold,
         )
         if diag["n_components"] > 1:
-            return OPERATOR_DEGENERATE
+            return _result(OPERATOR_DEGENERATE)
 
     labels_arr = np.asarray(labels).astype(int)
     if labels_arr.sum() == 0 or labels_arr.sum() == len(labels_arr):
-        return LABEL_SUSPECT
+        return _result(LABEL_SUSPECT)
 
     if diag is not None and (diag["b_all_zero"] or diag["N"] > n_large):
-        return INSUFFICIENT_RESOLUTION
+        return _result(INSUFFICIENT_RESOLUTION)
 
     score_auc = _auc(np.asarray(scores), labels_arr)
-    if np.isnan(score_auc) or abs(score_auc - 0.5) < auc_chance_tol:
-        return NO_SIGNAL_IN_APO
 
+    floor_candidates = None
+    floor_aucs = None
     if floor_scores is not None:
         floor_stack = np.asarray(floor_scores)
-        candidates = [floor_stack] if floor_stack.ndim == 1 else list(floor_stack)
-        floor_aucs = [_auc(np.asarray(c), labels_arr) for c in candidates]
+        floor_candidates = [floor_stack] if floor_stack.ndim == 1 else list(floor_stack)
+        floor_aucs = [_auc(np.asarray(c), labels_arr) for c in floor_candidates]
+
+    if np.isnan(score_auc) or abs(score_auc - 0.5) < auc_chance_tol:
+        return _result(NO_SIGNAL_IN_APO, score_auc, floor_candidates, floor_aucs)
+
+    if floor_aucs is not None:
         finite_floor_aucs = [a for a in floor_aucs if not np.isnan(a)]
         if finite_floor_aucs and score_auc <= max(finite_floor_aucs):
-            return BEATS_CHANCE_NOT_FLOOR
+            return _result(BEATS_CHANCE_NOT_FLOOR, score_auc, floor_candidates, floor_aucs)
 
-    return NO_FAILURE_DETECTED
+    return _result(NO_FAILURE_DETECTED, score_auc, floor_candidates, floor_aucs)
 
 
 # ---------------------------------------------------------------------------

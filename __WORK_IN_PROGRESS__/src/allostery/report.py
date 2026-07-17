@@ -225,6 +225,40 @@ def verdict_template(results: dict, *, provenance: str = "dev") -> str:
     ):
         lines.append(f"  {key:30s} : {fmt(key)}")
 
+    # TASK-0112: _diagnosis was computed (protocol.run_frozen_verdict, via
+    # diagnostics.classify_failure) but never rendered here at all before
+    # this task -- the category plus its block-bootstrap CI (both the
+    # scored operator's and the winning floor candidate's), and whether
+    # the two intervals overlap (statistically indistinguishable from the
+    # floor, not just a smaller point estimate). Missing keys (a `results`
+    # dict from before this task, or `return_ci` not used) render "N/A"/
+    # omit the overlap line, same missing-key convention as the headline
+    # block above -- not a crash.
+    diagnosis = results.get("_diagnosis")
+    if diagnosis is not None:
+        lines.append("")
+        lines.append(f"  {'_diagnosis':30s} : {diagnosis}")
+
+        def _fmt_ci(ci):
+            if ci is None:
+                return "N/A"
+            point, lo, hi = ci
+            return f"{point:.3f}  [{lo:.3f}, {hi:.3f}] (95% block-bootstrap CI)"
+
+        score_ci = results.get("_diagnosis_score_ci")
+        floor_ci = results.get("_diagnosis_floor_ci")
+        if score_ci is not None or floor_ci is not None:
+            lines.append(f"  {'score 95% CI':30s} : {_fmt_ci(score_ci)}")
+            lines.append(f"  {'floor 95% CI':30s} : {_fmt_ci(floor_ci)}")
+            overlap = results.get("_diagnosis_ci_overlap")
+            if overlap is not None:
+                lines.append(
+                    f"  {'CIs overlap?':30s} : "
+                    + ("YES -- statistically indistinguishable from the floor at this confidence level"
+                       if overlap else
+                       "NO -- score is statistically distinguishable from the floor")
+                )
+
     lines.append("")
     lines.append("DECISION-SUPPORT RECOMMENDATION")
     lines.append("-" * 32)

@@ -337,6 +337,7 @@ def run_frozen_verdict(
     apo_idx=None,
     holo_idx=None,
     consistency_k: int = 20,
+    coherent: bool = True,
 ) -> dict:
     """Select an operator/parameter config for `target_name` blind to its
     labels, then score and stamp the result -- the safety-critical core of
@@ -383,6 +384,14 @@ def run_frozen_verdict(
     here rather than silently rendered as a clean verdict) and
     `results["_winner_index"]`/`results["_winner_score"]` (the winning
     candidate's position and `unsupervised_score` value, for audit).
+
+    `coherent` (TASK-0118): passed straight through to `benchmark`'s and
+    every `quantum_vs_classical` call's own `coherent` parameter (apo and
+    holo alike) -- does *not* reach `select_frozen_config`/
+    `unsupervised_score`'s own internal scoring (`select.py`'s label-free
+    selection heuristics stay on the coherent superposition they were
+    built and tested against; this parameter only affects the reported
+    AUCs, not which candidate wins).
     """
     from .analysis import (
         ablation,
@@ -398,7 +407,7 @@ def run_frozen_verdict(
 
         bench = benchmark(
             coords, bfactors, source, labels,
-            cutoff=cutoff, t_max=t_max, n_steps=n_steps,
+            cutoff=cutoff, t_max=t_max, n_steps=n_steps, coherent=coherent,
         )
         abl = ablation(
             coords, bfactors, source, labels,
@@ -407,20 +416,25 @@ def run_frozen_verdict(
         )
         qvc = quantum_vs_classical(
             winner["H"], winner.get("source", source), labels,
-            t_max=winner.get("t", t_max), n_steps=n_steps,
+            t_max=winner.get("t", t_max), n_steps=n_steps, coherent=coherent,
         )
 
-        diagnosis = classify_failure(
+        # TASK-0112: return_ci=True attaches a block-bootstrap CI to both
+        # the scored operator and the winning floor candidate -- `_diagnosis`
+        # itself stays a bare str (every existing reader of that key is
+        # untouched), the CI rides alongside in three new, additive keys.
+        classification = classify_failure(
             qvc["ctqw"]["occ"], labels, H=winner["H"], bfactors=bfactors,
-            floor_scores=floor_scores,
+            floor_scores=floor_scores, return_ci=True,
         )
+        diagnosis = classification.category
 
         consistency = None
         auc_holo_optimised = None
         if holo_H is not None and holo_labels is not None:
             holo_qvc = quantum_vs_classical(
                 holo_H, holo_source, holo_labels,
-                t_max=winner.get("t", t_max), n_steps=n_steps,
+                t_max=winner.get("t", t_max), n_steps=n_steps, coherent=coherent,
             )
             auc_holo_optimised = _finite_or_none(holo_qvc["ctqw"]["AUC"])
             if apo_idx is not None and holo_idx is not None:
@@ -438,6 +452,9 @@ def run_frozen_verdict(
             auc_holo_optimised=auc_holo_optimised,
         )
         assembled["_diagnosis"] = diagnosis
+        assembled["_diagnosis_score_ci"] = classification.score_ci
+        assembled["_diagnosis_floor_ci"] = classification.floor_ci
+        assembled["_diagnosis_ci_overlap"] = classification.ci_overlap
         assembled["_winner_index"] = winner["index"]
         assembled["_winner_score"] = winner["score"]
 

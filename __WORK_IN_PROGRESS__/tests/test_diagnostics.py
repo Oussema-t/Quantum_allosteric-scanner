@@ -13,6 +13,7 @@ from allostery.diagnostics import (
     NO_SIGNAL_IN_APO,
     OPERATOR_DEGENERATE,
     PERM_LEAK_THRESHOLD,
+    FailureClassification,
     classify_failure,
     detect_permutation_leak,
     operator_diagnostics,
@@ -387,3 +388,101 @@ class TestPermutationNullLeakDetector:
         # An absurdly low threshold trivially flags even the honest scorer --
         # confirms `threshold` is actually wired through, not ignored.
         assert result["leak_detected"] is True
+
+
+class TestClassifyFailureBootstrapCI:
+    """TASK-0112 -- wires `metrics.block_bootstrap_ci` into `classify_
+    failure` via `return_ci=True`, so a floor-vs-score verdict can state
+    whether it's statistically decisive, not just which point estimate is
+    larger. `return_ci=False` (the default, every pre-existing call site)
+    must stay byte-identical to pre-TASK-0112 behavior -- checked first,
+    below, before anything about the new path."""
+
+    N = 80
+    _rng = np.random.default_rng(7)
+    LABELS = np.zeros(N, dtype=int)
+    LABELS[:20] = 1
+
+    def test_default_return_ci_false_is_unchanged_bare_str(self):
+        """Regression guard: return_ci defaults to False, and every
+        existing caller (protocol.py/analysis.py, none of which pass
+        return_ci) must keep getting a bare category string, not the new
+        dataclass -- this is the actual backward-compatibility contract,
+        not just a docstring claim."""
+        scores = self._rng.normal(0, 1, self.N)
+        result = classify_failure(scores, self.LABELS)
+        assert isinstance(result, str)
+        assert result in (NO_SIGNAL_IN_APO, BEATS_CHANCE_NOT_FLOOR, NO_FAILURE_DETECTED)
+
+    def test_return_ci_true_gives_failure_classification_with_same_category(self):
+        scores = self._rng.normal(0, 1, self.N)
+        bare = classify_failure(scores, self.LABELS)
+        rich = classify_failure(scores, self.LABELS, return_ci=True)
+        assert isinstance(rich, FailureClassification)
+        assert rich.category == bare  # CI annotation must not change the verdict itself
+
+    def test_technical_failure_categories_never_get_a_ci(self):
+        """OPERATOR_DEGENERATE/LABEL_SUSPECT/INSUFFICIENT_RESOLUTION have no
+        well-formed AUC to bootstrap -- return_ci=True must not silently
+        fabricate one."""
+        disconnected = _helix_coords(6)
+        far = _helix_coords(6, offset=1000.0)
+        coords = np.vstack([disconnected, far])
+        H = build_H_new(coords, np.full(12, 20.0), cutoff=10.0)
+        labels = np.zeros(12, dtype=int)
+        labels[[1, 7]] = 1
+        result = classify_failure(np.zeros(12), labels, H=H, return_ci=True)
+        assert result.category == OPERATOR_DEGENERATE
+        assert result.score_ci is None
+        assert result.floor_ci is None
+        assert result.ci_overlap is None
+
+        all_zero_labels = np.zeros(self.N, dtype=int)
+        result2 = classify_failure(self._rng.normal(0, 1, self.N), all_zero_labels, return_ci=True)
+        assert result2.category == LABEL_SUSPECT
+        assert result2.score_ci is None
+
+    def test_decisive_separation_gives_non_overlapping_cis(self):
+        """Planned Validation, case 1: a case where the true floor/score
+        gap is known to be decisive -- CI must NOT overlap."""
+        scores = self.LABELS * 3.0 + self._rng.normal(0, 0.3, self.N)
+        floor = self._rng.normal(0, 1, self.N)  # pure noise, no real signal
+        result = classify_failure(scores, self.LABELS, floor_scores=floor, return_ci=True)
+        assert result.category == NO_FAILURE_DETECTED
+        assert result.ci_overlap is False
+        score_auc, score_lo, score_hi = result.score_ci
+        floor_auc, floor_lo, floor_hi = result.floor_ci
+        assert score_lo > floor_hi  # score's CI sits entirely above the floor's
+
+    def test_noise_level_gap_gives_overlapping_cis(self):
+        """Planned Validation, case 2: a case where the true floor/score
+        gap is known to be within noise -- CI must overlap, proving the
+        wiring is sensitive in both directions, not just plumbed through."""
+        scores = self.LABELS * 0.05 + self._rng.normal(0, 1, self.N)
+        floor = self.LABELS * 0.03 + self._rng.normal(0, 1, self.N)
+        result = classify_failure(scores, self.LABELS, floor_scores=floor, return_ci=True)
+        assert result.ci_overlap is True
+
+    def test_floor_ci_is_the_winning_candidate_not_an_average(self):
+        """Multiple floor_scores candidates: floor_ci must be computed on
+        whichever single candidate classify_failure's own point-estimate
+        logic already selects as the winner (max AUC), matching
+        BEATS_CHANCE_NOT_FLOOR's own existing "beats the strongest
+        baseline" semantics (TASK-0094) -- not a blend across candidates."""
+        scores = self.LABELS * 0.4 + self._rng.normal(0, 1, self.N)
+        weak_floor = self._rng.normal(0, 1, self.N)
+        strong_floor = self.LABELS * 1.5 + self._rng.normal(0, 0.3, self.N)
+        result = classify_failure(
+            scores, self.LABELS, floor_scores=[weak_floor, strong_floor], return_ci=True,
+        )
+        from allostery.metrics import auc as _auc, block_bootstrap_ci as _bbci
+        expected_floor_ci = _bbci(strong_floor, self.LABELS)
+        assert result.floor_ci == expected_floor_ci
+
+    def test_ci_reproducible_with_explicit_rng_seed(self):
+        """Same seed in, same CI out -- block_bootstrap_ci's own
+        reproducibility contract must survive being wired through here."""
+        scores = self._rng.normal(0, 1, self.N)
+        r1 = classify_failure(scores, self.LABELS, return_ci=True, ci_rng=np.random.default_rng(3))
+        r2 = classify_failure(scores, self.LABELS, return_ci=True, ci_rng=np.random.default_rng(3))
+        assert r1.score_ci == r2.score_ci
