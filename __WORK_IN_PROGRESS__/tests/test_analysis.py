@@ -482,6 +482,43 @@ class TestOperatorSweep:
         )
         assert all(r["apo_holo_consistency"] is None for r in rows)
 
+    def test_coherent_flag_reaches_ctqw_not_ground_state(self, monkeypatch):
+        """TASK-0118/TASK-0129: defaults to `coherent=True`, and the flag
+        reaches `time_averaged_ctqw`'s `ctqw`-row call but never
+        `ground_state_relaxation` (already an incoherent classical mixture
+        by construction) -- checked via a spy, not an AUC-level difference
+        (AUC is rank-based and happens to be invariant to this specific
+        perturbation on this small synthetic fixture, same caveat as
+        `test_ceiling.py`/`test_protocol.py`'s equivalent fixes)."""
+        from allostery import propagators as propagators_mod
+
+        seen = []
+        real_fn = propagators_mod.time_averaged_ctqw
+
+        def _spy(*args, **kwargs):
+            seen.append(kwargs.get("coherent", True))
+            return real_fn(*args, **kwargs)
+
+        monkeypatch.setattr(propagators_mod, "time_averaged_ctqw", _spy)
+        multi_source = [0, 1, 2]
+        floor_scores = [
+            degree_centrality(COORDS, cutoff=10.0),
+            euclid_from_seed_centroid(COORDS, multi_source),
+            hop_from_seed(COORDS, multi_source, cutoff=10.0),
+        ]
+        operator_sweep(
+            COORDS, BFACTORS, multi_source, LABELS, floor_scores,
+            cutoff=10.0, operators=["H_new"], propagators=["ctqw"], t_max=5.0, n_steps=50,
+        )
+        assert seen == [True]
+        seen.clear()
+        operator_sweep(
+            COORDS, BFACTORS, multi_source, LABELS, floor_scores,
+            cutoff=10.0, operators=["H_new"], propagators=["ctqw"], t_max=5.0, n_steps=50,
+            coherent=False,
+        )
+        assert seen == [False]
+
     def test_disconnected_operator_is_flagged_operator_degenerate(self):
         """Regression guard: an earlier version of operator_sweep did not
         pass H/bfactors into classify_failure at all, which silently

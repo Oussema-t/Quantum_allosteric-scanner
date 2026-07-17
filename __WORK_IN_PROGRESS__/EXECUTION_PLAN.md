@@ -117,7 +117,7 @@ drift again as soon as the next task lands.
 
 | Done | In Progress | TODO | Total distinct IDs referenced |
 |---|---|---|---|
-| 49 (TASK-0004, 0005, 0018, 0037, 0046, 0047, 0050, 0052, 0055, 0056, 0058, 0063, 0064, 0066, 0067, 0068, 0070, 0071, 0074, 0075, 0079, 0080, 0081, 0082, 0088, 0090, 0091, 0092, 0093, 0094, 0095, 0096, 0097, 0099, 0100, 0101, 0102, 0103, 0104, 0105, 0106, 0108, 0109, 0110, 0112, 0118, 0119, 0120, 0128) | 1 (TASK-0023) | 32 (TASK-0015, 0021, 0022, 0040, 0044, 0054, 0072, 0073, 0076, 0077, 0078, 0083, 0084, 0085, 0086, 0087, 0089, 0098, 0113, 0114, 0115, 0116, 0117, 0121, 0122, 0123, 0124, 0125, 0126, 0127, 0129, 0130) | 82 |
+| 50 (TASK-0004, 0005, 0018, 0037, 0046, 0047, 0050, 0052, 0055, 0056, 0058, 0063, 0064, 0066, 0067, 0068, 0070, 0071, 0074, 0075, 0079, 0080, 0081, 0082, 0088, 0090, 0091, 0092, 0093, 0094, 0095, 0096, 0097, 0099, 0100, 0101, 0102, 0103, 0104, 0105, 0106, 0108, 0109, 0110, 0112, 0118, 0119, 0120, 0128, 0129) | 1 (TASK-0023) | 31 (TASK-0015, 0021, 0022, 0040, 0044, 0054, 0072, 0073, 0076, 0077, 0078, 0083, 0084, 0085, 0086, 0087, 0089, 0098, 0113, 0114, 0115, 0116, 0117, 0121, 0122, 0123, 0124, 0125, 0126, 0127, 0130) | 82 |
 
 **Note on the growing total:** the plan's scope keeps genuinely growing, not drifting —
 Phase 1B added ~20 IDs (TASK-0091–0106), the 2026-07-15 gap audits added TASK-0108–0117,
@@ -255,7 +255,7 @@ priority ordering (P0 → P1 → P2) — do not reorder without a stated reason.
 | 1C.11 | **[FILED] TASK-0127 — extend the ASD generalization set; make it the reported headline** | Mitigates ~15 human review cycles over the same 3 answer keys — `frozen_context` gates code-level multiple comparisons, nothing gates the reviewers. **Soft-blocked on 1C.2/1C.3/1C.6** — running this against a still-gauge-contaminated pipeline just reproduces the same undetermined state on more targets. | TODO |
 | 1C.12 | **[FILED] TASK-0125 — verify c-Myc/1NKP resnum numbering** | `keep_nucleic: true` risks the hit list silently reporting DNA nucleotide indices as residues — cheap check, real reputational risk if wrong ("a referee will spot 'residue 943' instantly"). | TODO |
 | 1C.13 | **[EXISTS] TASK-0054 — SE(3) invariance regression** | Panel P2-12, re-affirmed as still relevant alongside the other gauge fixes. | TODO |
-| 1C.14 | **[FILED] TASK-0129 — combined seed+clock re-run** | 1C.2 (TASK-0118) and 1C.3 (TASK-0119) landed independently, same day, neither combined with the other — every number either reports is fixed on only one axis. **Now the single highest-priority open item**: neither `COMPETENCE_MAP.md` recompute is the pipeline's actual current state until this lands. **Hard unblocked** — both dependencies Done. | TODO |
+| 1C.14 | **[FILED] TASK-0129 — combined seed+clock re-run** | 1C.2 (TASK-0118) and 1C.3 (TASK-0119) landed independently, same day, neither combined with the other — every number either reports is fixed on only one axis. **Now the single highest-priority open item**: neither `COMPETENCE_MAP.md` recompute is the pipeline's actual current state until this lands. **Hard unblocked** — both dependencies Done. | **Done (2026-07-18).** Extended `fix_clock_operator_sweep.py` in place; new `combined_competence_map_rerun.py`; added `coherent` to `analysis.operator_sweep`. **Headline: CARDIAC_MYOSIN's TASK-0118-only positive (+75.1% headroom) does not survive the clock fix** — combined actual AUC 0.7912 lands 0.0009 below its own floor (cross-validated via 2 independent code paths). No mandatory target's shipped actual clears its own floor under the fully corrected convention; real ceiling headroom exists for all three, reached by none. Flagged not resolved: tension with TASK-0110's BCR_ABL1 short-`t_max` finding (0.5829 at `t_max=2.39`, better than either convergence-motivated `t*`), and a spectral-gap reproducibility discrepancy vs TASK-0119's own recorded BCR_ABL1 value. `COMPETENCE_MAP.md` fully recomputed (2nd SUPERSEDED layer, old numbers preserved). |
 | 1C.15 | **[FILED] TASK-0130 — `time_averaged_ctqw`'s own convergence criterion is computationally infeasible** | TASK-0110 found `min_adequate_t_max(kind="time_averaged_ctqw")` prescribes `n_steps` in the millions on all 3 real targets — a single call didn't return after 2+ hours. Fix: compute the infinite-time closed form directly (already known to match at Spearman 0.9998) instead of chasing a bigger practical cap. Not blocking 1C.14. | TODO |
 
 **Scaffold hygiene found and fixed while reconciling this phase, 2026-07-16/17**: two
@@ -611,6 +611,20 @@ real data (prescribed `n_steps` in the millions; a real call didn't return after
 — filed as **1C.15 (TASK-0130)**, not blocking 1C.14. A scaffold hygiene defect (two
 concurrent threads both claiming `INV-0005`) was found and fixed the same pass (see Phase
 1C's own note above); **[[Q-0003]]** is formally closed.
+
+**Updated 2026-07-18: 1C.14 (TASK-0129) is Done — the combined seed+clock re-run
+landed.** This is the load-bearing result Phase 1C exists to produce: under the fully
+corrected convention (one seed convention, one per-operator clock, together),
+**CARDIAC_MYOSIN's positive result — the only mandatory-target actual-clears-floor
+result at any point in this project's history — did not survive.** All three mandatory
+targets now read the same way: real ceiling-vs-floor headroom exists in `H_new`'s
+physical-scalar space, the shipped default configuration reaches it on none of them.
+`COMPETENCE_MAP.md` is current as of this update. Two items found and flagged, not
+resolved (out of TASK-0129's own scope, "does not design a third fix"): TASK-0110's
+BCR_ABL1 short-`t_max` finding is in real tension with the per-operator clock's own
+prescription (shorter beats longer), and a BCR_ABL1 spectral-gap reproducibility
+question against TASK-0119's own recorded number. Neither blocks reading the headline
+above as this project's current, honestly-reported state.
 
 **Updated 2026-07-13:** 5.1 is Done, but its output is not yet trustworthy as reported —
 Phase 1B is now load-bearing on the critical path, inserted between 5.1 and 5.2. **1B.1

@@ -782,6 +782,8 @@ def operator_sweep(
     propagators=("ctqw", "ground_state"),
     t_max: float = 15.0,
     n_steps: int = 500,
+    *,
+    coherent: bool = True,
 ) -> list:
     """Score every named operator, through every named propagator, against
     `pocket_label` and TASK-0094's proximity floor. Tier-1 (descriptive)
@@ -791,6 +793,12 @@ def operator_sweep(
 
     `operators`: iterable of registry names, or `None` for all 16.
     `propagators`: iterable of `{"ctqw", "ground_state"}`.
+
+    `coherent` (TASK-0118/TASK-0129): passed straight through to the
+    `"ctqw"` propagator's `time_averaged_ctqw` call -- see that function's
+    own docstring. `"ground_state"` (`ground_state_relaxation`) is
+    unaffected either way (already an incoherent classical mixture over a
+    multi-index `source` by construction).
 
     An individual cell's failure (e.g. `H13`'s 3N x 3N shape, incompatible
     with residue-indexed scoring -- checked explicitly below, not left to
@@ -812,7 +820,7 @@ def operator_sweep(
     from .propagators import time_averaged_ctqw as _ctqw_fn
 
     propagator_fns = {
-        "ctqw": lambda H, source_: _ctqw_fn(H, t_max, source=source_, n_steps=n_steps),
+        "ctqw": lambda H, source_: _ctqw_fn(H, t_max, source=source_, n_steps=n_steps, coherent=coherent),
         "ground_state": lambda H, source_: _gsr_fn(H, t_max, source=source_),
     }
 
