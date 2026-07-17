@@ -59,6 +59,23 @@ Add repeated failure patterns, false assumptions, or tool traps that should not 
   > floor` before reporting headroom" lesson stands regardless; whether *this specific
   instance* (`ceiling < floor` for KRAS_G12C) survives denser search / validated
   propagator parameters is now separately tracked by those two tasks, not yet resolved.
+- **Resolution, 2026-07-16 ([[TASK-0118]]):** the specific instance *did not survive* --
+  but not for either reason above. `REVIEW-panel-2026-07-16-v2` found the ceiling
+  (0.524) and floor (0.798) that triggered this pitfall's own negative-denominator
+  discovery had been computed under two *different* seed conventions
+  (`ceiling_search_batched.py`'s full active-site array vs. `run_challenge.py`'s
+  single-index crash workaround, [[TASK-0090]]) -- not a real ceiling-vs-floor
+  comparison at all. This pitfall's own lesson ("check `ceiling > floor` explicitly")
+  is one level too shallow on its own: it caught the negative-denominator *symptom*
+  correctly, but the root cause was a silent unit mismatch between the two operands,
+  not a genuine floor-ceiling inversion. Under one corrected convention, KRAS_G12C's
+  ceiling (0.5269) clears its floor (0.4818) by +0.045 -- full numbers:
+  `COMPETENCE_MAP.md`, `.ai/invariants/INV-0006`. **Extended corollary**: before
+  trusting *any* cross-quantity comparison (ceiling vs. floor, apo vs. holo, old run
+  vs. new run), confirm both sides were computed under the same gauge/convention, not
+  just that the comparison's arithmetic is well-defined -- a negative or nonsensical
+  result is one symptom of a unit mismatch, but a plausible-looking result can hide
+  the same mismatch just as easily.
 
 ## P-0003 — Spot-check a new metric's own KNOB parameters before shipping its classification, not just its unit tests
 

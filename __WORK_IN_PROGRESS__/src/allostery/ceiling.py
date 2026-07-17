@@ -96,6 +96,7 @@ def consistency_score(
     holo_resnames=None,
     t_max: float = 15.0,
     n_steps: int = 500,
+    coherent: bool = True,
 ) -> dict:
     """notebook cell 43's `consistency_score`, ported verbatim (Intent
     Contract): `S = 0.5*(AUC_apo+AUC_holo) - 0.25*|AUC_apo-AUC_holo| +
@@ -103,6 +104,9 @@ def consistency_score(
     on both apo and holo while penalising an apo/holo split ("a setting
     that overfits to apo but breaks holo is penalised", notebook's own
     rationale).
+
+    `coherent` (TASK-0118): passed straight through to `time_averaged_ctqw`
+    for both apo and holo occupations -- see that function's own docstring.
 
     Holo scoring is entirely optional (omit `holo_coords`/`holo_pocket`
     for an apo-only search) -- when omitted, or when holo's own pocket
@@ -133,7 +137,7 @@ def consistency_score(
 
     y_a = np.asarray(apo_pocket).astype(int)
     H_a = _build(apo_coords, apo_bfactors)
-    occ_a = time_averaged_ctqw(H_a, t_max, source=apo_source, n_steps=n_steps)
+    occ_a = time_averaged_ctqw(H_a, t_max, source=apo_source, n_steps=n_steps, coherent=coherent)
     auc_a = auc_fn(occ_a, y_a) if y_a.sum() >= 3 else float("nan")
 
     auc_h = float("nan")
@@ -141,7 +145,7 @@ def consistency_score(
     if holo_coords is not None and holo_pocket is not None:
         y_h = np.asarray(holo_pocket).astype(int)
         H_h = _build(holo_coords, holo_bfactors)
-        occ_h = time_averaged_ctqw(H_h, t_max, source=holo_source, n_steps=n_steps)
+        occ_h = time_averaged_ctqw(H_h, t_max, source=holo_source, n_steps=n_steps, coherent=coherent)
         if y_h.sum() >= 3 and (len(y_h) - y_h.sum()) >= 3:
             auc_h = auc_fn(occ_h, y_h)
         if apo_resnames is not None and holo_resnames is not None:
@@ -189,6 +193,7 @@ def ceiling_search(
     seed: int = 7,
     t_max: float = 15.0,
     n_steps: int = 500,
+    coherent: bool = True,
 ) -> dict:
     """Random search driver over `consistency_score` (notebook cell 43's
     `OPT[name] = ...` loop, `N_trials=60` default matching the notebook),
@@ -196,6 +201,9 @@ def ceiling_search(
     sanctioned leakage (the search reads `apo_pocket`/`holo_pocket`, the
     answer key, by design; this call site marks that fact rather than
     leaving it implicit, per TASK-0006's Constraint).
+
+    `coherent` (TASK-0118): passed straight through to every trial's
+    `consistency_score` call -- see that function's own docstring.
 
     `seed=7` matches the notebook's own `np.random.default_rng(7)` --
     reproducing the notebook's exact trial sequence for the cross-check
@@ -227,7 +235,7 @@ def ceiling_search(
                     apo_resnames=apo_resnames,
                     holo_coords=holo_coords, holo_bfactors=holo_bfactors,
                     holo_source=holo_source, holo_pocket=holo_pocket, holo_resnames=holo_resnames,
-                    t_max=t_max, n_steps=n_steps,
+                    t_max=t_max, n_steps=n_steps, coherent=coherent,
                 )
             except Exception:
                 continue

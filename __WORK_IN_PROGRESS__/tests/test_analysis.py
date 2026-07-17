@@ -83,6 +83,19 @@ class TestQuantumVsClassical:
         out = quantum_vs_classical(L, source=[0, 1, 2], t_max=5.0, n_steps=50)
         assert out["ctqw"].sum() == pytest.approx(1.0, abs=1e-6)
 
+    def test_coherent_flag_passes_through_and_defaults_true(self):
+        """TASK-0118: `coherent` reaches `time_averaged_ctqw` -- the
+        default (unset) call must match an explicit `coherent=True` call
+        exactly, and `coherent=False` must differ for a genuine
+        multi-index source (the whole point of the parameter)."""
+        L = H2_combinatorial_laplacian(COORDS, cutoff=10.0)
+        default = quantum_vs_classical(L, source=[0, 1, 2], t_max=5.0, n_steps=50)
+        explicit_true = quantum_vs_classical(L, source=[0, 1, 2], t_max=5.0, n_steps=50, coherent=True)
+        incoherent = quantum_vs_classical(L, source=[0, 1, 2], t_max=5.0, n_steps=50, coherent=False)
+        np.testing.assert_array_equal(default["ctqw"], explicit_true["ctqw"])
+        assert not np.allclose(default["ctqw"], incoherent["ctqw"])
+        assert incoherent["ctqw"].sum() == pytest.approx(1.0, abs=1e-6)
+
 
 # ---------------------------------------------------------------------------
 # ablation
@@ -111,6 +124,13 @@ class TestBenchmark:
         assert set(result) == {"H_new_default", "H10_disorder_suppressed"}
         assert "AUC" in result["H_new_default"]
         assert "AUC" in result["H10_disorder_suppressed"]
+
+    def test_coherent_flag_passes_through_to_both_operators(self):
+        multi_source = [0, 1, 2]
+        coherent = benchmark(COORDS, BFACTORS, source=multi_source, labels=LABELS, t_max=5.0, n_steps=50, coherent=True)
+        incoherent = benchmark(COORDS, BFACTORS, source=multi_source, labels=LABELS, t_max=5.0, n_steps=50, coherent=False)
+        assert not np.allclose(coherent["H_new_default"]["occ"], incoherent["H_new_default"]["occ"])
+        assert not np.allclose(coherent["H10_disorder_suppressed"]["occ"], incoherent["H10_disorder_suppressed"]["occ"])
 
 
 # ---------------------------------------------------------------------------

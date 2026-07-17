@@ -57,6 +57,8 @@ def quantum_vs_classical(
     labels: np.ndarray | None = None,
     t_max: float = 15.0,
     n_steps: int = 500,
+    *,
+    coherent: bool = True,
 ) -> dict:
     """CTQW vs `propagators.ground_state_relaxation` on the *same* H.
 
@@ -87,10 +89,16 @@ def quantum_vs_classical(
     just the occupation vector if `labels` is None) -- key names kept as
     short internal labels, not a physics claim; see the correction above
     for what "heat" actually means when `H` is indefinite.
+
+    `coherent` (TASK-0118): passed straight through to `time_averaged_ctqw`
+    -- `ground_state_relaxation`'s classical mixture is unaffected either
+    way (it already treats a multi-index `source` as an incoherent
+    probability split, by construction, not a choice this parameter
+    changes).
     """
     from .propagators import time_averaged_ctqw, ground_state_relaxation
 
-    occ_ctqw = time_averaged_ctqw(H, t_max, source=source, n_steps=n_steps)
+    occ_ctqw = time_averaged_ctqw(H, t_max, source=source, n_steps=n_steps, coherent=coherent)
     occ_heat = ground_state_relaxation(H, t_max, source=source)
 
     if labels is None:
@@ -163,11 +171,16 @@ def benchmark(
     cutoff: float = 10.0,
     t_max: float = 15.0,
     n_steps: int = 500,
+    *,
+    coherent: bool = True,
 ) -> dict:
     """Default-parameter (not optimized -- see TASK-0008's Open Question on
     notebook Sec.8's coordinate-descent optimizer, out of this module's
     scope) comparison of H_new against the H10_disorder_suppressed
     baseline, both propagated by time-averaged CTQW.
+
+    `coherent` (TASK-0118): passed straight through to `time_averaged_ctqw`
+    for both operators -- see that function's own docstring.
 
     Returns {"H_new_default": metric_pack, "H10_disorder_suppressed":
     metric_pack}.
@@ -178,8 +191,8 @@ def benchmark(
     H_new = build_H_new(coords, bfactors, cutoff=cutoff)
     H10 = build_H10(coords, bfactors, cutoff=cutoff)
 
-    occ_new = time_averaged_ctqw(H_new, t_max, source=source, n_steps=n_steps)
-    occ_10 = time_averaged_ctqw(H10, t_max, source=source, n_steps=n_steps)
+    occ_new = time_averaged_ctqw(H_new, t_max, source=source, n_steps=n_steps, coherent=coherent)
+    occ_10 = time_averaged_ctqw(H10, t_max, source=source, n_steps=n_steps, coherent=coherent)
 
     return {
         "H_new_default": _metric_pack(occ_new, labels),

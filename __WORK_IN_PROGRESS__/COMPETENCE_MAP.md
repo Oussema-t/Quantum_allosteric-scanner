@@ -22,101 +22,145 @@ gated tasks below), that gap is stated explicitly, not filled with an estimate.
 > `REVIEW-2026-07-15`/`REVIEW-2026-07-15b`, filed the same day this document was first
 > written): every number below is a bare point estimate with no confidence interval
 > ([[TASK-0112]], open) — no floor-vs-score margin here should be read as a *decided*
-> result yet, including the headline "ceiling below floor" finding for KRAS_G12C. That
-> finding additionally rests on a 60-trial blind random search over an ~8-dimensional
-> space, flagged as weak evidence for a *negative* claim specifically (though adequate
-> for a positive one) ([[TASK-0116]], open), and on the same unvalidated
+> result yet. That finding additionally rests on a 60-trial blind random search over an
+> ~8-dimensional space, flagged as weak evidence for a *negative* claim specifically
+> (though adequate for a positive one) ([[TASK-0116]], open), and on the same unvalidated
 > `t_max=15`/`n_steps=500` every other headline AUC in this project already carries as an
 > open question ([[TASK-0117]]/[[TASK-0108]]/[[TASK-0109]]/[[TASK-0110]], open). None of
 > this retracts the numbers — it is the difference between "the strongest evidence
-> currently gathered says X" and "X is settled." This document states both the finding
-> and this caveat together, every time, per the reviewing thread's own explicit
-> instruction not to present TASK-0046's number as final while these are open.**
+> currently gathered says X" and "X is settled."**
+
+> **SUPERSEDED 2026-07-16 by [[TASK-0118]] — the table below is a full recompute, not an
+> edit of the old one. `REVIEW-panel-2026-07-16-v2` (§2.1) found that the numbers this
+> document previously reported were gauge-contaminated: `run_challenge.py`'s floor/actual
+> used a single representative seed residue (a [[TASK-0090]] crash workaround), while
+> `ceiling_search_batched.py`'s ceiling already used the full active-site array —
+> **floor/actual and ceiling were never comparable**, despite this document's prior text
+> asserting "apples-to-apples within each row." TASK-0118 fixed the crash's root cause
+> ([[TASK-0090]]), measured the real spread this caused on all 3 mandatory targets
+> (KRAS_G12C: 0.326 AUC swing across seed conventions — [[INV-0006]]), declared **one**
+> convention (full active-site array, incoherent statistical mixture — `propagators.ctqw`'s
+> new `coherent=False`), and re-ran floor/ceiling/actual for every mandatory target under
+> it. **The old numbers are not deleted** — see `git log` on this file, or
+> [[TASK-0046]]/[[TASK-0082]]'s own Done sections, for the pre-TASK-0118 values (KRAS_G12C
+> floor=0.798/ceiling=0.524/actual=0.779; BCR_ABL1 floor=0.565/ceiling=0.612/actual=0.525;
+> CARDIAC_MYOSIN floor=0.764/ceiling=0.819/actual=0.786) — they are superseded, not wrong
+> arithmetic; they were computed correctly under an inconsistent convention. Per this
+> project's own no-silent-overwrite convention (TASK-0104's precedent) and TASK-0118's own
+> explicit instruction ("report whatever the single-convention re-run actually finds — do
+> not pre-decide it is a positive or a negative"): the KRAS_G12C "ceiling below floor"
+> headline is **retracted** — under the one correct convention, the ceiling now clears the
+> floor, same qualitative shape as BCR_ABL1. This is **not** a new positive claim for the
+> *actual* (shipped) result, which still does not clear its floor for either target.**
 
 ---
 
 ## Mandatory targets — floor / ceiling / actual / headroom
 
+**Recomputed 2026-07-16 under [[TASK-0118]]'s one declared seed convention (full
+active-site array, incoherent mixture, `coherent=False`) — see the SUPERSEDED notice
+above for the pre-TASK-0118 numbers.**
+
 | Target | Floor | Ceiling | Actual (AUC) | Diagnosis | Headroom |
 |---|---|---|---|---|---|
-| KRAS_G12C | 0.798 | 0.524 | 0.779 | `BEATS_CHANCE_NOT_FLOOR` | **undefined — ceiling < floor, see below** |
-| BCR_ABL1 | 0.565 | 0.612 | 0.525 | `NO_SIGNAL_IN_APO` | **−85.5%** (actual is *below* its own floor) |
-| CARDIAC_MYOSIN | 0.764 | 0.819 | 0.786 | `INSUFFICIENT_RESOLUTION` | 40.7% — **moot**, N=950 flag fires before the floor check matters |
+| KRAS_G12C | 0.4818 | 0.5269 | 0.4614 | `NO_SIGNAL_IN_APO` | **−45.3%** (actual below floor; ceiling *does* clear floor, +0.045 — retracts "ceiling below floor") |
+| BCR_ABL1 | 0.5817 | 0.6057 | 0.5608 | `BEATS_CHANCE_NOT_FLOOR` | **−86.9%** (actual below floor; ceiling clears floor by a modest +0.024, same shape as before) |
+| CARDIAC_MYOSIN | 0.7921 | 0.8439 | 0.8310 | `NO_FAILURE_DETECTED` | **+75.1%** — actual clears its own floor. See caveats below before reading this as a clean win. |
 
 All three columns are CTQW-propagated, `H_new`-family numbers throughout (floor,
 ceiling, and actual all use `time_averaged_ctqw`, never a mix with
-`ground_state_relaxation`/"heat") — apples-to-apples within each row. Sources:
-- **Floor**: `RESULTS.md`'s TASK-0094 section (KRAS/CARDIAC_MYOSIN) and TASK-0106's Done
-  section (BCR_ABL1, `0.565`) — real `euclid_from_seed_centroid`/`hop_from_seed`/
-  `degree_centrality`, max of the three, same apo data/source/cutoff as Actual.
-- **Ceiling**: `results_task0082/<target>/ceiling_trials.jsonl` (this task, 2026-07-15),
-  60 real trials each, `ceiling.ceiling_search`/`ceiling_search_batched.py`, seed=7,
-  `protocol.ceiling_context()`. KRAS_G12C: two independent real runs gave 0.5250
-  ([[TASK-0046]]'s own cross-check) and 0.5239 (this task's checkpointed re-run) — a
-  ~0.001 floating-point/BLAS-threading divergence between runs, not a methodology
-  difference; both are reported, the table above uses the more recent checkpointed value.
-- **Actual**: `results/<target>/verdict.json`'s `AUC_apo_Hnew_optimised`
-  ([[TASK-0079.005]]'s real end-to-end run).
-- **Diagnosis**: `RESULTS.md`'s post-TASK-0094 per-target sections (the authoritative,
-  floor-aware verdict — not `verdict.json`'s own `_diagnosis` field, which predates
-  TASK-0094's floor and is stale for KRAS_G12C specifically).
+`ground_state_relaxation`/"heat"), **and, as of this recompute, all three columns
+genuinely share one seed convention within each row** — the property the prior table's
+text claimed but did not have. Sources:
+- **Floor**: computed fresh this recompute, same `degree_centrality`/
+  `euclid_from_seed_centroid`/`hop_from_seed` stack ([[TASK-0094]]), max of the three,
+  under the new full-array source (`scripts/seed_convention_sweep.py`'s own floor
+  computation, cross-checked against a direct re-derivation — both agree to 6 decimals).
+- **Ceiling**: `results_task0118_ceiling/<target>/ceiling_trials.jsonl` (fresh checkpoint
+  directory — deliberately *not* resuming `results_task0082/`'s old, `coherent=True`-only
+  checkpoints, which would have silently mixed conventions within one "completed" trial
+  set), 60 real trials each, `ceiling.ceiling_search`/`ceiling_search_batched.py --seed 7`,
+  `coherent=False` (this script's own new default), `protocol.ceiling_context()`.
+- **Actual**: `results_task0118/<target>/verdict.json`'s `AUC_apo_Hnew_optimised`, a fresh
+  `run_challenge.py` run (full active-site array, `coherent=False`, single-index
+  workaround removed).
+- **Diagnosis**: `verdict.json`'s own `_diagnosis` field, this time genuinely
+  authoritative (floor-aware — `floor_scores` is passed into this recompute's
+  `run_frozen_verdict` call, unlike whatever produced the stale field the old table's
+  own text warned about).
 
-### KRAS_G12C — the ceiling itself does not clear the floor (currently the strongest evidence gathered, not yet a settled claim — see caveat above)
+### KRAS_G12C — "ceiling below floor" is retracted; the actual result is still below floor
 
-**This is the strongest form of "honest NO" this competence map can report, and it is
-stronger than "the actual pipeline result is geometry" (TASK-0093's own finding) --
-*if* it survives TASK-0116/TASK-0117 (open).** A 60-trial random search over the entire
-`(lam_B, lam_T, lam_R, lam_C, lam_M, alpha, cutoff, n_low_modes)` space, scored against
-the real labeled pocket with the answer key in hand the whole time, could not find *any*
-point that beats a baseline which only knows Euclidean/graph distance from the seed.
-`REVIEW-2026-07-15b` flags this specific claim as needing stronger search coverage
-before a *negative* result can rest on it (60 draws over ~8 dimensions is sparse by any
-space-filling standard, `TASK-0116`) and notes it shares `t_max=15`/`n_steps=500` with
-every other unvalidated headline number in this project (`TASK-0117`). Neither finding
-retracts the number — it is not yet a corrected or contradicted result — but this
-section's claim should be read as "the best evidence gathered so far," not "proven."
-`headroom`'s denominator
-(`ceiling − floor = 0.524 − 0.798 = −0.274`) is negative — the formula is not merely
-small here, it is meaningless, and reporting a computed fraction through it would be
-worse than reporting nothing (see `.ai/memory/shared/pitfalls.md` P-0002, filed
-alongside this document; a question about whether this finding should reshape the
-floor/ceiling/headroom framing itself for this target is open to the Architect,
-`.ai/memory/questions/architect-planner/open/Q-0003-...md`).
+**[[TASK-0118]], 2026-07-16: retracted.** The pre-recompute claim ("the ceiling itself
+does not clear the floor... the strongest form of honest NO this competence map can
+report") rested on comparing a single-index floor/actual (0.798/0.779) against a
+full-array ceiling (0.524) — two different seed conventions, not a real floor-vs-ceiling
+comparison. Under the one declared convention (full active-site array, incoherent
+mixture), **the ceiling (0.5269) does clear the floor (0.4818), by +0.045** — real,
+if modest, headroom exists in `H_new`'s physical-scalar space for this target after all.
+This is **not** a new positive claim for the submission: the *actual*, shipped
+default-parameter result (0.4614) remains below its own floor (`NO_SIGNAL_IN_APO`,
+statistically indistinguishable from chance) — the operator family has headroom the
+shipped configuration does not reach, the same shape BCR_ABL1 already showed. TASK-0116's
+open question (is 60 blind draws over ~8 dimensions adequate search coverage) and
+TASK-0117's (is `t_max=15`/`n_steps=500` validated) both still apply to this recomputed
+ceiling exactly as they applied to the old one — neither is resolved by this recompute,
+and [[Q-0003]] (whether floor/ceiling/headroom is even the right lens here) is answered
+in one direction by this correction (the framing itself was sound; the seed gauge
+feeding it was not) but the CI/search-coverage/clock questions remain genuinely open.
 
-**What this does and does not license claiming**: it does not prove no operator family
-could ever recover this pocket from apo topology — only that `H_new`'s own physical-
-scalar space, under CTQW, cannot, at any point tested. It is consistent with, and
-strengthens, `PLAN.md`'s own pre-existing qualitative finding ("optimized AUC_apo on
-KRAS ~= 0.53, near chance even with the answer key") — this ceiling search independently
-reproduces that number (0.524–0.525) via a different code path (this session's `ceiling.py`
-port vs. whatever produced the original notebook-adjacent estimate) and additionally shows
-the *entire* searched space clusters there, not just one default point.
+**Pre-TASK-0118 numbers, preserved for the record, not endorsed**: floor=0.798,
+ceiling=0.524–0.525, actual=0.779, headroom "undefined (ceiling < floor)". See the
+SUPERSEDED notice above and `git log` on this file for the full prior text.
 
-### BCR_ABL1 — actual scores below its own floor
+### BCR_ABL1 — actual scores below its own floor (recomputed, same shape as before)
 
+**[[TASK-0118]], 2026-07-16: numbers recomputed, qualitative finding unchanged.**
 Headroom is a well-defined but negative fraction: the shipped pipeline's actual CTQW
-result (0.525) is *worse* than the strongest trivial proximity baseline (0.565) for this
-target — consistent with `NO_SIGNAL_IN_APO`. Unlike KRAS_G12C, the ceiling here (0.612)
-*does* clear the floor, by a modest margin (+0.047) — so there is, in principle, real
-headroom in this operator family for this target; the shipped default-parameter
-configuration simply does not reach it. **Separately** (not part of this headroom
-calculation, a different propagator entirely): `ground_state_relaxation` on the same
-`H_new` operator scores 0.7315, clearing the same floor decisively (margin +0.166) — but
-per [[TASK-0104]]'s already-corrected framing, that is a structural-prior/cryptic-pocket
-signature (the well, not the coupling — [[TASK-0103]]'s dumbbell negative control), not
-allosteric communication, and is not folded into this CTQW-based headroom row.
+result (0.5608) is *worse* than the strongest trivial proximity baseline (0.5817) for
+this target — consistent with `BEATS_CHANCE_NOT_FLOOR`. The ceiling here (0.6057) *does*
+clear the floor, by a modest margin (+0.024, down from the pre-recompute +0.047 —
+same qualitative shape, smaller margin under the corrected convention) — so there is, in
+principle, real headroom in this operator family for this target; the shipped
+default-parameter configuration simply does not reach it. **Separately** (not part of
+this headroom calculation, a different propagator entirely, and *not* re-run by
+TASK-0118 — `ground_state_relaxation`'s multi-index source was already correctly an
+incoherent classical mixture before this task, see [[INV-0006]]'s KNOB row): 
+`ground_state_relaxation` on the same `H_new` operator scores 0.7315, clearing the same
+floor decisively (margin +0.166) — but per [[TASK-0104]]'s already-corrected framing,
+that is a structural-prior/cryptic-pocket signature (the well, not the coupling —
+[[TASK-0103]]'s dumbbell negative control), not allosteric communication, and is not
+folded into this CTQW-based headroom row.
 
-### CARDIAC_MYOSIN — the only positive headroom, invalidated before it can be read
+### CARDIAC_MYOSIN — now clears its own floor, but for two confounded reasons, neither of which is a clean win
 
-40.7% headroom closure is the largest of the three mandatory targets — and is the one
-number in this table that must not be read as a win. `classify_failure`'s own
-`INSUFFICIENT_RESOLUTION` flag fires first (apo N=950 exceeds `LARGE_N_THRESHOLD`,
-`diagnostics.py`'s own documented computational-scaling ceiling, not a claim the science
-is invalid at this size) — the honesty pipeline catching its own stated limitation
-automatically, on real data, exactly as designed ([[TASK-0079.005]] Finding 4). This
-target's apo structure (5TBY) also carries its own independent, pre-existing data-quality
-caveat in `config/targets.yaml` (20 Å cryo-EM IHM assembly). The 40.7% figure is reported
-here for completeness, not endorsed.
+**[[TASK-0118]], 2026-07-16: diagnosis changed from `INSUFFICIENT_RESOLUTION` to
+`NO_FAILURE_DETECTED`, for two independent reasons — read both before treating this as
+a positive result.**
+
+1. **The seed-convention fix itself** (this task): actual AUC moved from 0.786 (old,
+   single-index) to 0.8310 (new, full-array incoherent mixture) — a real change, cited
+   in the table above.
+2. **An unrelated, pre-existing fact discovered while re-running this target**:
+   `diagnostics.LARGE_N_THRESHOLD` was raised from 800 to 1000 on 2026-07-14 (see that
+   constant's own code comment — "explicit user direction," no task ID assigned, no
+   science claim, purely a computational-scaling ceiling), which alone flips this
+   target's `INSUFFICIENT_RESOLUTION` flag off (N=950 < 1000) **regardless of the seed
+   fix** — this document's own "40.7% headroom, invalidated before it can be read"
+   framing had already gone stale before TASK-0118 touched anything, simply not yet
+   propagated here.
+
+**What this does and does not license claiming**: the arithmetic is real — floor=0.7921,
+ceiling=0.8439, actual=0.8310, headroom=+75.1%, and the actual result genuinely clears
+its own floor now. But this target's apo structure (5TBY) still carries its own
+independent, pre-existing data-quality caveat (`config/targets.yaml`: 20 Å cryo-EM IHM
+assembly, non-crystallographic B-factors, unverified chain assignment against a 6-chain
+complex) — `REVIEW-panel-2026-07-16-v2` Sec.1.2 names this exact structure as "the worst
+structure in the set" and explicitly warns against building the submission's one positive
+on it. **[[TASK-0124]]** (re-anchor or retire CARDIAC_MYOSIN) already exists to resolve
+this open question and is the right place to decide whether this number is reportable at
+all, not this document. Until TASK-0124 lands, this row is reported factually, flagged,
+and not endorsed as the submission's clean positive.
 
 ---
 
@@ -167,49 +211,83 @@ targets.md`.
 
 ## Cross-target reading
 
-No mandatory target in this table has a clean, floor-clearing, resolution-clean,
-headroom-positive result:
+**Recomputed 2026-07-16 ([[TASK-0118]]).** Under the one declared seed convention, no
+mandatory target's *actual, shipped* result clears its own floor except CARDIAC_MYOSIN
+(caveated, see its own section above) — but real headroom now exists in `H_new`'s
+physical-scalar space for **all three** targets (every ceiling clears its own floor):
 
-- **KRAS_G12C**: ceiling itself fails to clear the floor — the strongest form of
-  negative result this framework can express.
-- **BCR_ABL1**: actual result is below its own floor; a real (if modest) ceiling-floor
-  gap exists but is unclaimed by the shipped default configuration.
-- **CARDIAC_MYOSIN**: the one positive-headroom number, invalidated by a resolution flag
-  before the floor comparison is even meaningful.
+- **KRAS_G12C**: ceiling clears the floor (+0.045, retracting the old "ceiling below
+  floor" claim) but the shipped actual result does not (`NO_SIGNAL_IN_APO`).
+- **BCR_ABL1**: ceiling clears the floor (+0.024, smaller margin, same shape as before);
+  actual result is below its own floor (`BEATS_CHANCE_NOT_FLOOR`).
+- **CARDIAC_MYOSIN**: ceiling clears the floor (+0.052) **and** the actual result now
+  clears its own floor too (`NO_FAILURE_DETECTED`) — but this is confounded by two
+  separate factors (the seed fix, and an independently-changed `LARGE_N_THRESHOLD`) and
+  this target's apo structure still carries its own unresolved data-quality caveat
+  ([[TASK-0124]]). Not endorsed as a clean positive yet.
 
-Per `PLAN.md`'s own "gates before build" framing, this is the honest headline **as of the
-evidence gathered 2026-07-15**: **`H_new` under CTQW propagation does not, on every real
-evaluation run so far across all three mandatory targets and (for KRAS_G12C) the searched
-parameter space, recover allosteric pocket information from apo topology beyond trivial
-seed-proximity — and one target's only positive result is confounded by data resolution
-before that question can even be asked.** This is consistent with, not contradicted by,
-BCR_ABL1's separate `ground_state_relaxation` finding (0.7315, floor-clearing), which
+Per `PLAN.md`'s own "gates before build" framing, the honest headline **as of the
+evidence gathered 2026-07-16** is narrower than the pre-recompute one, not because the
+operator got better, but because the pre-recompute headline was itself an artifact of
+comparing numbers computed under different seed conventions: **`H_new` under CTQW
+propagation, evaluated consistently, does have real headroom over trivial seed-proximity
+in its own physical-scalar space on all three mandatory targets — but the shipped
+default-parameter configuration only reaches that headroom on one of them
+(CARDIAC_MYOSIN, itself caveated), and the ceiling search that found the headroom still
+carries TASK-0112/0116/0117's own open validity questions (CI, search coverage, clock)
+unchanged by this recompute.** This is consistent with, not contradicted by, BCR_ABL1's
+separate `ground_state_relaxation` finding (0.7315, floor-clearing), which
 [[TASK-0104]] already reframes as a structural-prior signature rather than a
 communication signal. **This headline should not be presented as final in a submission
-draft while TASK-0112/0116/0117 are open** (per the caveat at the top of this document) —
-it is the strongest claim the current evidence supports, and the honest-NO framing this
-project already practices means updating it without ceremony if stronger evidence
-(bootstrap CIs, denser ceiling search, a validated `t_max`/`n_steps`) changes the picture.
+draft while TASK-0112/0116/0117/0124 are open** (per the caveat at the top of this
+document) — it is the strongest claim the current evidence supports, and the honest-NO
+framing this project already practices means updating it without ceremony if stronger
+evidence (bootstrap CIs, denser ceiling search, a validated `t_max`/`n_steps`, a resolved
+CARDIAC_MYOSIN structure question) changes the picture.
 
 ---
 
 ## Open items
 
+- **Combined seed+clock re-run — not yet done** (found 2026-07-16, same day as the
+  recompute above): [[TASK-0118]] (this recompute, seed convention) and
+  [[TASK-0119]] (per-operator clock, `t* = -ln(tol)/gap` replacing the fixed
+  `t_max=15`) landed **concurrently** (claimed the same minute, different threads) and
+  were **not combined** — every number in the table above uses TASK-0118's seed fix at
+  the *old* fixed `t_max=15`, not TASK-0119's per-operator `t*`. `EXECUTION_PLAN.md`'s
+  own text anticipated exactly this scenario ("if both land around the same time, the
+  final headline re-run should use both fixes together... not silently attribute a
+  combined effect to only one") — a combined re-run is the next concrete step, not
+  optional cleanup.
 - **TASK-0112** (open): no confidence interval on any number in this document —
   `metrics.block_bootstrap_ci` exists and is used by `select.py`'s LOPO path but is not
   wired into any headline AUC this document cites. Every margin above (floor-vs-actual,
-  floor-vs-ceiling) should be re-read with a CI once this lands.
-- **TASK-0116** (open): KRAS_G12C's ceiling-below-floor finding rests on 60 blind random
-  draws over an ~8-dimensional space — flagged as weak evidence for a *negative* claim
-  specifically. A denser/space-filling search could still find a floor-clearing point
-  this run missed.
-- **TASK-0117** (open): the ceiling search (and every other headline AUC in this project)
-  uses `t_max=15`/`n_steps=500` with no convergence check — depends on TASK-0108/0109/0110.
-- **Q-0003** (`.ai/memory/questions/architect-planner/open/`): whether KRAS_G12C's
-  ceiling-below-floor finding should change how the floor/ceiling/headroom framing itself
-  is presented in the submission's central narrative — itself now also contingent on
-  TASK-0116/0117's answers, not decidable from TASK-0046's current evidence alone.
-- **TASK-0081**: generalization-set rows, not yet run.
+  floor-vs-ceiling) should be re-read with a CI once this lands — now against the
+  TASK-0118-recomputed numbers, not the superseded ones.
+- **TASK-0116** (open): every target's ceiling-vs-floor margin (all three now positive,
+  per the recompute above) rests on 60 blind random draws over an ~8-dimensional space —
+  flagged as weak evidence, originally for KRAS_G12C's negative claim specifically, but
+  the same sparse-search caveat applies to trusting any of the three new ceiling numbers
+  as a tight upper bound. A denser/space-filling search could still find a materially
+  different ceiling on any target.
+- **TASK-0117** (open): the ceiling search (and every other headline AUC in this project,
+  including this recompute) uses `t_max=15`/`n_steps=500` with no convergence check —
+  depends on TASK-0108/0109/0110. TASK-0118 deliberately did not touch the clock (out of
+  its own scope, see [[TASK-0119]]) — this recompute isolates the seed axis only.
+- **TASK-0119** (open): the clock fix, explicitly out of TASK-0118's own scope — should
+  ideally re-run under TASK-0118's now-declared seed convention, not the old mixed one,
+  per TASK-0118's own Dependency note.
+- **TASK-0124** (open): CARDIAC_MYOSIN's apo structure (5TBY, 20 Å docked homology model)
+  still carries its own unresolved data-quality caveat, independent of and unaffected by
+  TASK-0118's seed-convention fix — this document's CARDIAC_MYOSIN row should not be read
+  as settled until this lands.
+- **Q-0003** (`.ai/memory/questions/architect-planner/open/`): **partially resolved by
+  TASK-0118** — the floor/ceiling/headroom framing itself was sound; the seed gauge
+  feeding it was not, and is now fixed. The CI/search-coverage/clock questions
+  (TASK-0112/0116/0117) that motivated re-examining the framing in the first place remain
+  open, now against the corrected numbers.
+- **TASK-0081**: generalization-set rows, not yet run (and not re-run under TASK-0118's
+  convention — out of scope, flagged as a gap for whoever picks up TASK-0081/0127 next).
 - **TASK-0083** (result artifact contract, not yet started): this document is a plain
   markdown synthesis, not yet expressed in whatever versioned artifact shape TASK-0083
   eventually defines (GO/NO/UNSTABLE + knob-spread, per `EXECUTION_PLAN.md`'s own

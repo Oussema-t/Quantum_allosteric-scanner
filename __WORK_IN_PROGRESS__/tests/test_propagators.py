@@ -116,3 +116,82 @@ class TestCtqwUnaffected:
         p1 = ctqw(H1, t=2.0, source=0)
         p2 = ctqw(H2, t=2.0, source=0)
         assert not np.allclose(p1, p2)
+
+
+# ---------------------------------------------------------------------------
+# TASK-0118 -- incoherent-mixture `coherent=False` support
+# ---------------------------------------------------------------------------
+
+def _incoherent_reference(H, t, source, n_steps=None):
+    """Independent re-derivation of the incoherent-mixture formula --
+    average each seed index's own single-source `ctqw` occupation. Kept
+    deliberately separate from `_ctqw_mixture_from_eigh` (calls the public
+    `ctqw`, not the private eigh-sharing helper) so this doesn't just check
+    the implementation against itself. `n_steps=None` -> single-time-point
+    `ctqw`; otherwise averages `time_averaged_ctqw` per index."""
+    idx = np.atleast_1d(np.asarray(source, dtype=int))
+    if n_steps is None:
+        return np.mean([ctqw(H, t, source=int(i)) for i in idx], axis=0)
+    return np.mean(
+        [time_averaged_ctqw(H, t, source=int(i), n_steps=n_steps) for i in idx], axis=0
+    )
+
+
+class TestIncoherentMixture:
+    def test_default_is_coherent_true_byte_identical(self):
+        """No existing caller passes `coherent=` -- the default must be
+        exactly the pre-TASK-0118 behavior, not just close to it."""
+        H = _random_symmetric_H(14, seed=8)
+        default = ctqw(H, t=4.0, source=[1, 3, 5])
+        explicit = ctqw(H, t=4.0, source=[1, 3, 5], coherent=True)
+        np.testing.assert_array_equal(default, explicit)
+
+        default_ta = time_averaged_ctqw(H, t_max=6.0, source=[1, 3, 5], n_steps=40)
+        explicit_ta = time_averaged_ctqw(H, t_max=6.0, source=[1, 3, 5], n_steps=40, coherent=True)
+        np.testing.assert_array_equal(default_ta, explicit_ta)
+
+    def test_scalar_source_coherent_and_incoherent_identical(self):
+        """A one-element mixture has no coherence to differ over --
+        `coherent=False` must reduce to the same single-seed result."""
+        H = _random_symmetric_H(10, seed=9)
+        coherent = ctqw(H, t=3.0, source=4, coherent=True)
+        incoherent = ctqw(H, t=3.0, source=4, coherent=False)
+        np.testing.assert_allclose(coherent, incoherent, rtol=1e-10, atol=1e-12)
+
+    def test_ctqw_incoherent_matches_manual_average_of_single_seeds(self):
+        H = _random_symmetric_H(16, seed=10)
+        source = [2, 5, 9]
+        actual = ctqw(H, t=5.0, source=source, coherent=False)
+        reference = _incoherent_reference(H, t=5.0, source=source)
+        np.testing.assert_allclose(actual, reference, rtol=1e-10, atol=1e-12)
+
+    def test_time_averaged_ctqw_incoherent_matches_manual_average(self):
+        H = _random_symmetric_H(18, seed=11)
+        source = [1, 4, 7]
+        actual = time_averaged_ctqw(H, t_max=8.0, source=source, n_steps=60, coherent=False)
+        reference = _incoherent_reference(H, t=8.0, source=source, n_steps=60)
+        np.testing.assert_allclose(actual, reference, rtol=1e-10, atol=1e-12)
+
+    def test_coherent_and_incoherent_genuinely_differ_for_multi_index(self):
+        """The whole point of the distinction -- on a real (non-degenerate)
+        Hamiltonian with a genuine multi-index source, the coherent
+        superposition's cross-terms must make the two outputs differ, not
+        coincide."""
+        from allostery.hamiltonians import H2_combinatorial_laplacian
+
+        H = H2_combinatorial_laplacian(_helix_coords(20), cutoff=10.0)
+        coherent = ctqw(H, t=5.0, source=[2, 3, 4], coherent=True)
+        incoherent = ctqw(H, t=5.0, source=[2, 3, 4], coherent=False)
+        assert not np.allclose(coherent, incoherent)
+
+    def test_incoherent_output_is_a_valid_probability_vector(self):
+        H = _random_symmetric_H(12, seed=12)
+        p = ctqw(H, t=3.0, source=[0, 2, 4], coherent=False)
+        assert p.shape == (12,)
+        assert (p >= 0).all()
+        assert p.sum() == pytest.approx(1.0, abs=1e-6)
+
+        p_ta = time_averaged_ctqw(H, t_max=5.0, source=[0, 2, 4], n_steps=30, coherent=False)
+        assert p_ta.shape == (12,)
+        assert (p_ta >= 0).all()
+        assert p_ta.sum() == pytest.approx(1.0, abs=1e-6)

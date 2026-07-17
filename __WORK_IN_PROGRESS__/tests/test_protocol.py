@@ -518,6 +518,47 @@ class TestRunFrozenVerdict:
         )["ctqw"]["AUC"]
         assert result["AUC_apo_Hnew_optimised"] == pytest.approx(expected)
 
+    def test_coherent_flag_reaches_benchmark_and_the_winner_qvc(self, monkeypatch):
+        """TASK-0118: defaults to `coherent=True`, and the flag reaches
+        both `benchmark`'s and the winning candidate's `quantum_vs_
+        classical`'s `time_averaged_ctqw` calls -- checked via a spy, not
+        an AUC-level difference (AUC is rank-based and this small
+        synthetic fixture's optimised-candidate AUC happens to be
+        invariant to this specific perturbation, same caveat as
+        `test_ceiling.py`'s equivalent fix)."""
+        from allostery import propagators as propagators_mod
+
+        seen = []
+        real_fn = propagators_mod.time_averaged_ctqw
+
+        def _spy(*args, **kwargs):
+            seen.append(kwargs.get("coherent", True))
+            return real_fn(*args, **kwargs)
+
+        monkeypatch.setattr(propagators_mod, "time_averaged_ctqw", _spy)
+        multi_source = np.array([2, 3, 4])
+        run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, multi_source,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50,
+        )
+        # select_frozen_config's own unsupervised_score/ablation() calls
+        # are unaffected by this parameter (out of scope, see this
+        # function's own docstring) and always coherent=True -- so the
+        # default run must show no False at all.
+        n_calls_default = len(seen)
+        assert all(seen)
+        seen.clear()
+        run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, multi_source,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50, coherent=False,
+        )
+        # Same total call count (same functions run either way); benchmark's
+        # 2 calls + quantum_vs_classical's 1 call flip to False -- everything
+        # else (select_frozen_config, ablation) stays True.
+        assert len(seen) == n_calls_default
+        assert seen.count(False) == 3
+        assert seen.count(True) == n_calls_default - 3
+
     def test_diagnosis_and_winner_metadata_present(self):
         result = run_frozen_verdict(
             "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,

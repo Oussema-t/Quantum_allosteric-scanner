@@ -83,6 +83,31 @@ class TestConsistencyScore:
         assert with_holo["auc_apo"] == pytest.approx(apo_only["auc_apo"])  # apo side unaffected
         assert with_holo["auc_holo"] != pytest.approx(apo_only["auc_holo"])  # holo side actually used
 
+    def test_coherent_flag_passes_through(self, monkeypatch):
+        """TASK-0118: defaults to `coherent=True`, and the flag actually
+        reaches `time_averaged_ctqw` -- checked via a spy on the real call,
+        not via an AUC-level difference (AUC is rank-based and happens to
+        be invariant to this specific perturbation on this small synthetic
+        fixture -- a property of the fixture/metric, not proof the wiring
+        is inert; `test_analysis.py`'s equivalent check compares the raw
+        occupation vectors instead, where the difference is unambiguous)."""
+        from allostery import propagators as propagators_mod
+
+        seen = []
+        real_fn = propagators_mod.time_averaged_ctqw
+
+        def _spy(*args, **kwargs):
+            seen.append(kwargs.get("coherent", True))
+            return real_fn(*args, **kwargs)
+
+        monkeypatch.setattr(propagators_mod, "time_averaged_ctqw", _spy)
+        multi_source = np.array([9, 10, 11])
+        consistency_score(COORDS, BFACTORS, multi_source, POCKET, _PARAMS, t_max=5.0, n_steps=50)
+        assert seen == [True]
+        seen.clear()
+        consistency_score(COORDS, BFACTORS, multi_source, POCKET, _PARAMS, t_max=5.0, n_steps=50, coherent=False)
+        assert seen == [False]
+
 
 class TestCombineScore:
     """notebook cell 43's formula, isolated from the physics that produces
@@ -129,6 +154,21 @@ class TestCeilingSearch:
         empty_pocket = np.zeros(N, dtype=bool)  # <3 positives -> every trial's S is NaN
         with pytest.raises(RuntimeError, match="NaN"):
             ceiling_search("SYNTH", COORDS, BFACTORS, SOURCE, empty_pocket, n_trials=4, seed=1, t_max=5.0, n_steps=50)
+
+    def test_coherent_flag_reaches_every_trial(self):
+        """TASK-0118: defaults to `coherent=True` (byte-identical); a
+        genuine multi-index source's best score differs under
+        `coherent=False`, proving the flag reaches `consistency_score`
+        inside the trial loop, not just accepted and dropped."""
+        multi_source = np.array([9, 10, 11])
+        coherent = ceiling_search(
+            "SYNTH", COORDS, BFACTORS, multi_source, POCKET, n_trials=5, seed=1, t_max=5.0, n_steps=50,
+        )
+        incoherent = ceiling_search(
+            "SYNTH", COORDS, BFACTORS, multi_source, POCKET, n_trials=5, seed=1, t_max=5.0, n_steps=50,
+            coherent=False,
+        )
+        assert coherent["best"]["S"] != pytest.approx(incoherent["best"]["S"])
 
     def test_search_runs_with_ceiling_mode_active_and_exits_cleanly(self, monkeypatch):
         """TASK-0006's Constraint: the label-using search must run inside

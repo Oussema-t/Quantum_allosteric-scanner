@@ -71,10 +71,11 @@ def _classical_initial_weights(v: np.ndarray, source: Source) -> np.ndarray:
 def _ctqw_from_eigh(w: np.ndarray, v: np.ndarray, t: float, source: Source) -> np.ndarray:
     """CTQW occupation at time `t`, given `H`'s already-computed
     eigendecomposition `(w, v)` -- the shared post-`eigh` evolution
-    formula `ctqw`/`time_averaged_ctqw` both need (TASK-0111). Never
-    called directly by anything outside this module; `ctqw` computes
-    `(w, v)` itself for a single call, `time_averaged_ctqw` computes it
-    once and reuses it across its whole time grid."""
+    formula `ctqw`/`time_averaged_ctqw` both need (TASK-0111). Computes
+    the *coherent* equal-amplitude superposition over `source` (a single
+    seed reduces to the same thing trivially) -- see `_ctqw_mixture_
+    from_eigh` for the *incoherent* alternative (TASK-0118). Never called
+    directly by anything outside this module."""
     coeffs = _quantum_initial_coeffs(v, source)
     amplitudes = v @ (np.exp(-1j * w * t) * coeffs)
     p = np.abs(amplitudes) ** 2
@@ -82,10 +83,38 @@ def _ctqw_from_eigh(w: np.ndarray, v: np.ndarray, t: float, source: Source) -> n
     return p
 
 
+def _ctqw_mixture_from_eigh(w: np.ndarray, v: np.ndarray, t: float, source: Source) -> np.ndarray:
+    """CTQW occupation at time `t` for an *incoherent* statistical mixture
+    over `source`'s indices -- `rho0 = (1/k) * sum_i |i><i|`, physically
+    distinct from `_ctqw_from_eigh`'s coherent superposition `psi0 =
+    (1/sqrt(k)) * sum_i |i>` (whose density matrix carries off-diagonal
+    coherences/relative phase between every pair of seed residues).
+
+    Unitary evolution is linear in the density matrix, so this is exactly
+    the average of `k` independent single-seed CTQW occupations -- no new
+    eigendecomposition, reuses the shared `(w, v)` the same way
+    `_ctqw_from_eigh` does (TASK-0111's caching intact).
+
+    TASK-0118 (REVIEW-panel-2026-07-16-v2 Sec.5 P0-1): a multi-residue
+    functional/active site has no biophysical basis for a specific
+    relative quantum phase between its residues -- the coherent
+    superposition asserts one anyway (an implementation artifact of
+    `_quantum_initial_coeffs`'s original single-seed-generalizing
+    formula, not a deliberate physical modeling choice). This is the
+    "defensible object" the panel review recommends instead. For a
+    scalar `source`, identical to `_ctqw_from_eigh` by construction (a
+    one-element mixture has no coherence to differ over).
+    """
+    idx = _source_indices(source)
+    return np.mean([_ctqw_from_eigh(w, v, t, int(i)) for i in idx], axis=0)
+
+
 def ctqw(
     H: np.ndarray,
     t: float,
     source: Source = 0,
+    *,
+    coherent: bool = True,
 ) -> np.ndarray:
     """CTQW occupation probabilities at time t, starting from |source⟩.
 
@@ -93,19 +122,26 @@ def ctqw(
 
     Parameters
     ----------
-    H      : (N, N) real symmetric Hamiltonian.
-    t      : propagation time.
-    source : starting node index, or a sequence of indices -- a multi-index
-             source is a coherent equal-amplitude superposition over those
-             nodes (the functional/active-site seed set is rarely a single
-             atom), not a scalar reduction of one.
+    H        : (N, N) real symmetric Hamiltonian.
+    t        : propagation time.
+    source   : starting node index, or a sequence of indices.
+    coherent : `True` (default, unchanged from every prior release) --
+               a multi-index `source` is a coherent equal-amplitude
+               superposition over those nodes. `False` (TASK-0118) --
+               an incoherent statistical mixture instead (`rho0 = (1/k)
+               sum_i |i><i|`), the panel-recommended convention for a
+               multi-residue seed with no biophysical basis for a
+               specific relative phase; see `_ctqw_mixture_from_eigh`.
+               Identical output either way for a scalar `source`.
 
     Returns
     -------
     p : (N,) non-negative array summing to 1.
     """
     w, v = np.linalg.eigh(H)
-    return _ctqw_from_eigh(w, v, t, source)
+    if coherent:
+        return _ctqw_from_eigh(w, v, t, source)
+    return _ctqw_mixture_from_eigh(w, v, t, source)
 
 
 def _warn_if_indefinite(w: np.ndarray, tol: float, strict: bool, fn_name: str) -> None:
@@ -242,6 +278,8 @@ def time_averaged_ctqw(
     t_max: float,
     source: Source = 0,
     n_steps: int = 500,
+    *,
+    coherent: bool = True,
 ) -> np.ndarray:
     """Time-average of CTQW occupation from 0 to t_max.
 
@@ -253,12 +291,19 @@ def time_averaged_ctqw(
     `n_steps` iterations) was pure redundant work with no effect on the
     result; this is a performance fix only, not a behavior change (see
     `test_propagators.py::TestTimeAveragedCtqwEighCaching`).
+
+    `coherent`: same meaning and same default as `ctqw`'s own parameter
+    (TASK-0118) -- `False` averages each `source` index's independent
+    occupation (incoherent mixture) at every time step instead of using
+    the coherent multi-index superposition; identical output either way
+    for a scalar `source`.
     """
     w, v = np.linalg.eigh(H)
+    fn = _ctqw_from_eigh if coherent else _ctqw_mixture_from_eigh
     times = np.linspace(0.0, t_max, n_steps)
     acc = np.zeros(H.shape[0])
     for t in times:
-        acc += _ctqw_from_eigh(w, v, t, source)
+        acc += fn(w, v, t, source)
     return acc / n_steps
 
 

@@ -33,19 +33,23 @@ from the rendered report, per `verdict_template`'s own "a missing key
 renders N/A" design -- not a crash, not a guess.
 
 Seed residue: a target's assembled active site (`labels.Labels.active_site`)
-is typically several residues (every `func_ligand` contact), and
-`analysis.benchmark`/`ablation`/`quantum_vs_classical` all accept a
-multi-index seed fine. `select.unsupervised_score` does not -- a real,
-reproducible crash (`ballistic_exponent`'s BFS assumes a scalar seed,
-filed as TASK-0090, not fixed here; that module is Done/owned elsewhere
-and this script's job is to wire existing pieces, not patch them
-mid-orchestration). This script therefore uses a single representative
-seed index (the first, sorted, active-site residue) throughout its own
-pipeline -- consistently for candidate selection *and* scoring, so the
-"default" and "optimised" AUC numbers stay comparable (seeded the same
-way), rather than picking a multi-index seed for scoring and a
-different scalar for selection. Delete this workaround once TASK-0090
-lands and widen back to the full active-site array.
+is typically several residues (every `func_ligand` contact). This script
+uses the **full active-site array**, scored via `propagators.ctqw`/
+`time_averaged_ctqw`'s **incoherent statistical mixture** (`coherent=
+False`) -- the one seed convention declared for every scored call site in
+this codebase (TASK-0118, `.ai/invariants/INV-0006`). Previously used a
+single representative seed index (TASK-0090: `select.unsupervised_score`'s
+scoring path crashed on a multi-index source, `ballistic_exponent`'s BFS
+assumed a scalar seed) -- TASK-0090 fixed that crash; TASK-0118 then
+widened this script back to the full array and adopted the incoherent
+mixture (a coherent equal-amplitude superposition across active-site
+residues asserts a specific relative quantum phase between them with no
+biophysical basis, per `REVIEW-panel-2026-07-16-v2` Sec.5 P0-1). Candidate
+*selection* (`select_frozen_config`/`unsupervised_score`) still uses the
+coherent superposition internally -- that label-free heuristic was tested
+and tuned against it, and TASK-0118's own scope is the *reported* AUCs,
+not `select.py`'s internal ranking machinery; see `protocol.
+run_frozen_verdict`'s own docstring for this exact boundary.
 """
 from __future__ import annotations
 
@@ -286,17 +290,27 @@ def run_target(target_name: str, output_dir: Path) -> dict:
                 "build_labels returned pocket=None, cannot score a pocket label"
             )
 
-        # Single representative seed index, not the full active-site array --
-        # see this script's own module docstring ("Seed residue") for why
-        # (TASK-0090: select.py's candidate-scoring path crashes on a
-        # multi-index source).
+        # Full active-site array, incoherent statistical mixture -- the one
+        # declared seed convention (TASK-0118, INV-0006), used everywhere
+        # a scored quantity is computed. This script previously used a
+        # single representative seed index (TASK-0090: select.py's
+        # candidate-scoring path crashed on a multi-index source) --
+        # TASK-0090 fixed that crash, and TASK-0118's own real 3-target
+        # sweep (scripts/seed_convention_sweep.py) confirmed this seed
+        # choice is not a gauge (KRAS_G12C AUC spread 0.326 across
+        # conventions, decisively above the panel's own 0.1 "this is a
+        # real signal, not invariant" threshold) -- so a *declared*
+        # convention, not an invariance claim, is what removes the
+        # apples-to-oranges comparison the review's central finding
+        # identified (floor/actual used a single index while
+        # ceiling_search_batched.py already used the full array).
         active_site_idx = np.where(labels_obj.active_site)[0]
         if len(active_site_idx) == 0:
             raise RuntimeError(
                 f"no active-site residues resolved for {target_name!r} -- "
                 "build_labels returned an empty active_site mask"
             )
-        source = int(np.sort(active_site_idx)[0])
+        source = np.sort(active_site_idx)
         # TASK-0094 (REVIEW-2026-07-13 P1-A): degree_centrality alone is not
         # the confounding variable -- proximity to the propagation seed is.
         # classify_failure takes the max AUC across all three, so a target
@@ -315,12 +329,12 @@ def run_target(target_name: str, output_dir: Path) -> dict:
             target_name, candidates_builder,
             apo.coords, apo.bfactors, source, labels_obj.pocket,
             cutoff=cutoff, t_max=T_MAX, n_steps=N_STEPS,
-            floor_scores=floor_scores,
+            floor_scores=floor_scores, coherent=False,
         )
         _log(f"{target_name}: frozen verdict done in {time.monotonic() - t0:.1f}s -- diagnosis={result.get('_diagnosis')}")
 
         winner_H = candidates_builder()[result["_winner_index"]]["H"]
-        winner_occ = time_averaged_ctqw(winner_H, T_MAX, source=source, n_steps=N_STEPS)
+        winner_occ = time_averaged_ctqw(winner_H, T_MAX, source=source, n_steps=N_STEPS, coherent=False)
 
         propensity = edge_propensity(winner_H, source)
         matrix = edge_propensity_to_matrix(propensity, n=len(apo.resnums))

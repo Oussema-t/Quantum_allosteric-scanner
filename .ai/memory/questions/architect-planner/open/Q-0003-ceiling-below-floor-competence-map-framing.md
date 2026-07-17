@@ -90,9 +90,34 @@ search-coverage uncertainty" are different Architect-level calls with
 different implications for what the submission draft can safely claim
 in the meantime.
 
+**Update 2026-07-16, [[TASK-0118]]: the finding this question is built on no longer
+holds as stated.** `REVIEW-panel-2026-07-16-v2` (§2.1) found that the 0.5239–0.5250
+ceiling and the 0.798 floor cited above were computed under two *different* seed
+conventions (`ceiling_search_batched.py` used the full active-site array;
+`run_challenge.py`'s floor/actual used a single representative index, a
+[[TASK-0090]] crash workaround) — not a real floor-vs-ceiling comparison. TASK-0118
+fixed the crash, declared one convention (full active-site array, incoherent mixture),
+and re-ran both: under the corrected convention, KRAS_G12C's ceiling (0.5269) **does**
+clear its floor (0.4818), by +0.045. "The best case of the entire operator family,
+fully informed, doesn't clear floor either" is retracted — it was an artifact of the
+gauge, not a property of the operator family. Full numbers: `COMPETENCE_MAP.md`'s
+KRAS_G12C section, `.ai/invariants/INV-0006`.
+
+This resolves Question 1 above in a specific way worth stating plainly for whoever
+formally closes this question: **the floor/ceiling/headroom framing itself was never
+the problem** — it correctly surfaced a real inconsistency (via P-0002's negative-
+denominator symptom) that traced back to the seed gauge, not to the framing being
+wrong for this target. Question 2 (how confidently to read a low ceiling) is now
+moot for KRAS_G12C specifically (the ceiling isn't low relative to its floor anymore),
+but the underlying TASK-0116/0117 concerns (search coverage, clock validation) still
+apply to the *new* ceiling number exactly as they applied to the old one — not resolved
+by this correction, just now aimed at a different number.
+
 ## Answer
 
-(empty — Status: Open)
+(empty — Status: Open. TASK-0118's update above changes the evidence this question was
+raised against; the Architect/Planner call on whether to formally close or re-scope this
+question is still outstanding.)
 
 ## Action
 

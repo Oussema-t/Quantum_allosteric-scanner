@@ -91,7 +91,19 @@ def _append_checkpoint(path: Path, record: dict) -> None:
         os.fsync(f.fileno())
 
 
-def run(target_name: str, n_trials: int, batch_size: int, seed: int, checkpoint_dir: Path) -> dict:
+def run(
+    target_name: str, n_trials: int, batch_size: int, seed: int, checkpoint_dir: Path,
+    coherent: bool = False,
+) -> dict:
+    """`coherent=False` (TASK-0118, INV-0006) is this function's own
+    default -- the declared seed convention for every scored call site, not
+    just the CLI's opt-in. Checkpoints computed under a different
+    `coherent` value are NOT distinguished on disk (the record schema
+    predates this parameter) -- resuming an old checkpoint directory after
+    changing this value silently mixes conventions within one "completed"
+    trial set. Always point `--checkpoint-dir` at a fresh directory when
+    changing `coherent` for a target that already has checkpointed trials.
+    """
     target_config = load_target_config(target_name)
     cutoff_cfg = float(target_config.get("enm_cutoff", 10.0))
     pocket_cutoff = float(target_config.get("pocket_contact_cutoff", 4.5))
@@ -138,7 +150,7 @@ def run(target_name: str, n_trials: int, batch_size: int, seed: int, checkpoint_
             try:
                 result = consistency_score(
                     apo.coords, apo.bfactors, source, labels_obj.pocket, params,
-                    t_max=T_MAX, n_steps=N_STEPS,
+                    t_max=T_MAX, n_steps=N_STEPS, coherent=coherent,
                 )
                 elapsed = time.monotonic() - t0
                 record = {"trial": trial_idx, "elapsed_s": round(elapsed, 1), **result}
@@ -164,9 +176,15 @@ def main(argv=None) -> int:
     parser.add_argument("--batch-size", type=int, default=5)
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--checkpoint-dir", type=Path, default=DEFAULT_CHECKPOINT_DIR)
+    parser.add_argument(
+        "--coherent", action="store_true",
+        help="use the coherent superposition instead of this script's own "
+             "coherent=False default (TASK-0118) -- for A/B comparison "
+             "against the old convention only, not for a new headline run.",
+    )
     args = parser.parse_args(argv)
 
-    run(args.target, args.n_trials, args.batch_size, args.seed, args.checkpoint_dir)
+    run(args.target, args.n_trials, args.batch_size, args.seed, args.checkpoint_dir, coherent=args.coherent)
     return 0
 
 
