@@ -30,3 +30,6 @@ __WORK_IN_PROGRESS__/results_*/
 
 # .ai scaffold coordination (TASK-0024): ephemeral claim locks, not reviewed history
 .ai/tasks/.locks/*.lock
+
+documentation/*.pdf
+documentation/*.md
