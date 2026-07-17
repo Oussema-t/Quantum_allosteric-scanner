@@ -1,2 +1,28 @@
+[project]
+name = "allostery"
+version = "0.1.0"
+description = "Quantum allosteric scanner research package -- not published, internal use only."
+requires-python = ">=3.9"
+# TASK-0110/TASK-0108: no dependency manifest existed for this package
+# before this task -- requirements.txt (repo root) is explicitly
+# backend-only. This list is the ambient third-party import set already
+# in use across src/allostery/*.py (numpy/scipy/scikit-learn/networkx/
+# pyyaml/prody/matplotlib, confirmed by grepping every import statement,
+# not guessed), plus `optuna`, the one genuinely new dependency this task
+# adds. No version pins here (unlike requirements.txt's backend pins) --
+# this package has never been pinned, and retrofitting pins for packages
+# already ambiently installed and working is out of this task's scope;
+# flagged, not silently done.
+dependencies = [
+    "numpy",
+    "scipy",
+    "scikit-learn",
+    "networkx",
+    "pyyaml",
+    "prody",
+    "matplotlib",
+    "optuna",
+]
+
 [tool.pytest.ini_options]
 pythonpath = ["src"]

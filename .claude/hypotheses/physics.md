@@ -279,6 +279,46 @@ shared `t_max=15`) are both Done. See HYP-P6's own entry above for the real find
 (ranking is genuinely t-sensitive on CARDIAC_MYOSIN; `H_new`'s localization is not).
 TASK-0110 (Optuna scan) status not touched by this update — not this thread's work.
 
+### Status update, 2026-07-17 — TASK-0110 (Optuna scan) Done; sharpens HYP-P6 further
+
+**TASK-0110** is now Done, closing the gap the 2026-07-16 update above left
+open. Where TASK-0119 applied `min_adequate_t_max(kind="ground_state_
+relaxation")` (a 2-eigenvalue-gap criterion) to the operator sweep,
+TASK-0110 ran an Optuna search over `time_averaged_ctqw`'s own `(t_max,
+n_steps)` — the AAKV all-pairs-min-gap criterion this hypothesis's own
+"Resolved" note above did not exercise, and which TASK-0109 itself
+flagged as fragile on near-degenerate spectra. Two findings beyond
+HYP-P6's own original scope:
+
+1. **The clock gap is far larger than "t_max=15 is 100x too short"
+   (the panel's own order-of-magnitude estimate)**: the closed-form-
+   required `t_max` for `time_averaged_ctqw`'s own convergence is
+   145,000x (BCR_ABL1) to 3,950,000x (CARDIAC_MYOSIN) the current
+   default, measured on real `H_new`, not estimated.
+2. **Reaching it is currently not computable**, not merely expensive —
+   a single `time_averaged_ctqw` call at the prescribed `(t_max,
+   n_steps)` did not return after 2+ hours on real KRAS_G12C data
+   (`propagators.py`'s O(n_steps) Python loop). "Fix the clock" (this
+   hypothesis's own alternative 2, and the panel's P0#2) is therefore
+   not a parameter change that can simply be applied to the shipped
+   defaults — it requires either an algorithmic change to
+   `time_averaged_ctqw` (the decoherent infinite-time limit this
+   pipeline already treats it as equivalent to has a cheap closed form,
+   `Σ_k|v_k(j)|²|v_k(source)|²`, no time loop at all) or accepting
+   `t_max` far short of true convergence, permanently.
+
+A capped, honestly-sampled "practical ceiling" (searching only the
+`t_max` range where `n_steps` stays computationally tractable) found
+real per-target results, not just the infeasibility finding above:
+KRAS_G12C 0.4750 (near chance, cross-validates TASK-0046's independent
+0.5250 on a different parameter axis); **BCR_ABL1 0.5829 at t_max=2.39**
+— smaller, not larger, than the default, a genuine unexploited-headroom
+finding this hypothesis's own "To test" section did not anticipate;
+CARDIAC_MYOSIN 0.8149 (inherits that target's existing 5TBY caveat).
+Full detail: `.ai/tasks/DONE/TASK-0110-optuna-apo-holo-parameter-scan.md`,
+`.ai/invariants/INV-0005-propagator-time-parameters.md`'s matching
+update, `.ai/seams/SEAM-0012...md`'s matching update.
+
 ---
 
 ## HYP-P8 · For several targets, the apo contact graph does not contain the allosteric pocket signal at all

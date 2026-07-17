@@ -104,6 +104,32 @@ TASK-0046's ceiling number is to `run_challenge.py`'s own reported 0.779 in the 
 
 ---
 
+## Status update, 2026-07-17 — TASK-0110 cross-checks TASK-0046's ceiling on a second, independent axis
+
+**TASK-0117's own gap is now partly answered from an unexpected direction.** TASK-0110
+(Optuna scan of CTQW's *numerical* parameters, `t_max`/`n_steps` — deliberately kept
+`H_new`'s physical weights at default, the opposite axis from TASK-0046's own search)
+used `ceiling.py`'s exact seed convention (full active-site array) for a clean
+cross-check, not TASK-0118's newer `coherent=False` convention — see that task's own
+Done section for why. Result: KRAS_G12C's best honestly-sampled (Nyquist-uncapped) AUC
+= **0.4750**, closely agreeing with this file's own 0.5239-0.5250. **Two independent
+optimizers, two different parameter axes, same seed convention, same conclusion** —
+this is real corroborating evidence that KRAS's near-chance ceiling is not an artifact
+of under-searching `H_new`'s physical DOF specifically (TASK-0116's own concern); it
+also shows up when the numerical propagation parameters are searched instead.
+
+**A genuinely new, unanticipated finding from the same task, relevant to the "Minimum
+set" and "Optimizer" sections below**: TASK-0046's `t_max=15`/`n_steps=500` are not
+merely unvalidated (TASK-0117's framing) — TASK-0110 found the actual convergence
+requirement for `time_averaged_ctqw` on real `H_new` operators is **145,000x-3,950,000x**
+larger, and reaching it is currently **computationally infeasible** (a real call did not
+return after 2+ hours). Any future ceiling search that tries to "fix" `t_max`/`n_steps`
+by simply plugging in the analytically-correct value, rather than working around this
+algorithmic cost, will hit the same wall. Full detail:
+`.ai/tasks/DONE/TASK-0110-optuna-apo-holo-parameter-scan.md`.
+
+---
+
 ## Which operator to use for the ceiling search
 
 The ceiling should be measured with **every operator candidate** (H_new, H13 projection,

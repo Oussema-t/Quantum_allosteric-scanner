@@ -862,6 +862,76 @@ computation).
 
 ---
 
+### Optuna floor/ceiling parameter scan (TASK-0110, 2026-07-17) — the clock is not 100x too short, it is 145,000x-3,950,000x too short, and reaching convergence is currently uncomputable
+
+**[OBSERVED]** An Optuna-based apo-only ("floor," no ground truth,
+objective = `propagators.check_convergence`'s convergence-quality
+criterion) and holo-informed ("ceiling," objective = real AUC) scan of
+`time_averaged_ctqw`'s numerical parameters (`t_max`, `n_steps`), real
+compute, all 3 mandatory targets. Seed convention: `ceiling.py`'s own
+full active-site array (matches TASK-0046 exactly, for a clean
+cross-check — not TASK-0118's newer `coherent=False` incoherent-mixture
+convention, flagged explicitly as a caveat, not silently mixed).
+
+**Headline finding 1 — the clock gap, measured not estimated.** The
+smallest `t_max` at which `time_averaged_ctqw`'s own decoherent-limit
+criterion holds (`tol=1%`, AAKV-style all-pairs-min-gap bound) on real
+`H_new`:
+
+| Target | N | Required `t_max` | vs. shipped default (15.0) |
+|---|---|---|---|
+| KRAS_G12C | 169 | 4.82e6 | **320,000x** |
+| BCR_ABL1 | 451 | 2.18e6 | **145,000x** |
+| CARDIAC_MYOSIN | 950 | 5.92e7 | **3,950,000x** |
+
+An independent Optuna search (200 trials/target) cross-validates these
+closed-form values within 1.3-2.5% on every target — two independent
+methods, same answer.
+
+**Headline finding 2 — genuine convergence is not just unperformed, it
+is currently uncomputable.** The `n_steps` matching each `t_max` above
+is in the millions (KRAS_G12C 1.28e7, BCR_ABL1 7.06e6, CARDIAC_MYOSIN
+2.00e8). `time_averaged_ctqw` evaluates its time grid in an explicit
+Python loop, O(n_steps) — a single real call at KRAS_G12C's prescribed
+point **did not return after 2+ hours** (confirmed still actively
+computing, not hung, before being killed). "Fix the clock" (this
+project's own stated P0 priority, `REVIEW-panel-2026-07-16-v2.md` §2.2)
+is therefore not a parameter change that can simply be applied to the
+shipped `t_max=15.0`/`n_steps=500` defaults — it requires either an
+algorithmic change to `time_averaged_ctqw` (the decoherent infinite-time
+limit this pipeline already treats it as equivalent to, per this
+document's own P2-B methodology note above, has a cheap closed form,
+`Σ_k|v_k(j)|²|v_k(source)|²`, no time loop at all) or permanently
+accepting a `t_max` far short of true convergence.
+
+**Headline finding 3 — per-target practical (honestly, not aliased,
+sampled) ceilings**, restricted to the `t_max` range where `n_steps`
+stays computationally tractable (a cap of 20,000 steps; every trial
+outside this range is flagged `n_steps_capped` and excluded from the
+number below, not silently included):
+
+- **KRAS_G12C**: 0.4750 at `t_max=278.8` — near chance. **Cross-checks
+  TASK-0046's independent ceiling (0.5239-0.5250)** — same seed
+  convention, different parameter axis (physical `H_new` weights vs.
+  numerical propagation time), same conclusion: no recoverable ceiling
+  for KRAS_G12C under this seed convention, on either axis.
+- **BCR_ABL1**: 0.5829 at `t_max=2.39` — notably *smaller*, not larger,
+  than the shipped default. A genuine, unexploited-headroom finding, not
+  predicted by any prior task in this document — worth a dedicated
+  follow-up (Tier-2/operator-selection gated, `TASK-0100`, not decided
+  here).
+- **CARDIAC_MYOSIN**: 0.8149 at `t_max=7.67` — high, but inherits this
+  target's already-documented 5TBY data-quality caveat (20 A cryo-EM
+  docked homology model, flagged UNRESOLVED in `targets.yaml`) — not a
+  new positive result, a numerical-parameter-axis confirmation of an
+  already-known, already-caveated one.
+
+Full detail, trial histories, and the `optuna`-dependency/search-design
+notes: `.ai/tasks/DONE/TASK-0110-optuna-apo-holo-parameter-scan.md`,
+`results_task0110/<target>/scan.json`, `src/allostery/optuna_scan.py`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -876,6 +946,7 @@ computation).
 | 8 | Is dephasing-assisted transport (ENAQT) more noise-robust than coherent CTQW under a real per-gate NISQ noise model (`HOLO_DIRECTION_MODULE.md`'s named scoreable result)? | **resolved 2026-07-14: no — coherent ties or beats ENAQT at every depth/error-rate point tested (KRAS_G12C, 10-qubit coarse-grained `H_new`, 2 timescales), a real negative result, not the hoped-for story. `coarse.trotter_cost`'s accuracy-calibrated depth estimate (3133 steps) is ~2-3 orders of magnitude beyond NISQ-feasible — found empirically (a literal-estimate run was killed after 69 CPU-minutes), not anticipated** | [[TASK-0068]] |
 | 9 | Does a fully-informed ceiling search (answer key in hand, entire `H_new` physical-scalar space) beat each mandatory target's proximity floor — i.e. is there any real headroom in this operator family? | **resolved 2026-07-15: no for KRAS_G12C — the ceiling itself (0.524, 60 real trials) is *below* its own floor (0.798), the strongest form of negative result this framework can express. BCR_ABL1's ceiling (0.612) does clear its floor (0.565) but the shipped actual result (0.525) does not. CARDIAC_MYOSIN's ceiling (0.819) clears its floor (0.764, 40.7% headroom) but this is moot — `INSUFFICIENT_RESOLUTION` fires first. Full synthesis: `COMPETENCE_MAP.md`.** | [[TASK-0046]], [[TASK-0082]] |
 | 10 | Would the reported verdict change for any mandatory target if quantum coherence were randomized away — i.e. is `dephasing_sweep`'s "coherence adds ~nothing" finding actually wired into what a judge reads? | **resolved 2026-07-16: no for KRAS_G12C, formally — `auc_range=0.0132` at t_max=25 (spot-checked robust across t_max in {8,25,100} per REVIEW-panel-2026-07-16-v2 Sec.2.2's clock concern; also robust across two seed conventions per Sec.2.1), flat, floor-gated `COHERENCE_NOT_SIGNIFICANT`. BCR_ABL1/CARDIAC_MYOSIN blocked on a pre-existing, already-anticipated `calibrate_kappa` limitation (exactly-6-near-zero-mode assertion fails at n_zero=7/10) — filed as [[TASK-0128]], not silently skipped. The project-wide seed/clock gauge problem itself (Sec.2.1/2.2) remains unresolved outside this task's narrower scope.** | [[TASK-0099]], [[TASK-0128]] |
+| 11 | How far short is the shipped `t_max=15`/`n_steps=500` of `time_averaged_ctqw`'s own convergence criterion on real targets, and is reaching the corrected value practical? | **resolved 2026-07-17: 145,000x-3,950,000x short (grows with system size), and reaching it is currently uncomputable — a real call at the prescribed point did not return after 2+ hours (O(n_steps) Python loop). A capped, honestly-sampled search found real per-target ceilings instead: KRAS_G12C 0.475 (near chance, cross-checks TASK-0046's 0.525 on an independent axis), BCR_ABL1 0.583 at a *smaller* t_max=2.39 (unexploited headroom, new finding), CARDIAC_MYOSIN 0.815 (inherits that target's 5TBY caveat).** | [[TASK-0110]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

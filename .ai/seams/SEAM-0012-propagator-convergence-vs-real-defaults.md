@@ -52,3 +52,39 @@
   (`ceiling.py` specifically) remains this seam's owner; whoever
   eventually wires a corrected clock into the real defaults (either task)
   is the one that flips this to VERIFIED.
+- update 2026-07-17, [[TASK-0110]]: status remains OPEN, but the failure
+  mode this seam names is now confirmed on real data for the *other*
+  half of `check_convergence` — TASK-0119 deliberately used
+  `min_adequate_t_max(kind="ground_state_relaxation")` (a simple
+  2-eigenvalue-gap criterion), explicitly avoiding the
+  `kind="time_averaged_ctqw"` AAKV-style all-pairs-min-gap criterion,
+  which TASK-0109's own Done section already flagged as fragile on
+  near-degenerate spectra. TASK-0110 is the real-data test of exactly
+  that avoided criterion, since `time_averaged_ctqw` (not `ground_state_
+  relaxation`) is this pipeline's actual headline propagator for every
+  reported `AUC_apo_Hnew_*`/`AUC_ctqw_mean`. Result: the fragility is
+  real, not hypothetical — required `t_max` is 145,000x (BCR_ABL1) to
+  3,950,000x (CARDIAC_MYOSIN) the current default, and the matching
+  `n_steps` (millions) makes a single `time_averaged_ctqw` call at the
+  prescribed point **not return after 2+ hours** (measured directly, the
+  process was confirmed still computing, not hung, before being killed).
+  This sharpens this seam's own invariant statement: for the
+  `time_averaged_ctqw` criterion specifically, "the failure is explicit
+  and acknowledged" is not sufficient by itself — reaching the corrected
+  value is not currently *computable* with this module's O(n_steps)
+  Python-loop implementation, a stronger claim than "unperformed."
+  `optuna_scan.py`'s own `max_n_steps` cap (20,000, vs. TASK-0119's
+  independently-chosen 5,000 for the same class of problem on
+  `ground_state_relaxation`/`operator_sweep`) is a practical workaround,
+  not a resolution — every capped trial is Nyquist-*aliased*, flagged
+  per-trial via `n_steps_capped`, never silently substituted for a
+  converged answer. Real per-target evidence (closed-form prescription +
+  Optuna cross-check + a properly-sampled "practical" ceiling restricted
+  to the reachable range) in
+  `.ai/tasks/DONE/TASK-0110-optuna-apo-holo-parameter-scan.md` and
+  `results_task0110/`. Still does not flip this seam to VERIFIED — no
+  production call site's default changed — but the evidence base for
+  whoever eventually does (TASK-0117, or a follow-up addressing the
+  O(n_steps) algorithmic cost itself, e.g. exploiting that the true
+  infinite-time limit has a cheap closed form with no time loop at all)
+  is now considerably larger.

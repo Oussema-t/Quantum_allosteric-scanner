@@ -11,7 +11,7 @@
   code before filing this: **no**.) (b) [[TASK-0110]] — an Optuna-based
   parameter scan on the real mandatory targets, apo-only (floor) vs.
   holo-informed (ceiling).
-- Status: TODO
+- Status: Done
 - Owner: Architect/Planner (this task is a coordinator only — see
   `.ai/tasks/README.md`'s subtask convention: "the parent file stays a
   thin coordinator... holds shared decisions/constraints... but not the
@@ -91,4 +91,26 @@
 
 ## Done
 
-(not yet — parent closes when both children are Done)
+**Both children Done — coordinator closes.** [[TASK-0109]] (Implementer B,
+2026-07-15: `propagators.check_convergence`/`min_adequate_t_max`/
+`min_adequate_n_steps`) and [[TASK-0110]] (Implementer C, 2026-07-17:
+Optuna apo-floor/holo-ceiling scan on all 3 mandatory targets, `optuna`
+dependency added) are both Done. Flipped by Implementer C (this thread)
+on completing TASK-0110, the second child, per this file's own "closes
+when both children are Done" rule -- a factual/administrative close, not
+a scientific judgment call belonging only to the Architect/Planner
+thread that filed this coordinator.
+
+**Real-world outcome, for anyone reading only this coordinator**:
+TASK-0109 built the convergence-validity tool the user asked for;
+TASK-0110 used it (via `min_adequate_t_max`) to size its own search
+range and, in doing so, found the load-bearing headline result neither
+child was filed to specifically predict -- the current pipeline's
+`t_max=15`/`n_steps=500` defaults are 145,000x-3,950,000x short of
+`time_averaged_ctqw`'s own convergence criterion, and reaching genuine
+convergence is currently computationally infeasible (a real 2+ hour
+non-returning call, not an estimate). See TASK-0110's own Done section
+for the full per-target breakdown and its cross-check against TASK-0046.
+Remaining open, downstream work this pair unblocks but does not itself
+complete: [[TASK-0117]] (apply the same check to `ceiling.py`'s own
+literal defaults).
