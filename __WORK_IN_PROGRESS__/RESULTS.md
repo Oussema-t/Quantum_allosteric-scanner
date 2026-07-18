@@ -1366,6 +1366,93 @@ Full process detail and the exact commands run:
 
 ---
 
+## Ceiling search coverage upgrade (TASK-0116, 2026-07-18)
+
+**[EXECUTED]** [[TASK-0046]]'s ceiling search (`ceiling.ceiling_search`,
+blind random search, 60 trials over 8 dimensions) drew its
+`lam_B/T/R/C/M` weights independently on `(0.0, 2.0)` each — a range
+that predates [[TASK-0121]]'s z-scoring of `potentials.py`'s five terms
+and permits `sum(lam_i)` up to 10, ~25x [[TASK-0121]]'s own
+`sigma(V) <= 0.2*J <= 0.4` bound (`E[sum(lam)] = 5.0` under the old
+range — 12.5x the budget *on average*). The old search was therefore
+sampling almost entirely from the Anderson-localized regime TASK-0121
+exists to escape, making TASK-0046's own "near-chance ceiling, very
+little headroom" negative claim weak evidence — it never searched the
+physically valid region.
+
+**Fix**: `ceiling.py::sample_params` now draws `lam_*` on the
+constrained simplex `sum(lam_i) <= 0.4` — a total budget drawn
+uniformly on `[0, 0.4]` (so the search also explores under-using the
+budget, not only its boundary), split among the 5 terms via a
+`Dirichlet(1,1,1,1,1)` draw (uniform over relative proportions).
+`alpha`/`cutoff`/`n_low` unchanged. **Strategy upgrade**: added
+`ceiling.ceiling_search_optuna` — TPE (Optuna) search over the same
+corrected space, `consistency_score` reused completely unchanged as the
+objective (per this task's own Out Of Scope: search coverage, not the
+objective or the model).
+
+**[EXECUTED] Real KRAS_G12C re-run** (TASK-0046's own cross-check
+target), every delta kept separate and attributable (per this project's
+standing "report both, don't silently reconcile" convention), all at
+`t_max=15`/`n_steps=500` unchanged (matching TASK-0046's exact original
+methodology — deliberately *not* also applying [[TASK-0130]]'s newer
+`use_converged_limit` closed-form option, a 4th independent axis, which
+would make it impossible to attribute a change to the range/strategy
+fixes specifically):
+
+| Search | Range | Seed convention | Best S / AUC_apo | Delta vs. original |
+|---|---|---|---|---|
+| Original (TASK-0046, 2026-07-15) | stale `(0.0,2.0)` each | `coherent=True` (pre-TASK-0118, implicit) | 0.5250 | — |
+| Range-fix only, isolated | corrected `sum<=0.4` | `coherent=True` (byte-identical to original) | **0.4864** | -0.0386 |
+| Range-fix only, current convention | corrected `sum<=0.4` | `coherent=False` (TASK-0118) | 0.4735 | -0.0515 |
+| Range-fix + TPE, current convention | corrected `sum<=0.4` | `coherent=False` (TASK-0118) | **0.4908** (seed=7, exactly reproduced) / 0.4842 (seed=42, confirmatory) | -0.0342 |
+
+Current floor (re-measured in the same run, `coherent=False`
+convention): **0.4818**. The corrected-range TPE result (0.4908) lands
+marginally *above* this floor (+0.009) — the first time any of this
+project's KRAS_G12C ceiling numbers have crossed it, but the margin is
+small enough that it is **not read as a real positive here**: it needs
+[[TASK-0131]]'s permutation null (still TODO, unclaimed) or a bootstrap
+CI ([[TASK-0112]]'s machinery, not wired into this comparison) before
+that claim would be defensible. Flagged explicitly, not silently
+claimed as a win.
+
+**Headline finding: fixing the search space does not reveal hidden
+ceiling headroom — if anything the original 0.5250 was itself
+somewhat inflated by the stale range's access to physically-invalid
+extreme disorder.** Under both corrections (valid range, current seed
+convention) plus a smarter search strategy (TPE vs. blind random),
+KRAS_G12C's ceiling is still, at best, a hair above its own floor, not
+decisively above it. TASK-0046's "very little headroom in this operator
+family" conclusion is **confirmed, not overturned**, by better search
+coverage — now on firmer methodological ground than the original
+60-trial run it was drawn from.
+
+**Cross-validates two independent prior findings on different axes**:
+[[TASK-0110]]'s Optuna search over CTQW's own numerical `(t_max,
+n_steps)` parameters (H_new's physical weights left at default) found
+0.4750 for KRAS_G12C; this task's search over H_new's physical weights
+(CTQW numerics left at default) finds 0.4908. Three independent
+searches over three different parameter axes (TASK-0046's original,
+TASK-0110's numerics search, this task's corrected-space search) now
+agree KRAS_G12C sits near chance.
+
+**Not done, flagged rather than silently skipped**: BCR_ABL1/
+CARDIAC_MYOSIN not re-run (this task's own Out Of Scope: start with
+KRAS_G12C, extend only if the result changes the conclusion enough to
+warrant it — it did not). `COMPETENCE_MAP.md`'s own KRAS_G12C ceiling
+cell (0.524) not updated in place, per this document's and that one's
+own "don't overwrite a prior number" convention — read alongside this
+section, not instead of it. TASK-0117 (apply a validated CTQW clock to
+the ceiling search specifically) remains open, though TASK-0130's
+`use_converged_limit` now offers a ready mechanism for whoever picks it
+up next.
+
+Full detail: `.ai/tasks/DONE/TASK-0116-ceiling-search-coverage-upgrade.md`,
+`results_task0116/KRAS_G12C/`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -1384,6 +1471,7 @@ Full process detail and the exact commands run:
 | 12 | Is the labeled pocket even present in the apo topology (HYP-P8), measured directly rather than inferred from other findings? | **resolved 2026-07-17, extended 2026-07-18 once [[TASK-0128]] unblocked cumulative overlap for all 3 targets — all classify `LEARNABLE`, not the clean "KRAS is cryptic" story the panel expected.** KRAS_G12C: pocket RMSD 2.27x background, but cumulative overlap 0.638 — well above the 0.5 low-overlap bar — meaning the apo→holo direction IS substantially spanned by soft ANM modes, contradicting the panel's own Sec.4 prediction. BCR_ABL1: pocket moves *less* than background (ratio 0.49) and CO=0.794, consistent with its prior "apo-computable structural prior" framing (TASK-0104), not a cryptic opening. CARDIAC_MYOSIN: ratio 1.32, CO=0.584 — also `LEARNABLE`, though confounded by its own 5TBY data-quality issue and should not be read as cleanly as the other two.** | [[TASK-0120]], [[TASK-0128]] |
 | 13 | Was `most_impactful_term = V_R` (reported in every prior ablation run) a real physics finding, or an artifact of `V_R`'s ~30x-larger normalization scale vs. `V_C`/`V_M`? | **resolved 2026-07-18: artifact.** All five terms are now individually z-scored (std 1 each); `V_R`'s variance share drops from 88.8% to a structural 15.4%, and `lam_C`/`lam_M` go from unreachable (0.1% share each) to 3.8% each. Real-target ablation (KRAS_G12C, BCR_ABL1) now gives `most_impactful_term = V_B` on both, with `V_R` among the *least* impactful on KRAS_G12C. Does not by itself fix the separate proximity confound in the CTQW observable (§2.3) — measurably weakens it (ρ_euclid 0.71-0.83 → 0.22-0.47) but does not eliminate it. | [[TASK-0121]] |
 | 14 | Does the cross-target pattern (beats chance, not floor; raw AUC overstates signal) hold on targets no review cycle has ever seen, run under the fully gauge-fixed pipeline — the direct mitigation for ~15 cycles of repeated exposure to the same 3 answer keys? | **resolved 2026-07-18: yes, 4/4.** PTP1B, CASPASE7, CASPASE1 (new), GLUCOKINASE (new) all land in `BEATS_CHANCE_NOT_FLOOR` with overlapping score/floor 95% CIs — none statistically decisive, same pattern as the mandatory set. PTP1B remains anti-correlated with its true (genuinely distal) pocket (AUC 0.205). `most_impactful_term` is never `V_R` on any of the 4 — independent cross-check of [[TASK-0121]] on data its own validation never touched. Ceiling intentionally deferred for all 4 (known-stale `ceiling.py::_PARAM_RANGES`, [[TASK-0116]]'s scope, not a shortcut taken here). | [[TASK-0081]], [[TASK-0127]] |
+| 15 | Does KRAS_G12C's ceiling search (TASK-0046, 60 blind-random trials, `lam_*` sampled on a range ~25x [[TASK-0121]]'s own budget) actually support "very little headroom," or was the search exploring the wrong (physically invalid) space? | **resolved 2026-07-18: the "no headroom" conclusion is confirmed, not overturned, but the original 0.5250 number was itself somewhat inflated by the invalid range.** Corrected-range random search: 0.4735-0.4864 depending on seed convention (both below the original). Corrected-range + TPE strategy: 0.4908 (reproduced exactly at seed=7), marginally above the re-measured floor (0.4818, +0.009) — too small a margin to claim a real positive without [[TASK-0131]]'s permutation null, flagged not claimed. Cross-validates [[TASK-0110]]'s independent 0.4750 (different parameter axis, same near-chance conclusion). | [[TASK-0046]], [[TASK-0116]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
