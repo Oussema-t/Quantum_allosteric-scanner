@@ -139,3 +139,58 @@ Add repeated failure patterns, false assumptions, or tool traps that should not 
   (very large `t`, very small `tol`, etc.) on at least one concrete case — the
   agreement (or lack of it) is cheap to check and catches exactly this class of bug
   before it's read as a finding about the code under test rather than the test itself.
+
+## P-0005 — "Did not return within N hours" is not evidence of computational infeasibility without CPU-time, only wall-clock
+
+- Pattern: a long-running compute call is left running in a shared/multi-tenant
+  sandbox; it hasn't finished after N wall-clock hours; this is reported as "genuinely
+  computing, not hung" (checked via process state, e.g. Linux `R`) and read as evidence
+  the underlying computation is impractically expensive. Process state at a single
+  checkpoint proves the process was *actively scheduled at that moment* — it does not
+  prove *continuous* execution for the full elapsed wall-clock interval. A process can
+  be starved by concurrent contention for long stretches (already proven real in this
+  repo, see below) or, in an environment capable of it, suspended and resumed, and still
+  show as actively running at the one moment someone checks. Wall-clock elapsed time and
+  CPU-seconds actually consumed are different quantities, and only the second one is
+  evidence about the computation's real cost.
+- Evidence (this repo): two independent, related findings, neither of which by itself
+  proves the general pattern, but together make it a real, standing risk rather than a
+  hypothetical one — (1) [[TASK-0111]] found a *different* timing measurement in this
+  same shared sandbox was inflated by "6 other concurrent Claude Code sessions" running
+  at the same time (confirmed via `ps aux`), and explicitly distinguished a "controlled,
+  same-moment" benchmark (trustworthy) from a "naive wall-clock timing of a real-network
+  test in this environment" (not reproducible enough to serve as a real measurement) —
+  this is the identical confound-class, already caught once, for a *different* claim.
+  (2) [[TASK-0110]]'s "a single `time_averaged_ctqw` call did not return after 2+ hours"
+  finding (cited downstream as evidence of computational infeasibility by
+  `.ai/invariants/INV-0005-propagator-time-parameters.md` and [[TASK-0130]]) checked
+  process state (`R`, not hung) at the point it was killed, but did not log CPU-seconds
+  consumed (`resource.getrusage`/`/usr/bin/time`) across the full interval — so the
+  *shape* of P-0005's risk applies to it directly, unverified either way. Raised
+  2026-07-18 by the orchestrating user, who correctly noted the specific unruled-out
+  case ("computer went to sleep, was woken after 1.5h, resumed") — plausible in general,
+  though this repo's own evidence points more directly at contention (1) as the
+  demonstrated mechanism in *this* sandbox specifically, not sleep/suspend, which is
+  unconfirmed either way for this environment.
+- Corollary: this is not just a one-off measurement-hygiene note — it is a structural
+  gap in how this project (and its agent threads generally) handle long-running
+  compute. An in-session synchronous wait that times out is not a computational-cost
+  measurement; it is a session-length measurement wearing a computational-cost
+  measurement's clothes. Declaring "infeasible" from it, without CPU-time
+  corroboration, risks the same shape of error P-0001/P-0002 already named for other
+  quantities: a plausible-looking number that was never actually checked against the
+  thing it claims to measure.
+- How to apply: (1) any claim that a computation "did not complete in N [wall-clock]
+  time" must report CPU-time consumed over the same interval before being cited
+  elsewhere as an infeasibility finding — if CPU-time is unavailable for a past claim,
+  say so explicitly rather than silently treating wall-clock as a proxy. (2) for a
+  genuinely long job (expected minutes-to-hours), default to detached/background
+  execution with periodic CPU-time logging rather than an agent session blocking
+  synchronously and giving up at an arbitrary point — an agent's own context/session
+  boundary is not evidence about the computation's real feasibility, and a job that
+  outlives one session is not thereby infeasible. (3) consider explicit hand-off to a
+  human-in-the-loop to kick off and monitor a job expected to run past a session's
+  practical attention span, rather than an agent either blocking in-session or silently
+  declining to start something long — see [[TASK-0134]], filed to both re-verify the
+  specific TASK-0110 claim with real CPU-time instrumentation and propose a reusable
+  long-job/background-monitoring convention for this project generally.

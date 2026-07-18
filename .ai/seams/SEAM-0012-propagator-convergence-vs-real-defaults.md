@@ -88,3 +88,23 @@
   O(n_steps) algorithmic cost itself, e.g. exploiting that the true
   infinite-time limit has a cheap closed form with no time loop at all)
   is now considerably larger.
+- update 2026-07-18, raised by the orchestrating user, filed as [[P-0005]]
+  (`.ai/memory/shared/pitfalls.md`): the "2+ hours, confirmed still
+  computing (state `R`), not hung" evidence for TASK-0110's infeasibility
+  claim proves the process was *actively scheduled at the moment it was
+  checked* — it does not prove *continuous* execution for the full
+  elapsed wall-clock interval. A process starved by contention for long
+  stretches (already independently proven real in this same sandbox by
+  [[TASK-0111]]'s own timing-contention finding) — or, in an environment
+  capable of it, suspended and resumed — would show identically at a
+  single checkpoint. No CPU-seconds-consumed measurement was logged
+  alongside the wall-clock elapsed time, so this specific "2+ hours"
+  figure is unverified against P-0005's exact risk. This does not
+  overturn TASK-0110's practical conclusion (the closed-form fix
+  [[TASK-0130]] promotes is strictly better regardless of whether the
+  true cost is 2 hours or 20 minutes — exact, faster, no `t_max`/
+  `n_steps` to choose) but it does mean the specific multiplier ("2+
+  hours") should not be cited elsewhere as a precise, trusted number
+  until re-measured with real CPU-time instrumentation. [[TASK-0134]]
+  filed to do that re-measurement and to propose a reusable convention
+  so this class of claim doesn't recur unverified.
