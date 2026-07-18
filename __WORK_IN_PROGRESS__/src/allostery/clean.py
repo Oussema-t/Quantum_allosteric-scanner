@@ -231,7 +231,14 @@ def clean_from_config(target_name: str, role: str = "apo") -> CleanResult:
         raise ValueError(
             f"Target '{target_name}' has no '{pdb_key}' defined in config."
         )
-    chains = cfg.get("chains")
+    # TASK-0127 / Q-0001: an apo/holo pair can legitimately use different
+    # chain letters for the same biological chain (GLUCOKINASE: apo 1V4S is
+    # chain A, holo 3H1V is chain X -- both source docs were individually
+    # correct, for different structures). `{role}_chains` is an optional
+    # per-role override; falls back to the shared `chains` field when absent
+    # so every pre-existing target config (which only ever set `chains`) is
+    # completely unaffected -- additive, not a breaking schema change.
+    chains = cfg.get(f"{role}_chains", cfg.get("chains"))
     keep_nucleic = cfg.get("keep_nucleic", False)
     return clean(pdb_id, chains=chains, keep_nucleic=keep_nucleic)
 

@@ -22,6 +22,25 @@ prior run's numbers, even if a later run supersedes them — the
 methodology delta between two runs of the same target is itself
 sometimes the finding (see KRAS_G12C below).
 
+**Reading order (TASK-0127, 2026-07-18): start with the ASD
+generalization set, not the 3 mandatory targets.** By this point the
+same 3 mandatory-target answer keys (KRAS_G12C, BCR_ABL1,
+CARDIAC_MYOSIN) have been looked at across roughly 15 review cycles —
+every gauge fix, every renormalization, every re-run in this document
+was validated against numbers those same 3 targets produced. No
+code-level gate (`frozen_context`/LOPO) catches that kind of repeated
+exposure; only genuinely unseen targets can. The **"ASD generalization
+set" section below** (4 targets: PTP1B, CASPASE7, CASPASE1, GLUCOKINASE
+— none of which any review cycle in this document's history has ever
+been shaped by) is this project's actual headline evidence for whether
+a real signal exists. The mandatory-3 targets' numbers below remain
+useful — they are where every mechanism (proximity confound, seed/clock
+gauges, potential renormalization) was *found and diagnosed*, and they
+still have to be reported as the challenge's required deliverable — but
+read them as **supporting/mechanistic detail with a known repeated-
+exposure history stated plainly**, not as the primary claim of whether
+this approach generalizes. Per [[TASK-0115]]/[[TASK-0127]].
+
 ---
 
 ## Run 2026-07-12 — KRAS_G12C / BCR_ABL1 / CARDIAC_MYOSIN
@@ -1238,6 +1257,115 @@ Full detail: `.ai/tasks/DONE/TASK-0121-renormalize-potential-variance-budget.md`
 
 ---
 
+## ASD generalization set — headline evidence (TASK-0081 + TASK-0127, 2026-07-18)
+
+**[EXECUTED] This is the section to read first (see the reading-order
+note at the top of this document).** 4 targets from the Allosteric
+Database, none of which any prior review cycle in this project's ~15-
+cycle history has ever seen or been shaped by, each independently
+RCSB-verified (real chain IDs and real hetero-ligand records checked
+directly against RCSB, never trusted from either source doc — the same
+discipline that caught PTP1B's YAML-unquoted-numeric-ligand bug in
+TASK-0081) and run through the **current, fully gauge-fixed pipeline**
+([[TASK-0118]] seed convention, [[TASK-0119]] per-operator clock,
+[[TASK-0121]] renormalized potential — all landed):
+
+| Target | N | Pocket size | Actual AUC | Max floor (95% CI) | CI overlap | Diagnosis | most_impactful_term |
+|---|---|---|---|---|---|---|---|
+| PTP1B | 298 | 14 | **0.2050** | 0.4847 [0.242, 0.591] | Yes | `BEATS_CHANCE_NOT_FLOOR` | V_C |
+| CASPASE7 | 461 | 7 | 0.6463 | 0.7542 [0.575, 0.959] | Yes | `BEATS_CHANCE_NOT_FLOOR` | V_T |
+| CASPASE1 | 255 | 6 | 0.8119 | 0.9070 [0.776, 0.976] | Yes | `BEATS_CHANCE_NOT_FLOOR` | V_B |
+| GLUCOKINASE | 448 | 17 | 0.7713 | 0.8531 [0.767, 0.921] | Yes | `BEATS_CHANCE_NOT_FLOOR` | V_C |
+
+All four deliverables (connectivity matrix, top-5 hit list, report,
+verdict) verified present and well-formed for all 4 targets — same
+acceptance bar as the mandatory set, no lighter-touch standard for this
+"headline" set (`results_task0127/<target>/`).
+
+**Headline finding: 4/4 generalization targets land in the same
+`BEATS_CHANCE_NOT_FLOOR` category the mandatory set's KRAS_G12C already
+occupies, and all 4 CIs overlap their own floor's CI** — none
+statistically decisive (same non-decisive pattern [[TASK-0112]] found
+for the mandatory set). This is the strongest form of the cross-target
+pattern this project has assembled: raw AUC without a proximity floor
+overstates apparent signal, on genuinely unseen targets, not just the
+3 whose numbers have been repeatedly re-examined. PTP1B remains the
+most striking single result — **0.205 is not merely below its floor,
+it is anti-correlated with the true pocket** (well below 0.5), on a
+genuinely distal allosteric site (~20 A from the catalytic Cys215,
+structurally the same category as BCR_ABL1's myristoyl site) — the same
+finding TASK-0081 reported, now confirmed under the fully gauge-fixed
+pipeline (was 0.2497 pre-fix, now 0.205 post-fix — same direction,
+slightly stronger).
+
+**`most_impactful_term` is never `V_R` on any of the 4 targets**
+(V_C, V_T, V_B, V_C) — independent cross-validation of
+[[TASK-0121]]'s finding on data that fix's own validation never touched:
+the pre-TASK-0121 `V_R`-dominance pattern was a normalization artifact,
+not something specific to the 3 mandatory targets' own topology.
+
+**CASPASE1 and GLUCOKINASE are new additions this task (TASK-0127),
+not carried over from TASK-0081.** Of TASK-0081's 6 remaining draft
+candidates (ATCase, CASPASE1, HEMOGLOBIN, TAR_RECEPTOR,
+GLYCOGEN_PHOSPHORYLASE, PFK), independently RCSB-verified this task:
+
+- **CASPASE1**: passes. Same dimer-interface-allostery mechanism class
+  as CASPASE7 (chains `[A,B]` required); holo (2FQQ) is clean (ligand
+  F1G, a real small molecule, confirmed present, chain B). Apo (1ICE)
+  carries an unrelated active-site peptide-aldehyde inhibitor
+  (Ac-YVAD-CHO, chain T, excluded by the `[A,B]` chain selection) —
+  flagged as a caveat (not ligand-free) but does not corrupt the
+  allosteric-pocket label, which is derived from holo contacts and
+  UniProt active-site annotation, neither of which depends on what apo
+  happened to crystallize with.
+- **GLUCOKINASE**: passes, but required a real schema fix, not just
+  RCSB verification. TASK-0081 already found (2026-07-15) that apo
+  (1V4S) uses chain A and holo (3H1V) uses chain X — both source docs
+  were individually correct, for different structures — but
+  `targets.yaml`'s single `chains` field couldn't express a per-role
+  chain mapping, raised as `Q-0001` and left in `draft`. This task adds
+  optional `apo_chains`/`holo_chains` override fields to
+  `clean_from_config` (additive, falls back to `chains` when absent —
+  every other target's config is provably unaffected, see
+  `test_clean.py`), resolves `Q-0001`, and graduates GLUCOKINASE to
+  `verified`.
+- **ATCase, HEMOGLOBIN, GLYCOGEN_PHOSPHORYLASE, PFK**: all fail
+  independent verification, each for a *different*, real, substantive
+  reason (not the same failure repeated): ATCase's deposited structures
+  only have 4 of the full dodecamer's 12 chains, missing the regulatory
+  subunits that carry the allosteric site entirely. HEMOGLOBIN's own
+  apo/holo pair has no BPG (the target ligand) in either structure, and
+  is a T-state/R-state pair rather than an unbound/bound one.
+  GLYCOGEN_PHOSPHORYLASE's "apo" (1GPY) already has G6P bound — a
+  competing allosteric effector at the *same* regulatory site as the
+  intended AMP ligand, so it is not apo for the site of interest. PFK's
+  apo (1PFK, ~320 res/chain) and holo (3O8L, ~748 res/chain) differ so
+  much in size they may not even be the same protein, and apo already
+  has FBP (the intended allosteric ligand) bound regardless. None of
+  these are backfilled with a weaker pick to hit a round number — same
+  discipline TASK-0081 used ending at 2 targets instead of 4.
+  `config/targets.yaml`'s own entries for all 4 now carry these findings
+  as warnings, not just this document.
+
+**Ceiling intentionally not computed for any of the 4 targets in this
+pass.** `ceiling.py::_PARAM_RANGES` still samples each `lam_*` on the
+pre-[[TASK-0121]] range `(0.0, 2.0)` — a combined-potential disorder up
+to ~25x this project's own `sigma(V) <= 0.2*J` bound. Running a ceiling
+search against that stale range would not measure this operator
+family's real ceiling; it would measure how far a search can push
+`H_new` back into the disorder regime TASK-0121 just fixed. This is a
+known, already-filed gap ([[TASK-0116]], `REVIEW-panel-2026-07-17.md`
+P0-4), not a shortcut taken here — fixing `_PARAM_RANGES` is TASK-0116's
+explicit scope, and another thread has `ceiling.py` under active
+concurrent edit (TASK-0130) as of this writing. Floor + actual only,
+matching TASK-0081's own original precedent for this same target set.
+Re-run ceiling for all 4 generalization targets once TASK-0116 lands.
+
+Full process detail and the exact commands run:
+`.ai/tasks/DONE/TASK-0127-extend-asd-generalization-set-as-headline.md`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -1255,6 +1383,7 @@ Full detail: `.ai/tasks/DONE/TASK-0121-renormalize-potential-variance-budget.md`
 | 11 | How far short is the shipped `t_max=15`/`n_steps=500` of `time_averaged_ctqw`'s own convergence criterion on real targets, and is reaching the corrected value practical? | **resolved 2026-07-17: 145,000x-3,950,000x short (grows with system size), and reaching it is currently uncomputable — a real call at the prescribed point did not return after 2+ hours (O(n_steps) Python loop). A capped, honestly-sampled search found real per-target ceilings instead: KRAS_G12C 0.475 (near chance, cross-checks TASK-0046's 0.525 on an independent axis), BCR_ABL1 0.583 at a *smaller* t_max=2.39 (unexploited headroom, new finding), CARDIAC_MYOSIN 0.815 (inherits that target's 5TBY caveat).** | [[TASK-0110]] |
 | 12 | Is the labeled pocket even present in the apo topology (HYP-P8), measured directly rather than inferred from other findings? | **resolved 2026-07-17, extended 2026-07-18 once [[TASK-0128]] unblocked cumulative overlap for all 3 targets — all classify `LEARNABLE`, not the clean "KRAS is cryptic" story the panel expected.** KRAS_G12C: pocket RMSD 2.27x background, but cumulative overlap 0.638 — well above the 0.5 low-overlap bar — meaning the apo→holo direction IS substantially spanned by soft ANM modes, contradicting the panel's own Sec.4 prediction. BCR_ABL1: pocket moves *less* than background (ratio 0.49) and CO=0.794, consistent with its prior "apo-computable structural prior" framing (TASK-0104), not a cryptic opening. CARDIAC_MYOSIN: ratio 1.32, CO=0.584 — also `LEARNABLE`, though confounded by its own 5TBY data-quality issue and should not be read as cleanly as the other two.** | [[TASK-0120]], [[TASK-0128]] |
 | 13 | Was `most_impactful_term = V_R` (reported in every prior ablation run) a real physics finding, or an artifact of `V_R`'s ~30x-larger normalization scale vs. `V_C`/`V_M`? | **resolved 2026-07-18: artifact.** All five terms are now individually z-scored (std 1 each); `V_R`'s variance share drops from 88.8% to a structural 15.4%, and `lam_C`/`lam_M` go from unreachable (0.1% share each) to 3.8% each. Real-target ablation (KRAS_G12C, BCR_ABL1) now gives `most_impactful_term = V_B` on both, with `V_R` among the *least* impactful on KRAS_G12C. Does not by itself fix the separate proximity confound in the CTQW observable (§2.3) — measurably weakens it (ρ_euclid 0.71-0.83 → 0.22-0.47) but does not eliminate it. | [[TASK-0121]] |
+| 14 | Does the cross-target pattern (beats chance, not floor; raw AUC overstates signal) hold on targets no review cycle has ever seen, run under the fully gauge-fixed pipeline — the direct mitigation for ~15 cycles of repeated exposure to the same 3 answer keys? | **resolved 2026-07-18: yes, 4/4.** PTP1B, CASPASE7, CASPASE1 (new), GLUCOKINASE (new) all land in `BEATS_CHANCE_NOT_FLOOR` with overlapping score/floor 95% CIs — none statistically decisive, same pattern as the mandatory set. PTP1B remains anti-correlated with its true (genuinely distal) pocket (AUC 0.205). `most_impactful_term` is never `V_R` on any of the 4 — independent cross-check of [[TASK-0121]] on data its own validation never touched. Ceiling intentionally deferred for all 4 (known-stale `ceiling.py::_PARAM_RANGES`, [[TASK-0116]]'s scope, not a shortcut taken here). | [[TASK-0081]], [[TASK-0127]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

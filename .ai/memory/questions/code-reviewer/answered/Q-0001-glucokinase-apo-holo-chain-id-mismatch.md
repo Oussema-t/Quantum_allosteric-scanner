@@ -5,7 +5,7 @@
 - ID: Q-0001 (code-reviewer addressee folder — first question filed here, folder
   created per `.ai/memory/questions/README.md`'s "create the first time a question
   needs one" rule)
-- Status: Open
+- Status: Answered
 - Addressee: Code Reviewer
 - Raised By: Implementer C, 2026-07-15
 - Related: [[TASK-0081]] (generalization set, ASD targets, in progress),
@@ -66,8 +66,22 @@ write-up, not silently substituted for GLUCOKINASE without a note).
 
 ## Answer
 
-(empty — Status: Open)
+**Answered by Implementer C, 2026-07-18, TASK-0127.** Option 1 — a real
+schema gap, worth generalizing past this one target. Added optional
+`apo_chains`/`holo_chains` per-role override fields: `clean_from_config`
+now reads `cfg.get(f"{role}_chains", cfg.get("chains"))` instead of always
+reading the shared `chains` field. Additive and fully backward-compatible
+— every target that only ever set `chains` (all 13 others) is unaffected,
+verified by a new `chains` == `chains` fallback test
+(`test_clean.py::test_falls_back_to_shared_chains_when_no_per_role_override`).
+`GLUCOKINASE` now sets `apo_chains: ["A"]`, `holo_chains: ["X"]`, matching
+TASK-0081's own already-confirmed real data, and is promoted from `draft`
+to `verified: true`.
 
 ## Action
 
-(empty until answered)
+`__WORK_IN_PROGRESS__/src/allostery/clean.py::clean_from_config` — added
+the per-role fallback (5 lines). `__WORK_IN_PROGRESS__/tests/test_clean.py`
+— new file, 5 tests covering the override/fallback logic without a live
+RCSB fetch. `config/targets.yaml`'s `GLUCOKINASE` entry updated. See
+[[TASK-0127]]'s Done section for the real end-to-end run this unblocked.

@@ -19,14 +19,17 @@ from allostery.clean import load_target_config  # noqa: E402
 CONFIG_PATH = Path(__file__).resolve().parent.parent / "config" / "targets.yaml"
 
 MANDATORY_TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN", "MYC_MAX"]
-# PTP1B/CASPASE7 promoted to `verified` by TASK-0081 (2026-07-15):
-# independently RCSB-reconfirmed (real chain IDs, real hetero ligand
+# PTP1B/CASPASE7 promoted to `verified` by TASK-0081 (2026-07-15);
+# CASPASE1/GLUCOKINASE promoted to `verified` by TASK-0127 (2026-07-18) --
+# each independently RCSB-reconfirmed (real chain IDs, real hetero ligand
 # records checked directly, not trusted from either source doc) and run
 # for real through the end-to-end pipeline as this project's ASD
-# generalization set -- no longer draft/unverified.
-ASD_VERIFIED_TARGETS = ["PTP1B", "CASPASE7"]
+# generalization set -- no longer draft/unverified. GLUCOKINASE's apo/holo
+# use different chain letters for the same biological chain (apo_chains/
+# holo_chains, not the shared `chains` field -- see Q-0001/clean.py).
+ASD_VERIFIED_TARGETS = ["PTP1B", "CASPASE7", "CASPASE1", "GLUCOKINASE"]
 ASD_DRAFT_TARGETS = [
-    "GLUCOKINASE", "ATCase", "CASPASE1", "HEMOGLOBIN",
+    "ATCase", "HEMOGLOBIN",
     "TAR_RECEPTOR", "GLYCOGEN_PHOSPHORYLASE", "PFK", "GROEL_SUBUNIT",
 ]
 ALL_TARGETS = MANDATORY_TARGETS + ASD_VERIFIED_TARGETS + ASD_DRAFT_TARGETS
@@ -98,7 +101,14 @@ def test_asd_verified_targets_are_verified_with_resolvable_drug_ligand():
         cfg = load_target_config(name, config_path=CONFIG_PATH)
         assert cfg["status"] == "verified"
         assert cfg["verified"] is True
-        assert cfg["chains"] is not None
+        # TASK-0127: `chains` is None for a target using the per-role
+        # apo_chains/holo_chains override instead (GLUCOKINASE) -- either
+        # form must resolve real chains, not just the shared field.
+        has_shared_chains = cfg.get("chains") is not None
+        has_per_role_chains = cfg.get("apo_chains") is not None and cfg.get("holo_chains") is not None
+        assert has_shared_chains or has_per_role_chains, (
+            f"{name}: neither `chains` nor both `apo_chains`/`holo_chains` resolved"
+        )
         assert cfg["drug_ligand"] is not None
         assert isinstance(cfg["drug_ligand"], str)  # TASK-0081: PTP1B's
         # unquoted `892` silently parsed as a YAML int and never matched

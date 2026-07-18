@@ -7,7 +7,14 @@ schema_version: 1
 #
 # Field meanings (inputs to derivation only — see the hard rule below):
 #   apo_pdb / holo_pdb / holo_challenge_pdb : PDB accession codes.
-#   chains            : chain letters to keep during clean() (list[str]).
+#   chains            : chain letters to keep during clean() (list[str]),
+#                       applied identically to both apo and holo.
+#   apo_chains / holo_chains : TASK-0127 -- optional per-role override,
+#                       for the rare case where the same biological chain
+#                       has a different letter in the apo vs. holo
+#                       deposition (e.g. GLUCOKINASE: apo chain A, holo
+#                       chain X). Falls back to `chains` when absent --
+#                       every target that only sets `chains` is unaffected.
 #   keep_nucleic      : passed straight to clean()/clean_from_config().
 #   quarantine / quarantine_reason : passed straight to clean_from_config();
 #                       when quarantine is true, clean_from_config() warns.
@@ -262,40 +269,40 @@ targets:
   GLUCOKINASE:
     apo_pdb: 1V4S
     holo_pdb: 3H1V
-    chains: null   # UNRESOLVED: v2 says "A", backend/systems.py says "X" — conflict, not guessed
+    chains: null   # no single shared value; see apo_chains/holo_chains below
+    apo_chains: ["A"]
+    holo_chains: ["X"]
     keep_nucleic: false
     quarantine: false
     enm_cutoff: 8.0
     pocket_contact_cutoff: 4.5
-    drug_ligand: TK1   # candidate from backend/systems.py; NOT RCSB-rechecked this pass
+    drug_ligand: TK1
     func_ligand: ["Glucose"]
-    status: draft
-    verified: false
+    status: verified
+    verified: true
     confidence: 0.60
     disease: Metabolic/Diabetes
     target_class: Kinase
     site_name: GKA allosteric site
     objective: "Allosteric activator (GKA) site ~20 A from glucose."
     warnings:
-      - "chain conflict: SYSTEMS_allosteric_corrected_v2.md sets chain='A';
-         backend/systems.py sets chain='X'. Left null rather than guessed —
-         verify on RCSB before this target is graduated out of draft."
-      - "drug_ligand 'TK1' is backend/systems.py's already-resolved value
-         (there marked verified=True with a populated pocket), carried
-         here as a candidate only, not independently RCSB-rechecked."
-      - "RCSB-checked 2026-07-15 (TASK-0081): BOTH source docs were right,
-         for different structures -- apo 1V4S has only chain A; holo 3H1V
-         has only chain X. TK1 confirmed present in 3H1V's hetero records.
-         This is a real schema gap (targets.yaml's single `chains` field
-         can't express 'apo chain A maps to holo chain X'), not a
-         resolvable data conflict -- not used for TASK-0081's generalization
-         run for this reason; raised to Code Reviewer,
-         .ai/memory/questions/code-reviewer/open/Q-0001-...md, rather than
-         guessed at or silently worked around here."
+      - "RCSB-reconfirmed 2026-07-18 (TASK-0127): apo 1V4S has only chain
+         A; holo 3H1V has only chain X -- both source docs
+         (SYSTEMS_allosteric_corrected_v2.md='A', backend/systems.py='X')
+         were individually correct, for different structures, not in
+         conflict. TK1 confirmed present in 3H1V's hetero records.
+         `chains`'s single shared value could not express this (TASK-0081
+         found the same thing 2026-07-15, raised as Q-0001, left draft).
+         Resolved by adding `apo_chains`/`holo_chains` optional per-role
+         overrides to `clean_from_config` (additive, falls back to the
+         shared `chains` field when absent -- every other target's config
+         is unaffected). See Q-0001's Answer section."
     source: >
       SYSTEMS_allosteric_corrected_v2.md (2026-06-21, objective) +
-      backend/systems.py (candidate drug_ligand). Not RCSB-rechecked by
-      TASK-0003.
+      backend/systems.py (candidate drug_ligand), independently
+      RCSB-reconfirmed by TASK-0081 (2026-07-15) and graduated to
+      verified by TASK-0127 (2026-07-18) once the per-role chains gap
+      was resolved.
 
   ATCase:
     apo_pdb: 6AT1
@@ -317,25 +324,54 @@ targets:
       - "Allostery is INTER-SUBUNIT (regulatory vs. catalytic chains).
          Single-chain analysis destroys the mechanism — resolve the
          biological assembly before deriving a pocket, per v2."
+      - "RCSB-checked 2026-07-18 (TASK-0127): both 6AT1 and 4KH1 deposited
+         entries have only 4 chains (A-D), not the full dodecameric
+         assembly (2 catalytic C3 trimers + 3 regulatory R2 dimers = 12
+         chains) that carries the regulatory CTP/UTP allosteric site --
+         confirms v2's own warning directly rather than just trusting it.
+         4KH1's only ligand is PAL (PALA, a catalytic-site transition-state
+         analog on chains A/C), not a regulatory-site ligand. Real
+         biological-assembly-expansion work needed, out of TASK-0127's
+         'RCSB-verify the existing draft' scope -- not attempted."
     source: "SYSTEMS_allosteric_corrected_v2.md (2026-06-21). Not RCSB-rechecked."
 
   CASPASE1:
     apo_pdb: 1ICE
     holo_pdb: 2FQQ
-    chains: null   # v2: "VERIFY"
+    chains: ["A", "B"]
     keep_nucleic: false
     quarantine: false
     enm_cutoff: 8.0
     pocket_contact_cutoff: 4.5
-    drug_ligand: null   # v2: "VERIFY"
+    drug_ligand: F1G
     func_ligand: ["substrate"]
-    status: draft
-    verified: false
-    confidence: 0.55
+    status: verified
+    verified: true
+    confidence: 0.75
     target_class: Protease (oligomeric)
     site_name: Allosteric thiol site at dimer interface
     objective: "Allosteric thiol site at dimer interface (zymogen reversal)."
-    source: "SYSTEMS_allosteric_corrected_v2.md (2026-06-21). Not RCSB-rechecked."
+    warnings:
+      - "RCSB-verified 2026-07-18 (TASK-0127), same discipline as CASPASE7
+         (TASK-0081): chains=[A,B] required (allostery is dimer-interface,
+         same mechanism class as CASPASE7). 1ICE (apo) has chains A (167
+         res), B (88 res), and a third chain T (3 res) that is the bound
+         peptide-aldehyde active-site inhibitor Ac-YVAD-CHO (hetero
+         records ACE+ASA on chain T) -- chains=[A,B] naturally excludes
+         it. This means 'apo' is not ligand-free: the catalytic/orthosteric
+         site is covalently occupied by an unrelated active-site inhibitor.
+         Does not corrupt the allosteric-pocket label itself (labels come
+         from holo's drug_ligand contacts + UniProt active-site
+         annotation, neither of which depends on what apo happens to have
+         crystallized with at the orthosteric site) but flagged as a
+         caveat, not silently treated as a clean unbound structure. 2FQQ
+         (holo) is clean: chains A (147 res), B (88 res), ligand F1G (19
+         atoms, chain B) -- a real small-molecule allosteric ligand,
+         confirmed present, not in apo."
+    source: >
+      SYSTEMS_allosteric_corrected_v2.md (2026-06-21, objective). chains
+      and drug_ligand independently RCSB-verified by TASK-0127
+      (2026-07-18), same precedent CASPASE7 (TASK-0081) established.
 
   CASPASE7:
     apo_pdb: 1F1J
@@ -392,6 +428,13 @@ targets:
       - "2HHB is deoxy(T) and 1HHO is oxy(R) — this apo/holo pair is a
          STATE change, not an unbound/bound pair in the usual sense.
          Confirm this is the intended apo/holo sense before use, per v2."
+      - "RCSB-checked 2026-07-18 (TASK-0127): confirms v2's own concern is
+         real, not just a naming worry -- NEITHER 2HHB nor 1HHO has BPG in
+         its hetero records (only HEM, PO4, and 1HHO's bound O2). No
+         drug_ligand is resolvable for the config's own target site at
+         all, same failure mode as TAR_RECEPTOR. Also 2HHB is the full
+         alpha2beta2 tetramer (4 chains) while 1HHO's asymmetric unit only
+         has 2 -- a further apo/holo assembly mismatch. Not used."
     source: "SYSTEMS_allosteric_corrected_v2.md (2026-06-21). Not RCSB-rechecked."
 
   TAR_RECEPTOR:
@@ -442,6 +485,18 @@ targets:
     warnings:
       - "Functional dimer; AMP site near the subunit interface — resolve
          the assembly before deriving a pocket, per v2."
+      - "RCSB-checked 2026-07-18 (TASK-0127): the deposited asymmetric
+         units are actually single-chain (1GPY, 1A8I both chain A only,
+         ~820 res) -- the 'functional dimer' is a biological-assembly
+         fact, not a deposition fact, so multi-chain handling per se is
+         not the blocker here. The real problem: 'apo' 1GPY already has
+         G6P (glucose-6-phosphate) bound -- G6P and the config's intended
+         allosteric ligand AMP are competing effectors at the SAME
+         regulatory site (both stabilize the T-state). 1A8I ('holo') has
+         GLS (glucose) instead, at the catalytic site, not confirmed at
+         the AMP/G6P allosteric site. Neither structure is a clean
+         apo/holo pair for the target pocket -- the labeled 'apo' is
+         already occupied at the site of interest. Not used."
     source: "SYSTEMS_allosteric_corrected_v2.md (2026-06-21). Not RCSB-rechecked."
 
   PFK:
@@ -463,6 +518,18 @@ targets:
     warnings:
       - "Bacterial (E. coli) PFK — may not transfer to human targets.
          Homotetramer; allosteric site at subunit interface, per v2."
+      - "RCSB-checked 2026-07-18 (TASK-0127): a more severe problem than
+         the organism-transfer concern -- apo (1PFK) chains are ~320 res
+         each, holo (3O8L) chains are ~748 res each. That size gap is too
+         large for a conformational-state difference on the same protein;
+         these two PDB entries most likely are not the same protein
+         (3O8L looks like a eukaryotic/different PFK isoform, not the same
+         E. coli enzyme). Also 'apo' 1PFK already has FBP bound (the
+         config's own intended allosteric activator ligand) on both
+         chains -- not apo for the site of interest even if the
+         size mismatch were resolved. 3O8L's only ligand is PO4 (not FBP
+         or ADP). Not used; would need correct apo/holo PDB IDs re-sourced
+         from scratch, out of TASK-0127's verify-the-draft-pool scope."
     source: "SYSTEMS_allosteric_corrected_v2.md (2026-06-21). Not RCSB-rechecked."
 
   GROEL_SUBUNIT:
