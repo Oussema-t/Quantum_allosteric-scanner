@@ -338,6 +338,7 @@ def run_frozen_verdict(
     holo_idx=None,
     consistency_k: int = 20,
     coherent: bool = True,
+    use_converged_limit: bool = False,
 ) -> dict:
     """Select an operator/parameter config for `target_name` blind to its
     labels, then score and stamp the result -- the safety-critical core of
@@ -392,6 +393,13 @@ def run_frozen_verdict(
     selection heuristics stay on the coherent superposition they were
     built and tested against; this parameter only affects the reported
     AUCs, not which candidate wins).
+
+    `use_converged_limit` (TASK-0130): passed straight through to
+    `benchmark`'s and every `quantum_vs_classical` call's own
+    `use_converged_limit` parameter (apo and holo alike) -- same "affects
+    reported AUCs, not candidate selection" boundary as `coherent` above.
+    `AUC_apo_Hnew_optimised` (from `qvc["ctqw"]`) is the "actual" score
+    this affects most directly.
     """
     from .analysis import (
         ablation,
@@ -408,6 +416,7 @@ def run_frozen_verdict(
         bench = benchmark(
             coords, bfactors, source, labels,
             cutoff=cutoff, t_max=t_max, n_steps=n_steps, coherent=coherent,
+            use_converged_limit=use_converged_limit,
         )
         abl = ablation(
             coords, bfactors, source, labels,
@@ -417,6 +426,7 @@ def run_frozen_verdict(
         qvc = quantum_vs_classical(
             winner["H"], winner.get("source", source), labels,
             t_max=winner.get("t", t_max), n_steps=n_steps, coherent=coherent,
+            use_converged_limit=use_converged_limit,
         )
 
         # TASK-0112: return_ci=True attaches a block-bootstrap CI to both
@@ -435,6 +445,7 @@ def run_frozen_verdict(
             holo_qvc = quantum_vs_classical(
                 holo_H, holo_source, holo_labels,
                 t_max=winner.get("t", t_max), n_steps=n_steps, coherent=coherent,
+                use_converged_limit=use_converged_limit,
             )
             auc_holo_optimised = _finite_or_none(holo_qvc["ctqw"]["AUC"])
             if apo_idx is not None and holo_idx is not None:

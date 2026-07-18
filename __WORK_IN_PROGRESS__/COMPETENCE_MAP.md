@@ -74,9 +74,83 @@ gated tasks below), that gap is stated explicitly, not filled with an estimate.
 > them. Old numbers are not deleted — see the TASK-0118 table and prose immediately
 > below, kept intact, now itself marked superseded rather than rewritten in place.
 
+> **SUPERSEDED A THIRD TIME, 2026-07-18 by [[TASK-0130]] — the clock parameter itself is
+> gone, not just corrected.** TASK-0129 (immediately above) still carried a `t*`/`t_max`
+> to derive per operator; TASK-0110 had already found `time_averaged_ctqw`'s own
+> literature-grounded convergence criterion for that clock is computationally infeasible
+> to satisfy on real targets (145,000x-3,950,000x the shipped `t_max=15` default — a
+> single call did not return after 2+ hours). TASK-0130 replaced `time_averaged_ctqw`'s
+> finite-time approximation with its exact infinite-time closed form
+> (`propagators.time_averaged_ctqw_converged`, `sum_k |v_k(j)|^2|v_k(source)|^2`,
+> generalized to handle degenerate eigenspaces correctly per a real correctness bug the
+> plain index formula would silently have — see that task's Done section) for every
+> headline number's "ctqw" side — **there is no `t_max`/`t*`/`n_steps` left to choose,
+> derive, or disclose for this quantity at all.** Re-ran floor/ceiling/actual (all 3
+> mandatory targets) and the 96-cell operator sweep under this convention, both wired to
+> [[TASK-0112]]'s bootstrap CI directly (not a separate pass). **Headline: KRAS_G12C's
+> point-estimate diagnosis flips from `NO_SIGNAL_IN_APO` to `NO_FAILURE_DETECTED`** —
+> actual (0.5901) now clears its own floor (0.4818) by a real point-estimate margin
+> (+73.7% headroom) — **but the 95% CI still overlaps the floor's own CI
+> (`ci_overlap=True`), so this is not a statistically decided win**, only a genuine change
+> in the point estimate once the last unmeasured gauge (the clock) is removed rather than
+> merely fixed. BCR_ABL1 and CARDIAC_MYOSIN's actual results remain statistically
+> indistinguishable from their own floors under this convention too (both
+> `ci_overlap=True`) — **no mandatory target's shipped actual result is a statistically
+> decided win over its own floor**, the same qualitative conclusion as TASK-0129's, now
+> reached with zero remaining clock-gauge uncertainty. Old numbers (TASK-0129's own table,
+> immediately below) are not deleted.
+
 ---
 
 ## Mandatory targets — floor / ceiling / actual / headroom
+
+**Recomputed 2026-07-18 under [[TASK-0130]]'s closed-form fix — `time_averaged_ctqw`'s
+exact infinite-time limit (`propagators.time_averaged_ctqw_converged`), full-array
+incoherent-mixture seed (unchanged from TASK-0118/0129). No `t_max`/`t*`/`n_steps` column
+below: there is no finite-time clock parameter left for this quantity at all — the whole
+column TASK-0129's own table below carried (`t*`) no longer exists as a concept. All
+numbers carry a 95% block-bootstrap CI ([[TASK-0112]]), wired in directly.**
+
+| Target | Floor [95% CI] | Ceiling [95% CI] | Actual (AUC) [95% CI] | Diagnosis | Headroom | CI overlaps floor? |
+|---|---|---|---|---|---|---|
+| KRAS_G12C | 0.4818 [0.333, 0.675] | 0.6288 [0.466, 0.773] | 0.5901 [0.373, 0.748] | `NO_FAILURE_DETECTED` | **+73.7%** (point estimate clears floor) | **Yes** — not statistically decided |
+| BCR_ABL1 | 0.5817 [0.414, 0.720] | 0.6671 [0.530, 0.784] | 0.5266 [0.381, 0.662] | `NO_SIGNAL_IN_APO` | **−64.5%** | Yes |
+| CARDIAC_MYOSIN | 0.7921 [0.577, 0.913] | 0.8297 [0.615, 0.926] | 0.7272 [0.549, 0.853] | `BEATS_CHANCE_NOT_FLOOR` | **−173.0%** | Yes |
+
+**Headline: KRAS_G12C's point-estimate diagnosis changes** (`NO_SIGNAL_IN_APO` under
+TASK-0129 -> `NO_FAILURE_DETECTED` here) — the actual result's point estimate now clears
+its own floor by a real margin, a genuine change once the clock gauge is fully removed
+rather than merely corrected. **This is not yet a statistically decided win**: the actual
+and floor 95% CIs still overlap substantially. BCR_ABL1 and CARDIAC_MYOSIN show the same
+qualitative shape as TASK-0129 (actual does not clear floor, CIs overlap either way) — the
+closed form did not manufacture a different story for either. Every ceiling still clears
+its own floor as a point estimate (real headroom exists in `H_new`'s physical-scalar space
+for all three targets), but every ceiling-vs-floor CI overlaps too — none of the three is
+a statistically decided ceiling-over-floor margin either, a caveat TASK-0129's own table
+did not carry (pre-TASK-0112-wiring for this specific script). Sources:
+- **This recompute (all columns + CI)**: `results_task0130_competence/
+  closed_form_competence.json` (`scripts/closed_form_competence_map_rerun.py`) —
+  standalone script calling `protocol.run_frozen_verdict`/`ceiling.ceiling_search` with
+  the new `use_converged_limit=True` option (TASK-0130, ADD-only on both functions and on
+  `analysis.benchmark`/`analysis.quantum_vs_classical`/`analysis.operator_sweep`/
+  `ceiling.consistency_score`), same "standalone, does not touch live pipeline defaults"
+  discipline as TASK-0129's own script.
+- **96-cell operator-level cross-check**: `results_task0130_competence/
+  closed_form_sweep.json`/`sweep_report.md` (`scripts/closed_form_operator_sweep.py`)
+  independently reproduces KRAS_G12C's `H_new`/`ctqw` AUC to 3 decimals (0.590 both
+  places) via a separate code path (`analysis.operator_sweep`, not `run_frozen_verdict`).
+- **BCR_ABL1 CTQW-trapping reproduction (TASK-0106) under the closed form**: `results_
+  task0130_competence/trapping_reproduction_closed_form.json` — a real, unflagged finding
+  worth stating plainly: at the true infinite-time limit, `H_new_default`'s participation
+  ratio (0.0079) is no longer distinguishable in kind from `H10`/`H2`'s (0.0077-0.0079) —
+  the localization/trapping *contrast* between `H_new` and the transport-preserving
+  baselines that TASK-0106/TASK-0119 measured at finite `t_max`/`t*` (PR 0.299 vs.
+  comparable) largely washes out once every eigenmode has had time to contribute. This
+  does not retract TASK-0119's own finding (real and gauge-robust *at the timescale it
+  measured*) — it shows that timescale is not the converged/infinite-time endpoint, a
+  distinct fact worth a dedicated read rather than silently reconciling the two numbers.
+
+### TASK-0129's own table (combined seed+clock fix, superseded above) — kept for the old-vs-new record, no longer this document's current state
 
 **Recomputed 2026-07-17/18 under [[TASK-0129]]'s combined fix (TASK-0118's full-array
 incoherent-mixture seed AND TASK-0119's per-operator `t*`, together) — see the
@@ -384,13 +458,29 @@ CARDIAC_MYOSIN's reading changed.
 
 ## Open items
 
+- **Closed-form re-run — done, closes every clock-gauge item below** ([[TASK-0130]],
+  2026-07-18). `time_averaged_ctqw`'s exact infinite-time limit
+  (`propagators.time_averaged_ctqw_converged`) replaces the finite-`t_max` approximation
+  for every headline number's "ctqw" side — there is no `t_max`/`t*`/`n_steps` clock
+  parameter left for this quantity at all. This makes the next three items (TASK-0110/
+  BCR_ABL1 short-`t_max` tension, the BCR_ABL1 spectral-gap reproducibility flag, and
+  TASK-0117) **moot, not resolved-in-place**: the specific numerical questions they raised
+  (which `t_max` to trust, which of two disagreeing gap measurements is right) no longer
+  have an object to be about, since no `t_max`/gap is computed for this quantity anymore.
+  Kept below for the historical record, each marked moot rather than deleted, per this
+  document's own no-silent-overwrite convention. [[TASK-0112]]'s bootstrap CI is now wired
+  directly into this document's own headline numbers (see the TASK-0130 table above) — not
+  a separate open item anymore for *this specific* recompute, though TASK-0112's own
+  broader rollout to every other headline AUC in the repo remains its own task.
 - **Combined seed+clock re-run — done** ([[TASK-0129]], 2026-07-17/18, closes the item
   that used to be here). [[TASK-0118]] and [[TASK-0119]] landed concurrently and were
   not combined; TASK-0129 re-ran floor/ceiling/actual and the 96-cell operator sweep
   under both fixes together. Headline: CARDIAC_MYOSIN's seed-only-fix positive did not
   survive; no mandatory target's actual result clears its own floor under the fully
   corrected convention. See the SUPERSEDED notice and per-target sections above.
-- **TASK-0110/BCR_ABL1 short-`t_max` tension — flagged, not resolved** ([[TASK-0129]]):
+- **TASK-0110/BCR_ABL1 short-`t_max` tension — MOOT as of [[TASK-0130]]** (2026-07-18: no
+  `t_max` is computed for `time_averaged_ctqw` anymore; kept below for the record).
+  Originally flagged, not resolved ([[TASK-0129]]):
   TASK-0110's own AUC-optimal `t_max=2.39` for BCR_ABL1 scores *better* (0.5829,
   `coherent=True`) than either estimate of `H_new`'s numerically-adequate convergence
   time (23.8 or 123.1, themselves disagreeing — see below) scores under the combined
@@ -398,44 +488,52 @@ CARDIAC_MYOSIN's reading changed.
   here, not help it. Would need a real `coherent=False` re-run of TASK-0110's own
   Optuna search to properly reconcile; out of this task's own scope ("does not design a
   third fix").
-- **`H_new`'s BCR_ABL1 spectral gap — reproducibility question, flagged, not resolved**
-  ([[TASK-0129]]): freshly computed twice in the current environment (`gap=0.0374`,
+- **`H_new`'s BCR_ABL1 spectral gap — reproducibility question — MOOT as of
+  [[TASK-0130]]** (2026-07-18: no gap-derived `t*` is computed for `time_averaged_ctqw`
+  anymore; kept below for the record). Originally flagged, not resolved ([[TASK-0129]]):
+  freshly computed twice in the current environment (`gap=0.0374`,
   `t*=123.1`), consistent with itself but disagreeing with [[TASK-0119]]'s own recorded
   value for the identical computation (`gap=0.1933`, `t*=23.8`) on byte-identical input
   data. Plausibly explained by a genuine near-continuum in this operator/target's low
   spectrum (8 eigenvalues packed within a 0.14 span) making "the gap" numerically
   fragile — not chased further, a numerical-stability question orthogonal to this task's
   own seed+clock scope.
-- **TASK-0112** (open): no confidence interval on any number in this document —
-  `metrics.block_bootstrap_ci` exists and is used by `select.py`'s LOPO path but is not
-  wired into any headline AUC this document cites. Every margin above should be re-read
-  with a CI once this lands — now against the TASK-0129-recomputed numbers.
+- **TASK-0112 — wired in directly as of [[TASK-0130]]** (2026-07-18): every number in
+  this document's own current (TASK-0130) table above carries a 95% block-bootstrap CI,
+  computed in the same recompute pass, not a separate afterthought. Originally open: no
+  confidence interval on any number in this document — `metrics.block_bootstrap_ci`
+  exists and is used by `select.py`'s LOPO path but was not wired into any headline AUC
+  this document cites.
 - **TASK-0116** (open): every target's ceiling-vs-floor margin (all three positive, per
   the recompute above) rests on 60 blind random draws over an ~8-dimensional space —
   flagged as weak evidence, originally for KRAS_G12C's negative claim specifically, but
   the same sparse-search caveat applies to trusting any of the three ceiling numbers as a
   tight upper bound. A denser/space-filling search could still find a materially
   different ceiling on any target.
-- **TASK-0117** (open): the ceiling search's own numerical parameters (`n_steps` derived
-  from `H_new`'s own `n*`, per this recompute) still lack a formal confidence-interval
-  wrapper — TASK-0117 itself is substantially addressed by TASK-0119/TASK-0129's clock
-  work for the *point-estimate* axis, but the search-coverage question (TASK-0116) is
-  distinct and still open.
+- **TASK-0117 — MOOT as of [[TASK-0130]]** (2026-07-18: no `n_steps`/`t_max` is derived
+  for `time_averaged_ctqw` anymore, so there is no clock-derived numerical parameter left
+  to wrap in a CI for this quantity; kept below for the record). Originally open: the
+  ceiling search's own numerical parameters (`n_steps` derived from `H_new`'s own `n*`,
+  per the TASK-0129 recompute) still lacked a formal confidence-interval wrapper — the
+  search-*coverage* question (TASK-0116, below) is distinct and still genuinely open,
+  unaffected by TASK-0130.
 - **TASK-0124** (open): CARDIAC_MYOSIN's apo structure (5TBY, 20 Å docked homology model)
   still carries its own unresolved data-quality caveat — now the *only* remaining
   question for this target, since TASK-0129 already found it has no headroom to defend
   even setting the structure question aside.
-- **Q-0003** (`.ai/memory/questions/architect-planner/open/`): **further resolved by
-  TASK-0129** — the floor/ceiling/headroom framing itself was sound; both the seed gauge
-  and the clock gauge feeding it are now fixed, and the framing correctly surfaced a
-  real, honest negative result under the corrected numbers. The CI/search-coverage
-  questions (TASK-0112/0116) that motivated re-examining the framing remain open, now
-  against the doubly-corrected numbers.
-- **`H10`'s own `t*` not separately computed** ([[TASK-0129]]): the competence-map axis
-  applies `H_new`'s own default-config `t*` uniformly to both benchmark candidates and
-  every ceiling trial (a stated simplification, see this document's own table note and
-  TASK-0129's Done section) — a materially different `H10` `t*` is not ruled out and not
-  checked.
+- **Q-0003 — fully closed as of [[TASK-0130]]** (`.ai/memory/questions/architect-planner/
+  answered/Q-0003-...md`): the floor/ceiling/headroom framing has now been exercised
+  under three successive gauge corrections (seed, clock, and full clock-removal) and held
+  up each time — it correctly surfaces what the data says at each stage, including this
+  stage's own new finding (KRAS_G12C's point estimate now clears its floor, but the CI
+  says this isn't decided yet) without needing further redesign. TASK-0116 (ceiling
+  search coverage) remains its own separate, still-open question — never part of what
+  Q-0003 asked.
+- **`H10`'s own `t*` not separately computed — MOOT as of [[TASK-0130]]** (2026-07-18: no
+  `t*` is computed for either operator anymore under the closed form; kept below for the
+  record). Originally flagged ([[TASK-0129]]): the competence-map axis applied `H_new`'s
+  own default-config `t*` uniformly to both benchmark candidates and every ceiling trial
+  — a materially different `H10` `t*` was not ruled out and not checked.
 - **TASK-0081**: generalization-set rows, not yet run (and not re-run under TASK-0118's
   convention — out of scope, flagged as a gap for whoever picks up TASK-0081/0127 next).
 - **TASK-0083** (result artifact contract, not yet started): this document is a plain

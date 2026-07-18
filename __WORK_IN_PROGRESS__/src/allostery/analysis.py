@@ -59,6 +59,7 @@ def quantum_vs_classical(
     n_steps: int = 500,
     *,
     coherent: bool = True,
+    use_converged_limit: bool = False,
 ) -> dict:
     """CTQW vs `propagators.ground_state_relaxation` on the *same* H.
 
@@ -95,10 +96,25 @@ def quantum_vs_classical(
     way (it already treats a multi-index `source` as an incoherent
     probability split, by construction, not a choice this parameter
     changes).
-    """
-    from .propagators import time_averaged_ctqw, ground_state_relaxation
 
-    occ_ctqw = time_averaged_ctqw(H, t_max, source=source, n_steps=n_steps, coherent=coherent)
+    `use_converged_limit` (TASK-0130): `False` (default, byte-identical
+    to every existing call site) uses `time_averaged_ctqw(H, t_max,
+    ...)` as before. `True` uses `propagators.time_averaged_ctqw_
+    converged` instead -- the exact infinite-time closed form, ignoring
+    `t_max`/`n_steps` entirely for the "ctqw" side (`t_max` still governs
+    `ground_state_relaxation`'s own, unaffected, unrelated convergence
+    criterion -- see `check_convergence`'s two-independent-checks
+    docstring). Exists because `t_max=15` is 145,000x-3,950,000x short of
+    `time_averaged_ctqw`'s own AAKV convergence criterion on every real
+    target checked (TASK-0110); the closed form sidesteps that gap
+    entirely for a caller who wants the converged value.
+    """
+    from .propagators import ground_state_relaxation, time_averaged_ctqw, time_averaged_ctqw_converged
+
+    if use_converged_limit:
+        occ_ctqw = time_averaged_ctqw_converged(H, source=source, coherent=coherent)
+    else:
+        occ_ctqw = time_averaged_ctqw(H, t_max, source=source, n_steps=n_steps, coherent=coherent)
     occ_heat = ground_state_relaxation(H, t_max, source=source)
 
     if labels is None:
@@ -173,6 +189,7 @@ def benchmark(
     n_steps: int = 500,
     *,
     coherent: bool = True,
+    use_converged_limit: bool = False,
 ) -> dict:
     """Default-parameter (not optimized -- see TASK-0008's Open Question on
     notebook Sec.8's coordinate-descent optimizer, out of this module's
@@ -182,17 +199,27 @@ def benchmark(
     `coherent` (TASK-0118): passed straight through to `time_averaged_ctqw`
     for both operators -- see that function's own docstring.
 
+    `use_converged_limit` (TASK-0130): `False` (default, unchanged
+    behavior) uses `time_averaged_ctqw(H, t_max, ...)`; `True` uses the
+    exact infinite-time closed form (`time_averaged_ctqw_converged`)
+    instead, ignoring `t_max`/`n_steps` -- see `quantum_vs_classical`'s
+    own docstring for why this exists.
+
     Returns {"H_new_default": metric_pack, "H10_disorder_suppressed":
     metric_pack}.
     """
     from .hamiltonians import build_H_new, build_H10
-    from .propagators import time_averaged_ctqw
+    from .propagators import time_averaged_ctqw, time_averaged_ctqw_converged
 
     H_new = build_H_new(coords, bfactors, cutoff=cutoff)
     H10 = build_H10(coords, bfactors, cutoff=cutoff)
 
-    occ_new = time_averaged_ctqw(H_new, t_max, source=source, n_steps=n_steps, coherent=coherent)
-    occ_10 = time_averaged_ctqw(H10, t_max, source=source, n_steps=n_steps, coherent=coherent)
+    if use_converged_limit:
+        occ_new = time_averaged_ctqw_converged(H_new, source=source, coherent=coherent)
+        occ_10 = time_averaged_ctqw_converged(H10, source=source, coherent=coherent)
+    else:
+        occ_new = time_averaged_ctqw(H_new, t_max, source=source, n_steps=n_steps, coherent=coherent)
+        occ_10 = time_averaged_ctqw(H10, t_max, source=source, n_steps=n_steps, coherent=coherent)
 
     return {
         "H_new_default": _metric_pack(occ_new, labels),
@@ -784,6 +811,7 @@ def operator_sweep(
     n_steps: int = 500,
     *,
     coherent: bool = True,
+    use_converged_limit: bool = False,
 ) -> list:
     """Score every named operator, through every named propagator, against
     `pocket_label` and TASK-0094's proximity floor. Tier-1 (descriptive)
@@ -806,6 +834,15 @@ def operator_sweep(
     does not abort the rest of the sweep (this task's own Acceptance
     Scenario).
 
+    `use_converged_limit` (TASK-0130): `False` (default, unchanged
+    behavior) scores the `"ctqw"` propagator via `time_averaged_ctqw(H,
+    t_max, ...)`; `True` scores it via the exact infinite-time closed
+    form (`time_averaged_ctqw_converged`) instead, ignoring `t_max`/
+    `n_steps` for that propagator only -- `"ground_state"` is unaffected
+    either way (see `quantum_vs_classical`'s own docstring for why this
+    exists: `t_max=15` is orders of magnitude short of this criterion on
+    every real target checked).
+
     Returns a list of row-dicts: `operator`, `tier` ("A"/"B"), `propagator`,
     `auc`, `floor_cleared` (bool, via `diagnostics.classify_failure` --
     reuses the existing chance-then-floor precedence, not a new
@@ -818,11 +855,18 @@ def operator_sweep(
     from .metrics import auc as _auc_fn
     from .propagators import ground_state_relaxation as _gsr_fn
     from .propagators import time_averaged_ctqw as _ctqw_fn
+    from .propagators import time_averaged_ctqw_converged as _ctqw_converged_fn
 
-    propagator_fns = {
-        "ctqw": lambda H, source_: _ctqw_fn(H, t_max, source=source_, n_steps=n_steps, coherent=coherent),
-        "ground_state": lambda H, source_: _gsr_fn(H, t_max, source=source_),
-    }
+    if use_converged_limit:
+        propagator_fns = {
+            "ctqw": lambda H, source_: _ctqw_converged_fn(H, source=source_, coherent=coherent),
+            "ground_state": lambda H, source_: _gsr_fn(H, t_max, source=source_),
+        }
+    else:
+        propagator_fns = {
+            "ctqw": lambda H, source_: _ctqw_fn(H, t_max, source=source_, n_steps=n_steps, coherent=coherent),
+            "ground_state": lambda H, source_: _gsr_fn(H, t_max, source=source_),
+        }
 
     registry = _operator_registry()
     op_names = list(operators) if operators is not None else list(registry)

@@ -39,12 +39,9 @@ from __future__ import annotations
 
 import numpy as np
 
+_LAM_NAMES = ("lam_B", "lam_T", "lam_R", "lam_C", "lam_M")
+_LAM_BUDGET = 0.4  # TASK-0116/TASK-0121: sum|lam_i| <= 0.2*J, J<=2 universally -> 0.4
 _PARAM_RANGES = {
-    "lam_B": (0.0, 2.0),
-    "lam_T": (0.0, 2.0),
-    "lam_R": (0.0, 2.0),
-    "lam_C": (0.0, 2.0),
-    "lam_M": (0.0, 2.0),
     "alpha": (0.1, 0.6),
     "cutoff": (8.0, 12.0),  # notebook's "r_c"
 }
@@ -53,8 +50,27 @@ _N_LOW_CHOICES = (5, 8, 10, 12, 15)
 
 def sample_params(rng: np.random.Generator) -> dict:
     """One random draw over `build_H_new`'s physical scalars -- notebook
-    cell 43's `sample_params`, minus `kernel` (module docstring)."""
-    params = {name: float(rng.uniform(lo, hi)) for name, (lo, hi) in _PARAM_RANGES.items()}
+    cell 43's `sample_params`, minus `kernel` (module docstring).
+
+    TASK-0116/TASK-0121: `lam_B/T/R/C/M` are no longer sampled
+    independently on `(0.0, 2.0)` each (that range predates
+    `potentials.py`'s z-scoring and permitted `sum|lam_i|` up to 10 --
+    ~25x this project's own `sigma(V) <= 0.2*J <= 0.4` bound, so the old
+    range sampled almost entirely from the Anderson-localized regime
+    TASK-0121 exists to escape). Now sampled on the constrained simplex
+    `sum(lam_i) <= 0.4`: a total budget is drawn uniformly on
+    `[0, 0.4]` (so the search also explores *under*-using the budget,
+    not just its boundary), then split among the 5 terms via a
+    `Dirichlet(1,1,1,1,1)` draw (uniform over relative proportions) --
+    this is what makes a uniform draw over the simplex's interior, not
+    just its vertices/boundary. `alpha`/`cutoff`/`n_low` unchanged --
+    this task is a search-coverage fix over the `lam_*` axis specifically,
+    not a re-derivation of the other DOF's ranges.
+    """
+    budget = float(rng.uniform(0.0, _LAM_BUDGET))
+    proportions = rng.dirichlet(np.ones(len(_LAM_NAMES)))
+    params = {name: float(p * budget) for name, p in zip(_LAM_NAMES, proportions)}
+    params.update({name: float(rng.uniform(lo, hi)) for name, (lo, hi) in _PARAM_RANGES.items()})
     params["n_low"] = int(rng.choice(_N_LOW_CHOICES))
     return params
 
@@ -97,6 +113,7 @@ def consistency_score(
     t_max: float = 15.0,
     n_steps: int = 500,
     coherent: bool = True,
+    use_converged_limit: bool = False,
 ) -> dict:
     """notebook cell 43's `consistency_score`, ported verbatim (Intent
     Contract): `S = 0.5*(AUC_apo+AUC_holo) - 0.25*|AUC_apo-AUC_holo| +
@@ -107,6 +124,13 @@ def consistency_score(
 
     `coherent` (TASK-0118): passed straight through to `time_averaged_ctqw`
     for both apo and holo occupations -- see that function's own docstring.
+
+    `use_converged_limit` (TASK-0130): `False` (default, unchanged
+    behavior) uses `time_averaged_ctqw(H, t_max, ...)` for both apo and
+    holo occupations; `True` uses the exact infinite-time closed form
+    (`time_averaged_ctqw_converged`) instead, ignoring `t_max`/`n_steps`
+    -- see `analysis.quantum_vs_classical`'s own docstring for why this
+    exists.
 
     Holo scoring is entirely optional (omit `holo_coords`/`holo_pocket`
     for an apo-only search) -- when omitted, or when holo's own pocket
@@ -125,7 +149,7 @@ def consistency_score(
 
     from .hamiltonians import build_H_new
     from .metrics import auc as auc_fn
-    from .propagators import time_averaged_ctqw
+    from .propagators import time_averaged_ctqw, time_averaged_ctqw_converged
 
     def _build(coords, bfactors):
         return build_H_new(
@@ -135,9 +159,14 @@ def consistency_score(
             lam_C=params["lam_C"], lam_M=params["lam_M"], n_low_modes=params["n_low"],
         )
 
+    def _occ(H, source_):
+        if use_converged_limit:
+            return time_averaged_ctqw_converged(H, source=source_, coherent=coherent)
+        return time_averaged_ctqw(H, t_max, source=source_, n_steps=n_steps, coherent=coherent)
+
     y_a = np.asarray(apo_pocket).astype(int)
     H_a = _build(apo_coords, apo_bfactors)
-    occ_a = time_averaged_ctqw(H_a, t_max, source=apo_source, n_steps=n_steps, coherent=coherent)
+    occ_a = _occ(H_a, apo_source)
     auc_a = auc_fn(occ_a, y_a) if y_a.sum() >= 3 else float("nan")
 
     auc_h = float("nan")
@@ -145,7 +174,7 @@ def consistency_score(
     if holo_coords is not None and holo_pocket is not None:
         y_h = np.asarray(holo_pocket).astype(int)
         H_h = _build(holo_coords, holo_bfactors)
-        occ_h = time_averaged_ctqw(H_h, t_max, source=holo_source, n_steps=n_steps, coherent=coherent)
+        occ_h = _occ(H_h, holo_source)
         if y_h.sum() >= 3 and (len(y_h) - y_h.sum()) >= 3:
             auc_h = auc_fn(occ_h, y_h)
         if apo_resnames is not None and holo_resnames is not None:
@@ -194,6 +223,7 @@ def ceiling_search(
     t_max: float = 15.0,
     n_steps: int = 500,
     coherent: bool = True,
+    use_converged_limit: bool = False,
 ) -> dict:
     """Random search driver over `consistency_score` (notebook cell 43's
     `OPT[name] = ...` loop, `N_trials=60` default matching the notebook),
@@ -204,6 +234,10 @@ def ceiling_search(
 
     `coherent` (TASK-0118): passed straight through to every trial's
     `consistency_score` call -- see that function's own docstring.
+
+    `use_converged_limit` (TASK-0130): passed straight through to every
+    trial's `consistency_score` call -- see that function's own
+    docstring.
 
     `seed=7` matches the notebook's own `np.random.default_rng(7)` --
     reproducing the notebook's exact trial sequence for the cross-check
@@ -236,6 +270,7 @@ def ceiling_search(
                     holo_coords=holo_coords, holo_bfactors=holo_bfactors,
                     holo_source=holo_source, holo_pocket=holo_pocket, holo_resnames=holo_resnames,
                     t_max=t_max, n_steps=n_steps, coherent=coherent,
+                    use_converged_limit=use_converged_limit,
                 )
             except Exception:
                 continue
@@ -254,4 +289,104 @@ def ceiling_search(
         "trials": trials,
         "n_trials_run": len(trials),
         "n_trials_scored": len(scored),
+    }
+
+
+def ceiling_search_optuna(
+    target_name: str,
+    apo_coords: np.ndarray,
+    apo_bfactors: np.ndarray,
+    apo_source,
+    apo_pocket: np.ndarray,
+    *,
+    apo_resnames=None,
+    holo_coords: np.ndarray | None = None,
+    holo_bfactors: np.ndarray | None = None,
+    holo_source=None,
+    holo_pocket: np.ndarray | None = None,
+    holo_resnames=None,
+    n_trials: int = 60,
+    seed: int = 7,
+    t_max: float = 15.0,
+    n_steps: int = 500,
+    coherent: bool = True,
+    use_converged_limit: bool = False,
+) -> dict:
+    """TASK-0116: strategy-upgrade companion to `ceiling_search` -- TPE
+    (Optuna) instead of blind random search, over the *same* corrected
+    parameter space `sample_params` now uses (`sum(lam_i) <= 0.4`,
+    TASK-0121's own bound), not the original `(0.0, 2.0)`-per-term range.
+    `consistency_score` is reused completely unchanged as the objective
+    (Out Of Scope: this task changes only how the space is sampled, not
+    what's being scored) -- see that function's own docstring for `S`'s
+    formula.
+
+    The lam simplex is reparametrized for Optuna's `suggest_float`
+    interface (which has no native simplex/Dirichlet suggestion): 5
+    independent `suggest_float(0, 1)` weights are normalized to sum to 1,
+    then scaled by an independently suggested `lam_budget` in
+    `[0, _LAM_BUDGET]` -- structurally the same two-step draw
+    `sample_params` uses (budget, then relative split), just exposed
+    through named `suggest_*` calls so TPE can learn correlations between
+    them across trials, which a single opaque `sample_params(rng)` call
+    would hide from the optimizer entirely.
+
+    A trial whose `consistency_score` returns a `NaN` `S` (degenerate
+    `apo_pocket`, matching `ceiling_search`'s own doc) is pruned via
+    `optuna.TrialPruned` rather than returned as a value TPE would try to
+    rank -- `NaN` is not a valid objective value for a maximizing sampler.
+
+    Returns `{"target", "best", "study", "n_trials_run"}` -- `best` has
+    the same `{"S", "auc_apo", "auc_holo", "rho", "params"}` shape
+    `ceiling_search`'s own `best` does, for direct comparison; `study` is
+    the full `optuna.Study` (trial history, importances, etc.) for
+    whoever wants more than the single winner.
+    """
+    import optuna
+
+    from .protocol import ceiling_context
+
+    def objective(trial: "optuna.Trial") -> float:
+        raw = [trial.suggest_float(f"raw_{name}", 0.0, 1.0) for name in _LAM_NAMES]
+        total = sum(raw)
+        budget = trial.suggest_float("lam_budget", 0.0, _LAM_BUDGET)
+        params = {
+            name: (r / total) * budget if total > 0 else 0.0
+            for name, r in zip(_LAM_NAMES, raw)
+        }
+        params["alpha"] = trial.suggest_float("alpha", *_PARAM_RANGES["alpha"])
+        params["cutoff"] = trial.suggest_float("cutoff", *_PARAM_RANGES["cutoff"])
+        params["n_low"] = trial.suggest_categorical("n_low", list(_N_LOW_CHOICES))
+
+        result = consistency_score(
+            apo_coords, apo_bfactors, apo_source, apo_pocket, params,
+            apo_resnames=apo_resnames,
+            holo_coords=holo_coords, holo_bfactors=holo_bfactors,
+            holo_source=holo_source, holo_pocket=holo_pocket, holo_resnames=holo_resnames,
+            t_max=t_max, n_steps=n_steps, coherent=coherent,
+            use_converged_limit=use_converged_limit,
+        )
+        if np.isnan(result["S"]):
+            raise optuna.TrialPruned()
+        trial.set_user_attr("full_result", result)
+        return result["S"]
+
+    sampler = optuna.samplers.TPESampler(seed=seed)
+    study = optuna.create_study(direction="maximize", sampler=sampler)
+    with ceiling_context():
+        study.optimize(objective, n_trials=n_trials, show_progress_bar=False)
+
+    completed = [t for t in study.trials if t.state == optuna.trial.TrialState.COMPLETE]
+    if not completed:
+        raise RuntimeError(
+            f"ceiling_search_optuna({target_name!r}): every trial (of {len(study.trials)} run) "
+            "was pruned (NaN S) -- check apo_pocket has >=3 positive residues."
+        )
+    best = study.best_trial.user_attrs["full_result"]
+    return {
+        "target": target_name,
+        "best": best,
+        "study": study,
+        "n_trials_run": len(study.trials),
+        "n_trials_scored": len(completed),
     }

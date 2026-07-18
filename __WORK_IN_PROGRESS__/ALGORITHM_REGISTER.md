@@ -27,7 +27,11 @@ path; drive on the global residual, not a local patch.
 **Tama–Sanejouand cumulative overlap — 2001 — 5**
 Not a morph but the diagnostic: how few low modes span Δr = holo−apo. This is the
 Step-2 go/no-go gate and the single most informative number — it tells you per target
-whether the holo direction is even reachable from apo (KRAS Switch-II likely fails).
+whether the holo direction is even reachable from apo. **Corrected 2026-07-18
+(TASK-0130, superseding the "KRAS Switch-II likely fails" prediction above)**:
+TASK-0120 actually ran this gate on real KRAS_G12C data and measured CO(20)=0.638 —
+well above the 0.5 low-overlap bar — so KRAS_G12C's Switch-II pocket direction
+classifies `LEARNABLE`, the opposite of this entry's original (unmeasured) guess.
 Cheap, decisive, leakage-free.
 
 **Plastic Network Model — Maragakis & Karplus 2005 (adenylate kinase) — 4**

@@ -66,7 +66,11 @@ For each training target with known holo:
 **Decision:** high CO + right edges appear → the holo direction is inside the
 admissible manifold (barrier penetrable in a reachable direction) → proceed for that
 target. Low CO → you'd propagate on a fictional graph; **stop for that target** and
-record it. KRAS Switch-II is the expected NO case (local/anharmonic opening). The
+record it. **Corrected 2026-07-18 (TASK-0130, superseding "KRAS Switch-II is the
+expected NO case" below)**: TASK-0120 actually measured this gate on real KRAS_G12C
+data — CO(20)=0.638, above the 0.5 low-overlap bar — so KRAS_G12C is a GO case, not
+the predicted NO. The general NO-case argument below still applies to whichever
+targets actually measure low CO; KRAS_G12C is no longer the example of it. The
 NO result is publishable: "cryptic pocket unreachable by the thermal ensemble of the
 apo state" beats "walk scored at chance."
 

@@ -96,6 +96,33 @@ class TestQuantumVsClassical:
         assert not np.allclose(default["ctqw"], incoherent["ctqw"])
         assert incoherent["ctqw"].sum() == pytest.approx(1.0, abs=1e-6)
 
+    def test_use_converged_limit_default_false_is_byte_identical(self):
+        """TASK-0130: the new flag must not change a single existing
+        caller's output -- default (unset) must equal an explicit
+        `use_converged_limit=False` call exactly."""
+        L = H2_combinatorial_laplacian(COORDS, cutoff=10.0)
+        default = quantum_vs_classical(L, source=0, t_max=5.0, n_steps=50)
+        explicit_false = quantum_vs_classical(L, source=0, t_max=5.0, n_steps=50, use_converged_limit=False)
+        np.testing.assert_array_equal(default["ctqw"], explicit_false["ctqw"])
+
+    def test_use_converged_limit_true_matches_the_closed_form_directly(self):
+        """`use_converged_limit=True` must produce exactly
+        `propagators.time_averaged_ctqw_converged`'s own output, not an
+        approximation of it -- and must differ from the finite-`t_max`
+        default (ignoring `t_max`/`n_steps` entirely, per the docstring),
+        proving the flag actually switches propagators rather than being
+        accepted and silently ignored."""
+        from allostery.propagators import time_averaged_ctqw_converged
+
+        L = H2_combinatorial_laplacian(COORDS, cutoff=10.0)
+        finite = quantum_vs_classical(L, source=0, t_max=5.0, n_steps=50)
+        converged = quantum_vs_classical(L, source=0, t_max=5.0, n_steps=50, use_converged_limit=True)
+        expected = time_averaged_ctqw_converged(L, source=0)
+        np.testing.assert_allclose(converged["ctqw"], expected)
+        assert not np.allclose(finite["ctqw"], converged["ctqw"])
+        # heat (ground_state_relaxation) is unaffected by this flag.
+        np.testing.assert_array_equal(finite["heat"], converged["heat"])
+
 
 # ---------------------------------------------------------------------------
 # ablation
@@ -131,6 +158,15 @@ class TestBenchmark:
         incoherent = benchmark(COORDS, BFACTORS, source=multi_source, labels=LABELS, t_max=5.0, n_steps=50, coherent=False)
         assert not np.allclose(coherent["H_new_default"]["occ"], incoherent["H_new_default"]["occ"])
         assert not np.allclose(coherent["H10_disorder_suppressed"]["occ"], incoherent["H10_disorder_suppressed"]["occ"])
+
+    def test_use_converged_limit_matches_closed_form_for_both_operators(self):
+        from allostery.propagators import time_averaged_ctqw_converged
+
+        result = benchmark(COORDS, BFACTORS, source=0, labels=LABELS, t_max=5.0, n_steps=50, use_converged_limit=True)
+        expected_new = time_averaged_ctqw_converged(build_H_new(COORDS, BFACTORS, cutoff=10.0), source=0)
+        expected_10 = time_averaged_ctqw_converged(build_H10(COORDS, BFACTORS, cutoff=10.0), source=0)
+        np.testing.assert_allclose(result["H_new_default"]["occ"], expected_new)
+        np.testing.assert_allclose(result["H10_disorder_suppressed"]["occ"], expected_10)
 
 
 # ---------------------------------------------------------------------------
@@ -419,6 +455,28 @@ class TestOperatorSweep:
         # every other operator still produced a real result
         non_h13 = [r for r in rows if r["operator"] != "H13"]
         assert all(r["error"] is None for r in non_h13)
+
+    def test_use_converged_limit_changes_ctqw_rows_not_ground_state_rows(self):
+        """TASK-0130: `use_converged_limit=True` must swap the `"ctqw"`
+        propagator to the closed form (different AUC than the finite
+        `t_max=5.0` default, in general) while leaving `"ground_state"`
+        rows byte-identical (unaffected by this flag, per the docstring)."""
+        finite = operator_sweep(
+            COORDS, BFACTORS, self.FLOOR_SOURCE, LABELS, self._floor_scores(),
+            cutoff=10.0, operators=["H10"], propagators=["ctqw", "ground_state"],
+            t_max=5.0, n_steps=50,
+        )
+        converged = operator_sweep(
+            COORDS, BFACTORS, self.FLOOR_SOURCE, LABELS, self._floor_scores(),
+            cutoff=10.0, operators=["H10"], propagators=["ctqw", "ground_state"],
+            t_max=5.0, n_steps=50, use_converged_limit=True,
+        )
+        finite_ctqw = next(r for r in finite if r["propagator"] == "ctqw")
+        converged_ctqw = next(r for r in converged if r["propagator"] == "ctqw")
+        finite_gs = next(r for r in finite if r["propagator"] == "ground_state")
+        converged_gs = next(r for r in converged if r["propagator"] == "ground_state")
+        assert finite_ctqw["auc"] != converged_ctqw["auc"]
+        assert finite_gs["auc"] == converged_gs["auc"]
 
     def test_h10_and_build_h10_agree_exactly(self):
         """build_H10 is a convenience alias for H10_disorder_suppressed --

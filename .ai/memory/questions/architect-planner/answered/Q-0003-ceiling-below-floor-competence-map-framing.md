@@ -146,3 +146,25 @@ No code/task-design action needed beyond what's already in flight — [[TASK-011
 (combined seed+clock re-run, filed this session) carry the remaining open threads forward.
 Filed straight to `answered/`, matching [[Q-0001]]/[[Q-0002]]'s precedent for questions that
 resolve without a distinct new follow-up task of their own.
+
+**Update 2026-07-18, [[TASK-0130]]: fully closed, no remaining clock-gauge question at
+all.** TASK-0129 (above) still had a `t*`/`t_max` clock parameter to choose per operator
+(`min_adequate_t_max`) — item 3's own flagged caveat. TASK-0130 found that criterion is
+itself computationally infeasible to satisfy on real targets (TASK-0110's own measurement:
+145,000x-3,950,000x the shipped default), and replaced `time_averaged_ctqw`'s finite-time
+approximation with its exact infinite-time closed form
+(`propagators.time_averaged_ctqw_converged`) for the "ctqw" side of every headline number —
+there is no `t_max`/`t*`/`n_steps` left to derive, disclose, or get wrong for this quantity
+at all. Re-ran floor/ceiling/actual (all 3 mandatory targets, `scripts/closed_form_
+competence_map_rerun.py`) and the 96-cell operator sweep (`scripts/closed_form_operator_
+sweep.py`) under this convention, both wired to [[TASK-0112]]'s bootstrap CI. Headline:
+KRAS_G12C's point-estimate diagnosis flips `NO_SIGNAL_IN_APO` -> `NO_FAILURE_DETECTED`
+(actual 0.5901 vs floor 0.4818, +73.7% headroom) — a real point-estimate change from
+TASK-0129's own numbers — but the 95% CI still overlaps the floor's own CI
+(`ci_overlap=True`), so this is not yet a statistically decided win, consistent with this
+question's own Answer #1 ("the framing correctly surfaces what it finds; it does not
+manufacture significance"). BCR_ABL1 and CARDIAC_MYOSIN remain unresolved from chance/floor
+under this convention too (both `ci_overlap=True`). Full numbers: `COMPETENCE_MAP.md`'s
+newest SUPERSEDED layer, `results_task0130_competence/closed_form_competence.json`. This
+question requires no further reopening — the framing has now been exercised under three
+successive gauge corrections (seed, clock, and clock-removal) and held up each time.

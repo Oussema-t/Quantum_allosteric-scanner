@@ -389,7 +389,14 @@ def check_convergence(
        the same physical mechanism (oscillatory cross-term cancellation
        under time-averaging). `check_convergence` uses the smallest
        nonzero eigenvalue gap `min_gap` and flags `t_max` as inadequate
-       when `2/(min_gap*t_max) > tol`.
+       when `2/(min_gap*t_max) > tol`. **TASK-0130**: on every real target
+       checked so far, satisfying this criterion is computationally
+       infeasible with `time_averaged_ctqw`'s current implementation
+       (see `min_adequate_t_max`'s own escape-hatch note) -- a caller
+       who wants the converged/decoherent-limit value this criterion is
+       trying to certify should use `time_averaged_ctqw_converged`
+       instead, which computes that exact limit directly and has no
+       `t_max`/`n_steps` to validate at all.
 
     `gamma` is accepted for signature symmetry with `haken_strobl` but has
     no dedicated check here -- `gamma` interacts with `solve_ivp`'s own
@@ -539,6 +546,22 @@ def min_adequate_t_max(
     Returns `np.inf` if the relevant gap is zero (degenerate spectrum --
     no finite `t_max` achieves the criterion; a caller should treat this
     as "cannot converge by this criterion," not silently proceed).
+
+    **`kind="time_averaged_ctqw"` escape hatch (TASK-0130)**: on every
+    real target this project has checked, this prescription is
+    computationally infeasible to actually satisfy with `time_averaged_
+    ctqw`'s O(n_steps) explicit time loop -- TASK-0110 measured
+    145,000x-3,950,000x the shipped `t_max=15` default, and a single call
+    at the prescribed `n_steps` did not return after 2+ hours on real
+    KRAS_G12C data. If the caller's actual goal is the converged/
+    decoherent-limit value (not a genuine finite-time snapshot), use
+    `time_averaged_ctqw_converged` instead -- it computes that exact
+    limit directly from `H`'s spectrum, sidestepping this `t_max`/
+    `n_steps` question entirely rather than chasing an ever-larger
+    practical cap. This function and `check_convergence(kind=
+    "time_averaged_ctqw")` remain correct and useful for a caller who
+    specifically wants a bounded finite-time snapshot; they are not
+    superseded, just not the right tool for the converged-limit case.
     """
     if w is None:
         if H is None:
@@ -587,6 +610,170 @@ def min_adequate_n_steps(
     if bandwidth <= 0:
         return 1
     return int(np.ceil(t_max * bandwidth / np.pi)) + 1
+
+
+# ---------------------------------------------------------------------------
+# TASK-0130 -- `time_averaged_ctqw`'s closed-form infinite-time limit.
+#
+# TASK-0110 measured that `min_adequate_t_max(kind="time_averaged_ctqw")`
+# prescribes t_max 145,000x-3,950,000x the shipped default on real targets
+# -- a single call at the prescribed n_steps did not return after 2+ hours,
+# with the current O(n_steps) explicit time-loop. But the quantity every
+# caller actually wants (the decoherent/infinite-time-average limit, this
+# pipeline's own documented headline quantity, RESULTS.md) has a known
+# closed form -- no time loop needed at all:
+#
+#   P_infinity(j | source) = sum_k |v_k(j)|^2 |<v_k|psi0>|^2
+#
+# (promoted from scripts/propagator_convergence_battery.py's private
+# `_true_diagonal_ensemble`, which already used this for a scalar source
+# to validate `check_convergence`'s predictions against ground truth).
+#
+# Correctness note (REVIEW-panel-2026-07-17.md P0-1): the index-wise sum
+# above is exact only for a non-degenerate spectrum -- derivation: the
+# time-averaged occupation is `sum_k sum_l v_k(j) v_l(j) c_k c_l* <exp(-i
+# (w_k-w_l)t)>_T`; as T -> infinity the time-average kills every
+# cross term with w_k != w_l, leaving `sum_k |v_k(j)|^2 |c_k|^2` -- but
+# for (near-)degenerate w_k, w_l, that cross term does NOT average away
+# (its phase stays ~stationary), so it must be kept, not dropped. The
+# rigorous object groups eigenvalues into blocks of (near-)exact
+# degeneracy and sums *amplitudes* within a block before squaring
+# (Godsil's average mixing matrix, M = sum_r E_r o E_r over spectral
+# idempotents E_r). `_group_degenerate_eigenvalues`/`_block_projected_
+# diagonal` below implement exactly that; in the fully non-degenerate
+# case (every block a singleton) this reduces algebraically to the plain
+# index-wise formula above, so it strictly generalizes rather than
+# replaces it. This project's real spectra are near-degenerate, not
+# exactly degenerate (confirmed by TASK-0129's BCR_ABL1 finding and by
+# this review's own §2.3 BLAS-order-instability flag), so the plain
+# formula would likely be numerically fine as-is -- but per the review's
+# explicit instruction ("assert a minimum gap or group eigenvalues within
+# tolerance... do not inherit a new silent bug while fixing an old one"),
+# this implementation groups rather than assumes.
+# ---------------------------------------------------------------------------
+
+def _group_degenerate_eigenvalues(w: np.ndarray, tol: float) -> List[np.ndarray]:
+    """Partition ascending-sorted eigenvalues `w` into blocks of
+    (near-)exact degeneracy: consecutive eigenvalues whose gap is `<=
+    tol` join the same block. `tol` is meant to be tiny relative to the
+    spectrum's own bandwidth (callers below scale it that way) -- this
+    groups true/near-exact degeneracies (e.g. TASK-0128's ANM
+    rigid-body-nullspace zero modes, or symmetry-induced degeneracies),
+    not merely closely-spaced eigenvalues in a dense real spectrum, which
+    the non-degenerate limit of this formula already handles correctly.
+    Returns a list of index arrays into `w`/`v`'s eigenvector axis, in
+    ascending order, covering every index exactly once."""
+    n = len(w)
+    blocks = []
+    start = 0
+    for i in range(1, n):
+        if w[i] - w[i - 1] > tol:
+            blocks.append(np.arange(start, i))
+            start = i
+    blocks.append(np.arange(start, n))
+    return blocks
+
+
+def _block_projected_diagonal(v: np.ndarray, blocks: List[np.ndarray], psi0: np.ndarray) -> np.ndarray:
+    """`sum_r (E_r @ psi0)^2`, `E_r = V_r @ V_r.T` the projector onto
+    degeneracy block `r`'s eigenspace (`V_r` = `v`'s columns in that
+    block) -- the block-wise generalization of the plain index-wise
+    `sum_k (v_k(j) * <v_k|psi0>)^2` formula (identical to it when every
+    block is a singleton). `psi0` real (this module's initial states
+    never carry a relative phase, see `_quantum_initial_coeffs`'s own
+    docstring), so no complex arithmetic is needed here despite this
+    being a genuinely quantum-coherent-superposition calculation."""
+    p = np.zeros(v.shape[0])
+    for block in blocks:
+        V_r = v[:, block]
+        c_r = V_r.T @ psi0
+        p += (V_r @ c_r) ** 2
+    return p
+
+
+def time_averaged_ctqw_converged(
+    H: Optional[np.ndarray] = None,
+    source: Source = 0,
+    *,
+    coherent: bool = True,
+    degenerate_tol: float = 1e-6,
+    w: Optional[np.ndarray] = None,
+    v: Optional[np.ndarray] = None,
+) -> np.ndarray:
+    """The exact t_max -> infinity limit of `time_averaged_ctqw`, computed
+    directly from `H`'s spectral decomposition -- no time loop, no
+    `t_max`/`n_steps` validity question, because there is no finite time
+    parameter to choose. Supersedes `min_adequate_t_max(kind=
+    "time_averaged_ctqw")`'s infeasible prescription for any caller who
+    wants the converged/decoherent-limit value rather than a genuine
+    finite-time snapshot (TASK-0130; see `min_adequate_t_max`'s own
+    docstring for the pointer here).
+
+    A new function rather than a `time_averaged_ctqw(t_max=None, ...)`
+    option: `time_averaged_ctqw`'s existing signature/behavior is
+    untouched (ADD-only, no existing call site's output can change), and
+    a caller reading `time_averaged_ctqw_converged(H, source)` does not
+    need to know this project's own t_max-infeasibility history to
+    understand what it computes.
+
+    Parameters
+    ----------
+    H : (N, N) real symmetric Hamiltonian. Optional if both `w` and `v`
+        (an already-computed `eigh(H)` decomposition) are supplied --
+        this function never re-decomposes `H` when the caller already
+        has one (same reuse discipline as `check_convergence`'s own `w`
+        parameter, per this task's own Constraint).
+    source : starting node index, or a sequence of indices.
+    coherent : same meaning as `ctqw`'s own parameter -- `True` (default,
+        matching `ctqw`/`time_averaged_ctqw`'s own default): a coherent
+        equal-amplitude superposition over `source`, cross-source
+        interference terms included. `False`: an incoherent statistical
+        mixture (mean of each source index's own single-seed limit,
+        TASK-0118's panel-recommended convention for a multi-residue
+        seed). Identical either way for a scalar `source`.
+    degenerate_tol : eigenvalue-gap tolerance, as a *fraction of H's own
+        spectral bandwidth* (`w.max()-w.min()`), below which consecutive
+        eigenvalues are treated as exactly degenerate and grouped before
+        squaring (see module-level comment above this function). Default
+        1e-6 catches true/near-machine-precision degeneracies (e.g.
+        TASK-0128's ANM zero modes, spaced ~1e-16 apart on a spectrum
+        spanning O(1)-O(10)) without merging this project's real,
+        near-continuum-but-distinct spectra (e.g. the BCR_ABL1 gap
+        REVIEW-panel-2026-07-17.md §2.3 flags as BLAS-order-unstable,
+        ~0.03-0.2 apart -- five to six orders of magnitude above this
+        default's threshold on that target's own bandwidth, so untouched
+        by it).
+
+    Returns
+    -------
+    p : (N,) non-negative array summing to 1.
+    """
+    if w is None or v is None:
+        if H is None:
+            raise ValueError(
+                "time_averaged_ctqw_converged needs either H or a precomputed (w, v) eigh(H) pair"
+            )
+        w, v = np.linalg.eigh(H)
+    idx = _source_indices(source)
+    bandwidth = float(w[-1] - w[0]) if len(w) > 1 else 0.0
+    tol = degenerate_tol * bandwidth if bandwidth > 0 else degenerate_tol
+    blocks = _group_degenerate_eigenvalues(w, tol)
+    n = v.shape[0]
+
+    if coherent:
+        psi0 = np.zeros(n)
+        psi0[idx] = 1.0 / np.sqrt(len(idx))
+        p = _block_projected_diagonal(v, blocks, psi0)
+    else:
+        p = np.zeros(n)
+        for i in idx:
+            psi0 = np.zeros(n)
+            psi0[i] = 1.0
+            p += _block_projected_diagonal(v, blocks, psi0)
+        p /= len(idx)
+
+    p /= p.sum() + 1e-300
+    return p
 
 
 def build_gapped_synthetic_network(N: int, well_depth: float, *, seed: int = 0) -> np.ndarray:

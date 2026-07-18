@@ -559,6 +559,53 @@ class TestRunFrozenVerdict:
         assert seen.count(False) == 3
         assert seen.count(True) == n_calls_default - 3
 
+    def test_use_converged_limit_reaches_benchmark_and_the_winner_qvc(self, monkeypatch):
+        """TASK-0130: `use_converged_limit=True` must swap `benchmark`'s 2
+        calls and the winning candidate's `quantum_vs_classical` call (3
+        total, same call sites `test_coherent_flag_reaches_benchmark_and_
+        the_winner_qvc` counts above) from `time_averaged_ctqw` to
+        `time_averaged_ctqw_converged` -- checked via spies on both, not
+        an AUC-level difference. `ablation()`'s own 6 `time_averaged_ctqw`
+        calls (L_only + 5 terms) are legitimately unaffected -- out of
+        this parameter's scope, same "select_frozen_config/ablation
+        unaffected" boundary the `coherent` flag's own test documents
+        above -- so `finite_calls` is not asserted empty, only that the 3
+        benchmark/qvc call sites specifically moved."""
+        from allostery import propagators as propagators_mod
+
+        finite_calls = []
+        converged_calls = []
+        real_finite = propagators_mod.time_averaged_ctqw
+        real_converged = propagators_mod.time_averaged_ctqw_converged
+
+        def _spy_finite(*args, **kwargs):
+            finite_calls.append(1)
+            return real_finite(*args, **kwargs)
+
+        def _spy_converged(*args, **kwargs):
+            converged_calls.append(1)
+            return real_converged(*args, **kwargs)
+
+        monkeypatch.setattr(propagators_mod, "time_averaged_ctqw", _spy_finite)
+        monkeypatch.setattr(propagators_mod, "time_averaged_ctqw_converged", _spy_converged)
+
+        run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50, use_converged_limit=True,
+        )
+        assert len(converged_calls) == 3
+        n_calls_default = len(finite_calls)
+        finite_calls.clear()
+        converged_calls.clear()
+        run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50, use_converged_limit=False,
+        )
+        # Same ablation/select_frozen_config calls (unaffected) plus the 3
+        # benchmark/qvc calls, now on the finite side instead.
+        assert len(finite_calls) == n_calls_default + 3
+        assert converged_calls == []
+
     def test_diagnosis_and_winner_metadata_present(self):
         result = run_frozen_verdict(
             "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
