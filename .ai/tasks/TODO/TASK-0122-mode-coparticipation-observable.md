@@ -14,9 +14,44 @@
 - Claimed By: —
 - Claimed At: —
 - Source: `.ai/reviews/REVIEW-panel-2026-07-16-v2.md` §2.5, §5 P1-6.
-- Priority: **P1 — weeks 2-4**, paired with [[TASK-0121]].
+- Priority: **Escalated — this is now P1-5 in
+  `.ai/reviews/REVIEW-panel-2026-07-17.md`** ("the experiment your own
+  learnability gate demands... the only route back to a defensible
+  positive"), with a sharpened, evidence-backed specification below.
+  [[TASK-0121]] (the hard dependency this task was already paired with)
+  has landed — this task is now unblocked, not just paired.
 
 ## Intent Contract
+
+- **Sharpened target, per the 2026-07-17 review — build this specific
+  form, not a generic co-participation function.** [[TASK-0120]]
+  measured that the real apo→holo displacement lives 58-79% inside the
+  lowest-20 ANM modes (CO(20) = 0.638/0.794/0.584) — but the CTQW
+  observable this project scores integrates over **all** N modes
+  (169-950), averaging that ~20-dimensional signal against 150-930
+  dimensions of pure proximity noise. The review's own reconstruction
+  (3MHT, N=327, unverified against this repo's real code — treat as a
+  hypothesis to confirm, not a result to inherit) measured a slow-mode-
+  filtered form:
+
+  ```
+  CP_low(j) = Σ_{k ≤ n_low} |v_k(j)|² · mean_{i ∈ src} |v_k(i)|²
+  ```
+
+  at `k=5`: `ρ(CP_low, −dist)` dropped from +0.560 (all 327 modes) to
+  **−0.061** — inside their own measured noise floor (`|ρ(random,
+  −dist)| = 0.044 ± 0.036`) — while cross-cutoff reproducibility
+  (`ρ(CP@7Å, CP@8Å)`) *improved* from 0.542 to **0.940**, the signature
+  of real structure rather than noise (per Zheng/Brooks/Thirumalai, PNAS
+  103:7664 — citation as given by the review, not independently verified
+  by this Architect/Planner thread). `n_low` is already a `build_H_new`
+  argument and already swept as a potential ingredient in the ceiling
+  search — this task's job is to also expose it as an **observable
+  filter**, independent of whether it's used as a Hamiltonian ingredient.
+  Sweep `k` (at minimum the review's own 3/5/10/all checkpoints) on real
+  targets and report where `ρ(CP_low, −dist)` crosses into the noise
+  floor, rather than assuming `k=5` transfers from a 327-residue
+  reconstruction to this project's real 169-950-residue targets.
 
 - Outcome: a new observable, `mode_coparticipation` (or equivalent name),
   seed-dependent and **not distance-monotone by construction** — the
@@ -77,20 +112,31 @@ None
 
 ## TODO
 
-- [ ] Implement `mode_coparticipation` per REVIEW-13b §6.
+- [ ] Implement `mode_coparticipation`/`CP_low` (the slow-mode-filtered
+      form above, per the 2026-07-18 sharpened spec).
 - [ ] Reproduce the panel's clean-Laplacian (0.18) vs. current-H_new
       (0.50) distance-correlation comparison as a validation gate.
-- [ ] Re-measure on renormalized `H_new` (post-[[TASK-0121]]).
+- [ ] Re-measure on renormalized `H_new` (post-[[TASK-0121]], now Done).
+- [ ] Sweep `k` (≤n_low filter) on all 3 real targets; report where
+      `ρ(CP_low, −dist)` crosses into a measured noise floor — do not
+      assume the review's `k=5`/3MHT result transfers directly.
 - [ ] Gate through [[TASK-0103]]'s dumbbell matrix.
 - [ ] Score against real labels, all 3 targets, checked against the
       proximity floor.
 
 ## Dependency
 
-- Hard: [[TASK-0121]] must land first (or this task measures both
-  variants and reports the contrast explicitly).
+- [[TASK-0121]] (Done) — was the hard blocker, now landed; this task is
+  unblocked.
+- [[TASK-0120]] (Done) — the CO(20) finding this task's slow-mode filter
+  directly operationalizes.
 - [[TASK-0103]] (dumbbell matrix, Done) — reused, not rebuilt.
 - [[TASK-0094]] (proximity floor, Done) — reused for the real-label check.
+- Related, not blocking: [[TASK-0133]] (learnability-gate random-patch
+  control) — if that task finds CO(20) doesn't discriminate the real
+  pocket from a random patch, read this task's own `k`-sweep result
+  alongside it before claiming `CP_low` finds the pocket specifically,
+  not just "some structure."
 
 ## Open Questions
 

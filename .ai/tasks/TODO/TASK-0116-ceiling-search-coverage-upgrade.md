@@ -22,17 +22,38 @@
 
 ## Intent Contract
 
+- **Prerequisite, added 2026-07-18, must land first — per
+  `.ai/reviews/REVIEW-panel-2026-07-17.md` §2.4, §4 P0-4**: `ceiling.py`'s
+  `_PARAM_RANGES` still samples each `lam_*` uniformly on `(0.0, 2.0)`
+  independently (confirmed unchanged, `ceiling.py:42-48`), untouched
+  since [[TASK-0121]] proved `Σ|λ| ≤ 0.4` is required to keep the
+  potential's dispersion within `σ(V) ≤ 0.2·J`. `E[Σλ] = 5.0` under the
+  current ranges — **12.5x the budget typical, 25x at the corner** — so
+  the search samples mostly from deep inside the Anderson-localized
+  regime TASK-0121 exists to escape. **Upgrading the search strategy
+  (below) without fixing this first just explores the wrong space more
+  efficiently.** Fix: sample `lam_*` on the simplex `Σ|λᵢ| ≤ 0.4` (or an
+  equivalent constrained design — Sobol/LHS over the constrained set, or
+  a Dirichlet-style simplex sampler scaled to the budget), not
+  independently per-dimension. Cheap (~1 hour per the review's own
+  estimate) — do this as this task's own first step, before choosing or
+  running any alternative search strategy.
 - Outcome: re-run the ceiling search on KRAS_G12C (TASK-0046's own real
-  cross-check target) with either (a) a space-filling design (Sobol or
+  cross-check target), **first under the corrected `Σ|λ| ≤ 0.4` ranges
+  at the existing 60-trial budget** (isolates the range fix's own
+  effect), **then** with either (a) a space-filling design (Sobol or
   Latin hypercube) at a matched or larger trial budget, or (b) a real
   optimizer (Optuna/TPE, reusing TASK-0110's new dependency if it lands
   first), and report whether the near-chance ceiling finding is confirmed
-  or overturned.
+  or overturned. Report the range fix and the strategy upgrade as two
+  separate, attributable deltas — do not merge them into one number, per
+  this project's own standing convention for stacked corrections.
 - In Scope:
-  - implement or wire in one alternative search strategy over
-    `ceiling.py`'s existing `_PARAM_RANGES`/`_N_LOW_CHOICES` — reuse
-    `consistency_score` as the objective unchanged, this task only
-    changes how the parameter space is sampled, not what's being scored.
+  - Fix `_PARAM_RANGES` per the prerequisite above.
+  - implement or wire in one alternative search strategy over the
+    *corrected* parameter space — reuse `consistency_score` as the
+    objective unchanged, this task only changes how the parameter space
+    is sampled, not what's being scored.
   - run on KRAS_G12C at a comparable or larger trial budget than
     TASK-0046's 60; report the new best `S`/`auc_apo` alongside the
     original 0.5250 for direct comparison.
@@ -66,13 +87,22 @@ None
 
 ## TODO
 
+- [ ] Fix `_PARAM_RANGES` to respect `Σ|λ| ≤ 0.4` (simplex/constrained
+      design, not independent per-dimension uniforms).
+- [ ] Re-run at the existing 60-trial budget under corrected ranges
+      alone; report this delta in isolation.
 - [ ] Choose search strategy (Sobol/LHS vs. Optuna) and justify the
       choice briefly in Done.
-- [ ] Run on KRAS_G12C, matched or larger budget than TASK-0046's 60.
+- [ ] Run on KRAS_G12C, matched or larger budget than TASK-0046's 60,
+      under the corrected ranges.
 - [ ] Report new best result vs. TASK-0046's 0.5250; state agreement or
-      disagreement explicitly.
-- [ ] If disagreement found, flag `TASK-0082` (competence map) since it
-      is instructed to read TASK-0046's ceiling number directly.
+      disagreement explicitly, and attribute the delta to range-fix vs.
+      strategy-upgrade separately.
+- [ ] If disagreement found, flag whatever document currently holds the
+      ceiling headline (`COMPETENCE_MAP.md`, post-[[TASK-0130]]).
+- [ ] If [[TASK-0131]]'s permutation null hasn't landed yet, flag that
+      any new "best result" here still needs that null before being read
+      as a real positive, not just a bigger max-of-K draw.
 
 ## Dependency
 
