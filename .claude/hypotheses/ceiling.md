@@ -130,6 +130,45 @@ algorithmic cost, will hit the same wall. Full detail:
 
 ---
 
+## Status update, 2026-07-18/19 — the H13-vs-`H_new` scope gap (flagged above, 2026-07-15) is closed
+
+**TASK-0126** ran H13 (via both projection options) through the ceiling search on all 3
+mandatory targets. Started under the TASK-0129 finite-`t_max` convention, then switched
+mid-task to TASK-0130's exact closed-form infinite-time limit once that landed
+concurrently — the switch also removed the `O(n_steps)` time-stepping cost that had
+made a full 3-target Option B run infeasible under the old convention (BCR_ABL1
+projected ~31.5 hours/60 trials; CARDIAC_MYOSIN not attempted). Headline results,
+checked not assumed, all under `H_new`'s own TASK-0130 closed-form ceiling
+(KRAS=0.6288, BCR_ABL1=0.6671, CARDIAC_MYOSIN=0.8297):
+
+- **Literal Option A (scalar `trace`-of-3×3-blocks projection) is degenerate** — proven
+  via `np.allclose` (max diff 1.8e-15) to collapse exactly to `H2_combinatorial_
+  laplacian` for this repo's real `H13_3N_anm_hessian` construction. It discards *all*
+  orientational information, not "some" as this file and `physics.md` HYP-P5 both hedged.
+  H2 does not beat `H_new` on any of the 3 targets.
+- **Option B (3N×3N-native propagation, orientation-preserving) was implemented as a
+  thin wrapper around the existing propagators** — no refactor of `ctqw`/`time_averaged_
+  ctqw`/`time_averaged_ctqw_converged` was needed, contrary to what this file's own
+  "Minimum set" note below anticipated. Run to completion on all 3 targets under the
+  closed form (KRAS: 0.5026, BCR_ABL1: 0.6466, CARDIAC_MYOSIN: 0.8513).
+- **The result is genuinely mixed, not a clean win or loss**: Option B does not beat
+  `H_new` on KRAS_G12C (worst of the three candidates there) or BCR_ABL1 (close,
+  −0.0205), but **does beat `H_new` on CARDIAC_MYOSIN** (+0.0216) — the one target
+  where H13's full orientational detail actually helped over the scalar reductions.
+  Per IMP-H7's own decision protocol, `H_new` is **not** uniformly confirmed as
+  baseline against H13 — this is a target-dependent finding, not a global verdict.
+- **`H14_anm_pinv_trace`** (already implemented, already Tier-A, TASK-0096) — the
+  codebase's own non-degenerate scalarization of H13's physics (ANM cross-correlation,
+  Bahar/Atilgan/Erman 1997) — **beats `H_new`'s ceiling on BCR_ABL1** (+0.0503), not on
+  KRAS_G12C or CARDIAC_MYOSIN. Worth a dedicated look at that target specifically, not
+  a project-wide reselection signal.
+
+Full detail, including the H13-native rigid-body-nullspace bug found in
+`min_adequate_t_max` (and superseded by the closed form's own degenerate-eigenvalue
+grouping) along the way: `.ai/tasks/DONE/TASK-0126-h13-ceiling-comparison.md`.
+
+---
+
 ## Which operator to use for the ceiling search
 
 The ceiling should be measured with **every operator candidate** (H_new, H13 projection,
@@ -139,7 +178,10 @@ basis for choosing an operator. See `physics.md` HYP-P5 and `../improvements/ham
 **Minimum set:**
 - H_new with full (λ_B, λ_T, λ_R, λ_C, λ_M, α, r_c, n_low, kernel) search
 - H8 (GNM) as a classical reference ceiling (cheap, well-validated)
-- H13 projected to N×N — or 3N×3N if propagators are refactored (see IMP-H7)
+- H13 projected to N×N — or 3N×3N if propagators are refactored (see IMP-H7) — **done,
+  TASK-0126 (2026-07-18/19): both options run on all 3 targets; Option B beats `H_new`
+  on CARDIAC_MYOSIN only (mixed, target-dependent), see status update above. H14
+  (pinv-trace) beats it on BCR_ABL1 only, was not on this original list — add it.**
 - Degree centrality (plain graph degree) as the structural floor
 
 **Optimizer:** Grid + random search is acceptable at this stage. 60 trials from the

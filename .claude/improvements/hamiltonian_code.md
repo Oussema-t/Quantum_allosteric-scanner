@@ -151,3 +151,25 @@ This preserves the anisotropic coupling fully and is the physically correct comp
 **Do not assume H_new wins without running this comparison.**  
 The dimensional mismatch was the only argument for not testing H13, and it is solvable.
 The comparison is required for the scientific claim that H_new is the right operator.
+
+**Status, 2026-07-18/19 (TASK-0126): protocol executed on all 3 targets, result
+target-dependent.** Step 1's literal Option A formula, checked via `np.allclose` (max
+diff 1.8e-15), is numerically identical to the already-registered `H2_combinatorial_
+laplacian` for this repo's real `H13_3N_anm_hessian` — every off-diagonal block is
+`-outer(r,r)` for a *unit* bond vector, so `trace(outer(r,r))=1` always; the projection
+discards all orientational information, so step 2's comparison is just "H2 vs H_new"
+(H2 does not beat it, any target). Per step 4, Option B was implemented (as a
+propagator wrapper — `ctqw`/`time_averaged_ctqw`/`time_averaged_ctqw_converged` needed
+no extension, they already accept arbitrary-size `H`) and run to completion on **all
+3 targets** (TASK-0130's closed-form convention, landed mid-task, removed the
+`O(n_steps)` cost that had made a full run infeasible under the older finite-`t_max`
+convention). Result: Option B does not beat `H_new` on KRAS_G12C (0.5026 vs 0.6288,
+worse than Option A/H2 itself) or BCR_ABL1 (0.6466 vs 0.6671, close), **but does beat
+it on CARDIAC_MYOSIN** (0.8513 vs 0.8297). Per steps 3/5, this is not a clean
+step-5 "confirm H_new as baseline" outcome — H13-native is a real, checked candidate
+specifically for CARDIAC_MYOSIN, not confirmed superior generally and not dismissed
+either. Full numbers, the H13 rigid-body-nullspace bug found in `propagators.
+min_adequate_t_max` along the way, and the separate `H14_anm_pinv_trace` finding
+(beats H_new on BCR_ABL1 only — not one of this note's two options, an existing scalar
+reduction that was already sitting in the operator registry):
+`.ai/tasks/DONE/TASK-0126-h13-ceiling-comparison.md`.

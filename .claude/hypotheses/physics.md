@@ -150,6 +150,27 @@ See IMP-H7 in `../improvements/hamiltonian_code.md` for the two refactoring opti
 **The comparison is required for scientific rigor.** Without it, choosing H_new
 over H13 is an untested assumption, not a result.
 
+**Status, 2026-07-18/19 (TASK-0126): tested, claim partially supported — mixed,
+target-dependent.** Option A was checked (not assumed) to be numerically identical to
+`H2_combinatorial_laplacian` (`np.allclose`, max diff 1.8e-15) — it discards *all*
+orientational information via `H13`'s unit bond vectors, not "some" as this
+hypothesis's own step 2 hedged. Option B was implemented as a propagator wrapper (no
+refactor needed — `ctqw`/`time_averaged_ctqw`/`time_averaged_ctqw_converged` were
+already dimension-agnostic) and run to completion on **all 3 mandatory targets**
+(TASK-0130's closed-form infinite-time convention removed the time-stepping cost that
+had made a full run infeasible under the older finite-`t_max` convention this task
+started with). Result: **H13-native (Option B) does not beat `H_new` on KRAS_G12C**
+(0.5026 vs 0.6288, worst of the three candidates) **or BCR_ABL1** (0.6466 vs 0.6671,
+close) **but does beat it on CARDIAC_MYOSIN** (0.8513 vs 0.8297) — the one target where
+full orientational detail actually helped. Per this hypothesis's own step 5/6, the
+verdict is target-dependent, not a uniform confirmation of either the scalar
+approximation (step 6) or the refactored anisotropic propagation (step 5) — H13-native
+is a real, checked candidate for CARDIAC_MYOSIN specifically. Separately, `H14_anm_
+pinv_trace` (a different, non-degenerate scalar reduction of H13 already in the
+codebase, not one of this hypothesis's two options) beat `H_new` on BCR_ABL1 only —
+see `ceiling.md`'s 2026-07-18/19 status update and `.ai/tasks/DONE/TASK-0126-h13-
+ceiling-comparison.md` for full numbers.
+
 ---
 
 ## HYP-P6 · Propagation time t in CTQW is currently unprincipled; a spectral choice would close a validity gap
@@ -273,16 +294,13 @@ speculative when several of these are now settled:
   section calls for (rigid vs. multi-domain vs. IDP benchmark, checking whether AUC drop is
   domain-restricted) — still open, now more urgent given how much of the operator register
   is failing on these specific 3 targets.
-- **HYP-P5 (H13 ceiling) is still completely untested — a real, currently unfiled gap.**
-  `ceiling.md`'s own text calls the H13-vs-H_new ceiling comparison "required for scientific
-  rigor." **TASK-0046's real ceiling search (Done, 2026-07-14) only searched `H_new`'s own
-  8-parameter DOF** (`lam_B, lam_T, lam_R, lam_C, lam_M, alpha, cutoff, n_low_modes`) — H13
-  was never included as a candidate operator, despite `ceiling.md`'s "Minimum set" section
-  explicitly naming it alongside H8 and degree centrality. TASK-0116 (filed 2026-07-15)
-  flags the *search density* of that same run (60 random trials, ~8 dimensions) as thin
-  evidence for a negative claim — a different, narrower gap than "H13 was never in the
-  candidate set at all." **No task currently owns this specific gap** — worth filing before
-  claiming the ceiling comparison settled either way.
+- **HYP-P5 (H13 ceiling) — SUPERSEDED, closed by TASK-0126 (2026-07-18).** This note
+  originally flagged the H13-vs-`H_new` comparison as untested and unfiled; TASK-0126
+  ran it (both projection options, all 3 targets where feasible) and found neither
+  option beats `H_new` — see HYP-P5's own status update above and
+  `.ai/tasks/DONE/TASK-0126-h13-ceiling-comparison.md`. TASK-0116's separate concern
+  (search density within `H_new`'s own DOF) remains open on its own terms, unaffected
+  by this closure.
 - **New, cross-cutting finding not anticipated by any hypothesis above: seed cardinality is
   an unexamined GAUGE choice that flips signs.** TASK-0093 found that narrowing the CTQW
   source from the full active-site residue array to `run_challenge.py`'s single

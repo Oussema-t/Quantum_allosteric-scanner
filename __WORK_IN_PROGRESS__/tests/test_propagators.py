@@ -17,8 +17,13 @@ if str(_SRC) not in sys.path:
 
 from allostery.propagators import (  # noqa: E402
     ctqw,
+    ctqw_3n_native,
+    reduce_3n_occupation,
+    residue_source_to_3n,
     time_averaged_ctqw,
+    time_averaged_ctqw_3n_native,
     time_averaged_ctqw_converged,
+    time_averaged_ctqw_converged_3n_native,
 )
 
 
@@ -199,6 +204,113 @@ class TestIncoherentMixture:
         assert p_ta.shape == (12,)
         assert (p_ta >= 0).all()
         assert p_ta.sum() == pytest.approx(1.0, abs=1e-6)
+
+
+# ---------------------------------------------------------------------------
+# TASK-0126 -- 3N-native propagation (IMP-H7 Option B)
+# ---------------------------------------------------------------------------
+
+class TestResidueSourceTo3n:
+    def test_scalar_expands_to_its_own_triplet(self):
+        np.testing.assert_array_equal(residue_source_to_3n(4), [12, 13, 14])
+
+    def test_multi_index_expands_every_residue_in_order(self):
+        np.testing.assert_array_equal(residue_source_to_3n([0, 2]), [0, 1, 2, 6, 7, 8])
+
+
+class TestReduce3nOccupation:
+    def test_sums_each_residues_three_components(self):
+        p_3n = np.array([0.1, 0.2, 0.3, 0.05, 0.05, 0.3])
+        np.testing.assert_allclose(reduce_3n_occupation(p_3n), [0.6, 0.4])
+
+    def test_raises_on_length_not_a_multiple_of_three(self):
+        with pytest.raises(ValueError):
+            reduce_3n_occupation(np.array([0.1, 0.2, 0.3, 0.4]))
+
+
+class TestCtqw3nNative:
+    def _real_h13(self, n=10, cutoff=10.0):
+        from allostery.hamiltonians import H13_3N_anm_hessian
+
+        return H13_3N_anm_hessian(_helix_coords(n), cutoff=cutoff)
+
+    def test_matches_manual_expand_reduce_around_unmodified_ctqw(self):
+        """The wrapper must be exactly equivalent to calling the real,
+        unmodified `ctqw` on the expanded 3N source and reducing by hand --
+        proving this is a pure translation layer, not a reimplementation."""
+        H13 = self._real_h13()
+        source = [2, 5]
+        wrapped = ctqw_3n_native(H13, t=4.0, source=source)
+        manual = reduce_3n_occupation(ctqw(H13, t=4.0, source=residue_source_to_3n(source)))
+        np.testing.assert_array_equal(wrapped, manual)
+
+    def test_output_is_a_valid_per_residue_probability_vector(self):
+        n = 10
+        H13 = self._real_h13(n=n)
+        p = ctqw_3n_native(H13, t=4.0, source=0)
+        assert p.shape == (n,)
+        assert (p >= 0).all()
+        assert p.sum() == pytest.approx(1.0, abs=1e-6)
+
+    def test_kwargs_pass_through_to_the_real_ctqw(self):
+        """`coherent=False` must actually reach the wrapped `ctqw` call --
+        checked by a genuine multi-index source producing a different
+        result, not just accepted and dropped."""
+        H13 = self._real_h13()
+        coherent = ctqw_3n_native(H13, t=4.0, source=[2, 3, 4], coherent=True)
+        incoherent = ctqw_3n_native(H13, t=4.0, source=[2, 3, 4], coherent=False)
+        assert not np.allclose(coherent, incoherent)
+
+    def test_time_averaged_variant_matches_manual_expand_reduce(self):
+        H13 = self._real_h13()
+        source = [1, 3]
+        wrapped = time_averaged_ctqw_3n_native(H13, t_max=6.0, source=source, n_steps=20)
+        manual = reduce_3n_occupation(
+            time_averaged_ctqw(H13, t_max=6.0, source=residue_source_to_3n(source), n_steps=20)
+        )
+        np.testing.assert_array_equal(wrapped, manual)
+
+    def test_time_averaged_variant_is_a_valid_probability_vector(self):
+        n = 10
+        H13 = self._real_h13(n=n)
+        p = time_averaged_ctqw_3n_native(H13, t_max=6.0, source=0, n_steps=20)
+        assert p.shape == (n,)
+        assert (p >= 0).all()
+        assert p.sum() == pytest.approx(1.0, abs=1e-6)
+
+    def test_converged_variant_matches_manual_expand_reduce(self):
+        H13 = self._real_h13()
+        source = [1, 3]
+        wrapped = time_averaged_ctqw_converged_3n_native(H13, source=source)
+        manual = reduce_3n_occupation(
+            time_averaged_ctqw_converged(H13, source=residue_source_to_3n(source))
+        )
+        np.testing.assert_array_equal(wrapped, manual)
+
+    def test_converged_variant_is_a_valid_probability_vector(self):
+        n = 10
+        H13 = self._real_h13(n=n)
+        p = time_averaged_ctqw_converged_3n_native(H13, source=0)
+        assert p.shape == (n,)
+        assert (p >= 0).all()
+        assert p.sum() == pytest.approx(1.0, abs=1e-6)
+
+    def test_converged_variant_kwargs_pass_through(self):
+        H13 = self._real_h13()
+        coherent = time_averaged_ctqw_converged_3n_native(H13, source=[2, 3, 4], coherent=True)
+        incoherent = time_averaged_ctqw_converged_3n_native(H13, source=[2, 3, 4], coherent=False)
+        assert not np.allclose(coherent, incoherent)
+
+    def test_converged_variant_absorbs_rigid_body_nullspace_without_error(self):
+        """The whole point of switching TASK-0126's H13-native ceiling
+        search to the closed form: no separate nullspace-skipping step
+        (`_drop_rigid_body_zero_modes`) is needed here -- `time_averaged_
+        ctqw_converged`'s own degenerate-eigenvalue grouping absorbs H13's
+        6 near-machine-precision rigid-body zero modes transparently."""
+        H13 = self._real_h13(n=20)
+        p = time_averaged_ctqw_converged_3n_native(H13, source=[0, 5, 10])
+        assert np.isfinite(p).all()
+        assert p.sum() == pytest.approx(1.0, abs=1e-6)
 
 
 # ---------------------------------------------------------------------------

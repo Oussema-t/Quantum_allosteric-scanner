@@ -307,6 +307,78 @@ def time_averaged_ctqw(
     return acc / n_steps
 
 
+# ---------------------------------------------------------------------------
+# TASK-0126 -- 3N-native propagation (`hamiltonians.H13_3N_anm_hessian`,
+# IMP-H7's "Option B"). Deliberately *not* a change to `ctqw`/
+# `time_averaged_ctqw` themselves: both already operate on `H` of any
+# size, indexed however the caller wants -- the only 3N-specific thing is
+# what a "residue" seed/occupation *means* in that space (3 spatial DOF
+# per residue, not 1). These two functions are a thin translation layer
+# around the existing, unmodified propagators, not a refactor of them.
+# ---------------------------------------------------------------------------
+
+def residue_source_to_3n(source: Source) -> np.ndarray:
+    """Expand a residue-index `source` (scalar or sequence) into the
+    matching 3N-space index set, exciting all 3 spatial DOF of each seed
+    residue with equal weight -- an isotropic initial perturbation at that
+    residue, not favoring any particular bond direction (a stated modeling
+    choice, not the only possible one: weighting by each residue's own
+    local mode shape would be an alternative, more expensive design left
+    for a future task if this one shows it matters)."""
+    idx = _source_indices(source)
+    return np.concatenate([[3 * int(i), 3 * int(i) + 1, 3 * int(i) + 2] for i in idx])
+
+
+def reduce_3n_occupation(p_3n: np.ndarray) -> np.ndarray:
+    """Sum each residue's 3 spatial-DOF occupation components back to a
+    per-residue occupation vector (IMP-H7 Option B's own prescription:
+    `p_residue[i] = p_3N[3i] + p_3N[3i+1] + p_3N[3i+2]`). `p_3n` must have
+    length `3*n_residues`; raises on any other shape rather than silently
+    truncating or padding."""
+    if len(p_3n) % 3 != 0:
+        raise ValueError(f"reduce_3n_occupation: length {len(p_3n)} is not a multiple of 3")
+    return p_3n.reshape(-1, 3).sum(axis=1)
+
+
+def ctqw_3n_native(H_3n: np.ndarray, t: float, source: Source, **kwargs) -> np.ndarray:
+    """`ctqw` on a 3N x 3N operator (e.g. `hamiltonians.H13_3N_anm_hessian`),
+    with `source` given in *residue* indices (not 3N-space) and the
+    returned occupation already reduced back to one value per residue --
+    see `residue_source_to_3n`/`reduce_3n_occupation` for the two
+    translations this wraps. `ctqw` itself is called completely unchanged;
+    `**kwargs` (e.g. `coherent`) pass straight through to it."""
+    p_3n = ctqw(H_3n, t, source=residue_source_to_3n(source), **kwargs)
+    return reduce_3n_occupation(p_3n)
+
+
+def time_averaged_ctqw_3n_native(H_3n: np.ndarray, t_max: float, source: Source, **kwargs) -> np.ndarray:
+    """`time_averaged_ctqw` on a 3N x 3N operator -- see `ctqw_3n_native`
+    for the residue-source/occupation translation this wraps (identical
+    convention, time-averaged instead of a single snapshot)."""
+    p_3n = time_averaged_ctqw(H_3n, t_max, source=residue_source_to_3n(source), **kwargs)
+    return reduce_3n_occupation(p_3n)
+
+
+def time_averaged_ctqw_converged_3n_native(H_3n: np.ndarray, source: Source, **kwargs) -> np.ndarray:
+    """`time_averaged_ctqw_converged` (TASK-0130's exact infinite-time
+    closed form) on a 3N x 3N operator -- same residue-source/occupation
+    translation as `ctqw_3n_native`/`time_averaged_ctqw_3n_native`, no
+    `t_max`/`n_steps` (there is none for the closed form). Added the same
+    day TASK-0130 landed (concurrently with this task's own H13-native
+    work) once it became clear the closed form also sidesteps the O(
+    n_steps) time-stepping cost that made a full H13-native cutoff search
+    infeasible for BCR_ABL1/CARDIAC_MYOSIN under the old finite-`t_max`
+    convention (TASK-0126's own Done section has the timing numbers).
+    `time_averaged_ctqw_converged`'s own degenerate-eigenvalue grouping
+    (`degenerate_tol`, default 1e-6 of `H_3n`'s bandwidth) also transparently
+    absorbs H13's 6 near-machine-precision rigid-body zero modes -- no
+    separate nullspace-skipping step is needed here the way the old
+    `min_adequate_t_max`-based path required (see that function's own
+    TASK-0126 docstring caveat)."""
+    p_3n = time_averaged_ctqw_converged(H_3n, source=residue_source_to_3n(source), **kwargs)
+    return reduce_3n_occupation(p_3n)
+
+
 @dataclass
 class ConvergenceReport:
     """Result of `check_convergence`. `ok` is True only if every check that
@@ -546,6 +618,22 @@ def min_adequate_t_max(
     Returns `np.inf` if the relevant gap is zero (degenerate spectrum --
     no finite `t_max` achieves the criterion; a caller should treat this
     as "cannot converge by this criterion," not silently proceed).
+
+    **Rigid-body nullspace caveat (TASK-0126)**: this `inf` guard only
+    catches an *exactly* zero gap. A genuine mechanical Hessian like
+    `H13_3N_anm_hessian` has 6 rigid-body translation/rotation zero modes
+    that are zero *in theory* but land a few ULPs apart in practice (e.g.
+    `-2.2e-15` vs `-1.8e-15`) -- `gap > 0` is technically true, so this
+    function silently returns an astronomical, physically meaningless
+    `t_max` (measured: `9.8e14` for KRAS_G12C's H13) instead of `inf`. A
+    caller feeding a multi-DOF-per-node operator's raw spectrum here must
+    drop the near-zero nullspace first (same `count(w < 1e-8*max(|w|,1))`
+    threshold `superpose._check_anm_rigid_body_nullspace`/TASK-0005/
+    TASK-0128 already use) before calling -- see `h13_ceiling_comparison.
+    py::_drop_rigid_body_zero_modes` for the pattern. `H2`/`H14`'s own
+    single trivial (Laplacian all-ones) zero mode is *not* affected by
+    this -- `w[1]` is already their true first non-trivial gap by
+    construction, no truncation needed.
 
     **`kind="time_averaged_ctqw"` escape hatch (TASK-0130)**: on every
     real target this project has checked, this prescription is
