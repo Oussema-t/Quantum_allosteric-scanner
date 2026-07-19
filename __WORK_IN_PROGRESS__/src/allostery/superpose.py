@@ -474,6 +474,84 @@ def cumulative_overlap(delta_r: np.ndarray, eigvecs: np.ndarray, common_idx: np.
     return np.sqrt(np.cumsum(c ** 2)) / delta_norm
 
 
+def restricted_cumulative_overlap(
+    apo, alignment: Alignment, eigvecs: np.ndarray, residue_idx: np.ndarray,
+) -> np.ndarray:
+    """CO(m) for one residue subset's own apo->holo displacement,
+    zero-padded into the full ANM coordinate space (TASK-0133) --
+    **not** `cumulative_overlap`'s own renormalize-a-sliced-eigenvector
+    approach, which is invalid for a small subset (see below).
+
+    **Not the same quantity `learnability_gate.py`'s own reported
+    `CO(20)` computes.** That script's `delta_r`/`common_idx` cover the
+    *entire* common (chain, resnum) correspondence set (166-709 residues
+    depending on target) -- a whole-structure conformational-change
+    overlap, not a pocket-specific one, confirmed directly against real
+    data (`len(delta_r) == 3 * len(alignment.apo_idx)`, not
+    `3 * n_pocket_residues`). This function computes the *region-
+    specific* CO(m) TASK-0133's own random-patch control needs to be a
+    type-correct comparison: TASK-0120's whole-structure CO(20) is one
+    number per target, constant regardless of which residues you'd call
+    "the pocket" -- comparing it against a distribution of per-patch
+    numbers would be comparing two different quantities.
+
+    **Real, load-bearing finding (TASK-0133): does NOT delegate to
+    `cumulative_overlap` for the restricted case.** `cumulative_overlap`/
+    `_projection_coefficients` slice each eigenvector down to
+    `residue_idx` and renormalize the slice to unit length -- a fine
+    approximation when `residue_idx` is the full or near-full common set
+    (a handful of missing residues), which is `cumulative_overlap`'s own
+    only prior use in this codebase, but it silently breaks Bessel's
+    inequality (`CO(m) <= 1` by construction) once `residue_idx` is a
+    small fraction of the structure: renormalizing a mostly-truncated
+    eigenvector slice inflates it, and the resulting "modes" are no
+    longer orthonormal. Confirmed directly, not assumed: a 3-of-50-residue
+    synthetic subset gives `CO(20) = 1.47`, and real pocket-sized subsets
+    (13-18 of 166-709 residues) give values up to 1.64 -- both
+    mathematically impossible for a genuine overlap fraction.
+
+    This function instead zero-pads `residue_idx`'s displacement into the
+    *full* `3N`-length coordinate space and projects onto the untouched,
+    still-orthonormal `eigvecs` directly (`c_k = v_k . delta_r_padded`,
+    no renormalization) -- Bessel's inequality then guarantees
+    `CO(m) <= 1` for *any* subset size, verified directly on the same
+    3-of-50 case above (`CO(20) = 0.34`). Physically: "how much of this
+    subset's own displacement, treated as zero elsewhere, does the global
+    low-frequency subspace explain" -- a well-posed question for any
+    region size, unlike the renormalized-slice version.
+
+    `residue_idx` must be a subset of `alignment.apo_idx` (every index
+    must have a holo correspondence) -- raises if not, rather than
+    silently dropping residues.
+    """
+    apo_idx, holo_idx = alignment.apo_idx, alignment.holo_idx
+    apo_to_holo = dict(zip(apo_idx.tolist(), holo_idx.tolist()))
+    residue_idx = np.asarray(residue_idx)
+    missing = [int(i) for i in residue_idx if i not in apo_to_holo]
+    if missing:
+        raise ValueError(
+            f"restricted_cumulative_overlap: {len(missing)} residue(s) have no "
+            f"holo correspondence in this alignment (not in alignment.apo_idx): "
+            f"{missing[:10]}{'...' if len(missing) > 10 else ''}"
+        )
+    holo_subset = np.array([apo_to_holo[int(i)] for i in residue_idx])
+    disp = alignment.aligned_holo_coords[holo_subset] - apo.coords[residue_idx]
+
+    n_full = eigvecs.shape[0] // 3
+    delta_padded = np.zeros(3 * n_full)
+    block_idx = np.empty(3 * len(residue_idx), dtype=int)
+    block_idx[0::3] = 3 * residue_idx
+    block_idx[1::3] = 3 * residue_idx + 1
+    block_idx[2::3] = 3 * residue_idx + 2
+    delta_padded[block_idx] = disp.ravel()
+
+    delta_norm = np.linalg.norm(delta_padded)
+    if delta_norm < 1e-12:
+        return np.zeros(eigvecs.shape[1])
+    c = eigvecs.T @ delta_padded
+    return np.sqrt(np.cumsum(c ** 2)) / delta_norm
+
+
 # ---------------------------------------------------------------------------
 # TASK-0075 -- knob-spread go/no-go gate over cumulative_overlap
 # ---------------------------------------------------------------------------

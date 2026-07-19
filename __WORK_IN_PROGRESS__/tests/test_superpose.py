@@ -35,6 +35,7 @@ from allostery.superpose import (  # noqa: E402
     learnability_verdict,
     mode_energetics,
     pocket_cross_map,
+    restricted_cumulative_overlap,
     run_superpose,
     _check_anm_rigid_body_nullspace,
 )
@@ -489,6 +490,91 @@ class TestCumulativeOverlap:
         _, eigvecs = anm_modes(COORDS, cutoff=10.0, n_modes=5)
         with pytest.raises(ValueError):
             cumulative_overlap(np.zeros(7), eigvecs, np.arange(N))
+
+
+class TestRestrictedCumulativeOverlap:
+    """TASK-0133 -- CO(m) restricted to one residue subset's own
+    displacement, distinct from `learnability_gate.py`'s whole-structure
+    number (confirmed via `len(delta_r) == 3*len(alignment.apo_idx)` on
+    real data, not the pocket size)."""
+
+    def test_matches_cumulative_overlap_when_subset_is_the_full_common_set(self):
+        """Sanity check: restricting to *every* common-set residue must
+        reproduce the whole-structure `cumulative_overlap` exactly --
+        the restriction logic is a strict generalization, not a
+        different formula."""
+        apo = _Struct(COORDS, resnums=list(range(1, N + 1)), resnames=_SEQ3)
+        rng = np.random.default_rng(1)
+        holo_coords = COORDS + rng.normal(0, 1.0, COORDS.shape)
+        holo = _Struct(holo_coords, resnums=list(range(1, N + 1)), resnames=_SEQ3)
+        alignment = align_apo_holo(apo, holo)
+        _, eigvecs = anm_modes(COORDS, cutoff=10.0, n_modes=3 * N - 6)
+
+        full_delta_r = (
+            alignment.aligned_holo_coords[alignment.holo_idx] - apo.coords[alignment.apo_idx]
+        ).ravel()
+        expected = cumulative_overlap(full_delta_r, eigvecs, alignment.apo_idx)
+        actual = restricted_cumulative_overlap(apo, alignment, eigvecs, alignment.apo_idx)
+        np.testing.assert_allclose(actual, expected)
+
+    def test_differs_from_whole_structure_when_only_one_residue_moves(self):
+        """The whole-structure CO and a single-residue-restricted CO are
+        genuinely different quantities: a small local displacement
+        buried in a large whole-structure norm reads very differently
+        once isolated -- this is the exact type mismatch TASK-0133's own
+        Done section flags about `learnability_gate.py`'s reported
+        number."""
+        apo = _Struct(COORDS, resnums=list(range(1, N + 1)), resnames=_SEQ3)
+        rng = np.random.default_rng(2)
+        holo_coords = COORDS + rng.normal(0, 3.0, COORDS.shape)  # everything moves
+        holo = _Struct(holo_coords, resnums=list(range(1, N + 1)), resnames=_SEQ3)
+        alignment = align_apo_holo(apo, holo)
+        _, eigvecs = anm_modes(COORDS, cutoff=10.0, n_modes=3 * N - 6)
+
+        whole = restricted_cumulative_overlap(apo, alignment, eigvecs, alignment.apo_idx)
+        one_residue = restricted_cumulative_overlap(apo, alignment, eigvecs, np.array([5]))
+        assert not np.allclose(whole, one_residue)
+
+    def test_residue_without_holo_correspondence_raises(self):
+        apo = _Struct(COORDS, resnums=list(range(1, N + 1)), resnames=_SEQ3)
+        holo = _Struct(COORDS[: N - 2].copy(), resnums=list(range(1, N - 1)), resnames=_SEQ3[: N - 2])
+        alignment = align_apo_holo(apo, holo)
+        _, eigvecs = anm_modes(COORDS, cutoff=10.0, n_modes=5)
+
+        with pytest.raises(ValueError, match="no holo correspondence"):
+            restricted_cumulative_overlap(apo, alignment, eigvecs, np.array([N - 1]))
+
+    def test_output_length_matches_n_modes(self):
+        apo = _Struct(COORDS, resnums=list(range(1, N + 1)), resnames=_SEQ3)
+        rng = np.random.default_rng(3)
+        holo_coords = COORDS + rng.normal(0, 1.0, COORDS.shape)
+        holo = _Struct(holo_coords, resnums=list(range(1, N + 1)), resnames=_SEQ3)
+        alignment = align_apo_holo(apo, holo)
+        _, eigvecs = anm_modes(COORDS, cutoff=10.0, n_modes=7)
+
+        co = restricted_cumulative_overlap(apo, alignment, eigvecs, np.array([2, 5, 8]))
+        assert len(co) == 7
+
+    def test_stays_bounded_by_one_for_a_small_subset_of_a_large_structure(self):
+        """TASK-0133's own real, load-bearing finding: naively reusing
+        `cumulative_overlap`'s renormalize-a-sliced-eigenvector approach
+        for a small residue subset breaks `CO(m) <= 1` (confirmed on real
+        pocket-sized data, up to 1.64) -- this function's zero-padding
+        approach must not reproduce that bug. Large structure (N=50), tiny
+        subset (3 residues), same shape as the real pocket-vs-full-
+        structure ratio this task's real targets have (13-18 of
+        166-709)."""
+        big_coords = _helix_coords(50)
+        apo = _Struct(big_coords, resnums=list(range(1, 51)), resnames=(_SEQ3 * 5)[:50])
+        rng = np.random.default_rng(0)
+        holo_coords = big_coords + rng.normal(0, 1.0, big_coords.shape)
+        holo = _Struct(holo_coords, resnums=list(range(1, 51)), resnames=(_SEQ3 * 5)[:50])
+        alignment = align_apo_holo(apo, holo)
+        _, eigvecs = anm_modes(big_coords, cutoff=10.0, n_modes=20)
+
+        co = restricted_cumulative_overlap(apo, alignment, eigvecs, np.array([10, 11, 12]))
+        assert co.max() <= 1.0 + 1e-9
+        assert np.all(np.diff(co) >= -1e-9)  # still monotonically non-decreasing
 
 
 # ---------------------------------------------------------------------------

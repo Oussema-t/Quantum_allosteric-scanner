@@ -1170,6 +1170,80 @@ Full detail: `.ai/tasks/DONE/TASK-0120-learnability-gate-hyp-p8.md`,
 `results_task0120/learnability_gate.json` (includes the full CO(m) curve
 for KRAS_G12C, not just the final value).
 
+**[UPDATED 2026-07-19, [[TASK-0133]]] The `CO(20)` values in the tables
+above are a *whole-structure* quantity, not a pocket-specific one — a
+real, load-bearing finding, not a restatement.** Checked directly
+against real data: `delta_r`'s length in `learnability_gate.py` equals
+`3 * len(alignment.apo_idx)` (166-709, the *entire* common apo/holo
+correspondence set), not `3 * n_pocket_residues` (13-18). The reported
+`CO(20)` therefore measures how well the apo ANM's low-frequency modes
+explain the *whole conformational change*, not specifically the
+pocket's own opening direction — a materially different claim than
+"the pocket's displacement is spanned by the soft modes," which is what
+`learnability_verdict`'s own framing (and the panel's) reads it as.
+
+[[TASK-0133]] built a genuinely pocket-restricted CO(m)
+(`superpose.restricted_cumulative_overlap`, zero-pads the residue
+subset's displacement into the full 3N ANM space and projects onto the
+untouched orthonormal eigenvectors directly — **not** by naively
+slicing+renormalizing eigenvectors the way `cumulative_overlap` does,
+which was found, mid-task, to silently break `CO(m) <= 1` for a small
+subset: real pocket-sized subsets gave values up to 1.64, a
+mathematically invalid "overlap fraction," root-caused to a synthetic
+3-of-50-residue case before being trusted on real data) and compared it
+against 1000 random same-sized patches per target, drawn from the same
+common correspondence set:
+
+| Target | Pocket size | Restricted pocket CO(20) | Whole-structure CO(20) (original) | Random-patch CO(20) (mean±std) | Pocket percentile | One-sided p |
+|---|---|---|---|---|---|---|
+| KRAS_G12C | 18 | **0.458** | 0.638 | 0.341 ± 0.075 | 93.0th | ≈0.07 |
+| BCR_ABL1 | 16 | 0.175 | 0.794 | 0.199 ± 0.059 | 37.3th | ≈0.63 |
+| CARDIAC_MYOSIN | 13 | 0.044 | 0.584 | 0.074 ± 0.032 | 12.6th | ≈0.87 |
+
+**Headline, stated directly: this control only matters for KRAS_G12C —
+the one target whose `learnability_verdict` actually depends on the CO
+half of the conjunction** (BCR_ABL1 already fails the RMSD-ratio bar at
+0.49<1.5, and CARDIAC_MYOSIN at 1.32<1.5, so their verdicts are
+RMSD-determined regardless of CO). For KRAS_G12C, the *properly
+pocket-restricted* CO(20) is **0.458 — below `learnability_verdict`'s
+own `co_threshold=0.5`**, the opposite side of the threshold from the
+whole-structure proxy's 0.638 that produced the original `LEARNABLE`
+verdict. Had this task's corrected measurement been used in place of
+the whole-structure proxy, KRAS_G12C's `co_low` condition would flip to
+`True`, and combined with its already-`True` `rmsd_much_greater`
+(ratio 2.27), the conjunction would classify `UNLEARNABLE_FROM_APO` —
+reversing TASK-0120's headline verdict for the panel's own "textbook
+cryptic case."
+
+**Not silently reclassified — the random-patch control itself says this
+isn't a clean flip either way.** KRAS_G12C's pocket CO (0.458) is real
+and elevated relative to the random-patch null (93rd percentile, mean
+0.341) — the pocket is not indistinguishable from a random same-sized
+region — but a one-sided p≈0.07 does not clear this project's own
+established significance bar (uncorrected 0.05, let alone
+Bonferroni-corrected across targets, [[TASK-0131]]'s own precedent). So
+neither the original whole-structure "0.638, comfortably above
+threshold, LEARNABLE" reading nor a flipped "0.458, below threshold,
+UNLEARNABLE" reading is fully supported without a caveat: the fixed
+0.5 threshold applied to either quantity is doing more work than the
+underlying statistical evidence decisively supports for this target.
+Per this task's own Out Of Scope, `learnability_verdict`'s threshold
+logic is not changed here — this is the concrete finding for whoever
+next revisits KRAS_G12C's `LEARNABLE` classification to act on.
+
+BCR_ABL1 and CARDIAC_MYOSIN's pockets score *below* their own
+random-patch medians (37th and 13th percentile) — the real pocket is
+less well explained by the soft-mode subspace than a typical
+same-sized random region, the opposite of "broadly expressive/no
+discrimination." Their verdicts are unaffected either way (RMSD-
+determined), but this is a real, target-specific asymmetry worth
+recording: CO does discriminate between regions on these two targets,
+just not in the pocket-favoring direction, and not in a way that
+changes anything currently reported.
+
+Full detail: `.ai/tasks/DONE/TASK-0133-learnability-gate-random-patch-control.md`,
+`results_task0133/learnability_gate_patch_control.json`.
+
 ---
 
 ### `H_new`'s 5-term potential variance-budget renormalization (TASK-0121, 2026-07-18)
@@ -1621,6 +1695,7 @@ Full detail: `.ai/tasks/DONE/TASK-0122-mode-coparticipation-observable.md`,
 | 14 | Does the cross-target pattern (beats chance, not floor; raw AUC overstates signal) hold on targets no review cycle has ever seen, run under the fully gauge-fixed pipeline — the direct mitigation for ~15 cycles of repeated exposure to the same 3 answer keys? | **resolved 2026-07-18: yes, 4/4.** PTP1B, CASPASE7, CASPASE1 (new), GLUCOKINASE (new) all land in `BEATS_CHANCE_NOT_FLOOR` with overlapping score/floor 95% CIs — none statistically decisive, same pattern as the mandatory set. PTP1B remains anti-correlated with its true (genuinely distal) pocket (AUC 0.205). `most_impactful_term` is never `V_R` on any of the 4 — independent cross-check of [[TASK-0121]] on data its own validation never touched. Ceiling intentionally deferred for all 4 (known-stale `ceiling.py::_PARAM_RANGES`, [[TASK-0116]]'s scope, not a shortcut taken here). | [[TASK-0081]], [[TASK-0127]] |
 | 15 | Does KRAS_G12C's ceiling search (TASK-0046, 60 blind-random trials, `lam_*` sampled on a range ~25x [[TASK-0121]]'s own budget) actually support "very little headroom," or was the search exploring the wrong (physically invalid) space? | **resolved 2026-07-18: the "no headroom" conclusion is confirmed, not overturned, but the original 0.5250 number was itself somewhat inflated by the invalid range.** Corrected-range random search: 0.4735-0.4864 depending on seed convention (both below the original). Corrected-range + TPE strategy: 0.4908 (reproduced exactly at seed=7), marginally above the re-measured floor (0.4818, +0.009) — too small a margin to claim a real positive without [[TASK-0131]]'s permutation null, flagged not claimed. Cross-validates [[TASK-0110]]'s independent 0.4750 (different parameter axis, same near-chance conclusion). | [[TASK-0046]], [[TASK-0116]] |
 | 16 | Is this project's headline output actually reproducible given identical seeded inputs, or has environmental nondeterminism been silently corrupting "before vs. after" comparisons ([[INV-0008]], the BCR_ABL1 gap discrepancy)? | **resolved 2026-07-19: reproducible — the hypothesis is refuted, not confirmed.** 3 independent repeats each of a spectral-gap eigendecomposition, a blind random search, and a TPE search all gave bit-for-bit identical results. BLAS thread-count variation (`1/2/4/8`) produces real but negligible drift (~1e-14 relative). The original 0.0374-vs-0.1933 discrepancy this hypothesis was raised from is directly ruled out as environmental (11 orders of magnitude too small) — traces instead to a stale cached object from 5 days before a later code change, not live nondeterminism. New `allostery.runlog` module (environment fingerprint + incremental wall/CPU-time JSONL logging) adopted in `scripts/reproducibility_audit.py`. | [[TASK-0135]], [[INV-0008]] |
+| 17 | Does cumulative overlap onto the apo ANM's lowest 20 modes actually discriminate "spans *this pocket's* displacement" from "spans *any* same-sized displacement" — or does a random patch score just as high ([[TASK-0120]]'s CO half of the learnability conjunction, `REVIEW-panel-2026-07-17.md` §5.2)? | **resolved 2026-07-19, with a real complication found mid-task.** TASK-0120's own reported `CO(20)` turns out to be a *whole-structure* quantity (166-709 residues), not pocket-specific — confirmed directly, not assumed. A properly pocket-restricted CO (new `superpose.restricted_cumulative_overlap`; also fixed a real bug found along the way — naively slicing+renormalizing eigenvectors for a small subset breaks `CO(m)<=1`, up to 1.64 observed) compared against 1000 random same-sized patches/target: **only matters for KRAS_G12C** (the one target whose verdict actually depends on the CO half). KRAS_G12C's restricted CO=0.458 is *below* the 0.5 threshold (vs. 0.638 whole-structure) and would flip the verdict to `UNLEARNABLE_FROM_APO` — but sits at only the 93rd percentile of the random-patch null (p≈0.07, not decisive at this project's own significance bar). BCR_ABL1/CARDIAC_MYOSIN score *below* their random-patch medians (37th/13th percentile) but their verdicts are RMSD-determined regardless. | [[TASK-0133]], [[TASK-0120]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
