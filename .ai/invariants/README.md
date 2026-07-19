@@ -17,9 +17,15 @@ as `.ai/tasks/` and `.ai/seams/`.
 |---|---|---|---|
 | **GAUGE** | must not change the answer at all | hard assert, `atol≈1e-9` | a bug, always |
 | **KNOB** | a modeling choice; may change the answer | report the spread, never a point estimate | verdict is knob-dependent → report `UNSTABLE` |
-| **SIGNAL** | must change the answer | assert it does (null control) | the metric is inert |
+| **SIGNAL** | must change the answer | assert it does, **against the domain's strongest trivial confounder — not only random/chance** (null control) | the metric is inert, or worse, is scoring the confounder |
 
 An unclassified transformation is the free axle — it is where the next bug lives.
+
+**"Beats chance" is not "beats the obvious alternative explanation" (TASK-0098,
+amending TASK-0051's original adoption)** — see `INVARIANCE_PROTOCOL.md`'s Tier 3b
+for the full rule and this repo's own worked example (a propagation-based
+occupation score must clear a proximity-from-seed floor, not just chance;
+`baselines.euclid_from_seed_centroid`/`hop_from_seed`, TASK-0094).
 
 ## Required fields (every invariant file)
 
@@ -27,7 +33,9 @@ An unclassified transformation is the free axle — it is where the next bug liv
 - for GAUGE rows: the test that enforces it (hard assert) and its status
 - for KNOB rows: how the spread is reported, and whether the go/no-go decision
   is checked stable across the grid
-- for SIGNAL rows: the null control that proves the metric isn't inert
+- for SIGNAL rows: the null control that proves the metric isn't inert **and**
+  that it beats the domain's strongest trivial confounder, not only random
+  noise (TASK-0098)
 - `status` per row: `GAUGE-VERIFIED` | `KNOB-CHARACTERIZED` | `OPEN`
 
 ## Rule of engagement
