@@ -492,6 +492,102 @@ class TestCumulativeOverlap:
             cumulative_overlap(np.zeros(7), eigvecs, np.arange(N))
 
 
+class TestCumulativeOverlapSE3Invariance:
+    """TASK-0054 -- `INVARIANCE_PROTOCOL.md` Tier 0 GAUGE regression test
+    for `INV-0001`'s one `OPEN` row: rotating+translating `coords` *and*
+    `delta_r` jointly by an arbitrary rigid motion must not change
+    `cumulative_overlap`'s output at all. This is the exact class of bug
+    the protocol names as this repo's own prior incident (cumulative
+    overlap moved 0.34->0.90 under rotation before `anm_modes`'
+    select-by-eigenvalue-not-index fix) -- that fix is already live
+    (`anm_modes`'s own `n_zero = int((w < 1e-8).sum())` selection); this
+    is the regression test that would have caught its absence, which
+    never existed for this specific quantity until now.
+
+    A genuinely arbitrary (non-axis-aligned) rotation matters: 90/180
+    degree rotations can leave an axis-aligned bug undetected. Uses a
+    fixed, off-axis Euler angle triple, not 0/90/180.
+    """
+
+    ROTATION = _rotation_matrix(0.4, -1.1, 2.3)  # arbitrary, off-axis, fixed
+    TRANSLATION = np.array([5.0, -3.0, 12.0])    # arbitrary, nonzero
+
+    def _rotate_flat(self, vec: np.ndarray, R: np.ndarray) -> np.ndarray:
+        """Rotate a flat 3N-length vector (coords or a per-residue
+        displacement) block-wise by R."""
+        return (vec.reshape(-1, 3) @ R.T).ravel()
+
+    def test_rotation_and_translation_leave_cumulative_overlap_unchanged(self):
+        rng = np.random.default_rng(4)
+        # Real, non-trivial displacement -- not the degenerate zero case
+        # (already covered by test_zero_delta_r_returns_zeros above).
+        delta_r = rng.normal(size=3 * N)
+
+        eigvals_before, eigvecs_before = anm_modes(COORDS, cutoff=10.0, n_modes=3 * N - 6)
+        common_idx = np.arange(N)
+        co_before = cumulative_overlap(delta_r, eigvecs_before, common_idx)
+
+        # Joint rigid motion: coords get rotation + translation; the
+        # *displacement* vector gets rotation only (translation is gauge-
+        # trivial for a difference of two translated point sets -- t
+        # cancels: (R@holo+t) - (R@apo+t) = R@(holo-apo) -- asserted
+        # below, not assumed).
+        coords_transformed = (COORDS @ self.ROTATION.T) + self.TRANSLATION
+        delta_r_transformed = self._rotate_flat(delta_r, self.ROTATION)
+
+        eigvals_after, eigvecs_after = anm_modes(coords_transformed, cutoff=10.0, n_modes=3 * N - 6)
+        co_after = cumulative_overlap(delta_r_transformed, eigvecs_after, common_idx)
+
+        # Eigenvalues (the physical mode energies) are SE(3)-invariant by
+        # construction -- a real ANM/GAUGE sanity check on the fixture
+        # itself before trusting the CO comparison built on top of it.
+        np.testing.assert_allclose(eigvals_after, eigvals_before, atol=1e-9)
+        np.testing.assert_allclose(co_after, co_before, atol=1e-9)
+
+    def test_translation_alone_is_gauge_trivial_for_the_displacement(self):
+        """Isolates the translation half of the joint motion: translating
+        `coords` (no rotation) while leaving `delta_r` untouched must also
+        leave `cumulative_overlap` unchanged -- per this task's own Intent
+        Contract ("translation should be gauge-trivial for a displacement
+        vector, but assert it anyway -- cheap, and the protocol's own
+        point is not to assume")."""
+        rng = np.random.default_rng(5)
+        delta_r = rng.normal(size=3 * N)
+        common_idx = np.arange(N)
+
+        _, eigvecs_before = anm_modes(COORDS, cutoff=10.0, n_modes=3 * N - 6)
+        co_before = cumulative_overlap(delta_r, eigvecs_before, common_idx)
+
+        coords_translated = COORDS + self.TRANSLATION
+        _, eigvecs_after = anm_modes(coords_translated, cutoff=10.0, n_modes=3 * N - 6)
+        co_after = cumulative_overlap(delta_r, eigvecs_after, common_idx)
+
+        np.testing.assert_allclose(co_after, co_before, atol=1e-9)
+
+    def test_residue_relabeling_leaves_cumulative_overlap_unchanged(self):
+        """Sibling GAUGE check (INV-0001's second `OPEN` row, absorbed
+        here since it's cheap alongside the rotation test, per this
+        task's own Out Of Scope allowance): permuting residue indices
+        consistently across coords/delta_r/common_idx must not change the
+        result -- the modes and the displacement must permute together,
+        not just the modes."""
+        rng = np.random.default_rng(6)
+        delta_r = rng.normal(size=3 * N)
+        common_idx = np.arange(N)
+
+        _, eigvecs = anm_modes(COORDS, cutoff=10.0, n_modes=3 * N - 6)
+        co_before = cumulative_overlap(delta_r, eigvecs, common_idx)
+
+        perm = rng.permutation(N)
+        coords_perm = COORDS[perm]
+        delta_r_perm = delta_r.reshape(N, 3)[perm].ravel()
+
+        _, eigvecs_perm = anm_modes(coords_perm, cutoff=10.0, n_modes=3 * N - 6)
+        co_after = cumulative_overlap(delta_r_perm, eigvecs_perm, common_idx)
+
+        np.testing.assert_allclose(co_after, co_before, atol=1e-9)
+
+
 class TestRestrictedCumulativeOverlap:
     """TASK-0133 -- CO(m) restricted to one residue subset's own
     displacement, distinct from `learnability_gate.py`'s whole-structure
