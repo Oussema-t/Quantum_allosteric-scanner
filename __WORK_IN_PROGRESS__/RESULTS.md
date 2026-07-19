@@ -1760,6 +1760,84 @@ Full detail: `.ai/tasks/DONE/TASK-0132-gnm-transfer-entropy-baseline.md`,
 
 ---
 
+## Distance-stratified evaluation (TASK-0123, 2026-07-19) — the panel's own kill/pass test, plus a correction the panel's own criterion didn't anticipate
+
+**[EXECUTED, all 3 mandatory targets, real code, real data]**
+`REVIEW-panel-2026-07-16-v2.md` Sec.2.3/Sec.6 identified a structural problem with every
+whole-graph AUC this project reports: occupation of a walk seeded at a point is
+monotonically decreasing in distance from that point, for any operator, at any time — a
+whole-graph AUC cannot distinguish "found the pocket" from "found distance." The
+prescribed fix and falsification test: score each pocket residue only against non-pocket
+residues at the *same* hop-shell from the seed; "stratified AUC ~= 0.5 in every shell ->
+observable dead."
+
+New `metrics.stratified_auc`/`stratified_auc_summary` (single-hop-distance bins, computed
+once per target and reused identically across every operator — this task's own
+Constraint), applied to all 16 operators in `analysis._operator_registry()` x both
+propagators (`ctqw` via TASK-0130's closed form, `ground_state` at `t_max=15`) x all 3
+mandatory targets (96 cells), plus [[TASK-0122]]'s `mode_coparticipation`.
+
+**Naive reading, easy to overclaim**: 40 (target, operator, propagator) cells with a
+well-powered shell (>=3 pocket residues) clear stratified AUC > 0.65 — on every mandatory
+target, across nearly every operator in the register. Read naively, this looks like a
+striking reversal of nearly every other "no mandatory target's actual clears its own
+floor" finding elsewhere in this document.
+
+**That naive reading is wrong, checked directly, not assumed.** `stratified_auc_summary`
+takes the *maximum* AUC over several shells per cell — the identical winner's-curse/
+look-elsewhere structure [[TASK-0131]] already found for the ceiling search's max-over-60-
+trials statistic. A real permutation null (label the same-sized random subset of residues
+"pocket," re-score the *same, fixed, already-computed* occupation vector, 1000 replicates)
+confirms this directly: the null's own median well-powered-max AUC is **0.56-0.64, not
+0.5** — most of the naive ">0.65" list is within or barely above what pure noise produces
+under this exact max-over-shells procedure.
+
+**The corrected picture** (3 representative cases per target — `H_new`/`ctqw`, `H_new`/
+`ground_state`, `mode_coparticipation` — the two propagators plus TASK-0122's own
+observable, 9 tests total):
+
+| Target | Representative | Real well-powered max AUC (shell) | Null median | p-value |
+|---|---|---|---|---|
+| KRAS_G12C | `H_new`/ctqw | 0.710 (shell 1) | 0.643 | 0.269 |
+| KRAS_G12C | `H_new`/ground_state | 0.518 (shell 3) | 0.635 | 0.851 |
+| KRAS_G12C | `mode_coparticipation` | 0.405 (shell 3) | 0.640 | 0.982 |
+| BCR_ABL1 | `H_new`/ctqw | 0.741 (shell 4) | 0.609 | 0.153 |
+| BCR_ABL1 | `H_new`/ground_state | 0.820 (shell 4) | 0.620 | 0.053 |
+| BCR_ABL1 | `mode_coparticipation` | 0.906 (shell 2) | 0.619 | **0.012** |
+| CARDIAC_MYOSIN | `H_new`/ctqw | 0.581 (shell 1) | 0.560 | 0.451 |
+| CARDIAC_MYOSIN | `H_new`/ground_state | 0.890 (shell 1) | 0.569 | **0.010** |
+| CARDIAC_MYOSIN | `mode_coparticipation` | 0.604 (shell 2) | 0.570 | 0.400 |
+
+**2 of 9 clear p<0.05 uncorrected** (BCR_ABL1's `mode_coparticipation`, CARDIAC_MYOSIN's
+`H_new`/`ground_state`) — **neither survives a Bonferroni correction** for 9 tests
+(threshold 0.0056). The panel's own literal kill criterion ("stratified AUC ~= 0.5 in
+every shell") does not strictly fire — several real values sit well above 0.5 — but the
+panel's own criterion did not anticipate that "stratified AUC" itself, as the maximum over
+several shells, carries its own selection bias requiring the same null-distribution
+treatment TASK-0131 already established for the ceiling search. Read plainly: this task
+finds **real, uncorrected suggestive signal in 2 of 9 tested cells** — candidates for
+targeted follow-up (a dedicated look at CARDIAC_MYOSIN's `H_new` ground-state relaxation
+within its own hop-shell-1 neighborhood, and at BCR_ABL1's `mode_coparticipation` within
+shell 2) — **not a confirmed reversal of this document's other floor/ceiling findings**,
+and not the panel's own predicted "observable dead" outcome either. Neither extreme is
+supported; the honest middle is what the data shows.
+
+**A secondary, real observation worth naming**: the naive (uncorrected) list shows the
+*same* shell (BCR_ABL1's shell 4, `n_pos=3`/`n_neg=76`; CARDIAC_MYOSIN's shells 1/4/12 at
+varying power) clearing >0.65 across nearly every operator in the register simultaneously
+— consistent with a real, shared structural property of that specific shell (not
+independent per-operator discoveries; most register operators are built from similar
+structural inputs and would be correlated with each other under any real signal, which is
+itself why the naive per-cell count of "40 passes" overstates independent evidence even
+before the permutation-null correction above).
+
+Full detail: `.ai/tasks/DONE/TASK-0123-distance-stratified-evaluation.md`,
+`results_task0123_distance_stratified/distance_stratified_evaluation.json`,
+`results_task0123_distance_stratified/summary.md`,
+`scripts/distance_stratified_evaluation.py`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |

@@ -33,6 +33,77 @@ def top_k_indices(scores: np.ndarray, k: int) -> np.ndarray:
     return np.argsort(scores)[::-1][:k]
 
 
+# ---------------------------------------------------------------------------
+# TASK-0123 -- distance-stratified AUC (REVIEW-panel-2026-07-16-v2.md Sec.2.3,
+# Sec.6): whole-graph AUC is mechanically dominated by "occupation of a walk
+# seeded at a point is a monotonically-decreasing function of distance from
+# that point, for any operator, at any time" -- it cannot distinguish "found
+# the pocket" from "found distance." Scoring each pocket residue only against
+# non-pocket residues at the *same* hop-shell removes the distance axis from
+# the comparison entirely, letting a real signal inside the confound become
+# visible if one exists.
+# ---------------------------------------------------------------------------
+
+def stratified_auc(scores: np.ndarray, labels: np.ndarray, shells: np.ndarray,
+                    min_pos: int = 1, min_neg: int = 1) -> dict:
+    """AUC computed independently within each unique value of `shells`
+    (e.g. integer hop-distance-from-seed, `-baselines.hop_from_seed(...)`)
+    -- residues are compared only against same-shell residues, never
+    across shells, so a scorable shell's AUC cannot be driven by distance
+    (every residue being compared is equidistant from the seed by
+    construction).
+
+    A shell needs at least `min_pos` positive and `min_neg` negative
+    labels to be scorable (mirrors `auc`'s own degenerate-label NaN
+    convention, but at the shell level: an all-pocket or all-non-pocket
+    shell is silently excluded from the result, not scored as a
+    degenerate NaN entry -- there is nothing to discriminate within it).
+
+    Returns `{shell_value: {"auc", "n_pos", "n_neg"}, ...}` for every
+    scorable shell -- empty if no shell has both labels present (the
+    panel's own "observable dead" case reports as an empty result, not a
+    crash or a silent 0.5).
+    """
+    scores = np.asarray(scores)
+    labels = np.asarray(labels).astype(int)
+    shells = np.asarray(shells)
+
+    result: dict = {}
+    for shell_value in np.unique(shells):
+        mask = shells == shell_value
+        shell_labels = labels[mask]
+        n_pos = int(shell_labels.sum())
+        n_neg = int(len(shell_labels) - n_pos)
+        if n_pos < min_pos or n_neg < min_neg:
+            continue
+        result[float(shell_value)] = {
+            "auc": auc(scores[mask], shell_labels),
+            "n_pos": n_pos,
+            "n_neg": n_neg,
+        }
+    return result
+
+
+def stratified_auc_summary(stratified: dict) -> dict:
+    """Collapse `stratified_auc`'s per-shell dict into the single
+    summary this task's own Planned Validation reads: does *any* shell
+    clear 0.5 (the panel's own pass criterion), or is stratified AUC
+    approximately 0.5 everywhere (the panel's own "observable dead, per
+    this task's own framing" kill criterion)."""
+    if not stratified:
+        return {"n_scorable_shells": 0, "mean_auc": float("nan"), "max_auc": float("nan"), "max_shell": None}
+    aucs = [v["auc"] for v in stratified.values() if np.isfinite(v["auc"])]
+    if not aucs:
+        return {"n_scorable_shells": len(stratified), "mean_auc": float("nan"), "max_auc": float("nan"), "max_shell": None}
+    max_shell = max((s for s in stratified if np.isfinite(stratified[s]["auc"])), key=lambda s: stratified[s]["auc"])
+    return {
+        "n_scorable_shells": len(stratified),
+        "mean_auc": float(np.mean(aucs)),
+        "max_auc": float(np.max(aucs)),
+        "max_shell": max_shell,
+    }
+
+
 def block_bootstrap_ci(
     scores: np.ndarray,
     labels: np.ndarray,
