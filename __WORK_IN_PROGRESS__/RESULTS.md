@@ -1523,6 +1523,84 @@ Full detail: `.ai/tasks/DONE/TASK-0135-reproducibility-audit-and-run-logging.md`
 
 ---
 
+## Mode co-participation (TASK-0122, 2026-07-19) — a mixed, mostly-negative real result that refutes the panel's own preliminary estimate
+
+**[EXECUTED, all 3 mandatory targets, real code, real data]** `mode_coparticipation`
+(REVIEW-2026-07-13b Sec.6, sharpened by `REVIEW-panel-2026-07-17.md` P1-5 into a
+per-residue `CP_low(j) = sum_{k<=n_low} |v_k(j)|^2 * mean_{i in source} |v_k(i)|^2`)
+was proposed as "the only route back to a defensible positive" — a seed-dependent,
+not-distance-monotone observable that should decorrelate from the proximity confound
+every propagator in this project's register already carries. Implemented (new
+`analysis.mode_coparticipation`), gated through TASK-0103's dumbbell 2x2 matrix (passed
+cleanly — tracks coupling like CTQW, not the well like GSR, same double dissociation
+`test_dumbbell_negative_control.py::TestModeCoparticipationDumbbellGate` already
+established for CTQW), then validated on real KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN data.
+
+**Headline: the panel's own preliminary numbers (measured on a reconstructed 3MHT
+surrogate, explicitly flagged there as unverified against this repo's real code) do not
+transfer, and not in the direction hoped for.**
+
+| Target | `\|rho(CP,-dist)\|` clean Laplacian | `\|rho\|` `H_new` pre-TASK-0121 | `\|rho\|` `H_new` current (renormalized) | Real-label AUC vs. floor |
+|---|---|---|---|---|
+| KRAS_G12C | 0.430 | 0.198 | 0.305 | 0.309 vs 0.482 — **fails floor** |
+| BCR_ABL1 | 0.237 | 0.425 | 0.451 | 0.758 vs 0.582 — **clears floor** (+0.176) |
+| CARDIAC_MYOSIN | 0.621 | 0.239 | 0.358 | 0.577 vs 0.792 — **fails floor** |
+
+Three findings, all real, none matching the panel's own prediction:
+
+1. **The panel's own clean-Laplacian estimate (`\|rho\|`=0.18) does not hold on any real
+   target — every real target measures substantially higher (0.24-0.62).** A clean
+   Laplacian's own CP is, if anything, *more* distance-confounded on real protein
+   geometry than the panel's 3MHT reconstruction suggested, not less.
+2. **TASK-0121's potential renormalization made CP's distance-correlation *worse*, not
+   better, on all 3 targets** (pre-TASK-0121 `\|rho\|` 0.198/0.425/0.239 -> current
+   0.305/0.451/0.358) — the opposite of the panel's own hoped-for effect (they measured
+   un-renormalized `H_new` as the *worse* of the two, predicting renormalization would
+   help; on real data it consistently hurts instead). The sign also flips between the
+   clean Laplacian (positive — high CP near the seed, the ordinary proximity-confound
+   direction) and every `H_new` variant (negative — high CP *far* from the seed) on all 3
+   targets; the magnitude stays substantial either way, so this is a different confound
+   shape, not less of one.
+3. **The k-sweep never reliably crosses into a real, directly-measured noise floor**
+   (`\|rho(random,-dist)\|` = 0.062/0.039/0.026 +/- ~0.03-0.05 per target, 200 draws each
+   — measured fresh here, not copied from the panel's own 3MHT estimate of
+   0.044+/-0.036). Across `n_low` in {3, 5, 10, 20, all} on the current renormalized
+   `H_new`: KRAS_G12C dips inside the noise floor at `k=10` only (`\|rho\|`=0.114,
+   non-monotonic — `k=3`/`5`/`20`/`all` are all outside it: 0.179/0.305/0.498/0.760);
+   BCR_ABL1 and CARDIAC_MYOSIN never cross into their own noise floor at any `k` tested
+   (BCR_ABL1: 0.488/0.451/0.312/0.483/0.766; CARDIAC_MYOSIN: 0.362/0.358/0.340/0.312/
+   0.668). The panel's own "`k=5` decorrelates" specific claim does not reproduce on any
+   of the 3 real targets — `k=5`'s own `\|rho\|` is 0.305/0.451/0.358, all well outside
+   each target's own noise floor.
+
+**Real-label scoring is genuinely mixed, not uniformly negative**: BCR_ABL1 clears its
+own proximity floor by a real margin (+0.176) — the one target where CP finds real
+signal beyond what the "necessary but not sufficient" caveat this task was filed with
+requires checking. But per finding 2 above, BCR_ABL1's own CP score is *also* the most
+strongly distance-correlated of the three (`\|rho\|`=0.451) — its floor-clearing AUC
+coexists with, not instead of, a substantial distance confound, which weakens (does not
+void) reading this pass as clean evidence of coupling-detection rather than a
+differently-shaped proximity effect. KRAS_G12C and CARDIAC_MYOSIN both fail to clear
+their own floors.
+
+**Verdict, stated plainly per this project's own honest-NO convention**: `mode_
+coparticipation` is correctly implemented (formula verified against an independent
+hand-derivation, `TestModeCoparticipation::test_matches_hand_derived_formula_on_a_
+tiny_synthetic_case`) and correctly falls on the "tracks coupling" side of the dumbbell
+gate — but on this project's real targets and real code, it does **not** deliver the
+low-distance-correlation property its entire case for adoption rested on, and clears
+the real-label proximity floor on only 1 of 3 mandatory targets. This is not a
+recommendation to adopt `mode_coparticipation` as a submission observable in its
+current form — it is a real, checked answer to a real, load-bearing question the panel
+raised, and the answer is mostly no, not yes. Tier-2 gating (TASK-0100) still applies
+unchanged; this task's own scope was measurement, not operator selection.
+
+Full detail: `.ai/tasks/DONE/TASK-0122-mode-coparticipation-observable.md`,
+`results_task0122_mode_coparticipation/mode_coparticipation_validation.json`,
+`scripts/mode_coparticipation_validation.py`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |

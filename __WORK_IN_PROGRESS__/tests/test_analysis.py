@@ -29,6 +29,7 @@ from allostery.analysis import (  # noqa: E402
     consensus_ranking,
     dephasing_sweep,
     gnm_cutoff_weight_sweep,
+    mode_coparticipation,
     operator_sweep,
     quantum_vs_classical,
     spectral_enrichment,
@@ -214,6 +215,79 @@ class TestSpectralEnrichment:
         result = spectral_enrichment(H, LABELS, n_modes=5)
         assert np.isfinite(result["eff_rank"])
         assert np.isfinite(result["spectral_gap"])
+
+
+# ---------------------------------------------------------------------------
+# mode_coparticipation (TASK-0122)
+# ---------------------------------------------------------------------------
+
+class TestModeCoparticipation:
+    def test_returns_correct_shape_and_is_non_negative(self):
+        H = H2_combinatorial_laplacian(COORDS, cutoff=10.0)
+        cp = mode_coparticipation(H, source=0, n_low=5)
+        assert cp.shape == (N,)
+        assert (cp >= 0).all()
+
+    def test_matches_hand_derived_formula_on_a_tiny_synthetic_case(self):
+        """Regression-pins the exact formula (`CP_low(j) = sum_k |v_k(j)|^2
+        * mean_i |v_k(i)|^2`) against an independent re-derivation from
+        `H`'s own eigh, not just calling the function against itself."""
+        H = H2_combinatorial_laplacian(COORDS, cutoff=10.0)
+        source = [1, 3]
+        n_low = 4
+        w, v = np.linalg.eigh((H + H.T) / 2)
+        idx_start = max(1, int(np.searchsorted(w, 1e-8)))
+        low = v[:, idx_start:idx_start + n_low]
+        src_participation = (low[source, :] ** 2).mean(axis=0)
+        expected = (low ** 2) @ src_participation
+
+        got = mode_coparticipation(H, source=source, n_low=n_low)
+        np.testing.assert_allclose(got, expected)
+
+    def test_different_seeds_give_different_results(self):
+        H = H2_combinatorial_laplacian(COORDS, cutoff=10.0)
+        cp_a = mode_coparticipation(H, source=0, n_low=5)
+        cp_b = mode_coparticipation(H, source=10, n_low=5)
+        assert not np.allclose(cp_a, cp_b)
+
+    def test_seed_residue_scores_relatively_high_among_its_own_low_modes(self):
+        """A basic sanity floor: CP_low(source) itself should not be zero
+        or negative -- the source necessarily participates in its own
+        mode set."""
+        H = H2_combinatorial_laplacian(COORDS, cutoff=10.0)
+        cp = mode_coparticipation(H, source=0, n_low=5)
+        assert cp[0] > 0
+
+    def test_multi_index_source_uses_mean_not_sum(self):
+        """A 2-residue source's score at a fixed target residue must equal
+        the mean (not the sum) of the two single-residue CP contributions'
+        underlying low-mode participation -- proves the `mean` normalization
+        in the docstring is real, not just a comment."""
+        H = H2_combinatorial_laplacian(COORDS, cutoff=10.0)
+        n_low = 3
+        w, v = np.linalg.eigh((H + H.T) / 2)
+        idx_start = max(1, int(np.searchsorted(w, 1e-8)))
+        low = v[:, idx_start:idx_start + n_low]
+        manual_mean = (low[[2, 5], :] ** 2).mean(axis=0)
+        expected = (low ** 2) @ manual_mean
+
+        got = mode_coparticipation(H, source=[2, 5], n_low=n_low)
+        np.testing.assert_allclose(got, expected)
+
+    def test_n_low_changes_the_result(self):
+        H = H2_combinatorial_laplacian(COORDS, cutoff=10.0)
+        cp_5 = mode_coparticipation(H, source=0, n_low=5)
+        cp_10 = mode_coparticipation(H, source=0, n_low=10)
+        assert not np.allclose(cp_5, cp_10)
+
+    def test_works_on_an_indefinite_operator(self):
+        """H_new is indefinite by design (TASK-0095) -- this must not
+        assume a positive-semidefinite spectrum the way a naive "skip
+        eigenvalues below zero" implementation might."""
+        H = build_H_new(COORDS, BFACTORS, cutoff=10.0)
+        cp = mode_coparticipation(H, source=0, n_low=5)
+        assert cp.shape == (N,)
+        assert np.isfinite(cp).all()
 
 
 # ---------------------------------------------------------------------------

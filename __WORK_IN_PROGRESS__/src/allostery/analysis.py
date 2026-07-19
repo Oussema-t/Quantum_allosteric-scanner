@@ -411,6 +411,65 @@ def spectral_enrichment(H: np.ndarray, pocket_mask: np.ndarray, n_modes: int = 1
 
 
 # ---------------------------------------------------------------------------
+# TASK-0122 -- mode co-participation (REVIEW-2026-07-13b Sec.6, sharpened
+# by REVIEW-panel-2026-07-17.md P1-5): a seed-dependent, not-distance-
+# monotone observable -- joint amplitude in the same low-energy modes,
+# the formalization of "a soft collective mode spanning both the active
+# site and a distal residue," rather than a propagating walk that is
+# monotonically decreasing in distance from its seed for *any* operator,
+# at *any* time (REVIEW-panel-2026-07-17.md Sec.2.3's own point, the
+# stated reason a different observable, not a better Hamiltonian, is the
+# candidate fix for the proximity confound).
+# ---------------------------------------------------------------------------
+
+def mode_coparticipation(H: np.ndarray, source, n_low: int = 5) -> np.ndarray:
+    """`CP_low(j) = sum_{k<=n_low} |v_k(j)|^2 * mean_{i in source} |v_k(i)|^2`
+    over `H`'s own `n_low` lowest non-trivial eigenmodes (REVIEW-panel-
+    2026-07-17.md's sharpened per-residue form of REVIEW-2026-07-13b
+    Sec.6's original `CP(target) = sum_k (sum_i v_k(i)^2)(sum_j v_k(j)^2)`
+    -- `mean` over `source` here rather than a bare `sum`, so the score
+    doesn't scale with seed cardinality, matching this module's other
+    seed-normalized conventions, e.g. `propagators._quantum_initial_
+    coeffs`'s own `1/sqrt(k)` normalization for a multi-index source).
+
+    Diagonalizes whichever `H` is passed in -- this is deliberately an
+    operator-level observable like `ctqw`/`ground_state_relaxation`, not
+    a fixed-basis one: the panel's own finding (Done section, this task)
+    is that CP's distance-correlation flips sign depending on which
+    `H_new` variant (current vs. TASK-0121-renormalized) produced the
+    eigenbasis, so a caller must supply the actual operator under test,
+    not assume a shared reference basis.
+
+    Skips the trivial lowest mode (`idx_start = max(1, searchsorted(w,
+    1e-8))`), the same convention `spectral_enrichment`/`potentials.V_M`
+    already use -- for a genuine near-zero rigid-body/constant mode this
+    skips a real trivial mode; for an indefinite operator with no
+    near-zero eigenvalue (e.g. `H_new`) this unconditionally skips only
+    the single lowest mode, the same simplification those two existing
+    functions already make for any operator, not a new one invented
+    here.
+
+    Returns an `(N,)` array (not normalized to sum to 1 -- this is a
+    spectral participation score, not a probability distribution, so it
+    is scored the same way `spectral_enrichment`'s `participation` is:
+    via `metrics.auc`/rank-based comparison, not treated as an
+    occupation).
+    """
+    from .propagators import _source_indices
+
+    w, v = np.linalg.eigh((H + H.T) / 2)
+    idx_start = max(1, int(np.searchsorted(w, 1e-8)))
+    idx_end = min(idx_start + n_low, len(w))
+    if idx_end <= idx_start:
+        return np.zeros(H.shape[0])
+    low_modes = v[:, idx_start:idx_end]  # (N, n_low)
+
+    idx = _source_indices(source)
+    src_participation = (low_modes[idx, :] ** 2).mean(axis=0)  # (n_low,)
+    return (low_modes ** 2) @ src_participation  # (N,)
+
+
+# ---------------------------------------------------------------------------
 # Phase 0a -- dephasing sweep: is coherence scientifically relevant?
 # ---------------------------------------------------------------------------
 
