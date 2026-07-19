@@ -245,6 +245,18 @@ def haken_strobl(
     Returns
     -------
     p : (N,) diagonal of ρ(t), non-negative, sums to 1.
+
+    Raises
+    ------
+    RuntimeError
+        If the RK45 integration does not converge (`sol.success is
+        False`) -- TASK-0041: `sol.y[:, -1]` would otherwise be returned
+        silently as if it were a valid `rho(t)`. Empirically (that
+        task's own real-parameter check), RK45 succeeds throughout this
+        project's actual gamma range (up to `gamma=100`,
+        `analysis.dephasing_sweep`'s own `DEFAULT_GAMMAS` ceiling) and
+        only becomes impractically slow -- not `success=False` -- around
+        `gamma>=1000-10000`, well beyond any real call site.
     """
     N = H.shape[0]
     idx = _source_indices(source)
@@ -267,6 +279,12 @@ def haken_strobl(
         atol=atol,
         dense_output=False,
     )
+    if not sol.success:
+        raise RuntimeError(
+            f"haken_strobl: solve_ivp did not converge for gamma={gamma}, t={t} "
+            f"(status={sol.status}, message={sol.message!r}) -- the returned "
+            "density matrix would be silently wrong, not a valid rho(t)."
+        )
     rho_t = sol.y[:, -1].reshape(N, N)
     p = np.real(np.diag(rho_t))
     p = np.clip(p, 0.0, None)

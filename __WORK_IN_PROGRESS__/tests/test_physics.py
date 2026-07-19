@@ -186,6 +186,53 @@ def test_haken_strobl_trace():
 
 
 # ---------------------------------------------------------------------------
+# 7b. Haken-Strobl surfaces a non-converged solve_ivp instead of returning
+#     a silently-wrong result (TASK-0041)
+# ---------------------------------------------------------------------------
+
+def test_haken_strobl_realistic_gamma_range_converges():
+    """TASK-0041's own 'before implementing' review: does RK45 actually
+    fail anywhere in this project's real gamma range? `analysis.
+    dephasing_sweep`'s own `DEFAULT_GAMMAS = np.logspace(-4, 2, 8)` tops
+    out at gamma=100 -- confirms solve_ivp succeeds (and stays fast, well
+    under a second) at that boundary, one order of magnitude past the
+    existing gamma=20 'Zeno regime' test above. RK45 does become
+    impractically slow (not incorrect) around gamma>=1000-10000, ~10-100x
+    beyond anything this project's real call sites request -- not
+    reachable in practice, so not asserted here as a failure case."""
+    N = 5
+    A = nx.adjacency_matrix(nx.path_graph(N)).toarray().astype(float)
+    p = haken_strobl(A, t=50.0, gamma=100.0, source=0)
+    assert abs(p.sum() - 1.0) < 1e-6
+
+
+def test_haken_strobl_raises_on_failed_integration(monkeypatch):
+    """A non-converged `solve_ivp` result must be surfaced, not silently
+    returned as a valid rho(t) -- construct the failure via a mocked
+    `solve_ivp` (a genuine `sol.success=False` proved impractical to
+    trigger with real physical parameters within any reasonable wall-
+    clock budget during this task's own 'before implementing' review;
+    RK45 degrades to impractical slowness under extreme stiffness, not a
+    clean success=False, so the defensive check is tested directly)."""
+    import allostery.propagators as prop_mod
+
+    class _FakeSol:
+        success = False
+        status = -1
+        message = "Required step size is less than spacing between numbers."
+        y = np.zeros((4, 1))  # unused -- raised before this is read
+
+    def fake_solve_ivp(*args, **kwargs):
+        return _FakeSol()
+
+    monkeypatch.setattr(prop_mod, "solve_ivp", fake_solve_ivp)
+    N = 2
+    A = nx.adjacency_matrix(nx.path_graph(N)).toarray().astype(float)
+    with pytest.raises(RuntimeError, match="did not converge"):
+        haken_strobl(A, t=1.0, gamma=1.0, source=0)
+
+
+# ---------------------------------------------------------------------------
 # 8. Heat kernel – non-negativity and sum ≤ 1
 # ---------------------------------------------------------------------------
 
