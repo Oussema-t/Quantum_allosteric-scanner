@@ -1453,6 +1453,76 @@ Full detail: `.ai/tasks/DONE/TASK-0116-ceiling-search-coverage-upgrade.md`,
 
 ---
 
+## Reproducibility audit + run-logging convention (TASK-0135, 2026-07-19)
+
+**[EXECUTED] The hypothesis this task was filed to test — "does this
+environment silently corrupt 'before vs. after' comparisons via
+run-to-run nondeterminism" ([[INV-0008]]) — is refuted, not confirmed.**
+Three representative headline computations, spanning three different
+computational patterns, each re-run at least 3 times independently
+(fresh process each time, fresh RCSB fetch where applicable, no cached
+objects reused):
+
+| Computation | Repeats | Result |
+|---|---|---|
+| `H_new`'s spectral gap, BCR_ABL1 | 3 | Identical: `gap=0.032949006294881435` every time |
+| `ceiling.ceiling_search`, KRAS_G12C, `seed=7` | 3 (1 from [[TASK-0116]] 2026-07-18 + 2 fresh) | Identical: `S=0.4735`, identical winning params, every time |
+| `optuna_scan.apo_floor_scan`, KRAS_G12C, `seed=7` | 3 | Identical: `best_value=1895379886243.563` every time |
+
+**BLAS thread-count sensitivity, tested directly** (spectral-gap case,
+`OMP_NUM_THREADS`/`OPENBLAS_NUM_THREADS`/`MKL_NUM_THREADS` varied
+`1/2/4/8`): real but tiny — result changes only in the ~14th
+significant figure (spread ~7e-15, relative). **Conclusion: this
+project's headline computations are reproducible given identical code +
+seed + inputs, in this environment.** No caveat needed on any existing
+headline number on reproducibility grounds.
+
+**The originally-flagged BCR_ABL1 spectral-gap discrepancy
+(`0.0374` vs. `0.1933`, [[INV-0008]]) is NOT explained by
+environmental nondeterminism** — directly ruled out by the thread-count
+test above (real effect ~1e-14 relative, discrepancy is 5.2x, ~11
+orders of magnitude too large to be the same mechanism).
+`REVIEW-panel-2026-07-17.md`'s "from BLAS reduction order" attribution
+for this discrepancy was an inference, not itself a controlled test,
+and is now refuted by one. Real, most-likely explanation (not
+exhaustively pinned — a stale historical number, now moot):
+`0.1933` traces to [[TASK-0102]]'s Done section (2026-07-13), which
+explicitly reused a *cached* `H_new` object from [[TASK-0091]] rather
+than rebuilding it — a snapshot from 5 days before [[TASK-0121]]
+changed `build_H_new`'s `lam_*` defaults (among possibly other
+intervening code changes). Tested both the pre- and post-TASK-0121
+defaults directly on fresh BCR_ABL1 data: neither reproduces `0.1933`
+exactly (`0.00107` and `0.0329` respectively) — some other code
+difference across that 5-day gap is the more likely cause, not chased
+further per this task's own scope (a stale number [[TASK-0130]] already
+made moot by deleting the gap-based clock entirely). `COMPETENCE_MAP.md`
+and [[INV-0008]] corrected additively with this finding, not silently
+overwritten.
+
+**Run-logging convention (Part 2)**: new `allostery.runlog` module —
+`environment_fingerprint()` (BLAS thread env vars, hostname, PID,
+python/numpy/scipy/optuna versions, timestamp) and `RunLogger` (JSONL,
+one line per step, flushed + fsync'd immediately — same "partial run
+still leaves a usable trace" discipline `ceiling_search_batched.py`'s
+own checkpoint file already established, generalized). Each step
+records both wall-clock and CPU-seconds elapsed
+([[P-0005]]/[[TASK-0134]]'s own finding that wall-clock alone cannot
+distinguish genuine computation from contention/suspension). Chosen
+over a documentation-only convention because a real importable module is
+directly reusable and enforceable, not just describable — this
+project's own `_log(msg)` helper is independently copy-pasted across
+10+ scripts already, exactly the kind of duplication a shared module
+fixes. Adopted in a real script: new `scripts/reproducibility_audit.py`
+(the tool that produced this section's spectral-gap numbers) uses
+`RunLogger` for its own environment fingerprint + per-repeat timing,
+not the ad-hoc pattern.
+
+Full detail: `.ai/tasks/DONE/TASK-0135-reproducibility-audit-and-run-logging.md`,
+`.ai/invariants/INV-0008-run-to-run-environmental-reproducibility.md`,
+`results_task0135/BCR_ABL1/spectral_gap_audit.jsonl`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -1472,6 +1542,7 @@ Full detail: `.ai/tasks/DONE/TASK-0116-ceiling-search-coverage-upgrade.md`,
 | 13 | Was `most_impactful_term = V_R` (reported in every prior ablation run) a real physics finding, or an artifact of `V_R`'s ~30x-larger normalization scale vs. `V_C`/`V_M`? | **resolved 2026-07-18: artifact.** All five terms are now individually z-scored (std 1 each); `V_R`'s variance share drops from 88.8% to a structural 15.4%, and `lam_C`/`lam_M` go from unreachable (0.1% share each) to 3.8% each. Real-target ablation (KRAS_G12C, BCR_ABL1) now gives `most_impactful_term = V_B` on both, with `V_R` among the *least* impactful on KRAS_G12C. Does not by itself fix the separate proximity confound in the CTQW observable (§2.3) — measurably weakens it (ρ_euclid 0.71-0.83 → 0.22-0.47) but does not eliminate it. | [[TASK-0121]] |
 | 14 | Does the cross-target pattern (beats chance, not floor; raw AUC overstates signal) hold on targets no review cycle has ever seen, run under the fully gauge-fixed pipeline — the direct mitigation for ~15 cycles of repeated exposure to the same 3 answer keys? | **resolved 2026-07-18: yes, 4/4.** PTP1B, CASPASE7, CASPASE1 (new), GLUCOKINASE (new) all land in `BEATS_CHANCE_NOT_FLOOR` with overlapping score/floor 95% CIs — none statistically decisive, same pattern as the mandatory set. PTP1B remains anti-correlated with its true (genuinely distal) pocket (AUC 0.205). `most_impactful_term` is never `V_R` on any of the 4 — independent cross-check of [[TASK-0121]] on data its own validation never touched. Ceiling intentionally deferred for all 4 (known-stale `ceiling.py::_PARAM_RANGES`, [[TASK-0116]]'s scope, not a shortcut taken here). | [[TASK-0081]], [[TASK-0127]] |
 | 15 | Does KRAS_G12C's ceiling search (TASK-0046, 60 blind-random trials, `lam_*` sampled on a range ~25x [[TASK-0121]]'s own budget) actually support "very little headroom," or was the search exploring the wrong (physically invalid) space? | **resolved 2026-07-18: the "no headroom" conclusion is confirmed, not overturned, but the original 0.5250 number was itself somewhat inflated by the invalid range.** Corrected-range random search: 0.4735-0.4864 depending on seed convention (both below the original). Corrected-range + TPE strategy: 0.4908 (reproduced exactly at seed=7), marginally above the re-measured floor (0.4818, +0.009) — too small a margin to claim a real positive without [[TASK-0131]]'s permutation null, flagged not claimed. Cross-validates [[TASK-0110]]'s independent 0.4750 (different parameter axis, same near-chance conclusion). | [[TASK-0046]], [[TASK-0116]] |
+| 16 | Is this project's headline output actually reproducible given identical seeded inputs, or has environmental nondeterminism been silently corrupting "before vs. after" comparisons ([[INV-0008]], the BCR_ABL1 gap discrepancy)? | **resolved 2026-07-19: reproducible — the hypothesis is refuted, not confirmed.** 3 independent repeats each of a spectral-gap eigendecomposition, a blind random search, and a TPE search all gave bit-for-bit identical results. BLAS thread-count variation (`1/2/4/8`) produces real but negligible drift (~1e-14 relative). The original 0.0374-vs-0.1933 discrepancy this hypothesis was raised from is directly ruled out as environmental (11 orders of magnitude too small) — traces instead to a stale cached object from 5 days before a later code change, not live nondeterminism. New `allostery.runlog` module (environment fingerprint + incremental wall/CPU-time JSONL logging) adopted in `scripts/reproducibility_audit.py`. | [[TASK-0135]], [[INV-0008]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
