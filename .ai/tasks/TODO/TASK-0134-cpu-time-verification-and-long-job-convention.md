@@ -25,11 +25,20 @@
   of risk — not properly assuring how much compute IS being consumed —
   is the ether of this project." Filed as [[P-0005]]
   (`.ai/memory/shared/pitfalls.md`) and an update to [[SEAM-0012]].
-- Priority: **P1.** Does not block [[TASK-0130]] (the closed-form fix is
-  strictly better regardless of the exact multiplier — see that task's
-  own reasoning) but the specific "2+ hours"/"145,000x–3,950,000x"
-  figures are currently cited in multiple places as precise, trusted
-  measurements and should not remain so until corroborated.
+- Priority: **P2, downgraded 2026-07-19 — Part 1 is now largely moot.**
+  [[TASK-0130]] replaced `time_averaged_ctqw`'s finite-time approximation
+  with the exact closed form for every headline call path — the specific
+  `t_max`/`n_steps` combination that produced the original "2+ hours,
+  did not return" observation is no longer how this project computes
+  this quantity, so re-verifying that exact historical multiplier has
+  materially less value than it did when this task was filed (nobody is
+  going to run that code path again in the way that produced the
+  original number). **Part 2 (a reusable long-job/background-monitoring
+  convention, including the HITL hand-off option) remains fully valid
+  and independent of this** — general infrastructure, not tied to the
+  specific claim that motivated it. Whoever picks this up should treat
+  Part 1 as optional/historical-record-only and Part 2 as the actual
+  remaining deliverable.
 
 ## Intent Contract
 

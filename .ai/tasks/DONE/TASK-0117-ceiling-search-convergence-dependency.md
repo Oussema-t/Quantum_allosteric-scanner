@@ -10,7 +10,9 @@
   check, and no CI/uncertainty measure, yet its "does not clear chance,
   very little headroom" finding is flagged as the number TASK-0082
   (competence map) should read directly.
-- Status: TODO
+- Status: Done
+- Resolution: obsolete
+- Resolution Note: Superseded by TASK-0130's closed-form clock removing the t_max/n_steps parameter this task existed to validate; TASK-0131 already ran its permutation null against the parameter-free procedure directly.
 - Owner: Implementer
 - Source: `REVIEW-2026-07-15b-ceiling-search-methodology.md`, finding #2.
 - Crit Ref: `ceiling.py:97-98`'s `t_max: float = 15.0, n_steps: int = 500`
@@ -82,4 +84,30 @@ None
 
 ## Done
 
-(not yet)
+**Resolved as obsolete, 2026-07-19 (Architect/Planner).** This task's
+entire question — "is `t_max=15.0`/`n_steps=500` adequate for the
+ceiling search's `time_averaged_ctqw` calls, and if not, what's the
+corrected number" — no longer has an object to be about. [[TASK-0130]]
+(2026-07-18) replaced `time_averaged_ctqw`'s finite-time approximation
+with the exact closed-form infinite-time limit
+(`time_averaged_ctqw_converged`) for every headline "ctqw" computation,
+including `ceiling.ceiling_search(use_converged_limit=True)` — there is
+no `t_max`/`n_steps` parameter left in that call path to validate.
+[[TASK-0131]]'s permutation null (2026-07-19) already ran its real
+36,000-trial test directly against this parameter-free procedure, not
+the old finite-time one — confirming in practice, not just in principle,
+that the ceiling search this task was filed to validate no longer
+exists in the form this task describes.
+
+Not "done" in the sense of having answered the original question (was
+`t_max=15` adequate?) — that question is dissolved, not resolved, since
+the premise (a fixed finite `t_max` on the ceiling search) is no longer
+true of the shipped code. Matches [[TASK-0130]]'s own Done section,
+which already listed this task among those it closes "per the task
+file's own Priority note" — this entry makes that closure explicit and
+moves the file, rather than leaving a stale, blocked-forever TODO in the
+active queue.
+
+No further action needed. `COMPETENCE_MAP.md`'s own Open Items already
+mark this MOOT (not "resolved") per TASK-0130's own documentation
+update.
