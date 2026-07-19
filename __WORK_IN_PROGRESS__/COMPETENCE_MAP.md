@@ -29,6 +29,15 @@ gated tasks below), that gap is stated explicitly, not filled with an estimate.
 > open question ([[TASK-0117]]/[[TASK-0108]]/[[TASK-0109]]/[[TASK-0110]], open). None of
 > this retracts the numbers — it is the difference between "the strongest evidence
 > currently gathered says X" and "X is settled."**
+>
+> **Status update, 2026-07-19**: [[TASK-0112]] is Done and wired directly into this
+> document's current (TASK-0130) numbers; [[TASK-0116]] is Done (`_PARAM_RANGES`
+> corrected); [[TASK-0117]] is moot (TASK-0130 removed the clock parameter it was about);
+> the sparse-search concern this caveat raised for TASK-0116 now has a real, quantitative
+> answer per target via [[TASK-0131]]'s permutation null (see that section below) rather
+> than remaining a qualitative flag. This top-level caveat is kept for the historical
+> record of what was unknown when this document was first written, not as this document's
+> current uncertainty inventory — see the "Open items" section near the end for that.**
 
 > **SUPERSEDED 2026-07-16 by [[TASK-0118]] — the table below is a full recompute, not an
 > edit of the old one. `REVIEW-panel-2026-07-16-v2` (§2.1) found that the numbers this
@@ -149,6 +158,56 @@ did not carry (pre-TASK-0112-wiring for this specific script). Sources:
   does not retract TASK-0119's own finding (real and gauge-robust *at the timescale it
   measured*) — it shows that timescale is not the converged/infinite-time endpoint, a
   distinct fact worth a dedicated read rather than silently reconciling the two numbers.
+
+### Permutation null for the ceiling ([[TASK-0131]]) — decides whether "ceiling clears floor" is real signal or the winner's curse
+
+**The competence map's only nonnegative claim, tested directly.** Every ceiling number
+above is the **maximum** AUC over 60 blind random draws against the real pocket label — a
+maximum over K noisy draws is upward-biased by construction (the winner's curse / look-
+elsewhere effect), independent of whether real signal exists in the operator family. This
+section runs the identical 60-trial search protocol (`ceiling.ceiling_search(use_
+converged_limit=True, coherent=False)` — the actual TASK-0130 procedure that produced the
+ceiling numbers above, not the now-superseded finite-`t_max` script the task was
+originally filed against) against **permuted** pocket labels (same size, shuffled
+identity), 200 replicates per target, and reports each target's real ceiling-minus-floor
+margin as a percentile of its own null.
+
+| Target | Real margin | Null median | Null SD | Null max | Percentile | One-sided p (n=200) | Bonferroni-corrected (x3) |
+|---|---|---|---|---|---|---|---|
+| KRAS_G12C | 0.1470 | 0.0545 | 0.0512 | 0.1941 | 95.5th | **0.045** | 0.135 |
+| BCR_ABL1 | 0.0854 | 0.0316 | 0.0568 | 0.1450 | 90.0th | 0.100 | 0.300 |
+| CARDIAC_MYOSIN | 0.0375 | 0.0326 | 0.0453 | 0.1546 | 55.0th | 0.450 | 1.000 |
+
+**Headline, real and not uniform across targets — the three "ceiling clears floor" margins
+do not carry the same evidentiary weight**:
+- **CARDIAC_MYOSIN's headroom claim is fully explained by the winner's-curse bias alone.**
+  Its real margin (0.0375) sits at the 55th percentile of pure noise doing the identical
+  60-trial max-search procedure against a same-sized random label — indistinguishable from
+  what a genuinely null operator family produces. The "+0.064" (TASK-0129) / real-margin-
+  0.0375 (TASK-0130) headroom this document has carried since TASK-0082 was never
+  meaningful evidence of real capacity in `H_new`'s parameter space for this target.
+- **KRAS_G12C's margin is real, uncorrected-significant (p=0.045), but does not survive a
+  naive Bonferroni correction for testing 3 targets (p=0.135).** The strongest of the
+  three by a real margin — worth flagging as the one target where genuine headroom in the
+  operator family is plausible, not asserted as decided. 200 replicates give p-value
+  resolution of 0.005 (vs. the review's own preliminary 12-replicate estimate's ~0.083) —
+  precise enough to place this specific number, not just its bulk.
+- **BCR_ABL1 is intermediate and inconclusive** (p=0.10, 0.30 corrected) — above the null's
+  median but not distinguishable from noise at any conventional threshold.
+
+**This does not change any diagnosis category** (`NO_FAILURE_DETECTED`/`NO_SIGNAL_IN_APO`/
+`BEATS_CHANCE_NOT_FLOOR` above are `classify_failure`'s point-estimate verdicts on
+*actual* vs. floor/chance, a different comparison than ceiling-vs-floor) — it changes how
+confidently the *ceiling* numbers specifically should be read as "real headroom exists in
+this operator family" vs. "an artifact of taking a maximum over 60 tries." Full null
+distributions: `results_task0131_permutation_null/permutation_null.json`
+(`scripts/ceiling_permutation_null.py`).
+
+**Correction to `REVIEW-2026-07-15b-ceiling-search-methodology.md`'s own text** (per this
+task's own In Scope, additive not silent): that review's Finding 1 argued "a single lucky
+trial clearing the floor is real regardless of how the rest of the space looks," correct
+for an *existence* claim but not for the *maximum-over-K* statistic this document actually
+reports — see the dated correction appended to that file directly.
 
 ### TASK-0129's own table (combined seed+clock fix, superseded above) — kept for the old-vs-new record, no longer this document's current state
 
@@ -288,6 +347,20 @@ operator/target, not a bug in either computation. Flagged, not resolved — a ge
 open question about the gap-based `t*` prescription's own robustness on a
 near-degenerate spectrum, orthogonal to this task's seed+clock combination work.
 
+**Correction, 2026-07-19 ([[TASK-0135]], [[INV-0008]]):** the "BLAS
+threading/reduction order" attribution above was never directly tested
+and is now refuted by one. A real, controlled test (3 independent fresh
+computations, plus `OMP_NUM_THREADS`/`OPENBLAS_NUM_THREADS`/
+`MKL_NUM_THREADS` varied `1/2/4/8`) found this exact quantity
+reproduces to 14+ significant figures regardless of thread count —
+environmental variation of that kind is real but ~11 orders of
+magnitude too small to produce this row's 5.2x discrepancy. The real
+explanation traces to [[TASK-0102]]'s cached `H_new` object (2026-07-13,
+5 days before [[TASK-0121]] changed `build_H_new`'s defaults, among
+other intervening code changes) — a stale-object/code-version mismatch,
+not run-to-run nondeterminism. Moot for this document's own current
+numbers either way: [[TASK-0130]] deleted the gap-based clock entirely.
+
 **Reconciliation with [[TASK-0110]]'s BCR_ABL1 short-`t_max` finding** (practical
 ceiling AUC=0.5829 at `t_max=2.39`, found by an Optuna search over `t_max`/`n_steps` at
 `H_new`'s *default* physical parameters, `coherent=True`, per that task's own
@@ -405,6 +478,38 @@ targets.md`.
 
 ## Cross-target reading
 
+**Recomputed 2026-07-18/19 ([[TASK-0130]] closed form + [[TASK-0131]] permutation null —
+supersedes the TASK-0129-only reading immediately below, kept for the record.)** Under the
+closed form (no clock parameter left at all), the actual-vs-floor picture is qualitatively
+similar to TASK-0129's own reading, with one real change: **KRAS_G12C's point-estimate
+diagnosis now clears its own floor** (`NO_SIGNAL_IN_APO` -> `NO_FAILURE_DETECTED`), though
+not at a statistically decided level (its 95% CI still overlaps the floor's). The bigger
+change is on the *ceiling* side, where TASK-0129's own headline — "real headroom exists in
+`H_new`'s physical-scalar space for all three targets" — **does not survive contact with a
+null.** TASK-0131's 200-replicate permutation null (identical search procedure, permuted
+labels) found:
+
+- **KRAS_G12C**: ceiling clears floor by +0.147, at the 95.5th percentile of pure noise
+  doing the same procedure (p=0.045 uncorrected, 0.135 Bonferroni-corrected for 3 targets)
+  — the one target where genuine headroom is plausible, not decided.
+- **BCR_ABL1**: ceiling clears floor by +0.085, 90th percentile (p=0.10) — inconclusive,
+  above the null's median but not distinguishable from noise at any conventional threshold.
+- **CARDIAC_MYOSIN**: ceiling clears floor by +0.038, only the **55th percentile** of pure
+  noise (p=0.45) — **statistically indistinguishable from what the identical 60-trial
+  max-search procedure produces against a same-sized random label.** This target's
+  "headroom" claim, carried in this document since TASK-0082, was never real evidence of
+  operator-family capacity — it was the winner's-curse bias inherent in reporting a
+  maximum over 60 draws.
+
+**The honest headline is now target-specific, not uniform**: `H_new` under CTQW
+propagation shows real, if unconfirmed-at-Bonferroni-correction, headroom over trivial
+seed-proximity for KRAS_G12C specifically; BCR_ABL1 is inconclusive; CARDIAC_MYOSIN's
+apparent headroom is a search-bias artifact, not a property of the operator family. The
+shipped default-parameter configuration reaches none of this headroom regardless of
+target. Full detail: the "Mandatory targets" table and "Permutation null" section above.
+
+### TASK-0129's own cross-target reading (combined seed+clock fix, superseded above) — kept for the old-vs-new record, no longer this document's current state
+
 **Recomputed 2026-07-17/18 ([[TASK-0129]], combined seed + clock fix — supersedes the
 2026-07-16/[[TASK-0118]]-only reading immediately below, kept for the record.)** Under
 the fully corrected convention, **no mandatory target's actual, shipped result clears
@@ -497,26 +602,35 @@ CARDIAC_MYOSIN's reading changed.
   data. Plausibly explained by a genuine near-continuum in this operator/target's low
   spectrum (8 eigenvalues packed within a 0.14 span) making "the gap" numerically
   fragile — not chased further, a numerical-stability question orthogonal to this task's
-  own seed+clock scope.
+  own seed+clock scope. **[[TASK-0135]] (2026-07-19) directly tested "numerically
+  fragile to environment" and refuted it** (14+ significant figures reproducible across
+  thread counts) — see the corrected entry above and [[INV-0008]] for the real,
+  most-likely explanation (a stale cached object across a code-version gap, not
+  environmental nondeterminism).
 - **TASK-0112 — wired in directly as of [[TASK-0130]]** (2026-07-18): every number in
   this document's own current (TASK-0130) table above carries a 95% block-bootstrap CI,
   computed in the same recompute pass, not a separate afterthought. Originally open: no
   confidence interval on any number in this document — `metrics.block_bootstrap_ci`
   exists and is used by `select.py`'s LOPO path but was not wired into any headline AUC
   this document cites.
-- **TASK-0116** (open): every target's ceiling-vs-floor margin (all three positive, per
-  the recompute above) rests on 60 blind random draws over an ~8-dimensional space —
-  flagged as weak evidence, originally for KRAS_G12C's negative claim specifically, but
-  the same sparse-search caveat applies to trusting any of the three ceiling numbers as a
-  tight upper bound. A denser/space-filling search could still find a materially
-  different ceiling on any target.
+- **TASK-0116 — Done** (`_PARAM_RANGES`/`sample_params` corrected to the constrained
+  simplex, already the current shipped code — this bullet was itself stale, corrected
+  here). Coverage sparsity (60 blind draws over an ~8-dimensional space) remains a real
+  property of the search, but [[TASK-0131]] (below) now directly answers the question this
+  sparsity originally raised — not "is 60 samples enough coverage," but "is the reported
+  maximum distinguishable from what 60 samples of pure noise would produce" — per target,
+  with a real null distribution rather than a qualitative flag. See TASK-0131's own
+  section above: real for KRAS_G12C (p=0.045 uncorrected), not for CARDIAC_MYOSIN (p=0.45).
+  A denser/space-filling search remains a legitimate follow-up if a *tighter* ceiling
+  estimate is wanted (this task's own Out Of Scope explicitly did not redesign the search),
+  but the "is the current number meaningful at all" question is now answered, not open.
 - **TASK-0117 — MOOT as of [[TASK-0130]]** (2026-07-18: no `n_steps`/`t_max` is derived
   for `time_averaged_ctqw` anymore, so there is no clock-derived numerical parameter left
   to wrap in a CI for this quantity; kept below for the record). Originally open: the
   ceiling search's own numerical parameters (`n_steps` derived from `H_new`'s own `n*`,
   per the TASK-0129 recompute) still lacked a formal confidence-interval wrapper — the
-  search-*coverage* question (TASK-0116, below) is distinct and still genuinely open,
-  unaffected by TASK-0130.
+  search-*coverage* question (TASK-0116, above) is distinct — see that bullet's own
+  2026-07-19 update (TASK-0131) — unaffected by TASK-0130.
 - **TASK-0124** (open): CARDIAC_MYOSIN's apo structure (5TBY, 20 Å docked homology model)
   still carries its own unresolved data-quality caveat — now the *only* remaining
   question for this target, since TASK-0129 already found it has no headroom to defend

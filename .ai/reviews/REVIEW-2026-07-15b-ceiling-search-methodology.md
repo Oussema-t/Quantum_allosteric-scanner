@@ -47,6 +47,30 @@ result, though it would be perfectly adequate evidence for a *positive*
 finding (a single lucky trial clearing the floor is real regardless of
 how the rest of the space looks).
 
+**Correction, 2026-07-18/19 ([[TASK-0131]])**: the last clause above
+("a single lucky trial clearing the floor is real regardless of how the
+rest of the space looks") is right for an *existence* claim — does any
+point in the search space score highly against the real label — but
+wrong for the statistic this project actually reports. `COMPETENCE_MAP.md`
+does not report "does any of the 60 trials clear the floor" as a yes/no
+existence check; it reports the **maximum** AUC over those 60 trials as
+"the ceiling," and reads `ceiling − floor > 0` as evidence of real
+headroom. A maximum over K noisy draws is upward-biased by construction
+(the winner's curse / look-elsewhere effect) — a single trial "clearing
+the floor" is exactly what pure noise, given 60 independent tries,
+produces some of the time even with zero real signal in the operator
+family. TASK-0131 measured this directly: a 200-replicate permutation
+null (identical 60-trial search protocol, permuted pocket labels, same
+pocket size) on all 3 mandatory targets — see that task's own Done
+section and `COMPETENCE_MAP.md`'s newest SUPERSEDED layer for the real
+null distributions and where each target's real margin falls within
+them. This correction does not retract Finding 1's own headline claim
+(sparse 8-D coverage is still weak evidence either direction) — it
+retracts only the specific "a lucky positive trial needs no further
+scrutiny" argument, which turns out to need exactly the scrutiny this
+finding already argued for on the negative side, just applied
+symmetrically.
+
 Compounding this: `TASK-0110` (filed same day, TODO) brings a real
 optimizer (Optuna/TPE) into this pipeline — but explicitly scoped to
 CTQW's *numerical* parameters (`t_max`/`n_steps`/`gamma`), with
