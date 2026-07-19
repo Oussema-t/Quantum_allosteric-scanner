@@ -1675,6 +1675,91 @@ Full detail: `.ai/tasks/DONE/TASK-0122-mode-coparticipation-observable.md`,
 
 ---
 
+## GNM transfer-entropy classical baseline (TASK-0132, 2026-07-19)
+
+**[EXECUTED, all 3 mandatory targets, real code, real data]** A published,
+classical (no MD, no quantum), seconds-on-a-laptop baseline — directional
+transfer entropy over GNM contact topology — implemented and scored the
+same way as every other observable in this project's register, per
+`REVIEW-panel-2026-07-17.md` §4 P1-6/§6.3#5: *"the published classical
+method that does [slow-mode filtering] already. If you can't beat it, you
+don't have a result."*
+
+**Citations checked directly before implementing, not assumed from the
+review's one-line summary** — both papers are real. Hacisuleyman & Erman,
+*Proteins* 85(6):1056-1064 (2017), PMID 28241380, confirms the claimed
+method (Schreiber transfer entropy + GNM, directional causal-flow signal
+from harmonic interactions alone). **Correction to the filing task's own
+citation**: PMID 35644497 (*J Mol Biol* 434(17), 2022, "Subsets of Slow
+Dynamic Modes Reveal Global Information Sources as Allosteric Sites") is
+real and matches the claimed method (GNM+TE over slow-mode subsets, a
+20-protein benchmark) — but its authors are **Altintel, Acar, Erman,
+Haliloglu**, not "Kaynak & Bahar" as filed.
+
+**Formulation, stated per this task's own Constraint** (several TE
+variants exist in the literature; the review's summary is not a full
+method spec): the linear-Gaussian transfer entropy / Granger-causality
+closed form (Barnett, Barrett & Seth, *PRL* 103:238701, 2009) —
+`T_{Y->X} = 0.5*ln(Sigma_X / Sigma_{X|Y})` — applies exactly, since GNM
+fluctuations are multivariate Gaussian by construction (no histogram-
+based entropy estimation needed, unlike the MD-trajectory-based
+predecessor papers). Lag `tau` set to the GNM's own slowest relaxation
+time (`1/gap`, this task's own choice, matching the project's existing
+spectral-gap-clock convention from TASK-0109/0119/0130 rather than
+inventing an unrelated rule — the cited papers do not specify a single
+universal lag).
+
+**A genuine mathematical subtlety worked out and verified, not assumed**:
+for the pure (reversible) GNM Langevin process, the lagged cross-
+covariance `C_ij(tau)` is provably **symmetric** (`C_ij(tau) = C_ji(tau)`
+for any `tau`, confirmed both by derivation and directly on real data) —
+the cross-term alone carries no directional information. Directionality
+survives anyway because the two directions' formulas use *different
+self-prediction baselines* (residue X's own marginal relaxation
+properties vs. residue Y's, generally different) — confirmed numerically
+via a dedicated regression test and a synthetic hub-vs-periphery sanity
+check (a tightly-coupled clique correctly scores as a stronger
+information source than a weakly-coupled one, joined by a single bridge
+edge) before trusting this on real targets.
+
+**Real run** (`scripts/transfer_entropy_baseline.py`, live fetch,
+`results_task0132/transfer_entropy_baseline.json`), compared directly
+against `H_new`/CTQW's own current numbers (`COMPETENCE_MAP.md`'s
+TASK-0130 closed-form table):
+
+| Target | Floor | Transfer-entropy AUC | `H_new`/CTQW actual AUC | TE diagnosis |
+|---|---|---|---|---|
+| KRAS_G12C | 0.4818 | 0.4485 | 0.5901 | `BEATS_CHANCE_NOT_FLOOR` |
+| BCR_ABL1 | 0.5817 | 0.3497 | 0.5266 | `BEATS_CHANCE_NOT_FLOOR` |
+| CARDIAC_MYOSIN | 0.7921 | 0.5335 | 0.7272 | `NO_SIGNAL_IN_APO` |
+
+**Neither of this task's own two anticipated outcomes holds cleanly —
+reported as the mixed result it actually is, not forced into either
+bucket.** (a) does **not** hold: this classical baseline does not beat
+or match `H_new`/CTQW — it scores lower on all 3 targets, decisively so
+on BCR_ABL1 and CARDIAC_MYOSIN (the latter not even clearing chance).
+(b) holds only partially: the classical method **also** fails to clear
+the proximity floor on all 3 targets, which is a real, independent
+confirmation that this specific 3-target problem is hard beyond just
+this project's own operator choices — but `H_new`/CTQW still does
+directionally, sometimes substantially, better than this particular
+published classical method, so "the task itself is hard regardless of
+method family" is not the full story either. Cross-reference:
+[[TASK-0122]]'s mode co-participation (the other independent classical-
+ish comparison point landed the same day) clears its own floor on 1 of
+3 targets (BCR_ABL1, +0.176) — transfer entropy clears it on 0 of 3,
+the more negative of the two comparisons run this session.
+
+**Out of scope, not attempted**: reselecting the submission operator
+based on this result (Tier-2-gated per [[TASK-0100]], unchanged); this
+task's own scope was measurement, not selection.
+
+Full detail: `.ai/tasks/DONE/TASK-0132-gnm-transfer-entropy-baseline.md`,
+`results_task0132/transfer_entropy_baseline.json`,
+`src/allostery/transfer_entropy.py`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -1696,6 +1781,7 @@ Full detail: `.ai/tasks/DONE/TASK-0122-mode-coparticipation-observable.md`,
 | 15 | Does KRAS_G12C's ceiling search (TASK-0046, 60 blind-random trials, `lam_*` sampled on a range ~25x [[TASK-0121]]'s own budget) actually support "very little headroom," or was the search exploring the wrong (physically invalid) space? | **resolved 2026-07-18: the "no headroom" conclusion is confirmed, not overturned, but the original 0.5250 number was itself somewhat inflated by the invalid range.** Corrected-range random search: 0.4735-0.4864 depending on seed convention (both below the original). Corrected-range + TPE strategy: 0.4908 (reproduced exactly at seed=7), marginally above the re-measured floor (0.4818, +0.009) — too small a margin to claim a real positive without [[TASK-0131]]'s permutation null, flagged not claimed. Cross-validates [[TASK-0110]]'s independent 0.4750 (different parameter axis, same near-chance conclusion). | [[TASK-0046]], [[TASK-0116]] |
 | 16 | Is this project's headline output actually reproducible given identical seeded inputs, or has environmental nondeterminism been silently corrupting "before vs. after" comparisons ([[INV-0008]], the BCR_ABL1 gap discrepancy)? | **resolved 2026-07-19: reproducible — the hypothesis is refuted, not confirmed.** 3 independent repeats each of a spectral-gap eigendecomposition, a blind random search, and a TPE search all gave bit-for-bit identical results. BLAS thread-count variation (`1/2/4/8`) produces real but negligible drift (~1e-14 relative). The original 0.0374-vs-0.1933 discrepancy this hypothesis was raised from is directly ruled out as environmental (11 orders of magnitude too small) — traces instead to a stale cached object from 5 days before a later code change, not live nondeterminism. New `allostery.runlog` module (environment fingerprint + incremental wall/CPU-time JSONL logging) adopted in `scripts/reproducibility_audit.py`. | [[TASK-0135]], [[INV-0008]] |
 | 17 | Does cumulative overlap onto the apo ANM's lowest 20 modes actually discriminate "spans *this pocket's* displacement" from "spans *any* same-sized displacement" — or does a random patch score just as high ([[TASK-0120]]'s CO half of the learnability conjunction, `REVIEW-panel-2026-07-17.md` §5.2)? | **resolved 2026-07-19, with a real complication found mid-task.** TASK-0120's own reported `CO(20)` turns out to be a *whole-structure* quantity (166-709 residues), not pocket-specific — confirmed directly, not assumed. A properly pocket-restricted CO (new `superpose.restricted_cumulative_overlap`; also fixed a real bug found along the way — naively slicing+renormalizing eigenvectors for a small subset breaks `CO(m)<=1`, up to 1.64 observed) compared against 1000 random same-sized patches/target: **only matters for KRAS_G12C** (the one target whose verdict actually depends on the CO half). KRAS_G12C's restricted CO=0.458 is *below* the 0.5 threshold (vs. 0.638 whole-structure) and would flip the verdict to `UNLEARNABLE_FROM_APO` — but sits at only the 93rd percentile of the random-patch null (p≈0.07, not decisive at this project's own significance bar). BCR_ABL1/CARDIAC_MYOSIN score *below* their random-patch medians (37th/13th percentile) but their verdicts are RMSD-determined regardless. | [[TASK-0133]], [[TASK-0120]] |
+| 18 | Does a published, classical (no MD, no quantum) GNM transfer-entropy method beat or match `H_new`/CTQW on this project's own 3 mandatory targets — "if you can't beat it, you don't have a result" (`REVIEW-panel-2026-07-17.md` §4 P1-6)? | **resolved 2026-07-19: no, on both counts, a mixed result reported as such.** New `transfer_entropy.py` (linear-Gaussian TE / Granger-causality closed form over GNM lagged covariance, verified against 2 real cited papers — one citation's author list was wrong in the filing task, corrected). Scored against all 3 real targets: AUC 0.4485/0.3497/0.5335 vs. floor 0.4818/0.5817/0.7921 — fails to clear the floor anywhere (0/3), and scores *lower* than `H_new`/CTQW's own current numbers (0.5901/0.5266/0.7272) on all 3, decisively so on 2. Neither "classical method already does the job" nor "the task itself is uniformly hard regardless of method" holds cleanly — `H_new` beats this specific classical baseline, which itself doesn't clear the floor. | [[TASK-0132]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
