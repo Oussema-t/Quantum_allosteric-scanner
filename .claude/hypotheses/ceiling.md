@@ -169,6 +169,29 @@ grouping) along the way: `.ai/tasks/DONE/TASK-0126-h13-ceiling-comparison.md`.
 
 ---
 
+## Status update, 2026-07-19 — H14's own margin over `H_new` does not survive scrutiny (TASK-0138)
+
+**TASK-0138** ran a TASK-0131-compatible permutation null against H14's ceiling search
+on all 3 targets, plus a trial-density convergence check. Headline: **H14's ceiling-
+clears-floor claim is not statistically distinguishable from winner's-curse noise on
+either target where a positive margin existed** — KRAS_G12C's margin (0.0914) sits at
+the 70th percentile of 200 null replicates (p=0.300 uncorrected); BCR_ABL1's (0.1357,
+the target where TASK-0126 found H14 beating `H_new`) sits at the 79th percentile
+(p=0.210 uncorrected) — neither reaches conventional significance even before
+Bonferroni correction. CARDIAC_MYOSIN's margin is negative (H14's ceiling sits *below*
+its own floor) and confirmed, via a reduced 30-replicate null, to sit at the 0th
+percentile — worse than every null replicate, not just non-significant. Separately, a
+trial-density check found KRAS_G12C's 60-trial convention has **not converged**
+(running max still climbs from 0.5732 at n=60 to 0.5949 at n=150) while BCR_ABL1's has
+(0.7174 → 0.7213, a much smaller residual gain) — the BCR_ABL1 margin over `H_new` is
+therefore not a trial-density artifact, but its own ceiling-clears-floor claim still
+does not survive the null either way. Same qualitative pattern this file's own
+2026-07-18/19 update above found for H13, and TASK-0131 found for `H_new`'s own
+CARDIAC_MYOSIN margin: a headline-looking number that does not survive scrutiny once
+applied. Full detail: `.ai/tasks/DONE/TASK-0138-h14-ceiling-validity-characterization.md`.
+
+---
+
 ## Which operator to use for the ceiling search
 
 The ceiling should be measured with **every operator candidate** (H_new, H13 projection,
