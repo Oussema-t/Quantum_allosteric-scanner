@@ -218,6 +218,40 @@ def ground_state_relaxation(
     return p / (s + 1e-300)
 
 
+def _haken_strobl_rho0(N: int, idx: np.ndarray, coherent: bool) -> np.ndarray:
+    """Initial density matrix for Haken-Strobl dynamics over seed indices
+    `idx`: a coherent equal-amplitude superposition (rank-1, `|psi0><psi0|`,
+    carrying off-diagonal coherences/relative phase between every pair of
+    seed residues) or an incoherent statistical mixture (diagonal,
+    `(1/k) * sum_i |i><i|`, no such phase) -- same physical distinction and
+    same `coherent` convention as `ctqw`'s own split (`_ctqw_from_eigh` vs
+    `_ctqw_mixture_from_eigh`, TASK-0118/INV-0006). A scalar `source`
+    (`len(idx) == 1`) gives the identical result either way."""
+    if coherent:
+        psi0 = np.zeros(N, dtype=complex)
+        psi0[idx] = 1.0 / np.sqrt(len(idx))
+        return np.outer(psi0, psi0.conj())
+    rho0 = np.zeros((N, N), dtype=complex)
+    rho0[idx, idx] = 1.0 / len(idx)
+    return rho0
+
+
+def _haken_strobl_rhs(H: np.ndarray, gamma: float):
+    """Closure over `H`/`gamma` implementing the Lindblad pure-dephasing
+    RHS shared by `haken_strobl` and `haken_strobl_time_averaged` -- kept
+    as one definition so the two integrators cannot silently drift apart
+    on the physics."""
+    N = H.shape[0]
+
+    def rhs(t_: float, rho_flat: np.ndarray) -> np.ndarray:
+        rho = rho_flat.reshape(N, N)
+        commutator = -1j * (H @ rho - rho @ H)
+        dephasing = -gamma * (rho - np.diag(np.diag(rho)))
+        return (commutator + dephasing).flatten()
+
+    return rhs
+
+
 def haken_strobl(
     H: np.ndarray,
     t: float,
@@ -225,22 +259,34 @@ def haken_strobl(
     source: Source = 0,
     rtol: float = 1e-6,
     atol: float = 1e-8,
+    *,
+    coherent: bool = True,
 ) -> np.ndarray:
     """Open-system CTQW with Haken–Strobl dephasing.
 
     Lindblad master equation (dephasing-only):
         dρ/dt = −i[H, ρ] − γ · (ρ − diag(ρ) · I)
 
-    Starting from ρ₀ = |psi0⟩⟨psi0| (psi0 a coherent equal-amplitude
-    superposition over `source` index/indices -- a scalar `source` recovers
-    the original single-index ρ₀ = |source⟩⟨source| exactly), integrates to
-    time t and returns the diagonal of the density matrix (occupation
-    probabilities).
+    Starting from ρ₀ built by `_haken_strobl_rho0` (a scalar `source`
+    recovers the original single-index ρ₀ = |source⟩⟨source| exactly
+    regardless of `coherent`), integrates to time t and returns the
+    diagonal of the density matrix (occupation probabilities).
 
     Parameters
     ----------
     gamma : dephasing rate in units of the Hamiltonian energy scale.
             gamma=0 recovers pure CTQW; gamma→∞ gives classical diffusion.
+    coherent : `True` (default, unchanged from every prior release) -- a
+            multi-index `source` is a coherent equal-amplitude
+            superposition (matching `ctqw`'s own default and this
+            function's original, only behavior). `False` -- an incoherent
+            statistical mixture instead (TASK-0141: this project's
+            established multi-residue-seed GAUGE, TASK-0118/INV-0006, is
+            incoherent -- a functional/active site has no biophysical
+            basis for a specific relative quantum phase between its
+            residues; callers seeding from a real multi-residue active
+            site must pass `coherent=False` to stay on that gauge, the
+            same way `ctqw(..., coherent=False)` already does).
 
     Returns
     -------
@@ -260,18 +306,10 @@ def haken_strobl(
     """
     N = H.shape[0]
     idx = _source_indices(source)
-    psi0 = np.zeros(N, dtype=complex)
-    psi0[idx] = 1.0 / np.sqrt(len(idx))
-    rho0 = np.outer(psi0, psi0.conj())
-
-    def rhs(t_: float, rho_flat: np.ndarray) -> np.ndarray:
-        rho = rho_flat.reshape(N, N)
-        commutator = -1j * (H @ rho - rho @ H)
-        dephasing = -gamma * (rho - np.diag(np.diag(rho)))
-        return (commutator + dephasing).flatten()
+    rho0 = _haken_strobl_rho0(N, idx, coherent)
 
     sol = solve_ivp(
-        rhs,
+        _haken_strobl_rhs(H, gamma),
         [0.0, t],
         rho0.flatten(),
         method="RK45",
@@ -288,6 +326,83 @@ def haken_strobl(
     rho_t = sol.y[:, -1].reshape(N, N)
     p = np.real(np.diag(rho_t))
     p = np.clip(p, 0.0, None)
+    return p / (p.sum() + 1e-300)
+
+
+def haken_strobl_time_averaged(
+    H: np.ndarray,
+    t_max: float,
+    gamma: float,
+    source: Source = 0,
+    n_snapshots: int = 50,
+    *,
+    coherent: bool = True,
+    rtol: float = 1e-6,
+    atol: float = 1e-8,
+) -> np.ndarray:
+    """Time-average of Haken-Strobl occupation from 0 to `t_max` -- the
+    discrimination-relevant quantity TASK-0141 scores (a single arbitrary
+    snapshot, `haken_strobl`'s own return, is not a steady-state-like
+    quantity a ranking should be built on); the open-system analogue of
+    `time_averaged_ctqw`.
+
+    Implemented as **one** `solve_ivp` call with `t_eval` set to the
+    snapshot grid, not `n_snapshots` independent re-solves from t=0: the
+    RK45 adaptive-step cost is set by `H`'s own spectral bandwidth and
+    `t_max`, not by how many points are requested for interpolation, so
+    this is effectively free on top of the single-endpoint cost already
+    measured for `haken_strobl` (TASK-0105: KRAS_G12C ~11s, BCR_ABL1
+    ~161s per gamma at t=25) -- not an O(n_snapshots) blowup the naive
+    "call `haken_strobl` in a loop" approach would be.
+
+    Each snapshot's diagonal is clipped and renormalised independently
+    before averaging (matching `haken_strobl`'s own per-call convention)
+    so early-time floating-point noise at small `t` cannot bias the
+    average.
+
+    `gamma=0` is NOT special-cased here (unlike `analysis.dephasing_sweep`/
+    `coherence_sensitivity`'s documented `ctqw`-shortcut convention) --
+    callers wanting that optimization should call
+    `time_averaged_ctqw(..., coherent=coherent)` directly at `gamma=0`
+    themselves; this function's only job is the `gamma > 0` ODE path.
+
+    `coherent`: same meaning as `haken_strobl`'s own parameter.
+    """
+    N = H.shape[0]
+    idx = _source_indices(source)
+    rho0 = _haken_strobl_rho0(N, idx, coherent)
+
+    # Excludes t=0 deliberately (unlike `time_averaged_ctqw`'s own
+    # `linspace(0, t_max, n_steps)`, which is harmless there at its
+    # n_steps=500 default): this function's initial rho0 is a delta-
+    # function-like spike exactly at the seed (coherent or incoherent),
+    # so including it as one of only `n_snapshots` equally-weighted
+    # points would bake a `1/n_snapshots`-weighted proximity artifact
+    # into the average, independent of gamma or equilibration -- exactly
+    # the kind of confound TASK-0141 exists to test for, not introduce
+    # into its own scored quantity. Found directly while validating this
+    # function (`test_haken_strobl_extensions.py`), not assumed.
+    t_eval = np.linspace(0.0, t_max, n_snapshots + 1)[1:]
+    sol = solve_ivp(
+        _haken_strobl_rhs(H, gamma),
+        [0.0, t_max],
+        rho0.flatten(),
+        method="RK45",
+        rtol=rtol,
+        atol=atol,
+        t_eval=t_eval,
+        dense_output=False,
+    )
+    if not sol.success:
+        raise RuntimeError(
+            f"haken_strobl_time_averaged: solve_ivp did not converge for "
+            f"gamma={gamma}, t_max={t_max} (status={sol.status}, "
+            f"message={sol.message!r})."
+        )
+    rho_t = np.real(sol.y).reshape(N, N, len(t_eval))
+    diag = np.clip(np.einsum("iit->it", rho_t), 0.0, None)  # (N, n_snapshots)
+    diag = diag / (diag.sum(axis=0, keepdims=True) + 1e-300)
+    p = diag.mean(axis=1)
     return p / (p.sum() + 1e-300)
 
 

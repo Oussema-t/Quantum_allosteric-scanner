@@ -1984,6 +1984,98 @@ Full detail: `.ai/tasks/DONE/TASK-0114-pocket-label-cutoff-sensitivity.md`,
 `results_task0114_pocket_cutoff_sensitivity/pocket_label_cutoff_sensitivity.json`,
 `scripts/pocket_label_cutoff_sensitivity.py`.
 
+---
+
+## Engineered-dephasing (ENAQT) discrimination sweep (TASK-0141, HYP-P11, 2026-07-20)
+
+Tests the collaborator's Idea #1 (Mohseni/Rebentrost/Lloyd/Aspuru-Guzik 2008, Rebentrost 2009,
+Caruso 2014, Viciani 2015) with the *correct scored quantity*: those four references establish
+an optimal Haken-Strobl dephasing rate for **transport efficiency to a known trap** — this
+project's own objective is **discrimination** of an *unknown* pocket, a different quantity.
+`REVIEW-panel-2026-07-20`'s own physics check (`enaqt_sanity.py`, a synthetic sanity script not
+present in this repo — flagged by this Architect/Planner thread before this task started)
+predicted a clean NEGATIVE: dephasing de-traps the walker from `H_new`'s Anderson localization
+by pushing it toward classical diffusion, which *is* this project's own well-documented
+proximity confound — synthetic AUC 0.72→0.16, `rho(occ,-dist)` 0.10→0.68→0.92 as gamma: 0→5.
+
+**Two real, load-bearing gaps closed in `propagators.py` before this task's own sweep could be
+trusted:**
+1. `haken_strobl` had no incoherent-mixture source option — every multi-residue seed used a
+   coherent equal-amplitude superposition, violating this project's own established GAUGE
+   (TASK-0118/INV-0006: a real multi-residue active site has no biophysical basis for a specific
+   relative quantum phase between its residues). New `coherent` kwarg (default `True`, unchanged
+   for every existing caller) mirrors `ctqw`'s own split; this task always passes
+   `coherent=False`.
+2. No time-averaged Haken-Strobl occupation existed — `haken_strobl` only returns one endpoint
+   snapshot, but this task's own Intent Contract scores "time-averaged site occupation". New
+   `haken_strobl_time_averaged` (one `solve_ivp` call with `t_eval`, not `n_snapshots`
+   independent re-solves — effectively free on top of the existing single-endpoint cost).
+   Deliberately excludes `t=0` from its own averaging grid (unlike `time_averaged_ctqw`'s
+   `linspace(0, t_max, n_steps)`, harmless there at its 500-point default): the initial
+   condition is a delta-function-like spike exactly at the seed, and including it as one of only
+   `n_snapshots` equally-weighted points would bake a `1/n_snapshots`-weighted proximity
+   artifact into the very quantity this task exists to check for a proximity confound in — found
+   directly while validating the function (12 new tests, `test_haken_strobl_extensions.py`), not
+   assumed.
+
+**Method**: gamma swept over the task's own fixed grid `{0, 0.05, 0.1, 0.2, 0.5, 1, 2, 5} x
+H_new's spectral bandwidth` (this repo's established "bandwidth" convention,
+`w.max()-w.min()`), `t_max=25` (TASK-0105's own established anchor), `coherent=False`
+(TASK-0118 GAUGE), on KRAS_G12C / BCR_ABL1 / PTP1B (the collaborator's chosen third case — its
+apo/holo chain wiring was confirmed identical to the 3 mandatory targets, `.ai/tasks/DONE/
+TASK-0081...md`, resolving this task's own Open Question with no substitution needed). Scored:
+whole-graph AUC vs `diagnostics.classify_failure`'s proximity floor (with block-bootstrap 95%
+CIs), TASK-0123's own distance-stratified lens, `metrics.ipr` (participation ratio) and
+`rho(occ, -dist)` as the mechanism covariate. Runtime was far below the pre-registered
+feasibility estimate (TASK-0105's own N^3-scaling note): 0.06-0.6s/gamma (KRAS_G12C),
+0.05-3.0s/gamma (PTP1B), 0.2-9.1s/gamma (BCR_ABL1) — full 3-target, 8-point sweep completed in
+~90s wall-clock, not the tens-of-minutes budgeted for.
+
+**Headline result — NEGATIVE on all 3 targets, confirming HYP-P11's own pre-registered
+prediction:**
+
+| Target | gamma=0 AUC | Best interior AUC (gamma mult) | Floor | CI non-overlapping? | Beats coherent? | Permutation p (Bonferroni alpha=0.0167) |
+|---|---|---|---|---|---|---|
+| KRAS_G12C | 0.4489 | 0.4757 (5x) | 0.4818 | No | Yes | 0.649 |
+| BCR_ABL1 | 0.5366 | 0.5582 (5x) | 0.5817 | No | Yes | 0.211 |
+| PTP1B | 0.2392 | 0.2414 (5x) | 0.4847 | No | Yes | 1.000 |
+
+No gamma clears the proximity floor with non-overlapping CIs on any target, and the best interior
+gamma's own permutation-null check (1000 replicates, "which of these 8 fixed points looks best on
+real labels" is itself a max-of-K selection getting the same winner's-curse scrutiny TASK-0131/
+TASK-0138/TASK-0123 have already established as necessary here) is nowhere near significant even
+uncorrected, let alone Bonferroni-corrected across 3 targets. AUC does rise slightly from gamma=0
+to gamma=5x on all 3 targets (interior optimum shape echoing TASK-0105's own transport-efficiency
+finding, `RESULTS.md` open-question row 7) — but the rise is small, not floor-crossing, and not
+distinguishable from noise. PTP1B stays clearly anti-correlated with its own (genuinely distal)
+pocket at every gamma (AUC 0.19-0.24), consistent with TASK-0081's independent finding
+(AUC 0.2497 at a different, undephased configuration).
+
+**The mandatory classical-limit sanity gate did NOT pass as literally specified, on any target —
+a genuine complication, root-caused (not glossed over) before trusting the interior points:**
+`rho(occ,-dist)` *fell* from gamma=0 to the gamma=5x endpoint on all 3 targets (KRAS_G12C:
+0.721->0.539; BCR_ABL1: 0.619->0.351; PTP1B: 0.470->0.226) — the opposite direction from the
+task's own synthetic prior (which predicted a rise to ~0.92). Diagnosed directly (not assumed):
+at fixed `t_max=25`, this is **not** an integrator bug and **not** evidence the classical-limit
+picture is wrong in general — it is Zeno-regime suppression of the *effective* diffusion
+timescale at large gamma (`D_eff ~ ||H||^2/2*gamma` falls as gamma grows past the ENAQT-optimal
+point), meaning the classical-diffusion-like proximity signature needs *more* propagation time to
+develop as gamma increases, and `t_max=25` (fixed across the whole sweep, matching TASK-0105's
+own established anchor) under-samples it at the grid's high end. Confirmed directly on
+KRAS_G12C at gamma=5x bandwidth by extending `t` alone (gamma held fixed): `rho(occ,-dist)`
+0.584 (t=25) -> 0.730 (t=100) -> 0.863 (t=300) — recovers the expected rising trend once given
+enough time, ruling out an implementation error. This does not change the headline verdict (the
+AUC-vs-floor numbers above are valid measurements of "what gamma does to discrimination at
+t_max=25", the task's own fixed-grid deliverable) but means the sanity gate's own literal pass/
+fail bar, as specified, is not met at this `t_max`, and is flagged rather than silently
+worked around.
+
+Full detail: `.ai/tasks/DONE/TASK-0141-engineered-dephasing-sweep.md`,
+`results_task0141_dephasing/dephasing_discrimination_sweep.json`,
+`scripts/dephasing_discrimination_sweep.py`, new `propagators.haken_strobl_time_averaged` /
+`haken_strobl(..., coherent=)`, `tests/test_haken_strobl_extensions.py`.
+
+---
 
 ## Index of open questions from this run
 
@@ -2008,6 +2100,8 @@ Full detail: `.ai/tasks/DONE/TASK-0114-pocket-label-cutoff-sensitivity.md`,
 | 17 | Does cumulative overlap onto the apo ANM's lowest 20 modes actually discriminate "spans *this pocket's* displacement" from "spans *any* same-sized displacement" — or does a random patch score just as high ([[TASK-0120]]'s CO half of the learnability conjunction, `REVIEW-panel-2026-07-17.md` §5.2)? | **resolved 2026-07-19, with a real complication found mid-task.** TASK-0120's own reported `CO(20)` turns out to be a *whole-structure* quantity (166-709 residues), not pocket-specific — confirmed directly, not assumed. A properly pocket-restricted CO (new `superpose.restricted_cumulative_overlap`; also fixed a real bug found along the way — naively slicing+renormalizing eigenvectors for a small subset breaks `CO(m)<=1`, up to 1.64 observed) compared against 1000 random same-sized patches/target: **only matters for KRAS_G12C** (the one target whose verdict actually depends on the CO half). KRAS_G12C's restricted CO=0.458 is *below* the 0.5 threshold (vs. 0.638 whole-structure) and would flip the verdict to `UNLEARNABLE_FROM_APO` — but sits at only the 93rd percentile of the random-patch null (p≈0.07, not decisive at this project's own significance bar). BCR_ABL1/CARDIAC_MYOSIN score *below* their random-patch medians (37th/13th percentile) but their verdicts are RMSD-determined regardless. **[[TASK-0139]], 2026-07-20: decided, not left standing — pocket-restricted CO is the correct quantity (RMSD half is already region-specific; a whole-structure CO answers a different question), and `co_threshold=0.5` is replaced by a direct significance test against this exact null once available (new `learnability_verdict(co_percentile=...)`). KRAS_G12C resolves to `AMBIGUOUS` (RMSD clears, CO evidence inconclusive at α=0.05) — not `LEARNABLE`, not `UNLEARNABLE_FROM_APO`. BCR_ABL1/CARDIAC_MYOSIN unchanged (RMSD-determined).** | [[TASK-0139]], [[TASK-0133]], [[TASK-0120]] |
 | 18 | Does a published, classical (no MD, no quantum) GNM transfer-entropy method beat or match `H_new`/CTQW on this project's own 3 mandatory targets — "if you can't beat it, you don't have a result" (`REVIEW-panel-2026-07-17.md` §4 P1-6)? | **resolved 2026-07-19: no, on both counts, a mixed result reported as such.** New `transfer_entropy.py` (linear-Gaussian TE / Granger-causality closed form over GNM lagged covariance, verified against 2 real cited papers — one citation's author list was wrong in the filing task, corrected). Scored against all 3 real targets: AUC 0.4485/0.3497/0.5335 vs. floor 0.4818/0.5817/0.7921 — fails to clear the floor anywhere (0/3), and scores *lower* than `H_new`/CTQW's own current numbers (0.5901/0.5266/0.7272) on all 3, decisively so on 2. Neither "classical method already does the job" nor "the task itself is uniformly hard regardless of method" holds cleanly — `H_new` beats this specific classical baseline, which itself doesn't clear the floor. | [[TASK-0132]] |
 | 20 | Is the pocket-label ligand-contact cutoff (4.5 Å, `holo_pocket_mask`, defines ground truth itself) knob-unstable the same way TASK-0075 proved the cumulative-overlap gate's own 4.5 Å-shaped threshold is (0.067–0.860 swings, 15/18 verdict flips)? | **resolved 2026-07-20: no, materially more stable — but not fully insensitive either.** Swept {4.0,4.5,5.0,5.5} Å on all 3 mandatory targets, re-scoring the same once-computed `H_new` occupation against each cutoff's regenerated label. `floor_cleared` never flips for any target across the whole grid. `classify_failure`'s finer diagnosis *does* flip for 2/3 targets at the grid's edges (KRAS_G12C `NO_FAILURE_DETECTED`->`NO_SIGNAL_IN_APO` at 5.5 Å; BCR_ABL1 `BEATS_CHANCE_NOT_FLOOR`->`NO_SIGNAL_IN_APO` between 4.0/4.5 Å) — real but narrow, nothing like TASK-0075's own instability. TASK-0047's pinned 4.5 Å KRAS_G12C fixture (21/21) confirmed exactly correct, but sits on a still-moving slope (the raw recovered residue set changes at every 0.5 Å step tested, both directions), not a stable plateau. CARDIAC_MYOSIN run against TASK-0124's new 8QYP structure (landed the same day) — flagged as not comparable to this document's other, 5TBY-era CARDIAC_MYOSIN numbers. | [[TASK-0114]], [[TASK-0075]], [[TASK-0047]] |
+
+| 19 | Does *any* engineered Haken-Strobl dephasing rate gamma improve pocket **discrimination** (not transport efficiency) over the coherent walk, on real targets — HYP-P11, the collaborator's Idea #1 run with the correct scored quantity? | **resolved 2026-07-20: no, on all 3 targets tested (KRAS_G12C, BCR_ABL1, PTP1B), confirming the pre-registered NEGATIVE prediction.** No gamma clears the proximity floor with non-overlapping CIs anywhere; the best-of-8-gamma point's own permutation null is nowhere near significant (p=0.649/0.211/1.000, Bonferroni alpha=0.0167). Closed 2 real gaps in `propagators.haken_strobl` along the way (no incoherent-mixture source option; no time-averaged variant — both now added, `coherent`/`haken_strobl_time_averaged`). The task's own mandatory classical-limit sanity gate did *not* pass as literally specified at `t_max=25` (`rho(occ,-dist)` fell, not rose, with gamma) — root-caused to Zeno-regime suppression of the effective diffusion timescale at large gamma under a fixed `t_max`, confirmed genuine (not an integrator bug) by extending `t` alone at fixed gamma and recovering the expected rising trend. | [[TASK-0141]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
