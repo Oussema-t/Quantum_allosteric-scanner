@@ -1,0 +1,416 @@
+{
+  "KRAS_G12C": {
+    "target": "KRAS_G12C",
+    "n_residues": 169,
+    "rows": [
+      {
+        "cutoff": 4.0,
+        "n_pocket_residues": 15,
+        "auc_h_new": 0.5805194805194804,
+        "floor": 0.504978354978355,
+        "floor_cleared": true,
+        "diagnosis": "NO_FAILURE_DETECTED"
+      },
+      {
+        "cutoff": 4.5,
+        "n_pocket_residues": 18,
+        "auc_h_new": 0.5901398086828551,
+        "floor": 0.4817880794701987,
+        "floor_cleared": true,
+        "diagnosis": "NO_FAILURE_DETECTED"
+      },
+      {
+        "cutoff": 5.0,
+        "n_pocket_residues": 18,
+        "auc_h_new": 0.5743193524650478,
+        "floor": 0.4762693156732892,
+        "floor_cleared": true,
+        "diagnosis": "NO_FAILURE_DETECTED"
+      },
+      {
+        "cutoff": 5.5,
+        "n_pocket_residues": 17,
+        "auc_h_new": 0.521671826625387,
+        "floor": 0.44349845201238386,
+        "floor_cleared": true,
+        "diagnosis": "NO_SIGNAL_IN_APO"
+      }
+    ],
+    "raw_pocket_sets_by_cutoff": {
+      "4.0": [
+        9,
+        10,
+        12,
+        16,
+        34,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        68,
+        72,
+        95,
+        96,
+        99,
+        103
+      ],
+      "4.5": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        16,
+        34,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        68,
+        69,
+        72,
+        95,
+        96,
+        99,
+        100,
+        103
+      ],
+      "5.0": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        16,
+        34,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        68,
+        69,
+        72,
+        92,
+        95,
+        96,
+        99,
+        100,
+        103
+      ],
+      "5.5": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        16,
+        34,
+        35,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        68,
+        69,
+        72,
+        92,
+        95,
+        96,
+        99,
+        100,
+        103
+      ]
+    },
+    "floor_cleared_changes_across_grid": false,
+    "diagnosis_changes_across_grid": true,
+    "task0047_cliff_check": {
+      "4.0": {
+        "n_residues": 17,
+        "matches_pinned_4_5a_exactly": false,
+        "missing_vs_4_5a": [
+          11,
+          13,
+          69,
+          100
+        ],
+        "extra_vs_4_5a": []
+      },
+      "4.5": {
+        "n_residues": 21,
+        "matches_pinned_4_5a_exactly": true,
+        "missing_vs_4_5a": [],
+        "extra_vs_4_5a": []
+      },
+      "5.0": {
+        "n_residues": 22,
+        "matches_pinned_4_5a_exactly": false,
+        "missing_vs_4_5a": [],
+        "extra_vs_4_5a": [
+          92
+        ]
+      },
+      "5.5": {
+        "n_residues": 24,
+        "matches_pinned_4_5a_exactly": false,
+        "missing_vs_4_5a": [],
+        "extra_vs_4_5a": [
+          35,
+          64,
+          92
+        ]
+      }
+    }
+  },
+  "BCR_ABL1": {
+    "target": "BCR_ABL1",
+    "n_residues": 451,
+    "rows": [
+      {
+        "cutoff": 4.0,
+        "n_pocket_residues": 14,
+        "auc_h_new": 0.56538084341288,
+        "floor": 0.5932494279176201,
+        "floor_cleared": false,
+        "diagnosis": "BEATS_CHANCE_NOT_FLOOR"
+      },
+      {
+        "cutoff": 4.5,
+        "n_pocket_residues": 16,
+        "auc_h_new": 0.5265804597701149,
+        "floor": 0.5816810344827587,
+        "floor_cleared": false,
+        "diagnosis": "NO_SIGNAL_IN_APO"
+      },
+      {
+        "cutoff": 5.0,
+        "n_pocket_residues": 19,
+        "auc_h_new": 0.5243664717348928,
+        "floor": 0.5779117933723197,
+        "floor_cleared": false,
+        "diagnosis": "NO_SIGNAL_IN_APO"
+      },
+      {
+        "cutoff": 5.5,
+        "n_pocket_residues": 20,
+        "auc_h_new": 0.5315545243619489,
+        "floor": 0.5823085846867749,
+        "floor_cleared": false,
+        "diagnosis": "NO_SIGNAL_IN_APO"
+      }
+    ],
+    "raw_pocket_sets_by_cutoff": {
+      "4.0": [
+        351,
+        356,
+        359,
+        360,
+        363,
+        448,
+        451,
+        452,
+        453,
+        454,
+        481,
+        483,
+        484,
+        487,
+        512,
+        521,
+        525,
+        529
+      ],
+      "4.5": [
+        351,
+        356,
+        359,
+        360,
+        363,
+        448,
+        451,
+        452,
+        453,
+        454,
+        456,
+        481,
+        482,
+        483,
+        484,
+        487,
+        512,
+        521,
+        525,
+        529
+      ],
+      "5.0": [
+        351,
+        355,
+        356,
+        359,
+        360,
+        363,
+        448,
+        451,
+        452,
+        453,
+        454,
+        456,
+        480,
+        481,
+        482,
+        483,
+        484,
+        487,
+        491,
+        512,
+        521,
+        525,
+        529
+      ],
+      "5.5": [
+        351,
+        355,
+        356,
+        359,
+        360,
+        363,
+        448,
+        449,
+        451,
+        452,
+        453,
+        454,
+        456,
+        480,
+        481,
+        482,
+        483,
+        484,
+        487,
+        491,
+        512,
+        521,
+        525,
+        529
+      ]
+    },
+    "floor_cleared_changes_across_grid": false,
+    "diagnosis_changes_across_grid": true
+  },
+  "CARDIAC_MYOSIN": {
+    "target": "CARDIAC_MYOSIN",
+    "n_residues": 704,
+    "rows": [
+      {
+        "cutoff": 4.0,
+        "n_pocket_residues": 9,
+        "auc_h_new": 0.46091127098321344,
+        "floor": 0.5114308553157474,
+        "floor_cleared": false,
+        "diagnosis": "NO_SIGNAL_IN_APO"
+      },
+      {
+        "cutoff": 4.5,
+        "n_pocket_residues": 13,
+        "auc_h_new": 0.5176444394968274,
+        "floor": 0.5678503840587776,
+        "floor_cleared": false,
+        "diagnosis": "NO_SIGNAL_IN_APO"
+      },
+      {
+        "cutoff": 5.0,
+        "n_pocket_residues": 14,
+        "auc_h_new": 0.49865424430641814,
+        "floor": 0.5505175983436852,
+        "floor_cleared": false,
+        "diagnosis": "NO_SIGNAL_IN_APO"
+      },
+      {
+        "cutoff": 5.5,
+        "n_pocket_residues": 14,
+        "auc_h_new": 0.49865424430641814,
+        "floor": 0.5505175983436852,
+        "floor_cleared": false,
+        "diagnosis": "NO_SIGNAL_IN_APO"
+      }
+    ],
+    "raw_pocket_sets_by_cutoff": {
+      "4.0": [
+        164,
+        167,
+        168,
+        666,
+        711,
+        712,
+        713,
+        721,
+        722,
+        770,
+        774
+      ],
+      "4.5": [
+        120,
+        163,
+        164,
+        167,
+        168,
+        170,
+        666,
+        710,
+        711,
+        712,
+        713,
+        721,
+        722,
+        770,
+        774
+      ],
+      "5.0": [
+        120,
+        163,
+        164,
+        167,
+        168,
+        170,
+        666,
+        710,
+        711,
+        712,
+        713,
+        717,
+        721,
+        722,
+        770,
+        774
+      ],
+      "5.5": [
+        120,
+        163,
+        164,
+        167,
+        168,
+        170,
+        666,
+        710,
+        711,
+        712,
+        713,
+        717,
+        721,
+        722,
+        770,
+        774
+      ]
+    },
+    "floor_cleared_changes_across_grid": false,
+    "diagnosis_changes_across_grid": false
+  }
+}
