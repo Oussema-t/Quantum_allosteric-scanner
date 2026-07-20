@@ -429,6 +429,14 @@ added as `superpose.background_rmsd`/`learnability_verdict`):
   `anm_modes`' rigid-body-mode assertion (`n_zero=7`/`10` instead of 6),
   a real, separately-filed gap ([[TASK-0128]]), not silently
   worked around.
+- **[[TASK-0124]], 2026-07-20**: CARDIAC_MYOSIN's apo replaced 5TBY ->
+  8QYP (real X-ray, resolves its own `n_zero=10` floppy-mode issue to a
+  clean 6). The RMSD/CO numbers directly above were computed against the
+  now-retired 5TBY apo and are stale, not yet re-run under 8QYP — blocked
+  on a real, separately-filed gap in `align_apo_holo`'s own chain-letter
+  matching ([[TASK-0144]]), not silently worked around. See
+  `COMPETENCE_MAP.md`'s own CARDIAC_MYOSIN section for the full
+  floor/ceiling/actual re-run, which does not depend on this gate.
 
 **Practical upshot**: the 2026-07-15 status-update bullet below ("HYP-P8
 is now strongly supported") was built from *indirect* evidence about

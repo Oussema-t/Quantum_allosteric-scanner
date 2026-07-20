@@ -127,10 +127,12 @@ targets:
       RCSB by TASK-0003 on 2026-07-06.
 
   CARDIAC_MYOSIN:
-    apo_pdb: 5TBY
+    apo_pdb: 8QYP               # TASK-0124, 2026-07-20 — replaces 5TBY, see below
     holo_pdb: 8QYR              # validation structure — real drug contacts
     holo_challenge_pdb: 6C1H    # challenge-listed; confirmed unusable, see below
-    chains: ["B"]
+    chains: null                # no single shared value; see apo_chains/holo_chains below
+    apo_chains: ["A"]
+    holo_chains: ["B"]
     keep_nucleic: false
     quarantine: false
     enm_cutoff: 8.0
@@ -139,14 +141,14 @@ targets:
     func_ligand: ["ADP", "ATP"]
     status: verified
     verified: true
-    confidence: 0.65
+    confidence: 0.90
     disease: Cardiology
     target_class: Motor Protein
     site_name: Mavacamten site
     objective: >
       Mavacamten super-relaxed/IHM-stabilization site. Derive the pocket
       from XB2 (mavacamten) contacts in 8QYR, chain B — NOT from 6C1H,
-      which does not contain the drug.
+      which does not contain the drug. Apo is 8QYP, chain A (TASK-0124).
     warnings:
       - "RCSB-reconfirmed 2026-07-06: 6C1H is confirmed NOT mavacamten-bound
          — polymer entities are actin, unconventional myosin-1b (rat),
@@ -161,25 +163,60 @@ targets:
          confirmed, nonpolymer_bound_components include XB2 (mavacamten,
          C15H19N3O2) bound to chain B (auth), plus ADP/BEF/MG/SO4/EDO.
          holo_validation_chain='B' in backend/systems.py is correct."
-      - "UNRESOLVED, still open: apo 5TBY is confirmed a 20.0 A cryo-EM
-         interacting-heads-motif (IHM) assembly — 6 chains (A-F), a
-         homology model rigidly docked to a thick-filament reconstruction
-         (EMD-2240), not a clean single motor-domain crystal. This is the
-         apo-construct concern SYSTEMS_allosteric_corrected_v2.md flagged
-         and it is NOT resolved by this task — confidence is held at 0.65
-         (below the ~0.90-0.95 of the other 3 mandatory targets) rather
-         than promoted to full verified confidence, and chains=['B'] carries
-         forward backend/systems.py's choice unverified against the
-         6-chain assembly's actual motor-domain mapping. TASK-0005
-         (superpose.py) or TASK-0018 should re-examine before trusting the
-         apo Ca graph uncritically; clean.py's own resolution check
-         (>3.5A warns) will also fire on this structure."
+      - "UNRESOLVED (2026-07-06), RESOLVED 2026-07-20 (TASK-0124): apo 5TBY
+         was confirmed a 20.0 A cryo-EM interacting-heads-motif (IHM)
+         assembly — 6 chains (A-F), a homology model rigidly docked to a
+         thick-filament reconstruction (EMD-2240), not a clean single
+         motor-domain crystal. This concern is NOT patched around — the
+         apo structure itself is replaced below. Original text kept for
+         the record, not deleted, per this project's no-silent-overwrite
+         convention."
+      - "TASK-0124, 2026-07-20: apo replaced 5TBY -> 8QYP. RCSB-verified
+         directly (REST API + prody.parsePDB, live fetch, not assumed):
+         8QYP is real Bos taurus MYH7 (beta-cardiac myosin motor domain),
+         X-ray diffraction, 2.759 A resolution, single chain A (780
+         residues, real per-residue B-factors mean=75.8/std=17.5 -- not a
+         homology-model flatline), 'pre-powerstroke state' with ADP +
+         vanadate (VO4, an ATP-hydrolysis transition-state mimic) at the
+         nucleotide site, NOT mavacamten -- a genuine drug-free apo state
+         at the allosteric (XB2) pocket. Same paper/deposition series and
+         same species as the existing 8QYR holo (Auguin, Robert-Paganin,
+         Rety, Kikuti, David, Theumer, Schmidt, Knolker & Houdusse,
+         bioRxiv 2023, doi:10.1101/2023.11.15.567213, PMID 38014327,
+         sibling entries 8QYP/8QYQ/8QYU) -- sequence-identical to 8QYR's
+         chain to 779/780 residues (one-residue terminal offset), so this
+         also fixes an unremarked apo(human)/holo(bovine) species mismatch
+         that existed under 5TBY. `superpose.hamiltonians.H13_3N_anm_hessian`
+         gives n_zero=6 exact rigid-body modes on 8QYP (verified directly),
+         resolving TASK-0128's floppy-mode workaround for this target as a
+         side effect, not by revisiting that task's own scope. `chains`
+         changed to the `apo_chains`/`holo_chains` per-role override
+         (TASK-0127 schema, apo='A' holo='B') since 8QYP and 8QYR use
+         different author chain letters for the same biological chain.
+         confidence promoted 0.65 -> 0.90, now in line with the other 3
+         mandatory targets."
+      - "TASK-0124, 2026-07-20: independently verified the relayed
+         2026-07-20 lead proposing PDB 9GZ1 as a holo replacement for
+         6C1H. Real, RCSB-confirmed: 'Beta-cardiac myosin interacting
+         heads motif complexed to mavacamten', cryo-EM, 3.70 A, Homo
+         sapiens, XB2 (mavacamten) present (chains J/N of a 6-chain IHM
+         complex incl. light chains), McMillan et al., bioRxiv
+         10.1101/2025.02.12.637875 (PMID 39990378), now published Science
+         Advances 2026-04-29 (doi:10.1126/sciadv.aea9335) -- the lead's
+         citation was accurate, not an error. NOT adopted as the pocket
+         source: already-in-use 8QYR is higher resolution (1.80 A X-ray
+         vs. 3.70 A cryo-EM) and a single motor domain rather than a
+         6-chain IHM complex, making it the cleaner structure for this
+         pipeline's Ca-only contact graph. Recorded here as independent
+         corroboration (a second, different-species, different-method
+         structure confirms the same XB2/mavacamten binding site), not a
+         substitution."
     source: >
       backend/systems.py (apo/holo_validation/chain resolution) +
       SYSTEMS_allosteric_corrected_v2.md (quarantine rationale, now
-      partially resolved — see warnings); both independently reconfirmed
-      against RCSB by TASK-0003 on 2026-07-06. Apo-construct quality
-      concern remains open, not resolved by this task.
+      resolved — see warnings); both independently reconfirmed against
+      RCSB by TASK-0003 on 2026-07-06. Apo-construct quality concern
+      resolved 2026-07-20 by TASK-0124 (5TBY -> 8QYP replacement).
 
   MYC_MAX:
     apo_pdb: 1NKP

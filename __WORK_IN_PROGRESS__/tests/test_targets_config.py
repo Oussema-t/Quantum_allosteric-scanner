@@ -138,7 +138,13 @@ def test_cardiac_myosin_uses_validation_structure_for_pocket_derivation():
     assert cfg["holo_challenge_pdb"] == "6C1H"  # confirmed unusable
     assert cfg["drug_ligand"] == "XB2"
     assert cfg["quarantine"] is False
-    assert cfg["confidence"] < 0.9  # apo 5TBY IHM-assembly concern stays open
+    # TASK-0124 (2026-07-20): apo replaced 5TBY (20 A IHM homology model) ->
+    # 8QYP (2.76 A X-ray, same paper/species as the 8QYR holo) -- the
+    # confidence-suppressing concern this test used to pin is resolved, not
+    # just re-scored, so confidence is promoted to parity with the other 3
+    # mandatory targets rather than held below 0.9.
+    assert cfg["apo_pdb"] == "8QYP"
+    assert cfg["confidence"] >= 0.9
 
 
 def test_myc_max_pocket_not_applicable():

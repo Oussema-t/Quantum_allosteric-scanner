@@ -1,0 +1,45 @@
+{
+  "CARDIAC_MYOSIN": {
+    "target": "CARDIAC_MYOSIN",
+    "n_residues": 704,
+    "n_seed_residues": 18,
+    "floor": 0.5678503840587776,
+    "floor_ci": [
+      0.5678503840587776,
+      0.41474630415528313,
+      0.7348616879938465
+    ],
+    "floor_winning_baseline": "euclid_from_seed_centroid",
+    "actual_auc": 0.5176444394968274,
+    "actual_diagnosis": "NO_SIGNAL_IN_APO",
+    "actual_score_ci": [
+      0.5176444394968274,
+      0.34808350362706675,
+      0.7682654658478891
+    ],
+    "actual_floor_ci": [
+      0.5678503840587776,
+      0.4229977411394542,
+      0.7492128649181578
+    ],
+    "actual_ci_overlap": true,
+    "ceiling_auc": 0.6452187465212067,
+    "ceiling_ci": [
+      0.6452187465212067,
+      0.359947992259313,
+      0.867493173626988
+    ],
+    "ceiling_best_params": {
+      "lam_B": 0.06807515376286087,
+      "lam_T": 0.037189834220900636,
+      "lam_R": 0.013120077725395723,
+      "lam_C": 0.06178873647073903,
+      "lam_M": 0.02629067282448133,
+      "alpha": 0.18968563184410317,
+      "cutoff": 8.545234899272122,
+      "n_low": 8
+    },
+    "ceiling_n_trials_scored": 60,
+    "headroom": -0.6489208633093512
+  }
+}

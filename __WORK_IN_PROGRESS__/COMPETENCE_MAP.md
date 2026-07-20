@@ -429,6 +429,62 @@ apparent positive survived closer scrutiny. The 5TBY data-quality caveat and
 now academic for the *headroom* question specifically (there is none to defend), still
 live for whether this target should appear in the submission in any form.
 
+**[[TASK-0124]], 2026-07-20: resolved — apo replaced 5TBY -> 8QYP, and the "positive"
+does not survive the structural fix either, the fourth and most decisive reason.**
+5TBY (20 Å cryo-EM IHM homology model, non-crystallographic B-factors, unverified
+6-chain assignment, cross-species mismatch against the bovine 8QYR holo) is replaced by
+8QYP — a real 2.759 Å X-ray structure, same paper/deposition series and same species
+(*Bos taurus*) as 8QYR (Auguin/Robert-Paganin/Houdusse et al., bioRxiv
+10.1101/2023.11.15.567213), RCSB-verified directly (REST API + live `prody.parsePDB`
+fetch, not assumed): real per-residue B-factors (mean 75.8, std 17.5), drug-free at the
+XB2/mavacamten pocket (ADP+vanadate at the separate nucleotide site), and exactly 6
+rigid-body ANM modes (resolving [[TASK-0128]]'s floppy-mode workaround for this target
+as a side effect). The relayed 2026-07-20 lead proposing PDB 9GZ1 as a holo replacement
+was independently verified as real (McMillan et al., *Science Advances* 2026-04-29,
+doi:10.1126/sciadv.aea9335) but not adopted — 8QYR remains the cleaner structure
+(1.80 Å single motor domain vs. 9GZ1's 3.70 Å 6-chain IHM complex); 9GZ1 stands as
+independent corroboration of the same binding site, not a substitution.
+
+Full re-run under the current (TASK-0130 closed-form) convention,
+`scripts/closed_form_competence_map_rerun.py --target CARDIAC_MYOSIN`:
+
+| Target | Floor (95% CI) | Ceiling (95% CI) | Actual (95% CI) | Diagnosis | Headroom |
+|---|---|---|---|---|---|
+| CARDIAC_MYOSIN (8QYP/8QYR, N=704) | 0.5679 [0.415, 0.735] | 0.6452 [0.360, 0.867] | 0.5176 [0.348, 0.768] | `NO_SIGNAL_IN_APO` | −65.4% |
+
+**Headline: every one of this section's four independent reasons for caution (seed,
+`LARGE_N_THRESHOLD`, the clock, and now the structure itself) pointed the same
+direction, and the fourth removes the result entirely rather than merely re-scoring
+it.** N drops 950 → 704 (the 5TBY IHM's inflated chain count is gone), floor drops
+0.7921 → 0.5679 (the old floor itself was likely inflated by whatever geometric
+artifact the IHM assembly's docked-homology-model geometry introduced — not itself
+re-derived here, flagged as a plausible reading, not asserted), and actual AUC drops
+from 0.7912 (TASK-0129's already-diminished number) to 0.5176 — squarely
+`NO_SIGNAL_IN_APO`, matching BCR_ABL1's own diagnosis rather than standing apart from
+it. **CARDIAC_MYOSIN no longer has any positive result to defend, on the real
+structure.** This closes TASK-0124's own open question (whether the 5TBY caveat could
+be resolved or must be reported as data-limited) with a third option neither disjunct
+anticipated: resolved, and resolving it removes the result. Combined with KRAS_G12C
+([[TASK-0130]]: CI still overlaps floor) and BCR_ABL1 ([[TASK-0129]]/[[TASK-0131]]:
+inconclusive), **no mandatory target has a decisive positive result under the fully
+corrected pipeline, full stop** — this was already TASK-0129's own reading for the
+other two targets; CARDIAC_MYOSIN now joins them for an independent, additional
+reason (structure, not gauge). A fresh permutation null on this target's own new
+ceiling number (mirroring [[TASK-0131]]'s method) was not run here — out of this
+task's own scope (a structural swap, not a re-derivation of the permutation-null
+methodology) — flagged as a natural follow-up if this target's ceiling headroom
+(+0.077 over floor) is ever reported as a positive claim.
+
+`scripts/learnability_gate.py`'s own CARDIAC_MYOSIN row (`LEARNABLE`, [[TASK-0120]]/
+[[TASK-0133]]) was computed against the retired 5TBY apo and is now stale — not
+re-run here (blocked on a real, separate bug: `superpose.align_apo_holo` matches
+apo/holo residues by raw `(chain, resnum)`, and 8QYP/8QYR use different author chain
+letters (A vs. B) for the same biological chain, which the learnability-gate
+machinery was never extended to handle, unlike `clean_from_config`'s own
+`apo_chains`/`holo_chains` override — found live while executing this task, filed
+as [[TASK-0144]], not fixed inline here since a concurrent thread held uncommitted
+changes in `superpose.py` at the time).
+
 ---
 
 ## c-Myc / 1NKP — no ground truth (per [[TASK-0080]])
@@ -631,10 +687,11 @@ CARDIAC_MYOSIN's reading changed.
   per the TASK-0129 recompute) still lacked a formal confidence-interval wrapper — the
   search-*coverage* question (TASK-0116, above) is distinct — see that bullet's own
   2026-07-19 update (TASK-0131) — unaffected by TASK-0130.
-- **TASK-0124** (open): CARDIAC_MYOSIN's apo structure (5TBY, 20 Å docked homology model)
-  still carries its own unresolved data-quality caveat — now the *only* remaining
-  question for this target, since TASK-0129 already found it has no headroom to defend
-  even setting the structure question aside.
+- **TASK-0124 — Done, 2026-07-20** (see the CARDIAC_MYOSIN section's own dated
+  addendum above): apo replaced 5TBY -> 8QYP (real X-ray, same paper/species as the
+  8QYR holo). Resolving the structure question did not rescue the result — actual AUC
+  drops to 0.5176, `NO_SIGNAL_IN_APO`. CARDIAC_MYOSIN no longer carries any open
+  data-quality caveat, and no longer carries a positive result either.
 - **Q-0003 — fully closed as of [[TASK-0130]]** (`.ai/memory/questions/architect-planner/
   answered/Q-0003-...md`): the floor/ceiling/headroom framing has now been exercised
   under three successive gauge corrections (seed, clock, and full clock-removal) and held
