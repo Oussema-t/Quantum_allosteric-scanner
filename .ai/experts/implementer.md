@@ -48,6 +48,10 @@ Status: Active seed
 - `.ai/experts/architect-planner.md`
 - `.ai/reference/CAPABILITIES.md`
 - `.ai/memory/shared/patterns.md`
+- `.ai/reference/IMPLEMENTER_SPINUP_BRIEF.md` — the concrete claim →
+  implement → test → document → commit mechanics this file intentionally
+  keeps out of scope (merged 2026-07-20 from two implementer threads'
+  own written debriefs; read it before your first commit of a session).
 
 ## Memory Touchpoints
 

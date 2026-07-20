@@ -1,0 +1,56 @@
+Spin-up: Implementer thread, Quantum Allosteric Scanner
+
+You're joining a live, multi-agent coordination scaffold. Multiple Claude Code threads work in the same git working tree and same git index simultaneously — that fact drives almost every rule below.
+
+1. Orient
+
+Read CLAUDE.md at repo root, then say "use scaffold" to load .ai/COMMON.md (task registry, source-of-truth table) and .ai/reference/OPERATION_PROTOCOL.md.
+Skim git log --oneline -20 and .ai/COMMON.md's Done rows to see what landed recently — teammates change things under you constantly.
+2. Pick up a task
+
+
+python3 .ai/tools/claim.py claim TASK-XXXX "Implementer <letter> (this thread)"
+Read the task file in full before touching code — Intent Contract, In/Out of Scope, Constraints, Planned Validation. Don't infer root cause; check it directly against real data (RCSB structures, not synthetic stand-ins, unless the task itself is a synthetic regression suite).
+
+3. Do the work
+
+Fix/build the thing.
+Write regression tests that prove both the original failure mode is still caught and the new legitimate case is now accepted — not just "it runs."
+Run the full suite before claiming done (pytest tests/ -q).
+If a naive result looks surprisingly good (or bad), check it against a real null/permutation before reporting it — max-over-K statistics (ceiling search, stratified-shell AUC, anything with a "best of N" step) are upward-biased by construction. This has bitten this project twice already.
+4. Document additively, never overwrite
+
+RESULTS.md/hypothesis files: append dated [RESOLVED]/[CORRECTED]/[OBSERVED] blocks. Prior numbers stay on record even when superseded.
+Real negative results are valid deliverables here — write them up plainly, don't soften or hide them.
+5. The git mv staleness trap
+git mv TODO/X.md DONE/X.md sometimes stages content from before your last Edit. Always follow with git add <new-path>, then verify:
+
+
+git show :<path> | grep -c <unique-marker-from-your-Done-section>
+before trusting the stage.
+
+6. Update the shared docs — expect to lose the race sometimes
+.ai/COMMON.md and EXECUTION_PLAN.md are hot. Re-read fresh immediately before editing. After editing, before you stage, re-grep for your own content — another thread's concurrent write can silently clobber your in-memory edit before it's committed. If it's gone, just redo it against the current file; don't assume your Edit tool call was the last word.
+
+7. Commit through the SCQ, not straight to git commit
+
+
+python3 .ai/tools/claim.py scq-enter --as "Implementer <letter> (this thread)" \
+  --files <exact list> --message "<summary>"
+python3 .ai/tools/claim.py status GIT-COMMIT        # check the queue — do this AGAIN right before staging, not just once at the start
+python3 .ai/tools/claim.py claim GIT-COMMIT "Implementer <letter> (this thread)"
+Then, for every file you're about to stage that's shared (COMMON.md, EXECUTION_PLAN.md, RESULTS.md, review files): diff it against HEAD first and confirm every added/removed line is yours. If someone else's row is mixed in, do the surgical single-row splice (save both-edits copy → reconstruct HEAD+your-change-only → stage that → restore the mixed working-tree copy) rather than committing their in-progress work under your name.
+
+
+git add <exact files, never -A>
+# verify: wc -l working tree == wc -l `git show :<path>` for every file
+python3 .ai/tools/claim.py commit-guard --expect <same exact file list>
+git commit -m "..."
+python3 .ai/tools/claim.py release GIT-COMMIT
+python3 .ai/tools/claim.py release TASK-XXXX
+8. Conventions that will get flagged in review
+
+Python 3.9: typing.Optional/List, never X | None.
+ADD-only API changes — new optional kwargs defaulting to old behavior, not signature breaks.
+Cite the source review/section for any formula you port; state Implementer's-call decisions explicitly in the Done section, with the reasoning, not just the choice.
+That's the loop. Claim → read fully → verify on real data → implement → test both directions → document additively → move file (verify, don't trust) → update shared docs (re-read, re-verify) → SCQ → commit → release.
