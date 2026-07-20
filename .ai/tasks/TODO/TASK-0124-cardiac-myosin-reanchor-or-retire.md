@@ -19,6 +19,23 @@
   (Weaknesses #4), §5 P1-8.
 - Priority: **P1 — weeks 2-4.** Per the panel: "do not build the only
   positive on a 20 Å docked homology model."
+- **New lead, 2026-07-20 (relayed via `.ai/reviews/2026-07-20/
+  Mavacamten-fix.txt`, not yet independently verified by this
+  Architect/Planner thread — no internet access confirmed available in
+  this session):** this project's own prior finding that **6C1H (the
+  challenge's own designated CARDIAC_MYOSIN holo structure) contains no
+  mavacamten** is corroborated — the note states 6C1H has only ADP
+  bound (the post-hydrolysis product), the inhibited conformation but
+  not the drug-bound one. **A genuinely new candidate is proposed**:
+  **PDB 9GZ1** (cryo-EM, reportedly April 2026, *Science Advances*,
+  https://www.science.org/doi/10.1126/sciadv.aea9335) — claimed to
+  contain mavacamten directly (ligand code `XB2`), compared against an
+  apo structure to show the drug-induced conformational change. If
+  this holds up under this task's own independent-verification
+  discipline, it would be a real, concrete fix for CARDIAC_MYOSIN's
+  holo side — not just the apo side this task was originally scoped
+  around — and directly strengthens the existing "6C1H correction"
+  finding the panel called "still under-sold."
 
 ## Intent Contract
 
@@ -44,14 +61,26 @@
     same independent-verification discipline TASK-0081 already
     established for ASD candidates (don't trust `targets.yaml`'s
     existing entry uncritically).
-  - If found: re-run the full pipeline (floor/ceiling/actual, per
-    whatever seed/clock convention [[TASK-0118]]/[[TASK-0119]] have
-    landed by then) against the new structure.
-  - If not found: write the data-limited caveat into `RESULTS.md`/
-    `COMPETENCE_MAP.md`, additive per the no-silent-overwrite convention,
-    citing this task and the specific structural defects (20 Å
-    resolution, non-crystallographic B-factors, unverified chain
-    assignment against a 6-chain complex).
+  - **Independently verify PDB 9GZ1** (the 2026-07-20 lead above) with
+    the same discipline: fetch directly, confirm it is a real deposited
+    structure, confirm ligand `XB2` is present and matches mavacamten's
+    real chemical identity (not assumed from the relayed note alone),
+    confirm what apo structure it should be compared/aligned against
+    (the note implies a companion apo structure was used in the citing
+    paper — identify and verify it too, do not assume 5TBY is the right
+    pairing for a 9GZ1-based holo). If verified, this becomes this
+    task's own preferred holo replacement for 6C1H, addressed alongside
+    (not instead of) the apo-side search above.
+  - If a real apo replacement (and/or 9GZ1 as holo) is found: re-run the
+    full pipeline (floor/ceiling/actual, per whatever seed/clock
+    convention has landed by then — TASK-0118/0119/0130 are all Done)
+    against the new structure(s).
+  - If not found (either side): write the data-limited caveat into
+    `RESULTS.md`/`COMPETENCE_MAP.md`, additive per the no-silent-
+    overwrite convention, citing this task and the specific structural
+    defects (20 Å resolution, non-crystallographic B-factors, unverified
+    chain assignment against a 6-chain complex; 6C1H's own confirmed
+    lack of mavacamten).
 - Out Of Scope:
   - Re-deriving the `LARGE_N_THRESHOLD` correction (TASK-0101's
     2026-07-15 fix) — the panel confirms that correction was itself
@@ -75,9 +104,13 @@ None
 
 - [ ] Search RCSB for alternative apo β-cardiac myosin (MYH7)
       motor-domain crystal structures.
-- [ ] Independently verify any candidate (resolution, chain ID, B-factor
-      provenance) before adopting it.
-- [ ] If found: substitute in `config/targets.yaml`, re-run full pipeline.
+- [ ] Independently verify PDB 9GZ1 (ligand `XB2`=mavacamten, its
+      companion apo structure, resolution, chain composition) — the
+      2026-07-20 lead, not yet checked by this thread.
+- [ ] Independently verify any apo candidate (resolution, chain ID,
+      B-factor provenance) before adopting it.
+- [ ] If found (either side): substitute in `config/targets.yaml`,
+      re-run full pipeline.
 - [ ] If not found: write the data-limited caveat into `RESULTS.md`/
       `COMPETENCE_MAP.md`, citing this task.
 

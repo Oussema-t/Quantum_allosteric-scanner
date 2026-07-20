@@ -1,0 +1,7 @@
+I have checked for mavacamten case. The 6C1H does not have mavacamten in the structure. It only has ADP which is the additional product during the inhibition of the protein. So protein does not have the drug in that structure but rather it shows the inhibited conformation of the structure with ADP attached.
+
+But I found a recent paper from 2026 April where they already solved the cryo-EM structure of Myosin with Mavacamten. This is so new; https://www.science.org/doi/10.1126/sciadv.aea9335
+
+And here is the PDB ID: 9GZ1
+
+Here we can clearly see the mavacamten inside the protein (the name of the drug is XB2 in the protein structure). And this clearly shows us how it is inhibited when we compare it with apo structure. This is the initial step of the conformational change to go to inhibition. 

@@ -55,6 +55,18 @@ are permanent files under `__WORK_IN_PROGRESS__/results/<target>/`, not
 reproduced verbatim here — this document is the narrative/interpretation
 layer over those files, not a replacement for them.
 
+> **Note, 2026-07-20 (folder consolidation)**: `__WORK_IN_PROGRESS__/results/`
+> and every `results_task*/`/`results_*/` sibling directory referenced
+> throughout this document and in `.ai/tasks/DONE/`'s own historical Done
+> sections are now consolidated under `__WORK_IN_PROGRESS__/RESULTS/`
+> (e.g. `results_task0094/` → `RESULTS/results_task0094/`) — a repo
+> reorganization, not a change to any script's own default output
+> location naming. Historical path references elsewhere in this document
+> and in already-Done task files are left as originally written (the
+> paths were correct at the time), not rewritten in place; new output
+> should land under the `RESULTS/` parent going forward. `.gitignore`
+> updated to match.
+
 **Methodology note that applies to every number below**: all scoring is
 **apo-only**. The operator, the propagation, and the headline AUCs are
 computed from the apo structure's topology alone; the holo structure is
