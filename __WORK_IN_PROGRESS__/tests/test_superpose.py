@@ -368,6 +368,98 @@ class TestLearnabilityVerdict:
         assert result["co_threshold"] == 0.4
 
 
+class TestLearnabilityVerdictCoPercentile:
+    """TASK-0139 -- `co_percentile` (ADD-only, default `None` preserves
+    every test above byte-for-byte): once a random-patch null exists
+    for a target (TASK-0133), test the CO half against that null
+    directly rather than the un-validated bare `co_threshold=0.5`.
+    Real KRAS_G12C numbers reproduced directly below (ratio=2.27,
+    co_final=0.458 restricted, co_percentile=0.93/93rd) -- this is the
+    exact case this task exists to resolve, not just a synthetic one."""
+
+    def test_default_none_is_byte_identical_to_pre_task_0139_behavior(self):
+        with_none = learnability_verdict(
+            pocket_rmsd_mean=6.0, background_rmsd_mean=1.0, co_final=0.2,
+        )
+        explicit_none = learnability_verdict(
+            pocket_rmsd_mean=6.0, background_rmsd_mean=1.0, co_final=0.2,
+            co_percentile=None,
+        )
+        assert with_none["verdict"] == explicit_none["verdict"] == "UNLEARNABLE_FROM_APO"
+        assert with_none["ambiguous"] is False
+
+    def test_kras_g12c_real_numbers_resolve_to_ambiguous(self):
+        """The actual case this task exists to resolve: RMSD clears its
+        own bar (ratio=2.27>=1.5), but the pocket-restricted CO's own
+        elevation over a random-patch null (93rd percentile, one-sided
+        p~=0.07) does not clear this project's own 0.05 significance
+        bar in either direction -- neither LEARNABLE nor UNLEARNABLE_
+        FROM_APO is supported by the statistics, so AMBIGUOUS."""
+        result = learnability_verdict(
+            pocket_rmsd_mean=1.863, background_rmsd_mean=0.820, co_final=0.458,
+            co_percentile=0.930,
+        )
+        assert result["verdict"] == "AMBIGUOUS"
+        assert result["ambiguous"] is True
+        assert result["rmsd_much_greater"] is True
+
+    def test_significantly_elevated_co_percentile_is_learnable_even_if_raw_co_is_low(self):
+        """A real pocket CO below the bare 0.5 threshold, but
+        significantly *above* its own random-patch null -- the null-
+        based criterion overrides the bare threshold once available,
+        per this function's own documented reasoning (co_threshold was
+        never validated against any null)."""
+        result = learnability_verdict(
+            pocket_rmsd_mean=3.0, background_rmsd_mean=1.0, co_final=0.3,
+            co_threshold=0.5, co_percentile=0.97,
+        )
+        assert result["verdict"] == "LEARNABLE"
+        assert result["co_low"] is False
+        assert result["ambiguous"] is False
+
+    def test_significantly_depressed_co_percentile_is_unlearnable_even_if_raw_co_is_high(self):
+        result = learnability_verdict(
+            pocket_rmsd_mean=3.0, background_rmsd_mean=1.0, co_final=0.6,
+            co_threshold=0.5, co_percentile=0.02,
+        )
+        assert result["verdict"] == "UNLEARNABLE_FROM_APO"
+        assert result["co_low"] is True
+        assert result["ambiguous"] is False
+
+    def test_ambiguous_co_evidence_does_not_apply_when_rmsd_half_already_fails(self):
+        """Matches BCR_ABL1/CARDIAC_MYOSIN's own real situation (TASK-
+        0133's confirmation): both fail `rmsd_much_greater` outright, so
+        an inconclusive CO percentile must not produce AMBIGUOUS -- the
+        verdict is already fully determined as LEARNABLE by the RMSD
+        half alone, regardless of CO."""
+        result = learnability_verdict(
+            pocket_rmsd_mean=1.0, background_rmsd_mean=1.0, co_final=0.458,
+            co_percentile=0.50,  # dead center of the null -- maximally inconclusive
+        )
+        assert result["verdict"] == "LEARNABLE"
+        assert result["ambiguous"] is False
+
+    def test_percentile_exactly_at_the_alpha_boundary_counts_as_significant(self):
+        result_low = learnability_verdict(
+            pocket_rmsd_mean=3.0, background_rmsd_mean=1.0, co_final=0.3,
+            co_percentile=0.05, significance_alpha=0.05,
+        )
+        assert result_low["verdict"] == "UNLEARNABLE_FROM_APO"
+        result_high = learnability_verdict(
+            pocket_rmsd_mean=3.0, background_rmsd_mean=1.0, co_final=0.3,
+            co_percentile=0.95, significance_alpha=0.05,
+        )
+        assert result_high["verdict"] == "LEARNABLE"
+
+    def test_reports_co_percentile_and_significance_alpha_in_output(self):
+        result = learnability_verdict(
+            pocket_rmsd_mean=3.0, background_rmsd_mean=1.0, co_final=0.3,
+            co_percentile=0.93, significance_alpha=0.05,
+        )
+        assert result["co_percentile"] == 0.93
+        assert result["significance_alpha"] == 0.05
+
+
 # ---------------------------------------------------------------------------
 # ANM modes
 # ---------------------------------------------------------------------------

@@ -1,0 +1,44 @@
+{
+  "KRAS_G12C": {
+    "target": "KRAS_G12C",
+    "pocket_rmsd_mean": 1.8626538102301942,
+    "background_rmsd_mean": 0.8202973774012386,
+    "rmsd_ratio": 2.270705553309479,
+    "rmsd_much_greater": true,
+    "whole_structure_co20": 0.6382554915726365,
+    "pocket_restricted_co20": 0.45826097451031905,
+    "co_percentile_within_random_patch_null": 0.93,
+    "original_verdict_whole_structure_co": "LEARNABLE",
+    "resolved_verdict_pocket_restricted_co_with_null": "AMBIGUOUS",
+    "verdict_changed": true,
+    "resolution_depends_on_co_at_all": true
+  },
+  "BCR_ABL1": {
+    "target": "BCR_ABL1",
+    "pocket_rmsd_mean": 0.3616789064479256,
+    "background_rmsd_mean": 0.7336566376282941,
+    "rmsd_ratio": 0.49298116843477613,
+    "rmsd_much_greater": false,
+    "whole_structure_co20": 0.7937167213401779,
+    "pocket_restricted_co20": 0.17517856941431661,
+    "co_percentile_within_random_patch_null": 0.373,
+    "original_verdict_whole_structure_co": "LEARNABLE",
+    "resolved_verdict_pocket_restricted_co_with_null": "LEARNABLE",
+    "verdict_changed": false,
+    "resolution_depends_on_co_at_all": false
+  },
+  "CARDIAC_MYOSIN": {
+    "target": "CARDIAC_MYOSIN",
+    "pocket_rmsd_mean": 4.168226528761121,
+    "background_rmsd_mean": 3.1609037481136797,
+    "rmsd_ratio": 1.318681890028628,
+    "rmsd_much_greater": false,
+    "whole_structure_co20": 0.5841587955739727,
+    "pocket_restricted_co20": 0.0438840150901718,
+    "co_percentile_within_random_patch_null": 0.126,
+    "original_verdict_whole_structure_co": "LEARNABLE",
+    "resolved_verdict_pocket_restricted_co_with_null": "LEARNABLE",
+    "verdict_changed": false,
+    "resolution_depends_on_co_at_all": false
+  }
+}

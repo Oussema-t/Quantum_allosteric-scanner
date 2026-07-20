@@ -443,6 +443,31 @@ narrow claim, and for the one target the panel specifically named
 other way. Full numbers: `RESULTS.md`,
 `.ai/tasks/DONE/TASK-0120-learnability-gate-hyp-p8.md`.
 
+**Superseded for KRAS_G12C, 2026-07-20 (TASK-0139) -- the "LEARNABLE,
+not cryptic-structural" reading above rested on a whole-structure
+cumulative-overlap number, not a pocket-specific one, found by TASK-0133
+(2026-07-19).** The properly pocket-restricted CO(20) is 0.458, not
+0.638, and sits at only the 93rd percentile of a random-same-sized-patch
+null (one-sided p≈0.07) -- elevated, but not significantly so at this
+project's own 0.05 bar. TASK-0139 resolved which quantity this
+hypothesis's own test should use (pocket-restricted -- the RMSD half is
+already region-specific, per this file's own Step 2/3 above; a
+whole-structure CO answers whether *some* motion is mode-spanned, not
+whether *the pocket's own* motion is) and replaced the un-derived
+`co_threshold=0.5` cutoff with a direct significance test against this
+random-patch null (new `superpose.learnability_verdict(co_percentile=
+...)`). **Result: KRAS_G12C is `AMBIGUOUS`, not `LEARNABLE`** -- the
+pocket RMSD signature is real and clears its own bar (2.27x background),
+but the CO evidence is genuinely inconclusive, not affirmatively high.
+This is closer to HYP-P8's own original spirit than the 2026-07-17
+reading was (real, if partial, support for pocket-specific structural
+change; the mode-spanning question is undecided rather than answered
+"no"), still short of the "textbook cryptic case, no method could find
+it" framing the panel originally predicted. BCR_ABL1/CARDIAC_MYOSIN's
+`LEARNABLE` verdicts are unaffected (RMSD-determined, confirmed
+programmatically). Full numbers: `RESULTS.md`'s learnability-gate
+section, `.ai/tasks/DONE/TASK-0139-kras-learnability-reclassification-decision.md`.
+
 ---
 
 ## HYP-P9 · A chiral (broken-time-reversal) walk yields a proximity-orthogonal, directional loop observable

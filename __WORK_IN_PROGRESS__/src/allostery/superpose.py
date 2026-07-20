@@ -21,6 +21,7 @@ versa (TASK-0018).
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Optional
 
 import numpy as np
 
@@ -299,6 +300,8 @@ def learnability_verdict(
     *,
     rmsd_ratio_threshold: float = 1.5,
     co_threshold: float = 0.5,
+    co_percentile: Optional[float] = None,
+    significance_alpha: float = 0.05,
 ) -> dict:
     """TASK-0120 -- `REVIEW-panel-2026-07-16-v2.md` Sec.6's learnability
     kill criterion, made precise: **pocket RMSD >> background RMSD AND
@@ -319,14 +322,80 @@ def learnability_verdict(
     small displacement. Requiring both is what makes this a *relative*,
     two-independent-methods verdict rather than either measurement read
     in isolation.
+
+    `co_final` must be `superpose.restricted_cumulative_overlap`'s
+    pocket-restricted quantity, **not** the whole-structure `cumulative_
+    overlap` TASK-0120's own original script computed (TASK-0139:
+    resolved in favor of the restricted quantity -- the RMSD half of
+    this same conjunction is already pocket-vs-background, i.e. region-
+    specific by design; a whole-structure CO answers "does the soft-mode
+    subspace span *some* substantial motion somewhere," not "does it
+    span *this pocket's* motion," a different and easier question than
+    the one Sec.6's kill criterion actually asks). Both call sites in
+    this codebase have been updated to pass the restricted quantity as
+    of TASK-0139.
+
+    `co_percentile` (TASK-0139, optional, ADD-only -- `None` preserves
+    this function's exact pre-TASK-0139 behavior): the real pocket's
+    percentile within a same-target, same-size random-patch null
+    distribution (`scripts/learnability_gate_patch_control.py`,
+    TASK-0133's own control). When supplied, replaces the bare
+    `co_final < co_threshold` comparison with a two-tailed significance
+    test against that null -- `co_threshold=0.5` was never itself
+    validated against *any* real null (TASK-0120's own admission: "not
+    derived from literature"; confirmed by re-reading `cumulative_
+    overlap_gate`, the only other consumer, which also never validated
+    it against a null), so once a real null is available for a specific
+    target, testing against it directly is the more principled
+    criterion, not a redundant extra check layered on top of the bare
+    threshold:
+      - `co_percentile >= 1 - significance_alpha` (real pocket
+        significantly *above* the null -- genuinely better explained by
+        the soft-mode subspace than a same-sized random region) ->
+        `co_low=False`, contributes toward `LEARNABLE`, regardless of
+        where `co_final` sits relative to `co_threshold`.
+      - `co_percentile <= significance_alpha` (real pocket significantly
+        *below* the null -- genuinely more anharmonic than a typical
+        same-sized region) -> `co_low=True`, contributes toward
+        `UNLEARNABLE_FROM_APO`.
+      - Otherwise (neither tail significant): the CO evidence is
+        genuinely inconclusive -- if `rmsd_much_greater` is also true
+        (the only case where the CO half's value matters at all, since
+        `rmsd_much_greater=False` already forces `LEARNABLE`
+        unconditionally), verdict is `AMBIGUOUS`, a real third category
+        distinct from both `LEARNABLE` and `UNLEARNABLE_FROM_APO` --
+        per this project's own "an honest don't-know is a publishable
+        result" convention, rather than a bare-threshold comparison
+        forcing a binary call the statistics underneath it don't
+        support.
     """
     ratio = (
         pocket_rmsd_mean / background_rmsd_mean
         if background_rmsd_mean > 1e-9 else float("inf")
     )
     rmsd_much_greater = ratio >= rmsd_ratio_threshold
-    co_low = co_final < co_threshold
-    verdict = "UNLEARNABLE_FROM_APO" if (rmsd_much_greater and co_low) else "LEARNABLE"
+
+    ambiguous = False
+    if co_percentile is None:
+        co_low = co_final < co_threshold
+    else:
+        significantly_high = co_percentile >= 1.0 - significance_alpha
+        significantly_low = co_percentile <= significance_alpha
+        if significantly_low:
+            co_low = True
+        elif significantly_high:
+            co_low = False
+        else:
+            co_low = False  # not affirmatively low -- see `ambiguous` below
+            ambiguous = rmsd_much_greater
+
+    if ambiguous:
+        verdict = "AMBIGUOUS"
+    elif rmsd_much_greater and co_low:
+        verdict = "UNLEARNABLE_FROM_APO"
+    else:
+        verdict = "LEARNABLE"
+
     return dict(
         verdict=verdict,
         pocket_rmsd_mean=pocket_rmsd_mean,
@@ -337,6 +406,9 @@ def learnability_verdict(
         co_low=co_low,
         rmsd_ratio_threshold=rmsd_ratio_threshold,
         co_threshold=co_threshold,
+        co_percentile=co_percentile,
+        significance_alpha=significance_alpha,
+        ambiguous=ambiguous,
     )
 
 
