@@ -1274,9 +1274,12 @@ async function applyGraphMotion() {
     LAST.frames = { resnums: fr.resnums, cutoff: fr.cutoff, frames: fr.frames,
       frame_labels: fr.frame_labels };
     applyConnRegion();                                 // render the real frames on the current region
+    const dropped = (fr.rejected && fr.rejected.length)
+      ? ` · dropped ${fr.rejected.length} poorly-aligned: ${fr.rejected.map((r) => r.pdb_id).join(", ")}`
+      : "";
     st.textContent = (fr.n_frames > 2)
-      ? `Playing ${fr.n_frames} real frames: ${fr.frame_labels.join(" → ")} · ${fr.n_shared} shared residues (follows the Region selector).`
-      : `No other structures of this protein found in the PDB — using apo + holo only (${fr.n_shared} shared residues).`;
+      ? `Playing ${fr.n_frames} real frames: ${fr.frame_labels.join(" → ")} · ${fr.n_shared} shared residues (follows the Region selector)${dropped}.`
+      : `No well-aligning structures of this protein found — using apo + holo only (${fr.n_shared} shared residues)${dropped}.`;
   } catch (e) {
     st.textContent = `Failed: ${e.message}`;
   } finally {

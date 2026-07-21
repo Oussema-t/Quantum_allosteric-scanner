@@ -152,7 +152,15 @@ Real keyframes for the 3D contact-graph animation. The protein is already chosen
 intermediates are **auto-discovered**: `discovery.same_protein_entries` (UniProt → RCSB
 search) lists other PDB structures of the same protein, and `analysis._auto_intermediates`
 orders them along the apo→holo path by a best-fit-RMSD progress coordinate
-(`RMSD→apo / (RMSD→apo + RMSD→holo)`), picking `n_frames−2` spread evenly. The node/edge set
+(`RMSD→apo / (RMSD→apo + RMSD→holo)`), picking `n_frames−2` spread evenly. **Quality gates
+(no hardcoded PDB lists):** for each candidate `_load_best_chain` picks the chain whose
+residue numbers best overlap the apo (so complexes like antibody-bound 3GFT resolve to the
+protein chain, not the antibody), and the candidate is **rejected** if it shares
+<`MIN_OVERLAP_FRAC` (0.80) of the apo's residues or its Cα RMSD to apo exceeds
+`MAX_ALIGN_RMSD` (10 Å) — dropping wrong-construct / mis-aligned outliers (e.g. KRAS 1KZP at
+19 Å) automatically. Rejections are returned in `rejected[{pdb_id, reason}]`. Alignment is by
+residue-number correspondence on the chosen chains (deterministic — never a geometric search
+that could pair onto the wrong chain). The node/edge set
 is the **canonical apo∩holo residue set** (identical residues + cutoff to the connectivity
 graph, so straight-line and real modes are directly comparable); each intermediate only
 **repositions** the residues it actually contains (Kabsch-aligned to apo), and residues a PDB

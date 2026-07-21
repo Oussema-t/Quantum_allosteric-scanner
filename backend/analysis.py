@@ -483,47 +483,106 @@ def _coords_on(s, common):
     return np.array([s["coords"][pos[int(r)]] for r in common], float)
 
 
-def _auto_intermediates(apo_pdb, chain, apo, holo, holo_pdb, k, pool_cap=12):
-    """Auto-pick k real structures of the SAME protein, ordered along the apo→holo path.
+# Quality gates for auto-discovered conformers (overridable — not tuned to any target).
+# A same-protein conformer shares MOST of the apo's residues and superposes with a
+# reasonable Cα RMSD; a different construct / wrong chain / gross outlier fails one of
+# these. Defaults sit in the empirically-observed gap between valid KRAS conformers
+# (≥90% overlap, ≤~7 Å after loop flexibility) and the 1KZP outlier (68% overlap, 14 Å).
+MIN_OVERLAP_FRAC = 0.80     # ≥80% of the apo's residues must be present (else wrong protein/chain)
+MAX_ALIGN_RMSD = 10.0       # Å — reject gross mis-alignment even at high overlap
 
-    No hardcoding / no user-supplied ids: query the PDB for other structures of this
-    protein (UniProt), and for each compute a 'progress' coordinate = best-fit RMSD to
-    apo / (RMSD to apo + RMSD to holo) — 0 ≈ apo-like, 1 ≈ holo-like. Then pick k spread
-    evenly across that coordinate. Returns (ordered ids, [{pdb_id, progress}])."""
+
+def _rmsd_on(coords_by_resnum, st, resnums):
+    """Kabsch Cα RMSD between a reference (dict resnum→coord) and `st`, on shared `resnums`."""
+    pos = {int(r): j for j, r in enumerate(st["resnums"])}
+    A = np.array([coords_by_resnum[int(r)] for r in resnums], float)
+    C = np.array([st["coords"][pos[int(r)]] for r in resnums], float)
+    return float(np.sqrt(((_kabsch_rotate(C, A) - A) ** 2).sum(1).mean()))
+
+
+def _load_best_chain(pdb_id, apo_resset, chain_hint=None, max_chains=8):
+    """Return (structure, chain, overlap) for the chain of `pdb_id` whose residue numbers
+    best overlap the apo residue set — so complexes (e.g. antibody-bound 3GFT) resolve to
+    OUR protein's chain, not blindly chain A. Parses the file ONCE. (None, None, 0) if none."""
+    from .rcsb import chain_summary
+    try:
+        chains = [c["chain"] for c in chain_summary(pdb_id)][:max_chains]
+    except Exception:
+        chains = []
+    if chain_hint and chain_hint not in chains:
+        chains = [chain_hint] + chains
+    if not chains:
+        chains = [chain_hint or "A"]
+    st = load_structure(pdb_id, ",".join(chains))
+    if st is None:
+        return (None, None, 0)
+    chain_arr = np.asarray([str(x) for x in st["chains"]])
+    resn = np.asarray([int(r) for r in st["resnums"]], int)
+    coords = np.asarray(st["coords"], float)
+    bfac = np.asarray(st["bfac"], float)
+    best_ch, best_ov = None, 0
+    for ch in dict.fromkeys(chain_arr.tolist()):          # unique, order-preserving
+        ov = len(apo_resset & set(resn[chain_arr == ch].tolist()))
+        if ov > best_ov:
+            best_ch, best_ov = ch, ov
+    if best_ch is None:
+        return (None, None, 0)
+    m = chain_arr == best_ch
+    return ({"resnums": resn[m], "coords": coords[m], "bfac": bfac[m], "chains": chain_arr[m]},
+            best_ch, best_ov)
+
+
+def _auto_intermediates(apo_pdb, chain, apo, holo, holo_pdb, k, pool_cap=12,
+                        min_overlap_frac=MIN_OVERLAP_FRAC, max_align_rmsd=MAX_ALIGN_RMSD):
+    """Auto-pick k real, well-aligning structures of the SAME protein, ordered apo→holo.
+
+    For each candidate we (1) pick the chain that actually matches our protein (max residue
+    overlap), (2) REJECT it if it shares <min_overlap_frac of the apo's residues or its
+    best-fit Cα RMSD to apo exceeds max_align_rmsd (wrong construct / wrong chain / gross
+    outlier), then (3) order survivors by progress = RMSD→apo / (RMSD→apo + RMSD→holo) and
+    pick k spread evenly. Returns (chosen[{pdb_id, chain, progress}], rejected[{pdb_id, reason}])."""
     from .discovery import same_protein_entries
-    pool = [p for p in same_protein_entries(apo_pdb, max_n=40)
-            if p != str(holo_pdb).upper()]
-    base = set(int(r) for r in apo["resnums"]) & set(int(r) for r in holo["resnums"])
-    scored, loaded = [], 0
+    pool = [p for p in same_protein_entries(apo_pdb, max_n=40) if p != str(holo_pdb).upper()]
+    apo_resset = set(int(r) for r in apo["resnums"])
+    holo_resset = set(int(r) for r in holo["resnums"])
+    apo_pos = {int(r): apo["coords"][i] for i, r in enumerate(apo["resnums"])}
+    holo_pos = {int(r): holo["coords"][i] for i, r in enumerate(holo["resnums"])}
+    n_apo = max(len(apo_resset), 1)
+    accepted, rejected, loaded = [], [], 0
     for pid in pool:
         if loaded >= pool_cap:
             break
-        st = load_structure(pid, chain)
+        st, ch, ov = _load_best_chain(pid, apo_resset, chain)
         if st is None:
             continue
         loaded += 1
-        com = base & set(int(r) for r in st["resnums"])
-        if len(com) < 10:
+        if ov / n_apo < min_overlap_frac:            # different protein / construct / wrong chain
+            rejected.append({"pdb_id": pid, "reason": f"only {ov}/{n_apo} residues shared "
+                             f"({ov / n_apo:.0%} < {min_overlap_frac:.0%})"})
             continue
-        com = np.array(sorted(com), int)
-        A, H, C = _coords_on(apo, com), _coords_on(holo, com), _coords_on(st, com)
-        r_apo = float(np.sqrt(((_kabsch_rotate(C, A) - A) ** 2).sum(1).mean()))
-        r_holo = float(np.sqrt(((_kabsch_rotate(C, H) - H) ** 2).sum(1).mean()))
-        scored.append((r_apo / (r_apo + r_holo + 1e-9), pid))
-    scored.sort()
-    if not scored:
-        return [], []
-    if k >= len(scored):
-        chosen = scored
+        shared_a = sorted(apo_resset & set(int(r) for r in st["resnums"]))
+        r_apo = _rmsd_on(apo_pos, st, shared_a)
+        if r_apo > max_align_rmsd:                   # gross mis-alignment
+            rejected.append({"pdb_id": pid, "reason": f"poor alignment to apo "
+                             f"({r_apo:.1f} Å > {max_align_rmsd:.0f} Å)"})
+            continue
+        shared_h = sorted(holo_resset & set(int(r) for r in st["resnums"]))
+        r_holo = _rmsd_on(holo_pos, st, shared_h) if len(shared_h) >= 10 else r_apo
+        accepted.append({"pdb_id": pid, "chain": ch,
+                         "progress": r_apo / (r_apo + r_holo + 1e-9), "rmsd_apo": round(r_apo, 2)})
+    accepted.sort(key=lambda d: d["progress"])
+    if k >= len(accepted):
+        chosen = accepted
     else:
         chosen, used = [], set()
-        for t in np.linspace(0.0, 1.0, k + 2)[1:-1]:          # interior targets
-            best = min((s for s in scored if s[1] not in used),
-                       key=lambda s: abs(s[0] - t), default=None)
-            if best:
-                used.add(best[1]); chosen.append(best)
-        chosen.sort()
-    return [pid for _, pid in chosen], [{"pdb_id": pid, "progress": round(pr, 2)} for pr, pid in chosen]
+        for t in np.linspace(0.0, 1.0, k + 2)[1:-1]:          # interior progress targets
+            cand = [d for d in accepted if d["pdb_id"] not in used]
+            if not cand:
+                break
+            b = min(cand, key=lambda d: abs(d["progress"] - t))
+            used.add(b["pdb_id"]); chosen.append(b)
+        chosen.sort(key=lambda d: d["progress"])
+    return chosen, rejected
 
 
 def morph_frames(apo_pdb, apo_chain, holo_pdb, holo_chain=None, inter_pdbs=None,
@@ -540,15 +599,24 @@ def morph_frames(apo_pdb, apo_chain, holo_pdb, holo_chain=None, inter_pdbs=None,
     holo = load_structure(holo_pdb, holo_chain or apo_chain)
     if apo is None or holo is None:
         raise ValueError(f"could not load apo {apo_pdb} or holo {holo_pdb}")
+    apo_resset = set(int(r) for r in apo["resnums"])
     inter_ids = [str(p).strip().upper() for p in (inter_pdbs or []) if str(p).strip()]
-    auto_selected = []
-    if not inter_ids and n_frames and int(n_frames) > 2:
-        inter_ids, auto_selected = _auto_intermediates(
+    auto_selected, rejected, inter_specs = [], [], []      # inter_specs = [(pid, chain)]
+    if inter_ids:                                          # explicit override
+        for pid in inter_ids:
+            st, ch, ov = _load_best_chain(pid, apo_resset)  # still pick the matching chain
+            if st is None:
+                raise ValueError(f"could not load intermediate {pid}")
+            inter_specs.append((pid, ch))
+    elif n_frames and int(n_frames) > 2:                   # auto-discover (chain-checked + QC-gated)
+        chosen, rejected = _auto_intermediates(
             apo_pdb, apo_chain, apo, holo, holo_pdb, int(n_frames) - 2)
+        inter_specs = [(d["pdb_id"], d["chain"]) for d in chosen]
+        auto_selected = [{"pdb_id": d["pdb_id"], "chain": d["chain"],
+                          "progress": round(d["progress"], 2)} for d in chosen]
 
     # canonical set = apo ∩ holo (identical nodes/edges to the connectivity graph)
-    common = np.array(sorted(set(int(r) for r in apo["resnums"]) &
-                             set(int(r) for r in holo["resnums"])), int)
+    common = np.array(sorted(apo_resset & set(int(r) for r in holo["resnums"])), int)
     if len(common) < 10:
         raise ValueError(f"only {len(common)} residues shared between apo and holo — need ≥10")
     if len(common) > max_n:
@@ -557,13 +625,10 @@ def morph_frames(apo_pdb, apo_chain, holo_pdb, holo_chain=None, inter_pdbs=None,
     holo_c = _kabsch_rotate(_coords_on(holo, common), ref)  # holo endpoint, aligned to apo
 
     inter_states = []
-    for pid in inter_ids:
-        st = load_structure(pid, apo_chain)
-        if st is None:
-            if inter_pdbs:                                 # explicit id must load
-                raise ValueError(f"could not load intermediate {pid} on chain {apo_chain}")
-            continue                                       # auto pick: just skip
-        inter_states.append((pid, st))
+    for pid, ch in inter_specs:
+        st = load_structure(pid, ch)
+        if st is not None:
+            inter_states.append((pid, st))
 
     K = len(inter_states) + 2
     frames = [np.round(ref, 3).tolist()]
@@ -588,7 +653,8 @@ def morph_frames(apo_pdb, apo_chain, holo_pdb, holo_chain=None, inter_pdbs=None,
     return {
         "resnums": [int(r) for r in common], "cutoff": cutoff,
         "frames": frames, "frame_labels": labels, "auto_selected": auto_selected,
-        "coverage": coverage, "n_frames": len(frames), "n_shared": int(len(common)),
+        "rejected": rejected, "coverage": coverage,
+        "n_frames": len(frames), "n_shared": int(len(common)),
     }
 
 
