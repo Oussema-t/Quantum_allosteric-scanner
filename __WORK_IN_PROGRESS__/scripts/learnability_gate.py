@@ -42,6 +42,7 @@ from allostery.superpose import (  # noqa: E402
     align_apo_holo,
     anm_modes,
     background_rmsd,
+    chain_map_from_config,
     cryptic_openness_gate,
     cumulative_overlap,
     learnability_verdict,
@@ -66,7 +67,7 @@ def run_one(target_name: str) -> dict:
     if labels_obj.pocket is None or not labels_obj.pocket.any():
         raise RuntimeError(f"{target_name}: no resolvable pocket label")
 
-    alignment = align_apo_holo(apo, holo)
+    alignment = align_apo_holo(apo, holo, chain_map=chain_map_from_config(target_config))
     gate = cryptic_openness_gate(apo, holo, alignment, labels_obj.pocket, rmsd_threshold=3.0)
     bg = background_rmsd(apo, holo, alignment, labels_obj.pocket)
 

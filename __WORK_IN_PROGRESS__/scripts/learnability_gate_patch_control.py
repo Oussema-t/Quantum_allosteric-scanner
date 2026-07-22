@@ -44,6 +44,7 @@ from allostery.labels import build_labels  # noqa: E402
 from allostery.superpose import (  # noqa: E402
     align_apo_holo,
     anm_modes,
+    chain_map_from_config,
     cumulative_overlap,
     restricted_cumulative_overlap,
 )
@@ -73,7 +74,7 @@ def run_one(target_name: str, n_replicates: int, seed: int) -> dict:
     if labels_obj.pocket is None or not labels_obj.pocket.any():
         raise RuntimeError(f"{target_name}: no resolvable pocket label")
 
-    alignment = align_apo_holo(apo, holo)
+    alignment = align_apo_holo(apo, holo, chain_map=chain_map_from_config(target_config))
     eigvals, eigvecs = anm_modes(apo.coords, cutoff=anm_cutoff, n_modes=DEFAULT_N_MODES)
 
     # Real pocket, restricted to residues with a holo correspondence --

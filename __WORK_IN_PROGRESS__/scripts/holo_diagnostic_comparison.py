@@ -60,7 +60,7 @@ from allostery.hamiltonians import build_H_new, build_H10  # noqa: E402
 from allostery.labels import build_labels  # noqa: E402
 from allostery.protocol import run_frozen_verdict  # noqa: E402
 from allostery.report import verdict_template  # noqa: E402
-from allostery.superpose import align_apo_holo  # noqa: E402
+from allostery.superpose import align_apo_holo, chain_map_from_config  # noqa: E402
 
 # Reused, not re-derived (Intent Contract) -- run_challenge.py's own loader
 # and candidate builder, TASK-0067's holo-native-label construction.
@@ -127,7 +127,7 @@ def run_target(target_name: str, output_dir: Path) -> dict:
 
     holo_H = _HOLO_BUILDERS[winner_name](holo.coords, holo.bfactors, cutoff)
 
-    alignment = align_apo_holo(apo, holo)
+    alignment = align_apo_holo(apo, holo, chain_map=chain_map_from_config(target_config))
 
     # Pass 2: apo + holo together, the real composed run.
     pass2 = run_frozen_verdict(

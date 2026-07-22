@@ -1314,9 +1314,21 @@ Full detail: `.ai/tasks/DONE/TASK-0139-kras-learnability-reclassification-decisi
 `results_task0139_learnability_resolution/resolution.json`,
 `scripts/resolve_kras_learnability.py`.
 
----
-
-### `H_new`'s 5-term potential variance-budget renormalization (TASK-0121, 2026-07-18)
+**[UPDATED 2026-07-22, [[TASK-0144]]] TASK-0120's and TASK-0133's CARDIAC_MYOSIN rows
+above (N=950/709 common, pocket RMSD 4.168 Å, ratio 1.32, whole-structure CO(20) 0.584,
+restricted CO(20) 0.044) are superseded, not corrected in place** — they were computed
+against the apo structure [[TASK-0124]] later retired (5TBY -> 8QYP, 2026-07-20), and
+are kept verbatim above only as the historical record of what was measured against that
+structure. They are also a coincidental case of a bug this task fixes: `superpose.
+align_apo_holo`/`common_residues_by_resnum` matched apo/holo Cα atoms by raw `(chain,
+resnum)`, with no remap for targets ([[TASK-0127]]'s `apo_chains`/`holo_chains` override)
+where the same biological chain is deposited under different author chain letters in apo
+vs. holo. 5TBY happened to share holo's chain letter, so the old numbers above were never
+affected by this bug — but the new 8QYP apo (chain A) vs. 8QYR holo (chain B) pair is
+exactly this shape, and produced 0 common residues / a `ValueError` before this fix.
+Fresh, correct CARDIAC_MYOSIN numbers under the current (8QYP/8QYR) apo/holo pair, plus a
+first-ever run of GLUCOKINASE (same latent bug shape, apo 1V4S chain A / holo 3H1V chain
+X, never previously run through this gate), are in TASK-0144's own section below.
 
 **[EXECUTED, fixes a real bug]** `REVIEW-panel-2026-07-16-v2.md` §2.4 found
 that `potentials.py`'s five diagonal terms (V_B/V_T/V_R/V_C/V_M) were not
@@ -2451,6 +2463,76 @@ Full detail: `.ai/tasks/DONE/TASK-0136-percolation-connectivity-robustness.md`,
 
 ---
 
+## Apo/holo chain-letter remap for `align_apo_holo` (TASK-0144, 2026-07-22)
+
+**Real bug, found live while executing [[TASK-0124]]'s CARDIAC_MYOSIN apo replacement:**
+`superpose.common_residues_by_resnum`/`align_apo_holo` matched apo/holo Cα atoms by the
+raw `(chain_id, resnum)` pair, verbatim. [[TASK-0127]] added an `apo_chains`/`holo_chains`
+per-role config override for targets where the same biological chain is deposited under
+different author chain letters in apo vs. holo (its own worked example: GLUCOKINASE, apo
+1V4S chain A, holo 3H1V chain X) — wired correctly into `clean_from_config`/
+`run_challenge._load_apo_holo` (which only controls which chains are *loaded*, confirmed
+by reading `clean.py:241`), but `superpose.py`'s own correspondence never got the same
+treatment. Confirmed directly: on TASK-0124's new CARDIAC_MYOSIN pair (apo=8QYP chain A,
+holo=8QYR chain B), `common_residues_by_resnum` returned 0 common residues, and
+`align_apo_holo` raised (`< 3 common Ca pairs`). GLUCOKINASE has the identical latent
+shape (apo chain A, holo chain X) but had never actually been run through
+`align_apo_holo` before this task — TASK-0120/125/133's own target lists never include it.
+
+**Fix**: `common_residues_by_resnum(apo, holo, chain_map=None)` and
+`align_apo_holo(apo, holo, chain_map=None)` — an additive `chain_map: Optional[Dict[str,
+str]]` parameter (holo chain letter -> apo chain letter), default `None`, byte-identical
+to the previous behavior for every caller that doesn't pass one (none of the 3 mandatory
+targets use `apo_chains`/`holo_chains` as of this filing). New `superpose.
+chain_map_from_config(target_config)` builds it from a target's `apo_chains`/
+`holo_chains` (`dict(zip(holo_chains, apo_chains))`) when both are set, `None` otherwise
+— threaded through every real call site found by re-grepping the whole repo at pickup
+time (this task's own filing already flagged the caller list might have grown):
+`superpose.run_superpose` (already had `target_config` in scope), `scripts/
+learnability_gate.py`, `scripts/learnability_gate_patch_control.py`, `scripts/
+holo_diagnostic_comparison.py`, and `scripts/kras_auc_reconciliation.py`'s
+`_holo_mapped_source` (KRAS_G12C-only, never actually exercises a non-`None` map, threaded
+for consistency). `analysis.py`'s own mention of `align_apo_holo` is docstring-only, not a
+real call — confirmed, not touched.
+
+**Re-run `scripts/learnability_gate.py` (TASK-0120's own script) for CARDIAC_MYOSIN under
+the new 8QYP/8QYR pair, and for GLUCOKINASE for the first time ever:**
+
+| Target | N (common) | Pocket RMSD | Background RMSD | Ratio | Whole-structure CO(20) | Verdict |
+|---|---|---|---|---|---|---|
+| CARDIAC_MYOSIN (8QYP/8QYR) | 704 (698) | 1.335 Å | 0.853 Å | **1.57** | 0.943 | `LEARNABLE` |
+| GLUCOKINASE (1V4S/3H1V) | 448 (446) | 0.640 Å | 0.330 Å | **1.94** | 0.443 | `UNLEARNABLE_FROM_APO` |
+
+**CARDIAC_MYOSIN's coverage jumps from 709/950 (75%) to 698/704 (99%)** — the old 5TBY
+pair's low common-residue coverage (flagged in TASK-0120's own writeup as a possible
+alignment-quality issue) was, at least in significant part, this same chain-letter defect
+silently discarding correspondences it should have kept, not (only) a genuine
+structural-quality gap. Overall alignment RMSD also drops sharply (3.75 Å -> 1.18 Å).
+**GLUCOKINASE is the first target in this project's history to classify
+`UNLEARNABLE_FROM_APO` on the RMSD half of the conjunction failing to matter — both
+conditions are met here** (ratio 1.94 >= 1.5 threshold, CO(20) 0.443 < 0.5 threshold) —
+the first real case, on a mandatory-adjacent target, where TASK-0120's kill criterion
+actually fires as originally designed.
+
+**Caveat, stated plainly**: both numbers above use `learnability_gate.py`'s own
+whole-structure `cumulative_overlap`, the same quantity [[TASK-0133]]/[[TASK-0139]] later
+found conflates "the low-mode subspace explains *some* substantial motion somewhere" with
+"...explains *this pocket's* motion" — this task did not re-run either target through
+`restricted_cumulative_overlap`/the corrected `learnability_verdict(co_percentile=...)`
+path (out of this task's own scope; a natural follow-up mirroring [[TASK-0133]]'s own
+random-patch-null construction, not done here for either target). GLUCOKINASE's `ratio`
+half alone already clears its own bar independent of which CO quantity is used, so its
+verdict is not contingent on this caveat; CARDIAC_MYOSIN's is not either (ratio 1.57 and
+whole-structure CO 0.943 both agree with `LEARNABLE` well clear of either threshold), but
+the restricted-CO number is unmeasured for both and should not be assumed to agree.
+
+Full detail: `.ai/tasks/DONE/TASK-0144-align-apo-holo-chain-letter-mismatch.md`,
+`results_task0144_learnability_rerun/learnability_gate_rerun.json`,
+`tests/test_superpose.py::TestCommonResiduesByResnum`/`TestAlignApoHolo`'s new
+chain-letter-remap cases.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -2482,6 +2564,7 @@ Full detail: `.ai/tasks/DONE/TASK-0136-percolation-connectivity-robustness.md`,
 
 | 24 | Does `select.py`'s reported quantities (`focusing`, `source_specificity`, `ballistic_exponent`, `unsupervised_score`) actually satisfy the GAUGE/KNOB/SIGNAL classification `INV-0004` seeded for them, or was that just reasoned from each function's signature and never verified ([[TASK-0064]])? | **resolved 2026-07-20: mostly GAUGE-VERIFIED/KNOB-CHARACTERIZED as expected, plus one real, previously-unexamined finding.** `source_specificity` is NOT relabeling-invariant with its default sub-sampled `n_alt` (root-caused to label-position-dependent `rng.choice`, confirmed exact once sampling is exhaustive) — reclassified GAUGE→KNOB rather than force-passed, flagged in the function's own docstring, not fixed algorithmically (would change what "random sample" means). `unsupervised_score`'s ranking also confirmed to flip between scalar/multi-index `source` conventions (closes that KNOB row, matches [[TASK-0118]]'s project-wide finding). `ballistic_exponent`'s `t_values` window is this module's dominant KNOB by an order of magnitude. SIGNAL null-controlled against a 30-graph random-graph batch, not a single instance. Full detail: `RESULTS.md`'s own `select.py` invariance section above, `.ai/invariants/INV-0004-select-unsupervised-score.md`. | [[TASK-0089]] |
 | 25 | Is allosteric communication between the active site and known pocket carried by a narrow, fragile bottleneck or a broad, redundant subnetwork, measured directly on the apo contact graph — a purely topological question, no propagator involved (raised directly by the orchestrating user, 2026-07-18)? | **resolved 2026-07-22: broad and redundant, decisively, on all 3 mandatory targets.** New `allostery.percolation` (shortest-path ensemble, Menger's-theorem edge connectivity + literal min-cut, percolation-threshold sweep). Edge connectivity is 68-76 (an order of magnitude above a narrow-bottleneck signature) on every target, with min-cuts spanning dozens of distinct residue pairs, not a single chokepoint. Real bug found+fixed first: an initial unit-capacity virtual-edge construction silently capped every result at `min(|active|,|pocket|)` (13-18, empty cuts) — confirmed wrong via a synthetic single-hub-3-fan-out check, fixed via large-capacity virtual edges + `nx.maximum_flow_value`/`minimum_cut` (`edge_connectivity`/`minimum_edge_cut` don't accept a `capacity` argument at all). As a blind scoreable baseline (`connectivity_robustness`, part c), beats the proximity floor on only 1/3 targets, and `stratified_auc` (actually run, not cited by analogy) shows most of its raw AUC is the same distance/degree confound found pervasive elsewhere in this project's register. Dumbbell gate: exactly chance in every cell — a clean, understood negative (unweighted route-counting can't see the dumbbell's edge-weight-only confound). | [[TASK-0136]] |
+| 26 | Does `superpose.align_apo_holo`'s raw `(chain, resnum)` correspondence silently break for targets ([[TASK-0127]]'s `apo_chains`/`holo_chains` override) where apo and holo deposit the same biological chain under different author chain letters — found live while executing [[TASK-0124]]'s CARDIAC_MYOSIN apo replacement? | **resolved 2026-07-22: yes, confirmed on 2 real targets, now fixed.** New optional `chain_map` parameter on `common_residues_by_resnum`/`align_apo_holo` (default `None`, byte-identical prior behavior), built from target config via new `chain_map_from_config`, threaded through all 5 real call sites found by re-grepping the repo (`run_superpose`, `learnability_gate.py`, `learnability_gate_patch_control.py`, `holo_diagnostic_comparison.py`, `kras_auc_reconciliation.py`). Before the fix: CARDIAC_MYOSIN's new 8QYP/8QYR pair (apo chain A, holo chain B) had 0 common residues, `align_apo_holo` raised. After: 698/704 residues resolve (vs. 5TBY-era's 709/950, a coverage jump from 75%->99%), `LEARNABLE` (ratio 1.57, whole-structure CO(20) 0.943). GLUCOKINASE (apo chain A, holo chain X), run through this gate for the first time ever, resolves 446/448 and is the project's first target to classify `UNLEARNABLE_FROM_APO` on both conjunction halves genuinely firing (ratio 1.94, CO(20) 0.443). TASK-0120/0133's own CARDIAC_MYOSIN rows are flagged superseded (by TASK-0124's apo replacement, not retroactively by this bug — 5TBY happened to share holo's chain letter) in this document's own learnability-gate section, not deleted. | [[TASK-0144]], [[TASK-0124]], [[TASK-0127]], [[TASK-0120]], [[TASK-0133]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

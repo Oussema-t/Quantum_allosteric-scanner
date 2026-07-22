@@ -24,6 +24,7 @@ from allostery.superpose import (  # noqa: E402
     anm_modes,
     background_rmsd,
     calibrate_kappa,
+    chain_map_from_config,
     common_residues_by_resnum,
     cryptic_openness_gate,
     cumulative_overlap,
@@ -132,6 +133,36 @@ class TestCommonResiduesByResnum:
         assert len(apo_idx) == 0
         assert len(holo_idx) == 0
 
+    def test_different_chain_letters_silently_empty_without_chain_map(self):
+        """TASK-0144's real bug shape: same biological chain, same resnums,
+        but a different author chain letter in apo vs. holo (GLUCOKINASE:
+        apo chain A, holo chain X; CARDIAC_MYOSIN post-TASK-0124: apo=8QYP
+        chain A, holo=8QYR chain B). Without a remap, the raw (chain,
+        resnum) intersection is silently empty even though every residue
+        has a real correspondent -- this is the bug, not the fix."""
+        apo = _Struct(COORDS, resnums=list(range(1, N + 1)), resnames=_SEQ3, chain_ids=["A"] * N)
+        holo = _Struct(COORDS.copy(), resnums=list(range(1, N + 1)), resnames=_SEQ3, chain_ids=["B"] * N)
+        apo_idx, holo_idx = common_residues_by_resnum(apo, holo)
+        assert len(apo_idx) == 0
+        assert len(holo_idx) == 0
+
+    def test_chain_map_recovers_correspondence_across_letter_mismatch(self):
+        apo = _Struct(COORDS, resnums=list(range(1, N + 1)), resnames=_SEQ3, chain_ids=["A"] * N)
+        holo = _Struct(COORDS.copy(), resnums=list(range(1, N + 1)), resnames=_SEQ3, chain_ids=["B"] * N)
+        apo_idx, holo_idx = common_residues_by_resnum(apo, holo, chain_map={"B": "A"})
+        assert len(apo_idx) == N
+        assert len(holo_idx) == N
+        np.testing.assert_array_equal(np.sort(apo_idx), np.arange(N))
+        np.testing.assert_array_equal(np.sort(holo_idx), np.arange(N))
+
+    def test_chain_map_from_config_none_when_fields_absent(self):
+        assert chain_map_from_config({}) is None
+        assert chain_map_from_config({"chains": ["A"]}) is None
+
+    def test_chain_map_from_config_builds_holo_to_apo_map(self):
+        cfg = {"apo_chains": ["A"], "holo_chains": ["X"]}
+        assert chain_map_from_config(cfg) == {"X": "A"}
+
 
 class TestAlignApoHolo:
     def test_zero_rmsd_for_identical_structures(self):
@@ -166,6 +197,24 @@ class TestAlignApoHolo:
         holo = _Struct(COORDS.copy(), resnums=list(range(1, N + 1)), resnames=_SEQ3, chain_ids=chains)
         alignment = align_apo_holo(apo, holo)
         assert set(alignment.rmsd_per_chain) == {"A", "B"}
+
+    def test_chain_letter_mismatch_raises_without_chain_map_succeeds_with_it(self):
+        """TASK-0144: GLUCOKINASE/CARDIAC_MYOSIN's real shape -- apo and holo
+        deposit the same biological chain under different author chain
+        letters. Without `chain_map`, this is < 3 common Ca pairs and
+        `align_apo_holo` raises exactly as it did on TASK-0124's new
+        CARDIAC_MYOSIN pair before this fix; with the TASK-0127-shaped
+        `chain_map`, it recovers the full correspondence and a zero RMSD."""
+        apo = _Struct(COORDS, resnums=list(range(1, N + 1)), resnames=_SEQ3, chain_ids=["A"] * N)
+        holo = _Struct(COORDS.copy(), resnums=list(range(1, N + 1)), resnames=_SEQ3, chain_ids=["B"] * N)
+
+        with pytest.raises(ValueError):
+            align_apo_holo(apo, holo)
+
+        alignment = align_apo_holo(apo, holo, chain_map={"B": "A"})
+        assert isinstance(alignment, Alignment)
+        assert alignment.rmsd_overall < 1e-9
+        assert len(alignment.apo_idx) == N
 
 
 # ---------------------------------------------------------------------------

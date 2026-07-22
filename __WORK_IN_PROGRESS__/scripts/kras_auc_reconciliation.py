@@ -83,7 +83,7 @@ from allostery.labels import (  # noqa: E402
     protein_heavy_atoms_by_residue,
 )
 from allostery.metrics import auc as auc_fn  # noqa: E402
-from allostery.superpose import align_apo_holo  # noqa: E402
+from allostery.superpose import align_apo_holo, chain_map_from_config  # noqa: E402
 
 TARGET = "KRAS_G12C"
 APO_PDB = "4OBE"
@@ -118,7 +118,7 @@ def _load():
     return apo, holo_bare, holo_heavy
 
 
-def _holo_mapped_source(apo, holo):
+def _holo_mapped_source(apo, holo, target_config):
     """Old test's recipe verbatim: GDP contacts computed in holo's own
     frame, cross-mapped to apo via align_apo_holo's common-residue
     correspondence -- a full multi-index array, not narrowed."""
@@ -126,7 +126,7 @@ def _holo_mapped_source(apo, holo):
         holo.coords, holo.ligand_groups, {"func_ligand": FUNC_LIGAND}
     )
     assert provenance == "func_ligand-contact:GDP"
-    alignment = align_apo_holo(apo, holo)
+    alignment = align_apo_holo(apo, holo, chain_map=chain_map_from_config(target_config))
     holo_to_apo = dict(zip(alignment.holo_idx.tolist(), alignment.apo_idx.tolist()))
     apo_src_idx = np.array([holo_to_apo[i] for i in holo_src_idx if i in holo_to_apo])
     return apo_src_idx
@@ -161,7 +161,7 @@ def main() -> int:
     apo_active_idx = np.where(labels_assembled_obj.active_site)[0]
     source_apo_scalar = int(np.sort(apo_active_idx)[0])   # TASK-0090 workaround, real run's actual mechanism
     source_apo_array = apo_active_idx                      # full apo-native active_site, no narrowing
-    source_holo_mapped = _holo_mapped_source(apo, holo_bare)  # old test's recipe, full array, Calpha-only
+    source_holo_mapped = _holo_mapped_source(apo, holo_bare, cfg)  # old test's recipe, full array, Calpha-only
 
     print(f"pocket_assembled: {pocket_assembled.sum()} residues; pocket_raw: {pocket_raw.sum()} residues")
     print(f"source_apo_scalar: {source_apo_scalar}; source_apo_array: {len(source_apo_array)} residues; "

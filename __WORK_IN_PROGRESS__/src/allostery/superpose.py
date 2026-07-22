@@ -21,7 +21,7 @@ versa (TASK-0018).
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import Dict, Optional
 
 import numpy as np
 
@@ -60,7 +60,23 @@ def kabsch_align(mobile, ref, apply_to=None):
 # Common Ca correspondence + superposition
 # ---------------------------------------------------------------------------
 
-def common_residues_by_resnum(apo, holo):
+def chain_map_from_config(target_config: dict) -> Optional[Dict[str, str]]:
+    """Holo-chain -> apo-chain remap for `common_residues_by_resnum`/
+    `align_apo_holo`, derived from a target config's TASK-0127
+    `apo_chains`/`holo_chains` per-role override (TASK-0144).
+
+    Returns `None` (today's exact by-resnum-and-letter behavior) unless
+    both fields are set on the config -- every existing target that only
+    sets the shared `chains` field is unaffected.
+    """
+    apo_chains = target_config.get("apo_chains")
+    holo_chains = target_config.get("holo_chains")
+    if not apo_chains or not holo_chains:
+        return None
+    return dict(zip(holo_chains, apo_chains))
+
+
+def common_residues_by_resnum(apo, holo, chain_map: Optional[Dict[str, str]] = None):
     """Indices (into apo.coords, holo.coords) of (chain, resnum) pairs
     present in both structures, in matching order.
 
@@ -70,13 +86,21 @@ def common_residues_by_resnum(apo, holo):
     labels.holo_pocket_mask's sequence-alignment pocket mask is a
     geometric red flag caught by two different methods, not circular
     validation of the same method against itself.
+
+    `chain_map` (TASK-0144): optional holo-chain -> apo-chain letter
+    remap, for targets (TASK-0127's `apo_chains`/`holo_chains` override)
+    where the same biological chain is deposited under different author
+    chain letters in apo vs. holo (e.g. GLUCOKINASE: apo chain A, holo
+    chain X). Defaults to `None`, which is byte-identical to the previous
+    behavior (match holo's own chain letter verbatim against apo's).
     """
     apo_key = {
         (c, int(r)): i for i, (c, r) in enumerate(zip(apo.chain_ids, apo.resnums))
     }
     apo_idx, holo_idx = [], []
     for j, (c, r) in enumerate(zip(holo.chain_ids, holo.resnums)):
-        i = apo_key.get((c, int(r)))
+        apo_chain = chain_map.get(c, c) if chain_map else c
+        i = apo_key.get((apo_chain, int(r)))
         if i is not None:
             apo_idx.append(i)
             holo_idx.append(j)
@@ -97,7 +121,7 @@ class Alignment:
     rmsd_per_chain: dict
 
 
-def align_apo_holo(apo, holo) -> Alignment:
+def align_apo_holo(apo, holo, chain_map: Optional[Dict[str, str]] = None) -> Alignment:
     """Kabsch-superpose holo onto apo using the common (chain, resnum) Ca
     set, then report per-chain RMSD on that same set.
 
@@ -105,8 +129,13 @@ def align_apo_holo(apo, holo) -> Alignment:
     sequence-alignment label mapping (Intent Contract) -- a large RMSD here
     on a target where labels.py reports a clean pocket map is itself a
     finding worth surfacing, not something to silently paper over.
+
+    `chain_map` (TASK-0144): see `common_residues_by_resnum`; pass
+    `chain_map_from_config(target_config)` for targets that use TASK-0127's
+    `apo_chains`/`holo_chains` override, otherwise omit (default `None`
+    is the previous, unaffected behavior).
     """
-    apo_idx, holo_idx = common_residues_by_resnum(apo, holo)
+    apo_idx, holo_idx = common_residues_by_resnum(apo, holo, chain_map=chain_map)
     if len(apo_idx) < 3:
         raise ValueError(
             f"only {len(apo_idx)} common (chain, resnum) Ca pair(s) between "
@@ -805,7 +834,7 @@ def run_superpose(apo, holo, target_config: dict, n_modes: int = 20, cutoff: flo
     """
     from .labels import holo_pocket_mask
 
-    alignment = align_apo_holo(apo, holo)
+    alignment = align_apo_holo(apo, holo, chain_map=chain_map_from_config(target_config))
     ligand_code = target_config.get("drug_ligand")
 
     seq_mask = holo_pocket_mask(apo, holo, ligand_code, cutoff=4.5) if ligand_code else None
