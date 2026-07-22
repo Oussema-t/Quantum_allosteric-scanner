@@ -2077,6 +2077,109 @@ Full detail: `.ai/tasks/DONE/TASK-0141-engineered-dephasing-sweep.md`,
 
 ---
 
+## Coordinated-closure graph-openness premise (TASK-0143, HYP-P10, 2026-07-22)
+
+Tests the premise the entire loop/multi-site-closure observable family (HYP-P9, HYP-P12)
+depends on: are real holo-defined cryptic-pocket residues Euclidean-near but graph-hop-far
+on the **apo** contact graph — i.e. does the open cleft mean the apo contact graph doesn't
+"know" the pocket residues belong together. `REVIEW-panel-2026-07-20`'s own Falsifier A
+already killed the *trivial* single-loop idea (at 8 Å a spatial cluster is already a
+clique); the multi-site reframe survives only if real pockets carry this near-space/
+far-graph signature. Renumbered from the batch's own `TASK-0139` (ID collision with an
+unrelated, already-committed TASK-0139).
+
+**Distinct from `cumulative_overlap`/`cryptic_openness_gate` ([[TASK-0059]]/[[TASK-0120]])
+by construction, not just assertion**: new `allostery.closure` never imports `superpose` —
+`openness_signature`/`graph_dist_matrix` operate on apo coordinates and the apo contact
+graph alone, no ANM modes or holo displacement enter any computation here. That gate asks
+a *dynamics* question (is apo→holo spanned by soft modes); this asks a *structural-graph*
+question about the apo state alone — orthogonal, can agree or disagree.
+
+**Method**: `openness_signature(pocket) = mean pairwise apo graph-hop distance / mean
+pairwise Euclidean distance` among the holo-defined pocket residues (same 8 Å `enm_cutoff`/
+4.5 Å `pocket_contact_cutoff` every other headline number uses). Matched-spread random-
+closure null: ≥500 random same-size residue sets whose own mean pairwise Euclidean spread
+falls within ±35% of the real pocket's (fixed, pre-registered, never tuned against the
+outcome), scored identically. A synthetic positive-control gate (a horseshoe-arc
+construction whose two open-end tips are Euclidean-close but graph-far only reachable by
+traversing the whole arc) ran first and landed at the 100th percentile, confirming the
+implementation before any real data was touched. Pre-registered verdict: **PASS** (premise
+supported) requires >95th percentile **and** Bonferroni significance across the 7 targets
+(α=0.05/7≈0.0071); **FAIL** requires ≤50th percentile; everything between is
+**INSUFFICIENT**.
+
+**Headline: 0/7 targets PASS.** The premise is not supported, and the multi-site-closure
+family it gates ([[TASK-0140]], [[TASK-0142]]) has no confirmed non-proximity loop to
+detect on this benchmark's real targets.
+
+| Target | N | Pocket size | Graph-hop mean | Euclid mean (Å) | Real signature | Null | Percentile | p (uncorrected) | p (Bonferroni ×7) | Verdict |
+|---|---|---|---|---|---|---|---|---|---|---|
+| KRAS_G12C | 169 | 18 | 2.3856 | 11.57 | 0.2062 | 500/500 | 98.4 | 0.0160 | 0.1120 | INSUFFICIENT |
+| BCR_ABL1 | 451 | 16 | 2.3500 | 10.30 | 0.2281 | 0/500 (20M attempts) | — | — | — | INFEASIBLE |
+| CARDIAC_MYOSIN | 704 | 13 | 4.5769 | 13.23 | 0.3461 | 1/500 (20M attempts) | — | — | — | INFEASIBLE |
+| PTP1B | 298 | 14 | 2.2308 | 10.79 | 0.2067 | 19/500 (20M attempts) | — | — | — | INFEASIBLE |
+| GLUCOKINASE | 448 | 17 | 2.6618 | 11.76 | 0.2263 | 1/500 (20M attempts) | — | — | — | INFEASIBLE |
+| CASPASE1 | 255 | 6 | 2.1333 | 9.62 | 0.2218 | 500/500 | 90.2 | 0.0980 | 0.6860 | INSUFFICIENT |
+| CASPASE7 | 461 | 7 | 2.8571 | 14.82 | 0.1927 | 500/500 | 26.8 | 0.7320 | 1.0000 | **FAIL** |
+
+Raw components added 2026-07-22 (`allostery.closure.pairwise_components`, always
+computable independent of null feasibility — no rejection sampling involved). Notable:
+6 of 7 targets cluster tightly at 2.1-2.9 graph hops despite Euclidean spreads ranging
+9.6-14.8 Å; CARDIAC_MYOSIN is the one outlier at 4.58 hops (roughly double the rest) —
+consistent with, not resolving, its own INFEASIBLE verdict: the raw number is the
+largest in the set, but with no matched-spread null built there is no way to say
+whether that reflects a real anomaly or just its own larger pocket spread (also the
+second-largest in the set).
+
+**The naive (uncorrected) reading and the corrected (Bonferroni) reading, tagged
+separately, per this task's own requirement:** naively, KRAS_G12C's p=0.016 clears an
+uncorrected α=0.05 bar (same shape as [[TASK-0131]]'s own uncorrected-but-not-Bonferroni-
+significant KRAS_G12C ceiling finding) — but this does not survive correction for testing
+7 targets (p=0.112). No target reaches significance either way once corrected. CASPASE7 is
+the one target with a real, decisive result in *either* reading: its pocket is actually
+*less* graph-far than a typical matched-spread random cluster (26.8th percentile) — the
+opposite of HYP-P10's claimed direction, not just an absence of support for it.
+
+**A real, substantive finding in its own right: the pre-registered null construction is
+infeasible for most targets.** 4 of 7 targets could not reach 500 matched-spread replicates
+even at 20,000,000 unbiased rejection-sampling attempts (`MAX_ATTEMPTS`, a compute-budget
+parameter, raised without touching the ±35% tolerance/500 replicate count/8 Å cutoff this
+task's own Constraints froze). Root cause, checked not assumed: a compact same-size residue
+cluster matching a real pocket's spread is intrinsically rare among *uniform* random draws
+over a large protein, since most such draws scatter across the whole fold rather than
+clustering compactly by chance — real pockets are markedly more spatially compact than a
+typical random same-size subset of their own structure. This is itself informative but a
+distinct property from HYP-P10's own graph-openness claim, and the pre-registered
+methodology (uniform rejection sampling) cannot test the latter when it cannot even
+construct a comparison set for the former. Not fixed here (a validated fix would need a
+different, more sophisticated sampling scheme — e.g. spatially-biased proposals with
+importance correction — which changes the null's own statistical construction and is
+explicitly Out of Scope to redesign after seeing the outcome); flagged as a concrete
+methodological gap for whoever next revisits this premise.
+
+**Two real bugs found and fixed along the way:**
+1. `seed = BASE_SEED + (hash(target_name) & 0xFFFF)` used Python's built-in `hash()` on a
+   string — salted per-process (`PYTHONHASHSEED`, a security feature since Python 3.3), so
+   the derived seed silently differed on every invocation. Found directly: KRAS_G12C's
+   percentile read 100.0 on one run and 99.4 on an identical-looking re-run. Fixed to
+   `zlib.crc32(target_name.encode())`, a fixed deterministic function of its input.
+2. The output JSON was written only once, at the very end — the first full-batch run was
+   interrupted partway through and the already-completed KRAS_G12C/BCR_ABL1 results were
+   lost, nothing having reached disk yet. Fixed to checkpoint after every target (the same
+   design flaw [[TASK-0138]]'s own null script independently hit and fixed).
+
+`CARDIAC_MYOSIN`'s `N=704` (not the `950` [[TASK-0126]]/[[TASK-0138]] used) reflects
+[[TASK-0124]]'s already-landed apo re-anchor (5TBY → 8QYP) — confirmed directly against
+that task's own resolution, not a bug in this task's own loading path.
+
+Full detail: `.ai/tasks/DONE/TASK-0143-openness-premise-real-targets.md`,
+`results_task0143_openness_premise/openness_premise.json`, new
+`src/allostery/closure.py`, `scripts/openness_premise_test.py`,
+`tests/test_closure.py`.
+
+---
+
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -2104,6 +2207,7 @@ Full detail: `.ai/tasks/DONE/TASK-0141-engineered-dephasing-sweep.md`,
 | 19 | Does *any* engineered Haken-Strobl dephasing rate gamma improve pocket **discrimination** (not transport efficiency) over the coherent walk, on real targets — HYP-P11, the collaborator's Idea #1 run with the correct scored quantity? | **resolved 2026-07-20: no, on all 3 targets tested (KRAS_G12C, BCR_ABL1, PTP1B), confirming the pre-registered NEGATIVE prediction.** No gamma clears the proximity floor with non-overlapping CIs anywhere; the best-of-8-gamma point's own permutation null is nowhere near significant (p=0.649/0.211/1.000, Bonferroni alpha=0.0167). Closed 2 real gaps in `propagators.haken_strobl` along the way (no incoherent-mixture source option; no time-averaged variant — both now added, `coherent`/`haken_strobl_time_averaged`). The task's own mandatory classical-limit sanity gate did *not* pass as literally specified at `t_max=25` (`rho(occ,-dist)` fell, not rose, with gamma) — root-caused to Zeno-regime suppression of the effective diffusion timescale at large gamma under a fixed `t_max`, confirmed genuine (not an integrator bug) by extending `t` alone at fixed gamma and recovering the expected rising trend. | [[TASK-0141]] |
 
 | 21 | Does CARDIAC_MYOSIN's only surviving positive result rest on a defensible apo structure, or does resolving its 20 Å docked-homology-model caveat (5TBY) change the result itself (`REVIEW-panel-2026-07-16-v2.md` §1.2/§3, "do not build the only positive on a 20 Å docked homology model")? | **resolved 2026-07-20: resolving the structure removes the result.** Apo replaced 5TBY -> 8QYP (real 2.759 Å X-ray, same paper/deposition series and species as the existing 8QYR holo, RCSB-verified directly — resolves [[TASK-0128]]'s floppy-mode workaround for this target as a side effect, n_zero=10->6). Full re-run under the current closed-form convention: N drops 950->704, floor drops 0.7921->0.5679, actual AUC drops from 0.7912 ([[TASK-0129]]'s already-diminished number) to **0.5176**, `NO_SIGNAL_IN_APO` — matching BCR_ABL1's own diagnosis. The relayed 2026-07-20 lead proposing PDB 9GZ1 as a holo replacement was independently verified as real (*Science Advances* 2026-04-29) but not adopted — 8QYR remains the cleaner (higher-resolution, single-domain) structure; 9GZ1 stands as corroboration, not substitution. **No mandatory target now has a decisive positive result under the fully corrected pipeline.** Full detail: `COMPETENCE_MAP.md`'s own CARDIAC_MYOSIN section. | [[TASK-0124]], [[TASK-0129]], [[TASK-0128]] |
+| 22 | Do real holo-defined cryptic-pocket residues actually carry the "near-in-3D / far-on-apo-graph" coordinated-closure signature (HYP-P10) the entire loop/multi-site-closure observable family (HYP-P9, HYP-P12) depends on? | **resolved 2026-07-22: no — 0/7 targets pass the pre-registered gate.** KRAS_G12C (98.4th percentile, p=0.016 uncorrected/0.112 Bonferroni) and CASPASE1 (90.2nd percentile) are INSUFFICIENT; CASPASE7 is a clean FAIL (26.8th percentile, the opposite direction from the claim). BCR_ABL1/CARDIAC_MYOSIN/PTP1B/GLUCOKINASE could not be tested at all — the matched-spread null is infeasible via unbiased rejection sampling at the pre-registered ±35% tolerance even at 20M attempts, since a compact real pocket's spread is intrinsically rare among uniform random same-size draws over a large protein (a real finding in its own right, not fixed here — would require redesigning the null's sampling scheme). Two real bugs found+fixed: a non-reproducible seed (Python's per-process-salted `hash()`, fixed to `zlib.crc32`) and output written only once at the end (fixed to checkpoint per-target). Gates [[TASK-0140]]/[[TASK-0142]] as unsupported, not blocked outright. | [[TASK-0143]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
