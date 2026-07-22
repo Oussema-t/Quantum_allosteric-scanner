@@ -1907,84 +1907,6 @@ Full detail: `.ai/tasks/DONE/TASK-0123-distance-stratified-evaluation.md`,
 `scripts/distance_stratified_evaluation.py`.
 
 ---
-## Pocket-label ligand-contact cutoff sensitivity (TASK-0114, 2026-07-20)
-
-**Is the ground-truth pocket label itself a knob with unreported spread?** `holo_pocket_
-mask`'s 4.5 Å ligand-contact cutoff defines which residues count as "true pocket" at
-all — a different, upstream cutoff from the GNM graph cutoff TASK-0067/TASK-0113 already
-characterized. TASK-0075 already proved this project's *other* threshold gate
-(cumulative-overlap go/no-go) is knob-unstable (0.067–0.860 across an 18-combo grid,
-15/18 verdict flips) — this task checks whether the label-definition cutoff has the same
-property.
-
-Method: sweep `build_labels`' `cutoff` across {4.0, 4.5, 5.0, 5.5} Å on all 3 mandatory
-targets, re-scoring the *same*, once-computed `H_new`/`time_averaged_ctqw_converged`
-occupation (TASK-0130's closed form) against each cutoff's regenerated label — only the
-label changes, the operator is never recomputed (`scripts/pocket_label_cutoff_
-sensitivity.py`, `results_task0114_pocket_cutoff_sensitivity/`).
-
-| Target | Cutoff (Å) | n pocket | AUC | Floor | Floor cleared? | `classify_failure` |
-|---|---|---|---|---|---|---|
-| KRAS_G12C | 4.0 | 15 | 0.581 | 0.505 | Yes | `NO_FAILURE_DETECTED` |
-| KRAS_G12C | 4.5 | 18 | 0.590 | 0.482 | Yes | `NO_FAILURE_DETECTED` |
-| KRAS_G12C | 5.0 | 18 | 0.574 | 0.476 | Yes | `NO_FAILURE_DETECTED` |
-| KRAS_G12C | 5.5 | 17 | 0.522 | 0.444 | Yes | **`NO_SIGNAL_IN_APO`** |
-| BCR_ABL1 | 4.0 | 14 | 0.565 | 0.593 | No | **`BEATS_CHANCE_NOT_FLOOR`** |
-| BCR_ABL1 | 4.5 | 16 | 0.527 | 0.582 | No | `NO_SIGNAL_IN_APO` |
-| BCR_ABL1 | 5.0 | 19 | 0.524 | 0.578 | No | `NO_SIGNAL_IN_APO` |
-| BCR_ABL1 | 5.5 | 20 | 0.532 | 0.582 | No | `NO_SIGNAL_IN_APO` |
-| CARDIAC_MYOSIN* | 4.0 | 9 | 0.461 | 0.511 | No | `NO_SIGNAL_IN_APO` |
-| CARDIAC_MYOSIN* | 4.5 | 13 | 0.518 | 0.568 | No | `NO_SIGNAL_IN_APO` |
-| CARDIAC_MYOSIN* | 5.0 | 14 | 0.499 | 0.551 | No | `NO_SIGNAL_IN_APO` |
-| CARDIAC_MYOSIN* | 5.5 | 14 | 0.499 | 0.551 | No | `NO_SIGNAL_IN_APO` |
-
-*CARDIAC_MYOSIN's numbers here use [[TASK-0124]]'s new apo structure (8QYP, N=704),
-landed the same day as this task and in flight while this sweep ran — **not directly
-comparable to this project's other CARDIAC_MYOSIN numbers elsewhere in this document,
-almost all computed against the old 5TBY structure (N=950)**, flagged explicitly rather
-than silently mixed. A re-run against 8QYP once that task's own numbers are the
-document's settled reference is a real, cheap follow-up (rerun the same script), not
-redone here.
-
-**Headline, precisely stated — two different granularities give two different answers**:
-
-1. **The coarse question the task's own Outcome asked ("does the cutoff choice flip
-   which side of the proximity floor a target lands on") — no, not for any target.**
-   `floor_cleared` is stable across the entire grid for all 3 targets (KRAS_G12C always
-   clears, BCR_ABL1/CARDIAC_MYOSIN never do).
-2. **The finer-grained `classify_failure` diagnosis category is NOT stable — it changes
-   for 2 of 3 targets.** KRAS_G12C flips `NO_FAILURE_DETECTED` -> `NO_SIGNAL_IN_APO` at
-   5.5 Å (AUC drops to 0.522, inside the ±0.05-of-chance band `classify_failure` checks
-   *before* the floor comparison, even though the bare `auc > floor` boolean would still
-   read "cleared"). BCR_ABL1 flips the other direction, `BEATS_CHANCE_NOT_FLOOR` ->
-   `NO_SIGNAL_IN_APO`, between 4.0 Å and 4.5 Å. Neither swing is remotely as dramatic as
-   TASK-0075's CO-gate instability (0.067–0.860, 15/18 flips) — AUC itself only moves
-   ~0.04–0.07 across the whole grid for either target — but it is real, reportable
-   sensitivity in the reported *diagnosis label*, not just noise in a number nobody reads
-   directly.
-3. **TASK-0047's pinned 4.5 Å KRAS_G12C fixture (21/21 heavy-atom recovery) is confirmed
-   exactly correct** (`matches_pinned_4_5a_exactly=True`) **and sits on a real, still-
-   moving slope, not a plateau**: 4.0 Å recovers 17 raw contacts (4 short of the pinned
-   set: residues 11, 13, 69, 100 drop out); 5.0 Å recovers 22 (gains residue 92); 5.5 Å
-   recovers 24 (gains 35, 64, 92). The recovered set keeps changing in both directions at
-   every 0.5 Å step tested — the 4.5 Å choice is not obviously sitting on a stable local
-   plateau, though the *downstream* verdict (§1/§2 above) is far less sensitive than the
-   raw residue-set churn alone would suggest.
-
-**Reading together with TASK-0075's own finding**: this project now has direct evidence
-that its two structurally distinct 4.5 Å-shaped thresholds behave very differently —
-the cumulative-overlap go/no-go gate is genuinely knob-unstable (large swings, most
-combinations flip), while the pocket-label cutoff is comparatively well-behaved (small
-AUC drift, a real but narrow diagnosis-category sensitivity at the grid's edges, no
-floor-side flips at all). Per this task's own Out Of Scope, the shipped 4.5 Å default is
-not changed here — this is a characterization, the same posture TASK-0067 took for the
-GNM cutoff.
-
-Full detail: `.ai/tasks/DONE/TASK-0114-pocket-label-cutoff-sensitivity.md`,
-`results_task0114_pocket_cutoff_sensitivity/pocket_label_cutoff_sensitivity.json`,
-`scripts/pocket_label_cutoff_sensitivity.py`.
-
----
 
 ## Engineered-dephasing (ENAQT) discrimination sweep (TASK-0141, HYP-P11, 2026-07-20)
 
@@ -2074,6 +1996,85 @@ Full detail: `.ai/tasks/DONE/TASK-0141-engineered-dephasing-sweep.md`,
 `results_task0141_dephasing/dephasing_discrimination_sweep.json`,
 `scripts/dephasing_discrimination_sweep.py`, new `propagators.haken_strobl_time_averaged` /
 `haken_strobl(..., coherent=)`, `tests/test_haken_strobl_extensions.py`.
+
+---
+
+## Pocket-label ligand-contact cutoff sensitivity (TASK-0114, 2026-07-20)
+
+**Is the ground-truth pocket label itself a knob with unreported spread?** `holo_pocket_
+mask`'s 4.5 Å ligand-contact cutoff defines which residues count as "true pocket" at
+all — a different, upstream cutoff from the GNM graph cutoff TASK-0067/TASK-0113 already
+characterized. TASK-0075 already proved this project's *other* threshold gate
+(cumulative-overlap go/no-go) is knob-unstable (0.067–0.860 across an 18-combo grid,
+15/18 verdict flips) — this task checks whether the label-definition cutoff has the same
+property.
+
+Method: sweep `build_labels`' `cutoff` across {4.0, 4.5, 5.0, 5.5} Å on all 3 mandatory
+targets, re-scoring the *same*, once-computed `H_new`/`time_averaged_ctqw_converged`
+occupation (TASK-0130's closed form) against each cutoff's regenerated label — only the
+label changes, the operator is never recomputed (`scripts/pocket_label_cutoff_
+sensitivity.py`, `results_task0114_pocket_cutoff_sensitivity/`).
+
+| Target | Cutoff (Å) | n pocket | AUC | Floor | Floor cleared? | `classify_failure` |
+|---|---|---|---|---|---|---|
+| KRAS_G12C | 4.0 | 15 | 0.581 | 0.505 | Yes | `NO_FAILURE_DETECTED` |
+| KRAS_G12C | 4.5 | 18 | 0.590 | 0.482 | Yes | `NO_FAILURE_DETECTED` |
+| KRAS_G12C | 5.0 | 18 | 0.574 | 0.476 | Yes | `NO_FAILURE_DETECTED` |
+| KRAS_G12C | 5.5 | 17 | 0.522 | 0.444 | Yes | **`NO_SIGNAL_IN_APO`** |
+| BCR_ABL1 | 4.0 | 14 | 0.565 | 0.593 | No | **`BEATS_CHANCE_NOT_FLOOR`** |
+| BCR_ABL1 | 4.5 | 16 | 0.527 | 0.582 | No | `NO_SIGNAL_IN_APO` |
+| BCR_ABL1 | 5.0 | 19 | 0.524 | 0.578 | No | `NO_SIGNAL_IN_APO` |
+| BCR_ABL1 | 5.5 | 20 | 0.532 | 0.582 | No | `NO_SIGNAL_IN_APO` |
+| CARDIAC_MYOSIN* | 4.0 | 9 | 0.461 | 0.511 | No | `NO_SIGNAL_IN_APO` |
+| CARDIAC_MYOSIN* | 4.5 | 13 | 0.518 | 0.568 | No | `NO_SIGNAL_IN_APO` |
+| CARDIAC_MYOSIN* | 5.0 | 14 | 0.499 | 0.551 | No | `NO_SIGNAL_IN_APO` |
+| CARDIAC_MYOSIN* | 5.5 | 14 | 0.499 | 0.551 | No | `NO_SIGNAL_IN_APO` |
+
+*CARDIAC_MYOSIN's numbers here use [[TASK-0124]]'s new apo structure (8QYP, N=704),
+landed the same day as this task and in flight while this sweep ran — **not directly
+comparable to this project's other CARDIAC_MYOSIN numbers elsewhere in this document,
+almost all computed against the old 5TBY structure (N=950)**, flagged explicitly rather
+than silently mixed. A re-run against 8QYP once that task's own numbers are the
+document's settled reference is a real, cheap follow-up (rerun the same script), not
+redone here.
+
+**Headline, precisely stated — two different granularities give two different answers**:
+
+1. **The coarse question the task's own Outcome asked ("does the cutoff choice flip
+   which side of the proximity floor a target lands on") — no, not for any target.**
+   `floor_cleared` is stable across the entire grid for all 3 targets (KRAS_G12C always
+   clears, BCR_ABL1/CARDIAC_MYOSIN never do).
+2. **The finer-grained `classify_failure` diagnosis category is NOT stable — it changes
+   for 2 of 3 targets.** KRAS_G12C flips `NO_FAILURE_DETECTED` -> `NO_SIGNAL_IN_APO` at
+   5.5 Å (AUC drops to 0.522, inside the ±0.05-of-chance band `classify_failure` checks
+   *before* the floor comparison, even though the bare `auc > floor` boolean would still
+   read "cleared"). BCR_ABL1 flips the other direction, `BEATS_CHANCE_NOT_FLOOR` ->
+   `NO_SIGNAL_IN_APO`, between 4.0 Å and 4.5 Å. Neither swing is remotely as dramatic as
+   TASK-0075's CO-gate instability (0.067–0.860, 15/18 flips) — AUC itself only moves
+   ~0.04–0.07 across the whole grid for either target — but it is real, reportable
+   sensitivity in the reported *diagnosis label*, not just noise in a number nobody reads
+   directly.
+3. **TASK-0047's pinned 4.5 Å KRAS_G12C fixture (21/21 heavy-atom recovery) is confirmed
+   exactly correct** (`matches_pinned_4_5a_exactly=True`) **and sits on a real, still-
+   moving slope, not a plateau**: 4.0 Å recovers 17 raw contacts (4 short of the pinned
+   set: residues 11, 13, 69, 100 drop out); 5.0 Å recovers 22 (gains residue 92); 5.5 Å
+   recovers 24 (gains 35, 64, 92). The recovered set keeps changing in both directions at
+   every 0.5 Å step tested — the 4.5 Å choice is not obviously sitting on a stable local
+   plateau, though the *downstream* verdict (§1/§2 above) is far less sensitive than the
+   raw residue-set churn alone would suggest.
+
+**Reading together with TASK-0075's own finding**: this project now has direct evidence
+that its two structurally distinct 4.5 Å-shaped thresholds behave very differently —
+the cumulative-overlap go/no-go gate is genuinely knob-unstable (large swings, most
+combinations flip), while the pocket-label cutoff is comparatively well-behaved (small
+AUC drift, a real but narrow diagnosis-category sensitivity at the grid's edges, no
+floor-side flips at all). Per this task's own Out Of Scope, the shipped 4.5 Å default is
+not changed here — this is a characterization, the same posture TASK-0067 took for the
+GNM cutoff.
+
+Full detail: `.ai/tasks/DONE/TASK-0114-pocket-label-cutoff-sensitivity.md`,
+`results_task0114_pocket_cutoff_sensitivity/pocket_label_cutoff_sensitivity.json`,
+`scripts/pocket_label_cutoff_sensitivity.py`.
 
 ---
 
@@ -2179,7 +2180,6 @@ Full detail: `.ai/tasks/DONE/TASK-0143-openness-premise-real-targets.md`,
 
 ---
 
-
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -2202,9 +2202,8 @@ Full detail: `.ai/tasks/DONE/TASK-0143-openness-premise-real-targets.md`,
 | 16 | Is this project's headline output actually reproducible given identical seeded inputs, or has environmental nondeterminism been silently corrupting "before vs. after" comparisons ([[INV-0008]], the BCR_ABL1 gap discrepancy)? | **resolved 2026-07-19: reproducible — the hypothesis is refuted, not confirmed.** 3 independent repeats each of a spectral-gap eigendecomposition, a blind random search, and a TPE search all gave bit-for-bit identical results. BLAS thread-count variation (`1/2/4/8`) produces real but negligible drift (~1e-14 relative). The original 0.0374-vs-0.1933 discrepancy this hypothesis was raised from is directly ruled out as environmental (11 orders of magnitude too small) — traces instead to a stale cached object from 5 days before a later code change, not live nondeterminism. New `allostery.runlog` module (environment fingerprint + incremental wall/CPU-time JSONL logging) adopted in `scripts/reproducibility_audit.py`. | [[TASK-0135]], [[INV-0008]] |
 | 17 | Does cumulative overlap onto the apo ANM's lowest 20 modes actually discriminate "spans *this pocket's* displacement" from "spans *any* same-sized displacement" — or does a random patch score just as high ([[TASK-0120]]'s CO half of the learnability conjunction, `REVIEW-panel-2026-07-17.md` §5.2)? | **resolved 2026-07-19, with a real complication found mid-task.** TASK-0120's own reported `CO(20)` turns out to be a *whole-structure* quantity (166-709 residues), not pocket-specific — confirmed directly, not assumed. A properly pocket-restricted CO (new `superpose.restricted_cumulative_overlap`; also fixed a real bug found along the way — naively slicing+renormalizing eigenvectors for a small subset breaks `CO(m)<=1`, up to 1.64 observed) compared against 1000 random same-sized patches/target: **only matters for KRAS_G12C** (the one target whose verdict actually depends on the CO half). KRAS_G12C's restricted CO=0.458 is *below* the 0.5 threshold (vs. 0.638 whole-structure) and would flip the verdict to `UNLEARNABLE_FROM_APO` — but sits at only the 93rd percentile of the random-patch null (p≈0.07, not decisive at this project's own significance bar). BCR_ABL1/CARDIAC_MYOSIN score *below* their random-patch medians (37th/13th percentile) but their verdicts are RMSD-determined regardless. **[[TASK-0139]], 2026-07-20: decided, not left standing — pocket-restricted CO is the correct quantity (RMSD half is already region-specific; a whole-structure CO answers a different question), and `co_threshold=0.5` is replaced by a direct significance test against this exact null once available (new `learnability_verdict(co_percentile=...)`). KRAS_G12C resolves to `AMBIGUOUS` (RMSD clears, CO evidence inconclusive at α=0.05) — not `LEARNABLE`, not `UNLEARNABLE_FROM_APO`. BCR_ABL1/CARDIAC_MYOSIN unchanged (RMSD-determined).** | [[TASK-0139]], [[TASK-0133]], [[TASK-0120]] |
 | 18 | Does a published, classical (no MD, no quantum) GNM transfer-entropy method beat or match `H_new`/CTQW on this project's own 3 mandatory targets — "if you can't beat it, you don't have a result" (`REVIEW-panel-2026-07-17.md` §4 P1-6)? | **resolved 2026-07-19: no, on both counts, a mixed result reported as such.** New `transfer_entropy.py` (linear-Gaussian TE / Granger-causality closed form over GNM lagged covariance, verified against 2 real cited papers — one citation's author list was wrong in the filing task, corrected). Scored against all 3 real targets: AUC 0.4485/0.3497/0.5335 vs. floor 0.4818/0.5817/0.7921 — fails to clear the floor anywhere (0/3), and scores *lower* than `H_new`/CTQW's own current numbers (0.5901/0.5266/0.7272) on all 3, decisively so on 2. Neither "classical method already does the job" nor "the task itself is uniformly hard regardless of method" holds cleanly — `H_new` beats this specific classical baseline, which itself doesn't clear the floor. | [[TASK-0132]] |
-| 20 | Is the pocket-label ligand-contact cutoff (4.5 Å, `holo_pocket_mask`, defines ground truth itself) knob-unstable the same way TASK-0075 proved the cumulative-overlap gate's own 4.5 Å-shaped threshold is (0.067–0.860 swings, 15/18 verdict flips)? | **resolved 2026-07-20: no, materially more stable — but not fully insensitive either.** Swept {4.0,4.5,5.0,5.5} Å on all 3 mandatory targets, re-scoring the same once-computed `H_new` occupation against each cutoff's regenerated label. `floor_cleared` never flips for any target across the whole grid. `classify_failure`'s finer diagnosis *does* flip for 2/3 targets at the grid's edges (KRAS_G12C `NO_FAILURE_DETECTED`->`NO_SIGNAL_IN_APO` at 5.5 Å; BCR_ABL1 `BEATS_CHANCE_NOT_FLOOR`->`NO_SIGNAL_IN_APO` between 4.0/4.5 Å) — real but narrow, nothing like TASK-0075's own instability. TASK-0047's pinned 4.5 Å KRAS_G12C fixture (21/21) confirmed exactly correct, but sits on a still-moving slope (the raw recovered residue set changes at every 0.5 Å step tested, both directions), not a stable plateau. CARDIAC_MYOSIN run against TASK-0124's new 8QYP structure (landed the same day) — flagged as not comparable to this document's other, 5TBY-era CARDIAC_MYOSIN numbers. | [[TASK-0114]], [[TASK-0075]], [[TASK-0047]] |
-
 | 19 | Does *any* engineered Haken-Strobl dephasing rate gamma improve pocket **discrimination** (not transport efficiency) over the coherent walk, on real targets — HYP-P11, the collaborator's Idea #1 run with the correct scored quantity? | **resolved 2026-07-20: no, on all 3 targets tested (KRAS_G12C, BCR_ABL1, PTP1B), confirming the pre-registered NEGATIVE prediction.** No gamma clears the proximity floor with non-overlapping CIs anywhere; the best-of-8-gamma point's own permutation null is nowhere near significant (p=0.649/0.211/1.000, Bonferroni alpha=0.0167). Closed 2 real gaps in `propagators.haken_strobl` along the way (no incoherent-mixture source option; no time-averaged variant — both now added, `coherent`/`haken_strobl_time_averaged`). The task's own mandatory classical-limit sanity gate did *not* pass as literally specified at `t_max=25` (`rho(occ,-dist)` fell, not rose, with gamma) — root-caused to Zeno-regime suppression of the effective diffusion timescale at large gamma under a fixed `t_max`, confirmed genuine (not an integrator bug) by extending `t` alone at fixed gamma and recovering the expected rising trend. | [[TASK-0141]] |
+| 20 | Is the pocket-label ligand-contact cutoff (4.5 Å, `holo_pocket_mask`, defines ground truth itself) knob-unstable the same way TASK-0075 proved the cumulative-overlap gate's own 4.5 Å-shaped threshold is (0.067–0.860 swings, 15/18 verdict flips)? | **resolved 2026-07-20: no, materially more stable — but not fully insensitive either.** Swept {4.0,4.5,5.0,5.5} Å on all 3 mandatory targets, re-scoring the same once-computed `H_new` occupation against each cutoff's regenerated label. `floor_cleared` never flips for any target across the whole grid. `classify_failure`'s finer diagnosis *does* flip for 2/3 targets at the grid's edges (KRAS_G12C `NO_FAILURE_DETECTED`->`NO_SIGNAL_IN_APO` at 5.5 Å; BCR_ABL1 `BEATS_CHANCE_NOT_FLOOR`->`NO_SIGNAL_IN_APO` between 4.0/4.5 Å) — real but narrow, nothing like TASK-0075's own instability. TASK-0047's pinned 4.5 Å KRAS_G12C fixture (21/21) confirmed exactly correct, but sits on a still-moving slope (the raw recovered residue set changes at every 0.5 Å step tested, both directions), not a stable plateau. CARDIAC_MYOSIN run against TASK-0124's new 8QYP structure (landed the same day) — flagged as not comparable to this document's other, 5TBY-era CARDIAC_MYOSIN numbers. | [[TASK-0114]], [[TASK-0075]], [[TASK-0047]] |
 
 | 21 | Does CARDIAC_MYOSIN's only surviving positive result rest on a defensible apo structure, or does resolving its 20 Å docked-homology-model caveat (5TBY) change the result itself (`REVIEW-panel-2026-07-16-v2.md` §1.2/§3, "do not build the only positive on a 20 Å docked homology model")? | **resolved 2026-07-20: resolving the structure removes the result.** Apo replaced 5TBY -> 8QYP (real 2.759 Å X-ray, same paper/deposition series and species as the existing 8QYR holo, RCSB-verified directly — resolves [[TASK-0128]]'s floppy-mode workaround for this target as a side effect, n_zero=10->6). Full re-run under the current closed-form convention: N drops 950->704, floor drops 0.7921->0.5679, actual AUC drops from 0.7912 ([[TASK-0129]]'s already-diminished number) to **0.5176**, `NO_SIGNAL_IN_APO` — matching BCR_ABL1's own diagnosis. The relayed 2026-07-20 lead proposing PDB 9GZ1 as a holo replacement was independently verified as real (*Science Advances* 2026-04-29) but not adopted — 8QYR remains the cleaner (higher-resolution, single-domain) structure; 9GZ1 stands as corroboration, not substitution. **No mandatory target now has a decisive positive result under the fully corrected pipeline.** Full detail: `COMPETENCE_MAP.md`'s own CARDIAC_MYOSIN section. | [[TASK-0124]], [[TASK-0129]], [[TASK-0128]] |
 | 22 | Do real holo-defined cryptic-pocket residues actually carry the "near-in-3D / far-on-apo-graph" coordinated-closure signature (HYP-P10) the entire loop/multi-site-closure observable family (HYP-P9, HYP-P12) depends on? | **resolved 2026-07-22: no — 0/7 targets pass the pre-registered gate.** KRAS_G12C (98.4th percentile, p=0.016 uncorrected/0.112 Bonferroni) and CASPASE1 (90.2nd percentile) are INSUFFICIENT; CASPASE7 is a clean FAIL (26.8th percentile, the opposite direction from the claim). BCR_ABL1/CARDIAC_MYOSIN/PTP1B/GLUCOKINASE could not be tested at all — the matched-spread null is infeasible via unbiased rejection sampling at the pre-registered ±35% tolerance even at 20M attempts, since a compact real pocket's spread is intrinsically rare among uniform random same-size draws over a large protein (a real finding in its own right, not fixed here — would require redesigning the null's sampling scheme). Two real bugs found+fixed: a non-reproducible seed (Python's per-process-salted `hash()`, fixed to `zlib.crc32`) and output written only once at the end (fixed to checkpoint per-target). Gates [[TASK-0140]]/[[TASK-0142]] as unsupported, not blocked outright. | [[TASK-0143]] |
