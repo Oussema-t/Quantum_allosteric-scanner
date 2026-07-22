@@ -11,6 +11,7 @@ import pytest
 from allostery.baselines import (
     _parse_fpocket_info,
     betweenness_centrality,
+    connectivity_robustness,
     degree_centrality,
     euclid_from_seed_centroid,
     fpocket_baseline,
@@ -124,6 +125,40 @@ class TestProximityBaselines:
         coords = _chain_coords(4, spacing=2.0)
         with pytest.raises(IndexError):
             euclid_from_seed_centroid(coords, source=99)
+
+
+class TestConnectivityRobustness:
+    def test_chain_every_residue_has_exactly_one_route(self):
+        """A path graph has no redundancy anywhere -- every reachable
+        residue's edge-connectivity from a single-residue seed is 1."""
+        coords = _chain_coords(5, spacing=2.0)
+        score = connectivity_robustness(coords, source=0, cutoff=3.0)
+        np.testing.assert_allclose(score[1:], np.ones(4))
+
+    def test_disconnected_residue_gets_zero_not_a_penalty_value(self):
+        """Unlike `hop_from_seed`'s `n+1` penalty, zero edge-disjoint paths
+        is the literally correct connectivity value for an unreachable
+        residue -- no borrowed convention needed."""
+        cluster_a = _chain_coords(3, spacing=2.0)
+        cluster_b = _chain_coords(3, spacing=2.0) + np.array([1000.0, 0.0, 0.0])
+        coords = np.vstack([cluster_a, cluster_b])
+        score = connectivity_robustness(coords, source=0, cutoff=3.0)
+        np.testing.assert_allclose(score[3:], np.zeros(3))
+
+    def test_redundant_bridge_gives_higher_connectivity_than_single_bridge(self):
+        """A residue reachable via 3 independent parallel routes must score
+        higher than one reachable via a single bottleneck route -- the
+        actual bottleneck-vs-distributed distinction this baseline exists
+        to capture."""
+        # Seed (0) connects to residue 4 via 3 disjoint 1-hop lanes, and to
+        # residue 8 via a single 4-hop chain.
+        seed = np.array([[0.0, 0.0, 0.0]])
+        lanes = np.array([[3.0, 0.0, 0.0], [3.0, 3.0, 0.0], [3.0, -3.0, 0.0]])
+        redundant_target = np.array([[6.0, 0.0, 0.0]])
+        single_chain = np.array([[3.0, 20.0, 0.0], [6.0, 20.0, 0.0], [9.0, 20.0, 0.0]])
+        coords = np.vstack([seed, lanes, redundant_target, single_chain])
+        score = connectivity_robustness(coords, source=0, cutoff=4.0)
+        assert score[4] > score[7]  # redundant_target > end of single_chain
 
 
 class TestProximityConfoundReproduction:

@@ -62,6 +62,7 @@ if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
 from allostery.analysis import mode_coparticipation  # noqa: E402
+from allostery.baselines import connectivity_robustness_from_adjacency  # noqa: E402
 from allostery.hamiltonians import laplacian  # noqa: E402
 from allostery.metrics import auc as _auc  # noqa: E402
 from allostery.propagators import ground_state_relaxation, time_averaged_ctqw  # noqa: E402
@@ -182,6 +183,19 @@ def _cp(H, t, source, n_low=5):
     TASK-0122, is a spectral observable, not a propagator with a time
     parameter)."""
     return mode_coparticipation(H, source=source, n_low=n_low)
+
+
+def _connectivity(H, t, source):
+    """Matches `auc_to_drug`'s `propagator(H, t, source=...)` interface --
+    `t` is accepted and ignored (`connectivity_robustness_from_adjacency`,
+    TASK-0136, is a static graph-topology measure, no time parameter).
+    `H` here is the dumbbell's own combinatorial Laplacian (`L = D - W`);
+    the underlying adjacency `W` is recovered as `-L` off the diagonal
+    (`L`'s diagonal encodes degree, unused by this purely-topological
+    measure -- edge existence/weight is all it looks at)."""
+    A = -H.copy()
+    np.fill_diagonal(A, 0)
+    return connectivity_robustness_from_adjacency(A, source)
 
 
 class TestDumbbellNegativeControl:
@@ -310,6 +324,45 @@ class TestModeCoparticipationDumbbellGate:
         the GSR/CTQW sanity check above."""
         cp = _mean_auc_over_seeds(None, None, _cp)
         assert abs(cp - 0.5) < 0.3, f"CP not near chance in C4 (mean AUC={cp:.3f})"
+
+
+class TestConnectivityRobustnessDumbbellGate:
+    """TASK-0136's own mandatory gate (Intent Contract: "no lighter-touch
+    reporting standard for a new, topologically-motivated observable than
+    for CTQW"). Checked here, not assumed -- and the result is a genuine,
+    clean negative, distinct in kind from GSR's well-following: this
+    observable is **unweighted** (Menger's-theorem edge-*count*, per its
+    own docstring), while the dumbbell's DRUG/DECOY bridges are
+    topologically identical (same node count, same edge count) and differ
+    *only* in edge weight (1.0 vs 0.15) -- there is no edge-count signal
+    here for an unweighted measure to find, by construction, not by bug.
+
+    Real measured values on this construction (checked directly before
+    writing these assertions): C2=0.500, C3=0.500, C1=0.500, C4=0.500 --
+    exactly chance in every cell, not merely "weak" or "noisy." This is
+    the expected, honest consequence of the design choice documented in
+    `connectivity_robustness`'s own docstring, not a surprise found here."""
+
+    def test_c2_c3_give_exactly_chance_not_a_directional_signal(self):
+        """Both conflict cells must land at exactly 0.5 -- this observable
+        has no edge-count-based way to prefer either lobe on this
+        construction, so it must neither follow the well (like GSR) nor
+        the coupling (like CTQW/CP)."""
+        c2 = _mean_auc_over_seeds("DECOY", "DRUG", _connectivity)
+        c3 = _mean_auc_over_seeds("DRUG", "DECOY", _connectivity)
+        assert c2 == pytest.approx(0.5), f"expected exact chance in C2, got {c2:.3f}"
+        assert c3 == pytest.approx(0.5), f"expected exact chance in C3, got {c3:.3f}"
+
+    def test_c1_c4_also_give_exactly_chance(self):
+        """Unlike GSR/CTQW/CP, C1 (cues agree) is not "uninformative but
+        directionally correct" here -- it is exactly the same 0.5 as every
+        other cell, since well placement has no effect on an observable
+        that never looks at the well term at all (`H`'s diagonal is
+        discarded entirely by `_connectivity`'s own adjacency recovery)."""
+        c1 = _mean_auc_over_seeds("DRUG", "DRUG", _connectivity)
+        c4 = _mean_auc_over_seeds(None, None, _connectivity)
+        assert c1 == pytest.approx(0.5)
+        assert c4 == pytest.approx(0.5)
 
 
 class TestBuildDumbbellNetwork:

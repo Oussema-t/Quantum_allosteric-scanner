@@ -2339,6 +2339,118 @@ Full detail: `.ai/invariants/INV-0004-select-unsupervised-score.md`,
 
 ---
 
+## Path-ensemble + percolation connectivity between active site and pocket (TASK-0136, 2026-07-22)
+
+Raised directly by the orchestrating user, 2026-07-18: "would it make sense to actually
+make a 'shortest path' finding algorithm between known active/allosteric sites and do
+any form of percolation on the outcome? What would it potentially model?" Purely
+topological (no propagator, no `t_max`, no seed coherence, no clock) -- the deliberate
+structural complement to CTQW/GSR/ENAQT, outside the current P0 gauge-fixing batch's
+confound axes entirely. Models a real, pre-existing distinction in the allostery
+literature (Chennubhotla & Bahar's correlation-network path analysis, Nussinov & Tsai's
+ensemble-allostery framing, both cited in the challenge statement itself): is
+communication carried by a **narrow, fragile bottleneck** (one dominant channel) or a
+**broad, redundant subnetwork** (many independent routes)?
+
+**Correction to this task's own filing**: cites "`potentials.py`'s existing
+`W_invdist`-style weighting" -- `potentials.py` has no such thing (grepped directly).
+The actual existing invdist weighting is `hamiltonians.contact_matrix(weight=
+"invdist")`, reused from the correct module.
+
+New `allostery.percolation`: `shortest_path_ensemble` (Dijkstra + Yen's-algorithm
+sub-optimal-path enumeration between two residue sets, via a virtual super-source/sink
+reduction), `set_edge_connectivity` (Menger's-theorem edge connectivity + the literal
+min-cut edges), `percolation_threshold` (Union-Find sweep from strongest edge to
+weakest, reports the exact edge that first connects the two sets). New `baselines.
+connectivity_robustness` (part c) -- edge-connectivity from a seed set to every
+residue, a strict generalization of `hop_from_seed`'s own shape, scored as a blind
+baseline.
+
+**Real bug found and fixed before trusting any real-target number**: the first run
+showed edge connectivity saturating at *exactly* `min(|active site|, |pocket|)` on all
+3 targets, with an *empty* min-cut -- too clean a pattern to accept without checking.
+Root cause: the virtual super-source/sink construction gave each seed member a single
+**unit-capacity** edge, on the (wrong) reasoning that a k-residue set cannot originate
+more than k edge-disjoint paths. Confirmed wrong directly with a synthetic check: a
+single node with 3 real fan-out edges supports true edge-connectivity 3, not 1 -- a
+set's cardinality does not bound route redundancy, its own graph degree does.
+Unit-capacity virtual edges silently capped every result, and the "empty cut" was this
+construction's own bookkeeping, not real graph structure. Also found while fixing:
+`networkx.edge_connectivity`/`minimum_edge_cut` do not accept a `capacity` argument at
+all (checked directly, not assumed) -- switched to the capacitated equivalents,
+`maximum_flow_value`/`minimum_cut`. Fixed: virtual edges get a large capacity, real
+graph edges get `capacity=1` (Menger's-theorem counting is otherwise unweighted,
+unchanged). Re-running after the fix changed `set_edge_connectivity`'s numbers
+dramatically (13-18 -> 68-76); `connectivity_robustness`'s own per-residue AUC was
+**unaffected** (a single target node's own real degree, not the seed-set's cardinality,
+was already the binding constraint there in every case checked -- confirmed by direct
+re-run comparison, not assumed).
+
+**Headline: all 3 mandatory targets show broad, redundant connectivity -- no narrow,
+fragile bottleneck on any target.**
+
+| Target | (a) shortest path length | (a) ensemble size (tol=10%) | (b-i) edge connectivity | (b-ii) merge distance (Å) | (b-ii) edges added to merge |
+|---|---|---|---|---|---|
+| KRAS_G12C | 3.753 | 2 | **73** | 3.75 | 2 |
+| BCR_ABL1 | 7.522 | 1 | **76** | 3.82 | 355 |
+| CARDIAC_MYOSIN | 3.809 | 1 | **68** | 3.81 | 149 |
+
+68-76 edge-disjoint routes connect the active site to the pocket on every target -- an
+order of magnitude above what a narrow bottleneck would look like; the min-cut edge
+lists (full detail in the JSON results) each span dozens of distinct residue pairs, not
+a single dominant chokepoint. Separately, KRAS_G12C's active site and pocket merge
+after only the 2 strongest edges in the *entire* apo graph are added (3.75 Å) -- an
+independent, purely topological confirmation of this project's own established finding
+that KRAS_G12C's active site and pocket sit unusually close in 3-D space (the
+proximity-confound history this project has tracked since TASK-0094). BCR_ABL1/
+CARDIAC_MYOSIN merge later in the global strength ordering (355/149 edges) despite
+similarly short absolute merge distances -- both are larger structures with many
+stronger (shorter) contacts elsewhere ranked ahead of the specific bridging edge.
+Sub-optimal-path tolerance (this task's own Open Question, Implementer's call):
+`tol=0.10`, `max_paths=50` -- never bound in practice (largest ensemble found: 2 paths,
+KRAS_G12C; BCR_ABL1/CARDIAC_MYOSIN each have a unique shortest path, no near-ties).
+
+**Part (c), `connectivity_robustness` as a blind scored baseline -- mixed, mostly-
+negative, reported as such:**
+
+| Target | AUC | Floor | Beats floor? | Stratified mean AUC | Stratified max AUC |
+|---|---|---|---|---|---|
+| KRAS_G12C | 0.5587 | 0.4818 | **Yes** (+0.0769) | 0.510 | 0.820 |
+| BCR_ABL1 | 0.5272 | 0.5817 | No (−0.0545) | 0.535 | 0.723 |
+| CARDIAC_MYOSIN | 0.4178 | 0.5679 | No (−0.1501, below chance) | 0.372 | 0.581 |
+
+1/3 targets beats its own floor. TASK-0123's own `stratified_auc` cross-read was
+**actually run** (not cited by analogy) on `connectivity_robustness`'s scores, same
+hop-shell construction TASK-0123 used elsewhere: stratified mean AUC sits near chance
+on KRAS_G12C/BCR_ABL1 and *below* chance on CARDIAC_MYOSIN -- most of this baseline's
+raw AUC is the same distance/degree confound TASK-0123 already found pervasive across
+this project's operator register, exactly the concern this task's own Constraint
+anticipated rather than assumed exempt.
+
+**Dumbbell gate (TASK-0103), a clean negative distinct in kind from GSR's
+well-following**: new `TestConnectivityRobustnessDumbbellGate` -- AUC is **exactly
+0.500 in every cell** (C1-C4), not merely weak. `connectivity_robustness` is
+deliberately unweighted (Menger's-theorem route *counting*); the dumbbell's DRUG/DECOY
+bridges are topologically identical (same node/edge count), differing only in edge
+*weight* -- there is no edge-count signal for an unweighted measure to find here, by
+design, not by defect.
+
+**Answer to this task's own central question**: the active site and known allosteric
+pocket are broadly, redundantly connected on apo topology alone, on all 3 mandatory
+targets -- not a narrow communication bottleneck. A real, decisive, purely topological
+finding, independent from and consistent with this project's established
+proximity-confound history. As a blind scoreable baseline, `connectivity_robustness`
+beats the proximity floor on only 1/3 targets and its signal is mostly explained by the
+same distance confound found pervasive elsewhere in this project's register -- a real,
+mostly-negative result for part (c) specifically, distinct from parts (a)/(b)'s own
+decisive diagnostic finding.
+
+Full detail: `.ai/tasks/DONE/TASK-0136-percolation-connectivity-robustness.md`,
+`results_task0136_percolation/percolation_connectivity.json`, new
+`src/allostery/percolation.py`, `baselines.connectivity_robustness`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -2369,6 +2481,7 @@ Full detail: `.ai/invariants/INV-0004-select-unsupervised-score.md`,
 | 23 | Does TASK-0067's "cutoff doesn't matter (7.5/8.0/10.0 Å)" conclusion, measured on a bare GNM Kirchhoff, transfer to `H_new` — the operator that produces every headline AUC in this document (`REVIEW-2026-07-15-execution-plan-gap-audit.md` finding #2)? | **resolved 2026-07-22: agrees in aggregate, disagrees on a real, headline-relevant per-target case.** `H_new`'s own aggregate (2-target mean) cutoff sensitivity is if anything smaller than the bare Laplacian's (ctqw range 0.003, ground_state range 0.020, vs. TASK-0067's 0.0124) — but this is a coincidence of KRAS_G12C/BCR_ABL1 moving in opposite directions (~0.04-0.05 each), not real insensitivity. **BCR_ABL1's `ground_state_relaxation` floor-clearing status (its own "apo-computable structural prior" finding, row 1 above) flips**: clears at 7.5/8.0 Å, does not clear at 10.0 Å (both AUC and floor move, ordering flips). `time_averaged_ctqw`'s own floor-crossing story stays fully stable across the grid for both targets. No weight-scheme axis exists for `H_new` (`normalised_laplacian_alpha` hardcodes `weight="exponential"`) — a real structural difference from TASK-0067's own 2-axis grid, reported rather than forced. | [[TASK-0113]], [[TASK-0067]], [[TASK-0091]] |
 
 | 24 | Does `select.py`'s reported quantities (`focusing`, `source_specificity`, `ballistic_exponent`, `unsupervised_score`) actually satisfy the GAUGE/KNOB/SIGNAL classification `INV-0004` seeded for them, or was that just reasoned from each function's signature and never verified ([[TASK-0064]])? | **resolved 2026-07-20: mostly GAUGE-VERIFIED/KNOB-CHARACTERIZED as expected, plus one real, previously-unexamined finding.** `source_specificity` is NOT relabeling-invariant with its default sub-sampled `n_alt` (root-caused to label-position-dependent `rng.choice`, confirmed exact once sampling is exhaustive) — reclassified GAUGE→KNOB rather than force-passed, flagged in the function's own docstring, not fixed algorithmically (would change what "random sample" means). `unsupervised_score`'s ranking also confirmed to flip between scalar/multi-index `source` conventions (closes that KNOB row, matches [[TASK-0118]]'s project-wide finding). `ballistic_exponent`'s `t_values` window is this module's dominant KNOB by an order of magnitude. SIGNAL null-controlled against a 30-graph random-graph batch, not a single instance. Full detail: `RESULTS.md`'s own `select.py` invariance section above, `.ai/invariants/INV-0004-select-unsupervised-score.md`. | [[TASK-0089]] |
+| 25 | Is allosteric communication between the active site and known pocket carried by a narrow, fragile bottleneck or a broad, redundant subnetwork, measured directly on the apo contact graph — a purely topological question, no propagator involved (raised directly by the orchestrating user, 2026-07-18)? | **resolved 2026-07-22: broad and redundant, decisively, on all 3 mandatory targets.** New `allostery.percolation` (shortest-path ensemble, Menger's-theorem edge connectivity + literal min-cut, percolation-threshold sweep). Edge connectivity is 68-76 (an order of magnitude above a narrow-bottleneck signature) on every target, with min-cuts spanning dozens of distinct residue pairs, not a single chokepoint. Real bug found+fixed first: an initial unit-capacity virtual-edge construction silently capped every result at `min(|active|,|pocket|)` (13-18, empty cuts) — confirmed wrong via a synthetic single-hub-3-fan-out check, fixed via large-capacity virtual edges + `nx.maximum_flow_value`/`minimum_cut` (`edge_connectivity`/`minimum_edge_cut` don't accept a `capacity` argument at all). As a blind scoreable baseline (`connectivity_robustness`, part c), beats the proximity floor on only 1/3 targets, and `stratified_auc` (actually run, not cited by analogy) shows most of its raw AUC is the same distance/degree confound found pervasive elsewhere in this project's register. Dumbbell gate: exactly chance in every cell — a clean, understood negative (unweighted route-counting can't see the dumbbell's edge-weight-only confound). | [[TASK-0136]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

@@ -146,6 +146,86 @@ def hop_from_seed(coords: np.ndarray, source, cutoff: float = 10.0) -> np.ndarra
     return -dist
 
 
+def connectivity_robustness_from_adjacency(A: np.ndarray, source) -> np.ndarray:
+    """Graph-level core of `connectivity_robustness` below -- takes an
+    already-built (weighted or binary; only nonzero-vs-zero is used, this
+    measure is deliberately unweighted) adjacency matrix directly, no
+    coordinates involved. Split out so a caller with an abstract graph
+    (e.g. `tests/test_dumbbell_negative_control.py`'s Laplacian-only
+    dumbbell construction, which has no 3-D coordinates at all) can gate
+    this observable the same way every propagator-based observable in this
+    register already is, via `H`/`W` directly rather than round-tripping
+    through a synthetic coordinate embedding.
+
+    **Real bug, found and fixed while validating the first real-target
+    run**: an earlier version connected the virtual `__seed__` node to
+    each seed residue with a single unit-capacity edge, reasoning that a
+    k-residue seed set cannot originate more than k edge-disjoint paths.
+    That reasoning is wrong -- a single residue can itself fan out into
+    several edge-disjoint routes through its own distinct real graph
+    edges (confirmed directly, see `percolation._with_virtual_endpoints`'s
+    own docstring for the synthetic check). Unit-capacity virtual edges
+    silently capped every score at `len(source)`, which is exactly why the
+    first real run showed several residues tied at a suspiciously round
+    maximum. Fixed: virtual edges get a large `capacity` (`n+1`), so the
+    real graph's own edges (`capacity=1` each) always determine the
+    result."""
+    import networkx as nx
+
+    idx = np.atleast_1d(np.asarray(source, dtype=int))
+    G = nx.from_numpy_array((A != 0).astype(float))
+    n = A.shape[0]
+    for u, v in G.edges():
+        G[u][v]["capacity"] = 1.0
+
+    G.add_node("__seed__")
+    big_capacity = float(n + 1)
+    for i in idx.tolist():
+        G.add_edge("__seed__", int(i), capacity=big_capacity)
+
+    # `nx.edge_connectivity` does not accept a `capacity` argument at all
+    # (checked directly -- purely-topological, unit-capacity only); the
+    # capacitated equivalent, needed here for the large-capacity virtual
+    # seed edges above, is `nx.maximum_flow_value`.
+    out = np.zeros(n)
+    idx_set = set(idx.tolist())
+    for node in range(n):
+        if node in idx_set:
+            continue
+        if not nx.has_path(G, "__seed__", node):
+            out[node] = 0.0
+        else:
+            out[node] = float(nx.maximum_flow_value(G, "__seed__", node, capacity="capacity"))
+    return out
+
+
+def connectivity_robustness(coords: np.ndarray, source, cutoff: float = 10.0) -> np.ndarray:
+    """TASK-0136 -- edge-connectivity (Menger's theorem: the number of
+    edge-disjoint paths, equivalently the min-cut size) from the seed set
+    to every residue, (n,). A strict generalization of `hop_from_seed`'s
+    own "seed to every residue" shape -- reports path *redundancy*
+    (how many independent routes) instead of path *length* (how many
+    hops), the same bottleneck-vs-distributed distinction
+    `percolation.set_edge_connectivity` makes for two known endpoint sets,
+    generalized here to a full blind, AUC-scoreable baseline.
+
+    Unweighted (each contact edge counts as one route, same convention as
+    `percolation.set_edge_connectivity`) -- a real, reported consequence:
+    this measure cannot distinguish two topologically-identical bridges
+    that differ only in edge *strength*, not edge *count* (see this
+    task's own Done section, dumbbell-gate result). Residues unreachable
+    from the seed set (a disconnected component) get connectivity 0, the
+    correct value (zero edge-disjoint paths exist), not a penalty
+    convention borrowed from `hop_from_seed`.
+
+    Cost: one `networkx.edge_connectivity` (bounded max-flow) call per
+    residue, `O(n)` calls total -- measured directly per target (not
+    assumed adequate) before this task's own scored run, see Done.
+    """
+    A = contact_matrix(coords, cutoff=cutoff, weight="binary")
+    return connectivity_robustness_from_adjacency(A, source)
+
+
 # ---------------------------------------------------------------------------
 # External baselines -- fpocket (real wrapper; binary-based, apo-computable)
 # ---------------------------------------------------------------------------
