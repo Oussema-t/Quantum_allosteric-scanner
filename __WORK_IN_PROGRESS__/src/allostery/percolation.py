@@ -9,7 +9,16 @@ fragile bottleneck** (one dominant channel, low edge-connectivity) and a
 connectivity) between two known residue sets -- the same bottleneck-vs-
 distributed question Chennubhotla & Bahar's correlation-network path
 analysis and Nussinov & Tsai's ensemble-allostery framing both hinge on
-(both cited in the challenge statement itself).
+(both cited in the challenge statement itself, refs [8]/[3]).
+**Both independently verified [[TASK-0137]], 2026-07-22**: Chennubhotla &
+Bahar, PLoS Comput Biol 3(9):e172 (2007) -- exists, exact attribution,
+full text transcribed (`documentation/references/
+Chennubhotla_Bahar_2007.md`), hit/commute-time communication framing
+confirmed directly. Nussinov & Tsai, Cell 153:293-305 (2013) -- exists,
+exact attribution (confirmed via PubMed metadata), but the specific
+"ensemble-allostery" content claim could not be independently verified
+(Cell is paywalled, no legitimate OA copy found, not circumvented per
+this project's own citation-verification discipline).
 
 **Correction to this task's own filing, checked not assumed**: the task
 text cites "`potentials.py`'s existing `W_invdist`-style weighting" --

@@ -584,6 +584,13 @@ def check_convergence(
        time-averaged distribution `P_bar_T`:
        `||P_bar_T - pi|| <= 2 * sum_{i,j: lambda_i != lambda_j}
        |a_i|^2 / (T |lambda_i - lambda_j|)`
+       **Citation verified [[TASK-0137]], 2026-07-22**: real arXiv
+       preprint, exact author match, Lemma 4.3 above confirmed word-for-
+       word against the source PDF (page 6) -- transcription in
+       `documentation/references/AAKV_quant-ph-0012090.md`/`.pdf` (the
+       .md's own equation rendering is garbled by the PDF->Markdown
+       conversion; the .pdf/page image is the reliable copy for this
+       specific lemma).
        -- i.e. convergence to the time-average limit is controlled by
        `1/(T * gap)`, `gap` the smallest eigenvalue difference with
        nonzero overlap. The continuous-time analog follows directly by
@@ -859,8 +866,13 @@ def min_adequate_n_steps(
 # (its phase stays ~stationary), so it must be kept, not dropped. The
 # rigorous object groups eigenvalues into blocks of (near-)exact
 # degeneracy and sums *amplitudes* within a block before squaring
-# (Godsil's average mixing matrix, M = sum_r E_r o E_r over spectral
-# idempotents E_r). `_group_degenerate_eigenvalues`/`_block_projected_
+# (Coutinho, Godsil, Guo & Zhan, "A New Perspective on the Average
+# Mixing Matrix," arXiv:1709.03591 -- corrected from "Godsil" alone,
+# a 4-author paper, TASK-0137 2026-07-22 -- average mixing matrix
+# M = sum_r E_r^o2, "the sum of the Schur squares of the spectral
+# idempotents," confirmed word-for-word on page 3 of the source PDF,
+# `documentation/references/Godsil_average_mixing_matrix_1709.03591.pdf`).
+# `_group_degenerate_eigenvalues`/`_block_projected_
 # diagonal` below implement exactly that; in the fully non-degenerate
 # case (every block a singleton) this reduces algebraically to the plain
 # index-wise formula above, so it strictly generalizes rather than

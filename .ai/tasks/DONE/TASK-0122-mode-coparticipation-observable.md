@@ -270,3 +270,16 @@ measurement, not operator selection (per its own Out Of Scope).
   "related, not blocking" framing — [[TASK-0133]]'s own status should be
   checked before citing this task's k-sweep as evidence CP finds the
   pocket specifically rather than "some structure."
+
+**Addendum, [[TASK-0137]], 2026-07-22**: this task's own Zheng/Brooks/
+Thirumalai citation (line ~45, flagged above as "not independently
+verified by this Architect/Planner thread") is now verified. Real paper:
+Zheng, Brooks, Thirumalai, "Low-frequency normal modes that describe
+allosteric transitions in biological nanomachines are robust to
+sequence variations," PNAS 103:7664-7669 (2006), PMCID PMC1472502 (free)
+— exact author/title/venue match, full text transcribed
+(`documentation/references/Zheng_Brooks_Thirumalai_PNAS2006.md`). The
+paper's own finding (functionally relevant low-frequency normal modes
+are robust/conserved across sequence variation) directly supports this
+task's use of it as "the signature of real structure rather than
+noise" — confirmed, not merely assumed.

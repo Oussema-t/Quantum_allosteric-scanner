@@ -65,15 +65,21 @@ optional, evaluate if the hand-built admissible-deformation scan proves fiddly.
 
 ## B. Linear response / perturbation direction (forward engine)
 
-**Linear Response Theory — Ikeguchi, Ueno, Ota, Kidera 2005 — 4**
+**Linear Response Theory — Ikeguchi, Ueno, Sato, Kidera,** *PRL* **94:078102 (2005) — 4**
 Δr = C·f: apply a force, read the structural response via the covariance. The forward
 engine for the blind holo-direction module and cheap (one linear solve). Solid, well-
 cited; the inverse problem (which f opens the pocket) is the hard part, not this.
+**[[TASK-0137]], 2026-07-22: third author corrected "Ota" -> "Sato"** (confirmed via
+PubMed + 2 independent search sources) — real citation error, propagated from an
+earlier filing, now fixed here and in `HOLO_DIRECTION_MODULE.md`. Paper's content not
+independently verifiable (APS paywalled, no legitimate OA copy found) — attribution
+only, not a content check.
 
-**Perturbation Response Scanning — Atilgan & Atilgan 2009 — 4**
+**Perturbation Response Scanning — Atilgan & Atilgan,** *PLoS Comput Biol* **5(10):e1000544 (2009) — 4**
 Scans perturbations site-by-site to map which sites propagate where. Directly useful
 for choosing the source/injection set and for an apo-side allosteric-coupling readout.
-Pairs naturally with LRT; classical and challenge-legal.
+Pairs naturally with LRT; classical and challenge-legal. **Verified [[TASK-0137]]**:
+`documentation/references/Atilgan_Atilgan_PLoSCompBiol2009.md`.
 
 ---
 

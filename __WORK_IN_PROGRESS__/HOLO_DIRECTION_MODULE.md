@@ -18,11 +18,11 @@ clear its own go/no-go gate (Step 2) before any quantum work.
 
 | Component of the idea | Established method | Reference |
 |---|---|---|
-| Perturb a few sites, read whole-protein structural response | Linear Response Theory (LRT) | Ikeguchi, Ueno, Ota, Kidera, *PRL* 2005 |
-| Scan perturbations site-by-site to map response | Perturbation Response Scanning (PRS) | Atilgan & Atilgan, *PLoS Comput Biol* 2009; General & Bahar applications |
+| Perturb a few sites, read whole-protein structural response | Linear Response Theory (LRT) | Ikeguchi, Ueno, **Sato** [not "Ota" — corrected [[TASK-0137]], 2026-07-22, verified against 3 independent metadata sources], Kidera, *PRL* 94:078102 (2005). Content not independently verifiable (no legitimate OA copy found, APS paywalled) — attribution only. |
+| Scan perturbations site-by-site to map response | Perturbation Response Scanning (PRS) | Atilgan & Atilgan, *PLoS Comput Biol* 5(10):e1000544 (2009); General & Bahar applications. **Verified [[TASK-0137]]**: `documentation/references/Atilgan_Atilgan_PLoSCompBiol2009.md`, method name "perturbation-response scanning" confirmed directly in abstract. |
 | apo→holo change lives in a few lowest modes; measure by overlap | Mode/conformational-change overlap | Tama & Sanejouand, *Protein Eng* 2001 |
-| Interpolate apo↔holo when both endpoints known | Two-state ANM | Das, Gur, Cheng, Jo, Bahar, Roux, *PLoS Comput Biol* 2014 — **challenge ref [15]** |
-| Normal-mode-guided sampling to predict allosteric sites | CG-NMA conformational sampling | Zheng, *J Chem Phys* 2023 — **challenge ref [1]** |
+| Interpolate apo↔holo when both endpoints known | Two-state ANM | Das, Gur, Cheng, Jo, Bahar, Roux, *PLoS Comput Biol* 10(4):e1003521 (2014) — **challenge ref [15]**. **Verified [[TASK-0137]]**: `documentation/references/Das_Gur_Cheng_Jo_Bahar_Roux_PLoSCompBiol2014.md`, exact author/title/method ("ANMPathway") match. |
+| Normal-mode-guided sampling to predict allosteric sites | CG-NMA conformational sampling | Zheng, *J Chem Phys* 158:124127 (2023) — **challenge ref [1]**. Spot-checked [[TASK-0137]] (title/author/venue confirmed via search; not transcribed). |
 | Predict cryptic-pocket *location* from one structure, no MD | PocketMiner (GNN) | Meller, Ward, Borowsky… Bowman, *Nat Commun* 2023 |
 | Vibrations open blocked transport paths | ENAQT / dephasing-assisted transport | Plenio & Huelga, *NJP* 2008; Rebentrost, Mohseni, Lloyd, Aspuru-Guzik, *NJP* 2009 |
 | Discrete conformational search as QUBO on a QPU | Quantum folding | Robert, Barkoutsos, Woerner, Tavernelli, *npj QI* 2021; Perdomo-Ortiz et al., *Sci Rep* 2012 (D-Wave) |
