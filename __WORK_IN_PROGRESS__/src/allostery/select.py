@@ -78,6 +78,22 @@ def source_specificity(
     the actual crash TASK-0090's own reproduction hits -- despite that
     task's Intent Contract marking this function "already correct", which
     was checked by execution and found false, not assumed).
+
+    **Known GAUGE limitation (TASK-0089, INV-0004), not fixed here**: with
+    the default sub-sampled `n_alt` (< every non-seed node), this function's
+    returned value is *not* invariant under residue relabeling or RNG seed
+    choice -- `others` is always ascending-sorted by node label, and
+    `rng.choice` selects by *position* in that array, so a relabeling
+    permutation changes which alternates a fixed seed draws. Confirmed
+    exactly invariant when `n_alt` is exhaustive (every non-seed node used,
+    no sub-sampling) -- see `tests/test_select.py`'s
+    `TestGaugeResidueRelabeling`/`TestSourceSpecificitySamplingSensitivity`.
+    Not treated as a bug to fix: a fix would require sampling alternates by
+    a canonical graph-intrinsic order instead of raw label position,
+    changing "a random sample of other nodes" into a deterministic subset
+    -- a larger, unrequested behavior change for a real but bounded
+    (measured ~0.14 spread on a 12-node synthetic fixture) sampling-variance
+    effect, not a wrong-answer. Classified KNOB, not GAUGE.
     """
     from .propagators import time_averaged_ctqw
 

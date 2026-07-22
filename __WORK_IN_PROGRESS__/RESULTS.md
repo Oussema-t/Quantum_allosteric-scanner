@@ -2277,6 +2277,68 @@ Full detail: `.ai/tasks/DONE/TASK-0113-cutoff-sweep-headline-operator.md`,
 
 ---
 
+## `select.py` invariance classification, closing `INV-0004` (TASK-0089, 2026-07-20)
+
+Closes every row `INV-0004` seeded 2026-07-12 ([[TASK-0064]]) for `select.py`'s
+four scoring functions (`focusing`, `source_specificity`, `ballistic_exponent`,
+`unsupervised_score`) — per `INVARIANCE_PROTOCOL.md`'s own rule, "no
+transformation table → not reportable." 35 new tests, `tests/test_select.py`
+(the existing suite is unchanged, per this task's own Planned Validation).
+
+**GAUGE (residue relabeling, candidate order) — verified, with one real carve-out.**
+Permuting `H`'s indices + `source` consistently on a genuinely asymmetric random
+graph (not the symmetric path/star/complete fixtures, which could hide a labeling
+bug) leaves `focusing`, `ballistic_exponent`, and `unsupervised_score`'s per-
+candidate scores unchanged to `atol=1e-9`. **`source_specificity` is the
+exception, and a real finding**: with its default *sub-sampled* `n_alt` (< every
+non-seed node), the score is **not** relabeling-invariant — root-caused (not
+assumed) to `others = [i for i in range(N) if i not in excluded]` always being
+ascending-sorted *by label*, with `rng.choice` then selecting by *position* in
+that array, so a relabeling permutation changes which alternates a fixed seed
+draws. Confirmed directly that this disappears entirely once `n_alt` is
+exhaustive (every non-seed node used, no sub-sampling) — isolates the sampling
+step, not the underlying Hellinger-distance/`time_averaged_ctqw` computation, as
+the source. **Not fixed at the algorithm level**: a fix would mean sampling by a
+canonical graph-intrinsic order instead of raw label position (the exact
+`anm_modes` eigenvalue-not-index precedent `INVARIANCE_PROTOCOL.md` itself
+cites) — but that changes what "a random sample of other nodes" means (a
+deterministic subset every time, not a genuine draw), a bigger, unrequested
+behavior change for a real but bounded effect, not a wrong-answer bug.
+Reclassified GAUGE→KNOB instead (report the spread, don't force a false pass),
+and flagged directly in `source_specificity`'s own docstring.
+
+**KNOB — all four rows characterized, on the same synthetic 12-node fixture:**
+
+| Row | Measured spread | Classification |
+|---|---|---|
+| `focusing`'s `t_max`/`n_steps` | ~0.02-0.04 | Least sensitive of the four |
+| `source_specificity`'s `t_max`/`n_alt`/seed | ~0.06-0.17 | Moderate, real |
+| `ballistic_exponent`'s `t_values` window | 0.084-0.525 (>6x) | **This module's dominant KNOB**, by an order of magnitude |
+| `unsupervised_score`'s scalar vs. multi-index `source` | ranking **flips** (`H_COMPLETE`→`H_STAR`) | Confirms `REVIEW-panel-2026-07-16-v2`'s project-wide seed-cardinality finding, locally |
+
+`ballistic_exponent`'s time-window sensitivity is a real transport-regime effect
+(early ballistic-like spreading vs. later saturation/diffusive crossover in the
+log-log slope fit), not numerical noise — any reader treating a single
+`ballistic_exponent` value as a stable point estimate should read this row
+first.
+
+**SIGNAL — null-controlled.** A naive 2-candidate `unsupervised_score` z-score
+competition is a coin flip regardless of the true underlying gap (z-scores of 2
+points are always exactly ±1, checked directly before relying on it) — so the
+null control instead compares `H_STAR`'s *raw* `focusing`/`source_specificity`
+against a batch of 30 independently-drawn random graphs of the same node/edge
+count (the same distribution-level discipline this project's own permutation
+nulls use elsewhere, [[TASK-0131]]/[[TASK-0123]]): `H_STAR` clears the random
+batch's mean+1 std.dev. on focusing and the mean on specificity. The degenerate
+single-candidate case is confirmed to return exactly `0.0` (the `_zscore`
+epsilon guard), not NaN/inf.
+
+Full detail: `.ai/invariants/INV-0004-select-unsupervised-score.md`,
+`.ai/tasks/DONE/TASK-0089-select-invariance-classification.md`,
+`tests/test_select.py`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -2305,6 +2367,8 @@ Full detail: `.ai/tasks/DONE/TASK-0113-cutoff-sweep-headline-operator.md`,
 | 21 | Does CARDIAC_MYOSIN's only surviving positive result rest on a defensible apo structure, or does resolving its 20 Å docked-homology-model caveat (5TBY) change the result itself (`REVIEW-panel-2026-07-16-v2.md` §1.2/§3, "do not build the only positive on a 20 Å docked homology model")? | **resolved 2026-07-20: resolving the structure removes the result.** Apo replaced 5TBY -> 8QYP (real 2.759 Å X-ray, same paper/deposition series and species as the existing 8QYR holo, RCSB-verified directly — resolves [[TASK-0128]]'s floppy-mode workaround for this target as a side effect, n_zero=10->6). Full re-run under the current closed-form convention: N drops 950->704, floor drops 0.7921->0.5679, actual AUC drops from 0.7912 ([[TASK-0129]]'s already-diminished number) to **0.5176**, `NO_SIGNAL_IN_APO` — matching BCR_ABL1's own diagnosis. The relayed 2026-07-20 lead proposing PDB 9GZ1 as a holo replacement was independently verified as real (*Science Advances* 2026-04-29) but not adopted — 8QYR remains the cleaner (higher-resolution, single-domain) structure; 9GZ1 stands as corroboration, not substitution. **No mandatory target now has a decisive positive result under the fully corrected pipeline.** Full detail: `COMPETENCE_MAP.md`'s own CARDIAC_MYOSIN section. | [[TASK-0124]], [[TASK-0129]], [[TASK-0128]] |
 | 22 | Do real holo-defined cryptic-pocket residues actually carry the "near-in-3D / far-on-apo-graph" coordinated-closure signature (HYP-P10) the entire loop/multi-site-closure observable family (HYP-P9, HYP-P12) depends on? | **resolved 2026-07-22: no — 0/7 targets pass the pre-registered gate.** KRAS_G12C (98.4th percentile, p=0.016 uncorrected/0.112 Bonferroni) and CASPASE1 (90.2nd percentile) are INSUFFICIENT; CASPASE7 is a clean FAIL (26.8th percentile, the opposite direction from the claim). BCR_ABL1/CARDIAC_MYOSIN/PTP1B/GLUCOKINASE could not be tested at all — the matched-spread null is infeasible via unbiased rejection sampling at the pre-registered ±35% tolerance even at 20M attempts, since a compact real pocket's spread is intrinsically rare among uniform random same-size draws over a large protein (a real finding in its own right, not fixed here — would require redesigning the null's sampling scheme). Two real bugs found+fixed: a non-reproducible seed (Python's per-process-salted `hash()`, fixed to `zlib.crc32`) and output written only once at the end (fixed to checkpoint per-target). Gates [[TASK-0140]]/[[TASK-0142]] as unsupported, not blocked outright. | [[TASK-0143]] |
 | 23 | Does TASK-0067's "cutoff doesn't matter (7.5/8.0/10.0 Å)" conclusion, measured on a bare GNM Kirchhoff, transfer to `H_new` — the operator that produces every headline AUC in this document (`REVIEW-2026-07-15-execution-plan-gap-audit.md` finding #2)? | **resolved 2026-07-22: agrees in aggregate, disagrees on a real, headline-relevant per-target case.** `H_new`'s own aggregate (2-target mean) cutoff sensitivity is if anything smaller than the bare Laplacian's (ctqw range 0.003, ground_state range 0.020, vs. TASK-0067's 0.0124) — but this is a coincidence of KRAS_G12C/BCR_ABL1 moving in opposite directions (~0.04-0.05 each), not real insensitivity. **BCR_ABL1's `ground_state_relaxation` floor-clearing status (its own "apo-computable structural prior" finding, row 1 above) flips**: clears at 7.5/8.0 Å, does not clear at 10.0 Å (both AUC and floor move, ordering flips). `time_averaged_ctqw`'s own floor-crossing story stays fully stable across the grid for both targets. No weight-scheme axis exists for `H_new` (`normalised_laplacian_alpha` hardcodes `weight="exponential"`) — a real structural difference from TASK-0067's own 2-axis grid, reported rather than forced. | [[TASK-0113]], [[TASK-0067]], [[TASK-0091]] |
+
+| 24 | Does `select.py`'s reported quantities (`focusing`, `source_specificity`, `ballistic_exponent`, `unsupervised_score`) actually satisfy the GAUGE/KNOB/SIGNAL classification `INV-0004` seeded for them, or was that just reasoned from each function's signature and never verified ([[TASK-0064]])? | **resolved 2026-07-20: mostly GAUGE-VERIFIED/KNOB-CHARACTERIZED as expected, plus one real, previously-unexamined finding.** `source_specificity` is NOT relabeling-invariant with its default sub-sampled `n_alt` (root-caused to label-position-dependent `rng.choice`, confirmed exact once sampling is exhaustive) — reclassified GAUGE→KNOB rather than force-passed, flagged in the function's own docstring, not fixed algorithmically (would change what "random sample" means). `unsupervised_score`'s ranking also confirmed to flip between scalar/multi-index `source` conventions (closes that KNOB row, matches [[TASK-0118]]'s project-wide finding). `ballistic_exponent`'s `t_values` window is this module's dominant KNOB by an order of magnitude. SIGNAL null-controlled against a 30-graph random-graph batch, not a single instance. Full detail: `RESULTS.md`'s own `select.py` invariance section above, `.ai/invariants/INV-0004-select-unsupervised-score.md`. | [[TASK-0089]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
