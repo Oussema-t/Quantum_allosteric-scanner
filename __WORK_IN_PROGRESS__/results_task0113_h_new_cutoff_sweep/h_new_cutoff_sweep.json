@@ -1,0 +1,85 @@
+{
+  "KRAS_G12C": {
+    "target": "KRAS_G12C",
+    "n_residues": 169,
+    "rows": [
+      {
+        "cutoff": 7.5,
+        "floor": 0.48215599705665935,
+        "auc_ctqw": 0.6346578366445916,
+        "ctqw_floor_cleared": true,
+        "ctqw_diagnosis": "NO_FAILURE_DETECTED",
+        "auc_ground_state": 0.35577630610743194,
+        "gsr_floor_cleared": false
+      },
+      {
+        "cutoff": 8.0,
+        "floor": 0.4817880794701987,
+        "auc_ctqw": 0.5901398086828551,
+        "ctqw_floor_cleared": true,
+        "ctqw_diagnosis": "NO_FAILURE_DETECTED",
+        "auc_ground_state": 0.3745401030169242,
+        "gsr_floor_cleared": false
+      },
+      {
+        "cutoff": 10.0,
+        "floor": 0.500551876379691,
+        "auc_ctqw": 0.5967623252391463,
+        "ctqw_floor_cleared": true,
+        "ctqw_diagnosis": "NO_FAILURE_DETECTED",
+        "auc_ground_state": 0.4311994113318617,
+        "gsr_floor_cleared": false
+      }
+    ]
+  },
+  "BCR_ABL1": {
+    "target": "BCR_ABL1",
+    "n_residues": 451,
+    "rows": [
+      {
+        "cutoff": 7.5,
+        "floor": 0.5824712643678162,
+        "auc_ctqw": 0.48548850574712643,
+        "ctqw_floor_cleared": false,
+        "ctqw_diagnosis": "NO_SIGNAL_IN_APO",
+        "auc_ground_state": 0.674712643678161,
+        "gsr_floor_cleared": true
+      },
+      {
+        "cutoff": 8.0,
+        "floor": 0.5816810344827587,
+        "auc_ctqw": 0.5265804597701149,
+        "ctqw_floor_cleared": false,
+        "ctqw_diagnosis": "NO_SIGNAL_IN_APO",
+        "auc_ground_state": 0.6765804597701149,
+        "gsr_floor_cleared": true
+      },
+      {
+        "cutoff": 10.0,
+        "floor": 0.6464798850574712,
+        "auc_ctqw": 0.5172413793103449,
+        "ctqw_floor_cleared": false,
+        "ctqw_diagnosis": "NO_SIGNAL_IN_APO",
+        "auc_ground_state": 0.6379310344827587,
+        "gsr_floor_cleared": false
+      }
+    ]
+  },
+  "_aggregate": {
+    "7.5": {
+      "mean_auc_ctqw": 0.5600731711958591,
+      "mean_auc_ground_state": 0.5152444748927965,
+      "bare_laplacian_mean_auc_task0067": 0.423
+    },
+    "8.0": {
+      "mean_auc_ctqw": 0.558360134226485,
+      "mean_auc_ground_state": 0.5255602813935196,
+      "bare_laplacian_mean_auc_task0067": 0.4198
+    },
+    "10.0": {
+      "mean_auc_ctqw": 0.5570018522747455,
+      "mean_auc_ground_state": 0.5345652229073101,
+      "bare_laplacian_mean_auc_task0067": 0.4322
+    }
+  }
+}

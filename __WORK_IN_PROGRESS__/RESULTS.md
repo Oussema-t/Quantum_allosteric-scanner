@@ -2180,11 +2180,108 @@ Full detail: `.ai/tasks/DONE/TASK-0143-openness-premise-real-targets.md`,
 
 ---
 
+## Re-running the GNM cutoff sweep against the headline operator (TASK-0113, 2026-07-22)
+
+**Does the cutoff conclusion TASK-0067 reached on a bare GNM Kirchhoff transfer to `H_new`
+— the operator that actually produces every headline AUC in this document?** TASK-0067's
+own "Caveat, stated plainly" already flagged that its benchmark used the raw GNM
+Kirchhoff only (no potential terms, single-source `ground_state_relaxation` propagation
+— TASK-0067 predates TASK-0095's rename and calls the same function by its old name) —
+this task re-answers the same question directly against `H_new`, scored via both
+propagators.
+
+**A real, structural finding before running anything**: TASK-0067's sweep varies cutoff
+*and* weight scheme (`contact_matrix(..., weight=scheme)` — binary/gaussian/exponential/
+harmonic/invdist) on a bare Laplacian. `H_new`'s own base Laplacian
+(`normalised_laplacian_alpha`) hardcodes `weight="exponential"` — there is no equivalent
+weight-scheme knob on `build_H_new` to sweep (adding one would be the operator-redesign
+this task's own Constraints explicitly exclude: "reuse `build_H_new`... this is a
+cutoff/propagator sweep, not an operator-weight sweep"). This sweep is therefore
+cutoff-only for `H_new` — a real difference from TASK-0067's own 2-axis grid, reported
+rather than silently matched.
+
+Method: `H_new` (default potential weights, per this task's Constraints) built at cutoff
+∈ {7.5, 8.0, 10.0} Å on KRAS_G12C/BCR_ABL1 (TASK-0067's own 2 targets; CARDIAC_MYOSIN
+excluded for the same data-quality reason, inherited not re-litigated), scored via
+`time_averaged_ctqw_converged` (TASK-0130's closed form) and `ground_state_relaxation`
+(`t_max=15`). TASK-0094's floor baselines recomputed per cutoff too (they read the same
+GNM contact graph) for a fair, consistent comparison
+(`scripts/h_new_cutoff_sweep.py`, `results_task0113_h_new_cutoff_sweep/`).
+**Cross-validated**: the cutoff=8.0 Å row (the shipped default) reproduces
+[[TASK-0130]]'s own independently-computed closed-form numbers for BCR_ABL1 exactly
+(ctqw 0.5266, ground_state 0.6766) — confirms this script measures the same quantity the
+production pipeline reports, not a divergent one.
+
+| Target | Cutoff (Å) | Floor | AUC (ctqw) | ctqw cleared? | AUC (ground_state) | GSR cleared? |
+|---|---|---|---|---|---|---|
+| KRAS_G12C | 7.5 | 0.482 | 0.635 | Yes | 0.356 | No |
+| KRAS_G12C | 8.0 | 0.482 | 0.590 | Yes | 0.375 | No |
+| KRAS_G12C | 10.0 | 0.501 | 0.597 | Yes | 0.431 | No |
+| BCR_ABL1 | 7.5 | 0.583 | 0.486 | No | 0.675 | **Yes** |
+| BCR_ABL1 | 8.0 | 0.582 | 0.527 | No | 0.677 | **Yes** |
+| BCR_ABL1 | 10.0 | 0.647 | 0.517 | No | 0.638 | **No** |
+
+Aggregate (mean across both targets, matching TASK-0067's own reporting convention):
+
+| Cutoff (Å) | Mean AUC (ctqw) | Mean AUC (ground_state) | TASK-0067 bare-Laplacian mean AUC |
+|---|---|---|---|
+| 7.5 | 0.560 | 0.515 | 0.423 |
+| 8.0 | 0.558 | 0.526 | 0.420 |
+| 10.0 | 0.557 | 0.535 | 0.432 |
+
+**Headline, stated plainly — the aggregate agrees with TASK-0067, but hides a real,
+decisive per-target verdict flip the aggregate view alone would miss:**
+
+1. **At the aggregate level, `H_new`'s cutoff sensitivity is if anything *smaller* than
+   the bare Laplacian's** (ctqw range 0.003, ground_state range 0.020, vs. TASK-0067's
+   own 0.0124) — agrees with, and reinforces, "no significant aggregate difference."
+2. **That aggregate stability is a coincidence of cancellation, not real insensitivity —
+   checked directly, not assumed.** Per-target, ctqw's own AUC moves by a real
+   ~0.04-0.05 across the grid for *each* target individually (KRAS_G12C 0.590-0.635;
+   BCR_ABL1 0.486-0.527) — the two targets happen to move in **opposite** directions as
+   cutoff increases, which is what keeps the 2-target mean flat. Exactly the failure mode
+   this task's own Planned Validation warned against ("not collapsed into a single 'still
+   fine' summary if the data shows otherwise").
+3. **A real, decisive floor-crossing verdict flip: BCR_ABL1's `ground_state_relaxation`
+   clears the proximity floor at 7.5 Å and 8.0 Å (the shipped default — matches this
+   document's own current headline number, 0.677) but does NOT clear it at 10.0 Å**
+   (0.638 vs. a floor that itself jumps to 0.647 at the wider cutoff). Both AUC and floor
+   move with cutoff; their relative ordering flips. **This directly touches BCR_ABL1's own
+   "apo-computable structural prior" finding** ([[TASK-0091]]/[[TASK-0102]]/[[TASK-0104]],
+   open-questions row 1 above) — that finding's floor-clearing status is not robust to
+   the GNM cutoff choice, a real disagreement with TASK-0067's "no significant
+   difference" conclusion for this specific downstream claim. Not silently corrected here
+   — cross-linked per this project's own convention; TASK-0102's own "largely
+   seed-independent" finding is a different robustness axis (seed convention, not cutoff)
+   and is unaffected.
+4. **`time_averaged_ctqw`'s own floor-crossing/diagnosis story is fully stable across the
+   grid for both targets** (KRAS_G12C always clears/`NO_FAILURE_DETECTED`; BCR_ABL1 never
+   clears/`NO_SIGNAL_IN_APO`, all 3 cutoffs) — the flip above is specific to
+   `ground_state_relaxation`, not both propagators.
+5. **`H_new` scores meaningfully higher than the bare GNM Kirchhoff at every matching
+   cutoff** (aggregate ctqw ~0.557-0.560 vs. ~0.420-0.432; ground_state ~0.515-0.535 vs.
+   the same bare range) — the potential terms add real discriminative power beyond the
+   contact graph alone, as designed. Not itself a new finding, but confirms the two
+   sweeps are measuring meaningfully different operators, not restating the same result
+   under a new name.
+
+**Per this task's own Out Of Scope, TASK-0067's own bare-Laplacian result is not
+re-litigated** — it remains correct for the narrower question it was built to answer.
+This task's own scope was `H_new` specifically, and for `H_new` the cutoff choice is
+functionally inert for `time_averaged_ctqw` but real and headline-relevant for
+`ground_state_relaxation` on BCR_ABL1.
+
+Full detail: `.ai/tasks/DONE/TASK-0113-cutoff-sweep-headline-operator.md`,
+`results_task0113_h_new_cutoff_sweep/h_new_cutoff_sweep.json`,
+`scripts/h_new_cutoff_sweep.py`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
 |---|---|---|---|
-| 1 | Does BCR_ABL1's `ground_state_relaxation` score (0.731) survive TASK-0094's proximity floor, and does clearing it mean anything? | **resolved 2026-07-14: clears the floor (+0.166), is largely seed-independent (TASK-0102), and a controlled negative-control experiment shows the mechanism is well-depth, not active-site coupling (TASK-0103/TASK-0104, `REVIEW-2026-07-13b`)** — the number is real; the causal claim is now "apo-computable structural prior for cryptic pockets," not allosteric signal. See BCR_ABL1 section above for the full picture. | [[TASK-0091]], [[TASK-0102]], [[TASK-0103]], [[TASK-0104]] |
+| 1 | Does BCR_ABL1's `ground_state_relaxation` score (0.731) survive TASK-0094's proximity floor, and does clearing it mean anything? | **resolved 2026-07-14: clears the floor (+0.166), is largely seed-independent (TASK-0102), and a controlled negative-control experiment shows the mechanism is well-depth, not active-site coupling (TASK-0103/TASK-0104, `REVIEW-2026-07-13b`)** — the number is real; the causal claim is now "apo-computable structural prior for cryptic pockets," not allosteric signal. See BCR_ABL1 section above for the full picture. **Caveat added 2026-07-22 ([[TASK-0113]]): floor-clearing is seed-robust (TASK-0102) but not cutoff-robust — clears at the shipped 8.0 Å (and 7.5 Å) but does NOT clear at 10.0 Å (both AUC and floor move with cutoff, ordering flips). See open-questions row 23.** | [[TASK-0091]], [[TASK-0102]], [[TASK-0103]], [[TASK-0104]], [[TASK-0113]] |
 | 2 | What do the holo-side diagnostic numbers show for all three targets, and does the tiny apo/holo gap TASK-0067 found for the bare operator hold for the full `H_new` pipeline? | **resolved 2026-07-14: no, the gap is small for both targets (KRAS: holo 0.698 vs apo 0.779, holo actually lower; BCR_ABL1: holo 0.586 vs apo 0.525, small gap, both near chance) — for BCR_ABL1 this points to the propagator/operator being the bottleneck, not apo's information content; `ground_state_relaxation`'s holo-side AUC (0.7394) is very close to its apo-side (0.7315), the "static artifact" signature per the addendum's own caveat, not independent corroboration** | [[TASK-0092]] |
 | 3 | Which methodology difference (cutoff / pocket-label definition / source definition) explains KRAS_G12C's 0.779 vs. this repo's own previously-asserted 0.3–0.7 band? | open, but downgraded 2026-07-13 — no longer bears on whether KRAS shows real signal (it does not, either way; see TASK-0094) | [[TASK-0093]] |
 | 4 | Does CARDIAC_MYOSIN's or KRAS_G12C's high AUC share a common cause beyond CARDIAC_MYOSIN's already-explained large-N flag? | **resolved 2026-07-13**: yes for KRAS (proximity, TASK-0094); CARDIAC_MYOSIN's floor-clearance is independent of KRAS's (it clears the proximity floor, its issue is purely the large-N flag) | [[TASK-0094]] |
@@ -2207,6 +2304,7 @@ Full detail: `.ai/tasks/DONE/TASK-0143-openness-premise-real-targets.md`,
 
 | 21 | Does CARDIAC_MYOSIN's only surviving positive result rest on a defensible apo structure, or does resolving its 20 Å docked-homology-model caveat (5TBY) change the result itself (`REVIEW-panel-2026-07-16-v2.md` §1.2/§3, "do not build the only positive on a 20 Å docked homology model")? | **resolved 2026-07-20: resolving the structure removes the result.** Apo replaced 5TBY -> 8QYP (real 2.759 Å X-ray, same paper/deposition series and species as the existing 8QYR holo, RCSB-verified directly — resolves [[TASK-0128]]'s floppy-mode workaround for this target as a side effect, n_zero=10->6). Full re-run under the current closed-form convention: N drops 950->704, floor drops 0.7921->0.5679, actual AUC drops from 0.7912 ([[TASK-0129]]'s already-diminished number) to **0.5176**, `NO_SIGNAL_IN_APO` — matching BCR_ABL1's own diagnosis. The relayed 2026-07-20 lead proposing PDB 9GZ1 as a holo replacement was independently verified as real (*Science Advances* 2026-04-29) but not adopted — 8QYR remains the cleaner (higher-resolution, single-domain) structure; 9GZ1 stands as corroboration, not substitution. **No mandatory target now has a decisive positive result under the fully corrected pipeline.** Full detail: `COMPETENCE_MAP.md`'s own CARDIAC_MYOSIN section. | [[TASK-0124]], [[TASK-0129]], [[TASK-0128]] |
 | 22 | Do real holo-defined cryptic-pocket residues actually carry the "near-in-3D / far-on-apo-graph" coordinated-closure signature (HYP-P10) the entire loop/multi-site-closure observable family (HYP-P9, HYP-P12) depends on? | **resolved 2026-07-22: no — 0/7 targets pass the pre-registered gate.** KRAS_G12C (98.4th percentile, p=0.016 uncorrected/0.112 Bonferroni) and CASPASE1 (90.2nd percentile) are INSUFFICIENT; CASPASE7 is a clean FAIL (26.8th percentile, the opposite direction from the claim). BCR_ABL1/CARDIAC_MYOSIN/PTP1B/GLUCOKINASE could not be tested at all — the matched-spread null is infeasible via unbiased rejection sampling at the pre-registered ±35% tolerance even at 20M attempts, since a compact real pocket's spread is intrinsically rare among uniform random same-size draws over a large protein (a real finding in its own right, not fixed here — would require redesigning the null's sampling scheme). Two real bugs found+fixed: a non-reproducible seed (Python's per-process-salted `hash()`, fixed to `zlib.crc32`) and output written only once at the end (fixed to checkpoint per-target). Gates [[TASK-0140]]/[[TASK-0142]] as unsupported, not blocked outright. | [[TASK-0143]] |
+| 23 | Does TASK-0067's "cutoff doesn't matter (7.5/8.0/10.0 Å)" conclusion, measured on a bare GNM Kirchhoff, transfer to `H_new` — the operator that produces every headline AUC in this document (`REVIEW-2026-07-15-execution-plan-gap-audit.md` finding #2)? | **resolved 2026-07-22: agrees in aggregate, disagrees on a real, headline-relevant per-target case.** `H_new`'s own aggregate (2-target mean) cutoff sensitivity is if anything smaller than the bare Laplacian's (ctqw range 0.003, ground_state range 0.020, vs. TASK-0067's 0.0124) — but this is a coincidence of KRAS_G12C/BCR_ABL1 moving in opposite directions (~0.04-0.05 each), not real insensitivity. **BCR_ABL1's `ground_state_relaxation` floor-clearing status (its own "apo-computable structural prior" finding, row 1 above) flips**: clears at 7.5/8.0 Å, does not clear at 10.0 Å (both AUC and floor move, ordering flips). `time_averaged_ctqw`'s own floor-crossing story stays fully stable across the grid for both targets. No weight-scheme axis exists for `H_new` (`normalised_laplacian_alpha` hardcodes `weight="exponential"`) — a real structural difference from TASK-0067's own 2-axis grid, reported rather than forced. | [[TASK-0113]], [[TASK-0067]], [[TASK-0091]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
