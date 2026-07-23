@@ -87,6 +87,21 @@ class LoadRequest(BaseModel):
     active_site_mode: str = "benchmark"   # "benchmark" | "auto" (UniProt)
 
 
+def _cache_or_compute(params, compute):
+    """Return a cached result (add-only `cached` flag) or compute + store it. Only a
+    successful return is cached; a raised HTTPException propagates uncached. RCSB data is
+    immutable per PDB id, so a hit equals recomputing — nothing scientific changes."""
+    hit = result_cache.get(params)
+    if hit is not None:
+        return {**hit, "cached": True} if isinstance(hit, dict) else hit
+    out = compute()
+    if isinstance(out, dict):
+        result_cache.set(params, out)
+        return {**out, "cached": False}
+    result_cache.set(params, out)
+    return out
+
+
 @app.get("/api/health")
 def health():
     return {"status": "ok", "service": "quantum-allosteric-scanner", **result_cache.info()}
@@ -123,10 +138,14 @@ def targets():
 def holo_finder(apo_pdb: str, chains: str = None, target_name: str = None):
     """Find all ligand-bound (holo) structures of the same protein as `apo_pdb`,
     drug-bound first, for completing/visualizing the apo."""
-    try:
-        return find_holo_candidates(apo_pdb.strip().upper(), target_name=target_name)
-    except Exception as e:
-        raise HTTPException(422, f"holo search failed for {apo_pdb}: {e}")
+    apo_pdb = apo_pdb.strip().upper()
+
+    def _c():
+        try:
+            return find_holo_candidates(apo_pdb, target_name=target_name)
+        except Exception as e:
+            raise HTTPException(422, f"holo search failed for {apo_pdb}: {e}")
+    return _cache_or_compute({"op": "holo_finder", "apo": apo_pdb, "target_name": target_name}, _c)
 
 
 @app.get("/api/analysis-shift")
@@ -139,6 +158,11 @@ def analysis_shift(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = 
     if apo == holo:
         raise HTTPException(422, f"cannot compute an apo→holo shift for {apo} against "
                                  f"itself — provide a distinct apo and holo")
+    sparams = {"op": "analysis_shift", "apo": apo, "holo": holo, "apo_chain": apo_chain,
+               "holo_chain": holo_chain, "target_name": target_name, "cutoff": _clamp_cutoff(cutoff)}
+    shit = result_cache.get(sparams)
+    if shit is not None:
+        return {**shit, "cached": True}
     # use the holo chain that actually bears the drug + the matching apo chain
     res = resolve_compare_chains(apo, holo, apo_chain)
     if res is None:
@@ -173,6 +197,8 @@ def analysis_shift(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = 
     except Exception:
         result["drug_site"] = []
         result["drug_codes"] = []
+    result_cache.set(sparams, result)
+    result["cached"] = False
     return result
 
 
@@ -245,26 +271,38 @@ def morph_frames_ep(apo: str, holo: str, apo_chain: str = "A", holo_chain: str =
     if apo == holo:
         raise HTTPException(422, f"apo and holo are the same entry ({apo})")
     n_frames = max(2, min(int(n_frames), 8))
+    mparams = {"op": "morph_frames", "apo": apo, "holo": holo, "apo_chain": apo_chain,
+               "holo_chain": holo_chain, "n_frames": n_frames, "cutoff": _clamp_cutoff(cutoff)}
+    mhit = result_cache.get(mparams)
+    if mhit is not None:
+        return {**mhit, "cached": True}
     res = resolve_compare_chains(apo, holo, apo_chain)
     achain = res["apo_chain"] if res else apo_chain
     hchain = res["holo_chain"] if res else (holo_chain or apo_chain)
     try:
-        return morph_frames(apo, achain, holo, hchain, n_frames=n_frames,
-                            cutoff=_clamp_cutoff(cutoff))
+        out = morph_frames(apo, achain, holo, hchain, n_frames=n_frames,
+                           cutoff=_clamp_cutoff(cutoff))
     except ValueError as e:
         raise HTTPException(422, str(e))
     except Exception as e:
         raise HTTPException(422, f"morph-frames failed: {e}")
+    result_cache.set(mparams, out)
+    out["cached"] = False
+    return out
 
 
 @app.get("/api/active-site")
 def active_site(pdb_id: str, chains: str = "A", holo: str = None):
     """Auto-detect the active/functional site for any protein: UniProt curated
     residues, else the ligand binding site, else PDB SITE records."""
-    try:
-        return detect_active_site(pdb_id.strip().upper(), chains, holo_pdb=holo)
-    except Exception as e:
-        raise HTTPException(422, f"active-site detection failed for {pdb_id}: {e}")
+    pdb_id = pdb_id.strip().upper()
+
+    def _c():
+        try:
+            return detect_active_site(pdb_id, chains, holo_pdb=holo)
+        except Exception as e:
+            raise HTTPException(422, f"active-site detection failed for {pdb_id}: {e}")
+    return _cache_or_compute({"op": "active_site", "pdb_id": pdb_id, "chains": chains, "holo": holo}, _c)
 
 
 @app.get("/api/drug-site")
@@ -272,26 +310,33 @@ def drug_site_lookup(holo: str, chains: str = None):
     """Residues where the drug binds in the holo (drug-bearing chain) — to overlay on
     the apo (same residue numbering) when viewing the GNM analysis."""
     holo = holo.strip().upper()
-    try:
-        from .rcsb import drug_bearing_chain
-        hchain, _ = drug_bearing_chain(holo)
-        ch = hchain or ((chains or "").split(",")[0].strip() or None)
-        drug_ligs = [l for l in ligands_and_sites(holo, ch) if l["is_drug"]]
-        residues = sorted(set(r for l in drug_ligs for r in l["binding_site"]))
-        return {"holo": holo, "chain": ch, "drug_site": residues,
-                "drug_codes": [l["code"] for l in drug_ligs]}
-    except Exception as e:
-        raise HTTPException(422, f"drug-site lookup failed for {holo}: {e}")
+
+    def _c():
+        try:
+            from .rcsb import drug_bearing_chain
+            hchain, _ = drug_bearing_chain(holo)
+            ch = hchain or ((chains or "").split(",")[0].strip() or None)
+            drug_ligs = [l for l in ligands_and_sites(holo, ch) if l["is_drug"]]
+            residues = sorted(set(r for l in drug_ligs for r in l["binding_site"]))
+            return {"holo": holo, "chain": ch, "drug_site": residues,
+                    "drug_codes": [l["code"] for l in drug_ligs]}
+        except Exception as e:
+            raise HTTPException(422, f"drug-site lookup failed for {holo}: {e}")
+    return _cache_or_compute({"op": "drug_site", "holo": holo, "chains": chains}, _c)
 
 
 @app.get("/api/structure")
 def structure(pdb_id: str, chains: str = None):
     """Biologist-facing structure intel: chains, ligands/drugs + binding sites,
     missing residues, title/organism/resolution."""
-    try:
-        return structure_intel(pdb_id.strip().upper(), chains)
-    except Exception as e:
-        raise HTTPException(422, f"could not read structure {pdb_id}: {e}")
+    pdb_id = pdb_id.strip().upper()
+
+    def _c():
+        try:
+            return structure_intel(pdb_id, chains)
+        except Exception as e:
+            raise HTTPException(422, f"could not read structure {pdb_id}: {e}")
+    return _cache_or_compute({"op": "structure", "pdb_id": pdb_id, "chains": chains}, _c)
 
 
 @app.get("/api/compare")
@@ -302,6 +347,11 @@ def compare(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = None):
     if apo == holo:
         raise HTTPException(422, f"cannot compare {apo} against itself — apo and holo "
                                  f"are the same structure (provide a different apo/holo)")
+    cmpparams = {"op": "compare", "apo": apo, "holo": holo, "apo_chain": apo_chain,
+                 "holo_chain": holo_chain}
+    cmphit = result_cache.get(cmpparams)
+    if cmphit is not None:
+        return {**cmphit, "cached": True}
     # use the holo chain that actually bears the drug + the matching apo chain
     res = resolve_compare_chains(apo, holo, apo_chain)
     if res is None:
@@ -314,6 +364,8 @@ def compare(apo: str, holo: str, apo_chain: str = "A", holo_chain: str = None):
     except Exception as e:
         raise HTTPException(422, f"comparison failed: {e}")
     out["drug_code"] = res["drug_code"]
+    result_cache.set(cmpparams, out)
+    out["cached"] = False
     return out
 
 
@@ -369,23 +421,37 @@ def _prewarm():
     systems = resolve_systems()
     n = 0
     for name, cfg in systems.items():
-        apo = cfg.get("apo")
-        chain = cfg.get("chain", "A")
+        apo, holo, chain = cfg.get("apo"), cfg.get("holo"), cfg.get("chain", "A")
         if not apo:
             continue
         for cut in config.PREWARM_CUTOFFS:
-            try:
-                load(LoadRequest(pdb_id=apo, chains=chain, target_name=name, cutoff=cut))
-                n += 1
-            except Exception as e:                     # a broken target must not stop the rest
+            try:                                        # visualization + GNM analysis
+                load(LoadRequest(pdb_id=apo, chains=chain, target_name=name, cutoff=cut)); n += 1
+            except Exception as e:                      # a broken target must not stop the rest
                 _log.info("prewarm load %s@%s failed: %s", name, cut, e)
-            if cfg.get("holo"):
-                try:
-                    connectivity_change_ep(apo=apo, holo=cfg["holo"], apo_chain=chain,
-                                           target_name=name, cutoff=cut)
-                    n += 1
+            if holo:
+                try:                                    # connectivity change (DDM/rewiring/ΔDCC + morph + seed)
+                    connectivity_change_ep(apo=apo, holo=holo, apo_chain=chain,
+                                           target_name=name, cutoff=cut); n += 1
                 except Exception as e:
                     _log.info("prewarm connectivity %s@%s failed: %s", name, cut, e)
+                try:                                    # apo→holo site-potential shift (§5c/§5d)
+                    analysis_shift(apo=apo, holo=holo, apo_chain=chain,
+                                   target_name=name, cutoff=cut); n += 1
+                except Exception as e:
+                    _log.info("prewarm shift %s@%s failed: %s", name, cut, e)
+        if holo:
+            try:                                        # apo↔holo displacement (cutoff-independent)
+                compare(apo=apo, holo=holo, apo_chain=chain); n += 1
+            except Exception as e:
+                _log.info("prewarm compare %s failed: %s", name, e)
+            if config.PREWARM_MORPH:                     # real-structures animation (network-heavy)
+                cut0 = config.PREWARM_CUTOFFS[0] if config.PREWARM_CUTOFFS else 8.0
+                try:
+                    morph_frames_ep(apo=apo, holo=holo, apo_chain=chain,
+                                    n_frames=config.PREWARM_MORPH_FRAMES, cutoff=cut0); n += 1
+                except Exception as e:
+                    _log.info("prewarm morph %s failed: %s", name, e)
     _log.info("prewarm complete: %d results cached", n)
 
 

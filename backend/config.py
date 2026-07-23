@@ -48,6 +48,8 @@ class Config:
     PREWARM_DELAY_S = _int("QAS_PREWARM_DELAY_S", 8)     # let the server come up first
     PREWARM_CUTOFFS = [float(x) for x in
                        os.environ.get("QAS_PREWARM_CUTOFFS", "8").split(",") if x.strip()]
+    PREWARM_MORPH = os.environ.get("QAS_PREWARM_MORPH", "1") != "0"   # warm real-structure frames too
+    PREWARM_MORPH_FRAMES = _int("QAS_PREWARM_MORPH_FRAMES", 4)
 
     # ── misc ──
     HEALTH_PATH = os.environ.get("QAS_HEALTH_PATH", "/api/health")
