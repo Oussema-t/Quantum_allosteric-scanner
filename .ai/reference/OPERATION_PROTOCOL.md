@@ -110,6 +110,16 @@ Keep the human in the loop at as few points as practical:
 2. approval for destructive actions or major scope expansion
 3. final acceptance when the implementation claim matters
 
+## Long-Running Compute
+
+Step 6/7 (Implementation/Local Validation) sometimes involves a real
+compute job expected to exceed a practical in-session attention span.
+Do not block synchronously past ~10-15 minutes and do not skip a long
+job because no thread considered handing it off — instrument with
+wall-clock *and* CPU-time logging and run detached instead, with an
+explicit HITL hand-off path for anything expected to outlast a session.
+Full convention: `.ai/reference/LONG_JOB_CONVENTION.md` ([[TASK-0134]]).
+
 ## Manual and Automated Orchestration
 
 - Manual orchestration and agent workflows should use the same artifacts.

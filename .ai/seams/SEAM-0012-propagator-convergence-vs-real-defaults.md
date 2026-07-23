@@ -108,3 +108,25 @@
   until re-measured with real CPU-time instrumentation. [[TASK-0134]]
   filed to do that re-measurement and to propose a reusable convention
   so this class of claim doesn't recur unverified.
+- update 2026-07-22, [[TASK-0134]]: re-measured with continuous CPU-time
+  instrumentation (new `allostery.runlog.RunLogger`, 4-thread BLAS cap,
+  438 samples over one full, uninterrupted 950s/15.8min run to completion
+  — `completed_full_prescription: True`, not killed early). **Result:
+  P-0005's risk did not materialize here — corroborated, not inflated.**
+  `cpu_elapsed_s / wall_elapsed_s` held at 4.05 ± 0.035 throughout, with
+  no drops anywhere in the trace — clean evidence of continuous
+  4-thread execution, not contention or suspension, for the entire
+  interval. Separately: the *current* AAKV prescription for the same
+  target (KRAS_G12C) is `t_max=1.26e6`/`n_steps=877,811`, ~15x smaller
+  than the `4.82e6`/`1.3e7` cited in the 2026-07-17 update above —
+  `H_new`'s spectrum shifted after [[TASK-0121]]'s potential
+  renormalization (landed the day after that measurement). Extrapolating
+  the re-verified steady-state rate to the *original* 1.3e7-step
+  scenario gives ~3.9 CPU-wall-clock hours, consistent with "still
+  computing after 2+ hours" rather than contradicting it. This seam's
+  own core invariant is unaffected either way (the real defaults still
+  don't pass `check_convergence`, and this specific criterion is still
+  impractical to reach with the O(n_steps) implementation on real
+  targets) — this update corroborates the *evidence quality* behind the
+  2026-07-17 entry, it does not change its conclusion. Full detail:
+  `.ai/tasks/DONE/TASK-0134-cpu-time-verification-and-long-job-convention.md`.

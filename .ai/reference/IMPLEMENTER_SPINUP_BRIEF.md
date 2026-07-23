@@ -181,6 +181,20 @@ python3 .ai/tools/claim.py release TASK-XXXX          # if `move` didn't already
 - State Implementer's-call decisions explicitly in Done, with the reasoning,
   not just the choice.
 
+## 10. Long-running compute
+
+If a call is expected to take more than ~10-15 minutes: instrument it
+with `allostery.runlog.RunLogger` (wall-clock *and* CPU-time per sample,
+not a single before/after check) and run it detached (background
+execution for anything that should finish this session, OS-level
+`nohup`/`disown` for anything that should outlast it) — don't block
+synchronously and don't skip the job because no thread considered
+handing it off. Full convention, including the "CPU-time > wall-clock is
+normal under multithreaded BLAS, the ratio's *stability* across samples
+is the real contention signal, not its magnitude" finding (easy to get
+backwards on a first pass):
+`.ai/reference/LONG_JOB_CONVENTION.md` ([[TASK-0134]]).
+
 ## The loop, in one line
 
 Claim → read fully → verify citations/root-cause on real data → implement →

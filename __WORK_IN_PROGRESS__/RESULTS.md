@@ -2533,6 +2533,64 @@ chain-letter-remap cases.
 
 ---
 
+## CPU-time re-verification + long-job convention (TASK-0134, 2026-07-22)
+
+[[P-0005]]: TASK-0110's "a single `time_averaged_ctqw` call did not return after 2+
+hours" claim rested on a single process-state check (`R`, active) at kill time, not
+continuous CPU-time evidence — a process starved by contention (already proven real
+in this sandbox, [[TASK-0111]]) or suspended/resumed would look identical at one
+checkpoint. Re-ran the same call (real KRAS_G12C, `H_new`, AAKV-prescribed
+`t_max`/`n_steps`) with continuous `allostery.runlog.RunLogger` instrumentation
+instead — new `scripts/task0134_cpu_time_reverification.py`, 4-thread BLAS cap
+matching the original script's own environment.
+
+**Real complication found live, before the run even started**: the same AAKV
+formula on the same target now prescribes `t_max=1.26e6`/`n_steps=877,811` —
+~15x smaller than TASK-0110's original `t_max=4.82e6`/`n_steps~1.3e7` — `H_new`'s
+spectrum shifted after [[TASK-0121]]'s potential renormalization (landed the day
+after TASK-0110's original measurement). The literal historical scenario is no
+longer reproducible, so this task ran the full *current* prescription end to end
+instead (877,811 steps, not truncated) — enough to answer the actual question.
+
+**Result: 950.2s (~15.8 min), full prescription completed, not killed early. 438
+samples, `cpu_elapsed_s/wall_elapsed_s` held at 4.05 ± 0.035 throughout (min
+3.958, max 4.157) — no drops anywhere in the sequence.** Clean evidence of
+continuous 4-thread execution for the entire interval, directly closing the gap
+P-0005 named. Extrapolated to the original 1.3e7-step scenario, the re-verified
+rate implies ~3.9 CPU-wall-clock hours — consistent with, not contradicting,
+"still computing after 2+ hours." **The original claim is corroborated, not
+inflated.**
+
+**A separate, real methodological finding**: an uncapped calibration run (before
+the thread cap was applied) measured CPU-time at ~16x wall-clock on this 16-core
+machine — multithreaded BLAS parallelism, not contention, easy to get backwards
+on a first read. The real contention/suspension diagnostic is the *stability* of
+the ratio across successive samples, not its absolute magnitude.
+
+Downstream citations updated additively (corroboration + the parameter-drift
+fact, not corrections): `.ai/invariants/INV-0005-propagator-time-parameters.md`,
+`.ai/seams/SEAM-0012-propagator-convergence-vs-real-defaults.md`,
+`.ai/memory/shared/pitfalls.md`'s `P-0005` entry.
+
+**Part 2**: new `.ai/reference/LONG_JOB_CONVENTION.md` (cross-linked from
+`IMPLEMENTER_SPINUP_BRIEF.md`/`OPERATION_PROTOCOL.md`) — the ~10-15min
+synchronous-blocking threshold, harness-tracked (`run_in_background`) vs.
+OS-level (`nohup`/`disown`/`tmux`) detachment for two distinct time horizons,
+monitor-by-tail not poll, the ratio-stability diagnostic above, and an explicit
+HITL hand-off section (what "done"/"healthy"/"stalled" look like in a
+`RunLogger` trace, where to post checkback instructions durably). No new
+tooling built — generalizes `allostery.runlog.RunLogger` ([[TASK-0135]]) and
+this environment's own background/scheduling primitives, already adequate.
+
+Flagged (not re-run), sharing the same unverified-CPU-time shape: [[TASK-0105]]'s
+ENAQT per-gamma wall-clock timings, [[TASK-0068]]'s NISQ Trotter-step timing.
+
+Full detail: `.ai/tasks/DONE/TASK-0134-cpu-time-verification-and-long-job-convention.md`,
+`results_task0134_cpu_time/cpu_time_reverification.jsonl`,
+`.ai/reference/LONG_JOB_CONVENTION.md`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -2565,6 +2623,8 @@ chain-letter-remap cases.
 | 24 | Does `select.py`'s reported quantities (`focusing`, `source_specificity`, `ballistic_exponent`, `unsupervised_score`) actually satisfy the GAUGE/KNOB/SIGNAL classification `INV-0004` seeded for them, or was that just reasoned from each function's signature and never verified ([[TASK-0064]])? | **resolved 2026-07-20: mostly GAUGE-VERIFIED/KNOB-CHARACTERIZED as expected, plus one real, previously-unexamined finding.** `source_specificity` is NOT relabeling-invariant with its default sub-sampled `n_alt` (root-caused to label-position-dependent `rng.choice`, confirmed exact once sampling is exhaustive) — reclassified GAUGE→KNOB rather than force-passed, flagged in the function's own docstring, not fixed algorithmically (would change what "random sample" means). `unsupervised_score`'s ranking also confirmed to flip between scalar/multi-index `source` conventions (closes that KNOB row, matches [[TASK-0118]]'s project-wide finding). `ballistic_exponent`'s `t_values` window is this module's dominant KNOB by an order of magnitude. SIGNAL null-controlled against a 30-graph random-graph batch, not a single instance. Full detail: `RESULTS.md`'s own `select.py` invariance section above, `.ai/invariants/INV-0004-select-unsupervised-score.md`. | [[TASK-0089]] |
 | 25 | Is allosteric communication between the active site and known pocket carried by a narrow, fragile bottleneck or a broad, redundant subnetwork, measured directly on the apo contact graph — a purely topological question, no propagator involved (raised directly by the orchestrating user, 2026-07-18)? | **resolved 2026-07-22: broad and redundant, decisively, on all 3 mandatory targets.** New `allostery.percolation` (shortest-path ensemble, Menger's-theorem edge connectivity + literal min-cut, percolation-threshold sweep). Edge connectivity is 68-76 (an order of magnitude above a narrow-bottleneck signature) on every target, with min-cuts spanning dozens of distinct residue pairs, not a single chokepoint. Real bug found+fixed first: an initial unit-capacity virtual-edge construction silently capped every result at `min(|active|,|pocket|)` (13-18, empty cuts) — confirmed wrong via a synthetic single-hub-3-fan-out check, fixed via large-capacity virtual edges + `nx.maximum_flow_value`/`minimum_cut` (`edge_connectivity`/`minimum_edge_cut` don't accept a `capacity` argument at all). As a blind scoreable baseline (`connectivity_robustness`, part c), beats the proximity floor on only 1/3 targets, and `stratified_auc` (actually run, not cited by analogy) shows most of its raw AUC is the same distance/degree confound found pervasive elsewhere in this project's register. Dumbbell gate: exactly chance in every cell — a clean, understood negative (unweighted route-counting can't see the dumbbell's edge-weight-only confound). | [[TASK-0136]] |
 | 26 | Does `superpose.align_apo_holo`'s raw `(chain, resnum)` correspondence silently break for targets ([[TASK-0127]]'s `apo_chains`/`holo_chains` override) where apo and holo deposit the same biological chain under different author chain letters — found live while executing [[TASK-0124]]'s CARDIAC_MYOSIN apo replacement? | **resolved 2026-07-22: yes, confirmed on 2 real targets, now fixed.** New optional `chain_map` parameter on `common_residues_by_resnum`/`align_apo_holo` (default `None`, byte-identical prior behavior), built from target config via new `chain_map_from_config`, threaded through all 5 real call sites found by re-grepping the repo (`run_superpose`, `learnability_gate.py`, `learnability_gate_patch_control.py`, `holo_diagnostic_comparison.py`, `kras_auc_reconciliation.py`). Before the fix: CARDIAC_MYOSIN's new 8QYP/8QYR pair (apo chain A, holo chain B) had 0 common residues, `align_apo_holo` raised. After: 698/704 residues resolve (vs. 5TBY-era's 709/950, a coverage jump from 75%->99%), `LEARNABLE` (ratio 1.57, whole-structure CO(20) 0.943). GLUCOKINASE (apo chain A, holo chain X), run through this gate for the first time ever, resolves 446/448 and is the project's first target to classify `UNLEARNABLE_FROM_APO` on both conjunction halves genuinely firing (ratio 1.94, CO(20) 0.443). TASK-0120/0133's own CARDIAC_MYOSIN rows are flagged superseded (by TASK-0124's apo replacement, not retroactively by this bug — 5TBY happened to share holo's chain letter) in this document's own learnability-gate section, not deleted. | [[TASK-0144]], [[TASK-0124]], [[TASK-0127]], [[TASK-0120]], [[TASK-0133]] |
+
+| 27 | Does TASK-0110's "a single `time_averaged_ctqw` call did not return after 2+ hours" infeasibility claim hold up under continuous CPU-time evidence, not just a single process-state check at kill time ([[P-0005]])? | **resolved 2026-07-22: corroborated, not inflated.** Re-ran the same call with continuous `RunLogger` instrumentation: 438 samples over one full, uninterrupted 950s run to completion, `cpu_elapsed_s/wall_elapsed_s` held at 4.05 ± 0.035 throughout, no drops — clean evidence of continuous execution. The current AAKV prescription for the same target is ~15x smaller than the original (`H_new`'s spectrum shifted after [[TASK-0121]]'s renormalization); extrapolated to the original scale, the re-verified rate implies ~3.9 CPU-hours, consistent with the original claim. Separate finding: CPU-time exceeding wall-clock by ~16x (uncapped, 16-core) is normal multithreaded BLAS behavior, not contention — ratio *stability* across samples is the real diagnostic. New `.ai/reference/LONG_JOB_CONVENTION.md` generalizes the pattern for future long-running compute, including an explicit HITL hand-off path. | [[TASK-0134]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

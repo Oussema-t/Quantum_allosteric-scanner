@@ -194,3 +194,19 @@ Add repeated failure patterns, false assumptions, or tool traps that should not 
   declining to start something long — see [[TASK-0134]], filed to both re-verify the
   specific TASK-0110 claim with real CPU-time instrumentation and propose a reusable
   long-job/background-monitoring convention for this project generally.
+- **Resolved 2026-07-22 ([[TASK-0134]]): re-verified, corroborated, not inflated.**
+  Re-ran the specific TASK-0110 call with continuous CPU-time logging
+  (`allostery.runlog.RunLogger`, 4-thread BLAS cap, 438 samples over one full,
+  uninterrupted 950s run to completion — not killed early this time, since the
+  *current* AAKV prescription for the same target turned out ~15x smaller than the
+  2026-07-17 figure, `H_new`'s spectrum having shifted after [[TASK-0121]]'s
+  renormalization). `cpu_elapsed_s/wall_elapsed_s` held at 4.05 ± 0.035 throughout —
+  no gaps, no evidence of contention or suspension across the entire interval.
+  Extrapolated to the *original* (now-stale) 1.3e7-step scenario, the re-verified
+  rate implies ~3.9 CPU-wall-clock hours — consistent with, not contradicting, "still
+  computing after 2+ hours." **This specific instance of the pattern did not
+  materialize** — but the risk itself (process state alone is not proof of continuous
+  execution) is real and general, confirmed correct to have flagged; this repo just
+  didn't have a case where it changed the answer. Part 2 (the long-job convention)
+  landed regardless: `.ai/reference/LONG_JOB_CONVENTION.md`, with
+  `IMPLEMENTER_SPINUP_BRIEF.md`/`OPERATION_PROTOCOL.md` pointing to it.
