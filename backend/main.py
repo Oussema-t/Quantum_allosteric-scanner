@@ -25,6 +25,7 @@ from starlette.requests import Request
 from starlette.responses import Response
 from pydantic import BaseModel, Field
 
+from . import result_cache
 from .pipeline import build_view
 from .systems import resolve_systems
 from .rcsb import structure_intel, ligands_and_sites
@@ -88,7 +89,13 @@ class LoadRequest(BaseModel):
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "service": "quantum-allosteric-scanner"}
+    return {"status": "ok", "service": "quantum-allosteric-scanner", **result_cache.info()}
+
+
+# alias used by external keep-warm pings / uptime monitors
+@app.get("/healthz")
+def healthz():
+    return {"status": "ok", **result_cache.info()}
 
 
 @app.get("/api/targets")
@@ -177,6 +184,12 @@ def connectivity_change_ep(apo: str, holo: str, apo_chain: str = "A", holo_chain
     apo, holo = apo.strip().upper(), holo.strip().upper()
     if apo == holo:
         raise HTTPException(422, f"cannot compute connectivity change for {apo} vs itself")
+    cparams = {"op": "connectivity", "apo": apo, "holo": holo, "apo_chain": apo_chain,
+               "holo_chain": holo_chain, "target_name": target_name,
+               "cutoff": _clamp_cutoff(cutoff)}
+    chit = result_cache.get(cparams)
+    if chit is not None:
+        return {**chit, "cached": True}
     res = resolve_compare_chains(apo, holo, apo_chain)
     if res is None:
         raise HTTPException(422, f"no drug/ligand found in any chain of {holo}")
@@ -217,6 +230,8 @@ def connectivity_change_ep(apo: str, holo: str, apo_chain: str = "A", holo_chain
             cutoff=_clamp_cutoff(cutoff))
     except Exception:
         out["seed_readiness"] = None
+    result_cache.set(cparams, out)
+    out["cached"] = False
     return out
 
 
@@ -314,20 +329,26 @@ def _clamp_cutoff(c):
 @app.post("/api/load")
 def load(req: LoadRequest):
     """Load a structure for visualization (optionally completing missing residues)."""
+    # result cache: key on EVERY param that affects the output (RCSB data is immutable,
+    # so a hit is identical to recomputing). Add-only: response gains a `cached` flag.
+    params = {"op": "load", "pdb_id": req.pdb_id.strip().upper(), "chains": req.chains,
+              "source_residues": req.source_residues, "target_name": req.target_name,
+              "complete": req.complete, "holo_pdb": req.holo_pdb, "holo_chain": req.holo_chain,
+              "cutoff": _clamp_cutoff(req.cutoff), "active_site_mode": req.active_site_mode}
+    hit = result_cache.get(params)
+    if hit is not None:
+        return {**hit, "cached": True}
     try:
-        return build_view(
-            pdb_id=req.pdb_id.strip().upper(),
-            chains=req.chains,
-            source_residues=req.source_residues,
-            target_name=req.target_name,
-            complete=req.complete,
-            holo_pdb=req.holo_pdb,
-            holo_chain=req.holo_chain,
-            cutoff=_clamp_cutoff(req.cutoff),
+        out = build_view(
+            pdb_id=params["pdb_id"], chains=req.chains, source_residues=req.source_residues,
+            target_name=req.target_name, complete=req.complete, holo_pdb=req.holo_pdb,
+            holo_chain=req.holo_chain, cutoff=params["cutoff"],
             active_site_mode=req.active_site_mode,
         )
     except ValueError as e:
         raise HTTPException(422, str(e))
+    result_cache.set(params, out)
+    return {**out, "cached": False}
 
 
 # serve the frontend at "/"

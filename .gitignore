@@ -14,3 +14,6 @@ outputs/
 .DS_Store
 .vscode/
 .idea/
+
+# runtime result cache (ephemeral)
+result_cache/
