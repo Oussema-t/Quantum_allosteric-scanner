@@ -1,0 +1,104 @@
+Understood — I'll implement and run both, execute everything (no asserted numbers), and hand you results you can independently re-verify. 
+First I need to establish what real-target data is reachable offline, since RCSB isn't on my network allowlist.
+RCSB is confirmed unreachable from my sandbox (network allowlist blocks it), and the cached JSONs carry only summary scalars — no coordinates or adjacency — 
+so I **cannot** run these on the actual 4OBE/1OPL/etc. structures here. Fabricating real-target numbers is exactly what you'd (rightly) run cross-model 
+validation to catch, so I won't.
+
+What I *can* do honestly, and what's actually more useful for ruling out divergence: implement both methods against your repo's real APIs/conventions, 
+and **execute** them on rigorous synthetic controls with *known* ground truth — the same discipline your repo uses (horseshoe-arc, dumbbell) 
+before touching real data. You then run the identical code on real targets in-repo where RCSB is reachable; the invocation will be one command, 
+and because it's written to your conventions the numbers should match your agents' unless there's a real divergence to find.
+
+Let me inspect the exact APIs so the code drops in cleanly.APIs confirmed. 
+Installing the one new dependency (ripser) and building both methods against your real functions.
+Now writing Method A (low-mode / slow-mode predictor) as a drop-in module using your real ANM/GNM machinery, 
+plus a synthetic hinge-protein control with known ground truth.Honest and informative first pass: low-mode PRS **removes the proximity confound** 
+(ρ collapses 0.71→0.08) — exactly what the learnability gate promised — but AUC sits at chance. Before I conclude, 
+I need to check two things the repo's own methodology would demand: (a) that the coupling I *planted* is actually present in the low modes 
+(so a null result means the method failed, not that I failed to plant signal), and (b) the distance-controlled (stratified) lens — 
+among equally-distal residues, does slow-mode coupling separate the coupled pocket from uncoupled distal residues?The synthetic is imperfect 
+(my "uncoupled distal" set still moves in the global hinge mode, so Diagnostic 2 is partly residual distance) — 
+I'll flag that honestly rather than over-engineer it. The robust, executed takeaways for Method A are clear. Now Method B — persistent H₂ voids, 
+the more distinctive contribution, and the one I argued the openness-premise failure does *not* actually kill.Both methods execute and behave honestly. 
+Method B's headline confirms the argument I made in the review: persistent H₂ detects a cavity whose lining residues are **graph-adjacent (mean hop 1.44)** — 
+exactly the case the graph-openness premise (TASK-0143) would miss, so that 0/7 failure did *not* correctly kill this family. 
+Let me add pytest files so both drop into your suite, then run everything together.Good — that failure is your repo's own `anm_modes` guard 
+(TASK-0005) correctly refusing ANM on a disconnected graph; my random-blob test fixture fragmented at cutoff 10. 
+Real apo structures are connected, so this is a fixture issue, not a method issue. Fixing the fixture to be reliably connected.
+All 7 new tests pass. Copying the validation harnesses into `scripts/` so they're part of the deliverable, then confirming no collection regressions.
+Done — both methods are implemented against your real ANM/GNM primitives, tested (7 new tests pass; 794 collect clean, no regressions), and executed. 
+I could **not** run them on 4OBE/1OPL/etc. because RCSB is off my network allowlist, so everything below is on synthetic controls with *known* ground truth. 
+The real-target run is one command each in your repo (invocations at the end).
+
+**What each file is:** `lowmode_predictor.py` and `persistent_voids.py` drop into `src/allostery/`; the two `test_*` files into `tests/`; 
+the two `*_synthetic_control.py` into `scripts/`. One packaging note: `persistent_voids` adds `ripser` as a dependency — add it to `pyproject.toml`.
+
+## Method A — low-mode predictor (PRS-low / DCC-low): executed results
+
+On the synthetic hinge protein (seed at the far end of domain A, planted allosteric pocket at the far end of domain B, graph-far through a thin hinge, 
+coupled via the lowest bending mode):
+
+| observable | whole-graph AUC | ρ(score, −hop) | distance-controlled AUC |
+|---|---|---|---|
+| CTQW-occ (confounded) | 0.213 | **+0.713** | 0.375 |
+| proximity floor (−hop) | 0.092 | +1.000 | 0.207 |
+| **PRS-low (k=20)** | 0.493 | **+0.160** | 0.588 |
+| **PRS-low (k=5)** | 0.517 | **+0.076** | 0.596 |
+| DCC-low (k=20) | 0.261 | +0.559 | 0.290 |
+
+The clean finding, and it's not the hoped-for one: **mode-filtering does exactly what your learnability gate promised — it removes the proximity confound** 
+(ρ collapses from +0.71 to +0.08). But it does **not** thereby manufacture discrimination: whole-graph AUC sits at chance (~0.50), 
+because PRS response magnitude is high both at the seed's own neighborhood *and* at the coupled distal end, 
+so the distal pocket doesn't out-rank the near residues in a whole-graph ranking. 
+Only under your distance-controlled/stratified lens does a modest signal appear (~0.59 vs ~0.5). 
+Two honest caveats: my "uncoupled distal" control still moves in the global hinge mode 
+(I couldn't cleanly plant an uncoupled-but-distant region in a two-domain system), so that 0.59 is an optimistic read; 
+and DCC-low is worse than PRS-low, not better. **Prediction this makes for your real run:** on real targets, 
+expect whole-graph AUC ≈ chance and the *only* place any signal can show is the TASK-0123 stratified AUC. 
+If it's absent there too, the low-mode route is genuinely dead and you can say so with a mechanism.
+
+## Method B — persistent H₂ voids: executed results
+
+| control | top H₂ persistence | void_score AUC | pocket internal mean hop |
+|---|---|---|---|
+| hollow shell (POS) | ∞ (never fills) | — | — |
+| solid ball (NEG) | 1.105 | — | — |
+| carved cryptic cavity | 4.337 | 0.576 | **1.44** |
+
+The headline that matters for your proposal: **persistent H₂ cleanly separates void from no-void** (cavity 4.34 vs solid-ball noise floor 1.10), 
+and it detects a cavity whose lining residues are **graph-adjacent (mean hop 1.44)** — precisely the case the coordinated-closure graph-openness premise 
+(TASK-0143, 0/7) would miss. So that 0/7 failure did *not* correctly kill this family; it falsified a graph-distance signature the H₂ observable never depended on. 
+That's now demonstrated, not just argued.
+
+The weak link, stated plainly: residue-level localization is crude (void_score AUC 0.576, and in my geometry a proximity floor scored the cavity *higher* at
+0.82 because I placed seed and cavity on the same side). ripser doesn't hand back H₂ cycle representatives, so I estimate the void center geometrically. 
+The improvement path is GUDHI's alpha-complex with simplex tracking, or ripser with `do_cocycles` — either would sharpen "which residues line the void" 
+and is the thing to do before trusting residue-level AUC on real targets.
+
+## Net read for the September proposal
+
+Neither method manufactures a decisive positive on *ideal synthetic cases*, which honestly forecasts that neither will rescue the negative result on real targets. 
+But both are worth your real-target run for different reasons: Method A is the only proximity-orthogonal version of your own observable and 
+cleanly tests whether the learnability signal survives as a *predictor* (your gate says it should be there; this tests whether it's recoverable); 
+Method B reopens a family your apparatus prematurely gated and is the one genuine bridge to a quantum-advantage object (quantum Betti / Hodge-Laplacian). 
+If both come back null under the stratified lens on real targets, that is a *stronger, better-argued* negative than "our observable is confounded" — 
+it's "we built the two proximity-orthogonal observables the field would demand, and the signal isn't there either."
+
+## To run on real targets in-repo (where RCSB is reachable)
+
+```python
+from allostery import clean, labels, metrics, baselines
+from allostery.lowmode_predictor import prs_low, dcc_low
+from allostery.persistent_voids import void_score, top_h2_persistence
+# apo = clean.clean_from_config(target_cfg)  -> coords, seed (active-site indices), pocket label
+prs = prs_low(apo.coords, seed, cutoff=10.0, k_modes=20)
+print("PRS-low AUC", metrics.auc(prs, label),
+      "vs floor", metrics.auc(baselines.hop_from_seed(apo.coords, seed), label))
+vs = void_score(apo.coords, thresh=16.0)
+print("void AUC", metrics.auc(vs, label), "top H2", top_h2_persistence(apo.coords))
+```
+
+Wire both through your TASK-0123 stratified AUC and TASK-0131 permutation null before reading anything as signal — Method A specifically only shows up there, 
+and Method B needs the matched-patch null. Where your agents might diverge from me: the seed convention (I used a scalar; your pipeline uses the full active-site 
+array/incoherent mixture — pass that same `source`), the ANM cutoff (I defaulted 10 Å; `anm_modes` and `build_H_new` both default higher in places), 
+and `k_modes` (I used 20 to match CO(20); worth sweeping 5–20). If your numbers and mine disagree beyond those knobs, that's a real divergence worth chasing.

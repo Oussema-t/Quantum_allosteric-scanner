@@ -15,22 +15,69 @@
 - Source: `REVIEW-panel-2026-07-20` §"topological ladder" and Falsifier D
   (the homemade single-radius b1 could not separate a real loop from
   sampling noise — real persistence tooling is required).
-- **Flagged 2026-07-20 (Architect/Planner)**: no reference script (for
-  the L1 drop-in or otherwise) is present in this repo or the applied
-  review batch, consistent with this task's own honest "will provide a
-  reference if requested" framing above — request it, or build from
-  this task's own spec + HYP-P12's description. **Neither GUDHI nor
-  Ripser is currently a project dependency** (checked directly,
-  `requirements.txt`/`pyproject.toml`) — adding either is a new
-  third-party dependency requiring a manifest, per this project's own
-  TASK-0108/0110 precedent (the `optuna` dependency-manifest gap) — flag
+- **Flagged 2026-07-20 (Architect/Planner)**: no reference script existed
+  at that point for either half. **Update 2026-07-22**: a real H2
+  implementation now exists and is delivered — see the gating-correction
+  section below. **The L1 half still has no reference script** — request
+  one or build from this task's own spec + HYP-P12's description.
+  **`ripser` is now a concrete, delivered dependency** (not an open
+  GUDHI-or-Ripser choice) — add it to `pyproject.toml` per this
+  project's own TASK-0108/0110 dependency-manifest precedent; flag
   explicitly in Done, do not silently `pip install` without recording it.
-- Priority: **P2 — gated on [[TASK-0143]] and/or [[TASK-0140]] showing
-  life.** If the openness premise and the chiral observable both FAIL,
-  the topological rung inherits the same no-signal verdict and should not
-  be run before the Sept-15 writing constraint. If either shows life,
-  this is the rung that connects to a genuine (regime-dependent) quantum
-  advantage argument and belongs in the forward proposal.
+- Priority: **P1 for the H2 half, escalated 2026-07-22 — the TASK-0143
+  gate is corrected below, not removed by fiat.** The L1 half remains
+  P2/gated as originally scoped (see the split below).
+
+## Gating correction, 2026-07-22 (Architect/Planner) — H2 is not gated by TASK-0143 after all
+
+**Real, executed, well-argued work delivered** (relayed via
+`.ai/reviews/2026-07-22/persistent_voids.py` +
+`test_persistent_voids.py` + `persistent_voids_synthetic_control.py`)
+makes a specific, now-tested case that this task's own original gating
+("run only if TASK-0143 or TASK-0140 shows life") was applying the wrong
+premise to the H2 half specifically:
+
+**TASK-0143 tested whether pocket residues are Euclidean-near but
+graph-hop-*far*** — the signature of an *open* cleft that the apo contact
+graph doesn't yet connect. **A persistent H2 void is a different
+geometric object**: a *capped* cavity's lining residues form a closed
+2-cycle, which requires them to be graph-*adjacent* (close), not far —
+the opposite signature. TASK-0143's 0/7 result falsifies the open-cleft
+premise; it says nothing about capped voids, because H2 was never
+testing that premise in the first place.
+
+**This is now demonstrated, not just argued**: the delivered
+`test_persistent_voids.py::test_void_detected_even_when_lining_is_graph_
+adjacent` constructs a cavity whose wall points are deliberately
+graph-near and confirms `top_h2_persistence` still fires (>2.5). On a
+constructed "carved cryptic cavity" synthetic control: top H2 persistence
+4.337 (vs. a solid-ball noise floor of 1.105, and a hollow shell's
+never-fills ∞) with `void_score` AUC 0.576 and the cavity's own lining
+residues at **mean graph-hop 1.44** — i.e. graph-*adjacent*, exactly the
+case TASK-0143's own test would have missed. **Verified directly, not
+assumed** — this Architect/Planner thread read the actual test and
+confirmed the assertion matches the claim before accepting the argument
+and un-gating this half of the task.
+
+**The L1 half's gating is unaffected by this correction** — L1's own
+joint-support score is fundamentally a *cycle/loop-flow* quantity
+(closely related to H1/b1), the same family TASK-0143's graph-openness
+test actually does bear on. **L1 remains gated on TASK-0143/TASK-0140
+showing life**, per the task's original scoping; only the H2 half is
+escalated.
+
+**Known weak link in the delivered H2 implementation, stated honestly by
+its own author and confirmed on reading the code**: residue-level
+localization of the void's lining is a crude geometric heuristic (a
+grid-free shell-membership search for the void centroid, since `ripser`
+does not return H2 cycle representatives by default) — on the synthetic
+control, a plain proximity floor scored the cavity *higher* (0.82) than
+`void_score` (0.576) in a geometry where seed and cavity happened to sit
+on the same side. **This must be resolved or at least characterized
+before trusting residue-level AUC on real targets** — the improvement
+path already identified: GUDHI's alpha-complex with simplex tracking, or
+`ripser`'s `do_cocycles` option, either of which would recover which
+residues actually line the void rather than a geometric proxy for it.
 
 ## ⚠️ Before implementing — use real persistence tooling; H2 not H1
 
@@ -98,28 +145,57 @@ constraint, not a preference.
 
 ## TODO
 
-- [ ] Build apo simplicial complex (same 8 Å cutoff); ∂1, ∂2 (∂3 for H2).
+**H2 half — ungated, implementation delivered, do this first:**
+- [ ] Port `persistent_voids.py`/`test_persistent_voids.py`/
+      `persistent_voids_synthetic_control.py` into their real homes
+      (`src/allostery/`, `tests/`, `scripts/`); add `ripser` to
+      `pyproject.toml`; re-verify the 4 delivered tests pass unmodified.
+- [ ] Run `void_score`/`top_h2_persistence` on all 3 mandatory targets,
+      same 8 Å cutoff as the rest of the register.
+- [ ] Matched-spread random-patch null ([[TASK-0133]] precedent);
+      percentile + p per target.
+- [ ] Characterize (don't just note) the residue-localization weak link
+      before trusting real-target AUC — at minimum, report whether
+      `void_score`'s crude centroid heuristic or the plain proximity
+      floor scores higher on each real target, same comparison the
+      synthetic control already surfaced.
+- [ ] Bonferroni; PASS/FAIL/INSUFFICIENT per target, tagged;
+      `results_task0142_topology/`.
+
+**L1 half — still gated, still unimplemented:**
+- [ ] Build apo simplicial complex (same 8 Å cutoff); ∂1, ∂2 (∂3 for H2,
+      already covered by the H2 half above).
 - [ ] L1 = ∂1ᵀ∂1 + ∂2∂2ᵀ; assert dim ker L1 == E−N+C (validity gate).
 - [ ] L1 per-residue score (softest non-harmonic edge-mode joint support).
-- [ ] Persistent H2 via GUDHI/Ripser; top-generator pocket localization.
-- [ ] Matched-spread random-patch null for both; percentile + p.
-- [ ] Bonferroni; PASS/FAIL per target, tagged; `results_task0142_topology/`.
-- [ ] `RESULTS.md` section; state the quantum-Betti connection as PROPOSAL
-      framing, not a demonstrated advantage.
+- [ ] Matched-spread random-patch null; percentile + p.
+- [ ] Only attempt if [[TASK-0143]] or [[TASK-0140]] shows life.
+
+- [ ] `RESULTS.md` section covering both halves; state the quantum-Betti
+      connection as PROPOSAL framing, not a demonstrated advantage.
 
 ## Dependency
 
-- Hard gate: run only if [[TASK-0143]] or [[TASK-0140]] shows life.
-- Reuses: [[TASK-0133]] (random-patch null pattern), [[TASK-0112]] (CI).
-- New external dep: GUDHI or Ripser — flag for the environment/venv the
-  same way other deps were ([[TASK-0026]] lineage).
+- **H2 half: no hard gate** (corrected 2026-07-22, see above) — reuses
+  [[TASK-0133]] (random-patch null pattern), [[TASK-0112]] (CI).
+- **L1 half: hard gate unchanged** — run only if [[TASK-0143]] or
+  [[TASK-0140]] shows life.
+- New external dep: `ripser` (H2 half, delivered) — add to
+  `pyproject.toml`, flag in Done per [[TASK-0108]]/[[TASK-0110]]'s own
+  dependency-manifest precedent. GUDHI remains a possible future
+  upgrade path (better cocycle/simplex tracking) but is not required to
+  land the H2 half as delivered.
 
 ## Open Questions
 
-- Rips complex vs the contact-graph clique complex for the base complex —
-  they differ in the filled 2-/3-simplices. State the choice and why;
-  report if the H2 verdict is sensitive to it (it may be — this is the
-  Falsifier-D spurious-cycle regime).
+- **Resolved for the H2 half, 2026-07-22**: the delivered
+  `persistence_h2` builds a Vietoris-Rips complex directly on Cα
+  coordinates (Euclidean distance), not the contact-graph's clique
+  complex — a real, stated choice (`ripser(coords, maxdim=2, thresh=...)`),
+  not left open. Still applies to the L1 half, unimplemented.
+- Rips complex vs the contact-graph clique complex for the L1 base
+  complex — they differ in the filled 2-/3-simplices. State the choice
+  and why; report if the H2 verdict is sensitive to it (it may be — this
+  is the Falsifier-D spurious-cycle regime).
 - Whether N (up to ~950 for CARDIAC_MYOSIN) makes ∂3 / H2 persistence
   computationally heavy; if so, coarse-grain per the challenge's own
   coarse-graining secondary objective and note the compression.
