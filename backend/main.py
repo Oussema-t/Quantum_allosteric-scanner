@@ -351,6 +351,48 @@ def load(req: LoadRequest):
     return {**out, "cached": False}
 
 
+# ── background pre-warm: load the challenge targets into the cache after boot ─────
+# Runs in a daemon thread so it never blocks startup or real requests. Warms the full
+# structures (so any later cutoff is a network-free sub-second recompute) + the default
+# results (so the first click on a benchmark target is instant). Nothing is truncated.
+import threading
+import time
+import logging
+
+from .config import config
+
+_log = logging.getLogger("qas.prewarm")
+
+
+def _prewarm():
+    time.sleep(config.PREWARM_DELAY_S)
+    systems = resolve_systems()
+    n = 0
+    for name, cfg in systems.items():
+        apo = cfg.get("apo")
+        chain = cfg.get("chain", "A")
+        if not apo:
+            continue
+        for cut in config.PREWARM_CUTOFFS:
+            try:
+                load(LoadRequest(pdb_id=apo, chains=chain, target_name=name, cutoff=cut))
+                n += 1
+            except Exception as e:                     # a broken target must not stop the rest
+                _log.info("prewarm load %s@%s failed: %s", name, cut, e)
+            if cfg.get("holo"):
+                try:
+                    connectivity_change_ep(apo=apo, holo=cfg["holo"], apo_chain=chain,
+                                           target_name=name, cutoff=cut)
+                    n += 1
+                except Exception as e:
+                    _log.info("prewarm connectivity %s@%s failed: %s", name, cut, e)
+    _log.info("prewarm complete: %d results cached", n)
+
+
+if config.PREWARM_ENABLED:
+    threading.Thread(target=_prewarm, name="qas-prewarm", daemon=True).start()
+
+
 # serve the frontend at "/"
 if os.path.isdir(FRONTEND_DIR):
     app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")

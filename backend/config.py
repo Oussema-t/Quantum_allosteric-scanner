@@ -40,6 +40,15 @@ class Config:
     # ── frontend render caps (drawing limits only — never touch the computed values) ──
     MAX_PLOT_POINTS = _int("QAS_MAX_PLOT_POINTS", 4000)
 
+    # ── startup pre-warm (challenge targets loaded into cache in the background) ──
+    # Pre-warming the default cutoff also caches every structure, so ANY later cutoff/
+    # variable change is a sub-second local recompute (no network). Add more cutoffs via
+    # QAS_PREWARM_CUTOFFS="6,8,10,12" if you want those exact combos instant on first click.
+    PREWARM_ENABLED = os.environ.get("QAS_PREWARM", "1") != "0"
+    PREWARM_DELAY_S = _int("QAS_PREWARM_DELAY_S", 8)     # let the server come up first
+    PREWARM_CUTOFFS = [float(x) for x in
+                       os.environ.get("QAS_PREWARM_CUTOFFS", "8").split(",") if x.strip()]
+
     # ── misc ──
     HEALTH_PATH = os.environ.get("QAS_HEALTH_PATH", "/api/health")
 
