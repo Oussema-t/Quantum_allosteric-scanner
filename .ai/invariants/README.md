@@ -6,6 +6,12 @@ reportable. Full rationale and method: [`INVARIANCE_PROTOCOL.md`](../reference/I
 (TASK-0051). See also [[pitfalls#P-0001]] (`.ai/memory/shared/pitfalls.md`) for
 the two real bugs that motivated this.
 
+**Not covered by this registry**: repeated human/review exposure to the same
+fixed answer key across many review cycles is a real, separate risk this
+project has named (TASK-0115) — see `INVARIANCE_PROTOCOL.md`'s "Repeated-
+exposure risk" section. It is per-*claim*, not per-quantity, has no
+GAUGE/KNOB/SIGNAL table, and is deliberately not filed here as an `INV-XXXX`.
+
 ## One file per reported quantity
 
 `INV-0001-slug.md`, permanent id, never reused or renumbered — same convention

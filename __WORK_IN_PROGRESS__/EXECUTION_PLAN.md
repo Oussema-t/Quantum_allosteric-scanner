@@ -766,6 +766,18 @@ statistically decided win.** BCR_ABL1/CARDIAC_MYOSIN read the same as under TASK
 `COMPETENCE_MAP.md` is current as of this update (3rd SUPERSEDED layer, old numbers
 preserved).
 
+**Updated 2026-07-23: TASK-0115 (repeated-exposure risk) is Done — the finality rule
+this section's own numbers are read under is now written down, not implicit.** No
+`RESULTS.md` claim about robustness or generalizability is submission-final without
+being checked against 5.8/1C.11 (TASK-0081, extended by TASK-0127 to 4 targets and
+promoted to the reported headline) — the target set this project's ~15-cycle review
+history has never seen, unlike the mandatory 3 whose numbers fill this section above.
+That set is already Done and already corroborates the mandatory-3 pattern
+(`BEATS_CHANCE_NOT_FLOOR` on all 4, overlapping CIs) — the mitigation has run, not just
+been planned. Full statement, cross-linked from TASK-0081/TASK-0100:
+`INVARIANCE_PROTOCOL.md`'s new "Repeated-exposure risk" section. This is a
+documentation/protocol task only — no number in this section changes.
+
 **Updated 2026-07-13:** 5.1 is Done, but its output is not yet trustworthy as reported —
 Phase 1B is now load-bearing on the critical path, inserted between 5.1 and 5.2. **1B.1
 (TASK-0094) is the single highest-priority open task in this plan**: per the review, it

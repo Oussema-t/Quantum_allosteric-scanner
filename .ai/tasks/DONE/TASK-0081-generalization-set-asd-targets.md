@@ -155,3 +155,13 @@ test fixture missing `holo_pdb` entirely was silently misrouted) — see
 `TASK-0080`'s Done addendum for the finding and fix. `.venv/bin/python3
 -m pytest -q tests/ -k "not real_target and not kras_g12c_real and not
 real_run and not fetch"` — 581 passed after the fix, 0 failed.
+
+**Addendum, [[TASK-0115]], 2026-07-23**: this generalization set (later
+extended by [[TASK-0127]] to 4 targets and promoted to the reported
+headline) is this project's actual mitigation for the repeated-exposure
+risk named by TASK-0115 — a target set this project's own ~15-cycle
+review history has never seen, unlike the mandatory 3. Formalized in
+`INVARIANCE_PROTOCOL.md`'s new "Repeated-exposure risk" section: no
+`RESULTS.md` claim about robustness/generalizability is submission-final
+without checking it against this set, not merely "encouraged extra
+evidence" per the brief's own wording.

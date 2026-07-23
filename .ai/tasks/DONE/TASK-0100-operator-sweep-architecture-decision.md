@@ -245,3 +245,9 @@ project has run, each looking at the same 3 targets' true labels before
 deciding what to rename, re-scope, or re-frame. `TASK-0115` names that
 risk and ties any claim's finality to `TASK-0081`'s generalization set
 — complementary to this task's code-level gate, not a duplicate of it.
+
+**[[TASK-0115]] closed, 2026-07-23**: the risk this addendum anticipated
+is now formally written up in `INVARIANCE_PROTOCOL.md`'s "Repeated-
+exposure risk" section, cross-linked from this task and from
+`TASK-0081`. No code change to this task's own Tier-2 gate was needed
+or made — the two remain complementary, exactly as anticipated above.

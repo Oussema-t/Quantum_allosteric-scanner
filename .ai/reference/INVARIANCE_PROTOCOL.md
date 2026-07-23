@@ -149,6 +149,65 @@ transformations "obviously" gauge that nobody runs:
 - **Input-permutation invariance**: reordering rows/residues/targets must not change
   aggregate scores.
 
+## Repeated-exposure risk (TASK-0115) — distinct from GAUGE/KNOB/SIGNAL
+
+Everything above classifies transformations of a **single measurement**. This section
+names a different risk, orthogonal to that classification: what happens when the same
+**small, fixed answer key** is looked at by many decision-makers, many times, over a
+long review history.
+
+**The gap, stated precisely.** This project's 3 mandatory targets (KRAS_G12C, BCR_ABL1,
+CARDIAC_MYOSIN) have had their true holo labels visible to every review cycle this
+project has run — roughly 15 by the time this was named (`REVIEW-2026-07-15-
+execution-plan-gap-audit.md`, finding #4). `frozen_context`/LOPO/TASK-0100's Tier-2 gate
+correctly prevents *code* from peeking at labels before selecting an operator or
+parameter. **Nothing prevents a human (or an agent) from choosing which claim to make,
+which number to re-derive, or which framing to correct, having already seen how each
+candidate choice would land on those same 3 answers.** This is not a code defect and
+has no code-level fix — every individual decision named in the source review (heat→
+`ground_state_relaxation`, the floor definition, SEAM-0008's reassignment, the GSR
+causal-claim correction) was independently well-evidenced on its own terms. The risk is
+*cumulative and structural*: researcher-degrees-of-freedom exercised across many rounds
+of looking at the same 3 numbers, not a flaw in any one round.
+
+**Why this doesn't fit GAUGE/KNOB/SIGNAL.** Those three classes describe transformations
+applied to a quantity's *inputs* (rotation, permutation, a modeling choice, a null
+control). This risk has no input transformation — the same input, the same code, the
+same honest measurement, run by the same well-intentioned reviewers, still accumulates
+exposure simply by being *looked at repeatedly* before a claim is finalized. No
+GAUGE/KNOB/SIGNAL table closes it, because there is no transformation to classify.
+
+**The mitigation, already in flight, now made explicit rather than implicit:**
+[[TASK-0081]] (generalization set — 2 additional Allosteric Database targets, later
+[[TASK-0127]] extended this to 4 and made it the reported headline, not an appendix) is
+this project's actual answer: a set of targets **this project's own review history has
+never seen**, so a claim's performance on them cannot have been shaped, consciously or
+not, by prior exposure. [[TASK-0100]]'s Tier-2 gate (`select_frozen_config`/LOPO) is the
+correct, complementary code-level defense against a different, narrower risk (a single
+operator-selection act peeking at labels) — it does not and cannot address this one.
+
+**The rule, stated plainly**: **no claim in `RESULTS.md` is submission-final until it
+has been checked against the generalization set**, not merely treated as "encouraged
+extra evidence" per the brief's own wording. As of this writing both TASK-0081 and
+TASK-0127 are Done — the generalization set exists (PTP1B, CASPASE7, CASPASE1,
+GLUCOKINASE) and every one of its 4 results independently reproduces the mandatory-3
+pattern (`BEATS_CHANCE_NOT_FLOOR`, overlapping score/floor CIs, `most_impactful_term`
+never `V_R`) — so the mitigation is not merely planned, it has already run and
+corroborated the mandatory-3 findings on targets this project's review history could
+not have contaminated. **This does not retroactively "clear" the mandatory 3 targets of
+the exposure risk** — they cannot be un-seen — it means any claim about *robustness or
+generalizability* should cite the 4-target set as its evidence, not the mandatory 3
+alone, and a future claim that only holds on the mandatory 3 (and fails or is untested
+on the generalization set) should be read as exposure-contaminated until shown
+otherwise.
+
+**Registry note**: this risk class is deliberately *not* added to the `INV-XXXX`
+registry above — that registry is per-reported-quantity (GAUGE/KNOB/SIGNAL tables for
+`cumulative_overlap`, AUC, etc.); this risk is per-*claim*, not per-quantity, and has no
+executable test (Planned Validation: none code-executable — the validation is that this
+statement exists, is cross-linked, and that generalization-set evidence is actually
+cited before any finality claim, not that some assertion turns green).
+
 ## Rule of engagement
 
 1. Before a quantity is reported, its transformation table (GAUGE / KNOB / SIGNAL) must
@@ -167,3 +226,10 @@ transformations "obviously" gauge that nobody runs:
    against *knowing the answer*; this guards against the score being *trivially
    predictable from something else entirely* (geometry, in this repo's case). Both are
    leaks — one through labels, one through coordinates.
+6. **Repeated human exposure to a fixed small answer key is its own leak, distinct from
+   both of the above (TASK-0115).** No code-level gate — not `frozen_context`, not
+   TASK-0100's Tier-2 LOPO gate, not this file's own GAUGE/KNOB/SIGNAL classification —
+   can detect a reviewer choosing a claim having already seen how it lands on the same
+   3 targets across ~15 review cycles. See "Repeated-exposure risk" above. The
+   mitigation is a target set the review history has never seen ([[TASK-0081]]/
+   [[TASK-0127]]), not a code assertion.
