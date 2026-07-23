@@ -2591,6 +2591,74 @@ Full detail: `.ai/tasks/DONE/TASK-0134-cpu-time-verification-and-long-job-conven
 
 ---
 
+## Chiral (broken-time-reversal) circulation observable (TASK-0140, HYP-P9, 2026-07-23)
+
+Peierls-substituted complex-hopping Hamiltonian (symmetric-gauge vector potential,
+midpoint line-integral phase) → infinite-time-averaged bond current (projector-dephasing
+generalization of [[TASK-0130]]'s closed form to this off-diagonal bilinear quantity) →
+Helmholtz-Hodge split, scoring only the divergence-free (circulating) part — proximity-
+orthogonal by construction, not by tuning. Reference script (`chiral_observable.py`)
+confirmed absent from this repo; reconstructed from `HYP-P9`'s own description + cited
+literature (Zimborás 2013, Lu 2016). New `allostery.chiral`, 35 new tests.
+
+**Real physics finding made while building the test suite**: a bare N-cycle ring gives
+*exactly* zero converged circulation from a diagonal seed, at any flux — confirmed
+directly (idealized rings, randomly-weighted-and-phased rings, a bipartite-preserving
+ring+chord, even a uniform-weight triangle), not a corner case anyone anticipated. Real
+protein contact graphs (dense 3-D packing, degree well above 2 everywhere) are not at
+risk of this, but it ruled out a bare ring as this module's own regression-test
+fixture — an irregular, next-nearest-neighbor-widened ring (`_triangulated_asymmetric_
+coords`) is used instead. Full mechanism discussion: `allostery/chiral.py`'s own
+docstring §4.
+
+**GATE 1 (dissociates coupling from well-depth) and GATE 2 (beats floor on a synthetic
+distal loop pocket) both re-verified as passing on this fresh reconstruction** — not
+inherited from the missing script's claimed status. GATE 1 needed a new loop-dumbbell
+fixture (the original TASK-0103 dumbbell is a cycle-free tree, and Peierls phases on a
+tree gauge away to nothing): circulation follows coupling (mean AUC 0.81/0.19 across 8
+seeds in the two conflict cells), `ground_state_relaxation` on the identical topology
+follows the well instead (0.0/1.0) — a clean, deterministic dissociation. GATE 2 (a
+backbone forking into a tightly-spaced POCKET branch vs. a normally-spaced DECOY branch
+at matched distance from the seed): circulation clears the standard floor check
+(AUC 0.93–0.98 across 6 seeds); occupation does not. This reconstruction's own numbers
+(not the lost original's cited 0.33/0.6–0.97): rho(occ,-dist) ≈ -0.6 to -0.65,
+rho(circ,-dist) ≈ -0.18 to +0.15 — same qualitative pattern, different exact figures, as
+expected for an independently-built synthetic network.
+
+**Real run, all 3 mandatory + 4 ASD targets, `H_new`'s own apo graph, full active-site
+seed (incoherent mixture):**
+
+| Target | circ AUC | occ AUC | max floor AUC | CI overlap | ρ(circ,-dist) | ρ(occ,-dist) | strat-AUC perm p |
+|---|---|---|---|---|---|---|---|
+| KRAS_G12C (mand.) | 0.702 | 0.653 | 0.546 | yes | -0.259 | -0.700 | **0.0030** |
+| BCR_ABL1 (mand.) | 0.419 | 0.560 | 0.619 | yes | -0.479 | -0.738 | 0.5005 |
+| CARDIAC_MYOSIN (mand.) | 0.395 | 0.531 | 0.583 | yes | -0.223 | -0.712 | 0.6566 |
+| PTP1B (ASD) | 0.640 | 0.495 | 0.492 | yes | -0.286 | -0.695 | **0.0020** |
+| GLUCOKINASE (ASD) | 0.677 | 0.657 | 0.863 | yes | -0.392 | -0.594 | 0.0120 |
+| CASPASE1 (ASD) | 0.639 | 0.676 | 0.919 | yes | -0.374 | -0.581 | 0.4961 |
+| CASPASE7 (ASD) | 0.530 | 0.600 | 0.758 | yes | -0.260 | -0.434 | 0.8434 |
+
+**Pre-registered verdict: FAIL** — CI overlap is `True` on every target, so the primary
+bar (beats floor AND non-overlapping 95% block-bootstrap CIs) is not met anywhere,
+consistent with [[TASK-0143]]'s own FAIL on the graph-openness premise this observable
+depends on. **A distinct, real, honestly-reported suggestive signal**: KRAS_G12C
+(mandatory) and PTP1B (ASD) both clear the Bonferroni-corrected threshold (0.05/7 =
+0.00714) on the independent stratified-AUC permutation-null statistic — real, non-random
+by that test, just not enough to clear the stricter CI bar. **The proximity-
+orthogonality claim itself holds cleanly on 7/7 targets** — ρ(circ,-dist) is smaller in
+magnitude than ρ(occ,-dist) everywhere (circ range -0.22 to -0.48 vs. occ range -0.43
+to -0.74) — circulation genuinely measures something other than distance; that
+something just doesn't clear the discrimination bar on these targets. Field-scale
+sensitivity is real and target-dependent (PTP1B's AUC spans 0.429–0.818 across the
+0.02–0.2 sweep, crossing the floor in both directions).
+
+[[TASK-0142]]'s own hard gate ("run only if TASK-0143 or TASK-0140 shows life") remains
+unmet — this result does not open it. Full detail:
+`.ai/tasks/DONE/TASK-0140-chiral-circulation-observable.md`,
+`results_task0140_chiral/chiral_circulation_real_run.json`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -2625,6 +2693,8 @@ Full detail: `.ai/tasks/DONE/TASK-0134-cpu-time-verification-and-long-job-conven
 | 26 | Does `superpose.align_apo_holo`'s raw `(chain, resnum)` correspondence silently break for targets ([[TASK-0127]]'s `apo_chains`/`holo_chains` override) where apo and holo deposit the same biological chain under different author chain letters — found live while executing [[TASK-0124]]'s CARDIAC_MYOSIN apo replacement? | **resolved 2026-07-22: yes, confirmed on 2 real targets, now fixed.** New optional `chain_map` parameter on `common_residues_by_resnum`/`align_apo_holo` (default `None`, byte-identical prior behavior), built from target config via new `chain_map_from_config`, threaded through all 5 real call sites found by re-grepping the repo (`run_superpose`, `learnability_gate.py`, `learnability_gate_patch_control.py`, `holo_diagnostic_comparison.py`, `kras_auc_reconciliation.py`). Before the fix: CARDIAC_MYOSIN's new 8QYP/8QYR pair (apo chain A, holo chain B) had 0 common residues, `align_apo_holo` raised. After: 698/704 residues resolve (vs. 5TBY-era's 709/950, a coverage jump from 75%->99%), `LEARNABLE` (ratio 1.57, whole-structure CO(20) 0.943). GLUCOKINASE (apo chain A, holo chain X), run through this gate for the first time ever, resolves 446/448 and is the project's first target to classify `UNLEARNABLE_FROM_APO` on both conjunction halves genuinely firing (ratio 1.94, CO(20) 0.443). TASK-0120/0133's own CARDIAC_MYOSIN rows are flagged superseded (by TASK-0124's apo replacement, not retroactively by this bug — 5TBY happened to share holo's chain letter) in this document's own learnability-gate section, not deleted. | [[TASK-0144]], [[TASK-0124]], [[TASK-0127]], [[TASK-0120]], [[TASK-0133]] |
 
 | 27 | Does TASK-0110's "a single `time_averaged_ctqw` call did not return after 2+ hours" infeasibility claim hold up under continuous CPU-time evidence, not just a single process-state check at kill time ([[P-0005]])? | **resolved 2026-07-22: corroborated, not inflated.** Re-ran the same call with continuous `RunLogger` instrumentation: 438 samples over one full, uninterrupted 950s run to completion, `cpu_elapsed_s/wall_elapsed_s` held at 4.05 ± 0.035 throughout, no drops — clean evidence of continuous execution. The current AAKV prescription for the same target is ~15x smaller than the original (`H_new`'s spectrum shifted after [[TASK-0121]]'s renormalization); extrapolated to the original scale, the re-verified rate implies ~3.9 CPU-hours, consistent with the original claim. Separate finding: CPU-time exceeding wall-clock by ~16x (uncapped, 16-core) is normal multithreaded BLAS behavior, not contention — ratio *stability* across samples is the real diagnostic. New `.ai/reference/LONG_JOB_CONVENTION.md` generalizes the pattern for future long-running compute, including an explicit HITL hand-off path. | [[TASK-0134]] |
+
+| 28 | Does the chiral (broken-time-reversal) circulation observable (HYP-P9) — Peierls-flux bond current, Hodge-filtered to its circulating part, proximity-orthogonal by construction — clear the proximity floor with non-overlapping CIs on real pockets, per its own pre-registered gate? | **resolved 2026-07-23: no — FAIL on all 7 targets, consistent with [[TASK-0143]]'s own FAIL on the graph-openness premise this observable depends on.** CI overlap is `True` everywhere, so the primary bar is not met anywhere. Real, honestly-reported suggestive-not-confirmed signal: KRAS_G12C and PTP1B both clear the Bonferroni-corrected threshold (0.05/7) on the independent stratified-AUC permutation-null statistic. The proximity-orthogonality claim itself holds cleanly on 7/7 targets (ρ(circ,-dist) smaller in magnitude than ρ(occ,-dist) everywhere) — the observable measures something other than distance, that something just doesn't clear the discrimination bar here. Real physics finding made while building the regression tests (not anticipated in advance): a bare N-cycle ring gives exactly zero converged circulation from a diagonal seed, at any flux — real protein contact graphs aren't at risk (dense 3-D packing gives degree well above 2 everywhere), but it ruled out the obvious minimal synthetic test fixture. GATE 1/GATE 2 both re-verified passing on a fresh reconstruction (the cited reference script is confirmed absent). [[TASK-0142]]'s own hard gate remains unmet. | [[TASK-0140]], [[TASK-0143]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

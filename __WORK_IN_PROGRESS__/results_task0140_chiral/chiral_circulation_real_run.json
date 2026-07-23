@@ -1,0 +1,324 @@
+{
+  "KRAS_G12C": {
+    "target": "KRAS_G12C",
+    "n_residues": 169,
+    "pocket_size": 18,
+    "circ_auc": 0.7017543859649122,
+    "occ_auc": 0.6532999164578112,
+    "floor_aucs": {
+      "euclid": 0.5254803675856308,
+      "hop": 0.5463659147869674,
+      "degree": 0.49895572263993315
+    },
+    "max_floor_auc": 0.5463659147869674,
+    "circ_category": "NO_FAILURE_DETECTED",
+    "occ_category": "NO_FAILURE_DETECTED",
+    "circ_ci": [
+      0.7017543859649122,
+      0.5146296296296298,
+      0.8421136021318503
+    ],
+    "floor_ci": [
+      0.5463659147869674,
+      0.3061457316956514,
+      0.7523802334943638
+    ],
+    "ci_overlap": true,
+    "rho_circ_dist": -0.25933774834437084,
+    "rho_occ_dist": -0.6999302892994074,
+    "stratified_max_auc": 0.9523809523809524,
+    "stratified_max_shell": 2.0,
+    "stratified_n_scorable_shells": 4,
+    "permutation_null": {
+      "real_well_powered_max_auc": 0.9523809523809524,
+      "real_shell": 2.0,
+      "null_median": 0.6388888888888888,
+      "null_sd": 0.11530658801746778,
+      "n_reps": 1000,
+      "percentile": 0.997,
+      "p_value": 0.003
+    },
+    "field_scale_sensitivity": {
+      "0.02": 0.8095238095238095,
+      "0.05": 0.7017543859649122,
+      "0.1": 0.6470342522974102,
+      "0.2": 0.6712614870509608
+    }
+  },
+  "BCR_ABL1": {
+    "target": "BCR_ABL1",
+    "n_residues": 451,
+    "pocket_size": 16,
+    "circ_auc": 0.41885696821515894,
+    "occ_auc": 0.559596577017115,
+    "floor_aucs": {
+      "euclid": 0.4899144254278729,
+      "hop": 0.6186583129584352,
+      "degree": 0.4971729828850856
+    },
+    "max_floor_auc": 0.6186583129584352,
+    "circ_category": "BEATS_CHANCE_NOT_FLOOR",
+    "occ_category": "BEATS_CHANCE_NOT_FLOOR",
+    "circ_ci": [
+      0.41885696821515894,
+      0.2868250690758743,
+      0.6344593301435406
+    ],
+    "floor_ci": [
+      0.6186583129584352,
+      0.43881058718814353,
+      0.761358337445294
+    ],
+    "ci_overlap": true,
+    "rho_circ_dist": -0.4788909036907349,
+    "rho_occ_dist": -0.7378449609979523,
+    "stratified_max_auc": 0.6137566137566137,
+    "stratified_max_shell": 3.0,
+    "stratified_n_scorable_shells": 4,
+    "permutation_null": {
+      "real_well_powered_max_auc": 0.6137566137566137,
+      "real_shell": 3.0,
+      "null_median": 0.6137566137566137,
+      "null_sd": 0.12665461977432207,
+      "n_reps": 999,
+      "percentile": 0.5015015015015015,
+      "p_value": 0.5005005005005005
+    },
+    "field_scale_sensitivity": {
+      "0.02": 0.355898533007335,
+      "0.05": 0.41885696821515894,
+      "0.1": 0.3766809290953545,
+      "0.2": 0.40021393643031783
+    }
+  },
+  "CARDIAC_MYOSIN": {
+    "target": "CARDIAC_MYOSIN",
+    "n_residues": 704,
+    "pocket_size": 13,
+    "circ_auc": 0.39455937821465314,
+    "occ_auc": 0.5314893130643502,
+    "floor_aucs": {
+      "euclid": 0.5828094639387359,
+      "hop": 0.4931992227683164,
+      "degree": 0.4022173962738599
+    },
+    "max_floor_auc": 0.5828094639387359,
+    "circ_category": "BEATS_CHANCE_NOT_FLOOR",
+    "occ_category": "NO_SIGNAL_IN_APO",
+    "circ_ci": [
+      0.39455937821465314,
+      0.18138931242600137,
+      0.6157786702560025
+    ],
+    "floor_ci": [
+      0.5828094639387359,
+      0.4256215011626906,
+      0.7712291274598324
+    ],
+    "ci_overlap": true,
+    "rho_circ_dist": -0.22307865512479905,
+    "rho_occ_dist": -0.7122863348635282,
+    "stratified_max_auc": 0.9135802469135803,
+    "stratified_max_shell": 6.0,
+    "stratified_n_scorable_shells": 6,
+    "permutation_null": {
+      "real_well_powered_max_auc": 0.5376984126984127,
+      "real_shell": 4.0,
+      "null_median": 0.5954442049808429,
+      "null_sd": 0.13771696842040174,
+      "n_reps": 996,
+      "percentile": 0.3433734939759036,
+      "p_value": 0.6566265060240963
+    },
+    "field_scale_sensitivity": {
+      "0.02": 0.3755857812321408,
+      "0.05": 0.39455937821465314,
+      "0.1": 0.4823408389530232,
+      "0.2": 0.5189164475940108
+    }
+  },
+  "PTP1B": {
+    "target": "PTP1B",
+    "n_residues": 298,
+    "pocket_size": 14,
+    "circ_auc": 0.6400409626216078,
+    "occ_auc": 0.4946236559139785,
+    "floor_aucs": {
+      "euclid": 0.25448028673835127,
+      "hop": 0.2365591397849462,
+      "degree": 0.4920634920634921
+    },
+    "max_floor_auc": 0.4920634920634921,
+    "circ_category": "NO_FAILURE_DETECTED",
+    "occ_category": "NO_SIGNAL_IN_APO",
+    "circ_ci": [
+      0.6400409626216078,
+      0.49959989304014835,
+      0.7706023732609234
+    ],
+    "floor_ci": [
+      0.4920634920634921,
+      0.2582963682658805,
+      0.5957124255952381
+    ],
+    "ci_overlap": true,
+    "rho_circ_dist": -0.28575483678908004,
+    "rho_occ_dist": -0.6954151523623148,
+    "stratified_max_auc": 0.9444444444444444,
+    "stratified_max_shell": 5.0,
+    "stratified_n_scorable_shells": 4,
+    "permutation_null": {
+      "real_well_powered_max_auc": 0.9444444444444444,
+      "real_shell": 5.0,
+      "null_median": 0.6160325422069979,
+      "null_sd": 0.12193891964844147,
+      "n_reps": 1000,
+      "percentile": 0.998,
+      "p_value": 0.002
+    },
+    "field_scale_sensitivity": {
+      "0.02": 0.4290834613415259,
+      "0.05": 0.6400409626216078,
+      "0.1": 0.6633384536610343,
+      "0.2": 0.8179723502304147
+    }
+  },
+  "GLUCOKINASE": {
+    "target": "GLUCOKINASE",
+    "n_residues": 448,
+    "pocket_size": 17,
+    "circ_auc": 0.6772990886495442,
+    "occ_auc": 0.6570008285004143,
+    "floor_aucs": {
+      "euclid": 0.8630212648439658,
+      "hop": 0.8090996962165148,
+      "degree": 0.5084230875448771
+    },
+    "max_floor_auc": 0.8630212648439658,
+    "circ_category": "BEATS_CHANCE_NOT_FLOOR",
+    "occ_category": "BEATS_CHANCE_NOT_FLOOR",
+    "circ_ci": [
+      0.6772990886495442,
+      0.4767836757990868,
+      0.8394787494437027
+    ],
+    "floor_ci": [
+      0.8630212648439658,
+      0.7813876518775085,
+      0.9287364194615022
+    ],
+    "ci_overlap": true,
+    "rho_circ_dist": -0.39200038317021463,
+    "rho_occ_dist": -0.5940130758216008,
+    "stratified_max_auc": 0.9094650205761318,
+    "stratified_max_shell": 3.0,
+    "stratified_n_scorable_shells": 3,
+    "permutation_null": {
+      "real_well_powered_max_auc": 0.9094650205761318,
+      "real_shell": 3.0,
+      "null_median": 0.6206185567010309,
+      "null_sd": 0.11938330117733306,
+      "n_reps": 1000,
+      "percentile": 0.988,
+      "p_value": 0.012
+    },
+    "field_scale_sensitivity": {
+      "0.02": 0.6539629936481635,
+      "0.05": 0.6772990886495442,
+      "0.1": 0.6861364264015466,
+      "0.2": 0.7190002761668048
+    }
+  },
+  "CASPASE1": {
+    "target": "CASPASE1",
+    "n_residues": 255,
+    "pocket_size": 6,
+    "circ_auc": 0.639344262295082,
+    "occ_auc": 0.6755464480874318,
+    "floor_aucs": {
+      "euclid": 0.9193989071038251,
+      "hop": 0.8818306010928962,
+      "degree": 0.694672131147541
+    },
+    "max_floor_auc": 0.9193989071038251,
+    "circ_category": "BEATS_CHANCE_NOT_FLOOR",
+    "occ_category": "BEATS_CHANCE_NOT_FLOOR",
+    "circ_ci": [
+      0.639344262295082,
+      0.3525219816051631,
+      0.8386285369403912
+    ],
+    "floor_ci": [
+      0.9193989071038251,
+      0.8068593789280091,
+      0.9852784503631961
+    ],
+    "ci_overlap": true,
+    "rho_circ_dist": -0.373824221187539,
+    "rho_occ_dist": -0.5814832237315796,
+    "stratified_max_auc": 0.5170731707317073,
+    "stratified_max_shell": 1.0,
+    "stratified_n_scorable_shells": 2,
+    "permutation_null": {
+      "real_well_powered_max_auc": 0.5170731707317073,
+      "real_shell": 1.0,
+      "null_median": 0.5146198830409356,
+      "null_sd": 0.17211282448941778,
+      "n_reps": 383,
+      "percentile": 0.5039164490861618,
+      "p_value": 0.4960835509138381
+    },
+    "field_scale_sensitivity": {
+      "0.02": 0.6782786885245902,
+      "0.05": 0.639344262295082,
+      "0.1": 0.6639344262295082,
+      "0.2": 0.4685792349726776
+    }
+  },
+  "CASPASE7": {
+    "target": "CASPASE7",
+    "n_residues": 461,
+    "pocket_size": 7,
+    "circ_auc": 0.5297486477887369,
+    "occ_auc": 0.6003818008272351,
+    "floor_aucs": {
+      "euclid": 0.7581928094177537,
+      "hop": 0.6977410117721922,
+      "degree": 0.616131084950684
+    },
+    "max_floor_auc": 0.7581928094177537,
+    "circ_category": "NO_SIGNAL_IN_APO",
+    "occ_category": "BEATS_CHANCE_NOT_FLOOR",
+    "circ_ci": [
+      0.5297486477887369,
+      0.32586481826972863,
+      0.8341564564977972
+    ],
+    "floor_ci": [
+      0.7581928094177537,
+      0.5815427978593303,
+      0.9552938751964548
+    ],
+    "ci_overlap": true,
+    "rho_circ_dist": -0.2600988669283038,
+    "rho_occ_dist": -0.4338367379482202,
+    "stratified_max_auc": 0.9175257731958762,
+    "stratified_max_shell": 4.0,
+    "stratified_n_scorable_shells": 4,
+    "permutation_null": {
+      "real_well_powered_max_auc": 0.3125,
+      "real_shell": 2.0,
+      "null_median": 0.5027777777777778,
+      "null_sd": 0.16787441621711846,
+      "n_reps": 696,
+      "percentile": 0.15660919540229884,
+      "p_value": 0.8433908045977011
+    },
+    "field_scale_sensitivity": {
+      "0.02": 0.5284759783646198,
+      "0.05": 0.5297486477887369,
+      "0.1": 0.4451161310849507,
+      "0.2": 0.5806554247534204
+    }
+  }
+}

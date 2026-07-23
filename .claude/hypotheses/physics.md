@@ -518,6 +518,24 @@ The Hodge gradient/curl split maps exactly onto proximity-flow / loop-signal.
 **To test:** [[TASK-0140]] — gated benchmark eval vs the proximity floor with
 block-bootstrap CIs and distance-stratified AUC + permutation null.
 
+**Status, 2026-07-23 (TASK-0140): tested, claim not supported on real data — FAIL,
+consistent with HYP-P10's own FAIL.** Reference script confirmed absent (as flagged
+above); reconstructed independently from this hypothesis's own description + the cited
+literature, and re-verified GATE 1 (coupling-vs-well dissociation) and GATE 2
+(beats-floor-on-synthetic-loop-pocket) on the fresh reconstruction rather than
+inheriting the missing script's claimed pass status (both pass, with this
+reconstruction's own numbers, not the unrecoverable original's 0.33/0.6-0.97). On all
+3 mandatory + 4 ASD targets: **the proximity-orthogonality claim itself is confirmed
+cleanly on 7/7 targets** (rho(circ,-dist) consistently smaller in magnitude than
+rho(occ,-dist): circ range -0.22 to -0.48 vs occ range -0.43 to -0.74) — but this task's
+own pre-registered PASS bar (floor-beating AUC AND non-overlapping 95% block-bootstrap
+CIs) is not met on any target; CI overlap is `True` everywhere. Two targets
+(KRAS_G12C mandatory, PTP1B ASD) show real, Bonferroni-surviving signal on the
+independent stratified-AUC permutation-null statistic alone (p=0.0030, p=0.0020 vs
+threshold 0.00714) — reported as suggestive, not a PASS, since the primary CI criterion
+governs. Full detail: `.ai/tasks/DONE/TASK-0140-chiral-circulation-observable.md`.
+**Neither HYP-P9 nor HYP-P10 opens [[TASK-0142]]'s own hard gate.**
+
 ---
 
 ## HYP-P10 · Cryptic pockets carry a "near-in-3D / far-on-apo-graph" coordinated-closure signature
