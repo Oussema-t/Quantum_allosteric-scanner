@@ -98,6 +98,7 @@ async function findHolo() {
   btn.disabled = true;
   setHoloStatus("Searching RCSB for drug-bound structures of this protein…");
   try {
+    const t0 = performance.now();
     const url = `${API}/api/holo-finder?apo_pdb=${encodeURIComponent(apo)}` +
       ($("target").value ? `&target_name=${encodeURIComponent($("target").value)}` : "");
     const d = await fetch(url).then((r) => r.json());
@@ -120,7 +121,7 @@ async function findHolo() {
     } else {
       opts.forEach((o) => addOption(sel, o.v, o.t));
       setHoloAvailability(true);
-      setHoloStatus(`Found ${opts.length} structures (UniProt ${d.uniprot || "?"}).`);
+      setHoloStatus(`Found ${opts.length} structures (UniProt ${d.uniprot || "?"}). · ${timeTag(t0, d.cached)}`);
     }
   } catch (e) {
     setHoloStatus(`Holo search failed: ${e.message}`, true);
@@ -183,9 +184,8 @@ async function loadAndVisualize() {
       throw new Error(err.detail || `HTTP ${res.status}`);
     }
     const data = await res.json();
-    const dt = ((performance.now() - t0) / 1000).toFixed(1);
     LAST.view = data;
-    setStatus(`Loaded ${data.pdb_id} — ${data.n_residues} residues · ${dt}s`);
+    setStatus(`Loaded ${data.pdb_id} — ${data.n_residues} residues · ${timeTag(t0, data.cached)}`);
     showActiveSiteNote(data);
     // reset apo→holo shift state for the newly loaded structure
     LAST.shift = null;
@@ -209,6 +209,15 @@ function setStatus(msg, isError = false) {
   const s = $("status");
   s.textContent = msg;
   s.classList.toggle("error", isError);
+}
+
+// ⏱ per-section compute time: how many seconds we waited for the results.
+// ⚡cached = served from the result cache (≈0 s, identical to recomputing).
+function secsSince(t0) { return ((performance.now() - t0) / 1000).toFixed(2); }
+function timeTag(t0, cached) { return `⏱ ${secsSince(t0)} s${cached ? " · ⚡cached" : ""}`; }
+function appendTime(elId, t0, cached) {
+  const e = $(elId);
+  if (e) e.textContent = (e.textContent ? e.textContent + "  ·  " : "") + timeTag(t0, cached);
 }
 
 // show where the active site came from, and fill the field if the user left it blank
@@ -297,6 +306,7 @@ async function compareApoHolo() {
   btn.disabled = true;
   setCompareStatus(`Superimposing holo ${holo} onto apo ${apo}…`);
   try {
+    const t0 = performance.now();
     // pass only the apo-chain hint; the backend resolves the DRUG-BEARING holo chain
     const ac = ($("chains").value.trim() || "A").split(",")[0].trim();
     const url = `${API}/api/compare?apo=${apo}&holo=${holo}&apo_chain=${ac}`;
@@ -307,7 +317,7 @@ async function compareApoHolo() {
     render3DCompare(d);
     setCompareStatus(`apo ${apo}/${d.apo_chain} ↔ holo ${holo}/${d.holo_chain}` +
       `${d.drug_code ? ` (drug ${d.drug_code})` : ""} — ${d.n_aligned} aligned · ` +
-      `RMSD ${d.rmsd} Å · max Cα shift ${d.max_disp} Å`);
+      `RMSD ${d.rmsd} Å · max Cα shift ${d.max_disp} Å · ${timeTag(t0, d.cached)}`);
   } catch (e) {
     setCompareStatus(`Compare failed: ${e.message}`, true);
   } finally {
@@ -534,6 +544,7 @@ async function computeShift() {
   btn.disabled = true;
   setShiftNote(`Computing site potentials for holo ${holo} and the apo→holo shift…`);
   try {
+    const t0 = performance.now();
     // pass only the apo-chain hint; the backend resolves the DRUG-BEARING holo chain
     const ac = ($("chains").value.trim() || "A").split(",")[0].trim();
     const cutoff = parseFloat($("cutoff").value) || 8.0;
@@ -549,7 +560,7 @@ async function computeShift() {
     applyAnalysisMode();
     const cu = d.chains_used || {};
     setShiftNote(`Holo + Δ ready — apo chain ${cu.apo_chain} ↔ holo chain ${cu.holo_chain}` +
-      `${cu.drug_code ? ` (drug ${cu.drug_code})` : ""}, ${d.n_shared} shared residues. ` +
+      `${cu.drug_code ? ` (drug ${cu.drug_code})` : ""}, ${d.n_shared} shared residues · ${timeTag(t0, d.cached)}. ` +
       `Use “Show” to switch apo / holo / Δ.`);
   } catch (e) {
     setShiftNote(`Shift failed: ${e.message}`, true);
@@ -717,6 +728,7 @@ async function loadDrugSite() {
 
 // ── structure intel ─────────────────────────────────────────────────────────
 async function loadIntel(pdbId, chains) {
+  const t0 = performance.now();
   try {
     const url = `${API}/api/structure?pdb_id=${encodeURIComponent(pdbId)}` +
       (chains ? `&chains=${encodeURIComponent(chains)}` : "");
@@ -725,6 +737,12 @@ async function loadIntel(pdbId, chains) {
     LAST.intel = null;
   }
   renderStructInfo(LAST.intel);
+  if (LAST.intel) {
+    const s = document.createElement("div");
+    s.className = "status"; s.style.marginTop = "8px";
+    s.textContent = timeTag(t0, LAST.intel.cached);
+    $("structinfo").appendChild(s);
+  }
 }
 
 // ── 3D structure (3Dmol.js) — white background, biologist view ──────────────
@@ -933,6 +951,7 @@ async function computeConnectivityChange() {
   const btn = $("connbtn"); btn.disabled = true;
   setConnStatus(`Computing apo→holo connectivity change (${apo} → ${holo})…`);
   try {
+    const t0 = performance.now();
     const ac = ($("chains").value.trim() || "A").split(",")[0].trim();
     const cutoff = parseFloat($("cutoff").value) || 8.0;
     const url = `${API}/api/connectivity-change?apo=${apo}&holo=${holo}&apo_chain=${ac}&cutoff=${cutoff}` +
@@ -949,6 +968,7 @@ async function computeConnectivityChange() {
     $("connXint").value = ""; $("connYint").value = "";
     $("connfilter").classList.remove("hidden");
     applyConnRegion();   // renders heatmaps + morph + 3D graph (all residues initially)
+    appendTime("connstatus", t0, d.cached);   // ⏱ how long the compute took
   } catch (e) {
     setConnStatus(`Failed: ${e.message}`, true);
   } finally {
@@ -1265,6 +1285,7 @@ async function applyGraphMotion() {
   const btn = $("graphapply"); btn.disabled = true;
   st.textContent = `Finding ${nFrames - 2} real intermediate structure(s) of this protein…`;
   try {
+    const t0 = performance.now();
     const url = `${API}/api/morph-frames?apo=${apo}&holo=${holo}&apo_chain=${ac}&cutoff=${cutoff}` +
       `&n_frames=${nFrames}`;
     const fr = await fetch(url).then(async (r) => {
@@ -1277,9 +1298,10 @@ async function applyGraphMotion() {
     const dropped = (fr.rejected && fr.rejected.length)
       ? ` · dropped ${fr.rejected.length} poorly-aligned: ${fr.rejected.map((r) => r.pdb_id).join(", ")}`
       : "";
-    st.textContent = (fr.n_frames > 2)
-      ? `Playing ${fr.n_frames} real frames: ${fr.frame_labels.join(" → ")} · ${fr.n_shared} shared residues (follows the Region selector)${dropped}.`
-      : `No well-aligning structures of this protein found — using apo + holo only (${fr.n_shared} shared residues)${dropped}.`;
+    st.textContent = ((fr.n_frames > 2)
+      ? `Playing ${fr.n_frames} real frames: ${fr.frame_labels.join(" → ")} · ${fr.n_shared} shared residues (follows the Region selector)${dropped}`
+      : `No well-aligning structures of this protein found — using apo + holo only (${fr.n_shared} shared residues)${dropped}`)
+      + ` · ${timeTag(t0, fr.cached)}`;
   } catch (e) {
     st.textContent = `Failed: ${e.message}`;
   } finally {
