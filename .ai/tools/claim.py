@@ -39,6 +39,19 @@ which correctly prompts. Full recommended workflow:
     claim GIT-COMMIT -> commit-guard --expect-empty -> stage --expect ... ->
     commit-guard --expect ... -> git commit -> release GIT-COMMIT
 
+Extended for TASK-0154: `stage` now refuses outright unless GIT-COMMIT is
+currently claimed (by anyone -- an existence check, not yet an identity
+check against the caller). Real incident, 2026-07-24: a thread staged
+files via `stage` before ever claiming GIT-COMMIT -- nothing previously
+checked for that, `stage` would run regardless of lock state. This is
+deliberately scoped to `stage` alone, not `move`/`resolve` (both also
+call `git add`/`git mv` internally): those are routine task-file
+housekeeping calls this whole scaffold already relies on working without
+holding GIT-COMMIT first (e.g. marking a task Done mid-session, well
+before deciding what to bundle into a commit) -- `stage` is the one
+subcommand whose entire purpose is the deliberate, immediately-pre-commit
+staging step, so it's the one that should never run lock-less.
+
 Extended for TASK-0045: `reserve-next` atomically hands back a TASK-XXXX
 id guaranteed not to collide with any other thread's concurrent
 reservation. Plain `claim` requires the caller to already know which id
@@ -1077,6 +1090,19 @@ def _in_scope(rel_path):
 
 def cmd_stage(args):
     expect = list(args.expect)
+
+    if read_lock("GIT-COMMIT") is None:
+        print(
+            "error: GIT-COMMIT is not currently claimed -- run `claim.py "
+            "claim GIT-COMMIT <claimant>` before staging (stage is the "
+            "deliberate pre-commit step: claim -> commit-guard "
+            "--expect-empty -> stage -> commit-guard --expect -> commit -> "
+            "release). Real incident, 2026-07-24: a thread staged files via "
+            "this command before ever claiming the lock -- nothing "
+            "previously checked for that.",
+            file=sys.stderr,
+        )
+        return 1
 
     out_of_scope = [p for p in expect if not _in_scope(p)]
     if out_of_scope:
