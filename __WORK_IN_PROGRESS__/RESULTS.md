@@ -2834,6 +2834,95 @@ bears on) is not attempted.
 Full detail: `.ai/tasks/DONE/TASK-0142-hodge-l1-persistent-h2.md`,
 `results_task0142_topology/persistent_voids_real_run.json`.
 
+---
+
+## Quantum transport / effective-conductance observable (TASK-0145, 2026-07-24)
+
+Reframes the scoring question from "where does an excitation seeded at the active
+site spread to over time" (every observable this project has tried) to "what is
+the steady-state current/transmission from the active site to each candidate
+residue" — a non-equilibrium steady-state (NESS) transport calculation
+(Landauer-Buttiker; Nitzan & Ratner), not a seeded-walk-and-wait one. Two
+quantities, new `allostery.transport`:
+
+1. **Classical effective resistance/conductance** `R_eff(i,j) = L+_ii + L+_jj -
+   2*L+_ij`, `L+` the Moore-Penrose pseudo-inverse of a genuine combinatorial
+   graph Laplacian (`hamiltonians.H2_combinatorial_laplacian`) — `H_new` does
+   **not** qualify (confirmed directly: its diagonal potential terms, and its
+   use of the *normalised* Laplacian variant, both break the null-space
+   handling this formula relies on). Multi-index `source` via a
+   virtual-supernode construction, reusing `percolation.py`'s (TASK-0136) own
+   already-debugged "virtual super-source" pattern.
+2. **Landauer-Buttiker quantum transmission** `T(E) = Tr[Gamma_L G(E) Gamma_R
+   G(E)^dagger]`, wide-band-limit leads (`Gamma_L`/`Gamma_R` diagonal, nonzero
+   only at source/candidate contact sites — the minimal standard model, not an
+   invented one), `E=0` (DC/zero-bias) the primary pre-registered energy.
+   **A real algorithmic contribution**: since `Gamma_R` at each candidate is
+   always a single-site perturbation of the same source-only baseline, a
+   Sherman-Morrison closed form gives every candidate's `T(E)` from **one**
+   `N x N` matrix inversion (`O(N^2)` total) instead of `N` separate
+   re-inversions (`O(N^4)`) — derived and verified against a brute-force
+   reference (matched to `1e-10`) before trusting it.
+
+**Synthetic falsification gate** (`tests/test_dumbbell_negative_control.py`,
+reusing the established `build_dumbbell_network` construction): both
+observables give a clean, decisive double dissociation against GSR on the
+conflict cells — `R_eff` 1.000/0.000, `T(E)` 1.000/0.000 (C2/C3, every seed) —
+genuinely follow coupling, not the well. `R_eff` is *provably* well-invariant
+(a mathematical consequence of the formula, confirmed directly: C1 and C2,
+which differ only in which lobe has the well, score *exactly* identically).
+Real, characterized finding: the "no signal" null cell (C4) has much higher
+per-seed variance for both new observables (0.076-0.924 over 20 seeds) than
+this file's propagator-based gates show at only 5 — exact resistor-network/
+Green's-function calculations are more sensitive to the construction's own
+small random per-seed weight differences than a propagator is.
+
+**Real-target scoring, all 3 mandatory targets**
+(`scripts/transport_observable_real_run.py`), against TASK-0094's proximity
+floor with block-bootstrap CIs and a permutation null on every cell (`E`/
+`gamma_lead` are both fixed a priori, never swept-and-picked against labels,
+so no cell here is a "max of something" in the usual sense — the null is
+due-diligence scrutiny regardless). `R_eff`/`T(E)` both scored on the shared
+plain Laplacian `L` (the direct classical-vs-quantum comparison); `T(E)`
+additionally run on `H_new` directly (no null-space requirement) as a
+secondary check against this project's actual submission operator:
+
+| Target | R_eff AUC (p) | T(E=0) on L AUC (p) | T(E=0) on H_new AUC (p) | Floor |
+|---|---|---|---|---|
+| KRAS_G12C | 0.4187 (0.864) | 0.3716 (0.962) | 0.6402 (0.034) | 0.4818 |
+| BCR_ABL1 | 0.5980 (0.107) | **0.6985 (0.003)** | 0.6362 (0.036) | 0.5817 |
+| CARDIAC_MYOSIN | 0.4448 (0.774) | 0.4560 (0.726) | 0.4680 (0.651) | 0.5679 |
+
+(`p` = permutation-null p-value, 1000 replicates, Bonferroni alpha=0.0167 for
+3 targets.) **Headline: one genuinely decisive result** — BCR_ABL1's `T(E=0)`
+on the bare topological Laplacian clears Bonferroni correction (p=0.003), the
+only cell of 9 that does. The two `H_new`-based transmission cells that clear
+the floor at point estimate (KRAS_G12C 0.640, BCR_ABL1 0.636) are
+uncorrected-significant only — real but not decisive, the pattern this
+project's other point-estimate clearances already share. Every cell's 95% CI
+overlaps the floor's own CI regardless of permutation-null significance.
+CARDIAC_MYOSIN: no signal from either observable, on either operator.
+
+**Point 3 — classical vs. quantum, answered decisively**: Spearman correlation
+between `1/R_eff` and `T(E=0)`, same shared Laplacian, is strongly positive on
+all 3 targets (rho=0.74-0.85, all p<1e-45) — confirms the physical connection
+`E=0` was chosen for. **Not identical, though**: on BCR_ABL1, `T(E=0)` on `L`
+(0.699, Bonferroni-significant) clearly outperforms `R_eff` on the identical
+graph (0.598, not significant) despite the strong rank correlation — neither
+"pure classical restatement" nor "wholly different physics"; a real, if
+modest, quantum-formalism advantage survives on top of a mostly-shared
+classical ranking, on the one target where either shows real signal at all.
+
+**`E` sensitivity — a real, large KNOB, characterized not exploited**: a
+3-point grid (`E in {0, 0.05, 0.1} * bandwidth`), never used to pick a
+best-scoring point against labels. BCR_ABL1: AUC 0.698 (E=0) -> 0.306
+(E=0.05*bw) -> 0.464 (E=0.1*bw) — a >2x, non-monotonic swing. `gamma_lead` is a
+much weaker KNOB by comparison (BCR_ABL1: 0.680-0.705 across its own grid),
+consistent with the intended weak-coupling regime.
+
+Full detail: `.ai/tasks/DONE/TASK-0145-quantum-transport-effective-conductance.md`,
+`results_task0145_transport/transport_observable_real_run.json`,
+`src/allostery/transport.py`, `tests/test_transport.py`.
 
 ---
 
@@ -2876,6 +2965,8 @@ Full detail: `.ai/tasks/DONE/TASK-0142-hodge-l1-persistent-h2.md`,
 
 | 29 | Does persistent H2 (a capped-void signature, graph-*adjacent* not graph-*far*) localize real holo-defined pockets, given the 2026-07-22 Architect/Planner correction that [[TASK-0143]]'s open-cleft FAIL (0/7) does not actually falsify this half of the loop/multi-site-closure family? | **resolved 2026-07-24: no — clean FAIL on all 3 mandatory targets, one sharply informative.** 2/3 targets (KRAS_G12C, BCR_ABL1) show no H2 void at all — top persistence at/below the synthetic solid-ball noise floor (2.5); the honest gated score is all-zeros (chance AUC), and the nominally floor-beating *ungated* diagnostic score is explained away by the matched random-patch null (77.1st/46.3rd percentile, p=0.229/0.537 — indistinguishable from a random patch). CARDIAC_MYOSIN is the one target with a detected void (2.829) — and it is the **wrong void**: AUC 0.192, null percentile **0.0** (real pocket's mean score below all 1000 random patches). A large protein has multiple internal cavities; the most-persistent one found isn't the ligand pocket. Residue-localization weak link (crude geometric centroid heuristic, `ripser` has no H2 cycle representatives) confirmed on real data: proximity floor beats `void_score` on CARDIAC_MYOSIN (0.583 vs 0.192), same pattern as the synthetic control. Two filing-text imprecisions resolved by direct test before assuming: `thresh=16.0` (not "8 Å", truncates real H2 classes), and TASK-0133's *plain* random-patch null (not TASK-0143's spread-matched, infeasible-on-4/7-targets convention) as the actual cited precedent. L1 half not run — its own gate (TASK-0143 or TASK-0140 showing life) remains closed. | [[TASK-0142]], [[TASK-0143]], [[TASK-0140]] |
 | 30 | Do low-mode-restricted PRS/DCC (`prs_low`/`dcc_low`, proximity-orthogonal by construction) find real allosteric signal on real targets, and does mode-filtering actually decorrelate them from distance the way the delivered synthetic control predicted? | **resolved 2026-07-24: real, Bonferroni-surviving signal on CARDIAC_MYOSIN only; KRAS_G12C/BCR_ABL1 genuinely dead — but the decorrelation-from-distance premise itself does not hold as predicted.** CARDIAC_MYOSIN's stratified-AUC well-powered max (0.92/0.96 for `prs_low`/`dcc_low` at k=20) survives its own permutation null (p=0.006/p<0.001) and the primary 6-comparison Bonferroni bar; KRAS_G12C/BCR_ABL1 never reach significance at any `k` (p=0.67–0.99). **But ρ(score,−hop) stays substantial on every real target (`prs_low` −0.18 to −0.51; `dcc_low` +0.44 to +0.63)** — nowhere near the synthetic control's own ~0.08–0.16 "cleanly decorrelated" prediction. `dcc_low` in particular reproduces the classic proximity-confound sign/magnitude on real data (matching, not contradicting, the synthetic control's own "markedly worse than `prs_low`" finding); `prs_low` decorrelates in the opposite (anti-proximity, distal-favoring) direction instead of toward zero — real and target-consistent, not predicted by the synthetic control either. A real sign bug was found and fixed in this task's own new evaluation script (not in the ported `lowmode_predictor.py`) before trusting any ρ value — caught by checking the raw per-shell score trend against the printed sign, not assumed correct because the script ran without error. | [[TASK-0149]], [[TASK-0123]], [[TASK-0122]] |
+
+| 31 | Does reframing the scoring question as steady-state transport/conductance (Landauer-Buttiker `T(E)`, classical effective resistance `R_eff`) rather than seeded-walk-and-wait find real signal, and does the quantum transmission differ meaningfully from the classical `1/R_eff` limit? | **resolved 2026-07-24: one decisive result out of 9 cells, and quantum tracks classical closely but not identically.** BCR_ABL1's `T(E=0)` on the bare topological Laplacian clears Bonferroni correction (p=0.003, AUC 0.699) — the only cell (3 targets x {R_eff, T(E) on L, T(E) on H_new}) that does; KRAS_G12C/BCR_ABL1's `H_new`-based `T(E)` clear the floor at point estimate only (uncorrected-significant), CARDIAC_MYOSIN shows nothing. Classical-vs-quantum: Spearman rho 0.74-0.85 (same shared Laplacian, all targets) — strongly correlated, confirming the `E=0`/DC-limit choice, but not interchangeable in practice (BCR_ABL1's `T(E=0)` decisively beats its own `R_eff` on the identical graph). `E` is a large, real KNOB (BCR_ABL1: AUC 0.698->0.306->0.464 across a 3-point grid) characterized, not exploited. | [[TASK-0145]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

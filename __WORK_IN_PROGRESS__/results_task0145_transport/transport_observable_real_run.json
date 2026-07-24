@@ -1,0 +1,353 @@
+{
+  "KRAS_G12C": {
+    "target": "KRAS_G12C",
+    "N": 169,
+    "pocket_size": 18,
+    "cutoff": 8.0,
+    "bandwidth_L": 18.3041511445156,
+    "effective_resistance": {
+      "name": "effective_resistance",
+      "auc": 0.41869021339220014,
+      "category": "BEATS_CHANCE_NOT_FLOOR",
+      "score_ci": [
+        0.41869021339220014,
+        0.2646773745923819,
+        0.6406755036088216
+      ],
+      "floor_ci": [
+        0.4817880794701987,
+        0.3216555298475685,
+        0.6554576521712283
+      ],
+      "ci_overlap": true,
+      "permutation_null": {
+        "real_auc": 0.41869021339220014,
+        "null_median": 0.5053348050036792,
+        "null_p95": 0.6148454746136864,
+        "percentile": 0.137,
+        "p_value": 0.864,
+        "n_reps": 1000,
+        "bonferroni_alpha": 0.016666666666666666,
+        "bonferroni_significant": false
+      }
+    },
+    "transmission_on_L_E0": {
+      "name": "transmission_on_L_E0",
+      "auc": 0.3715967623252392,
+      "category": "BEATS_CHANCE_NOT_FLOOR",
+      "score_ci": [
+        0.3715967623252392,
+        0.2172259364627786,
+        0.5800195759923361
+      ],
+      "floor_ci": [
+        0.4817880794701987,
+        0.3216555298475685,
+        0.6554576521712283
+      ],
+      "ci_overlap": true,
+      "permutation_null": {
+        "real_auc": 0.3715967623252392,
+        "null_median": 0.5047829286239882,
+        "null_p95": 0.6181383370125092,
+        "percentile": 0.038,
+        "p_value": 0.962,
+        "n_reps": 1000,
+        "bonferroni_alpha": 0.016666666666666666,
+        "bonferroni_significant": false
+      }
+    },
+    "transmission_on_H_new_E0": {
+      "name": "transmission_on_H_new_E0",
+      "auc": 0.640176600441501,
+      "category": "NO_FAILURE_DETECTED",
+      "score_ci": [
+        0.640176600441501,
+        0.433979546382568,
+        0.8047650266883266
+      ],
+      "floor_ci": [
+        0.4817880794701987,
+        0.3216555298475685,
+        0.6554576521712283
+      ],
+      "ci_overlap": true,
+      "permutation_null": {
+        "real_auc": 0.640176600441501,
+        "null_median": 0.5016556291390728,
+        "null_p95": 0.6199779249448124,
+        "percentile": 0.966,
+        "p_value": 0.034,
+        "n_reps": 1000,
+        "bonferroni_alpha": 0.016666666666666666,
+        "bonferroni_significant": false
+      }
+    },
+    "classical_vs_quantum_spearman": {
+      "rho": 0.8539953259410274,
+      "p": 2.9459332057316237e-49
+    },
+    "E_knob_grid": [
+      {
+        "e_multiplier": 0.0,
+        "auc": 0.3715967623252392
+      },
+      {
+        "e_multiplier": 0.05,
+        "auc": 0.5073583517292126
+      },
+      {
+        "e_multiplier": 0.1,
+        "auc": 0.26563649742457696
+      }
+    ],
+    "gamma_knob_grid": [
+      {
+        "gamma_multiplier": 0.05,
+        "auc": 0.36865342163355413
+      },
+      {
+        "gamma_multiplier": 0.1,
+        "auc": 0.3715967623252392
+      },
+      {
+        "gamma_multiplier": 0.2,
+        "auc": 0.38300220750551883
+      }
+    ]
+  },
+  "BCR_ABL1": {
+    "target": "BCR_ABL1",
+    "N": 451,
+    "pocket_size": 16,
+    "cutoff": 8.0,
+    "bandwidth_L": 17.52145605358441,
+    "effective_resistance": {
+      "name": "effective_resistance",
+      "auc": 0.5979885057471265,
+      "category": "NO_FAILURE_DETECTED",
+      "score_ci": [
+        0.5979885057471265,
+        0.4112124497234792,
+        0.7295202291442894
+      ],
+      "floor_ci": [
+        0.5816810344827587,
+        0.40487928418995717,
+        0.7212045823313495
+      ],
+      "ci_overlap": true,
+      "permutation_null": {
+        "real_auc": 0.5979885057471265,
+        "null_median": 0.5009339080459769,
+        "null_p95": 0.6222988505747126,
+        "percentile": 0.893,
+        "p_value": 0.107,
+        "n_reps": 1000,
+        "bonferroni_alpha": 0.016666666666666666,
+        "bonferroni_significant": false
+      }
+    },
+    "transmission_on_L_E0": {
+      "name": "transmission_on_L_E0",
+      "auc": 0.6984913793103449,
+      "category": "NO_FAILURE_DETECTED",
+      "score_ci": [
+        0.6984913793103449,
+        0.5728055487877577,
+        0.7980463320874301
+      ],
+      "floor_ci": [
+        0.5816810344827587,
+        0.40487928418995717,
+        0.7212045823313495
+      ],
+      "ci_overlap": true,
+      "permutation_null": {
+        "real_auc": 0.6984913793103449,
+        "null_median": 0.4969109195402299,
+        "null_p95": 0.6201795977011494,
+        "percentile": 0.997,
+        "p_value": 0.003,
+        "n_reps": 1000,
+        "bonferroni_alpha": 0.016666666666666666,
+        "bonferroni_significant": true
+      }
+    },
+    "transmission_on_H_new_E0": {
+      "name": "transmission_on_H_new_E0",
+      "auc": 0.6362068965517241,
+      "category": "NO_FAILURE_DETECTED",
+      "score_ci": [
+        0.6362068965517241,
+        0.45546478873239443,
+        0.7938852937964177
+      ],
+      "floor_ci": [
+        0.5816810344827587,
+        0.40487928418995717,
+        0.7212045823313495
+      ],
+      "ci_overlap": true,
+      "permutation_null": {
+        "real_auc": 0.6362068965517241,
+        "null_median": 0.4987068965517242,
+        "null_p95": 0.6171120689655173,
+        "percentile": 0.964,
+        "p_value": 0.036,
+        "n_reps": 1000,
+        "bonferroni_alpha": 0.016666666666666666,
+        "bonferroni_significant": false
+      }
+    },
+    "classical_vs_quantum_spearman": {
+      "rho": 0.7381386083413004,
+      "p": 9.175526996725266e-79
+    },
+    "E_knob_grid": [
+      {
+        "e_multiplier": 0.0,
+        "auc": 0.6984913793103449
+      },
+      {
+        "e_multiplier": 0.05,
+        "auc": 0.30646551724137927
+      },
+      {
+        "e_multiplier": 0.1,
+        "auc": 0.4640804597701149
+      }
+    ],
+    "gamma_knob_grid": [
+      {
+        "gamma_multiplier": 0.05,
+        "auc": 0.7054597701149425
+      },
+      {
+        "gamma_multiplier": 0.1,
+        "auc": 0.6984913793103449
+      },
+      {
+        "gamma_multiplier": 0.2,
+        "auc": 0.6803160919540229
+      }
+    ]
+  },
+  "CARDIAC_MYOSIN": {
+    "target": "CARDIAC_MYOSIN",
+    "N": 704,
+    "pocket_size": 13,
+    "cutoff": 8.0,
+    "bandwidth_L": 18.412576641584934,
+    "effective_resistance": {
+      "name": "effective_resistance",
+      "auc": 0.4448402538127575,
+      "category": "BEATS_CHANCE_NOT_FLOOR",
+      "score_ci": [
+        0.4448402538127575,
+        0.29415923803459626,
+        0.7435951526952244
+      ],
+      "floor_ci": [
+        0.5678503840587776,
+        0.4229977411394542,
+        0.7492128649181578
+      ],
+      "ci_overlap": true,
+      "permutation_null": {
+        "real_auc": 0.4448402538127575,
+        "null_median": 0.5018924635422465,
+        "null_p95": 0.6362963375264388,
+        "percentile": 0.226,
+        "p_value": 0.774,
+        "n_reps": 1000,
+        "bonferroni_alpha": 0.016666666666666666,
+        "bonferroni_significant": false
+      }
+    },
+    "transmission_on_L_E0": {
+      "name": "transmission_on_L_E0",
+      "auc": 0.45597239229656017,
+      "category": "NO_SIGNAL_IN_APO",
+      "score_ci": [
+        0.45597239229656017,
+        0.17549858963276097,
+        0.8180080182268397
+      ],
+      "floor_ci": [
+        0.5678503840587776,
+        0.4229977411394542,
+        0.7492128649181578
+      ],
+      "ci_overlap": true,
+      "permutation_null": {
+        "real_auc": 0.45597239229656017,
+        "null_median": 0.5004452855393522,
+        "null_p95": 0.639212957809195,
+        "percentile": 0.274,
+        "p_value": 0.726,
+        "n_reps": 1000,
+        "bonferroni_alpha": 0.016666666666666666,
+        "bonferroni_significant": false
+      }
+    },
+    "transmission_on_H_new_E0": {
+      "name": "transmission_on_H_new_E0",
+      "auc": 0.4679951018590671,
+      "category": "NO_SIGNAL_IN_APO",
+      "score_ci": [
+        0.4679951018590671,
+        0.20888920588454196,
+        0.7018540022232049
+      ],
+      "floor_ci": [
+        0.5678503840587776,
+        0.4229977411394542,
+        0.7492128649181578
+      ],
+      "ci_overlap": true,
+      "permutation_null": {
+        "real_auc": 0.4679951018590671,
+        "null_median": 0.49816319715017254,
+        "null_p95": 0.630418568406991,
+        "percentile": 0.35,
+        "p_value": 0.651,
+        "n_reps": 1000,
+        "bonferroni_alpha": 0.016666666666666666,
+        "bonferroni_significant": false
+      }
+    },
+    "classical_vs_quantum_spearman": {
+      "rho": 0.7409524726330455,
+      "p": 1.6623245873807265e-123
+    },
+    "E_knob_grid": [
+      {
+        "e_multiplier": 0.0,
+        "auc": 0.45597239229656017
+      },
+      {
+        "e_multiplier": 0.05,
+        "auc": 0.56885227652232
+      },
+      {
+        "e_multiplier": 0.1,
+        "auc": 0.6753868418123122
+      }
+    ],
+    "gamma_knob_grid": [
+      {
+        "gamma_multiplier": 0.05,
+        "auc": 0.45374596459979966
+      },
+      {
+        "gamma_multiplier": 0.1,
+        "auc": 0.45597239229656017
+      },
+      {
+        "gamma_multiplier": 0.2,
+        "auc": 0.46098185461427144
+      }
+    ]
+  }
+}
