@@ -10,7 +10,7 @@
   (8QYP) apo and GLUCOKINASE (which never had one) — the same rigorous
   check [[TASK-0133]]/[[TASK-0139]] already did for KRAS_G12C's own
   bare-threshold verdict.
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Claimed By: —
 - Claimed At: —
@@ -91,4 +91,73 @@
 
 ## Done
 
-(not yet)
+**2026-07-24, Implementer D (this thread).**
+
+**(1) GLUCOKINASE runnability confirmed, not re-litigated** — this
+task's own Open Question asked whether [[TASK-0081]]'s chain-schema
+flag (`Q-0001`) had been resolved by pickup time. It has: [[TASK-0127]]
+added the `apo_chains`/`holo_chains` per-role override that fixes it,
+and [[TASK-0150]]'s own session already ran GLUCOKINASE cleanly through
+`compute_learnability` as direct evidence. Confirmed again here by a
+full, clean 1000-replicate real run — no config guess needed.
+
+**(2) `scripts/learnability_gate_patch_control.py` needed no CO-quantity
+fix** — checked directly before assuming it did (this task's own
+Constraints warned against reintroducing the bug [[TASK-0150]] fixed).
+This script already used `restricted_cumulative_overlap` correctly
+(the one call site TASK-0139's own claim about "both scripts already
+fixed" was actually true for). Only change: added an ADD-only
+`--target`/`--output` CLI option (default reproduces the original
+3-mandatory-target behavior exactly) so CARDIAC_MYOSIN/GLUCOKINASE
+could be run without recomputing KRAS_G12C/BCR_ABL1's own
+already-published null. Same minimal CLI addition made to
+`scripts/learnability_gate.py` for the same reason (GLUCOKINASE had
+never been added to its own `DEFAULT_TARGETS`/output JSON at all).
+
+**(3) Real 1000-replicate run** (`scripts/learnability_gate_patch_
+control.py --target CARDIAC_MYOSIN GLUCOKINASE`, live fetch, seed=7,
+same convention as TASK-0133's own KRAS_G12C run):
+
+| Target | RMSD ratio | Restricted CO(20) | Percentile in null | One-sided p | Bare-threshold | Null-informed |
+|---|---|---|---|---|---|---|
+| CARDIAC_MYOSIN (8QYP) | 1.57 | 0.254 | 85.7th | 0.143 | `UNLEARNABLE_FROM_APO` | **`AMBIGUOUS`** |
+| GLUCOKINASE | 1.94 | 0.304 | 89.9th | 0.101 | `UNLEARNABLE_FROM_APO` | **`AMBIGUOUS`** |
+
+New `scripts/resolve_cardiac_glucokinase_learnability.py` (mirroring
+`resolve_kras_learnability.py`'s own pattern, adapted: this comparison
+is bare-threshold-vs-null-informed, not whole-structure-vs-restricted,
+since both this task's inputs already use the correct restricted CO)
+confirmed both programmatically, not by hand-transcription. A units
+bug was caught and fixed *while writing this task*, not shipped:
+`learnability_verdict`'s own `co_percentile` parameter expects a 0–1
+fraction, not a 0–100 percentage — an initial hand-check passing
+`85.7` directly (instead of `0.857`) silently produced the wrong
+verdict (`LEARNABLE`, via a spurious `>= 0.95` true on any number above
+0.95 on the wrong scale) before the resolution script's own explicit
+`/100.0` division was written and re-verified against
+`resolve_kras_learnability.py`'s own precedent.
+
+**Headline: both targets soften from `UNLEARNABLE_FROM_APO` to
+`AMBIGUOUS`**, the same direction and magnitude as KRAS_G12C's own
+93rd-percentile/p≈0.07 result. This is now a recurring pattern on 3 of
+the 4 targets this precise analysis has ever been run on (only
+BCR_ABL1, RMSD-determined, never reaches the CO half at all) — not a
+one-off. Per this task's own Constraints, this does not retract
+[[TASK-0150]]'s own bare-threshold reading; it reports the more
+rigorous of two legitimate readings alongside it, exactly the
+relationship KRAS_G12C's own two numbers already have.
+
+**Docs updated additively**: `RESULTS.md`'s Learnability gate section
+(new 2026-07-24 block) and open-questions table (new row 34);
+`COMPETENCE_MAP.md`'s CARDIAC_MYOSIN section; [[TASK-0150]]'s own Done
+section (closing the gap it flagged, cross-linked both ways).
+
+**Full test suite**: 915 passed, 2 xfailed, 0 failed (no library code
+touched — two scripts gained an ADD-only CLI option each, default
+behavior byte-identical).
+
+**Not attempted, per this task's own Out Of Scope**: the null
+methodology itself was not re-derived or modified; KRAS_G12C's own
+already-closed [[TASK-0139]] verdict was not re-litigated; GLUCOKINASE's
+chain-schema question was reconfirmed resolved, not independently
+re-solved from scratch.

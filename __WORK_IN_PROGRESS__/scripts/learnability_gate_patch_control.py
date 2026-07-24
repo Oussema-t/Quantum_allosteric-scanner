@@ -21,6 +21,7 @@ distinguished.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import sys
@@ -143,17 +144,28 @@ def run_one(target_name: str, n_replicates: int, seed: int) -> dict:
     return result
 
 
-def main() -> int:
+def main(argv=None) -> int:
+    # TASK-0152: --target lets a caller extend this null past the 3
+    # mandatory targets (e.g. re-running CARDIAC_MYOSIN under its current,
+    # TASK-0124-replaced apo, or a first-ever GLUCOKINASE run) without
+    # recomputing KRAS_G12C/BCR_ABL1's own already-published null every
+    # time -- ADD-only, defaults to this script's original DEFAULT_TARGETS
+    # (byte-identical prior behavior) when omitted.
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--target", nargs="+", default=DEFAULT_TARGETS)
+    parser.add_argument("--output", type=Path, default=OUTPUT_DIR / "learnability_gate_patch_control.json")
+    args = parser.parse_args(argv)
+
     results = {}
-    for target_name in DEFAULT_TARGETS:
+    for target_name in args.target:
         try:
             results[target_name] = run_one(target_name, N_REPLICATES, SEED)
         except Exception as exc:
             _log(f"{target_name}: FAILED -- {exc!r}")
             results[target_name] = {"target": target_name, "error": str(exc)}
 
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    with open(OUTPUT_DIR / "learnability_gate_patch_control.json", "w") as f:
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    with open(args.output, "w") as f:
         json.dump(results, f, indent=2)
     return 0
 

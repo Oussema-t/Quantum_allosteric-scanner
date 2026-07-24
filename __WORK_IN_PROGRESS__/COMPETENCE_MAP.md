@@ -501,6 +501,19 @@ not on the scored AUC, and now not on whether the pocket's opening is even
 mode-spanned in the apo topology. Full table (KRAS_G12C/BCR_ABL1/GLUCOKINASE too):
 `RESULTS.md`'s learnability-gate section, 2026-07-24 block.
 
+**[[TASK-0152]], 2026-07-24: the bare-threshold `UNLEARNABLE_FROM_APO` verdict just
+above softens to `AMBIGUOUS`** under the same 1000-replicate random-patch null
+KRAS_G12C's own verdict already went through — restricted CO(20)=0.254 sits at the
+85.7th percentile of the null (one-sided p=0.143), elevated relative to a typical
+same-sized patch but not decisive at this project's own α=0.05 bar. GLUCOKINASE
+(never previously null-tested) shows the identical pattern (CO=0.304, 89.9th
+percentile, p=0.101 → `AMBIGUOUS`). This does not reopen CARDIAC_MYOSIN's own
+AUC-side conclusion above (still `NO_SIGNAL_IN_APO`, unaffected by this structural
+measurement) — it means the *structural* reading itself is now the more rigorous
+"genuinely undetermined," the same honest category KRAS_G12C already occupies,
+rather than a clean `UNLEARNABLE_FROM_APO`. Full table: `RESULTS.md`'s
+learnability-gate section, TASK-0152's own 2026-07-24 block.
+
 ---
 
 ## c-Myc / 1NKP — no ground truth (per [[TASK-0080]])

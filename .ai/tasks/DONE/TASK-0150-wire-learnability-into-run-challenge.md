@@ -221,3 +221,9 @@ checked KRAS_G12C. Out of this task's own scope (a wiring task, not a
 new statistical analysis) — a natural next step for whoever revisits
 this gate, not filed as a new task number here since it isn't blocking
 anything currently in flight.
+
+**Followed up, [[TASK-0152]], 2026-07-24**: this exact gap, filed as
+its own task the same day. Both targets' bare-threshold verdicts soften
+to `AMBIGUOUS` under the matched null — the same pattern KRAS_G12C's
+own result already showed. See that task's own Done section and
+`RESULTS.md`'s learnability-gate section for the full numbers.

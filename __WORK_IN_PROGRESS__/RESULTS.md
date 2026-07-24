@@ -1394,6 +1394,42 @@ ones already quoted verbatim in TASK-0120's/TASK-0144's own paragraphs above, wh
 were never touched or deleted — only the false claim of a separate `.bak` snapshot
 is retracted here.
 
+**[[TASK-0152]], 2026-07-24: CARDIAC_MYOSIN(8QYP)/GLUCOKINASE get the same
+matched-null rigor KRAS_G12C already has — and both soften the same way.**
+[[TASK-0150]]'s own bare-threshold verdicts (`UNLEARNABLE_FROM_APO` for both,
+restricted CO 0.254/0.304) rested on a single point estimate with no null-
+distribution context, exactly the gap [[TASK-0133]]/[[TASK-0139]] closed for
+KRAS_G12C. Same 1000-replicate random-patch null (`scripts/learnability_gate_
+patch_control.py`, extended with a `--target` option rather than duplicated),
+same resolution pattern (`scripts/resolve_cardiac_glucokinase_learnability.py`,
+mirroring `resolve_kras_learnability.py`):
+
+| Target | RMSD ratio | Restricted CO(20) | Percentile in null | One-sided p | Bare-threshold verdict | Null-informed verdict |
+|---|---|---|---|---|---|---|
+| CARDIAC_MYOSIN (8QYP) | 1.57 | 0.254 | 85.7th | 0.143 | `UNLEARNABLE_FROM_APO` | **`AMBIGUOUS`** |
+| GLUCOKINASE | 1.94 | 0.304 | 89.9th | 0.101 | `UNLEARNABLE_FROM_APO` | **`AMBIGUOUS`** |
+
+**Both targets flip from `UNLEARNABLE_FROM_APO` to `AMBIGUOUS`** — the real pocket's
+restricted CO sits *above* the random-patch mean for both (85.7th/89.9th percentile,
+the same direction as KRAS_G12C's own 93rd), meaning the bare `co_threshold=0.5`
+comparison was reading these regions as more anharmonic than a typical same-sized
+patch actually is, on this null. Neither reaches this project's own decisive bar
+(one-sided p<0.05, uncorrected) — same "elevated but not decisive" pattern as
+KRAS_G12C (p≈0.07), now confirmed on 3 of the 4 targets this precise analysis has
+ever been run on, not a one-off. **This is not a retraction of TASK-0150's own
+bare-threshold reading** — it is the more rigorous of two legitimate readings,
+exactly the relationship KRAS_G12C's own `AMBIGUOUS`/bare-threshold pair already
+established; both numbers are documented, neither silently overwrites the other.
+BCR_ABL1 remains the one target genuinely unaffected by any of this (RMSD ratio
+0.49 < 1.5, never reaches the CO half of the conjunction regardless of null or
+threshold). GLUCOKINASE's own chain-schema question ([[TASK-0081]]) is confirmed
+resolved, not re-litigated — [[TASK-0127]]'s `apo_chains`/`holo_chains` fix already
+made it runnable, independently reconfirmed here by a clean, real 1000-replicate run.
+
+Full detail: `.ai/tasks/DONE/TASK-0152-cardiac-myosin-glucokinase-learnability-null.md`,
+`RESULTS/results_task0152/learnability_gate_patch_control_task0152.json`,
+`results_task0152_learnability_resolution/resolution.json`.
+
 **[EXECUTED, fixes a real bug]** `REVIEW-panel-2026-07-16-v2.md` §2.4 found
 that `potentials.py`'s five diagonal terms (V_B/V_T/V_R/V_C/V_M) were not
 commensurately scaled before being combined: `V_R` is a sum of three
@@ -3094,6 +3130,7 @@ Full detail: `.ai/tasks/DONE/TASK-0151-generalization-check-transport-lowmode-fi
 
 | 33 | Do [[TASK-0145]]'s BCR_ABL1 transport positive and [[TASK-0149]]'s CARDIAC_MYOSIN `dcc_low`/`prs_low` positives — the project's two strongest results — survive [[TASK-0115]]'s Rule #6 repeated-exposure check against the PTP1B/CASPASE7 generalization set? | **resolved 2026-07-24: mixed, real, informative.** Transport does not clearly generalize: PTP1B's `T(E=0)` on L comes back below chance (AUC 0.382, p=0.926, opposite direction from BCR_ABL1's own AUC 0.699/p=0.003); CASPASE7 echoes the direction (AUC 0.748) but only at uncorrected p=0.011, not clearing this task's own stricter 6-comparison Bonferroni bar. **`dcc_low` replicates cleanly on PTP1B** — 3/4 k-values clear this task's own stricter 16-comparison bar, including well-powered max AUC 1.000 at k=10 (p=0.001) — now Bonferroni-significant on two independent targets, the strongest cross-target evidence any observable in this project has. `prs_low` never reaches significance on either generalization target. Neither observable shows anything on CASPASE7. Per this task's own Constraint, neither mandatory-3 finding is retracted — this changes framing, not standing: `dcc_low` graduates to a replicated finding, transport's BCR_ABL1 result and `prs_low` remain single-target. | [[TASK-0151]], [[TASK-0145]], [[TASK-0149]], [[TASK-0115]] |
 
+| 34 | Do CARDIAC_MYOSIN(8QYP)'s and GLUCOKINASE's bare-threshold learnability verdicts ([[TASK-0150]], both `UNLEARNABLE_FROM_APO`) survive the same 1000-replicate random-patch null [[TASK-0133]]/[[TASK-0139]] already applied to KRAS_G12C's own bare-threshold verdict? | **resolved 2026-07-24: no — both soften to `AMBIGUOUS`, the same direction and magnitude as KRAS_G12C's own result.** CARDIAC_MYOSIN: restricted CO=0.254 sits at the 85.7th percentile of the null (one-sided p=0.143); GLUCOKINASE: CO=0.304 at the 89.9th percentile (p=0.101) — both elevated relative to a random same-sized patch, neither decisive at this project's own α=0.05 bar, exactly the "elevated but not significant" pattern KRAS_G12C's own 93rd-percentile/p≈0.07 result already established. Now confirmed on 3 of the 4 targets this exact analysis has ever been run on. Does not retract [[TASK-0150]]'s own bare-threshold reading — reports the more rigorous of two legitimate readings alongside it, same relationship KRAS_G12C's own two numbers already have. GLUCOKINASE's chain-schema question ([[TASK-0081]]) reconfirmed resolved ([[TASK-0127]]), not re-litigated. | [[TASK-0152]], [[TASK-0150]], [[TASK-0133]], [[TASK-0139]] |
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
 (or `.ai/tasks/TODO/` if not yet closed — check `.ai/COMMON.md`'s registry

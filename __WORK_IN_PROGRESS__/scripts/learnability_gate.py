@@ -34,6 +34,7 @@ does not touch.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import sys
@@ -94,17 +95,27 @@ def run_one(target_name: str) -> dict:
     return result
 
 
-def main() -> int:
+def main(argv=None) -> int:
+    # TASK-0152: --target/--output let a caller extend this gate past the
+    # 3 mandatory targets (e.g. GLUCOKINASE, never previously included in
+    # DEFAULT_TARGETS/this JSON's own output) without recomputing/
+    # overwriting the mandatory-3 record by default -- ADD-only, defaults
+    # reproduce this script's original behavior exactly when omitted.
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--target", nargs="+", default=DEFAULT_TARGETS)
+    parser.add_argument("--output", type=Path, default=OUTPUT_DIR / "learnability_gate.json")
+    args = parser.parse_args(argv)
+
     results = {}
-    for target_name in DEFAULT_TARGETS:
+    for target_name in args.target:
         try:
             results[target_name] = run_one(target_name)
         except Exception as exc:
             print(f"{target_name}: FAILED -- {exc!r}")
             results[target_name] = {"target": target_name, "error": str(exc)}
 
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    with open(OUTPUT_DIR / "learnability_gate.json", "w") as f:
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    with open(args.output, "w") as f:
         json.dump(results, f, indent=2)
     return 0
 
