@@ -88,6 +88,7 @@ from allostery.pathways import edge_propensity, edge_propensity_to_matrix  # noq
 from allostery.propagators import time_averaged_ctqw  # noqa: E402
 from allostery.protocol import run_frozen_verdict  # noqa: E402
 from allostery.report import assemble_hit_list, no_ground_truth_report, verdict_template  # noqa: E402
+from allostery.superpose import compute_learnability  # noqa: E402
 
 def _log(msg: str) -> None:
     print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
@@ -323,6 +324,28 @@ def run_target(target_name: str, output_dir: Path) -> dict:
         ]
         candidates_builder = _make_candidates_builder(apo, source, cutoff)
 
+        # TASK-0150: closes SEAM-0007 (TASK-0059) for a real caller -- the
+        # learnability-gate verdict (superpose.compute_learnability, the
+        # pocket-restricted-CO-corrected successor to scripts/learnability_
+        # gate.py's own original computation) is computed here and passed
+        # to run_frozen_verdict below so it lands inline in this run's own
+        # verdict.json, not only in that separate script's own output.
+        # Caught locally, not left to crash the whole target: this is a
+        # diagnostic riding alongside the real score, and TASK-0059's own
+        # `learnability=None` default already means "simply not attached"
+        # is a fully supported, non-error state -- an unexpected failure
+        # here must degrade to that same state, not abort a target whose
+        # actual AUC/hit-list computation would otherwise have succeeded.
+        _log(f"{target_name}: computing learnability gate...")
+        try:
+            learnability = compute_learnability(
+                apo, holo, target_config, labels_obj.pocket, anm_cutoff=cutoff,
+            )
+            _log(f"{target_name}: learnability={learnability['verdict']}")
+        except Exception as exc:
+            _log(f"{target_name}: learnability gate failed ({exc!r}), omitting from verdict")
+            learnability = None
+
         _log(f"{target_name}: running frozen verdict (candidate selection + scoring, the expensive eigendecomposition stage)...")
         t0 = time.monotonic()
         result = run_frozen_verdict(
@@ -330,6 +353,7 @@ def run_target(target_name: str, output_dir: Path) -> dict:
             apo.coords, apo.bfactors, source, labels_obj.pocket,
             cutoff=cutoff, t_max=T_MAX, n_steps=N_STEPS,
             floor_scores=floor_scores, coherent=False,
+            learnability=learnability,
         )
         _log(f"{target_name}: frozen verdict done in {time.monotonic() - t0:.1f}s -- diagnosis={result.get('_diagnosis')}")
 

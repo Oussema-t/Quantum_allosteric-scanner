@@ -437,6 +437,21 @@ added as `superpose.background_rmsd`/`learnability_verdict`):
   matching ([[TASK-0144]]), not silently worked around. See
   `COMPETENCE_MAP.md`'s own CARDIAC_MYOSIN section for the full
   floor/ceiling/actual re-run, which does not depend on this gate.
+- **[[TASK-0150]], 2026-07-24**: re-run under the now-fixed chain map
+  ([[TASK-0144]]) plus a second, independent CO-quantity bug fixed the
+  same day (`scripts/learnability_gate.py` was still using
+  whole-structure `cumulative_overlap`, not the pocket-restricted
+  quantity [[TASK-0139]] already established as correct — that script
+  was never actually updated despite TASK-0139's own claim otherwise).
+  **CARDIAC_MYOSIN's verdict flips to `UNLEARNABLE_FROM_APO`** (ratio
+  1.57, restricted CO(20)=0.254) — the pocket is no longer "confounded,
+  unclear either way" as this bullet originally said; under the real,
+  corrected apo it reads cleanly cryptic, corroborating [[TASK-0124]]'s
+  own independent AUC-side finding from a structural angle. KRAS_G12C's
+  own bare-threshold reading (no percentile null applied in this live
+  path) is `UNLEARNABLE_FROM_APO`, distinct from [[TASK-0139]]'s own
+  fully null-resolved `AMBIGUOUS` — both documented, not reconciled into
+  one number. Full table: `RESULTS.md`'s learnability-gate section.
 
 **Practical upshot**: the 2026-07-15 status-update bullet below ("HYP-P8
 is now strongly supported") was built from *indirect* evidence about

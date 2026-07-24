@@ -122,6 +122,42 @@ class TestRunTarget:
         assert "_diagnosis" in verdict
         assert "_winner_index" in verdict
 
+    def test_verdict_json_carries_the_learnability_verdict(self, mocked_target, tmp_path):
+        """TASK-0150 -- closes SEAM-0007 (TASK-0059) for a real caller:
+        `run_target` must compute `superpose.compute_learnability` and
+        pass it through to `run_frozen_verdict`, so it lands in the same
+        `verdict.json` `_diagnosis`/AUC already do, not only in the
+        separate `scripts/learnability_gate.py`'s own output. The
+        synthetic fixture's apo/holo share one coordinate frame by
+        construction (zero displacement) -- a real, deterministic
+        `UNLEARNABLE_FROM_APO` verdict (background_rmsd=0 -> ratio=inf,
+        CO=0), not a placeholder value."""
+        run_challenge.run_target("SYNTH", tmp_path)
+        with open(tmp_path / "SYNTH" / "verdict.json") as f:
+            verdict = json.load(f)
+        assert verdict["_learnability_verdict"] == "UNLEARNABLE_FROM_APO"
+        assert "_learnability" in verdict
+        assert verdict["_learnability"]["co_final"] == pytest.approx(0.0)
+
+    def test_learnability_failure_is_caught_not_fatal(self, mocked_target, tmp_path, monkeypatch):
+        """An unexpected failure computing the learnability gate must not
+        abort a target's real AUC/hit-list scoring -- it degrades to the
+        same 'simply not attached' state `run_frozen_verdict`'s own
+        `learnability=None` default already supports, per this task's own
+        Constraints (must not regress a previously-succeeding target)."""
+        import run_challenge as rc
+
+        def _boom(*args, **kwargs):
+            raise RuntimeError("synthetic failure")
+
+        monkeypatch.setattr(rc, "compute_learnability", _boom)
+        result = run_challenge.run_target("SYNTH", tmp_path)
+        assert result["ok"] is True
+        with open(tmp_path / "SYNTH" / "verdict.json") as f:
+            verdict = json.load(f)
+        assert "_learnability_verdict" not in verdict
+        assert "_diagnosis" in verdict  # the real score still completes
+
     def test_a_config_load_failure_writes_error_txt_and_does_not_raise(self, monkeypatch, tmp_path):
         def _boom(name):
             raise KeyError(f"Unknown target '{name}'.")

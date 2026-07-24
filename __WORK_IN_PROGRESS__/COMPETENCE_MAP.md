@@ -485,6 +485,22 @@ machinery was never extended to handle, unlike `clean_from_config`'s own
 as [[TASK-0144]], not fixed inline here since a concurrent thread held uncommitted
 changes in `superpose.py` at the time).
 
+**[[TASK-0150]], 2026-07-24: re-run, and the verdict flips.** [[TASK-0144]] fixed the
+chain-letter bug named above and re-ran this gate, but with a second, independent bug
+still live in `scripts/learnability_gate.py` (whole-structure `cumulative_overlap`,
+not the pocket-restricted quantity [[TASK-0139]] had already established as correct
+for this exact conjunction — that script was never actually updated to match despite
+TASK-0139's own Done section claiming it was, confirmed false by direct code/`git
+log` inspection). With both fixes applied together: CARDIAC_MYOSIN's learnability
+verdict is **`UNLEARNABLE_FROM_APO`** (RMSD ratio 1.57, restricted CO(20)=0.254) —
+not TASK-0144's own `LEARNABLE` reading, which used the uncorrected CO. This is a
+second, fully independent line of evidence (a structural-learnability measurement,
+not an AUC/floor/ceiling one) corroborating this section's own headline above: the
+real, corrected apo structure does not support this target's apparent positive —
+not on the scored AUC, and now not on whether the pocket's opening is even
+mode-spanned in the apo topology. Full table (KRAS_G12C/BCR_ABL1/GLUCOKINASE too):
+`RESULTS.md`'s learnability-gate section, 2026-07-24 block.
+
 ---
 
 ## c-Myc / 1NKP — no ground truth (per [[TASK-0080]])

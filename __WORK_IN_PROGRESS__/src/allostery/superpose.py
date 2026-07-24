@@ -653,6 +653,101 @@ def restricted_cumulative_overlap(
     return np.sqrt(np.cumsum(c ** 2)) / delta_norm
 
 
+def compute_learnability(
+    apo, holo, target_config: dict, pocket_mask: np.ndarray,
+    *,
+    anm_cutoff: float = 10.0,
+    n_modes: int = 20,
+    rmsd_threshold: float = 3.0,
+    co_percentile: Optional[float] = None,
+) -> dict:
+    """TASK-0150 -- single, correct, reusable composition of this module's
+    own learnability-gate primitives (`align_apo_holo`, `cryptic_openness_
+    gate`, `background_rmsd`, `anm_modes`, `restricted_cumulative_overlap`,
+    `learnability_verdict`), extracted so `run_challenge.py` and `scripts/
+    learnability_gate.py` compute the *same* verdict from the *same* code
+    path instead of two independently-maintained copies.
+
+    **Real bug found and fixed while building this, not inherited**:
+    `scripts/learnability_gate.py`'s own `run_one` (TASK-0120) computes
+    `CO(20)` via the whole-structure `cumulative_overlap`, not the
+    pocket-restricted `restricted_cumulative_overlap` -- confirmed
+    directly (import list, the actual call, `restricted_cumulative_
+    overlap`'s own docstring which independently states this exact fact)
+    and via `git log`, which shows `learnability_gate.py` was never
+    touched by TASK-0133 or TASK-0139. **This contradicts TASK-0139's own
+    Done section**, which claims "both real call sites (`scripts/
+    learnability_gate.py`, `scripts/learnability_gate_patch_control.py`)
+    already compute the restricted quantity" -- true only for the second
+    script; TASK-0139's own later "Not attempted" section says the
+    opposite ("did not modify `scripts/learnability_gate.py` ... to
+    auto-compute ... the corrected verdict"), an internal contradiction
+    in that task's own write-up, not just a stale doc elsewhere. This
+    function uses the correct, pocket-restricted quantity throughout --
+    the whole-structure `cumulative_overlap` is never called here.
+
+    `co_percentile` (TASK-0139's own parameter on `learnability_verdict`,
+    threaded through unchanged): `None` by default -- this function does
+    NOT compute a random-patch null itself (that remains `scripts/
+    learnability_gate_patch_control.py`'s own, deliberately heavier,
+    1000-replicate analysis, out of scope for a per-run live computation
+    in the main pipeline). A caller holding a precomputed percentile
+    (e.g. from that script's own output) may pass it through; without
+    one, the verdict falls back to `learnability_verdict`'s own bare-
+    threshold comparison on the (now-correct) restricted CO -- **for
+    KRAS_G12C specifically this reads `UNLEARNABLE_FROM_APO`, not
+    [[TASK-0139]]'s own fully percentile-resolved `AMBIGUOUS`** (restricted
+    CO=0.458 is below `co_threshold=0.5`; only the null-percentile test,
+    at the 93rd percentile of a p≈0.07 one-sided test, softens that to
+    `AMBIGUOUS`). Both readings are legitimate and are documented as
+    distinct, not silently reconciled -- see TASK-0150's own Done section.
+
+    Same TASK-0128 graceful-degradation contract as `scripts/
+    learnability_gate.py`'s own `run_one`: `anm_modes`' rigid-body-mode
+    assertion failing on a multi-chain/floppy-linker target degrades to
+    `co_blocked_reason` (`verdict="PARTIAL_RMSD_ONLY_CO_BLOCKED"`)
+    rather than raising past this function -- pocket/background RMSD
+    never depend on `anm_modes` and are always reported.
+    """
+    alignment = align_apo_holo(apo, holo, chain_map=chain_map_from_config(target_config))
+    gate = cryptic_openness_gate(apo, holo, alignment, pocket_mask, rmsd_threshold=rmsd_threshold)
+    bg = background_rmsd(apo, holo, alignment, pocket_mask)
+
+    co_curve = None
+    co_final = float("nan")
+    co_blocked_reason = None
+    try:
+        eigvals, eigvecs = anm_modes(apo.coords, cutoff=anm_cutoff, n_modes=n_modes)
+        in_common = np.zeros(len(pocket_mask), dtype=bool)
+        in_common[alignment.apo_idx] = True
+        measurable_pocket = np.where(pocket_mask & in_common)[0]
+        co_curve = restricted_cumulative_overlap(apo, alignment, eigvecs, measurable_pocket)
+        co_final = float(co_curve[-1]) if len(co_curve) else float("nan")
+    except ValueError as exc:
+        co_blocked_reason = f"BLOCKED on TASK-0128 (anm_modes): {exc!r}"
+
+    verdict = learnability_verdict(
+        pocket_rmsd_mean=gate["pocket_rmsd_mean"],
+        background_rmsd_mean=bg["background_rmsd_mean"],
+        co_final=co_final,
+        co_percentile=co_percentile,
+    )
+    if co_blocked_reason is not None:
+        verdict["verdict"] = "PARTIAL_RMSD_ONLY_CO_BLOCKED"
+
+    return {
+        "n_common_correspondence": len(alignment.apo_idx),
+        "alignment_rmsd_overall": alignment.rmsd_overall,
+        "n_pocket_residues": gate["n_pocket_residues"],
+        "n_pocket_unmeasurable": gate["n_unmeasurable"],
+        "n_background_residues": bg["n_background_residues"],
+        "co_curve_at_n_modes": n_modes,
+        "co_curve": co_curve.tolist() if co_curve is not None else None,
+        "co_blocked_reason": co_blocked_reason,
+        **verdict,
+    }
+
+
 # ---------------------------------------------------------------------------
 # TASK-0075 -- knob-spread go/no-go gate over cumulative_overlap
 # ---------------------------------------------------------------------------
