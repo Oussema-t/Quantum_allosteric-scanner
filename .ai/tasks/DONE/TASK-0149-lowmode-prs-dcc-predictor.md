@@ -229,3 +229,18 @@ task's own "does not decorrelate as the synthetic control predicted" finding, no
 confirmed on a second target rather than resolved. Full detail: `RESULTS.md`'s own
 generalization-set section, open-questions row 33;
 `.ai/tasks/DONE/TASK-0151-generalization-check-transport-lowmode-findings.md`.
+
+**Holo-diagnostic comparison, 2026-07-24 ([[TASK-0153]], extending [[TASK-0067]]/
+[[TASK-0092]]):** CARDIAC_MYOSIN's `prs_low` headline (apo 0.922/p=0.006) gets the
+cleanest **near-information-ceiling** reading in the project so far — holo *stays*
+strongly significant at every k (p=0.0000–0.0051), gap only −0.020: apo already
+extracts almost all the signal the same operator could ever get from holo's own true
+structure. **`dcc_low`'s headline on the identical target (apo 0.962/p<0.001) does
+not get the same clean attribution** — holo loses significance at every k (p=0.07–
+0.30, gap −0.303 at k=20), flagged as a genuine, unresolved complication (candidate
+factors noted, not investigated: CARDIAC_MYOSIN's own 704-vs-709 apo/holo residue-
+count mismatch, its documented structural-remapping history). BCR_ABL1's `prs_low`
+reproduces TASK-0092's own "holo scores worse than apo" third outcome. Diagnostic
+only, per this task's own Constraint. Full detail: `RESULTS.md`'s own holo-
+diagnostic section, open-questions row 35;
+`.ai/tasks/DONE/TASK-0153-holo-diagnostic-transport-lowmode.md`.

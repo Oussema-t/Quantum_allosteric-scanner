@@ -277,3 +277,15 @@ generalize to PTP1B/CASPASE7. PTP1B's identical quantity comes back *below chanc
 Constraint) but should be framed as a single-target result, not yet cross-target
 replicated. Full detail: `RESULTS.md`'s own generalization-set section,
 open-questions row 33; `.ai/tasks/DONE/TASK-0151-generalization-check-transport-lowmode-findings.md`.
+
+**Holo-diagnostic comparison, 2026-07-24 ([[TASK-0153]], extending [[TASK-0067]]/
+[[TASK-0092]]):** BCR_ABL1's headline gets a clean **operator-limited** reading —
+holo AUC 0.626 vs apo 0.698 (gap −0.073), holo itself still nominally elevated
+(p=0.042) — corroborating TASK-0092's own established BCR_ABL1 pattern (small
+apo/holo gap → the propagator/operator is the bottleneck, not apo's information
+content) on a third, independent operator family now. KRAS_G12C's `T(E=0)` on H_new
+reproduces TASK-0092's own "unexpected direction" outcome — holo scores *below
+chance* (0.640→0.296) — neither apo-information-limited nor operator-limited
+cleanly. Diagnostic only, per this task's own Constraint — not a submission number.
+Full detail: `RESULTS.md`'s own holo-diagnostic section, open-questions row 35;
+`.ai/tasks/DONE/TASK-0153-holo-diagnostic-transport-lowmode.md`.

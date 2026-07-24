@@ -3085,6 +3085,55 @@ Full detail: `.ai/tasks/DONE/TASK-0151-generalization-check-transport-lowmode-fi
 
 ---
 
+## Holo-diagnostic comparison: transport + low-mode PRS/DCC (TASK-0153, 2026-07-24)
+
+Extends [[TASK-0067]]'s/[[TASK-0092]]'s holo-native diagnostic (same operator, fed
+holo topology instead of apo — never a submission prediction, purely failure-
+attribution: (a) apo genuinely lacks the information vs (b) the operator itself is
+the bottleneck) to [[TASK-0145]]'s transport and [[TASK-0149]]'s low-mode families,
+neither of which either prior task ever tested. New `scripts/holo_diagnostic_
+transport_lowmode.py` — simpler than TASK-0092's own two-pass design, confirmed
+directly (not assumed) that neither observable goes through `run_frozen_verdict`'s
+blind-selection machinery at all, so direct application on holo coordinates +
+`_holo_native_labels` (TASK-0067's own construction, imported verbatim) + each
+observable's own already-established `_score`/`_score_cell` function (reused
+unmodified, zero new scoring logic) is the correct, and simpler, design.
+
+**Transport**: BCR_ABL1's headline (`T(E=0)` on L, apo AUC 0.698/p=0.003) gets a clean
+**(b) operator-limited** reading — holo=0.626, gap −0.073, holo itself still nominally
+elevated (p=0.042) — corroborating TASK-0092's own established BCR_ABL1 pattern
+(small apo/holo gap → the propagator/operator is the bottleneck) on a third,
+independent operator family now. KRAS_G12C's `T(E=0)` on H_new reproduces TASK-0092's
+own "unexpected direction" third outcome — holo scores *below chance* (0.640→0.296,
+gap −0.344) — neither (a) nor (b) cleanly.
+
+**Lowmode**: CARDIAC_MYOSIN's `prs_low` headline (apo 0.922/p=0.006) gets the cleanest
+**(b) near-information-ceiling** reading in the project so far — holo *stays* strongly
+significant at every k (p=0.0000–0.0051), gap only −0.020: apo already extracts
+almost all the signal the same operator could ever get from holo's own true
+structure. **`dcc_low`'s headline on the identical target (apo 0.962/p<0.001) tells a
+starkly different story**: holo loses significance at every k (p=0.07–0.30, gap
+−0.303 at k=20) — the opposite of a clean information-ceiling reading, and not
+explained by either failure mode. Flagged as a genuine, unresolved complication
+(candidate factors — CARDIAC_MYOSIN's own apo/holo residue-count mismatch, 704 vs
+709, and its documented history of structural-remapping sensitivity,
+[[TASK-0124]]/[[TASK-0144]]/[[TASK-0150]] — noted, not investigated further, per this
+task's own scope). BCR_ABL1's `prs_low` reproduces the "unexpected direction" pattern
+again (holo markedly worse, 0.439→0.246).
+
+**Net read**: CARDIAC_MYOSIN's `prs_low` positive is now the best-attributed finding
+in the project — Bonferroni-significant on its own mandatory-3 target, replicated
+directionally under the holo-diagnostic lens with a textbook operator-limited
+reading. `dcc_low`'s own strong apo positive on the same target does not get the same
+clean attribution and should be framed with that caveat attached. Per this task's own
+Constraint, restated: none of these holo numbers were ever submission predictions —
+purely diagnostic.
+
+Full detail: `.ai/tasks/DONE/TASK-0153-holo-diagnostic-transport-lowmode.md`,
+`results_task0153_holo_diagnostic/holo_diagnostic_transport_lowmode.json`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -3131,6 +3180,8 @@ Full detail: `.ai/tasks/DONE/TASK-0151-generalization-check-transport-lowmode-fi
 | 33 | Do [[TASK-0145]]'s BCR_ABL1 transport positive and [[TASK-0149]]'s CARDIAC_MYOSIN `dcc_low`/`prs_low` positives — the project's two strongest results — survive [[TASK-0115]]'s Rule #6 repeated-exposure check against the PTP1B/CASPASE7 generalization set? | **resolved 2026-07-24: mixed, real, informative.** Transport does not clearly generalize: PTP1B's `T(E=0)` on L comes back below chance (AUC 0.382, p=0.926, opposite direction from BCR_ABL1's own AUC 0.699/p=0.003); CASPASE7 echoes the direction (AUC 0.748) but only at uncorrected p=0.011, not clearing this task's own stricter 6-comparison Bonferroni bar. **`dcc_low` replicates cleanly on PTP1B** — 3/4 k-values clear this task's own stricter 16-comparison bar, including well-powered max AUC 1.000 at k=10 (p=0.001) — now Bonferroni-significant on two independent targets, the strongest cross-target evidence any observable in this project has. `prs_low` never reaches significance on either generalization target. Neither observable shows anything on CASPASE7. Per this task's own Constraint, neither mandatory-3 finding is retracted — this changes framing, not standing: `dcc_low` graduates to a replicated finding, transport's BCR_ABL1 result and `prs_low` remain single-target. | [[TASK-0151]], [[TASK-0145]], [[TASK-0149]], [[TASK-0115]] |
 
 | 34 | Do CARDIAC_MYOSIN(8QYP)'s and GLUCOKINASE's bare-threshold learnability verdicts ([[TASK-0150]], both `UNLEARNABLE_FROM_APO`) survive the same 1000-replicate random-patch null [[TASK-0133]]/[[TASK-0139]] already applied to KRAS_G12C's own bare-threshold verdict? | **resolved 2026-07-24: no — both soften to `AMBIGUOUS`, the same direction and magnitude as KRAS_G12C's own result.** CARDIAC_MYOSIN: restricted CO=0.254 sits at the 85.7th percentile of the null (one-sided p=0.143); GLUCOKINASE: CO=0.304 at the 89.9th percentile (p=0.101) — both elevated relative to a random same-sized patch, neither decisive at this project's own α=0.05 bar, exactly the "elevated but not significant" pattern KRAS_G12C's own 93rd-percentile/p≈0.07 result already established. Now confirmed on 3 of the 4 targets this exact analysis has ever been run on. Does not retract [[TASK-0150]]'s own bare-threshold reading — reports the more rigorous of two legitimate readings alongside it, same relationship KRAS_G12C's own two numbers already have. GLUCOKINASE's chain-schema question ([[TASK-0081]]) reconfirmed resolved ([[TASK-0127]]), not re-litigated. | [[TASK-0152]], [[TASK-0150]], [[TASK-0133]], [[TASK-0139]] |
+
+| 35 | Does the [[TASK-0067]]/[[TASK-0092]] holo-native diagnostic (same operator, holo topology instead of apo — failure-attribution only, never a prediction) extend to [[TASK-0145]]'s transport and [[TASK-0149]]'s low-mode observable families, neither ever tested this way? | **resolved 2026-07-24: mixed and genuinely informative, including a third "unexpected direction" outcome on 2 cells and one striking within-target divergence.** BCR_ABL1's transport headline (`T(E=0)` on L, apo 0.698/p=0.003) gets a clean **(b) operator-limited** reading (holo=0.626, gap −0.073, holo itself still nominally elevated p=0.042) — corroborates TASK-0092's own BCR_ABL1 pattern on a third, independent operator family. CARDIAC_MYOSIN's `prs_low` headline (apo 0.922/p=0.006) gets the cleanest **(b) near-information-ceiling** reading in the project so far — holo stays strongly significant at every k (p=0.0000–0.0051), gap only −0.020. **`dcc_low`'s headline on the identical target (apo 0.962/p<0.001) does not** — holo loses significance at every k (p=0.07–0.30, gap −0.303 at k=20), the opposite of a clean ceiling reading, flagged as an open complication (not resolved — candidate factors noted: CARDIAC_MYOSIN's own 704-vs-709 apo/holo residue-count mismatch and its documented structural-remapping history). KRAS_G12C's transport-on-H_new and BCR_ABL1's `prs_low` both reproduce TASK-0092's own "holo scores *worse* than apo" third outcome, confirming it recurs rather than being a one-off. | [[TASK-0153]], [[TASK-0067]], [[TASK-0092]], [[TASK-0145]], [[TASK-0149]] |
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
 (or `.ai/tasks/TODO/` if not yet closed — check `.ai/COMMON.md`'s registry
