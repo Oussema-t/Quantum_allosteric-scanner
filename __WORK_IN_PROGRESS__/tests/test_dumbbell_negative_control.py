@@ -593,3 +593,73 @@ class TestSpectralCoherenceDumbbellGate:
     def test_c4_cues_absent_is_near_chance_with_a_wider_seed_average(self):
         c4 = _mean_auc_over_seeds(None, None, _spectral_coherence, n_seeds=20)
         assert abs(c4 - 0.5) < 0.3, f"spectral coherence not near chance in C4 (mean AUC={c4:.3f})"
+
+def _entanglement(H, t, source, radius: int = 1):
+    """Matches `auc_to_drug`'s `propagator(H, t, source=...)` interface --
+    `entanglement_entropy_mixture` needs a genuinely coherent amplitude at
+    a fixed time (see `allostery.entanglement`'s own module docstring:
+    time-averaged/decohered occupation has no accessible coherences),
+    so `t` is used directly, not ignored, unlike this file's other
+    spectral adapters. Neighborhoods are built fresh from `H`'s own
+    off-diagonal adjacency (recovered the same way `_reff`/`_connectivity`
+    above do, so a well on the diagonal doesn't leak into the graph
+    topology used to define regions) at `radius=1` (TASK-0148's own
+    default)."""
+    from scipy.sparse.csgraph import shortest_path
+
+    from allostery.entanglement import entanglement_entropy_mixture, hop_radius_neighborhoods
+
+    A = -H.copy()
+    np.fill_diagonal(A, 0)
+    hop_dist = shortest_path((A > 1e-12).astype(float), method="D", unweighted=True, directed=False)
+    neighborhoods = hop_radius_neighborhoods(hop_dist, radius=radius)
+    return entanglement_entropy_mixture(H, source, neighborhoods, t)
+
+
+class TestEntanglementEntropyDumbbellGate:
+    """TASK-0148's own mandatory gate (Intent Contract: "does the entropy
+    actually track coupling/delocalization on a constructed case... before
+    trusting real data"). Unlike `R_eff` (TASK-0145), entanglement entropy
+    operates directly on `H`'s coherent dynamics (well included, not
+    structurally blind to it) -- whether it tracks coupling or the well on
+    this construction is a genuine empirical question, checked directly.
+
+    Real measured values on this construction (n_seeds=10, `t=20.0`
+    matching this file's own default, `radius=1`, checked directly before
+    writing these assertions): C2=1.000, C3=0.000 (both exact across every
+    seed -- a decisive double dissociation from GSR, the same pattern
+    `R_eff`/`T(E)` (TASK-0145) and CP (TASK-0122) already showed on this
+    construction). C1=0.076 -- well below chance, not asserted
+    directionally (same resonance-sensitivity precedent as this file's
+    other coupling-tracking gates on the cues-agree cell). C4=0.584 mean,
+    high per-seed variance (0.076-0.924, the identical range TASK-0145's
+    gates found) -- a wider seed count is used for the same reason."""
+
+    def test_c2_entanglement_follows_coupling_not_well(self):
+        mean_auc = _mean_auc_over_seeds("DECOY", "DRUG", _entanglement, n_seeds=20)
+        assert mean_auc > 0.95, f"Entanglement entropy did not decisively follow coupling in C2 (mean AUC={mean_auc:.3f})"
+
+    def test_c3_entanglement_follows_coupling_not_well(self):
+        mean_auc = _mean_auc_over_seeds("DRUG", "DECOY", _entanglement, n_seeds=20)
+        assert mean_auc < 0.05, f"Entanglement entropy did not decisively follow coupling in C3 (mean AUC={mean_auc:.3f})"
+
+    def test_c2_c3_is_a_clean_double_dissociation_against_gsr(self):
+        e_c2 = _mean_auc_over_seeds("DECOY", "DRUG", _entanglement, n_seeds=10)
+        gsr_c2 = _mean_auc_over_seeds("DECOY", "DRUG", _gsr, n_seeds=10)
+        e_c3 = _mean_auc_over_seeds("DRUG", "DECOY", _entanglement, n_seeds=10)
+        gsr_c3 = _mean_auc_over_seeds("DRUG", "DECOY", _gsr, n_seeds=10)
+        assert e_c2 > gsr_c2, "Entanglement entropy should score DRUG higher than GSR in C2 (well elsewhere)"
+        assert e_c3 < gsr_c3, "Entanglement entropy should score DRUG lower than GSR in C3 (well on DRUG)"
+
+    def test_c1_cues_agree_is_not_asserted_tightly(self):
+        """Same convention as this file's other coupling-tracking gates'
+        own C1 cell, for the same measured reason (a deep co-located well
+        perturbs the coherent amplitude into a resonance-sensitive regime
+        even when coupling agrees) -- no directional claim, sanity only."""
+        c1 = _mean_auc_over_seeds("DRUG", "DRUG", _entanglement, n_seeds=5)
+        assert np.isfinite(c1)
+
+    def test_c4_cues_absent_is_near_chance_with_a_wider_seed_average(self):
+        c4 = _mean_auc_over_seeds(None, None, _entanglement, n_seeds=20)
+        assert abs(c4 - 0.5) < 0.3, f"Entanglement entropy not near chance in C4 (mean AUC={c4:.3f})"
+

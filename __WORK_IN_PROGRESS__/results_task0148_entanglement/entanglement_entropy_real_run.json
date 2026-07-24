@@ -1,0 +1,179 @@
+{
+  "KRAS_G12C": {
+    "target": "KRAS_G12C",
+    "N": 169,
+    "pocket_size": 18,
+    "cutoff": 8.0,
+    "t_star": 27.508991862005967,
+    "entanglement_entropy": {
+      "auc": 0.47866077998528334,
+      "category": "NO_SIGNAL_IN_APO",
+      "score_ci": [
+        0.47866077998528334,
+        0.2731236129837529,
+        0.7196753387533874
+      ],
+      "floor_ci": [
+        0.4817880794701987,
+        0.3216555298475685,
+        0.6554576521712283
+      ],
+      "ci_overlap": true,
+      "permutation_null": {
+        "real_auc": 0.47866077998528334,
+        "null_median": 0.504047093451067,
+        "null_p95": 0.6221854304635761,
+        "p_value": 0.629,
+        "n_reps": 1000,
+        "bonferroni_alpha": 0.016666666666666666,
+        "bonferroni_significant": false
+      }
+    },
+    "cross_read_task_0106": {
+      "participation_ratio_coherent_snapshot": 0.02134865696090651,
+      "participation_ratio_converged_limit": 0.014739019763258011
+    },
+    "t_knob_grid": [
+      {
+        "t_multiplier": 0.5,
+        "auc": 0.4205298013245033
+      },
+      {
+        "t_multiplier": 1.0,
+        "auc": 0.47866077998528334
+      },
+      {
+        "t_multiplier": 2.0,
+        "auc": 0.5452538631346578
+      }
+    ],
+    "radius_knob_grid": [
+      {
+        "radius": 1,
+        "auc": 0.47866077998528334
+      },
+      {
+        "radius": 2,
+        "auc": 0.5011037527593819
+      }
+    ]
+  },
+  "BCR_ABL1": {
+    "target": "BCR_ABL1",
+    "N": 451,
+    "pocket_size": 16,
+    "cutoff": 8.0,
+    "t_star": 26.72377377895095,
+    "entanglement_entropy": {
+      "auc": 0.5290948275862069,
+      "category": "NO_SIGNAL_IN_APO",
+      "score_ci": [
+        0.5290948275862069,
+        0.36206600772409514,
+        0.6765199289877614
+      ],
+      "floor_ci": [
+        0.5816810344827587,
+        0.40487928418995717,
+        0.7212045823313495
+      ],
+      "ci_overlap": true,
+      "permutation_null": {
+        "real_auc": 0.5290948275862069,
+        "null_median": 0.5002155172413794,
+        "null_p95": 0.6301867816091954,
+        "p_value": 0.349,
+        "n_reps": 1000,
+        "bonferroni_alpha": 0.016666666666666666,
+        "bonferroni_significant": false
+      }
+    },
+    "cross_read_task_0106": {
+      "participation_ratio_coherent_snapshot": 0.018065704513947196,
+      "participation_ratio_converged_limit": 0.007874345884823154
+    },
+    "t_knob_grid": [
+      {
+        "t_multiplier": 0.5,
+        "auc": 0.5229166666666667
+      },
+      {
+        "t_multiplier": 1.0,
+        "auc": 0.5290948275862069
+      },
+      {
+        "t_multiplier": 2.0,
+        "auc": 0.5053879310344828
+      }
+    ],
+    "radius_knob_grid": [
+      {
+        "radius": 1,
+        "auc": 0.5290948275862069
+      },
+      {
+        "radius": 2,
+        "auc": 0.5352729885057471
+      }
+    ]
+  },
+  "CARDIAC_MYOSIN": {
+    "target": "CARDIAC_MYOSIN",
+    "N": 704,
+    "pocket_size": 13,
+    "cutoff": 8.0,
+    "t_star": 82.82916428963325,
+    "entanglement_entropy": {
+      "auc": 0.48101970388511633,
+      "category": "NO_SIGNAL_IN_APO",
+      "score_ci": [
+        0.48101970388511633,
+        0.30600810875999834,
+        0.7204866007744039
+      ],
+      "floor_ci": [
+        0.5678503840587776,
+        0.4229977411394542,
+        0.7492128649181578
+      ],
+      "ci_overlap": true,
+      "permutation_null": {
+        "real_auc": 0.48101970388511633,
+        "null_median": 0.5032283201603027,
+        "null_p95": 0.6339892018256706,
+        "p_value": 0.624,
+        "n_reps": 1000,
+        "bonferroni_alpha": 0.016666666666666666,
+        "bonferroni_significant": false
+      }
+    },
+    "cross_read_task_0106": {
+      "participation_ratio_coherent_snapshot": 0.08419364958749437,
+      "participation_ratio_converged_limit": 0.08103666496581183
+    },
+    "t_knob_grid": [
+      {
+        "t_multiplier": 0.5,
+        "auc": 0.5466993209395525
+      },
+      {
+        "t_multiplier": 1.0,
+        "auc": 0.48101970388511633
+      },
+      {
+        "t_multiplier": 2.0,
+        "auc": 0.4509629299788489
+      }
+    ],
+    "radius_knob_grid": [
+      {
+        "radius": 1,
+        "auc": 0.48101970388511633
+      },
+      {
+        "radius": 2,
+        "auc": 0.48235556050317263
+      }
+    ]
+  }
+}

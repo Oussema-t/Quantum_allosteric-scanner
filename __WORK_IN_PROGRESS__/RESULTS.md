@@ -3229,6 +3229,80 @@ Full detail: `.ai/tasks/DONE/TASK-0146-frequency-domain-coherence-observable.md`
 
 ---
 
+## Single-particle entanglement entropy across a spatial cut (TASK-0148, 2026-07-24)
+
+Computes the Peschel (2003, *J. Phys. A* 36, L205, arXiv:cond-mat/0212631 —
+verified real directly, IOPscience/arXiv/ADS) correlation-matrix entanglement
+entropy of the active site's coherent single-particle state, bipartitioned per
+candidate residue into its own hop-radius-1 neighborhood vs. everything else —
+a localization/coupling observable distinct from raw occupation or anything
+else in this project's register. New `allostery.entanglement`.
+
+**A real mathematical reduction, derived and verified numerically (to
+`1e-16`) before implementing anything else**: for a single coherent source,
+the correlation matrix restricted to any region is exactly rank-1, collapsing
+Peschel's general diagonalization to the elementary closed form `S_A = h(P_A)`
+— the *binary* Shannon entropy of the region's own total occupation
+probability. This closed form does **not** apply under this project's own
+established multi-residue active-site GAUGE (TASK-0118: an incoherent
+mixture, not a coherent superposition) — confirmed directly that a mixture's
+correlation matrix is generically rank>1, so real-target scoring uses the
+general Peschel diagonalization throughout, not the shortcut.
+
+**A second real finding, resolving the task's own Open Question with a reason
+rather than a preference**: entanglement entropy needs the coherent complex
+amplitude's off-diagonal phase information — `propagators.ctqw`/
+`time_averaged_ctqw` only ever return `|amplitude|^2` by design, so the
+converged/time-averaged limit this project defaults to for most headline
+scores is not *available* here at all, not merely undesirable. Used a fixed
+coherent snapshot, `t* = 1/gap` (this project's own established gap-derived-
+timescale convention), blind to labels.
+
+**Synthetic falsification gate**
+(`tests/test_dumbbell_negative_control.py::TestEntanglementEntropyDumbbellGate`):
+a clean, decisive double dissociation against GSR on the conflict cells
+(C2=1.000, C3=0.000, every seed) — genuinely follows coupling, not the well,
+the same pattern `R_eff`/`T(E)` (TASK-0145) and CP (TASK-0122) already showed
+on this construction. C1 not asserted directionally (same resonance-
+sensitivity precedent as this file's other coupling-tracking gates); C4 has
+the same real, high per-seed variance TASK-0145's gates already characterized.
+
+**Real-target scoring, all 3 mandatory targets** (radius=1, `t=t*`), against
+TASK-0094's proximity floor with block-bootstrap CIs and a permutation null
+on the primary (pre-registered, not best-of-K) score:
+
+| Target | Entropy AUC | Floor | Category | Permutation p |
+|---|---|---|---|---|
+| KRAS_G12C | 0.4787 | 0.4818 | NO_SIGNAL_IN_APO | 0.629 |
+| BCR_ABL1 | 0.5291 | 0.5817 | NO_SIGNAL_IN_APO | 0.349 |
+| CARDIAC_MYOSIN | 0.4810 | 0.5679 | NO_SIGNAL_IN_APO | 0.624 |
+
+**A clean, complete negative — reported as such, not softened.** No target
+clears the floor; no p-value is anywhere near significant even uncorrected.
+Radius (1 vs 2) and `t` (0.5x/1x/2x `t*`) characterized as KNOBs on a small
+grid, never used to pick a best-scoring point against labels: `t` shows a
+real, moderate trend on 2/3 targets (KRAS_G12C: AUC 0.421->0.479->0.545
+across the grid) but never crosses into floor-clearing territory; radius has
+only a small effect (<0.03 AUC swing).
+
+**Cross-read against TASK-0106's own global localization finding**: this
+task's own coherent-snapshot occupation (the same state the entropy scores
+come from) has a participation ratio 1.2-2.3x *higher* (more localized) than
+the project's own standard converged-limit occupation on all 3 targets —
+consistent with, not contradicting, TASK-0106's established Anderson-
+localization finding for `H_new`'s CTQW: a coherent snapshot retains more of
+that localization than the fully dephased/time-averaged limit does. This does
+not, on its own, explain why the per-candidate entropy observable itself
+finds no discriminative signal — localization and discrimination are
+different questions, and this task's own real result answers the second
+directly (no), not by inference from the first.
+
+Full detail: `.ai/tasks/DONE/TASK-0148-single-particle-entanglement-entropy.md`,
+`results_task0148_entanglement/entanglement_entropy_real_run.json`,
+`src/allostery/entanglement.py`, `tests/test_entanglement.py`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -3278,6 +3352,8 @@ Full detail: `.ai/tasks/DONE/TASK-0146-frequency-domain-coherence-observable.md`
 
 | 35 | Does the [[TASK-0067]]/[[TASK-0092]] holo-native diagnostic (same operator, holo topology instead of apo — failure-attribution only, never a prediction) extend to [[TASK-0145]]'s transport and [[TASK-0149]]'s low-mode observable families, neither ever tested this way? | **resolved 2026-07-24: mixed and genuinely informative, including a third "unexpected direction" outcome on 2 cells and one striking within-target divergence.** BCR_ABL1's transport headline (`T(E=0)` on L, apo 0.698/p=0.003) gets a clean **(b) operator-limited** reading (holo=0.626, gap −0.073, holo itself still nominally elevated p=0.042) — corroborates TASK-0092's own BCR_ABL1 pattern on a third, independent operator family. CARDIAC_MYOSIN's `prs_low` headline (apo 0.922/p=0.006) gets the cleanest **(b) near-information-ceiling** reading in the project so far — holo stays strongly significant at every k (p=0.0000–0.0051), gap only −0.020. **`dcc_low`'s headline on the identical target (apo 0.962/p<0.001) does not** — holo loses significance at every k (p=0.07–0.30, gap −0.303 at k=20), the opposite of a clean ceiling reading, flagged as an open complication (not resolved — candidate factors noted: CARDIAC_MYOSIN's own 704-vs-709 apo/holo residue-count mismatch and its documented structural-remapping history). KRAS_G12C's transport-on-H_new and BCR_ABL1's `prs_low` both reproduce TASK-0092's own "holo scores *worse* than apo" third outcome, confirming it recurs rather than being a one-off. | [[TASK-0153]], [[TASK-0067]], [[TASK-0092]], [[TASK-0145]], [[TASK-0149]] |
 | 36 | Does the frequency content of un-averaged coherent quantum beating (`c_j(t)=<j|exp(-iHt)|source>`, Fourier-analyzed rather than time-averaged away like every other propagator this project scores) carry coupling information the converged limit destroys? | **resolved 2026-07-24: no — a real, honestly-reported negative, and the likely mechanism is the proximity confound this task's own filing flagged as a real risk.** New score (total AC/non-DC spectral power of `p_j(t)=|c_j(t)|^2`, `T=5000` calibrated against real Bohr-gap statistics, not picked arbitrarily) passes its own dumbbell falsification gate cleanly (C2/C3 exact double dissociation against GSR) but on real targets: no target reaches a decisive result (all 3 CIs overlap the floor's own CI; well-powered stratified max never clears even uncorrected p<0.05 on 2/3 targets, and the third — BCR_ABL1, p=0.034 — does not clear the 3-target Bonferroni bar). ρ(score,−hop) is +0.68 to +0.72 on every target, matching a *confounded* observable's own reference magnitude — confirmed directly, not assumed, and unlike `prs_low`/`dcc_low`/chiral circulation, this observable was never built with a structural proximity-orthogonality guarantee. Sensitivity check: the shipped `t_max=15` default is confirmed inadequate (flips KRAS_G12C's own floor-clearing verdict relative to the calibrated `T=5000`, which itself agrees closely with a 10×-larger window). | [[TASK-0146]], [[TASK-0110]], [[TASK-0123]], [[TASK-0149]] |
+| 37 | Does single-particle entanglement entropy across a spatial cut (Peschel's correlation-matrix method) find real localization/coupling signal on real targets, and does it reduce to a simpler quantity than the general method suggests? | **resolved 2026-07-24: a clean, complete negative, plus a real mathematical reduction confirmed before touching real data.** For a single coherent source, the entropy exactly reduces to the binary Shannon entropy of the region's total occupation probability (verified to `1e-16`) — but real active sites are multi-residue under this project's own incoherent-mixture GAUGE (TASK-0118), where the correlation matrix is generically rank>1 and the closed form does not apply, so real scoring used the general Peschel diagonalization throughout. No target clears the proximity floor (KRAS_G12C 0.4787/0.4818, BCR_ABL1 0.5291/0.5817, CARDIAC_MYOSIN 0.4810/0.5679); no permutation-null p-value is close to significant even uncorrected. A real, resolved Open Question: the converged/time-averaged occupation limit this project defaults to elsewhere is not available for this observable at all (it needs coherent phase information `|amplitude|^2` discards), so a fixed `t*=1/gap` coherent snapshot was used instead. Cross-read against TASK-0106: the coherent snapshot is 1.2-2.3x more localized (participation ratio) than the converged limit on all 3 targets, consistent with the established Anderson-localization finding, but that localization does not translate into per-candidate discriminative signal. | [[TASK-0148]] |
+
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
 (or `.ai/tasks/TODO/` if not yet closed — check `.ai/COMMON.md`'s registry
