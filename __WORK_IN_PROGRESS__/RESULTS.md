@@ -2990,6 +2990,65 @@ Full detail: `.ai/tasks/DONE/TASK-0145-quantum-transport-effective-conductance.m
 
 ---
 
+## Generalization-set check: transport + low-mode PRS/DCC (TASK-0151, TASK-0115 Rule #6, 2026-07-24)
+
+**First real application of [[TASK-0115]]'s Rule #6** (repeated-exposure risk: no
+robustness claim is submission-final without a check against the [[TASK-0081]]/
+[[TASK-0127]] generalization set). [[TASK-0145]]'s BCR_ABL1 transport positive and
+[[TASK-0149]]'s CARDIAC_MYOSIN `dcc_low`/`prs_low` positives — the two strongest
+results in the project as of 2026-07-24 — checked against PTP1B and CASPASE7 (the only
+2 of the 4 generalization targets with a resolved config; GLUCOKINASE/CASPASE1/
+HEMOGLOBIN/GLYCOGEN_PHOSPHORYLASE/PFK confirmed still unresolved). Pure re-application:
+new `scripts/generalization_check_transport_lowmode.py` imports and calls
+`transport_observable_real_run.run_one`/`lowmode_predictor_real_run.run_target`
+directly, unmodified — zero new scoring logic. Each observable kept its own
+already-established evaluation lens (transport: whole-graph AUC + block-bootstrap CI +
+permutation null; lowmode: TASK-0123's distance-stratified AUC + well-powered-shell
+filter + permutation null) — a tested divergence from this task's own filing text,
+which described both as using the stratified lens; only lowmode's own script actually
+does. Two new Bonferroni families, scoped to this task's own comparisons, not folded
+into either mandatory-3 task's own alpha: transport 2 targets × 3 quantities = 6
+(α=0.00833); lowmode 2 targets × 2 observables × 4 k_modes = 16 (α=0.00313).
+
+**Headline: mixed and informative, neither a clean replication nor a clean
+retraction.**
+
+**Transport does not clearly generalize.** PTP1B's `T(E=0)` on the bare Laplacian —
+the exact quantity significant on BCR_ABL1 (AUC 0.699, p=0.003) — comes back **below
+chance** (AUC 0.382, p=0.926, the opposite direction). CASPASE7 shows the same
+quantity at AUC 0.748, p=0.011 uncorrected — a real, suggestive echo of the BCR_ABL1
+direction, but does not clear this task's own stricter 6-comparison Bonferroni bar
+(0.00833). No transport cell on either generalization target survives correction.
+
+**`dcc_low` replicates cleanly on PTP1B — now the most robustly-evidenced positive
+result in the project.** 3 of 4 k-values (10, 15, 20) clear this task's own stricter
+α=0.00313, including a well-powered max AUC of exactly **1.000 at k=10** (p=0.001) —
+Bonferroni-significant on two independently-labeled targets (CARDIAC_MYOSIN and now
+PTP1B), a form of cross-target evidence no other observable in this program's register
+has. `ρ(score,−hop)` stays substantial on PTP1B too (+0.386 to +0.641) — the same
+"does not decorrelate from distance as predicted" pattern TASK-0149's own mandatory-3
+write-up flagged, now confirmed on a second target rather than resolved. `prs_low`
+never reaches significance on either generalization target at any k — its own
+CARDIAC_MYOSIN positive (p=0.006) does not generalize. Neither observable shows
+anything on CASPASE7 (best p=0.135).
+
+| Result | Mandatory-3 finding | Generalization-set result |
+|---|---|---|
+| Transport `T(E=0)` on L | BCR_ABL1: AUC 0.699, p=0.003 | PTP1B: AUC 0.382, p=0.926 (opposite direction); CASPASE7: AUC 0.748, p=0.011 (uncorrected only) |
+| `dcc_low` (k=20 / best k) | CARDIAC_MYOSIN: well-powered max 0.962, p<0.001 | **PTP1B: well-powered max 1.000 (k=10), p=0.001 — replicates**; CASPASE7: max 0.705, p=0.135 (not significant) |
+| `prs_low` (k=20) | CARDIAC_MYOSIN: well-powered max 0.922, p=0.006 | PTP1B: max 0.426, p=0.952; CASPASE7: max 0.415, p=0.717 (neither significant) |
+
+Per this task's own Constraint, neither mandatory-3 finding is retracted by this
+result — both stand as reported. This check changes how each should be *framed*:
+`dcc_low` graduates to a cross-target-replicated finding; the transport family's
+BCR_ABL1-specific result and `prs_low` remain single-target findings, real but not
+strengthened by the generalization set.
+
+Full detail: `.ai/tasks/DONE/TASK-0151-generalization-check-transport-lowmode-findings.md`,
+`results_task0151_generalization_check/generalization_check.json`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -3032,6 +3091,8 @@ Full detail: `.ai/tasks/DONE/TASK-0145-quantum-transport-effective-conductance.m
 
 | 31 | Does reframing the scoring question as steady-state transport/conductance (Landauer-Buttiker `T(E)`, classical effective resistance `R_eff`) rather than seeded-walk-and-wait find real signal, and does the quantum transmission differ meaningfully from the classical `1/R_eff` limit? | **resolved 2026-07-24: one decisive result out of 9 cells, and quantum tracks classical closely but not identically.** BCR_ABL1's `T(E=0)` on the bare topological Laplacian clears Bonferroni correction (p=0.003, AUC 0.699) — the only cell (3 targets x {R_eff, T(E) on L, T(E) on H_new}) that does; KRAS_G12C/BCR_ABL1's `H_new`-based `T(E)` clear the floor at point estimate only (uncorrected-significant), CARDIAC_MYOSIN shows nothing. Classical-vs-quantum: Spearman rho 0.74-0.85 (same shared Laplacian, all targets) — strongly correlated, confirming the `E=0`/DC-limit choice, but not interchangeable in practice (BCR_ABL1's `T(E=0)` decisively beats its own `R_eff` on the identical graph). `E` is a large, real KNOB (BCR_ABL1: AUC 0.698->0.306->0.464 across a 3-point grid) characterized, not exploited. | [[TASK-0145]] |
 | 32 | Does the learnability-gate verdict ([[TASK-0059]]'s new `run_frozen_verdict(learnability=...)` wiring) actually reach a real end-to-end run's own `verdict.json`, not just exist as a tested-but-unused capability — and does `scripts/learnability_gate.py`'s own reference computation hold up under direct re-verification? | **resolved 2026-07-24: wired end-to-end, and a real, previously-uncaught bug was found and fixed in the reference script itself.** New `superpose.compute_learnability` (shared by `run_challenge.py` and `scripts/learnability_gate.py`, replacing two independently-duplicated compositions) fixes `learnability_gate.py`'s own whole-structure-vs-restricted `cumulative_overlap` bug — real, confirmed directly (code + `git log`), and a direct contradiction of [[TASK-0139]]'s own Done section, which claimed this script already used the restricted quantity. Real re-run, all 4 previously-run targets: KRAS_G12C ratio 2.27/restricted CO 0.458 (bare-threshold `UNLEARNABLE_FROM_APO`, matching [[TASK-0133]]'s own number exactly); BCR_ABL1 ratio 0.49/CO 0.175 (`LEARNABLE`, unchanged, RMSD-determined); **CARDIAC_MYOSIN ratio 1.57/CO 0.254 — verdict flips `LEARNABLE`→`UNLEARNABLE_FROM_APO`** relative to [[TASK-0144]]'s own re-run (which used the same buggy whole-structure CO); GLUCOKINASE ratio 1.94/CO 0.304 (`UNLEARNABLE_FROM_APO`, verdict unchanged, CO number corrected). CARDIAC_MYOSIN's flip independently corroborates [[TASK-0124]]'s own AUC-side finding that this target's only positive result was an artifact of the retired 5TBY apo. `run_challenge.py`'s own live computation is caught locally on failure (degrades to "omitted," per [[TASK-0059]]'s own established convention), never aborts a target's real scoring. | [[TASK-0150]], [[TASK-0059]], [[TASK-0139]], [[TASK-0144]], [[TASK-0124]] |
+
+| 33 | Do [[TASK-0145]]'s BCR_ABL1 transport positive and [[TASK-0149]]'s CARDIAC_MYOSIN `dcc_low`/`prs_low` positives — the project's two strongest results — survive [[TASK-0115]]'s Rule #6 repeated-exposure check against the PTP1B/CASPASE7 generalization set? | **resolved 2026-07-24: mixed, real, informative.** Transport does not clearly generalize: PTP1B's `T(E=0)` on L comes back below chance (AUC 0.382, p=0.926, opposite direction from BCR_ABL1's own AUC 0.699/p=0.003); CASPASE7 echoes the direction (AUC 0.748) but only at uncorrected p=0.011, not clearing this task's own stricter 6-comparison Bonferroni bar. **`dcc_low` replicates cleanly on PTP1B** — 3/4 k-values clear this task's own stricter 16-comparison bar, including well-powered max AUC 1.000 at k=10 (p=0.001) — now Bonferroni-significant on two independent targets, the strongest cross-target evidence any observable in this project has. `prs_low` never reaches significance on either generalization target. Neither observable shows anything on CASPASE7. Per this task's own Constraint, neither mandatory-3 finding is retracted — this changes framing, not standing: `dcc_low` graduates to a replicated finding, transport's BCR_ABL1 result and `prs_low` remain single-target. | [[TASK-0151]], [[TASK-0145]], [[TASK-0149]], [[TASK-0115]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

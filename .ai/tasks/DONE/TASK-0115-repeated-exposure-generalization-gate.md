@@ -160,3 +160,16 @@ this task's changes being documentation-only. 874 passed, 2 xfailed, 0
 failed (`test_chiral.py`'s 4 earlier failures from a concurrent
 thread's in-progress work, noted by [[TASK-0137]]'s own Done section,
 are now green too — that thread's work landed since).
+
+**First real application, 2026-07-24 ([[TASK-0151]]):** [[TASK-0145]]'s BCR_ABL1
+transport positive and [[TASK-0149]]'s CARDIAC_MYOSIN `dcc_low`/`prs_low` positives —
+the project's two strongest results as of the day this rule was written — checked
+against the PTP1B/CASPASE7 generalization set. Mixed, real result: transport does not
+clearly generalize (PTP1B's identical quantity comes back below chance); `dcc_low`
+replicates cleanly on PTP1B (Bonferroni-significant on two independent targets now,
+the strongest cross-target evidence in the project's register), `prs_low` does not
+generalize to either target. Exactly the kind of result this rule exists to surface —
+a mixed outcome, not a uniform confirm/kill, changing how each finding should be
+framed without retracting either. Full detail: `RESULTS.md`'s own generalization-set
+section, open-questions row 33; `.ai/tasks/DONE/TASK-0151-generalization-check-
+transport-lowmode-findings.md`.

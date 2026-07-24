@@ -215,3 +215,17 @@ never triggered.
 
 Full detail: `RESULTS.md`'s "Low-mode PRS/DCC real-target run" section, open-questions
 row 30, `results_task0149_lowmode_predictor/lowmode_predictor_real_run.json`.
+
+**Generalization-set check, 2026-07-24 ([[TASK-0151]], per [[TASK-0115]]'s Rule #6):**
+**`dcc_low` replicates cleanly on PTP1B** — 3/4 `k_modes` (10, 15, 20) clear TASK-0151's
+own stricter 16-comparison Bonferroni bar, including a well-powered max AUC of exactly
+1.000 at k=10 (p=0.001) — now Bonferroni-significant on two independently-labeled
+targets (this task's own CARDIAC_MYOSIN plus TASK-0151's PTP1B), the strongest
+cross-target evidence any observable in this project's register has. `prs_low` does
+NOT generalize — never reaches significance on PTP1B or CASPASE7 at any k, despite its
+own p=0.006 CARDIAC_MYOSIN result. Neither observable shows anything on CASPASE7.
+`ρ(score,−hop)` stays substantial on PTP1B's `dcc_low` too (+0.386 to +0.641) — this
+task's own "does not decorrelate as the synthetic control predicted" finding, now
+confirmed on a second target rather than resolved. Full detail: `RESULTS.md`'s own
+generalization-set section, open-questions row 33;
+`.ai/tasks/DONE/TASK-0151-generalization-check-transport-lowmode-findings.md`.

@@ -267,3 +267,13 @@ Contract: no submission-operator reselection (Tier-2 gated,
 two-terminal, one-candidate-at-a-time calculation, as scoped). Full
 regression suite re-run after this change: 901 passed, 2 xfailed, no
 failures.
+
+**Generalization-set check, 2026-07-24 ([[TASK-0151]], per [[TASK-0115]]'s Rule #6):**
+this task's own headline (BCR_ABL1's `T(E=0)` on L, p=0.003) does not clearly
+generalize to PTP1B/CASPASE7. PTP1B's identical quantity comes back *below chance*
+(AUC 0.382, p=0.926 — the opposite direction); CASPASE7 echoes the direction (AUC
+0.748) but only at uncorrected p=0.011, not clearing TASK-0151's own stricter
+6-comparison Bonferroni bar. This finding is not retracted (TASK-0151's own
+Constraint) but should be framed as a single-target result, not yet cross-target
+replicated. Full detail: `RESULTS.md`'s own generalization-set section,
+open-questions row 33; `.ai/tasks/DONE/TASK-0151-generalization-check-transport-lowmode-findings.md`.
