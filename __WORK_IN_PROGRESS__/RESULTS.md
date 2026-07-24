@@ -2659,6 +2659,122 @@ unmet — this result does not open it. Full detail:
 
 ---
 
+## Low-mode PRS/DCC real-target run (TASK-0149, 2026-07-24)
+
+**Two proximity-orthogonal-by-construction observables** — low-mode Perturbation
+Response Scanning (`prs_low`, Atilgan 2009/Ikeguchi 2005 LRT, ANM pseudo-inverse
+restricted to the `k` lowest non-trivial modes) and low-mode GNM dynamic
+cross-correlation magnitude (`dcc_low`) — delivered pre-built and pre-tested
+(`.ai/reviews/2026-07-22/`, real code against this project's own `superpose.anm_modes`/
+`potentials._kirchhoff_eigh`, but **executed only on synthetic data** — RCSB was
+unreachable from the delivering thread's own sandbox, honestly disclosed rather than
+fabricated. Real-target execution was this task's own job. Ported unmodified into
+`src/allostery/lowmode_predictor.py`, `tests/test_lowmode_predictor.py`,
+`scripts/lowmode_predictor_synthetic_control.py`; the 3 delivered tests re-verified
+passing as-is (3/3, not re-trusted from the delivering thread's own account).
+
+**A real bug found and fixed in this task's own new evaluation script** (not in the
+ported `lowmode_predictor.py` itself, which is unaffected): the first version of
+`scripts/lowmode_predictor_real_run.py` computed `rho(score, shells)` where `shells`
+is the real, non-negative hop distance (`_prepare_target`'s own `-hop_from_seed(...)`,
+and `hop_from_seed` itself already returns *negative* hop — double negation), while
+the delivered synthetic control's own convention (`lowmode_predictor_synthetic_
+control.py`, `test_lowmode_predictor.py`) is `spearmanr(score, -hop)`. The first run's
+printed rho values were sign-flipped relative to that convention — caught by checking
+the raw per-shell score trend directly against the printed sign before trusting it
+(KRAS_G12C's `dcc_low` mean score *rose* near the seed and *fell* with distance, the
+opposite of what the first run's positive-sign labeling implied), not assumed correct
+from the script running without error. Fixed and re-run; all numbers below use the
+corrected, delivered-convention sign.
+
+Real-target evaluation follows [[TASK-0118]]'s current seed convention (full
+active-site array, incoherent mixture) — not the delivered code's own scalar-seed
+synthetic default — and reuses [[TASK-0123]]'s own `_prepare_target`/`stratified_auc`/
+well-powered-shell-filter/permutation-null machinery directly (`scripts/
+distance_stratified_evaluation.py`'s own functions, same shapes), per this task's own
+Constraint to gate through that methodology rather than re-derive an evaluation
+pipeline. `k_modes` swept over `{5, 10, 15, 20}`.
+
+**Headline (k=20, the delivered code's own default / this project's `CO(20)`
+convention — the primary, non-redundant comparison; full k-sweep below as
+sensitivity):**
+
+| Target | Observable | Whole-graph AUC | Floor | ρ(score, −hop) | Well-powered stratified max AUC | Null median | p (uncorrected) |
+|---|---|---|---|---|---|---|---|
+| KRAS_G12C | `prs_low` | 0.481 | 0.482 | **−0.18** | 0.595 | 0.646 | 0.672 |
+| KRAS_G12C | `dcc_low` | 0.522 | 0.482 | **+0.52** | 0.506 | 0.635 | 0.878 |
+| BCR_ABL1 | `prs_low` | 0.188 | 0.582 | **−0.26** | 0.439 | 0.615 | 0.918 |
+| BCR_ABL1 | `dcc_low` | 0.378 | 0.582 | **+0.50** | 0.518 | 0.619 | 0.803 |
+| CARDIAC_MYOSIN | `prs_low` | **0.836** | 0.568 | **−0.40** | **0.922** | 0.582 | **0.006** |
+| CARDIAC_MYOSIN | `dcc_low` | **0.711** | 0.568 | **+0.48** | **0.962** | 0.583 | **<0.001** |
+
+**KRAS_G12C and BCR_ABL1: genuinely dead, per the delivering thread's own predicted
+possible outcome.** No cell at any `k` reaches significance (uncorrected p ranges
+0.67–0.99 across the full 16-cell sub-grid) — the delivering thread's own words apply
+verbatim: "the low-mode route is genuinely dead [here] and you can say so with a
+mechanism." `dcc_low`'s consistently large positive ρ (+0.44 to +0.63 across both
+targets/all `k`) shows it, not `prs_low`, that survives as the classic proximity-
+confound direction on real data (comparable in sign and rough magnitude to a
+confounded observable's own synthetic ρ≈+0.71) — matching, not contradicting, the
+synthetic control's own finding that `dcc_low` is "markedly worse than `prs_low`."
+
+**CARDIAC_MYOSIN: a real, stratification-surviving signal — but not the clean
+proximity-orthogonal story the synthetic control predicted.** Both observables clear
+the proximity floor (0.568) on whole-graph AUC and reach `p≤0.006` at k=20
+(`prs_low`) and `p<0.001` (`dcc_low`) against the permutation null — a well-powered
+per-shell check confirmed directly, not just the summary number: the 2 shells that
+meet the well-powered filter (n_pos≥3) both score high for both observables (shell 3:
+`prs_low` 0.922/`dcc_low` 0.786; shell 4: `prs_low` 0.849/`dcc_low` 0.962) — 2
+independent shells, not a single-shell artifact — and the 2 under-powered shells
+(n_pos 1–2, not read as a claim on their own) are consistent, not contradictory
+(AUC 0.90–0.98 in both). **Real caveat, not smoothed over: ρ(score, −hop) stays
+substantial here
+(−0.40 `prs_low`, +0.48 `dcc_low`)** — nowhere near the synthetic control's own
+~0.08–0.16 "cleanly decorrelated" result — so the whole-graph AUC number alone is not
+trustworthy proof of a non-proximity signal on this target; `prs_low`'s own negative
+ρ means it is systematically *biased toward distal residues*, and CARDIAC_MYOSIN's
+true pocket happens to sit distally, so whole-graph AUC could in principle be
+re-discovering that bias rather than the pocket itself. **This is exactly why the
+stratified, permutation-null-gated result is the one being reported as the finding,
+not the whole-graph number**: within a fixed hop-shell (residues equidistant from the
+seed by construction), `prs_low`/`dcc_low` still separate pocket from non-pocket at
+AUC 0.85–0.98, which a pure distance-direction bias cannot produce on its own.
+
+**`k_modes` sensitivity: no sign or verdict flips across `{5, 10, 15, 20}` on any
+target.** CARDIAC_MYOSIN's significance holds at every `k` (`prs_low` p=0.003–0.006;
+`dcc_low` p<0.001–0.007); KRAS_G12C/BCR_ABL1 stay non-significant at every `k`
+(p=0.67–0.99 throughout). Full per-`k` table: `results_task0149_lowmode_predictor/
+lowmode_predictor_real_run.json`.
+
+**Multiple-comparisons honesty, both scopes reported, neither cherry-picked:**
+against the primary 6-comparison family (one `k` per observable per target, `k=20`,
+α=0.05/6≈0.0083), both CARDIAC_MYOSIN cells above survive (p=0.006, p<0.001). Against
+the maximally conservative 24-comparison family (the full `k`-sweep grid treated as
+independent, α=0.05/24≈0.0021), only 2 of the 8 CARDIAC_MYOSIN cells survive
+(`dcc_low` at k=15/p=0.001 and k=20/p<0.001); `prs_low`'s own best case (p=0.003 at
+k=10) does not clear that stricter bar. Reported as a range, not resolved to whichever
+reading is more favorable.
+
+**Cross-reference, not conflation, per this task's own Priority note**:
+[[TASK-0122]]'s `mode_coparticipation`/`CP_low` (a mode-*participation-product*
+construction, mathematically distinct from `prs_low`'s truncated ANM pseudo-inverse
+response and `dcc_low`'s truncated GNM covariance) "mostly failed to decorrelate from
+distance on real `H_new`" per that task's own finding. This task's own real-data ρ
+values show the same qualitative split hinted at by the synthetic comparison —
+`prs_low` decorrelates (and over-corrects, into anti-proximity) far more than
+`CP_low` did, `dcc_low` does not decorrelate at all — but this is a genuinely
+different method being independently checked, not a re-run of TASK-0122's own result.
+
+**No bug found in the delivered `lowmode_predictor.py` itself** — `prs_low`'s O(N·k)
+Python double loop timed at ≤1.7s even on CARDIAC_MYOSIN (N=704, 18 seed residues),
+not intractable, so the Out Of Scope note against rewriting it for performance was
+never triggered.
+
+Full detail: `.ai/tasks/DONE/TASK-0149-lowmode-prs-dcc-predictor.md`,
+`results_task0149_lowmode_predictor/lowmode_predictor_real_run.json`.
+
+---
+
 ## Persistent-H2 void detection, real-target run (TASK-0142 H2 half, HYP-P12, 2026-07-24)
 
 **Ungated 2026-07-22 by the Architect/Planner** (see the task file's own "Gating
@@ -2759,6 +2875,7 @@ Full detail: `.ai/tasks/DONE/TASK-0142-hodge-l1-persistent-h2.md`,
 | 28 | Does the chiral (broken-time-reversal) circulation observable (HYP-P9) — Peierls-flux bond current, Hodge-filtered to its circulating part, proximity-orthogonal by construction — clear the proximity floor with non-overlapping CIs on real pockets, per its own pre-registered gate? | **resolved 2026-07-23: no — FAIL on all 7 targets, consistent with [[TASK-0143]]'s own FAIL on the graph-openness premise this observable depends on.** CI overlap is `True` everywhere, so the primary bar is not met anywhere. Real, honestly-reported suggestive-not-confirmed signal: KRAS_G12C and PTP1B both clear the Bonferroni-corrected threshold (0.05/7) on the independent stratified-AUC permutation-null statistic. The proximity-orthogonality claim itself holds cleanly on 7/7 targets (ρ(circ,-dist) smaller in magnitude than ρ(occ,-dist) everywhere) — the observable measures something other than distance, that something just doesn't clear the discrimination bar here. Real physics finding made while building the regression tests (not anticipated in advance): a bare N-cycle ring gives exactly zero converged circulation from a diagonal seed, at any flux — real protein contact graphs aren't at risk (dense 3-D packing gives degree well above 2 everywhere), but it ruled out the obvious minimal synthetic test fixture. GATE 1/GATE 2 both re-verified passing on a fresh reconstruction (the cited reference script is confirmed absent). [[TASK-0142]]'s own hard gate remains unmet. | [[TASK-0140]], [[TASK-0143]] |
 
 | 29 | Does persistent H2 (a capped-void signature, graph-*adjacent* not graph-*far*) localize real holo-defined pockets, given the 2026-07-22 Architect/Planner correction that [[TASK-0143]]'s open-cleft FAIL (0/7) does not actually falsify this half of the loop/multi-site-closure family? | **resolved 2026-07-24: no — clean FAIL on all 3 mandatory targets, one sharply informative.** 2/3 targets (KRAS_G12C, BCR_ABL1) show no H2 void at all — top persistence at/below the synthetic solid-ball noise floor (2.5); the honest gated score is all-zeros (chance AUC), and the nominally floor-beating *ungated* diagnostic score is explained away by the matched random-patch null (77.1st/46.3rd percentile, p=0.229/0.537 — indistinguishable from a random patch). CARDIAC_MYOSIN is the one target with a detected void (2.829) — and it is the **wrong void**: AUC 0.192, null percentile **0.0** (real pocket's mean score below all 1000 random patches). A large protein has multiple internal cavities; the most-persistent one found isn't the ligand pocket. Residue-localization weak link (crude geometric centroid heuristic, `ripser` has no H2 cycle representatives) confirmed on real data: proximity floor beats `void_score` on CARDIAC_MYOSIN (0.583 vs 0.192), same pattern as the synthetic control. Two filing-text imprecisions resolved by direct test before assuming: `thresh=16.0` (not "8 Å", truncates real H2 classes), and TASK-0133's *plain* random-patch null (not TASK-0143's spread-matched, infeasible-on-4/7-targets convention) as the actual cited precedent. L1 half not run — its own gate (TASK-0143 or TASK-0140 showing life) remains closed. | [[TASK-0142]], [[TASK-0143]], [[TASK-0140]] |
+| 30 | Do low-mode-restricted PRS/DCC (`prs_low`/`dcc_low`, proximity-orthogonal by construction) find real allosteric signal on real targets, and does mode-filtering actually decorrelate them from distance the way the delivered synthetic control predicted? | **resolved 2026-07-24: real, Bonferroni-surviving signal on CARDIAC_MYOSIN only; KRAS_G12C/BCR_ABL1 genuinely dead — but the decorrelation-from-distance premise itself does not hold as predicted.** CARDIAC_MYOSIN's stratified-AUC well-powered max (0.92/0.96 for `prs_low`/`dcc_low` at k=20) survives its own permutation null (p=0.006/p<0.001) and the primary 6-comparison Bonferroni bar; KRAS_G12C/BCR_ABL1 never reach significance at any `k` (p=0.67–0.99). **But ρ(score,−hop) stays substantial on every real target (`prs_low` −0.18 to −0.51; `dcc_low` +0.44 to +0.63)** — nowhere near the synthetic control's own ~0.08–0.16 "cleanly decorrelated" prediction. `dcc_low` in particular reproduces the classic proximity-confound sign/magnitude on real data (matching, not contradicting, the synthetic control's own "markedly worse than `prs_low`" finding); `prs_low` decorrelates in the opposite (anti-proximity, distal-favoring) direction instead of toward zero — real and target-consistent, not predicted by the synthetic control either. A real sign bug was found and fixed in this task's own new evaluation script (not in the ported `lowmode_predictor.py`) before trusting any ρ value — caught by checking the raw per-shell score trend against the printed sign, not assumed correct because the script ran without error. | [[TASK-0149]], [[TASK-0123]], [[TASK-0122]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

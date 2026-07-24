@@ -9,10 +9,10 @@
   modes) and low-mode GNM dynamic cross-correlation (`dcc_low`) — against
   the proximity floor and, critically, [[TASK-0123]]'s distance-
   stratified AUC.
-- Status: TODO
+- Status: DONE
 - Owner: Implementer
-- Claimed By: —
-- Claimed At: —
+- Claimed By: Implementer B (this thread)
+- Claimed At: 2026-07-23 20:08
 - Source: real, executed work delivered 2026-07-22 (relayed via
   `.ai/reviews/2026-07-22/`) — `lowmode_predictor.py`,
   `test_lowmode_predictor.py`, `lowmode_predictor_synthetic_control.py`.
@@ -111,16 +111,16 @@ None
 
 ## TODO
 
-- [ ] Port the three delivered files into their real homes; re-verify
+- [x] Port the three delivered files into their real homes; re-verify
       the 3 existing tests pass unmodified.
-- [ ] Re-run on real targets under this project's actual seed convention
+- [x] Re-run on real targets under this project's actual seed convention
       (full active-site array, `coherent=False`), not the delivered
       code's scalar default.
-- [ ] Score whole-graph AUC vs. the proximity floor, all 3 targets.
-- [ ] Score via TASK-0123's distance-stratified AUC + permutation null —
+- [x] Score whole-graph AUC vs. the proximity floor, all 3 targets.
+- [x] Score via TASK-0123's distance-stratified AUC + permutation null —
       the one place signal is predicted to be visible, if anywhere.
-- [ ] Sweep `k_modes` in {5, 10, 15, 20}; report sensitivity.
-- [ ] Report the result, including a "genuinely dead, with a mechanism"
+- [x] Sweep `k_modes` in {5, 10, 15, 20}; report sensitivity.
+- [x] Report the result, including a "genuinely dead, with a mechanism"
       verdict if that's what real data shows.
 
 ## Dependency
@@ -139,4 +139,79 @@ None
 
 ## Done
 
-(not yet)
+**2026-07-24, Implementer B.** Executed as scoped: ported unmodified, re-ran on real
+targets under the project's actual seed convention, gated through TASK-0123's
+stratified AUC + permutation null, swept `k_modes`.
+
+**Port**: `lowmode_predictor.py` -> `src/allostery/`, `test_lowmode_predictor.py` ->
+`tests/`, `lowmode_predictor_synthetic_control.py` -> `scripts/`, byte-identical to the
+delivered versions. The 3 delivered tests re-verified passing (3/3), not re-trusted
+from the delivering thread's own account.
+
+**New `scripts/lowmode_predictor_real_run.py`**, reusing TASK-0123's own
+`_prepare_target`/`stratified_auc`/well-powered-shell-filter/permutation-null
+machinery directly rather than re-deriving an evaluation pipeline (per this task's
+own Constraint). A real bug was found and fixed in this new script itself (not in the
+ported `lowmode_predictor.py`, which is unaffected): the first version's `rho`
+computation used the wrong sign relative to the delivered convention (`spearmanr(score,
+-hop)`) -- `_prepare_target`'s `shells` is the real, non-negative hop distance, and the
+script initially correlated against `shells` directly instead of `-shells`. Caught by
+checking a raw per-shell score trend against the printed sign before trusting any
+number, not assumed correct because the script ran without error; fixed, re-run, and
+every number in `RESULTS.md`/this section uses the corrected sign.
+
+**Real-target result (k=20 primary, full `k∈{5,10,15,20}` sweep as sensitivity)**:
+
+| Target | Observable | Whole-graph AUC | Floor | ρ(score,−hop) | Stratified well-powered max AUC | p (uncorrected) |
+|---|---|---|---|---|---|---|
+| KRAS_G12C | `prs_low` | 0.481 | 0.482 | −0.18 | 0.595 | 0.672 |
+| KRAS_G12C | `dcc_low` | 0.522 | 0.482 | +0.52 | 0.506 | 0.878 |
+| BCR_ABL1 | `prs_low` | 0.188 | 0.582 | −0.26 | 0.439 | 0.918 |
+| BCR_ABL1 | `dcc_low` | 0.378 | 0.582 | +0.50 | 0.518 | 0.803 |
+| CARDIAC_MYOSIN | `prs_low` | **0.836** | 0.568 | −0.40 | **0.922** | **0.006** |
+| CARDIAC_MYOSIN | `dcc_low` | **0.711** | 0.568 | +0.48 | **0.962** | **<0.001** |
+
+**KRAS_G12C/BCR_ABL1: genuinely dead** -- no cell at any `k` reaches significance
+(p=0.67-0.99 across the full 16-cell sub-grid), matching the delivering thread's own
+predicted possible outcome verbatim.
+
+**CARDIAC_MYOSIN: real, stratification-surviving signal at every `k`** (`prs_low`
+p=0.003-0.006; `dcc_low` p<0.001-0.007), surviving the primary 6-comparison Bonferroni
+bar (alpha=0.05/6=0.0083) for both observables at k=20; only 2/8 CARDIAC_MYOSIN cells
+survive the maximally conservative 24-comparison full-grid Bonferroni
+(alpha=0.05/24=0.0021) -- both readings reported, neither cherry-picked. Confirmed via
+direct per-shell inspection (not just the summary statistic): the 2 well-powered
+shells (n_pos>=3) both score high for both observables (0.79-0.96), 2 independent
+shells, not a single-shell artifact.
+
+**Real, honestly-reported divergence from the synthetic control's own prediction**:
+ρ(score,−hop) stays substantial on every real target (`prs_low` −0.18 to −0.51;
+`dcc_low` +0.44 to +0.63), far from the synthetic control's own ~0.08-0.16 "cleanly
+decorrelated" result. `dcc_low` reproduces the classic proximity-confound sign/
+magnitude on real data (matching, not contradicting, the synthetic control's own
+"markedly worse than `prs_low`" finding). `prs_low` decorrelates in the *opposite*
+(anti-proximity, distal-favoring) direction instead of toward zero -- meaning
+CARDIAC_MYOSIN's own whole-graph AUC number is not, on its own, trustworthy proof of a
+non-proximity signal (the true pocket happens to sit distally, which a systematic
+distal bias could exploit on its own) -- exactly why the stratified, permutation-
+null-gated result is reported as the actual finding, not the whole-graph number.
+
+**`k_modes` sensitivity: no sign or verdict flip across `{5,10,15,20}` on any target.**
+
+**Cross-reference, not conflation** (this task's own Priority note): [[TASK-0122]]'s
+`mode_coparticipation`/`CP_low` mostly failed to decorrelate from distance on real
+`H_new`. This task's own real-data rho values show the same qualitative split hinted
+at by the synthetic comparison -- `prs_low` decorrelates (and over-corrects into
+anti-proximity) far more than `CP_low` did, `dcc_low` does not decorrelate at all --
+a genuinely different method independently checked, not a re-run of TASK-0122's own
+result.
+
+**No bug found in the delivered `lowmode_predictor.py` itself.** `prs_low`'s O(N*k)
+Python double loop timed at <=1.7s even on CARDIAC_MYOSIN (N=704, 18 seed residues) --
+not intractable, so the Out Of Scope note against rewriting it for performance was
+never triggered.
+
+**Full test suite**: 901 passed, 2 xfailed, 0 failed.
+
+Full detail: `RESULTS.md`'s "Low-mode PRS/DCC real-target run" section, open-questions
+row 30, `results_task0149_lowmode_predictor/lowmode_predictor_real_run.json`.
