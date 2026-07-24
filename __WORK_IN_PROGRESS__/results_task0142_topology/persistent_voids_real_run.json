@@ -1,0 +1,83 @@
+{
+  "KRAS_G12C": {
+    "target": "KRAS_G12C",
+    "n_residues": 169,
+    "pocket_size": 18,
+    "top_h2_persistence": 0.6694250106811523,
+    "noise_floor": 2.5,
+    "void_detected": false,
+    "n_h2_classes": 11,
+    "auc_gated": 0.5,
+    "category_gated": "NO_SIGNAL_IN_APO",
+    "auc_ungated": 0.5806182121971596,
+    "category_ungated": "NO_FAILURE_DETECTED",
+    "floor_aucs": {
+      "euclid": 0.5254803675856308,
+      "hop": 0.5463659147869674,
+      "degree": 0.49895572263993315
+    },
+    "max_floor_auc": 0.5463659147869674,
+    "random_patch_null": {
+      "real_mean_score": 0.22570264523857142,
+      "null_mean": 0.19142806794221928,
+      "null_sd": 0.04957303341779823,
+      "percentile": 77.10000000000001,
+      "p_value": 0.229,
+      "n_reps": 1000
+    }
+  },
+  "BCR_ABL1": {
+    "target": "BCR_ABL1",
+    "n_residues": 451,
+    "pocket_size": 16,
+    "top_h2_persistence": 2.404232978820801,
+    "noise_floor": 2.5,
+    "void_detected": false,
+    "n_h2_classes": 28,
+    "auc_gated": 0.5,
+    "category_gated": "NO_SIGNAL_IN_APO",
+    "auc_ungated": 0.702322738386308,
+    "category_ungated": "NO_FAILURE_DETECTED",
+    "floor_aucs": {
+      "euclid": 0.4899144254278729,
+      "hop": 0.6186583129584352,
+      "degree": 0.4971729828850856
+    },
+    "max_floor_auc": 0.6186583129584352,
+    "random_patch_null": {
+      "real_mean_score": 0.3862454000753899,
+      "null_mean": 0.4184448801079594,
+      "null_sd": 0.19272962720323022,
+      "percentile": 46.300000000000004,
+      "p_value": 0.537,
+      "n_reps": 1000
+    }
+  },
+  "CARDIAC_MYOSIN": {
+    "target": "CARDIAC_MYOSIN",
+    "n_residues": 704,
+    "pocket_size": 13,
+    "top_h2_persistence": 2.8288631439208984,
+    "noise_floor": 2.5,
+    "void_detected": true,
+    "n_h2_classes": 54,
+    "auc_gated": 0.19225054291919075,
+    "category_gated": "BEATS_CHANCE_NOT_FLOOR",
+    "auc_ungated": 0.19225054291919075,
+    "category_ungated": "BEATS_CHANCE_NOT_FLOOR",
+    "floor_aucs": {
+      "euclid": 0.5828094639387359,
+      "hop": 0.4931992227683164,
+      "degree": 0.4022173962738599
+    },
+    "max_floor_auc": 0.5828094639387359,
+    "random_patch_null": {
+      "real_mean_score": 1.780572620824813e-18,
+      "null_mean": 0.35240856645263574,
+      "null_sd": 0.21789491872608252,
+      "percentile": 0.0,
+      "p_value": 1.0,
+      "n_reps": 1000
+    }
+  }
+}

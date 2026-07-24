@@ -8,7 +8,7 @@
   dim ker L1 = b1) and persistent H2 (the capped void a buried pocket
   actually is) — and characterize whether either localizes real pockets
   that the graph-level observables miss ([[HYP-P12]]).
-- Status: TODO
+- Status: Done (2026-07-24) — H2 half: FAIL, see Done section. L1 half: not run, still hard-gated (both legs FAIL as of this writing).
 - Owner: Implementer (build + run). The L1 drop-in is small (~dozens of
   lines); the review will provide a reference if requested. H2 requires
   GUDHI/Ripser — not a homemade b1 (see callout).
@@ -146,20 +146,22 @@ constraint, not a preference.
 ## TODO
 
 **H2 half — ungated, implementation delivered, do this first:**
-- [ ] Port `persistent_voids.py`/`test_persistent_voids.py`/
+- [x] Port `persistent_voids.py`/`test_persistent_voids.py`/
       `persistent_voids_synthetic_control.py` into their real homes
       (`src/allostery/`, `tests/`, `scripts/`); add `ripser` to
       `pyproject.toml`; re-verify the 4 delivered tests pass unmodified.
-- [ ] Run `void_score`/`top_h2_persistence` on all 3 mandatory targets,
-      same 8 Å cutoff as the rest of the register.
-- [ ] Matched-spread random-patch null ([[TASK-0133]] precedent);
-      percentile + p per target.
-- [ ] Characterize (don't just note) the residue-localization weak link
+- [x] Run `void_score`/`top_h2_persistence` on all 3 mandatory targets.
+      (`thresh=16.0`, not the literal "8 Å" text — tested directly and
+      flagged as a divergence, see Done section.)
+- [x] Matched-spread random-patch null ([[TASK-0133]] precedent);
+      percentile + p per target. (TASK-0133's own literal implementation
+      is plain, not spread-matched — reused as delivered, flagged.)
+- [x] Characterize (don't just note) the residue-localization weak link
       before trusting real-target AUC — at minimum, report whether
       `void_score`'s crude centroid heuristic or the plain proximity
       floor scores higher on each real target, same comparison the
       synthetic control already surfaced.
-- [ ] Bonferroni; PASS/FAIL/INSUFFICIENT per target, tagged;
+- [x] Bonferroni; PASS/FAIL/INSUFFICIENT per target, tagged;
       `results_task0142_topology/`.
 
 **L1 half — still gated, still unimplemented:**
@@ -168,10 +170,12 @@ constraint, not a preference.
 - [ ] L1 = ∂1ᵀ∂1 + ∂2∂2ᵀ; assert dim ker L1 == E−N+C (validity gate).
 - [ ] L1 per-residue score (softest non-harmonic edge-mode joint support).
 - [ ] Matched-spread random-patch null; percentile + p.
-- [ ] Only attempt if [[TASK-0143]] or [[TASK-0140]] shows life.
+- [ ] Only attempt if [[TASK-0143]] or [[TASK-0140]] shows life. **Neither
+      does, as of 2026-07-24 — gate remains closed, not attempted.**
 
-- [ ] `RESULTS.md` section covering both halves; state the quantum-Betti
-      connection as PROPOSAL framing, not a demonstrated advantage.
+- [x] `RESULTS.md` section covering the H2 half (L1 not run, so not yet
+      applicable); quantum-Betti connection was never asserted as a
+      demonstrated advantage in this task's own real-run scope.
 
 ## Dependency
 
@@ -202,4 +206,94 @@ constraint, not a preference.
 
 ## Done
 
-(not yet)
+**Headline: H2 half FAIL, all 3 mandatory targets — clean, decisive, honest negative.
+L1 half not run (still hard-gated on TASK-0143/TASK-0140, both FAIL as of this writing).**
+
+### H2 half
+
+Ported the delivered `persistent_voids.py`/`test_persistent_voids.py`/`persistent_voids_
+synthetic_control.py` (`.ai/reviews/2026-07-22/`) into `src/allostery/`, `tests/`,
+`scripts/` unmodified. Re-verified independently (not trusted from the relayed claim):
+all 4 delivered tests pass; the synthetic-control script reproduces its own cited numbers
+exactly (POS hollow shell inf, NEG solid ball 1.105, CRYPTIC carved cavity 4.337 /
+void_score AUC 0.576 / pocket mean graph-hop 1.44 / proximity-floor AUC 0.824). `ripser`
+added to `pyproject.toml` (flagged per TASK-0108/0110's own dependency-manifest
+precedent).
+
+**Two Implementer's-call resolutions of the task's own filing-text imprecision, tested
+before assuming, stated explicitly:**
+- **`thresh` (Rips filtration cap) is not "the same 8 Å cutoff as every other
+  observable."** Tested directly on real KRAS_G12C coordinates before assuming the
+  generic filing text transfers: at `thresh=8.0` only 2 H2 classes appear, both with
+  birth values sitting right at the 8.0 boundary (truncated); the diagram is fully
+  stable (11 classes, identical birth/death) from `thresh=12.0` upward, matching the
+  delivered code's own tested default. Used `thresh=16.0` (void_score's own default).
+- **"Matched-spread random-patch null ([[TASK-0133]] precedent)"** — TASK-0133's own
+  delivered implementation (`scripts/learnability_gate_patch_control.py`) is a *plain*
+  random-patch null (uniform same-size draws, no spread-matching at all); "matched-
+  spread" is TASK-0143's own, different, and separately-documented-as-infeasible-on-4/7-
+  targets null convention. Took the literal citation ([[TASK-0133]]) as authoritative
+  over the adjective, reused its plain random-patch pattern — always feasible, no
+  rejection-sampling infeasibility risk.
+
+### Real run, all 3 mandatory targets, `thresh=16.0`, noise floor 2.5 (this module's own
+synthetic negative-control threshold, `test_solid_ball_has_no_strong_void`)
+
+| Target | top H2 persistence | void detected | AUC (gated) | AUC (ungated, diagnostic) | max floor AUC | patch-null percentile | patch-null p |
+|---|---|---|---|---|---|---|---|
+| KRAS_G12C | 0.669 | **No** | 0.500 (chance) | 0.581 | 0.546 | 77.1 | 0.229 |
+| BCR_ABL1 | 2.404 | **No** | 0.500 (chance) | 0.702 | 0.619 | 46.3 | 0.537 |
+| CARDIAC_MYOSIN | 2.829 | **Yes** | **0.192** | 0.192 | 0.583 | **0.0** | 1.000 |
+
+Bonferroni threshold: 0.05/3 = 0.01667.
+
+**Interpretation, decisive and clean, not ambiguous:**
+- **2/3 targets (KRAS_G12C, BCR_ABL1) show no void at all** — their top H2 persistence
+  sits at or below the synthetic solid-ball noise floor (1.105–2.5 established range).
+  Per this module's own honest design ("do not fabricate a ranking from noise"), the
+  gated score is all-zeros (chance AUC) for both. The *ungated* diagnostic score
+  (reported for completeness, never trusted as signal) nominally clears the floor on
+  both, but the random-patch null immediately explains why that's not real: KRAS_G12C
+  sits at the 77.1st percentile (p=0.229) and BCR_ABL1 at the 46.3rd (p=0.537) of the
+  null distribution — indistinguishable from a random same-size patch, exactly what
+  "noise, not signal" looks like under this task's own matched-null discipline.
+- **CARDIAC_MYOSIN is the one target with a detected void (2.829 > 2.5) — and it is the
+  wrong void.** AUC=0.192 (well below both chance and the floor, actively anti-ranking
+  the real pocket), random-patch-null percentile **0.0** — the real pocket's mean
+  void_score sits below every one of 1000 random same-size patches. A large protein
+  (N=704) can have multiple internal cavities; the single most-persistent one this
+  method finds is demonstrably not the ligand-binding pocket. This is a sharper,
+  more informative negative than "no signal": the observable is confidently pointing
+  at the wrong structural feature, not merely failing to discriminate.
+- **Residue-localization weak link, characterized on real data (not just the synthetic
+  control's own already-flagged caveat)**: on the one target where a void score is
+  even nominally computable and meaningful (CARDIAC_MYOSIN), the plain proximity floor
+  (0.583) beats `void_score` (0.192) by a wide margin — consistent with, and now
+  extending to real data, the synthetic control's own finding (proximity floor 0.824 vs
+  void_score 0.576 there). The crude geometric centroid-search heuristic (`ripser`
+  doesn't return H2 cycle representatives; `void_score` estimates the void center via a
+  shell-membership search) is not reliable for real-target residue-level localization —
+  confirmed, not merely inherited as a caveat.
+
+**Verdict: FAIL, per this task's own pre-registered framing** — "the pocket is not a
+topological feature these operators see at Cα resolution." Not run on the ASD
+generalization set (4 additional targets) — the mandatory-3 result is already clean and
+decisive in the negative direction; per this project's own convention (e.g. TASK-0138),
+a negative doesn't need generalization-set confirmation the way a claimed positive would.
+
+### L1 half — not run, gate remains closed
+
+TASK-0140 (chiral circulation) landed as a FAIL against its own pre-registered bar
+(CI overlap `True` on all 7 targets) in the session immediately preceding this one.
+TASK-0143 (graph-openness) was already a FAIL (0/7). **Neither leg of "run only if
+TASK-0143 or TASK-0140 shows life" is open.** Per this task's own explicit gating text,
+the L1 half is not attempted. Revisit only if a future task reopens either premise.
+
+### Files
+
+New `src/allostery/persistent_voids.py`, `tests/test_persistent_voids.py` (4 tests, all
+independently re-verified), `scripts/persistent_voids_synthetic_control.py`,
+`scripts/persistent_voids_real_run.py`. `pyproject.toml`: `ripser` added. 4 tests total
+added to the suite (persistent_voids only — no new tests needed for the real-run script
+itself, matching this project's convention of scripts being exercised by their own real
+run, not unit-tested).

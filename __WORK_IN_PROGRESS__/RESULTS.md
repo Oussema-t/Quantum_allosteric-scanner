@@ -2659,6 +2659,68 @@ unmet — this result does not open it. Full detail:
 
 ---
 
+## Persistent-H2 void detection, real-target run (TASK-0142 H2 half, HYP-P12, 2026-07-24)
+
+**Ungated 2026-07-22 by the Architect/Planner** (see the task file's own "Gating
+correction" section): a capped H2 void requires its lining residues to be graph-
+*adjacent*, the opposite premise from the open-cleft graph-*far* signature
+[[TASK-0143]] tested (0/7) — that FAIL does not bear on this observable, demonstrated
+directly by the delivered `test_void_detected_even_when_lining_is_graph_adjacent`.
+Ported the delivered `persistent_voids.py`/`test_persistent_voids.py`/`persistent_voids_
+synthetic_control.py` (`.ai/reviews/2026-07-22/`) into `src/allostery/`, `tests/`,
+`scripts/` unmodified. Re-verified independently before trusting: all 4 delivered tests
+pass; the synthetic-control script reproduces its own cited numbers exactly (hollow
+shell ∞, solid ball 1.105, cryptic cavity 4.337 / void_score AUC 0.576 / lining mean
+graph-hop 1.44 / proximity floor 0.824). `ripser` added to `pyproject.toml`.
+
+Two filing-text imprecisions resolved by direct test, not assumption: **`thresh`
+(Rips filtration cap) is not "the same 8 Å cutoff as every other observable"** — tested
+on real KRAS_G12C coordinates, `thresh=8.0` truncates real H2 classes mid-birth; the
+diagram stabilizes at `thresh≥12.0`, matching the delivered code's own 16.0 default,
+used here. **"Matched-spread random-patch null ([[TASK-0133]] precedent)"** — TASK-0133's
+own delivered implementation is a *plain* random-patch null, not spread-matched (that's
+a different, separately-documented-as-infeasible-on-4/7-targets convention,
+[[TASK-0143]]'s own); took the literal citation as authoritative, reused the plain
+pattern.
+
+**Real run, all 3 mandatory targets, `thresh=16.0`, noise floor 2.5 (this module's own
+`test_solid_ball_has_no_strong_void` threshold):**
+
+| Target | top H2 persistence | void detected | AUC (gated) | AUC (ungated, diagnostic) | max floor AUC | patch-null percentile | patch-null p |
+|---|---|---|---|---|---|---|---|
+| KRAS_G12C | 0.669 | No | 0.500 (chance) | 0.581 | 0.546 | 77.1 | 0.229 |
+| BCR_ABL1 | 2.404 | No | 0.500 (chance) | 0.702 | 0.619 | 46.3 | 0.537 |
+| CARDIAC_MYOSIN | 2.829 | **Yes** | **0.192** | 0.192 | 0.583 | **0.0** | 1.000 |
+
+**Verdict: FAIL, clean and in one case sharply informative, per this task's own
+pre-registered framing** ("the pocket is not a topological feature these operators see
+at Cα resolution"). 2/3 targets show no void at all — top H2 persistence sits at/below
+the synthetic noise floor, so the gated (honest) score is all-zeros/chance by this
+module's own design; the nominal ungated AUC's apparent floor-beating on both is
+explained away cleanly by the matched random-patch null (77.1st/46.3rd percentile,
+p=0.229/0.537 — statistically indistinguishable from a random patch). CARDIAC_MYOSIN is
+the one target with a detected void — and it is the **wrong void**: AUC 0.192
+(anti-ranks the real pocket), null percentile **0.0** (the real pocket's mean score
+sits below every one of 1000 random patches). A large protein (N=704) has multiple
+internal cavities; the most-persistent one found is not the ligand pocket. Residue-
+localization weak link confirmed on real data, not just synthetic: the proximity floor
+(0.583) beats `void_score` (0.192) on CARDIAC_MYOSIN, the same pattern the synthetic
+control already showed (0.824 vs 0.576) — `ripser`'s lack of H2 cycle representatives
+forces a crude geometric centroid-search heuristic that is not reliable for real-target
+localization.
+
+**L1 half not run — its own gate remains closed.** [[TASK-0140]] (chiral circulation)
+landed FAIL against its own pre-registered bar the session immediately prior;
+[[TASK-0143]] was already FAIL. Neither leg of "run only if TASK-0143 or TASK-0140 shows
+life" is open, so the L1 half (a cycle/loop-flow quantity, the same family TASK-0143
+bears on) is not attempted.
+
+Full detail: `.ai/tasks/DONE/TASK-0142-hodge-l1-persistent-h2.md`,
+`results_task0142_topology/persistent_voids_real_run.json`.
+
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -2695,6 +2757,8 @@ unmet — this result does not open it. Full detail:
 | 27 | Does TASK-0110's "a single `time_averaged_ctqw` call did not return after 2+ hours" infeasibility claim hold up under continuous CPU-time evidence, not just a single process-state check at kill time ([[P-0005]])? | **resolved 2026-07-22: corroborated, not inflated.** Re-ran the same call with continuous `RunLogger` instrumentation: 438 samples over one full, uninterrupted 950s run to completion, `cpu_elapsed_s/wall_elapsed_s` held at 4.05 ± 0.035 throughout, no drops — clean evidence of continuous execution. The current AAKV prescription for the same target is ~15x smaller than the original (`H_new`'s spectrum shifted after [[TASK-0121]]'s renormalization); extrapolated to the original scale, the re-verified rate implies ~3.9 CPU-hours, consistent with the original claim. Separate finding: CPU-time exceeding wall-clock by ~16x (uncapped, 16-core) is normal multithreaded BLAS behavior, not contention — ratio *stability* across samples is the real diagnostic. New `.ai/reference/LONG_JOB_CONVENTION.md` generalizes the pattern for future long-running compute, including an explicit HITL hand-off path. | [[TASK-0134]] |
 
 | 28 | Does the chiral (broken-time-reversal) circulation observable (HYP-P9) — Peierls-flux bond current, Hodge-filtered to its circulating part, proximity-orthogonal by construction — clear the proximity floor with non-overlapping CIs on real pockets, per its own pre-registered gate? | **resolved 2026-07-23: no — FAIL on all 7 targets, consistent with [[TASK-0143]]'s own FAIL on the graph-openness premise this observable depends on.** CI overlap is `True` everywhere, so the primary bar is not met anywhere. Real, honestly-reported suggestive-not-confirmed signal: KRAS_G12C and PTP1B both clear the Bonferroni-corrected threshold (0.05/7) on the independent stratified-AUC permutation-null statistic. The proximity-orthogonality claim itself holds cleanly on 7/7 targets (ρ(circ,-dist) smaller in magnitude than ρ(occ,-dist) everywhere) — the observable measures something other than distance, that something just doesn't clear the discrimination bar here. Real physics finding made while building the regression tests (not anticipated in advance): a bare N-cycle ring gives exactly zero converged circulation from a diagonal seed, at any flux — real protein contact graphs aren't at risk (dense 3-D packing gives degree well above 2 everywhere), but it ruled out the obvious minimal synthetic test fixture. GATE 1/GATE 2 both re-verified passing on a fresh reconstruction (the cited reference script is confirmed absent). [[TASK-0142]]'s own hard gate remains unmet. | [[TASK-0140]], [[TASK-0143]] |
+
+| 29 | Does persistent H2 (a capped-void signature, graph-*adjacent* not graph-*far*) localize real holo-defined pockets, given the 2026-07-22 Architect/Planner correction that [[TASK-0143]]'s open-cleft FAIL (0/7) does not actually falsify this half of the loop/multi-site-closure family? | **resolved 2026-07-24: no — clean FAIL on all 3 mandatory targets, one sharply informative.** 2/3 targets (KRAS_G12C, BCR_ABL1) show no H2 void at all — top persistence at/below the synthetic solid-ball noise floor (2.5); the honest gated score is all-zeros (chance AUC), and the nominally floor-beating *ungated* diagnostic score is explained away by the matched random-patch null (77.1st/46.3rd percentile, p=0.229/0.537 — indistinguishable from a random patch). CARDIAC_MYOSIN is the one target with a detected void (2.829) — and it is the **wrong void**: AUC 0.192, null percentile **0.0** (real pocket's mean score below all 1000 random patches). A large protein has multiple internal cavities; the most-persistent one found isn't the ligand pocket. Residue-localization weak link (crude geometric centroid heuristic, `ripser` has no H2 cycle representatives) confirmed on real data: proximity floor beats `void_score` on CARDIAC_MYOSIN (0.583 vs 0.192), same pattern as the synthetic control. Two filing-text imprecisions resolved by direct test before assuming: `thresh=16.0` (not "8 Å", truncates real H2 classes), and TASK-0133's *plain* random-patch null (not TASK-0143's spread-matched, infeasible-on-4/7-targets convention) as the actual cited precedent. L1 half not run — its own gate (TASK-0143 or TASK-0140 showing life) remains closed. | [[TASK-0142]], [[TASK-0143]], [[TASK-0140]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

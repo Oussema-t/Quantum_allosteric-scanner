@@ -22,6 +22,10 @@ dependencies = [
     "prody",
     "matplotlib",
     "optuna",
+    "ripser",  # TASK-0142: persistent-H2 void detection, no homemade
+    # Betti-number substitute permitted per that task's own hard
+    # correctness constraint (Falsifier D showed a homemade single-radius
+    # Rips b1 is dominated by spurious short-lived cycles).
 ]
 
 [tool.pytest.ini_options]
