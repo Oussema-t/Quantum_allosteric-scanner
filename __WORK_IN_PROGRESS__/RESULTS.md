@@ -1382,8 +1382,17 @@ checked KRAS_G12C's — out of scope for [[TASK-0150]] itself (a wiring task, no
 new statistical analysis), a natural next step for whoever revisits this gate.
 
 Full detail: `.ai/tasks/DONE/TASK-0150-wire-learnability-into-run-challenge.md`,
-`results_task0120/learnability_gate.json` (regenerated; prior whole-structure-CO
-output preserved at `learnability_gate.PRE_TASK0150_wholestructure_CO_bug.json.bak`).
+`results_task0120/learnability_gate.json` (regenerated). **Correction, same day**:
+this task's own Done section originally claimed the prior whole-structure-CO output
+was snapshotted to a `.bak` file before regenerating — checked directly and found
+false. The intended `cp` ran against an empty/nonexistent directory (no prior JSON
+was present on this thread's disk to snapshot — TASK-0120/0144's own original runs
+were never persisted here as files, only as the prose this document already
+carries) and silently no-opped; the "backup done" report was never actually
+verified. No data lost — the superseded numbers this correction refers to are the
+ones already quoted verbatim in TASK-0120's/TASK-0144's own paragraphs above, which
+were never touched or deleted — only the false claim of a separate `.bak` snapshot
+is retracted here.
 
 **[EXECUTED, fixes a real bug]** `REVIEW-panel-2026-07-16-v2.md` §2.4 found
 that `potentials.py`'s five diagonal terms (V_B/V_T/V_R/V_C/V_M) were not

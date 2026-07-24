@@ -23,9 +23,14 @@ own reported verdict changes as a direct, real consequence -- see
 `compute_learnability`'s own docstring and TASK-0150's Done section for
 the full before/after numbers and why this differs from
 `resolve_kras_learnability.py`'s own fully null-resolved `AMBIGUOUS`.
-Previous (buggy) output preserved at `results_task0120/learnability_
-gate.PRE_TASK0150_wholestructure_CO_bug.json.bak`, not silently
-discarded.
+**Correction**: an earlier version of this docstring claimed the
+previous (buggy) JSON output was snapshotted to a `.bak` file before
+regenerating -- checked directly and found false (the intended backup
+ran against an empty directory and silently no-opped; never verified).
+No prior run's output was actually on disk to preserve; the superseded
+numbers this refactor corrects are the ones already on record in
+`RESULTS.md`'s own TASK-0120/TASK-0144 sections, which this refactor
+does not touch.
 """
 from __future__ import annotations
 

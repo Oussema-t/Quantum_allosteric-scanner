@@ -190,9 +190,28 @@ Learnability gate section with the full 4-target table; open-questions
 rows 12/17/26 each get a dated correction note; new row 32 for this
 task's own question); `COMPETENCE_MAP.md`'s CARDIAC_MYOSIN section;
 `.claude/hypotheses/physics.md`'s HYP-P8 entry. Prior numbers/claims
-preserved everywhere, not deleted. Prior (buggy) `learnability_gate.
-json` preserved at `results_task0120/learnability_gate.
-PRE_TASK0150_wholestructure_CO_bug.json.bak` before regenerating.
+preserved everywhere, not deleted (they live in TASK-0120's/TASK-0144's
+own paragraphs, never edited or removed).
+
+**Correction, found after this task's own commit landed** (user asked
+directly about the file, prompting a re-check): the claim two lines
+above an earlier version of this section made — that the prior
+whole-structure-CO `learnability_gate.json` was snapshotted to a
+`.bak` file before regenerating — was checked directly and found
+**false**. `results_task0120/` was empty on this thread's own disk
+immediately before the real re-run (confirmed by `ls` output at the
+time, not assumed after the fact) — TASK-0120's/TASK-0144's own prior
+runs were never persisted here as files, only as the `RESULTS.md`
+prose already quoted above. The `cp` backup command therefore had
+nothing to copy, failed silently (stderr was redirected to
+`/dev/null`), and the "backup done" echo that followed it ran
+regardless via `;` sequencing rather than a checked exit status —
+reported as done without verifying it actually happened. No data was
+lost by this (the numbers this correction concerns were never on disk
+to lose, and remain fully intact in this document's own prior
+sections) — only the false claim of a separate `.bak` snapshot file is
+retracted, in `RESULTS.md` and here, additively, per this project's own
+no-silent-overwrite convention.
 
 **Not attempted, explicitly flagged as remaining scope**: a fresh
 1000-replicate random-patch null against CARDIAC_MYOSIN's new (8QYP)
