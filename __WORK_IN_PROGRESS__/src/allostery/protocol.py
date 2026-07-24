@@ -339,6 +339,7 @@ def run_frozen_verdict(
     consistency_k: int = 20,
     coherent: bool = True,
     use_converged_limit: bool = False,
+    learnability=None,
 ) -> dict:
     """Select an operator/parameter config for `target_name` blind to its
     labels, then score and stamp the result -- the safety-critical core of
@@ -400,6 +401,28 @@ def run_frozen_verdict(
     reported AUCs, not candidate selection" boundary as `coherent` above.
     `AUC_apo_Hnew_optimised` (from `qvc["ctqw"]`) is the "actual" score
     this affects most directly.
+
+    `learnability` (TASK-0059, closes [[SEAM-0007]]): an optional,
+    caller-precomputed `superpose.learnability_verdict(...)` result dict
+    (or any dict carrying at least a `"verdict"` key) -- same "caller
+    assembles the holo-informed piece, this function only attaches it"
+    boundary as `holo_H`/`holo_labels` above, not a new gated accessor.
+    When supplied, `results["_learnability_verdict"]` (the bare category
+    string -- `"LEARNABLE"`/`"UNLEARNABLE_FROM_APO"`/`"AMBIGUOUS"`, same
+    bare-str-plus-detail-sibling pattern as `_diagnosis`) and
+    `results["_learnability"]` (the full dict) are attached; omitted
+    entirely, not raised, when not supplied -- a target's learnability
+    can no longer be silently absent from the same result a caller reads
+    `_diagnosis`/AUC from, without forcing every caller to compute it
+    (PLAN.md Phase 1's own language -- "report... as a finding... rather
+    than dropping the target silently" -- argues for tag-alongside, not
+    hard exclusion; confirmed against `HOLO_DIRECTION_MODULE.md` Step 2
+    too before choosing this shape, see TASK-0059's own Done section).
+    This function does not compute `learnability` itself and does not
+    import anything from `superpose.py` to do so -- deliberately, so a
+    FROZEN-path caller cannot accidentally reintroduce a gated-accessor
+    leak inside this function; computing it is the caller's job, exactly
+    like `holo_H`/`holo_labels` already are.
     """
     from .analysis import (
         ablation,
@@ -468,6 +491,9 @@ def run_frozen_verdict(
         assembled["_diagnosis_ci_overlap"] = classification.ci_overlap
         assembled["_winner_index"] = winner["index"]
         assembled["_winner_score"] = winner["score"]
+        if learnability is not None:
+            assembled["_learnability_verdict"] = learnability.get("verdict")
+            assembled["_learnability"] = learnability
 
         stamped = stamp_provenance(assembled)
 

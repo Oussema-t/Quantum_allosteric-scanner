@@ -667,3 +667,75 @@ class TestRunFrozenVerdict:
         assert "AUC_holo_Hnew_optimised" in result
         assert "mean_rho_apo_holo" in result
         assert "mean_jacc20" in result
+
+
+class TestLearnabilityWiring:
+    """TASK-0059 -- closes SEAM-0007: a target's learnability-gate verdict
+    (`superpose.learnability_verdict`) must not be silently absent from
+    the same result dict a caller reads `_diagnosis`/AUC from. `run_
+    frozen_verdict` never computes this itself (no import from
+    `superpose.py`, same "caller assembles the holo-informed piece"
+    boundary `holo_H`/`holo_labels` already establish) -- these tests
+    exercise the attachment only, not `learnability_verdict`'s own
+    correctness (already covered by `test_superpose.py`, out of this
+    task's own scope)."""
+
+    def test_omitted_without_learnability_input(self):
+        """Default (unchanged from before this task): no `learnability`
+        kwarg, and the two new keys must be completely absent -- not
+        `None`-valued, matching `holo_H`'s own "omitted entirely, not
+        raised" convention exactly."""
+        result = run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50,
+        )
+        assert "_learnability_verdict" not in result
+        assert "_learnability" not in result
+
+    def test_unlearnable_verdict_is_attached_not_dropped(self):
+        """SEAM-0007's actual invariant: a target whose gate says the
+        apo->holo direction is NOT spanned by the soft modes (near-zero
+        CO, large relative pocket RMSD) must not silently flow through
+        as if it had cleared the gate -- the verdict must be visibly
+        attached to the same dict `_diagnosis`/AUC live in.
+        `learnability_verdict` is a pure function of 3 floats (real
+        signature, `superpose.py`), so a synthetic near-zero-CO /
+        large-RMSD-ratio scenario is constructed directly rather than
+        needing full apo/holo/alignment plumbing -- exactly the
+        "synthetic target constructed with a near-zero cumulative
+        overlap" this task's own Intent Contract asks for."""
+        from allostery.superpose import learnability_verdict
+
+        gate = learnability_verdict(
+            pocket_rmsd_mean=6.0, background_rmsd_mean=1.0, co_final=0.05,
+        )
+        assert gate["verdict"] == "UNLEARNABLE_FROM_APO"  # sanity: real gate logic, not assumed
+
+        result = run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50,
+            learnability=gate,
+        )
+        assert result["_learnability_verdict"] == "UNLEARNABLE_FROM_APO"
+        assert result["_learnability"] == gate
+        # The invariant this seam-test exists for: the verdict rides in
+        # the *same* dict as the AUC-based diagnosis -- a caller cannot
+        # read one without the other being right there.
+        assert "_diagnosis" in result
+
+    def test_learnable_verdict_is_also_attached(self):
+        """The wiring is symmetric -- a GO verdict is attached exactly
+        the same way as a NO-GO one, not special-cased."""
+        from allostery.superpose import learnability_verdict
+
+        gate = learnability_verdict(
+            pocket_rmsd_mean=2.0, background_rmsd_mean=1.0, co_final=0.9,
+        )
+        assert gate["verdict"] == "LEARNABLE"  # sanity
+
+        result = run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50,
+            learnability=gate,
+        )
+        assert result["_learnability_verdict"] == "LEARNABLE"
