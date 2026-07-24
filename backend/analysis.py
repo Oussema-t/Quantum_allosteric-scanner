@@ -202,36 +202,50 @@ def _site_descriptors_z(c, idx):
     }
 
 
+def _raw_arrays(c):
+    """The three raw per-residue descriptor arrays, computed ONCE per structure. The |nDCC|
+    coupling is the O(N³) part (full GNM covariance) — precompute it so the bootstrap
+    noise-floor never recomputes it per resample (that dominated /api/connectivity-change)."""
+    return {
+        "msf": np.asarray(c["msf"], float),
+        "coupling": _abs_coupling(c),
+        "slow": _slow_participation(c),
+    }
+
+
+def _mean_desc(arrays, idx):
+    """Seed-mean of the precomputed raw descriptor arrays over residue indices `idx`."""
+    return {k: float(np.mean(arrays[k][idx])) for k in arrays}
+
+
 def _site_descriptors_raw(c, idx):
     """Raw, unit-fixed descriptors — for the apo↔holo comparison (no z-score baseline, so
     the shift reflects the residues, not a changed protein-wide normalisation).
     msf high = flexible (inverse rigidity); coupling = |nDCC| row-sum; slow = mode participation."""
-    return {
-        "msf": float(np.mean(c["msf"][idx])),
-        "coupling": float(np.mean(_abs_coupling(c)[idx])),
-        "slow": float(np.mean(_slow_participation(c)[idx])),
-    }
+    return _mean_desc(_raw_arrays(c), np.asarray(idx, int))
 
 
-def _bootstrap_floor(c, n_seed, n_boot=200, seed=0):
+def _bootstrap_floor(arrays, n_seed, n_boot=200, seed=0):
     """2σ noise floor of the RAW seed-mean descriptors under random-residue sampling of the
-    SAME size — the significance threshold (replaces a fixed d_z constant)."""
+    SAME size — the significance threshold (replaces a fixed d_z constant). Operates on the
+    precomputed per-residue arrays (no O(N³) recompute per sample)."""
     rng = np.random.default_rng(seed)
-    N = len(c["msf"])
+    N = len(arrays["msf"])
     n_seed = max(1, min(int(n_seed), N - 1))
-    samp = [_site_descriptors_raw(c, rng.choice(N, n_seed, replace=False)) for _ in range(n_boot)]
+    samp = [_mean_desc(arrays, rng.choice(N, n_seed, replace=False)) for _ in range(n_boot)]
     return {k: float(np.std([s[k] for s in samp])) for k in samp[0]}
 
 
-def _raw_shift(idx_a, idx_h, c_a, c_h, n_boot=200):
-    """Raw apo→holo descriptor shift at a residue set + 2σ significance per descriptor."""
+def _raw_shift(idx_a, idx_h, arrays_a, arrays_h, n_boot=200):
+    """Raw apo→holo descriptor shift at a residue set + 2σ significance per descriptor.
+    `arrays_a`/`arrays_h` are precomputed per-structure raw arrays (see `_raw_arrays`)."""
     idx_a, idx_h = np.asarray(idx_a, int), np.asarray(idx_h, int)
     if len(idx_a) == 0 or len(idx_h) == 0:
         return None
-    da, dh = _site_descriptors_raw(c_a, idx_a), _site_descriptors_raw(c_h, idx_h)
+    da, dh = _mean_desc(arrays_a, idx_a), _mean_desc(arrays_h, idx_h)
     delta = {k: dh[k] - da[k] for k in da}
-    fa = _bootstrap_floor(c_a, len(idx_a), n_boot)
-    fb = _bootstrap_floor(c_h, len(idx_h), n_boot)
+    fa = _bootstrap_floor(arrays_a, len(idx_a), n_boot)
+    fb = _bootstrap_floor(arrays_h, len(idx_h), n_boot)
     thr = {k: 2.0 * float(np.sqrt(fa[k] ** 2 + fb[k] ** 2)) for k in da}
     sig = {k: bool(abs(delta[k]) > thr[k]) for k in da}
     return {
@@ -367,9 +381,12 @@ def seed_readiness_shift(apo_pdb, apo_chain, holo_pdb, holo_chain=None,
         overlap = len(set(pocket) & set(int(r) for r in site_resnums))
         topology = "orthosteric" if (overlap > 0 or sep <= cutoff) else "allosteric"
 
-    # raw, significance-gated shift at the active-site READOUT and at the DRUG pocket
-    act = _raw_shift(sa, sh, ca, ch, n_boot)
-    pkt = _raw_shift(pa, ph, ca, ch, n_boot)
+    # raw, significance-gated shift at the active-site READOUT and at the DRUG pocket.
+    # Precompute the per-structure raw arrays ONCE (the O(N³) coupling) and reuse them for
+    # both the active-site and pocket shifts — this is the fix for the slow endpoint.
+    arrays_a, arrays_h = _raw_arrays(ca), _raw_arrays(ch)
+    act = _raw_shift(sa, sh, arrays_a, arrays_h, n_boot)
+    pkt = _raw_shift(pa, ph, arrays_a, arrays_h, n_boot)
     reach_shift = round(rh["distal_enrich"] - ra["distal_enrich"], 3)
 
     # rigidify = raw MSF drops significantly; decouple = raw coupling drops significantly
