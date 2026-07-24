@@ -60,12 +60,39 @@ def _authorized(request: Request) -> bool:
     return False
 
 
+# live-request counter so the background pre-warm can yield the CPU to real traffic
+# (critical on Render's 0.1-vCPU free tier: an ungated pre-warm starves user requests).
+import threading as _threading
+
+_INFLIGHT = 0
+_INFLIGHT_LOCK = _threading.Lock()
+
+
+def _inflight(delta):
+    global _INFLIGHT
+    with _INFLIGHT_LOCK:
+        _INFLIGHT += delta
+
+
+def requests_in_flight():
+    with _INFLIGHT_LOCK:
+        return _INFLIGHT
+
+
 @app.middleware("http")
 async def gate_and_cache(request: Request, call_next):
     # login gate
     if not _authorized(request):
         return Response(status_code=401, headers={"WWW-Authenticate": _REALM})
-    resp = await call_next(request)
+    # count real API work (not the liveness probe) so pre-warm backs off while it runs
+    tracked = request.url.path.startswith("/api") and request.url.path != "/api/health"
+    if tracked:
+        _inflight(1)
+    try:
+        resp = await call_next(request)
+    finally:
+        if tracked:
+            _inflight(-1)
     # never let the browser cache the frontend assets (avoids stale JS after deploys)
     if not request.url.path.startswith("/api"):
         resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
@@ -416,6 +443,13 @@ from .config import config
 _log = logging.getLogger("qas.prewarm")
 
 
+def _wait_for_idle(poll=0.25):
+    """Block while any real API request is in flight — pre-warm must only use idle CPU,
+    never compete with a live user click (fatal on the 0.1-vCPU free tier)."""
+    while requests_in_flight() > 0:
+        time.sleep(poll)
+
+
 def _prewarm():
     time.sleep(config.PREWARM_DELAY_S)
     systems = resolve_systems()
@@ -425,28 +459,33 @@ def _prewarm():
         if not apo:
             continue
         for cut in config.PREWARM_CUTOFFS:
+            _wait_for_idle()
             try:                                        # visualization + GNM analysis
                 load(LoadRequest(pdb_id=apo, chains=chain, target_name=name, cutoff=cut)); n += 1
             except Exception as e:                      # a broken target must not stop the rest
                 _log.info("prewarm load %s@%s failed: %s", name, cut, e)
             if holo:
+                _wait_for_idle()
                 try:                                    # connectivity change (DDM/rewiring/ΔDCC + morph + seed)
                     connectivity_change_ep(apo=apo, holo=holo, apo_chain=chain,
                                            target_name=name, cutoff=cut); n += 1
                 except Exception as e:
                     _log.info("prewarm connectivity %s@%s failed: %s", name, cut, e)
+                _wait_for_idle()
                 try:                                    # apo→holo site-potential shift (§5c/§5d)
                     analysis_shift(apo=apo, holo=holo, apo_chain=chain,
                                    target_name=name, cutoff=cut); n += 1
                 except Exception as e:
                     _log.info("prewarm shift %s@%s failed: %s", name, cut, e)
         if holo:
+            _wait_for_idle()
             try:                                        # apo↔holo displacement (cutoff-independent)
                 compare(apo=apo, holo=holo, apo_chain=chain); n += 1
             except Exception as e:
                 _log.info("prewarm compare %s failed: %s", name, e)
             if config.PREWARM_MORPH:                     # real-structures animation (network-heavy)
                 cut0 = config.PREWARM_CUTOFFS[0] if config.PREWARM_CUTOFFS else 8.0
+                _wait_for_idle()
                 try:
                     morph_frames_ep(apo=apo, holo=holo, apo_chain=chain,
                                     n_frames=config.PREWARM_MORPH_FRAMES, cutoff=cut0); n += 1

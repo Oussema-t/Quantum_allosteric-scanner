@@ -48,7 +48,9 @@ class Config:
     PREWARM_DELAY_S = _int("QAS_PREWARM_DELAY_S", 8)     # let the server come up first
     PREWARM_CUTOFFS = [float(x) for x in
                        os.environ.get("QAS_PREWARM_CUTOFFS", "8").split(",") if x.strip()]
-    PREWARM_MORPH = os.environ.get("QAS_PREWARM_MORPH", "1") != "0"   # warm real-structure frames too
+    # real-structures morph is network-heavy (auto-discovers ~12 structures per target) —
+    # off by default so pre-warm stays light; opt in with QAS_PREWARM_MORPH=1.
+    PREWARM_MORPH = os.environ.get("QAS_PREWARM_MORPH", "0") != "0"
     PREWARM_MORPH_FRAMES = _int("QAS_PREWARM_MORPH_FRAMES", 4)
 
     # ── misc ──
