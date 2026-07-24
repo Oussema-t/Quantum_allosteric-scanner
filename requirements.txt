@@ -4,8 +4,11 @@ uvicorn[standard]==0.30.1
 numpy==1.26.4
 scipy==1.13.1
 biopython==1.83
-biotite==0.41.0
-gemmi==0.6.6
+# biotite/gemmi power rcsb_extract's faster CIF parser (optional — it falls back to
+# BioPython). Unpinned upper bound so the project's Python 3.9 gets a compatible build
+# (biotite 0.41+ requires Python ≥3.10) while newer Pythons on Render get the latest.
+biotite>=0.39
+gemmi>=0.6
 requests==2.32.3
 networkx==3.2.1
 scikit-learn==1.5.0
