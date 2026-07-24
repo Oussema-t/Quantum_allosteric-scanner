@@ -3134,6 +3134,101 @@ Full detail: `.ai/tasks/DONE/TASK-0153-holo-diagnostic-transport-lowmode.md`,
 
 ---
 
+## Frequency-domain / spectral coherence observable (TASK-0146, 2026-07-24)
+
+**Every propagator this project has scored explicitly time-averages away phase
+information** — `time_averaged_ctqw_converged` ([[TASK-0130]]) is *provably*
+phase-free at the converged limit. This task deliberately does the opposite:
+track the un-averaged, finite-time coherent amplitude `c_j(t) =
+<j|exp(-iHt)|source>` and ask whether the *frequency content* of quantum
+beating — not its time-average — carries coupling information the converged
+limit destroys. New `allostery.spectral_coherence`, 12 synthetic unit tests +
+a 5-test dumbbell falsification gate.
+
+**Two real design decisions, stated and justified per this task's own Intent
+Contract** (full reasoning in the module's own docstring):
+1. **Score target is `p_j(t)=|c_j(t)|^2` (occupation), not the raw amplitude**
+   — the task's own physics description ("quantum beating dominated by Bohr
+   frequencies `w_k-w_l`") only holds for the *probability*, whose Fourier
+   spectrum genuinely contains those cross-term beat frequencies; the raw
+   amplitude oscillates at the single frequencies `w_k` only.
+2. **Score = total AC (non-DC) spectral power** of `p_j(t)`'s spectrum, not
+   peak-counting. The DC bin is exactly `time_averaged_ctqw_converged`'s own
+   already-scored quantity — excluding it isolates the genuinely new
+   information. By Parseval's theorem this equals `Var_t[p_j(t)]` exactly
+   (confirmed as a direct numerical identity in the test suite, not just
+   asserted) — an interpretable quantity ("how much does this residue's
+   population move") without peak-counting's extra, unjustified threshold
+   parameter.
+
+**Time window, calibrated against real data, not picked arbitrarily**: the
+task's own suggested approach ("reuse `min_adequate_n_steps`-style
+reasoning... resolve the smallest relevant Bohr frequency") is, taken
+literally, [[TASK-0110]]'s own already-documented infeasibility (a full
+`t_max` 145,000×-3,950,000× the shipped default, driven by pathologically
+small near-degenerate gaps). Real gap-distribution check on `H_new` before
+choosing anything: median Bohr gap 0.0015–0.0062 across the 3 mandatory
+targets, but the single smallest gap is 3-4 orders of magnitude below that.
+Fixed `T=5000` instead — chosen so `min_adequate_n_steps(H, t_max=5000)`
+stays in the low thousands on every target (checked directly: ~3980 steps on
+CARDIAC_MYOSIN, the densest spectrum), same reused Nyquist formula as
+everywhere else in this family. **Honestly characterized, not glossed over**:
+this resolves (Δf=2π/T≈0.00126) 94.6%/76.0%/55.8% of real Bohr gaps on
+KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN respectively — CARDIAC_MYOSIN (largest N,
+densest spectrum) is the real limiting case, resolving only the majority, not
+the near-totality, of its own gap structure.
+
+**Sensitivity check (this task's own Open Question, answered directly)**: at
+the shipped `t_max=15` default (Δf≈0.42, resolves ~0% of real gaps), whole-graph
+AUC is a *different, materially worse-behaved* number on 2/3 targets —
+KRAS_G12C's own floor-clearing verdict **flips** (0.327, below floor, at
+`t_max=15` vs. 0.633, above floor, at `t_max=5000`). `T=5000` vs. a 10×-larger
+`T=50000` agree closely on all 3 targets (KRAS_G12C 0.633→0.635, BCR_ABL1
+0.576→0.571, CARDIAC_MYOSIN 0.584→0.583) — converged at the chosen default, not
+still drifting; `t_max=15` is confirmed inadequate exactly as the module's own
+gap-resolution calibration predicted, not merely a cosmetic difference.
+
+**Real-target scoring, `H_new`, full active-site array ([[TASK-0118]]/
+`INV-0006`), whole-graph AUC + [[TASK-0112]] block-bootstrap CI, plus
+[[TASK-0123]]'s stratified-AUC + well-powered-shell + permutation-null lens
+(no max-over-frequency-bins step exists in this score to gate, per the design
+above — the permutation null here is due-diligence on the standing statistic,
+matching [[TASK-0145]]'s own convention for a non-swept score):**
+
+| Target | Whole-graph AUC | Floor | CI overlap | Well-powered max AUC | p (uncorrected) | ρ(score,−hop) |
+|---|---|---|---|---|---|---|
+| KRAS_G12C | 0.633 | 0.482 | `True` | 0.792 | 0.103 | **+0.70** |
+| BCR_ABL1 | 0.576 | 0.582 | `True` | 0.851 | 0.034 | **+0.72** |
+| CARDIAC_MYOSIN | 0.584 | 0.568 | `True` | 0.752 | 0.106 | **+0.68** |
+
+**Verdict: no target reaches a decisive result, and the likely mechanism is
+the proximity confound this task's own filing flagged as a real risk (Priority
+note: "no structural argument for proximity-orthogonality... just a different
+observable built on the same underlying dynamics").** Confirmed directly, not
+assumed: ρ(score,−hop) is +0.68 to +0.72 on every target — the same sign and
+comparable magnitude to a *confounded* observable's own synthetic reference
+(CTQW-occ's ρ≈+0.71 to +1.0, [[TASK-0149]]'s own synthetic table). Unlike
+`prs_low`/`dcc_low`/the chiral circulation observable, `spectral_coherence`
+was never built with a proximity-orthogonality guarantee — this is exactly
+what its lack looks like on real data. KRAS_G12C and CARDIAC_MYOSIN clear the
+proximity floor on whole-graph AUC alone, but with overlapping 95% CIs
+(not decisive) and a well-powered stratified max that does not clear even the
+uncorrected p<0.05 bar (p=0.103/0.106) — the raw "clears floor" reading is
+best explained by the confirmed proximity correlation, not genuine distal
+coupling. BCR_ABL1 does not clear the floor on whole-graph AUC at all
+(0.576<0.582); its own well-powered stratified max (p=0.034) clears
+uncorrected significance but not the 3-target Bonferroni bar (α=0.0167).
+**A real, honestly-reported negative, matching the Architect/Planner's own
+P2 prior** ("lower plausibility than TASK-0145... nothing structural argues
+for proximity-orthogonality here").
+
+Full detail: `.ai/tasks/DONE/TASK-0146-frequency-domain-coherence-observable.md`,
+`results_task0146_spectral_coherence/spectral_coherence_real_run.json`,
+`src/allostery/spectral_coherence.py`, `tests/test_spectral_coherence.py`,
+`tests/test_dumbbell_negative_control.py::TestSpectralCoherenceDumbbellGate`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -3182,6 +3277,7 @@ Full detail: `.ai/tasks/DONE/TASK-0153-holo-diagnostic-transport-lowmode.md`,
 | 34 | Do CARDIAC_MYOSIN(8QYP)'s and GLUCOKINASE's bare-threshold learnability verdicts ([[TASK-0150]], both `UNLEARNABLE_FROM_APO`) survive the same 1000-replicate random-patch null [[TASK-0133]]/[[TASK-0139]] already applied to KRAS_G12C's own bare-threshold verdict? | **resolved 2026-07-24: no — both soften to `AMBIGUOUS`, the same direction and magnitude as KRAS_G12C's own result.** CARDIAC_MYOSIN: restricted CO=0.254 sits at the 85.7th percentile of the null (one-sided p=0.143); GLUCOKINASE: CO=0.304 at the 89.9th percentile (p=0.101) — both elevated relative to a random same-sized patch, neither decisive at this project's own α=0.05 bar, exactly the "elevated but not significant" pattern KRAS_G12C's own 93rd-percentile/p≈0.07 result already established. Now confirmed on 3 of the 4 targets this exact analysis has ever been run on. Does not retract [[TASK-0150]]'s own bare-threshold reading — reports the more rigorous of two legitimate readings alongside it, same relationship KRAS_G12C's own two numbers already have. GLUCOKINASE's chain-schema question ([[TASK-0081]]) reconfirmed resolved ([[TASK-0127]]), not re-litigated. | [[TASK-0152]], [[TASK-0150]], [[TASK-0133]], [[TASK-0139]] |
 
 | 35 | Does the [[TASK-0067]]/[[TASK-0092]] holo-native diagnostic (same operator, holo topology instead of apo — failure-attribution only, never a prediction) extend to [[TASK-0145]]'s transport and [[TASK-0149]]'s low-mode observable families, neither ever tested this way? | **resolved 2026-07-24: mixed and genuinely informative, including a third "unexpected direction" outcome on 2 cells and one striking within-target divergence.** BCR_ABL1's transport headline (`T(E=0)` on L, apo 0.698/p=0.003) gets a clean **(b) operator-limited** reading (holo=0.626, gap −0.073, holo itself still nominally elevated p=0.042) — corroborates TASK-0092's own BCR_ABL1 pattern on a third, independent operator family. CARDIAC_MYOSIN's `prs_low` headline (apo 0.922/p=0.006) gets the cleanest **(b) near-information-ceiling** reading in the project so far — holo stays strongly significant at every k (p=0.0000–0.0051), gap only −0.020. **`dcc_low`'s headline on the identical target (apo 0.962/p<0.001) does not** — holo loses significance at every k (p=0.07–0.30, gap −0.303 at k=20), the opposite of a clean ceiling reading, flagged as an open complication (not resolved — candidate factors noted: CARDIAC_MYOSIN's own 704-vs-709 apo/holo residue-count mismatch and its documented structural-remapping history). KRAS_G12C's transport-on-H_new and BCR_ABL1's `prs_low` both reproduce TASK-0092's own "holo scores *worse* than apo" third outcome, confirming it recurs rather than being a one-off. | [[TASK-0153]], [[TASK-0067]], [[TASK-0092]], [[TASK-0145]], [[TASK-0149]] |
+| 36 | Does the frequency content of un-averaged coherent quantum beating (`c_j(t)=<j|exp(-iHt)|source>`, Fourier-analyzed rather than time-averaged away like every other propagator this project scores) carry coupling information the converged limit destroys? | **resolved 2026-07-24: no — a real, honestly-reported negative, and the likely mechanism is the proximity confound this task's own filing flagged as a real risk.** New score (total AC/non-DC spectral power of `p_j(t)=|c_j(t)|^2`, `T=5000` calibrated against real Bohr-gap statistics, not picked arbitrarily) passes its own dumbbell falsification gate cleanly (C2/C3 exact double dissociation against GSR) but on real targets: no target reaches a decisive result (all 3 CIs overlap the floor's own CI; well-powered stratified max never clears even uncorrected p<0.05 on 2/3 targets, and the third — BCR_ABL1, p=0.034 — does not clear the 3-target Bonferroni bar). ρ(score,−hop) is +0.68 to +0.72 on every target, matching a *confounded* observable's own reference magnitude — confirmed directly, not assumed, and unlike `prs_low`/`dcc_low`/chiral circulation, this observable was never built with a structural proximity-orthogonality guarantee. Sensitivity check: the shipped `t_max=15` default is confirmed inadequate (flips KRAS_G12C's own floor-clearing verdict relative to the calibrated `T=5000`, which itself agrees closely with a 10×-larger window). | [[TASK-0146]], [[TASK-0110]], [[TASK-0123]], [[TASK-0149]] |
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
 (or `.ai/tasks/TODO/` if not yet closed — check `.ai/COMMON.md`'s registry

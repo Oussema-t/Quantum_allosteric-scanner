@@ -1,0 +1,107 @@
+{
+  "KRAS_G12C": {
+    "target": "KRAS_G12C",
+    "N": 169,
+    "pocket_size": 18,
+    "cutoff": 8.0,
+    "floor": 0.4817880794701987,
+    "elapsed_s": 0.09339678302058019,
+    "gap_delta_f_at_default_t_max": 0.0012566370614359172,
+    "fraction_of_real_gaps_resolved": 0.9464285714285714,
+    "whole_graph_auc": 0.633186166298749,
+    "category": "NO_FAILURE_DETECTED",
+    "score_ci": [
+      0.633186166298749,
+      0.4914141705069125,
+      0.7633692936420249
+    ],
+    "floor_ci": [
+      0.4817880794701987,
+      0.3216555298475685,
+      0.6554576521712283
+    ],
+    "ci_overlap": true,
+    "n_scorable_shells": 4,
+    "well_powered_shell": 3.0,
+    "well_powered_max_auc": 0.7916666666666666,
+    "stratified_permutation_null": {
+      "real_well_powered_max_auc": 0.7916666666666666,
+      "real_shell": 3.0,
+      "null_median": 0.6413043478260869,
+      "n_reps": 1000,
+      "p_value": 0.103,
+      "bonferroni_alpha": 0.016666666666666666,
+      "bonferroni_significant": false
+    }
+  },
+  "BCR_ABL1": {
+    "target": "BCR_ABL1",
+    "N": 451,
+    "pocket_size": 16,
+    "cutoff": 8.0,
+    "floor": 0.5816810344827587,
+    "elapsed_s": 0.32108618298661895,
+    "gap_delta_f_at_default_t_max": 0.0012566370614359172,
+    "fraction_of_real_gaps_resolved": 0.76,
+    "whole_graph_auc": 0.5760057471264368,
+    "category": "BEATS_CHANCE_NOT_FLOOR",
+    "score_ci": [
+      0.5760057471264368,
+      0.4464482482861668,
+      0.6901674606672032
+    ],
+    "floor_ci": [
+      0.5816810344827587,
+      0.40487928418995717,
+      0.7212045823313495
+    ],
+    "ci_overlap": true,
+    "n_scorable_shells": 4,
+    "well_powered_shell": 4.0,
+    "well_powered_max_auc": 0.8508771929824561,
+    "stratified_permutation_null": {
+      "real_well_powered_max_auc": 0.8508771929824561,
+      "real_shell": 4.0,
+      "null_median": 0.6096491228070176,
+      "n_reps": 999,
+      "p_value": 0.03403403403403404,
+      "bonferroni_alpha": 0.016666666666666666,
+      "bonferroni_significant": false
+    }
+  },
+  "CARDIAC_MYOSIN": {
+    "target": "CARDIAC_MYOSIN",
+    "N": 704,
+    "pocket_size": 13,
+    "cutoff": 8.0,
+    "floor": 0.5678503840587776,
+    "elapsed_s": 0.537518261000514,
+    "gap_delta_f_at_default_t_max": 0.0012566370614359172,
+    "fraction_of_real_gaps_resolved": 0.5576102418207681,
+    "whole_graph_auc": 0.5842146276299677,
+    "category": "NO_FAILURE_DETECTED",
+    "score_ci": [
+      0.5842146276299677,
+      0.3477849915674854,
+      0.8319425020369943
+    ],
+    "floor_ci": [
+      0.5678503840587776,
+      0.4229977411394542,
+      0.7492128649181578
+    ],
+    "ci_overlap": true,
+    "n_scorable_shells": 6,
+    "well_powered_shell": 4.0,
+    "well_powered_max_auc": 0.751984126984127,
+    "stratified_permutation_null": {
+      "real_well_powered_max_auc": 0.751984126984127,
+      "real_shell": 4.0,
+      "null_median": 0.5810284961685823,
+      "n_reps": 996,
+      "p_value": 0.10642570281124498,
+      "bonferroni_alpha": 0.016666666666666666,
+      "bonferroni_significant": false
+    }
+  }
+}

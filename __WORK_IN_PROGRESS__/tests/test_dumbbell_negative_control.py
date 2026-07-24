@@ -66,6 +66,7 @@ from allostery.baselines import connectivity_robustness_from_adjacency  # noqa: 
 from allostery.hamiltonians import laplacian  # noqa: E402
 from allostery.metrics import auc as _auc  # noqa: E402
 from allostery.propagators import ground_state_relaxation, time_averaged_ctqw  # noqa: E402
+from allostery.spectral_coherence import spectral_coherence_score  # noqa: E402
 from allostery.transport import effective_resistance_from_source, transmission_from_source  # noqa: E402
 
 ACTIVE = list(range(0, 12))
@@ -423,6 +424,19 @@ def _transmission(H, t, source):
     return transmission_from_source(H, source, E=0.0)
 
 
+def _spectral_coherence(H, t, source):
+    """Matches `auc_to_drug`'s `propagator(H, t, source=...)` interface --
+    `t` is used as this observable's own `t_max` (a window length, not a
+    snapshot time; TASK-0146's own convention throughout). This file's own
+    default `t=20.0` (`auc_to_drug`'s default, unchanged) is checked
+    directly to already be adequate here -- the dumbbell's own bandwidth
+    (~19) and median gap (~0.18) are both far larger than a real protein
+    `H_new`'s (real-target scoring uses a separately-calibrated, much
+    longer `spectral_coherence.DEFAULT_T_MAX=5000`), so this much shorter
+    window already resolves its Bohr structure comfortably."""
+    return spectral_coherence_score(H, source, t_max=t)
+
+
 class TestEffectiveResistanceDumbbellGate:
     """TASK-0145's own mandatory gate (Intent Contract: "synthetic
     falsification gate first... does either quantity track coupling
@@ -530,3 +544,52 @@ class TestTransmissionDumbbellGate:
     def test_c4_cues_absent_is_near_chance_with_a_wider_seed_average(self):
         c4 = _mean_auc_over_seeds(None, None, _transmission, n_seeds=20)
         assert abs(c4 - 0.5) < 0.3, f"T(E) not near chance in C4 (mean AUC={c4:.3f})"
+
+
+class TestSpectralCoherenceDumbbellGate:
+    """TASK-0146's own mandatory gate (Intent Contract: "synthetic
+    falsification gate first... does the spectral score track coupling,
+    not the well, before trusting real data"). This module's own score
+    (total AC/non-DC spectral power of `p_j(t)=|c_j(t)|^2`) is built from
+    the coherent, un-averaged amplitude trajectory -- genuinely different
+    machinery from `time_averaged_ctqw`'s converged limit, so whether it
+    tracks coupling here is a real empirical question, not assumed to
+    transfer.
+
+    Real measured values on this construction (n_seeds=20, checked
+    directly before writing these assertions, default `t=20.0` --
+    confirmed adequate at this file's own scale, see `_spectral_
+    coherence`'s own docstring): C2=1.000, C3=0.000 (exact, every seed --
+    a clean, decisive double dissociation against GSR). C1=0.083 -- the
+    same well-agrees-but-score-is-anti-intuitive resonance sensitivity
+    this file's other spectral/mode-based gates (`TestModeCoparticipation
+    DumbbellGate`, `TestTransmissionDumbbellGate`) already documented on
+    this identical construction -- not asserted directionally here either,
+    for the same reason. C4=0.504 mean, near chance."""
+
+    def test_c2_spectral_coherence_follows_coupling_not_well(self):
+        mean_auc = _mean_auc_over_seeds("DECOY", "DRUG", _spectral_coherence, n_seeds=20)
+        assert mean_auc > 0.95, f"spectral coherence did not decisively follow coupling in C2 (mean AUC={mean_auc:.3f})"
+
+    def test_c3_spectral_coherence_follows_coupling_not_well(self):
+        mean_auc = _mean_auc_over_seeds("DRUG", "DECOY", _spectral_coherence, n_seeds=20)
+        assert mean_auc < 0.05, f"spectral coherence did not decisively follow coupling in C3 (mean AUC={mean_auc:.3f})"
+
+    def test_c2_c3_is_a_clean_double_dissociation_against_gsr(self):
+        spec_c2 = _mean_auc_over_seeds("DECOY", "DRUG", _spectral_coherence, n_seeds=10)
+        gsr_c2 = _mean_auc_over_seeds("DECOY", "DRUG", _gsr, n_seeds=10)
+        spec_c3 = _mean_auc_over_seeds("DRUG", "DECOY", _spectral_coherence, n_seeds=10)
+        gsr_c3 = _mean_auc_over_seeds("DRUG", "DECOY", _gsr, n_seeds=10)
+        assert spec_c2 > gsr_c2, "spectral coherence should score DRUG higher than GSR in C2 (well elsewhere)"
+        assert spec_c3 < gsr_c3, "spectral coherence should score DRUG lower than GSR in C3 (well on DRUG)"
+
+    def test_c1_cues_agree_is_not_asserted_tightly(self):
+        """Same convention as this file's other coupling-tracking gates'
+        own C1 cell, for the same measured reason -- no directional
+        claim, sanity only."""
+        c1 = _mean_auc_over_seeds("DRUG", "DRUG", _spectral_coherence, n_seeds=5)
+        assert np.isfinite(c1)
+
+    def test_c4_cues_absent_is_near_chance_with_a_wider_seed_average(self):
+        c4 = _mean_auc_over_seeds(None, None, _spectral_coherence, n_seeds=20)
+        assert abs(c4 - 0.5) < 0.3, f"spectral coherence not near chance in C4 (mean AUC={c4:.3f})"
