@@ -14,8 +14,8 @@
   counts: not quantum, not all-pairs, not dense.
 - Status: TODO
 - Owner: Implementer
-- Claimed By: —
-- Claimed At: —
+- Claimed By: Implementer B (this thread)
+- Claimed At: 2026-07-25 10:21
 - Source: `PANEL_REVIEW_2026-07-25.md` §2.2/W3, §4 action item 3.
 - Priority: **P0** — a stated, explicitly-scored deliverable requirement
   is currently non-compliant on three counts; the review's own estimate

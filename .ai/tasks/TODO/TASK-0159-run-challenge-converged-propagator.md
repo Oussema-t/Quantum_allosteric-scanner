@@ -17,8 +17,8 @@
   convention the project's own analysis has already shown to be wrong.
 - Status: TODO
 - Owner: Implementer
-- Claimed By: —
-- Claimed At: —
+- Claimed By: Implementer B (this thread)
+- Claimed At: 2026-07-25 10:20
 - Source: `PANEL_REVIEW_2026-07-25.md` §2.2/W2, §4 action item 2.
 - Priority: **P0** — deliverable/science coherence; the review's own
   estimate is ½ day, and it is a prerequisite for the artifacts a judge
