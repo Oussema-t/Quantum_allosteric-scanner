@@ -16,8 +16,8 @@
   labels, not a test-construction artifact.
 - Status: TODO
 - Owner: Implementer
-- Claimed By: —
-- Claimed At: —
+- Claimed By: Implementer A (this thread)
+- Claimed At: 2026-07-25 10:21
 - Source: `PANEL_REVIEW_2026-07-25.md` §2.3/W1, `null_audit.py`/
   `null_audit2.py` (relocated to `scripts/`, re-verified running in this
   session — see commit message for the exact reproduced numbers).
