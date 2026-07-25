@@ -83,15 +83,23 @@ found by reading, not running:
 
 ## 4. New tasks filed alongside this review (this session)
 
-- **TASK-0153** — control-effort scanning (the collaborator's phase-
-  control hypothesis, reformulated to control-as-ruler; well-posed,
-  non-circular, pre-registered distance kill-switch).
-- **TASK-0154** — two-boson HOM interference (the one non-reducible
-  multi-walker residual; fermion/co-occupation/anyon variants explicitly
-  marked dead so none get re-run).
+- **TASK-0156** (filed here as TASK-0153; renumbered 2026-07-25 by
+  Architect/Planner — collided with an already-committed, already-Done
+  TASK-0153, holo-diagnostic transport/lowmode extension, filed the
+  same day by a different thread. No content changed, see the task
+  file's own provenance note) — control-effort scanning (the
+  collaborator's phase-control hypothesis, reformulated to
+  control-as-ruler; well-posed, non-circular, pre-registered distance
+  kill-switch).
+- **TASK-0157** (filed here as TASK-0154; renumbered 2026-07-25,
+  same reason — collided with an already-committed, already-Done
+  TASK-0154, the `stage`/`GIT-COMMIT` tooling gate) — two-boson HOM
+  interference (the one non-reducible multi-walker residual;
+  fermion/co-occupation/anyon variants explicitly marked dead so none
+  get re-run).
 - **TASK-0155** — apo-structure sensitivity sweep (the missing robustness
   axis; stress-tests KRAS's marginal surviving result across many apo
-  structures).
+  structures). No collision, ID unchanged.
 
 ## 5. Physical-status caveat worth carrying into the six pages
 

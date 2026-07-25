@@ -1,8 +1,16 @@
-# TASK-0153 Control-effort scanning (minimum-energy reachability) as a per-residue allostery observable
+# TASK-0156 Control-effort scanning (minimum-energy reachability) as a per-residue allostery observable
 
 ## Context
 
-- ID: TASK-0153
+- ID: TASK-0156
+- **Renumbered 2026-07-25 (Architect/Planner)**: filed as TASK-0153 by
+  `REVIEW-2026-07-23-register-hygiene-and-p12-gate.md`; collided with an
+  already-committed, already-Done TASK-0153 (holo-diagnostic
+  transport/lowmode extension, widely cross-referenced from
+  `RESULTS.md`/`COMMON.md`/TASK-0145/TASK-0149's own Done sections).
+  Renumbered here rather than the other way — the holo-diagnostic task's
+  number had already propagated into 4+ live documents; this task had
+  propagated into none (still unclaimed TODO). No content changed.
 - Title: rank residues by the *minimum control energy* required to steer
   the CTQW's population from the active-site seed to each candidate
   residue, rather than by where the uncontrolled walk deposits

@@ -350,6 +350,61 @@ hypotheses point to is currently open.
 
 ---
 
+## Phase 1E — external adversarial panel review response (2026-07-25, from PANEL_REVIEW_2026-07-25.md)
+
+Full 7-reviewer read of the entire repository, 897/897 real tests executed,
+plus **one new adversarial experiment run against the code** (§2.3): the
+project's own permutation null (`rng.choice`, a uniformly scattered same-size
+draw) is anti-conservative by 4.8×–42× for the spatially compact labels
+(real pockets) it is actually applied to, demonstrated with an executed
+audit and a white-noise negative control confirming the mechanism is real,
+not a test-construction artifact. This is the single most consequential
+finding since the project began and is treated as **P0** below — it decides
+whether the submission has a surviving positive result to report at all.
+Full one-paragraph verdict: *"a rigorous, multiply-confirmed negative result...
+and one surviving positive whose statistical support does not withstand the
+audit."* Reproduction: `scripts/null_audit.py`/`null_audit2.py` (relocated
+from the review delivery folder, re-verified running in this repo, same
+inflation numbers reproduced).
+
+| # | Task | Priority | Source |
+|---|---|---|---|
+| 1E.1 | **[FILED] [[TASK-0158]] — fix the anti-conservative permutation null, re-run every affected result** | **P0.** Decides whether `dcc_low`'s cross-target positive (and every other stratified/matched-null result) survives a correctly-specified compact-patch null. Pre-registered falsification statement (§5.3): if it doesn't survive on both CARDIAC_MYOSIN and PTP1B, the program is reported as a complete negative result. | §2.3/W1, §5.3 |
+| 1E.2 | **[FILED] [[TASK-0159]] — re-point `run_challenge.py` at the converged closed-form propagator** | **P0.** Shipped pipeline still hardcodes `T_MAX=15.0`/`N_STEPS=500` and calls the finite-time `time_averaged_ctqw`, not the converged form — TASK-0110's own documented 145,000×–3,950,000×-too-short truncation, shown by TASK-0146 to flip KRAS's floor-clearing verdict. | §2.2/W2 |
+| 1E.3 | **[FILED] [[TASK-0160]] — replace the connectivity-matrix deliverable with a genuine dense quantum P_∞(i,j)** | **P0.** The shipped `connectivity_matrix.npz` is a classical current-flow solve, seeded (not all-pairs), sparse on contact edges only (not dense) — fails the challenge's own §5 "quantum connectivity matrix" requirement on 3 counts. Fix reuses the existing converged-propagator eigendecomposition. | §2.2/W3 |
+| 1E.4 | **[FILED] [[TASK-0161]] — program-level multiple-comparison budget** | **P0.** ~200+ scored cells against ~7 answer keys predicts ~10 spurious positives at α=0.05; the project reports 3–4. State the arithmetic explicitly rather than let a referee compute it. | §2.2/W4, V2 |
+| 1E.5 | **[FILED] [[TASK-0162]] — reverse-direction coupling test (pocket→active site)** | **P1.** Every observable seeds at the active site; real allosteric experiments measure the reverse direction. Not symmetric under a non-normal operator or incoherent-mixture seed — untested. | §2.4, V5 |
+| 1E.6 | **[FILED] [[TASK-0163]] — external classical baselines (PocketMiner, ProteinLens, fpocket)** | **P1.** Challenge explicitly scores "comparison to classical analogs"; only one classical comparator (TASK-0132) has ever been run against ~40 quantum-flavored observables. | §2.2/W7, V8 |
+| 1E.7 | **[FILED] [[TASK-0164]] — freeze 3 unresolved ASD configs as a genuine held-out set** | **P1.** PTP1B/CASPASE7 have now been scored twice and PTP1B is cited as confirmatory evidence — no longer genuinely held out. Resolve+freeze 3 new targets, do not score until final pre-submission check. | §2.2/W5, V3 |
+| 1E.8 | **[FILED] [[TASK-0165]] — spatial (3D-neighbourhood) block bootstrap** | **P1.** `block_bootstrap_ci` blocks on sequence index; pockets are spatially compact but sequence-scattered. Same root mechanism as 1E.1's null defect — makes negatives safer, positives less safe than reported. | §2.2/W6, V4 |
+| 1E.9 | **[FILED] [[TASK-0166]] — ensemble/entropic observable (challenge ref [4], Motlagh & Hilser 2014)** | **P1.** The one mechanism the challenge itself cites that the project has never tested — allostery as ensemble redistribution, not signal transmission. Computable from existing GNM mode participation, no MD. Per the review, higher-expected-value than any remaining quantum route. | §2.4, §7.3(1), V9 |
+
+**Explicitly deprioritized by this review (file, do not build before the
+deadline):** [[TASK-0157]] (two-boson HOM — the only non-reducible
+multi-particle residual, but no prior it's proximity-orthogonal);
+[[TASK-0147]] (vibronic/structured bath — most quantum-biology-grounded
+remaining idea, highest implementation cost); Hodge-L1 half of
+[[TASK-0142]] (both gates FAIL, correctly stays closed). All three: describe
+in the forward-proposal section, do not spend implementation time before
+2026-09-15.
+
+**Writing timeline stated by the review, binding constraint:** Weeks 1–2
+above (1E.1–1E.9); **start writing 2026-08-08 regardless of analysis
+state**, six pages, draft by end of week 4, internal review week 5, revise
+week 6, week 7 buffer (no work planned).
+
+**Task-ID collision found and fixed alongside this batch (2026-07-25,
+Architect/Planner):** `REVIEW-2026-07-23-register-hygiene-and-p12-gate.md`
+filed 3 tasks as TASK-0153/0154/0155; TASK-0153 and TASK-0154 each collided
+with an unrelated, already-committed, already-Done task filed the same
+window by a different thread. Renumbered the review's own two (now
+[[TASK-0156]] control-effort-scanning, [[TASK-0157]] two-boson HOM) rather
+than the already-propagated originals — see each renamed file's own
+provenance note. TASK-0155 (apo-structure sensitivity sweep) had no
+collision, unchanged.
+
+---
+
 ## Phase 2 — Pin the physics so the trees cannot drift (the real "dedup")
 
 Dedup means *one implementation of each shared primitive, ported into both trees, numbers

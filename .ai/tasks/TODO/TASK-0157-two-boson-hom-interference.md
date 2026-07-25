@@ -1,8 +1,18 @@
-# TASK-0154 Two-boson Hong-Ou-Mandel interference observable (the one non-reducible multi-walker residual)
+# TASK-0157 Two-boson Hong-Ou-Mandel interference observable (the one non-reducible multi-walker residual)
 
 ## Context
 
-- ID: TASK-0154
+- ID: TASK-0157
+- **Renumbered 2026-07-25 (Architect/Planner)**: filed as TASK-0154 by
+  `REVIEW-2026-07-23-register-hygiene-and-p12-gate.md`; collided with an
+  already-committed, already-Done TASK-0154 (`stage`/`GIT-COMMIT` gate,
+  Toolsmith, referenced from `COMMON.md`, `CAPABILITIES.md`, and
+  `claim.py`'s own docstring). Renumbered here — the tooling task's
+  number had already propagated into 3 live documents plus the tool
+  itself; this task had propagated into none (still unclaimed TODO).
+  No content changed. Per `PANEL_REVIEW_2026-07-25.md`, this task is
+  explicitly deprioritized — describe in the forward-proposal section,
+  do not build before the deadline.
 - Title: a genuine two-particle *bosonic* interference observable —
   Hong-Ou-Mandel-style coincidence/bunching between two identical bosons,
   one launched at the active site and one swept across candidate
