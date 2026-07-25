@@ -16,8 +16,8 @@
 - Status: TODO
 - Owner: Architect/Planner (the freeze decision + config resolution),
   handoff to Implementer for the single frozen run.
-- Claimed By: —
-- Claimed At: —
+- Claimed By: Implementer D (this thread)
+- Claimed At: 2026-07-25 10:20
 - Source: `PANEL_REVIEW_2026-07-25.md` §2.2/W5, §4 action item, V3.
 - Priority: **P1** — the review's own estimate is 1 day; must happen
   *before* any further generalization-set analysis consumes more of the

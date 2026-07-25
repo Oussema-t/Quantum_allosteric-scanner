@@ -18,8 +18,8 @@
   than just adding one more null.
 - Status: TODO
 - Owner: Implementer
-- Claimed By: —
-- Claimed At: —
+- Claimed By: Implementer D (this thread)
+- Claimed At: 2026-07-25 10:20
 - Source: `PANEL_REVIEW_2026-07-25.md` §2.4, §3.1, §7.3(1), V9.
 - Priority: **P1** — real, cheap (uses existing GNM machinery,
   `superpose.anm_modes`/`potentials._kirchhoff_eigh` already computed

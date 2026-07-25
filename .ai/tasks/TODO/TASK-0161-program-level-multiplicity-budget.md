@@ -18,8 +18,8 @@
   rather than let a referee compute.
 - Status: TODO
 - Owner: Implementer
-- Claimed By: —
-- Claimed At: —
+- Claimed By: Implementer D (this thread)
+- Claimed At: 2026-07-25 10:20
 - Source: `PANEL_REVIEW_2026-07-25.md` §2.2/W4, §4 action item 4, V2.
 - Priority: **P0** — the review's own estimate is ½ day, and stating
   this yourself converts the strongest available criticism into a
