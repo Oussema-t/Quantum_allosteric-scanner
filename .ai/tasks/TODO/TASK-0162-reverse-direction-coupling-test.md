@@ -15,8 +15,8 @@
   existing one.
 - Status: TODO
 - Owner: Implementer
-- Claimed By: —
-- Claimed At: —
+- Claimed By: Implementer C (this thread)
+- Claimed At: 2026-07-25 10:20
 - Source: `PANEL_REVIEW_2026-07-25.md` §2.4, §4 action item 5, V5.
 - Priority: **P1** — the review's own estimate is 1–2 days, uses
   existing machinery unchanged, and either outcome (asymmetric or

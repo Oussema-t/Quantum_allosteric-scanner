@@ -12,8 +12,8 @@
   quantum-side testing volume has one classical baseline.
 - Status: TODO
 - Owner: Implementer
-- Claimed By: —
-- Claimed At: —
+- Claimed By: Implementer C (this thread)
+- Claimed At: 2026-07-25 10:20
 - Source: `PANEL_REVIEW_2026-07-25.md` §2.2/W7, §4 action item 6, V8.
 - Priority: **P1** — the review's own estimate is 2 days, mostly waiting
   on external web servers/tools, not analysis time. Either outcome
