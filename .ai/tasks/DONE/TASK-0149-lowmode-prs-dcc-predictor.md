@@ -244,3 +244,17 @@ reproduces TASK-0092's own "holo scores worse than apo" third outcome. Diagnosti
 only, per this task's own Constraint. Full detail: `RESULTS.md`'s own holo-
 diagnostic section, open-questions row 35;
 `.ai/tasks/DONE/TASK-0153-holo-diagnostic-transport-lowmode.md`.
+
+**Permutation-null correction, 2026-07-25 ([[TASK-0158]], `PANEL_REVIEW_2026-07-25.md`
+§2.3): the falsification statement fires.** This task's own permutation null drew a
+uniformly *scattered* same-size subset; real pockets are spatially *compact*, and for
+a smooth score field (true here) that makes the null anti-conservative (4.8x at
+α=0.05, 42x at α=0.001, confirmed directly). Re-run under the corrected
+`allostery.nulls.compact_patch`: **CARDIAC_MYOSIN's `dcc_low` headline (p=0.000 at
+k=20) rises to p=0.060 — fails even uncorrected α=0.05.** Combined with
+[[TASK-0151]]'s own PTP1B generalization result suffering the identical fate, this
+meets the review's own pre-registered condition ("removes `dcc_low`'s significance on
+both CARDIAC_MYOSIN and PTP1B") for reporting this observable family as a negative
+result. The underlying scores are unchanged — this corrects what they were judged
+against, not the computation itself. Full detail: `RESULTS.md`'s own compact-null
+section, open-questions row 38; `.ai/tasks/DONE/TASK-0158-compact-null-fix-and-rerun.md`.

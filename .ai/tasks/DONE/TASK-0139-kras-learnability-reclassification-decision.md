@@ -254,3 +254,9 @@ green.
   provenance — unaffected by this task's scope (RMSD is not the
   ambiguous half for KRAS_G12C; its ratio, 2.27, clears the bar
   cleanly).
+
+**Permutation-null correction, 2026-07-25 ([[TASK-0158]]):** the underlying
+random-patch null ([[TASK-0133]]) was re-run under a corrected spatially
+compact draw — KRAS_G12C's own reading softens from 93.0th/p=0.070 to
+65.7th/p=0.343, was never significant either way, no verdict change here.
+See [[TASK-0133]]'s own Done section / `RESULTS.md` open-questions row 38.

@@ -3303,6 +3303,75 @@ Full detail: `.ai/tasks/DONE/TASK-0148-single-particle-entanglement-entropy.md`,
 
 ---
 
+## Compact-vs-scattered permutation null correction (TASK-0158, `PANEL_REVIEW_2026-07-25.md` §2.3, 2026-07-25)
+
+**The pre-registered falsification statement fires.** Every permutation null in
+this project's register drew a uniformly *scattered* same-size subset
+(`rng.choice(N, size, replace=False)`), but real pockets are spatially *compact*.
+For a smooth spatial score field (true of every propagator-based observable in
+this register), a compact label's scores are spatially autocorrelated and
+produce a systematically more extreme rank statistic than a scattered label of
+the same size — making every p-value computed against a scattered null
+anti-conservative. Confirmed directly (re-running the external audit's own
+scripts, `scripts/null_audit.py`/`null_audit2.py`, before trusting the cited
+numbers): **4.8x inflation at α=0.05, rising to 42x at α=0.001**, with a
+spatially-uncorrelated white-noise control showing ~0x inflation — isolating the
+mechanism as spatial autocorrelation, not a test-construction artifact.
+
+New `src/allostery/nulls.py`: `compact_patch` (ported verbatim from the audit's
+own reference — nearest-Euclidean-neighbours of a random seed residue),
+`compact_patch_from_pool` (pool-restricted drop-in replacement for the prior
+`rng.choice(pool, ...)` convention), `compact_patch_matched`
+(radius-of-gyration-matched rejection sampling, TASK-0143's own established
+convention applied to this problem). Validated: a **compact-vs-compact**
+comparison (the actual fix) restores near-nominal calibration on the identical
+score field that showed the inflation — 1.36x at α=0.05, ~0x at α≤0.0083.
+
+**Every named dependent task re-run under the corrected null, side by side, not
+overwriting the original (scattered-null) numbers** (`scripts/
+compact_null_rerun.py`, reusing each family's own already-established scoring
+machinery unmodified):
+
+| Family | Task | Verdict change |
+|---|---|---|
+| Lowmode `dcc_low`/`prs_low` | [[TASK-0149]], [[TASK-0151]] | **Falsification statement's own condition met** — see below |
+| Persistent H2 `void_score` | [[TASK-0142]] | No change (already non-significant; weakens further) |
+| Learnability patch control | [[TASK-0133]], [[TASK-0139]], [[TASK-0152]] | No change (already non-significant; weakens further) |
+
+**The decisive cell — `dcc_low` on CARDIAC_MYOSIN and PTP1B, the review's own
+named pre-registered test (§5.3: "If a spatially-matched compact null removes
+`dcc_low`'s significance on both CARDIAC_MYOSIN and PTP1B, we report the program
+as a complete negative result"):**
+
+| Target | Best k | scattered p (originally reported, Bonferroni-surviving) | compact p (corrected) |
+|---|---|---|---|
+| CARDIAC_MYOSIN | k=20 | 0.000 | **0.060** (fails even uncorrected α=0.05) |
+| PTP1B | k=10 | 0.001 | **0.019** (clears uncorrected α=0.05, fails its own 16-comparison Bonferroni bar, α=0.00313) |
+
+**Read against the standard both findings were originally reported under
+(Bonferroni-surviving), the falsification statement's condition is met on both
+targets.** `prs_low` shows the identical pattern. This is a real correction to
+this project's single strongest cross-target-replicated finding
+([[TASK-0151]]'s own headline), not a retraction of the underlying computation —
+the scores themselves are unchanged; the null they were judged against was
+wrong.
+
+**Transport ([[TASK-0145]]) evaluated, not re-run (Out of Scope for this task):
+found MORE exposed, not exempt.** Direct empirical check on the identical
+whole-graph-AUC construction transport actually uses (no stratification) found
+**7.0x inflation at α=0.05, rising to 242x at α=0.001** — worse than the
+stratified construction, since stratification incidentally provides some
+protection (controlling for hop-distance shell) that a plain whole-graph AUC
+lacks entirely. TASK-0145's own BCR_ABL1 finding (`T(E=0)` on L, p=0.003) is
+flagged as exposed to this defect and NOT yet re-run under a corrected null —
+a live, real, and urgent open item for a follow-up task.
+
+Full detail: `.ai/tasks/DONE/TASK-0158-compact-null-fix-and-rerun.md`,
+`results_task0158_compact_null/compact_null_rerun.json`,
+`src/allostery/nulls.py`, `tests/test_nulls.py`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -3353,6 +3422,8 @@ Full detail: `.ai/tasks/DONE/TASK-0148-single-particle-entanglement-entropy.md`,
 | 35 | Does the [[TASK-0067]]/[[TASK-0092]] holo-native diagnostic (same operator, holo topology instead of apo — failure-attribution only, never a prediction) extend to [[TASK-0145]]'s transport and [[TASK-0149]]'s low-mode observable families, neither ever tested this way? | **resolved 2026-07-24: mixed and genuinely informative, including a third "unexpected direction" outcome on 2 cells and one striking within-target divergence.** BCR_ABL1's transport headline (`T(E=0)` on L, apo 0.698/p=0.003) gets a clean **(b) operator-limited** reading (holo=0.626, gap −0.073, holo itself still nominally elevated p=0.042) — corroborates TASK-0092's own BCR_ABL1 pattern on a third, independent operator family. CARDIAC_MYOSIN's `prs_low` headline (apo 0.922/p=0.006) gets the cleanest **(b) near-information-ceiling** reading in the project so far — holo stays strongly significant at every k (p=0.0000–0.0051), gap only −0.020. **`dcc_low`'s headline on the identical target (apo 0.962/p<0.001) does not** — holo loses significance at every k (p=0.07–0.30, gap −0.303 at k=20), the opposite of a clean ceiling reading, flagged as an open complication (not resolved — candidate factors noted: CARDIAC_MYOSIN's own 704-vs-709 apo/holo residue-count mismatch and its documented structural-remapping history). KRAS_G12C's transport-on-H_new and BCR_ABL1's `prs_low` both reproduce TASK-0092's own "holo scores *worse* than apo" third outcome, confirming it recurs rather than being a one-off. | [[TASK-0153]], [[TASK-0067]], [[TASK-0092]], [[TASK-0145]], [[TASK-0149]] |
 | 36 | Does the frequency content of un-averaged coherent quantum beating (`c_j(t)=<j|exp(-iHt)|source>`, Fourier-analyzed rather than time-averaged away like every other propagator this project scores) carry coupling information the converged limit destroys? | **resolved 2026-07-24: no — a real, honestly-reported negative, and the likely mechanism is the proximity confound this task's own filing flagged as a real risk.** New score (total AC/non-DC spectral power of `p_j(t)=|c_j(t)|^2`, `T=5000` calibrated against real Bohr-gap statistics, not picked arbitrarily) passes its own dumbbell falsification gate cleanly (C2/C3 exact double dissociation against GSR) but on real targets: no target reaches a decisive result (all 3 CIs overlap the floor's own CI; well-powered stratified max never clears even uncorrected p<0.05 on 2/3 targets, and the third — BCR_ABL1, p=0.034 — does not clear the 3-target Bonferroni bar). ρ(score,−hop) is +0.68 to +0.72 on every target, matching a *confounded* observable's own reference magnitude — confirmed directly, not assumed, and unlike `prs_low`/`dcc_low`/chiral circulation, this observable was never built with a structural proximity-orthogonality guarantee. Sensitivity check: the shipped `t_max=15` default is confirmed inadequate (flips KRAS_G12C's own floor-clearing verdict relative to the calibrated `T=5000`, which itself agrees closely with a 10×-larger window). | [[TASK-0146]], [[TASK-0110]], [[TASK-0123]], [[TASK-0149]] |
 | 37 | Does single-particle entanglement entropy across a spatial cut (Peschel's correlation-matrix method) find real localization/coupling signal on real targets, and does it reduce to a simpler quantity than the general method suggests? | **resolved 2026-07-24: a clean, complete negative, plus a real mathematical reduction confirmed before touching real data.** For a single coherent source, the entropy exactly reduces to the binary Shannon entropy of the region's total occupation probability (verified to `1e-16`) — but real active sites are multi-residue under this project's own incoherent-mixture GAUGE (TASK-0118), where the correlation matrix is generically rank>1 and the closed form does not apply, so real scoring used the general Peschel diagonalization throughout. No target clears the proximity floor (KRAS_G12C 0.4787/0.4818, BCR_ABL1 0.5291/0.5817, CARDIAC_MYOSIN 0.4810/0.5679); no permutation-null p-value is close to significant even uncorrected. A real, resolved Open Question: the converged/time-averaged occupation limit this project defaults to elsewhere is not available for this observable at all (it needs coherent phase information `|amplitude|^2` discards), so a fixed `t*=1/gap` coherent snapshot was used instead. Cross-read against TASK-0106: the coherent snapshot is 1.2-2.3x more localized (participation ratio) than the converged limit on all 3 targets, consistent with the established Anderson-localization finding, but that localization does not translate into per-candidate discriminative signal. | [[TASK-0148]] |
+
+| 38 | Does replacing the uniformly *scattered* permutation-null draw (`rng.choice`) with a spatially *compact* one — matching real pockets' own geometry — remove this project's strongest positive findings, per `PANEL_REVIEW_2026-07-25.md` §2.3's own pre-registered falsification statement? | **resolved 2026-07-25: yes — the falsification statement fires.** New `allostery.nulls.compact_patch`, validated against the external audit's own reproduced numbers (4.8x inflation at α=0.05, rising to 42x at α=0.001, ~0x on a white-noise control) and confirmed to restore near-nominal calibration (1.36x, ~0x) when both legs of the comparison use the corrected draw. Re-running every named dependent task ([[TASK-0149]], [[TASK-0151]], [[TASK-0142]], [[TASK-0133]], [[TASK-0139]], [[TASK-0152]]) side by side with the original: `dcc_low`'s Bonferroni-significance is removed on **both** CARDIAC_MYOSIN (p: 0.000→0.060, fails even uncorrected α=0.05) and PTP1B (p: 0.001→0.019, fails its own Bonferroni bar) — the review's own named pre-registered condition for reporting the program's strongest observable family as a negative result. H2 and learnability nulls were already non-significant and only weaken further (no verdict change). **[[TASK-0145]]'s transport null, evaluated but explicitly not re-run (Out of Scope), is exposed to the same defect even more severely** (7.0x/242x vs. 4.8x/42x) — flagged as a live, urgent open item for a follow-up task, not silently assumed exempt because its own construction differs. | [[TASK-0158]], [[TASK-0149]], [[TASK-0151]], [[TASK-0142]], [[TASK-0133]], [[TASK-0139]], [[TASK-0152]], [[TASK-0145]], [[TASK-0143]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

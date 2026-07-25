@@ -297,3 +297,10 @@ independently re-verified), `scripts/persistent_voids_synthetic_control.py`,
 added to the suite (persistent_voids only — no new tests needed for the real-run script
 itself, matching this project's convention of scripts being exercised by their own real
 run, not unit-tested).
+
+**Permutation-null correction, 2026-07-25 ([[TASK-0158]]):** this task's own
+random-patch null re-run under the spatially compact draw (`allostery.nulls.
+compact_patch_from_pool`) — all 3 targets, already non-significant under the
+original scattered null (p=0.229/0.537/1.000), weaken further under the corrected
+one (p=0.486/0.353/0.777). No verdict change. Full detail: `RESULTS.md`'s own
+compact-null section, open-questions row 38.

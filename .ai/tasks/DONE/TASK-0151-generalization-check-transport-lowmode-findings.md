@@ -222,3 +222,19 @@ are the honest opposite case — real, well-evidenced on their own terms (this t
 not retract them, per its own Constraint), but the generalization check does not
 strengthen them, and PTP1B's opposite-direction transport result is a real, reportable
 complication for the transport family specifically, not just an absence of support.
+
+**Permutation-null correction, 2026-07-25 ([[TASK-0158]]): the "most robustly-evidenced
+positive result" reading above does not survive the corrected null.** This task's own
+PTP1B `dcc_low` replication (k=10, p=0.001, the number this task's own Interpretation
+leaned on most heavily) was computed against the project-wide scattered permutation
+null, since found anti-conservative for smooth score fields (4.8x–42x inflation,
+[[TASK-0158]]). Under the corrected `allostery.nulls.compact_patch` null: PTP1B's
+`dcc_low` at k=10 rises to p=0.019 — clears uncorrected α=0.05 but not this task's own
+16-comparison Bonferroni bar (α=0.00313). Combined with CARDIAC_MYOSIN's own mandatory-3
+headline suffering the same fate ([[TASK-0149]]'s own Done section), this meets
+`PANEL_REVIEW_2026-07-25.md` §5.3's own pre-registered falsification condition. This
+task's own "strongest cross-target evidence" framing above is superseded, not deleted —
+the replication itself (same direction, same target) still stands as a fact about the
+scattered-null world it was computed in; it is the null's own validity that was wrong.
+Full detail: `RESULTS.md`'s own compact-null section, open-questions row 38;
+`.ai/tasks/DONE/TASK-0158-compact-null-fix-and-rerun.md`.

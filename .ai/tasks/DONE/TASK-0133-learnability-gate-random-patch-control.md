@@ -222,3 +222,11 @@ reported, not decided, here. BCR_ABL1/CARDIAC_MYOSIN's own CO-vs-random
 asymmetry (scoring below their random-patch medians) is recorded but not
 investigated further — a real, secondary finding this task's own scope
 didn't require chasing to a mechanism.
+
+**Permutation-null correction, 2026-07-25 ([[TASK-0158]]):** this task's own
+random-patch null re-run under the spatially compact draw (`allostery.nulls.
+compact_patch_from_pool`) — KRAS_G12C's own closest-to-significant reading
+(93.0th percentile, p=0.070) softens to 65.7th/p=0.343; BCR_ABL1 similarly
+softens (37.3rd→29.3rd). Neither was ever significant under the original
+scattered null, so no verdict change. Full detail: `RESULTS.md`'s own
+compact-null section, open-questions row 38.

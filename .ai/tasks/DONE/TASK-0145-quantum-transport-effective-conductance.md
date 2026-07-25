@@ -289,3 +289,18 @@ chance* (0.640→0.296) — neither apo-information-limited nor operator-limited
 cleanly. Diagnostic only, per this task's own Constraint — not a submission number.
 Full detail: `RESULTS.md`'s own holo-diagnostic section, open-questions row 35;
 `.ai/tasks/DONE/TASK-0153-holo-diagnostic-transport-lowmode.md`.
+
+**⚠️ Open, urgent, unresolved as of 2026-07-25 ([[TASK-0158]]):** this task's own
+whole-graph AUC permutation null (scattered same-size draw) was found exposed to a
+project-wide null-construction defect — real pockets are spatially compact, and a
+scattered null is anti-conservative for a smooth score field. Direct empirical
+check (not assumed) on this task's own exact construction found **7.0x inflation
+at α=0.05, rising to 242x at α=0.001 — worse than the stratified constructions
+found exposed elsewhere in this project ([[TASK-0149]]/[[TASK-0151]]'s 4.8x/42x),
+not exempt as the non-stratified construction might suggest.** This task's own
+BCR_ABL1 headline (`T(E=0)` on L, p=0.003, the only Bonferroni-surviving transport
+cell) has NOT been re-run under a corrected null — [[TASK-0158]]'s own scope
+explicitly excluded re-running transport, evaluation only. A follow-up task should
+re-run this finding under `allostery.nulls.compact_patch` before it is treated as
+submission-final. Full detail: `RESULTS.md`'s own compact-null section,
+open-questions row 38; `.ai/tasks/DONE/TASK-0158-compact-null-fix-and-rerun.md`.

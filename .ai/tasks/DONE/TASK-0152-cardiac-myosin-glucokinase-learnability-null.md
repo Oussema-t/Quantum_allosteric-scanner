@@ -161,3 +161,10 @@ methodology itself was not re-derived or modified; KRAS_G12C's own
 already-closed [[TASK-0139]] verdict was not re-litigated; GLUCOKINASE's
 chain-schema question was reconfirmed resolved, not independently
 re-solved from scratch.
+
+**Permutation-null correction, 2026-07-25 ([[TASK-0158]]):** this task's own
+random-patch null re-run under the spatially compact draw — CARDIAC_MYOSIN
+(8QYP) softens from 85.7th/p=0.143 to 73.8th/p=0.262; GLUCOKINASE softens from
+89.9th/p=0.101 to 83.3rd/p=0.167. Neither was ever significant under the
+original scattered null, so the `AMBIGUOUS` reading stands unchanged. Full
+detail: `RESULTS.md`'s own compact-null section, open-questions row 38.
