@@ -1554,6 +1554,23 @@ finding TASK-0081 reported, now confirmed under the fully gauge-fixed
 pipeline (was 0.2497 pre-fix, now 0.205 post-fix — same direction,
 slightly stronger).
 
+**[UPDATED 2026-07-26, [[TASK-0159]]] PTP1B's own `0.2050` row above is
+computed at the finite-time `time_averaged_ctqw(t_max=15, n_steps=500)`
+convention, confirmed directly (not assumed) to be ~104,000x short of
+this target's own real AAKV convergence criterion — not the converged
+value every other headline number now uses.** Re-scored under
+[[TASK-0130]]'s converged closed form (`time_averaged_ctqw_converged`,
+now also wired into the shipped `run_challenge.py` pipeline itself,
+TASK-0159): **PTP1B's AUC is 0.4859, not 0.2050 — the verdict flips from
+`BEATS_CHANCE_NOT_FLOOR` (anti-correlated, well below chance) to
+`NO_SIGNAL_IN_APO` (essentially at chance)**, independently confirmed by
+a real brute-force finite-time integration run all the way to true
+convergence (877K-4.6M steps; TASK-0159's own real-target section,
+`RESULTS.md`'s own open-questions row 39). Kept, not deleted, per this
+document's own no-overwrite convention — this row now describes the
+pre-TASK-0130 finite-time convention specifically, not this project's
+current reported science.
+
 **`most_impactful_term` is never `V_R` on any of the 4 targets**
 (V_C, V_T, V_B, V_C) — independent cross-validation of
 [[TASK-0121]]'s finding on data that fix's own validation never touched:
@@ -3372,6 +3389,110 @@ Full detail: `.ai/tasks/DONE/TASK-0158-compact-null-fix-and-rerun.md`,
 
 ---
 
+## Re-pointing the shipped pipeline at the converged closed-form propagator (TASK-0159, `PANEL_REVIEW_2026-07-25.md` W2, 2026-07-26)
+
+**The shipped end-to-end pipeline (`scripts/run_challenge.py`) — the artifact a
+judge would actually generate — still scored the headline AUC via the
+finite-time `time_averaged_ctqw(t_max=15.0, n_steps=500)`, not
+[[TASK-0130]]'s exact, phase-free, infinite-time closed form
+(`time_averaged_ctqw_converged`), despite [[TASK-0110]]'s own finding that
+this truncation is orders of magnitude short of the AAKV convergence
+criterion, and [[TASK-0146]]'s finding that it flips a real target's own
+floor-clearing verdict.** Fixed at the two call sites that determine the
+headline reported AUC/hit-list: `run_frozen_verdict(..., use_converged_
+limit=True)` (already-existing TASK-0130 machinery, never previously wired
+up here — `benchmark`/`quantum_vs_classical`'s own `ctqw` side now uses the
+closed form) and the winner's own occupation
+(`time_averaged_ctqw_converged(winner_H, source=source, coherent=False)`,
+replacing the direct finite-time call that fed `hit_list.json`). The old
+`T_MAX`/`N_STEPS` module constants are deleted (Intent Contract's own
+explicit requirement) — a renamed, explicitly-scoped-down pair
+(`SELECTION_GSR_ABLATION_T`/`_N_STEPS`) remains for the 3 genuinely
+different, still-finite-by-design uses this fix does not touch:
+`select_frozen_config`'s own blind candidate-ranking heuristic ([[TASK-0118]]'s
+own established, deliberately untouched scope boundary — selection is not
+the reported score), `ground_state_relaxation`'s single-snapshot relaxation
+time (an unrelated convergence criterion), and `ablation()`'s own per-term
+diagnostic (`most_impactful_term` — a mechanism finding, not a scored AUC;
+`ablation()` has no `use_converged_limit` knob at all and extending it is a
+real, separate follow-up, not done here, since it never feeds any AUC or
+floor-clearing verdict). `consensus_ranking` (TASK-0080's c-Myc/no-ground-
+truth branch) keeps its own finite-time convention unchanged for the same
+reason — no AUC/verdict-flip risk exists on a target with no ground truth
+to flip against. `test_run_challenge.py`'s existing 12 tests all pass
+unmodified (synthetic/mocked, no exact-AUC assertions to update).
+
+**Real quantitative scale of the problem, checked directly on `H_new` for
+all 5 targets touched by this task (not merely cited from TASK-0110's own
+3-target range)** — the AAKV-adequate `t_max*` (`propagators.
+min_adequate_t_max`, `tol=1e-2`) vs. the shipped `t_max=15`:
+
+| Target | N | AAKV `t_max*` | Ratio vs. shipped `t_max=15` |
+|---|---|---|---|
+| KRAS_G12C | 169 | 1,257,509 | 83,834× |
+| BCR_ABL1 | 451 | 1,789,844 | 119,323× |
+| CARDIAC_MYOSIN | 704 | 6,310,235 | 420,682× |
+| PTP1B | 298 | 1,562,207 | 104,147× |
+| CASPASE7 | 461 | 6,128,480 | 408,565× |
+
+Every target checked is 4-5 orders of magnitude short at the shipped
+default — confirming and extending TASK-0110's own original 3-target
+finding, not just repeating it.
+
+**Direct numerical validation of the closed form itself, beyond its own
+algebraic derivation** — per explicit user request, a genuine brute-force
+`time_averaged_ctqw` integration was run all the way to each target's own
+real AAKV-adequate `t_max*` above (877K-4.6M explicit time steps, up to
+12.3 wall-hours for CARDIAC_MYOSIN; new `scripts/task0159_finite_time_
+convergence_check.py`, `runlog.RunLogger`-instrumented per
+`LONG_JOB_CONVENTION.md`) and compared directly against `time_averaged_
+ctqw_converged`'s output on the identical `H`:
+
+| Target | Finite-run AUC | Converged AUC | Max |occupation diff| | Wall time |
+|---|---|---|---|---|
+| KRAS_G12C | 0.5901 | 0.5901 | 1.9e-6 | 0.28h |
+| BCR_ABL1 | 0.5266 | 0.5266 | 3.7e-6 | 2.93h |
+| CARDIAC_MYOSIN | 0.5176 | 0.5176 | 3.7e-7 | 12.33h |
+| PTP1B | 0.4859 | 0.4859 | 6.6e-7 | 0.17h |
+| CASPASE7 | 0.5938 | 0.5938 | 7.0e-7 | 1.16h |
+
+Every target agrees to within 1e-6 to 1e-7 (floating-point noise, not an
+approximation gap) — the closed form is confirmed exact on real protein
+data, not merely trusted from its own derivation. **First attempt at this
+validation lost all progress**: 5 targets launched as harness-tracked
+background jobs, all 5 killed simultaneously when the controlling session
+process exited (~15-18 min in, 0/5 complete) — a live demonstration of
+`LONG_JOB_CONVENTION.md`'s own explicit warning that this detachment
+mechanism does not survive session teardown. Re-launched OS-detached
+(`nohup`/`disown`) and, having also observed severe 5-26x slowdown from
+uncoordinated 5-way parallelism on the first attempt (worst on the two
+largest targets), run strictly sequentially on the second attempt instead.
+
+**Cross-check against `RESULTS.md`'s own already-reported numbers, per
+this task's own Planned Validation — a real, informative disagreement
+found and explained, not silently reconciled.** KRAS_G12C/BCR_ABL1/
+CARDIAC_MYOSIN's converged AUCs (0.5901/0.5266/0.5176) match [[TASK-0113]]'s
+own already-published TASK-0130 cross-validation numbers exactly. **PTP1B's
+converged AUC (0.4859) does NOT match the "ASD generalization set" table's
+own PTP1B row (AUC 0.2050, `BEATS_CHANCE_NOT_FLOOR`, [[TASK-0081]]/
+[[TASK-0127]], 2026-07-18)** — confirmed directly (not assumed) to be a
+finite-time-vs-converged discrepancy, not an error: re-running PTP1B's own
+`H_new`/`ctqw` at the literal old `t_max=15, n_steps=500` convention
+reproduces 0.2050 exactly. That table predates or is same-day as
+[[TASK-0130]] and never claims to use the converged form — **PTP1B's
+verdict flips from `BEATS_CHANCE_NOT_FLOOR` (anti-correlated, AUC well
+below chance) to `NO_SIGNAL_IN_APO` (AUC ~0.49, at chance)** once scored
+under the corrected convention, the same class of verdict-sensitivity
+[[TASK-0146]] already found for KRAS_G12C. This is reported as a real
+finding requiring a follow-up correction to the ASD generalization set's
+own PTP1B row, not silently absorbed.
+
+Full detail: `.ai/tasks/DONE/TASK-0159-run-challenge-converged-propagator.md`,
+`RESULTS/results_task0159_finite_time_convergence/*.json`,
+`scripts/task0159_finite_time_convergence_check.py`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -3424,6 +3545,7 @@ Full detail: `.ai/tasks/DONE/TASK-0158-compact-null-fix-and-rerun.md`,
 | 37 | Does single-particle entanglement entropy across a spatial cut (Peschel's correlation-matrix method) find real localization/coupling signal on real targets, and does it reduce to a simpler quantity than the general method suggests? | **resolved 2026-07-24: a clean, complete negative, plus a real mathematical reduction confirmed before touching real data.** For a single coherent source, the entropy exactly reduces to the binary Shannon entropy of the region's total occupation probability (verified to `1e-16`) — but real active sites are multi-residue under this project's own incoherent-mixture GAUGE (TASK-0118), where the correlation matrix is generically rank>1 and the closed form does not apply, so real scoring used the general Peschel diagonalization throughout. No target clears the proximity floor (KRAS_G12C 0.4787/0.4818, BCR_ABL1 0.5291/0.5817, CARDIAC_MYOSIN 0.4810/0.5679); no permutation-null p-value is close to significant even uncorrected. A real, resolved Open Question: the converged/time-averaged occupation limit this project defaults to elsewhere is not available for this observable at all (it needs coherent phase information `|amplitude|^2` discards), so a fixed `t*=1/gap` coherent snapshot was used instead. Cross-read against TASK-0106: the coherent snapshot is 1.2-2.3x more localized (participation ratio) than the converged limit on all 3 targets, consistent with the established Anderson-localization finding, but that localization does not translate into per-candidate discriminative signal. | [[TASK-0148]] |
 
 | 38 | Does replacing the uniformly *scattered* permutation-null draw (`rng.choice`) with a spatially *compact* one — matching real pockets' own geometry — remove this project's strongest positive findings, per `PANEL_REVIEW_2026-07-25.md` §2.3's own pre-registered falsification statement? | **resolved 2026-07-25: yes — the falsification statement fires.** New `allostery.nulls.compact_patch`, validated against the external audit's own reproduced numbers (4.8x inflation at α=0.05, rising to 42x at α=0.001, ~0x on a white-noise control) and confirmed to restore near-nominal calibration (1.36x, ~0x) when both legs of the comparison use the corrected draw. Re-running every named dependent task ([[TASK-0149]], [[TASK-0151]], [[TASK-0142]], [[TASK-0133]], [[TASK-0139]], [[TASK-0152]]) side by side with the original: `dcc_low`'s Bonferroni-significance is removed on **both** CARDIAC_MYOSIN (p: 0.000→0.060, fails even uncorrected α=0.05) and PTP1B (p: 0.001→0.019, fails its own Bonferroni bar) — the review's own named pre-registered condition for reporting the program's strongest observable family as a negative result. H2 and learnability nulls were already non-significant and only weaken further (no verdict change). **[[TASK-0145]]'s transport null, evaluated but explicitly not re-run (Out of Scope), is exposed to the same defect even more severely** (7.0x/242x vs. 4.8x/42x) — flagged as a live, urgent open item for a follow-up task, not silently assumed exempt because its own construction differs. | [[TASK-0158]], [[TASK-0149]], [[TASK-0151]], [[TASK-0142]], [[TASK-0133]], [[TASK-0139]], [[TASK-0152]], [[TASK-0145]], [[TASK-0143]] |
+| 39 | Does the shipped end-to-end pipeline (`scripts/run_challenge.py`) actually compute its headline AUC/hit-list via the same converged closed-form propagator ([[TASK-0130]]) the project's own corrected science reports, or still the finite-time approximation [[TASK-0110]] found orders of magnitude short of convergence? | **resolved 2026-07-26: no (before this task), now yes — and the closed form is now directly, numerically confirmed exact on real data, not just algebraically derived.** Wired `run_frozen_verdict(use_converged_limit=True)` (already-existing TASK-0130 machinery, never previously called with it) and swapped the winner's own occupation to `time_averaged_ctqw_converged` directly; old `T_MAX=15`/`N_STEPS=500` module constants deleted, a renamed/scoped-down pair kept only for the 3 genuinely different, still-finite-by-design uses (candidate-selection heuristic, GSR snapshot, `ablation()`'s per-term diagnostic) this task does not touch. Real AAKV `t_max*` checked directly on all 5 targets touched: 83,834x-420,682x the shipped `t_max=15` (extends, not just repeats, TASK-0110's own 3-target range). **Per explicit user request, a genuine brute-force integration was run all the way to each target's own real `t_max*`** (877K-4.6M steps, up to 12.3 wall-hours for CARDIAC_MYOSIN) and compared directly against the closed form: agreement to 1e-6 to 1e-7 on every target — floating-point noise, not an approximation gap. First attempt at this validation lost all progress when a harness-tracked background job was killed by session teardown (0/5 complete, ~15-18min in) — a live confirmation of `LONG_JOB_CONVENTION.md`'s own warning about that detachment mechanism; re-run OS-detached and sequentially (uncoordinated 5-way parallelism on the first attempt caused a real 5-26x slowdown). Cross-check against already-reported numbers: KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN match TASK-0113's own TASK-0130 cross-validation exactly; **PTP1B's converged AUC (0.4859) does not match the ASD generalization set's own PTP1B row (0.2050, `BEATS_CHANCE_NOT_FLOOR`) — confirmed to be a finite-time-vs-converged discrepancy (re-running at the literal old `t_max=15` reproduces 0.2050 exactly), and PTP1B's verdict flips to `NO_SIGNAL_IN_APO`** under the corrected convention, flagged as needing a follow-up correction to that table, not silently absorbed. | [[TASK-0159]], [[TASK-0130]], [[TASK-0110]], [[TASK-0146]], [[TASK-0113]], [[TASK-0081]], [[TASK-0127]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

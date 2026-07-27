@@ -34,10 +34,12 @@ renders N/A" design -- not a crash, not a guess.
 
 Seed residue: a target's assembled active site (`labels.Labels.active_site`)
 is typically several residues (every `func_ligand` contact). This script
-uses the **full active-site array**, scored via `propagators.ctqw`/
-`time_averaged_ctqw`'s **incoherent statistical mixture** (`coherent=
-False`) -- the one seed convention declared for every scored call site in
-this codebase (TASK-0118, `.ai/invariants/INV-0006`). Previously used a
+uses the **full active-site array**, scored via `propagators.time_averaged_
+ctqw_converged`'s **incoherent statistical mixture** (`coherent=False`) --
+the one seed convention declared for every scored call site in this
+codebase (TASK-0118, `.ai/invariants/INV-0006`). The headline occupation
+itself is the exact infinite-time closed form (TASK-0130), not a finite-
+time snapshot -- see TASK-0159's own Done section for why. Previously used a
 single representative seed index (TASK-0090: `select.unsupervised_score`'s
 scoring path crashed on a multi-index source, `ballistic_exponent`'s BFS
 assumed a scalar seed) -- TASK-0090 fixed that crash; TASK-0118 then
@@ -85,7 +87,7 @@ from allostery.labels import (  # noqa: E402
     protein_heavy_atoms_by_residue,
 )
 from allostery.pathways import edge_propensity, edge_propensity_to_matrix  # noqa: E402
-from allostery.propagators import time_averaged_ctqw  # noqa: E402
+from allostery.propagators import time_averaged_ctqw_converged  # noqa: E402
 from allostery.protocol import run_frozen_verdict  # noqa: E402
 from allostery.report import assemble_hit_list, no_ground_truth_report, verdict_template  # noqa: E402
 from allostery.superpose import compute_learnability  # noqa: E402
@@ -97,8 +99,27 @@ def _log(msg: str) -> None:
 DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results"
 DEFAULT_CUTOFF = 10.0  # analysis.py's own default, used only if a target's config omits enm_cutoff
 DEFAULT_POCKET_CUTOFF = 4.5
-T_MAX = 15.0
-N_STEPS = 500
+
+# TASK-0159: the headline CTQW occupation (candidates_builder's own winner,
+# run_frozen_verdict's benchmark()/quantum_vs_classical() ctqw side) now
+# uses time_averaged_ctqw_converged -- the exact infinite-time closed form
+# (TASK-0130) -- instead of a finite-time snapshot, since TASK-0110 measured
+# the old T_MAX=15.0/N_STEPS=500 pair as 145,000x-3,950,000x too short to
+# have actually converged, and TASK-0146 showed this truncation flips a
+# real target's own floor-clearing verdict. The old `T_MAX`/`N_STEPS`
+# module constants are deleted, not left as dead code, per this task's own
+# Intent Contract -- this renamed pair is a genuinely different, still-
+# correct-as-is use: `select_frozen_config`'s own blind candidate-ranking
+# heuristic (`unsupervised_score`, TASK-0118's own established, deliberately
+# untouched scope boundary -- selection is not the reported score),
+# `ground_state_relaxation`'s single-snapshot relaxation-convergence time
+# (an unrelated, still-finite-by-design criterion), and `ablation()`'s own
+# per-term diagnostic (`most_impactful_term` in verdict.json -- a mechanism
+# finding, not a scored AUC; extending that one function to the converged
+# form is a real, separate follow-up, not done here -- see this task's own
+# Done section for why).
+SELECTION_GSR_ABLATION_T = 15.0
+SELECTION_GSR_ABLATION_N_STEPS = 500
 
 
 def _load_apo_holo(target_name: str, target_config: dict):
@@ -135,8 +156,8 @@ def _make_candidates_builder(apo, source, cutoff: float):
         H_new = build_H_new(apo.coords, apo.bfactors, cutoff=cutoff)
         H10 = build_H10(apo.coords, apo.bfactors, cutoff=cutoff)
         return [
-            {"H": H_new, "source": source, "t": T_MAX, "name": "H_new_default"},
-            {"H": H10, "source": source, "t": T_MAX, "name": "H10_disorder_suppressed"},
+            {"H": H_new, "source": source, "t": SELECTION_GSR_ABLATION_T, "name": "H_new_default"},
+            {"H": H10, "source": source, "t": SELECTION_GSR_ABLATION_T, "name": "H10_disorder_suppressed"},
         ]
 
     return build_candidates
@@ -195,7 +216,10 @@ def run_target_no_ground_truth(target_name: str, target_config: dict, output_dir
     _log(f"{target_name}: consensus ranking across 4 operators (H_new/H10/H2/H14, "
          f"the expensive eigendecomposition stage)...")
     t0 = time.monotonic()
-    consensus = consensus_ranking(apo.coords, apo.bfactors, active_idx, cutoff=cutoff, t_max=T_MAX, n_steps=N_STEPS, k=5)
+    consensus = consensus_ranking(
+        apo.coords, apo.bfactors, active_idx, cutoff=cutoff,
+        t_max=SELECTION_GSR_ABLATION_T, n_steps=SELECTION_GSR_ABLATION_N_STEPS, k=5,
+    )
     _log(f"{target_name}: consensus ranking done in {time.monotonic() - t0:.1f}s")
 
     _log(f"{target_name}: fetching local PDB + running fpocket for docking viability...")
@@ -351,14 +375,14 @@ def run_target(target_name: str, output_dir: Path) -> dict:
         result = run_frozen_verdict(
             target_name, candidates_builder,
             apo.coords, apo.bfactors, source, labels_obj.pocket,
-            cutoff=cutoff, t_max=T_MAX, n_steps=N_STEPS,
+            cutoff=cutoff, t_max=SELECTION_GSR_ABLATION_T, n_steps=SELECTION_GSR_ABLATION_N_STEPS,
             floor_scores=floor_scores, coherent=False,
-            learnability=learnability,
+            learnability=learnability, use_converged_limit=True,
         )
         _log(f"{target_name}: frozen verdict done in {time.monotonic() - t0:.1f}s -- diagnosis={result.get('_diagnosis')}")
 
         winner_H = candidates_builder()[result["_winner_index"]]["H"]
-        winner_occ = time_averaged_ctqw(winner_H, T_MAX, source=source, n_steps=N_STEPS, coherent=False)
+        winner_occ = time_averaged_ctqw_converged(winner_H, source=source, coherent=False)
 
         propensity = edge_propensity(winner_H, source)
         matrix = edge_propensity_to_matrix(propensity, n=len(apo.resnums))
