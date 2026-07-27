@@ -100,6 +100,28 @@ class TestRunTarget:
         np.testing.assert_allclose(M, M.T)
         assert np.all(np.diag(M) == 0.0)
 
+    def test_quantum_connectivity_matrix_is_dense_symmetric_and_row_stochastic(self, mocked_target, tmp_path):
+        """TASK-0160: additive 5th deliverable, distinct from the
+        classical/seeded/sparse `connectivity_matrix.npz` above -- dense
+        (no structural zeros the way the contact-graph-only classical
+        matrix has), exactly symmetric, and each row a genuine
+        probability distribution (sums to 1), the challenge's own §5
+        "quantum connectivity matrix" requirement."""
+        run_challenge.run_target("SYNTH", tmp_path)
+        with np.load(tmp_path / "SYNTH" / "quantum_connectivity_matrix.npz") as npz:
+            Q = npz["matrix"]
+            resnums = npz["resnums"]
+        assert Q.shape == (N, N)
+        assert len(resnums) == N
+        assert np.array_equal(Q, Q.T)
+        assert np.all(Q >= 0.0)
+        np.testing.assert_allclose(Q.sum(axis=1), np.ones(N), atol=1e-9)
+        # dense: unlike connectivity_matrix.npz, no structural zeros --
+        # every off-diagonal entry is strictly positive on a fully
+        # connected synthetic helix.
+        off_diag = Q[~np.eye(N, dtype=bool)]
+        assert np.all(off_diag > 0.0)
+
     def test_hit_list_has_up_to_five_real_resnums(self, mocked_target, tmp_path):
         run_challenge.run_target("SYNTH", tmp_path)
         with open(tmp_path / "SYNTH" / "hit_list.json") as f:

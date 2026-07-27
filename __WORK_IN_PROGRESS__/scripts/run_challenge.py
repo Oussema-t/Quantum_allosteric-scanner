@@ -87,7 +87,7 @@ from allostery.labels import (  # noqa: E402
     protein_heavy_atoms_by_residue,
 )
 from allostery.pathways import edge_propensity, edge_propensity_to_matrix  # noqa: E402
-from allostery.propagators import time_averaged_ctqw_converged  # noqa: E402
+from allostery.propagators import quantum_connectivity_matrix, time_averaged_ctqw_converged  # noqa: E402
 from allostery.protocol import run_frozen_verdict  # noqa: E402
 from allostery.report import assemble_hit_list, no_ground_truth_report, verdict_template  # noqa: E402
 from allostery.superpose import compute_learnability  # noqa: E402
@@ -243,6 +243,11 @@ def run_target_no_ground_truth(target_name: str, target_config: dict, output_dir
     H_new = build_H_new(apo.coords, apo.bfactors, cutoff=cutoff)
     propensity = edge_propensity(H_new, active_idx)
     matrix = edge_propensity_to_matrix(propensity, n=len(apo.resnums))
+    # TASK-0160: the dense, symmetric, all-pairs quantum connectivity
+    # matrix (challenge Sec.5) -- reuses the same eigendecomposition
+    # `quantum_connectivity_matrix` needs, no second diagonalization.
+    w_qcm, v_qcm = np.linalg.eigh(H_new)
+    q_matrix = quantum_connectivity_matrix(w=w_qcm, v=v_qcm)
     _log(f"{target_name}: connectivity matrix done in {time.monotonic() - t0:.1f}s")
 
     hit_indices = np.asarray(consensus["consensus_ranked_indices"])
@@ -253,6 +258,7 @@ def run_target_no_ground_truth(target_name: str, target_config: dict, output_dir
     _log(f"{target_name}: writing deliverables to {target_dir}...")
     target_dir.mkdir(parents=True, exist_ok=True)
     np.savez(target_dir / "connectivity_matrix.npz", matrix=matrix, resnums=apo.resnums)
+    np.savez(target_dir / "quantum_connectivity_matrix.npz", matrix=q_matrix, resnums=apo.resnums)
     with open(target_dir / "hit_list.json", "w") as f:
         json.dump({
             "indices": hit_indices.tolist(),
@@ -382,7 +388,12 @@ def run_target(target_name: str, output_dir: Path) -> dict:
         _log(f"{target_name}: frozen verdict done in {time.monotonic() - t0:.1f}s -- diagnosis={result.get('_diagnosis')}")
 
         winner_H = candidates_builder()[result["_winner_index"]]["H"]
-        winner_occ = time_averaged_ctqw_converged(winner_H, source=source, coherent=False)
+        # TASK-0160: one eigendecomposition, reused for both the winner's
+        # own (seeded) occupation and the new dense, all-pairs quantum
+        # connectivity matrix -- no second diagonalization.
+        w_winner, v_winner = np.linalg.eigh(winner_H)
+        winner_occ = time_averaged_ctqw_converged(source=source, coherent=False, w=w_winner, v=v_winner)
+        q_matrix = quantum_connectivity_matrix(w=w_winner, v=v_winner)
 
         propensity = edge_propensity(winner_H, source)
         matrix = edge_propensity_to_matrix(propensity, n=len(apo.resnums))
@@ -392,6 +403,7 @@ def run_target(target_name: str, output_dir: Path) -> dict:
 
         target_dir.mkdir(parents=True, exist_ok=True)
         np.savez(target_dir / "connectivity_matrix.npz", matrix=matrix, resnums=apo.resnums)
+        np.savez(target_dir / "quantum_connectivity_matrix.npz", matrix=q_matrix, resnums=apo.resnums)
         with open(target_dir / "hit_list.json", "w") as f:
             json.dump({
                 "indices": hits["indices"].tolist(),

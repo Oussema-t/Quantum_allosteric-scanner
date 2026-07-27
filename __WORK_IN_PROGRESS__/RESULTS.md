@@ -3576,6 +3576,93 @@ Full detail: `.ai/tasks/DONE/TASK-0161-program-level-multiplicity-budget.md`.
 
 ---
 
+## A genuine dense quantum connectivity matrix (TASK-0160, `PANEL_REVIEW_2026-07-25.md` W3, 2026-07-27)
+
+**The challenge (§5) requires "an N×N matrix where entry (i,j) represents the
+calculated *quantum* connectivity strength between residue i and residue
+j." `run_challenge.py`'s pre-existing `connectivity_matrix.npz`
+(`edge_propensity_to_matrix(edge_propensity(H_new, active_idx))`) failed
+this on three independent counts**: it is a *classical* current-flow
+linear solve (Kirchhoff/resistor-network math, not a quantum evolution),
+*seeded* at the active site (one row/column populated, not all-pairs), and
+non-zero only on *contact-graph edges* (not dense). New
+`propagators.quantum_connectivity_matrix`:
+
+    P_inf(i, j) = sum_k |v_k(i)|^2 |v_k(j)|^2
+
+computed as a single `(N,N) @ (N,N)` matrix product (`V2 @ V2.T`, `V2 =
+v**2`) from the same eigendecomposition `time_averaged_ctqw_converged`
+already needs — no second diagonalization, per this task's own Constraint.
+Fixes all three failure counts at once, from machinery that already
+existed: genuinely quantum (an eigenprojector sum over a unitary
+generator's own eigenbasis), all-pairs (every residue is its own implicit
+"seed" simultaneously), and dense (every off-diagonal entry populated,
+confirmed — not assumed — on real data below).
+
+**Two mathematical properties, both derived and then confirmed
+numerically, not just asserted**: (1) **exact symmetry**
+(`P_inf(i,j)==P_inf(j,i)`, a direct consequence of the sum-of-outer-products
+form, checked bit-exact in tests, not with a tolerance); (2) **every row
+sums to exactly 1** (`sum_j P_inf(i,j) = sum_k v_k(i)^2 * sum_j v_k(j)^2 =
+sum_k v_k(i)^2 * 1 = 1`, since both `V`'s columns *and* its rows are
+unit-normalised for an orthogonal matrix) — meaning `P_inf(i, .)` is a
+genuine probability distribution over `j`, not an arbitrary similarity
+score, and is in fact identical to `time_averaged_ctqw_converged(H,
+source=i)`'s own single-source output, generalized to every `i` at once.
+**Diagonal**: `P_inf(i,i) = sum_k |v_k(i)|^4`, the inverse-participation-
+ratio-like self-term (large = spectral weight concentrated on few modes /
+localized; small = spread across many / delocalized).
+
+**Real, stated design choice**: this is the *plain* per-eigenvector sum,
+not [[TASK-0130]]'s own degenerate-eigenvalue-block-corrected form
+(`_group_degenerate_eigenvalues`/`_block_projected_diagonal`) — the two
+differ in principle for a source landing exactly on a degenerate
+eigenspace. Checked directly, not assumed: real `H_new` spectra are
+near-degenerate but never exactly degenerate (TASK-0130's own established
+finding), and every mandatory target's own `P_inf` column matches
+`time_averaged_ctqw_converged`'s independently-computed single-source
+output to **1e-16 to 1e-17** (machine precision) — the plain formula this
+task's own Intent Contract specifies is confirmed exact in practice on
+real data, not merely "probably fine."
+
+**Real-run confirmation, all 3 mandatory targets, dense vs. sparse
+measured directly** (fraction of non-zero entries):
+
+| Target | N | `P_inf` density | `connectivity_matrix.npz` density | Row-sum range | Exact symmetric |
+|---|---|---|---|---|---|
+| KRAS_G12C | 169 | **1.000** | 0.057 | [1.000000, 1.000000] | Yes |
+| BCR_ABL1 | 451 | **1.000** | 0.021 | [1.000000, 1.000000] | Yes |
+| CARDIAC_MYOSIN | 704 | **1.000** | 0.014 | [1.000000, 1.000000] | Yes |
+
+A stark, decisive confirmation of the "not dense" failure count specifically
+— the classical matrix's own density falls with N (more residues, same
+contact-graph sparsity pattern), while `P_inf` is fully dense on every
+target regardless of size, by construction.
+
+**Wired additively** (per this task's own Constraint): both `run_target`
+(the AUC-scored branch, `winner_H`'s own eigendecomposition reused for
+both `winner_occ` and `P_inf`) and `run_target_no_ground_truth` (TASK-0080's
+c-Myc branch, `H_new`'s own eigendecomposition) now also write
+`quantum_connectivity_matrix.npz` (key `matrix`, same `resnums` sidecar
+convention as the pre-existing file) alongside the unchanged, still-present
+`connectivity_matrix.npz` — a downstream consumer cannot mistake one for
+the other by filename, and the old classical output remains available as
+an independently-useful baseline, not removed or renamed.
+
+**Scope note**: this task's own TODO cites a "`SOFTWARE.md`/`RESULTS.md`
+note" — checked directly, `SOFTWARE.md` (repo root) documents only the
+live FastAPI web app (Phase ① backend/frontend), an entirely separate
+system from this `__WORK_IN_PROGRESS__` research scaffold's own
+`run_challenge.py`; no reference to `connectivity_matrix.npz` or any
+research-scaffold deliverable exists there to update. This section is the
+actual documentation this task's own intent calls for.
+
+Full detail: `.ai/tasks/DONE/TASK-0160-genuine-quantum-connectivity-matrix.md`,
+`src/allostery/propagators.py::quantum_connectivity_matrix`,
+`tests/test_propagators.py::TestQuantumConnectivityMatrix`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -3630,6 +3717,7 @@ Full detail: `.ai/tasks/DONE/TASK-0161-program-level-multiplicity-budget.md`.
 | 38 | Does replacing the uniformly *scattered* permutation-null draw (`rng.choice`) with a spatially *compact* one — matching real pockets' own geometry — remove this project's strongest positive findings, per `PANEL_REVIEW_2026-07-25.md` §2.3's own pre-registered falsification statement? | **resolved 2026-07-25: yes — the falsification statement fires.** New `allostery.nulls.compact_patch`, validated against the external audit's own reproduced numbers (4.8x inflation at α=0.05, rising to 42x at α=0.001, ~0x on a white-noise control) and confirmed to restore near-nominal calibration (1.36x, ~0x) when both legs of the comparison use the corrected draw. Re-running every named dependent task ([[TASK-0149]], [[TASK-0151]], [[TASK-0142]], [[TASK-0133]], [[TASK-0139]], [[TASK-0152]]) side by side with the original: `dcc_low`'s Bonferroni-significance is removed on **both** CARDIAC_MYOSIN (p: 0.000→0.060, fails even uncorrected α=0.05) and PTP1B (p: 0.001→0.019, fails its own Bonferroni bar) — the review's own named pre-registered condition for reporting the program's strongest observable family as a negative result. H2 and learnability nulls were already non-significant and only weaken further (no verdict change). **[[TASK-0145]]'s transport null, evaluated but explicitly not re-run (Out of Scope), is exposed to the same defect even more severely** (7.0x/242x vs. 4.8x/42x) — flagged as a live, urgent open item for a follow-up task, not silently assumed exempt because its own construction differs. | [[TASK-0158]], [[TASK-0149]], [[TASK-0151]], [[TASK-0142]], [[TASK-0133]], [[TASK-0139]], [[TASK-0152]], [[TASK-0145]], [[TASK-0143]] |
 | 39 | Does the shipped end-to-end pipeline (`scripts/run_challenge.py`) actually compute its headline AUC/hit-list via the same converged closed-form propagator ([[TASK-0130]]) the project's own corrected science reports, or still the finite-time approximation [[TASK-0110]] found orders of magnitude short of convergence? | **resolved 2026-07-26: no (before this task), now yes — and the closed form is now directly, numerically confirmed exact on real data, not just algebraically derived.** Wired `run_frozen_verdict(use_converged_limit=True)` (already-existing TASK-0130 machinery, never previously called with it) and swapped the winner's own occupation to `time_averaged_ctqw_converged` directly; old `T_MAX=15`/`N_STEPS=500` module constants deleted, a renamed/scoped-down pair kept only for the 3 genuinely different, still-finite-by-design uses (candidate-selection heuristic, GSR snapshot, `ablation()`'s per-term diagnostic) this task does not touch. Real AAKV `t_max*` checked directly on all 5 targets touched: 83,834x-420,682x the shipped `t_max=15` (extends, not just repeats, TASK-0110's own 3-target range). **Per explicit user request, a genuine brute-force integration was run all the way to each target's own real `t_max*`** (877K-4.6M steps, up to 12.3 wall-hours for CARDIAC_MYOSIN) and compared directly against the closed form: agreement to 1e-6 to 1e-7 on every target — floating-point noise, not an approximation gap. First attempt at this validation lost all progress when a harness-tracked background job was killed by session teardown (0/5 complete, ~15-18min in) — a live confirmation of `LONG_JOB_CONVENTION.md`'s own warning about that detachment mechanism; re-run OS-detached and sequentially (uncoordinated 5-way parallelism on the first attempt caused a real 5-26x slowdown). Cross-check against already-reported numbers: KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN match TASK-0113's own TASK-0130 cross-validation exactly; **PTP1B's converged AUC (0.4859) does not match the ASD generalization set's own PTP1B row (0.2050, `BEATS_CHANCE_NOT_FLOOR`) — confirmed to be a finite-time-vs-converged discrepancy (re-running at the literal old `t_max=15` reproduces 0.2050 exactly), and PTP1B's verdict flips to `NO_SIGNAL_IN_APO`** under the corrected convention, flagged as needing a follow-up correction to that table, not silently absorbed. | [[TASK-0159]], [[TASK-0130]], [[TASK-0110]], [[TASK-0146]], [[TASK-0113]], [[TASK-0081]], [[TASK-0127]] |
 | 40 | How many scored cells has this program actually run against real target labels, program-wide — and does the number of reported positives exceed what that testing volume alone would produce at α=0.05, per `PANEL_REVIEW_2026-07-25.md`'s own framing? | **resolved 2026-07-25: 226 real-target scored cells, confirming (and modestly exceeding) the review's own "~200+" estimate — expected false positives at α=0.05 ≈ 11.3.** Using [[TASK-0158]]'s corrected-null re-run (not the pre-correction numbers): **zero** confirmed, corrected-null-surviving positives program-wide. `dcc_low`, the one prior Bonferroni survivor, lost significance on both CARDIAC_MYOSIN and PTP1B under the compact-patch null. One cell remains genuinely unresolved rather than confirmed: [[TASK-0145]]'s BCR_ABL1 transport result uses a scattered null TASK-0158 found is *more* anti-conservative than the one that removed `dcc_low`'s significance, and was not itself re-run — treated as unconfirmed, not counted as a survivor. **The project has fewer positives than pure chance predicts, not merely "not clearly in excess of it."** Full enumeration table: this document's own "Program-level multiple-comparison budget" section above. | [[TASK-0161]], [[TASK-0158]], [[TASK-0149]], [[TASK-0151]], [[TASK-0145]] |
+| 41 | Does the shipped `connectivity_matrix.npz` deliverable actually satisfy the challenge's own §5 "N×N quantum connectivity matrix" requirement — quantum-defined, all-pairs, and dense? | **resolved 2026-07-27: no (before this task) — classical, seeded, and sparse, failing on all 3 counts; now yes, additively.** New `propagators.quantum_connectivity_matrix` (`P_inf(i,j)=sum_k \|v_k(i)\|^2\|v_k(j)\|^2`, one `(N,N)@(N,N)` product from the same eigendecomposition `time_averaged_ctqw_converged` already needs — no second diagonalization). Exact symmetry and row-sum-to-1 both derived and confirmed numerically; real-data check on all 3 mandatory targets shows the new matrix at density 1.000 vs. the old matrix's 0.014-0.057 (falling as N grows) — a decisive, measured confirmation of the "not dense" fix specifically. **Design choice checked, not assumed**: the plain per-eigenvector formula (not TASK-0130's own degenerate-block-corrected form) matches `time_averaged_ctqw_converged`'s independently-computed single-source column to 1e-16 to 1e-17 (machine precision) on every mandatory target — real `H_new` spectra are near- not exactly-degenerate, so the simpler formula this task's own Intent Contract specifies is confirmed exact in practice, not merely assumed safe. Wired additively into both `run_target` and `run_target_no_ground_truth` as `quantum_connectivity_matrix.npz`, the pre-existing classical file untouched and still written. | [[TASK-0160]], [[TASK-0130]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

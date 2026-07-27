@@ -18,6 +18,7 @@ if str(_SRC) not in sys.path:
 from allostery.propagators import (  # noqa: E402
     ctqw,
     ctqw_3n_native,
+    quantum_connectivity_matrix,
     reduce_3n_occupation,
     residue_source_to_3n,
     time_averaged_ctqw,
@@ -566,3 +567,94 @@ def test_shipped_default_t_max_15_is_far_from_converged(_):
     rho, _ = spearmanr(p_finite, p_converged)
     print(f"\nKRAS_G12C time_averaged_ctqw(t_max=15, shipped default) vs closed form: Spearman={rho:.6f}")
     assert rho < 0.9  # real measured value ~0.634 -- nowhere near "converged"
+
+
+class TestQuantumConnectivityMatrix:
+    """TASK-0160 -- dense, symmetric, all-pairs P_inf(i,j) = sum_k
+    |v_k(i)|^2 |v_k(j)|^2, the challenge's own §5 "quantum connectivity
+    matrix" deliverable (`run_challenge.py`'s pre-existing
+    `connectivity_matrix.npz` is classical, seeded, and sparse -- fails
+    all three counts this quantity fixes)."""
+
+    def test_shape_dtype_finite(self):
+        H = _random_symmetric_H(12, seed=2)
+        P = quantum_connectivity_matrix(H)
+        assert P.shape == (12, 12)
+        assert P.dtype == np.float64
+        assert np.all(np.isfinite(P))
+        assert np.all(P >= 0.0)
+
+    def test_exactly_symmetric_not_approximately(self):
+        """A mathematical identity of the sum-of-outer-products form
+        (V2 @ V2.T), not merely close -- checked bit-exact, not with a
+        tolerance."""
+        H = _random_symmetric_H(15, seed=9)
+        P = quantum_connectivity_matrix(H)
+        assert np.array_equal(P, P.T)
+
+    def test_matches_brute_force_double_sum(self):
+        """Independent re-derivation of the defining formula (a literal
+        double loop over k, not the vectorized V2 @ V2.T this function
+        actually uses) -- this task's own Planned Validation, run
+        directly, not assumed from the vectorized derivation."""
+        H = _random_symmetric_H(7, seed=4)
+        w, v = np.linalg.eigh(H)
+        n = H.shape[0]
+        expected = np.zeros((n, n))
+        for i in range(n):
+            for j in range(n):
+                expected[i, j] = np.sum(v[i, :] ** 2 * v[j, :] ** 2)
+        got = quantum_connectivity_matrix(H)
+        np.testing.assert_allclose(got, expected, atol=1e-12)
+
+    def test_rows_and_columns_sum_to_one(self):
+        """sum_j P_inf(i,j) = sum_k v_k(i)^2 * sum_j v_k(j)^2 = sum_k
+        v_k(i)^2 * 1 = 1 (V's own rows are unit-normalised since V is
+        orthogonal) -- P_inf(i, .) is a genuine probability distribution
+        over j, not an arbitrary similarity score, and P_inf(., i)
+        should therefore equal time_averaged_ctqw_converged(H, source=i)
+        (checked directly in a separate test below, not just asserted
+        from this row-sum property alone)."""
+        H = _random_symmetric_H(10, seed=11)
+        P = quantum_connectivity_matrix(H)
+        np.testing.assert_allclose(P.sum(axis=1), np.ones(10), atol=1e-9)
+        np.testing.assert_allclose(P.sum(axis=0), np.ones(10), atol=1e-9)
+
+    def test_diagonal_is_the_ipr_like_self_term(self):
+        H = _random_symmetric_H(8, seed=13)
+        w, v = np.linalg.eigh(H)
+        expected_diag = (v ** 4).sum(axis=1)
+        P = quantum_connectivity_matrix(H)
+        np.testing.assert_allclose(np.diag(P), expected_diag, atol=1e-12)
+
+    def test_column_matches_time_averaged_ctqw_converged_on_nondegenerate_spectrum(self):
+        """The two must agree exactly on a non-degenerate spectrum (this
+        function's own docstring claim) -- every real H_new spectrum
+        checked in this task's own Done section is near- not exactly-
+        degenerate, so this is the case that actually matters in
+        practice, not a corner case."""
+        H = _random_symmetric_H(9, seed=17)
+        source = 3
+        P = quantum_connectivity_matrix(H)
+        column = time_averaged_ctqw_converged(H, source=source)
+        np.testing.assert_allclose(P[:, source], column, atol=1e-12)
+        np.testing.assert_allclose(P[source, :], column, atol=1e-12)
+
+    def test_reuses_precomputed_eigh_and_never_recomputes(self):
+        H = _random_symmetric_H(6, seed=21)
+        w, v = np.linalg.eigh(H)
+        calls = {"n": 0}
+        real_eigh = np.linalg.eigh
+
+        def spy_eigh(*args, **kwargs):
+            calls["n"] += 1
+            return real_eigh(*args, **kwargs)
+
+        import unittest.mock as mock
+        with mock.patch("numpy.linalg.eigh", spy_eigh):
+            quantum_connectivity_matrix(w=w, v=v)
+        assert calls["n"] == 0
+
+    def test_raises_without_h_or_precomputed_eigh(self):
+        with pytest.raises(ValueError):
+            quantum_connectivity_matrix()

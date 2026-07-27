@@ -924,6 +924,91 @@ def _block_projected_diagonal(v: np.ndarray, blocks: List[np.ndarray], psi0: np.
     return p
 
 
+def quantum_connectivity_matrix(
+    H: Optional[np.ndarray] = None,
+    *,
+    w: Optional[np.ndarray] = None,
+    v: Optional[np.ndarray] = None,
+) -> np.ndarray:
+    """TASK-0160 -- dense, symmetric, all-pairs quantum connectivity matrix
+
+        P_inf(i, j) = sum_k |v_k(i)|^2 |v_k(j)|^2
+
+    the challenge's own (Sec.5) "N x N matrix where entry (i,j) represents
+    the calculated quantum connectivity strength between residue i and
+    residue j." `run_challenge.py`'s pre-existing `connectivity_matrix.npz`
+    (`edge_propensity_to_matrix(edge_propensity(...))`) fails this
+    definition on three counts: it is a *classical* current-flow linear
+    solve, *seeded* at the active site (one row/column, not all-pairs),
+    and non-zero only on *contact-graph edges* (not dense). `P_inf` fixes
+    all three at once, from machinery that already exists: the same
+    eigendecomposition `time_averaged_ctqw_converged` already computes,
+    just exposed as the full matrix instead of one seeded column.
+
+    Computed as `V2 @ V2.T` where `V2[i, k] = v_k(i)^2` -- a single
+    `(N, N) @ (N, N)` matrix product, O(N^3), not an N-times-repeated
+    single-source call.
+
+    **Diagonal**: `P_inf(i, i) = sum_k |v_k(i)|^4`, the inverse
+    participation-ratio-like self-term -- large when a residue's spectral
+    weight concentrates on a few modes (localized), small when it is
+    spread thin across many (delocalized). **Row sums to exactly 1**:
+    `sum_j P_inf(i, j) = sum_k v_k(i)^2 * sum_j v_k(j)^2 = sum_k v_k(i)^2
+    * 1 = 1` (each eigenvector is unit-normalised, and `V`'s own rows are
+    unit-normalised too since `V` is orthogonal) -- confirming `P_inf(.,
+    i)` really is `time_averaged_ctqw_converged(H, source=i)`'s own output
+    generalized to every `i` at once, a proper probability distribution
+    over `j` for each source `i`, not an arbitrary similarity score.
+
+    **Real, stated design choice, not glossed over**: this is the *plain*
+    per-eigenvector sum, not `time_averaged_ctqw_converged`'s own
+    degenerate-eigenvalue-block-corrected form (`_group_degenerate_
+    eigenvalues`/`_block_projected_diagonal`, TASK-0130/TASK-0129).
+    For a source that lands exactly on a degenerate eigenspace, the two
+    differ in principle (cross terms between degenerate partners don't
+    time-average away and must be kept, not dropped) -- but this
+    project's own real `H_new` spectra are checked and confirmed
+    near-degenerate, never exactly degenerate (TASK-0130's own docstring;
+    reconfirmed here directly for all 3 mandatory targets, see this
+    task's own Done section: matches `time_averaged_ctqw_converged`'s own
+    per-column output to <1e-9 on real data). Matches this task's own
+    Intent Contract and Planned Validation, both of which specify the
+    plain `sum_k |v_k(i)|^2|v_k(j)|^2` form and validate against a
+    brute-force computation of exactly that -- not the block-corrected
+    one. A future caller who needs the rigorous degenerate-safe version
+    of the *full matrix* (not just one column) would extend this function
+    the same way `time_averaged_ctqw_converged` already does for a single
+    source, not re-derive it from scratch.
+
+    Parameters
+    ----------
+    H : (N, N) real symmetric Hamiltonian. Optional if both `w` and `v`
+        (an already-computed `eigh(H)` decomposition) are supplied --
+        never re-decomposes `H` when the caller already has one (same
+        reuse discipline as `time_averaged_ctqw_converged`'s own `w`/`v`
+        parameters, per this task's own Constraint: "no new
+        diagonalization").
+    w : unused by the computation itself (this quantity depends only on
+        the eigenBASIS, not the eigenvalues) -- accepted anyway so a
+        caller can pass the exact same `(w, v)` pair it already has from
+        an `eigh(H)` call elsewhere, without the caller needing to know
+        which of the two arrays this function actually needs.
+
+    Returns
+    -------
+    P_inf : (N, N) float64, symmetric, non-negative, each row/column
+        summing to 1.
+    """
+    if v is None:
+        if H is None:
+            raise ValueError(
+                "quantum_connectivity_matrix needs either H or a precomputed (w, v) eigh(H) pair"
+            )
+        w, v = np.linalg.eigh(H)
+    v2 = v ** 2
+    return v2 @ v2.T
+
+
 def time_averaged_ctqw_converged(
     H: Optional[np.ndarray] = None,
     source: Source = 0,
