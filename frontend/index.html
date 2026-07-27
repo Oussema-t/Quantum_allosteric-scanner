@@ -284,12 +284,24 @@
         </div>
       </details>
       <button id="trapbtn" class="secondary">▶ Scan graph traps</button>
+      <div id="trapcuts" class="conn-filter" style="margin-top:8px">
+        <span class="cf-label">Cutoff&nbsp;(Å):</span>
+        <button class="secondary trapcut" data-cut="6">6</button>
+        <button class="secondary trapcut" data-cut="7">7</button>
+        <button class="secondary trapcut" data-cut="8">8</button>
+        <button class="secondary trapcut" data-cut="10">10</button>
+        <button class="secondary trapcut" data-cut="12">12</button>
+        <button class="secondary trapcut" data-cut="14">14</button>
+        <span class="status" style="margin-left:6px">— re-runs the scan at that contact cutoff (watch how the trap set changes)</span>
+      </div>
       <p id="trapstatus" class="status"></p>
       <div id="trapsummary"></div>
       <div class="charts">
         <div id="trapbar" class="connchart" style="min-height:320px"></div>
         <div id="trapspec" class="connchart" style="min-height:320px"></div>
       </div>
+      <p id="trap3dcap" class="hint-line" style="margin:10px 0 4px"></p>
+      <div id="trap3d" style="width:100%;height:520px;position:relative;background:#fff;border-radius:10px"></div>
     </section>
   </main>
 

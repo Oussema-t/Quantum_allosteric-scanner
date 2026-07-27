@@ -1313,31 +1313,65 @@ $("graphapply").addEventListener("click", applyGraphMotion);
 $("graphmode").addEventListener("change", () => { if (LAST.conn) applyConnRegion(); });
 
 // ── ② Quantum — graph traps (§2c pre-flight) ────────────────────────────────
-$("trapbtn").addEventListener("click", scanTraps);
+$("trapbtn").addEventListener("click", () => scanTrapsAt(parseFloat($("cutoff").value) || 8.0));
+// cutoff buttons: re-run the whole trap scan (2D + 3D) at that contact cutoff (§2c-viz)
+document.querySelectorAll("#trapcuts .trapcut").forEach((b) =>
+  b.addEventListener("click", () => scanTrapsAt(parseFloat(b.dataset.cut))));
 
-async function scanTraps() {
+function highlightTrapCut(c) {
+  document.querySelectorAll("#trapcuts .trapcut").forEach((b) =>
+    b.classList.toggle("cut-on", parseFloat(b.dataset.cut) === c));
+}
+
+async function scanTrapsAt(cutoff) {
   const pdb = $("pdb").value.trim();
   if (!pdb) { setTrapStatus("Load a structure first (enter a PDB id).", true); return; }
-  const chains = ($("chains").value.trim() || "A").split(",")[0].trim();
-  const cutoff = parseFloat($("cutoff").value) || 8.0;
+  const chain = ($("chains").value.trim() || "A").split(",")[0].trim();
   const target = $("target").value || "";
   const mode = ($("sitemode") && $("sitemode").value) || "benchmark";
   const btn = $("trapbtn"); btn.disabled = true;
-  setTrapStatus(`Scanning graph traps for ${pdb} (seed = active site)…`);
+  highlightTrapCut(cutoff);
+  setTrapStatus(`Scanning graph traps for ${pdb} @ ${cutoff} Å (seed = active site)…`);
   try {
-    const url = `${API}/api/traps?pdb_id=${pdb}&chains=${chains}&cutoff=${cutoff}` +
+    const url = `${API}/api/traps?pdb_id=${pdb}&chains=${chain}&cutoff=${cutoff}` +
       `&active_site_mode=${mode}` + (target ? `&target_name=${encodeURIComponent(target)}` : "");
     const d = await fetch(url).then(async (r) => {
       if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
       return r.json();
     });
     renderTraps(d);
-    setTrapStatus(`${d.n_flagged} operator traps · ${d.cached ? "⚡cached" : "computed"}.`);
+    renderTraps3D(d, pdb, chain);
+    setTrapStatus(`${d.n_flagged} operator traps @ ${cutoff} Å · ${d.cached ? "⚡cached" : "computed"}.`);
   } catch (e) {
     setTrapStatus(`Failed: ${e.message}`, true);
   } finally {
     btn.disabled = false;
   }
+}
+
+// §2c-viz: render traps on the 3D structure (dedicated viewer; peripheral grey, non-
+// peripheral red, active-site seed teal) — mirrors the notebook py3Dmol cutoff explorer.
+let TRAPVIEW = null;
+function renderTraps3D(d, pdb, chain) {
+  const el = $("trap3d");
+  if (!TRAPVIEW) TRAPVIEW = $3Dmol.createViewer(el, { backgroundColor: "#ffffff" });
+  const periph = new Set(d.trap_nodes_peripheral || []);
+  const nonper = (d.trap_nodes || []).filter((r) => !periph.has(r));
+  const active = d.active_site || [];
+  $("trap3dcap").innerHTML =
+    `${d.family} @ cutoff ${d.cutoff} Å: ${d.n_flagged} traps — ` +
+    `<b style="color:#c0392b">red = non-peripheral ${nonper.length}</b>, ` +
+    `<b style="color:#7f8c8d">grey = peripheral ${periph.size}</b>, ` +
+    `<b style="color:#00b89c">teal = active-site seed</b> · click a cutoff button to re-render.`;
+  TRAPVIEW.clear();
+  $3Dmol.download(`pdb:${pdb.toUpperCase()}`, TRAPVIEW, {}, () => {
+    TRAPVIEW.setStyle({}, { cartoon: { color: "#d9dde6" } });
+    active.forEach((r) => TRAPVIEW.addStyle({ chain, resi: r, atom: "CA" }, { sphere: { color: "#00b89c", radius: 0.9 } }));
+    periph.forEach((r) => TRAPVIEW.addStyle({ chain, resi: r, atom: "CA" }, { sphere: { color: "#7f8c8d", radius: 1.2 } }));
+    nonper.forEach((r) => TRAPVIEW.addStyle({ chain, resi: r, atom: "CA" }, { sphere: { color: "#c0392b", radius: 1.7 } }));
+    TRAPVIEW.zoomTo();
+    TRAPVIEW.render();
+  });
 }
 
 function setTrapStatus(msg, isErr = false) {
