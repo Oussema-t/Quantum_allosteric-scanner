@@ -34,15 +34,15 @@ header h1 { margin: 0; font-size: 22px; }
 main {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 16px;
+  gap: 10px;
+  padding: 12px;
 }
 
 .panel {
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 16px;
+  padding: 13px 15px;
 }
 
 /* ── horizontal control bar ─────────────────────────────── */
