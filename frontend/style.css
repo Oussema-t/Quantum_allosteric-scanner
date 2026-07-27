@@ -4,9 +4,9 @@
   --panel-2: #1c2542;
   --ink: #e8ecf5;
   --muted: #8b97b8;
-  --accent: #5b8cff;
-  --hit: #ff4d6d;
-  --src: #00e6c3;
+  --accent: #5b7fc0;      /* professional steel-blue (was electric #5b8cff) */
+  --hit: #cf6076;         /* muted rose (was neon #ff4d6d) */
+  --src: #3a9e8b;         /* serious muted teal (was neon #00e6c3) */
   --border: #29355c;
 }
 
@@ -103,23 +103,23 @@ button#load {
   font-weight: 600;
   cursor: pointer;
 }
-button#load:hover { background: #6f9bff; }
+button#load:hover { background: #6d8dc8; }
 button#load:disabled { opacity: .5; cursor: wait; }
 
 button.secondary {
   width: auto;
   padding: 9px 14px;
   height: 38px;
-  background: transparent;
-  color: var(--src);
-  border: 1px solid var(--src);
+  background: var(--panel-2);      /* solid slate, not a glowing outline */
+  color: #b8c1da;                  /* muted ink, no neon */
+  border: 1px solid var(--border);
   border-radius: 8px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
 }
-button.secondary:hover { background: rgba(0, 230, 195, 0.1); }
-button.secondary:disabled { opacity: .35; cursor: not-allowed; }
+button.secondary:hover { background: #232e52; border-color: var(--muted); color: var(--ink); }
+button.secondary:disabled { opacity: .4; cursor: not-allowed; }
 
 #valbody { font-size: 12px; color: var(--muted); line-height: 1.7; }
 #valbody .vrow { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid var(--border); }
