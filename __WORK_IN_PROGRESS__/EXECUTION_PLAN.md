@@ -388,6 +388,24 @@ remaining idea, highest implementation cost); Hodge-L1 half of
 in the forward-proposal section, do not spend implementation time before
 2026-09-15.
 
+**Updated 2026-07-25: 1E.7 ([[TASK-0164]]) is Done — real, decisive negative,
+not a partial result.** Re-checked `config/targets.yaml`'s remaining draft
+pool directly rather than assuming 3 resolvable configs exist: 6 real
+`status: draft` targets remain (not 7 — `LDH` lives under a separate
+`omitted_targets:` key with its own already-closed TASK-0003 decision, not
+a live unresolved config). [[TASK-0127]]'s own Done section already
+RCSB-verified 5 of the 6 as permanently blocked (missing chains, missing/
+wrong ligands, assembly mismatches — none schema-fixable). The 6th
+(`GROEL_SUBUNIT`), independently RCSB-verified for the first time by this
+task, has two separate permanent blockers of its own (apo deposits only
+7/14 biological chains, needing assembly-expansion code this project
+doesn't have; its ligand is a 7-chain protein, not a small molecule —
+`labels.py`'s pocket-definition methodology doesn't apply at all). **Zero
+of 6 qualify** — the generalization-set pool this project has drawn from
+twice ([[TASK-0081]], [[TASK-0127]]) is fully exhausted, not partially.
+Full statement, cross-linked from [[TASK-0115]]'s own repeated-exposure
+section: `INVARIANCE_PROTOCOL.md`'s new dated addendum there.
+
 **Writing timeline stated by the review, binding constraint:** Weeks 1–2
 above (1E.1–1E.9); **start writing 2026-08-08 regardless of analysis
 state**, six pages, draft by end of week 4, internal review week 5, revise

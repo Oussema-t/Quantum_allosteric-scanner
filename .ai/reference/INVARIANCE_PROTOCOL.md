@@ -208,6 +208,37 @@ executable test (Planned Validation: none code-executable — the validation is 
 statement exists, is cross-linked, and that generalization-set evidence is actually
 cited before any finality claim, not that some assertion turns green).
 
+**[[TASK-0164]], 2026-07-25: the generalization-set pool is exhausted — the mitigation
+above cannot be extended further from existing candidates.** PTP1B/CASPASE7 have now
+been scored twice ([[TASK-0081]]/[[TASK-0127]], then [[TASK-0151]]'s own generalization
+check citing PTP1B as confirmatory evidence for `dcc_low`) — a target a claim has
+already been checked against, and shaped its own framing around, is no longer
+genuinely held out, the same repeated-exposure mechanism this section names for the
+mandatory 3. The obvious mitigation — freeze 3 *more* never-seen targets from
+`config/targets.yaml`'s own remaining draft pool — was attempted and **does not work**:
+of the 6 real `status: draft` targets remaining (ATCase, HEMOGLOBIN, TAR_RECEPTOR,
+GLYCOGEN_PHOSPHORYLASE, PFK, GROEL_SUBUNIT — [[TASK-0127]]'s own Done section already
+RCSB-verified the first 5 as permanently blocked: missing biological-assembly chains,
+missing/wrong ligands, apo/holo assembly mismatches, none a schema/chain-letter issue
+the [[TASK-0127]] `apo_chains`/`holo_chains` pattern could fix), the 6th
+(`GROEL_SUBUNIT`, never independently checked before) was RCSB-verified directly by
+this task and confirmed to have **two independent, permanent blockers**: its apo
+(1GRL) deposits only 7 of the biological 14 chains (the second ring exists only via
+crystallographic symmetry, requiring biological-assembly-expansion code this project
+does not have — the same class of gap [[TASK-0127]] already deferred for ATCase, not
+a config field), and its own `drug_ligand` is GroES, a 7-chain protein complex, not a
+small molecule — `labels.py::holo_pocket_mask`'s entire methodology (derive the pocket
+from small-molecule heavy-atom contacts) does not apply to a protein-protein
+interface at all, a second, independent, out-of-scope gap. **Zero of the 6 remaining
+draft targets have a genuinely resolvable schema/config blocker** — this is not a
+partial result (e.g. "found 1 of 3"), the pool is fully exhausted at 0. Any further
+never-seen validation target would have to be sourced entirely from scratch (a new
+RCSB search beyond the existing draft pool this project and its predecessor doc have
+already drawn from twice), a materially larger undertaking than resolving an existing
+config, and a decision for the Architect/Planner role or the orchestrating user, not
+one this task's own scope authorizes it to start unilaterally. Full verification
+detail: `.ai/tasks/DONE/TASK-0164-frozen-held-out-generalization-check.md`.
+
 ## Rule of engagement
 
 1. Before a quantity is reported, its transformation table (GAUGE / KNOB / SIGNAL) must
