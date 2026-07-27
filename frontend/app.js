@@ -1312,6 +1312,90 @@ $("graphapply").addEventListener("click", applyGraphMotion);
 // toggling motion mode re-renders the graph on the current region (real frames if cached)
 $("graphmode").addEventListener("change", () => { if (LAST.conn) applyConnRegion(); });
 
+// ── ② Quantum — graph traps (§2c pre-flight) ────────────────────────────────
+$("trapbtn").addEventListener("click", scanTraps);
+
+async function scanTraps() {
+  const pdb = $("pdb").value.trim();
+  if (!pdb) { setTrapStatus("Load a structure first (enter a PDB id).", true); return; }
+  const chains = ($("chains").value.trim() || "A").split(",")[0].trim();
+  const cutoff = parseFloat($("cutoff").value) || 8.0;
+  const target = $("target").value || "";
+  const mode = ($("sitemode") && $("sitemode").value) || "benchmark";
+  const btn = $("trapbtn"); btn.disabled = true;
+  setTrapStatus(`Scanning graph traps for ${pdb} (seed = active site)…`);
+  try {
+    const url = `${API}/api/traps?pdb_id=${pdb}&chains=${chains}&cutoff=${cutoff}` +
+      `&active_site_mode=${mode}` + (target ? `&target_name=${encodeURIComponent(target)}` : "");
+    const d = await fetch(url).then(async (r) => {
+      if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
+      return r.json();
+    });
+    renderTraps(d);
+    setTrapStatus(`${d.n_flagged} operator traps · ${d.cached ? "⚡cached" : "computed"}.`);
+  } catch (e) {
+    setTrapStatus(`Failed: ${e.message}`, true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function setTrapStatus(msg, isErr = false) {
+  const s = $("trapstatus"); s.textContent = msg; s.classList.toggle("error", isErr);
+}
+
+function renderTraps(d) {
+  const scard = (l, v) => `<span class="scard"><span class="v">${v}</span> <span class="l">${l}</span></span>`;
+  const seedN = (d.seed_trap_nodes || []).length;
+  $("trapsummary").innerHTML =
+    scard("operator traps", d.n_flagged) +
+    scard("degree baseline", `${d.baseline_overlap}/${d.n_flagged}`) +
+    scard("pass dyn. gate", `${d.dyn_gate_pass.length}/${d.n_flagged}`) +
+    scard("near-degenerate", `${d.near_degen_pct}%`) +
+    scard("stable core", (d.stable_core || []).length) +
+    `<div style="margin-top:8px" class="status">Seed-coupled (active-site walk feeds most): <b style="color:var(--ink)">${(d.seed_trap_nodes || []).slice(0, 10).join(", ") || "—"}</b>` +
+    (d.near_degen_pct >= 50 ? ` · <b style="color:#c2a04e">⚠ ${d.near_degen_pct}% near-degenerate — diagnostic is thin for this (large) protein</b>` : "") + `</div>`;
+
+  const ax = d.resnums;
+  const active = new Set(d.active_site || []);
+  const opTraps = new Set(d.trap_nodes || []);
+  const gate = new Set(d.dyn_gate_pass || []);
+  const ts = d.trap_strength;
+  // bar: operator trap strength (grey) with dynamical-gate + active-site markers
+  const trapX = ax.filter((r) => opTraps.has(r));
+  const trapY = trapX.map((r) => ts[ax.indexOf(r)]);
+  const gateX = ax.filter((r) => gate.has(r)); const gateY = gateX.map((r) => ts[ax.indexOf(r)]);
+  const ymin = -0.04 * Math.max(...ts, 1e-9);
+  const actX = ax.filter((r) => active.has(r));
+  Plotly.newPlot("trapbar", [
+    { x: ax, y: ts, type: "bar", marker: { color: "#3a4060" }, name: "trap strength", hovertemplate: "res %{x}: %{y:.3f}<extra></extra>" },
+    { x: trapX, y: trapY, mode: "markers", type: "scatter", marker: { color: "#8a93b8", size: 7 }, name: "operator trap" },
+    { x: gateX, y: gateY, mode: "markers", type: "scatter", marker: { color: "#c77b73", symbol: "star", size: 11 }, name: "passes dynamical gate" },
+    { x: actX, y: actX.map(() => ymin), mode: "markers", type: "scatter", marker: { color: "#00e6c3", symbol: "square", size: 8 }, name: "active site (seed)" },
+  ], {
+    title: { text: "Where the walker stalls — trap strength per residue (★ survives the dynamical gate)", font: { size: 11, color: "#c7d0e6" }, x: 0.02 },
+    margin: { l: 44, r: 10, t: 26, b: 36 }, paper_bgcolor: "#141b30", plot_bgcolor: "#141b30",
+    font: { color: "#8b97b8", size: 9 }, showlegend: true, legend: { font: { size: 8 } },
+    xaxis: { title: "residue" }, yaxis: { title: "trap strength" }, barmode: "overlay",
+  }, { displayModeBar: false, responsive: true });
+
+  // localization spectrum: eigenvalue vs IPR, near-degenerate flagged, 1/N delocalized line
+  const nd = d.near_degenerate || [];
+  const ev = d.eigvals, ip = d.ipr;
+  const okX = ev.filter((_, i) => !nd[i]), okY = ip.filter((_, i) => !nd[i]);
+  const ndX = ev.filter((_, i) => nd[i]), ndY = ip.filter((_, i) => nd[i]);
+  Plotly.newPlot("trapspec", [
+    { x: okX, y: okY, mode: "markers", type: "scatter", marker: { color: "#8b97b8", size: 5, opacity: 0.7 }, name: "eigenstate" },
+    { x: ndX, y: ndY, mode: "markers", type: "scatter", marker: { color: "#c2a04e", size: 6, opacity: 0.7 }, name: "near-degenerate (excluded)" },
+  ], {
+    title: { text: "Localization spectrum — IPR vs eigenvalue (high IPR = localized)", font: { size: 11, color: "#c7d0e6" }, x: 0.02 },
+    margin: { l: 44, r: 10, t: 26, b: 36 }, paper_bgcolor: "#141b30", plot_bgcolor: "#141b30",
+    font: { color: "#8b97b8", size: 9 }, showlegend: true, legend: { font: { size: 8 } },
+    xaxis: { title: "eigenvalue" }, yaxis: { title: "IPR = Σ|v|⁴" },
+    shapes: [{ type: "line", x0: Math.min(...ev), x1: Math.max(...ev), y0: 1 / d.n_residues, y1: 1 / d.n_residues, line: { color: "#556", width: 1, dash: "dash" } }],
+  }, { displayModeBar: false, responsive: true });
+}
+
 function matAbsPct(m, pct) {
   const v = [];
   for (const row of m) for (const x of row) v.push(Math.abs(x));

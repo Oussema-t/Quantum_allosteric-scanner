@@ -34,6 +34,8 @@ from .compare import align_and_compare, resolve_compare_chains
 from .active_site import detect_active_site
 from .analysis import (site_potential_shift, connectivity_change, seed_readiness_shift,
                        morph_frames)
+from .data_layer import load_structure
+from .quantum import graph_trap_scan
 
 app = FastAPI(title="Cleveland Clinic Quantum Allosteric Scanner", version="0.2.0")
 app.add_middleware(
@@ -316,6 +318,41 @@ def morph_frames_ep(apo: str, holo: str, apo_chain: str = "A", holo_chain: str =
     result_cache.set(mparams, out)
     out["cached"] = False
     return out
+
+
+@app.get("/api/traps")
+def traps_ep(pdb_id: str, chains: str = "A", target_name: str = None, cutoff: float = 8.0,
+             active_site_mode: str = "benchmark", family: str = "GNM"):
+    """Phase-2 slice 1 (notebook §2c): graph-trap diagnostic — where a CTQW seeded at the
+    active site would STALL (localized dead-end modes), with a classical-degree baseline +
+    dynamical gate. Seed = the active site (benchmark metadata or auto-detected)."""
+    pdb_id = pdb_id.strip().upper()
+    cut = _clamp_cutoff(cutoff)
+    params = {"op": "traps", "pdb_id": pdb_id, "chains": chains, "target_name": target_name,
+              "cutoff": cut, "active_site_mode": active_site_mode, "family": family}
+
+    def _c():
+        st = load_structure(pdb_id, chains)
+        if st is None:
+            raise HTTPException(422, f"could not load {pdb_id} chain(s) {chains}")
+        # resolve the active-site seed the same way build_view does
+        active = []
+        cfg = resolve_systems().get(target_name) if target_name else None
+        if cfg is not None and active_site_mode != "auto":
+            active = list(cfg.get("catalytic", []))
+        if not active:
+            try:
+                active = detect_active_site(pdb_id, chains).get("active_site", [])
+            except Exception:
+                active = []
+        try:
+            return graph_trap_scan(st["coords"], st["bfac"], st["resnums"],
+                                   seed_resnums=active, cutoff=cut, family=family)
+        except ValueError as e:
+            raise HTTPException(422, str(e))
+        except Exception as e:
+            raise HTTPException(422, f"trap scan failed: {e}")
+    return _cache_or_compute(params, _c)
 
 
 @app.get("/api/active-site")

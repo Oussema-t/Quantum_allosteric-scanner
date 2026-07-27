@@ -174,6 +174,22 @@ structures exist it falls back to the 2 endpoints. 422 on self-compare / <10 sha
 ### `GET /api/active-site?pdb_id=&chains=&holo=`
 Auto-detect active/functional site. Returns `{active_site:int[], source, detail, uniprot?}`.
 
+### `GET /api/traps?pdb_id=&chains=A&target_name=&cutoff=8.0&active_site_mode=benchmark&family=GNM`
+**Phase-2 slice 1 (notebook §2c) — graph-trap pre-flight.** Maps residues where a CTQW would
+**stall** (localized dead-end modes of the transport operator), *before* running the allosteric
+walk. `backend/quantum.py`: `build_hamiltonian` (GNM = `normalized_laplacian(contact_weight)`) →
+`spectral_filter` (inert for traps) → `find_ctqw_traps` (IPR / participation / support /
+boundary-confinement; near-degenerate multiplets excluded) → degree baseline + degree-matched
+dynamical gate + threshold-stability + cutoff sweep, then **seed-coupled** to the active site
+(traps the active-site-seeded walk actually feeds: Σ_k|⟨j|φ_k⟩|²|⟨φ_k|ψ0⟩|² over localized modes).
+Cached. Returns `{n_residues, resnums, eigvals, ipr, near_degenerate, degree, trap_strength,
+trap_nodes, trap_nodes_peripheral, dyn_gate_pass, baseline_overlap, n_flagged, near_degen_pct,
+stable_core, threshold_dependent, jaccard_band, cutoff_sweep[], active_site, seed_trap_strength,
+seed_trap_nodes, seed_reaches_traps}`. **Honest scope:** a CLASSICAL connectivity diagnostic
+(degree reproduces most traps), NOT allosteric-site discovery; finite-size localization, not a
+true Anderson transition; thin when `near_degen_pct` is high (e.g. BCR-ABL1 ~63%). Rendered as the
+"② Quantum — graph traps" panel (trap-strength bar + IPR spectrum).
+
 ### `GET /api/compare?apo=&holo=&apo_chain=A&holo_chain=`
 Superimpose holo onto apo (Kabsch) and report per-residue Cα displacement.
 **The holo chain is auto-resolved to the drug-bearing chain; the apo chain is matched by

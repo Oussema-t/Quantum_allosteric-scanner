@@ -264,6 +264,33 @@
         </div>
       </div>
     </section>
+
+    <!-- ── ② Quantum solving — slice 1: graph-trap pre-flight (§2c) ────────── -->
+    <section class="panel quantum-panel">
+      <h2>② Quantum — graph traps (where a CTQW would stall)</h2>
+      <p class="hint-line">Phase-2 pre-flight, <b>before</b> running the allosteric walk: map the residues where a
+        continuous-time quantum walk would <b>stall</b> — localized dead-end modes of the transport operator.
+        <b>This is a connectivity/failure diagnostic, not an allosteric-site prediction.</b>
+        <span style="color:#00e6c3">teal = active site (the walk's seed)</span>.</p>
+      <details class="help-box">
+        <summary>ℹ︎ How to read these — and the honest scope</summary>
+        <div class="help-body">
+          <ul>
+            <li><b>Operator traps</b> = localized eigenstates of the graph operator H (high inverse participation ratio, confined away from their output neighbours). A property of H's <i>eigenvectors</i> — no time evolution, no seed.</li>
+            <li><b>Classical baseline</b>: a plain lowest-degree threshold already reproduces most traps — so this is reported as a <b>classical connectivity</b> diagnostic, not a quantum result. The <b>dynamical gate</b> keeps only traps that beat a degree-matched time-averaged-return control.</li>
+            <li><b>Seed-coupled traps</b> = the subset the walk <b>seeded at the active site</b> actually feeds (weighted by the seed's overlap with each localized mode). These are the dead-ends the <i>real</i> active-site walk hits.</li>
+            <li><b>Scope (fact-checked):</b> "trap" = a localized eigenstate (not an absorbing sink); boundary-confinement is a probability ratio (not a signed-amplitude dark state); on a finite protein graph this is <b>finite-size localization</b>, not a true Anderson transition; near-degenerate multiplets are excluded (basis-arbitrary). Refs: Bell&amp;Dean 1970 / Wegner 1980 (IPR); Mülken&amp;Blumen 2011 (CTQW localization); Godsil 2013 (average mixing).</li>
+          </ul>
+        </div>
+      </details>
+      <button id="trapbtn" class="secondary">▶ Scan graph traps</button>
+      <p id="trapstatus" class="status"></p>
+      <div id="trapsummary"></div>
+      <div class="charts">
+        <div id="trapbar" class="connchart" style="min-height:320px"></div>
+        <div id="trapspec" class="connchart" style="min-height:320px"></div>
+      </div>
+    </section>
   </main>
 
   <script src="app.js"></script>
