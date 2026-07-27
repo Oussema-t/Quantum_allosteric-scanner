@@ -3663,6 +3663,62 @@ Full detail: `.ai/tasks/DONE/TASK-0160-genuine-quantum-connectivity-matrix.md`,
 
 ---
 
+## Spatial-block bootstrap CI (TASK-0165, `PANEL_REVIEW_2026-07-25.md` W6/V4, 2026-07-27)
+
+**Built and validated as intended; the real-data direction is mixed, not the
+uniform widening the review's own text predicted — reported honestly rather
+than reconciled.** `metrics.block_bootstrap_ci` blocks bootstrap resamples on
+residue *sequence index* runs ("preserve local spatial correlation"), but real
+pockets are spatially compact while frequently *scattered* in sequence index
+(beta-sheet pairing, domain interfaces, loop closure) — the same root
+mechanism [[TASK-0158]] found for the permutation null, applied here to the
+confidence-interval construction instead.
+
+New `metrics.spatial_block_bootstrap_ci(coords, scores, labels, ...)` —
+`block_bootstrap_ci`'s own drop-in companion (identical signature plus a
+required `coords` array). Block construction: each residue's own block is its
+`block_size` nearest Euclidean neighbours (inclusive of itself) — the direct
+3D analogue of the sequence version's own window-start positions (Kunsch 1989
+moving-block bootstrap). A grid-partition alternative was considered and
+rejected (hard cell-boundary artefacts; no natural `block_size` mapping).
+
+**Regression property confirmed**: on a synthetic 1D-line control (coordinates
+matching sequence order exactly), the two methods' own resampled index sets
+coincide and their CIs match within Monte Carlo noise. **Synthetic
+sanity check**: an initial globule fixture showed an inconsistent direction
+(3/5 seeds wider) until a real confound was found and removed — a random-walk
+build order keeps partial accidental sequence/3D correlation a real protein
+fold mostly doesn't preserve; explicitly decorrelating sequence index from 3D
+position (matching a real fold) gives a clean, robust 1.4x–2.4x widening
+across every seed tried, confirming the mechanism targets the right thing.
+
+**Real transport data (the program's currently near-surviving positives, per
+[[TASK-0158]]'s own flag): the effect does NOT uniformly widen.**
+
+| Cell | Sequence-block width | Spatial-block width | Ratio |
+|---|---|---|---|
+| BCR_ABL1 `effective_resistance` | 0.318 | 0.279 | 0.88 |
+| BCR_ABL1 `transmission_on_L_E0` | 0.225 | 0.220 | 0.98 |
+| BCR_ABL1 `transmission_on_H_new_E0` | 0.338 | 0.287 | 0.85 |
+| KRAS_G12C `transmission_on_H_new_E0` | 0.371 | 0.469 | 1.27 |
+| PTP1B `transmission_on_H_new_E0` | 0.359 | 0.296 | 0.83 |
+
+4/5 cells got *narrower* under spatial blocking. Plausible mechanism (not
+investigated further): real secondary structure keeps genuine local sequence
+stretches spatially coherent too, so sequence-blocking was already capturing
+real dependence structure for much of a real protein — unlike the idealized
+synthetic control, which was built specifically to have none. **Practical
+bottom line unaffected**: `grep -rl '"ci_overlap": false' results_task*/*.json`
+confirms no cell anywhere in this project has ever had a non-overlapping CI,
+and every spatial-block score CI re-checked here still overlaps its own
+floor's CI — no verdict flips either direction.
+
+Full detail: `.ai/tasks/DONE/TASK-0165-spatial-block-bootstrap.md`,
+`results_task0165_spatial_ci/spatial_ci_rerun.json`,
+`src/allostery/metrics.py::spatial_block_bootstrap_ci`, `tests/test_metrics.py`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -3718,6 +3774,8 @@ Full detail: `.ai/tasks/DONE/TASK-0160-genuine-quantum-connectivity-matrix.md`,
 | 39 | Does the shipped end-to-end pipeline (`scripts/run_challenge.py`) actually compute its headline AUC/hit-list via the same converged closed-form propagator ([[TASK-0130]]) the project's own corrected science reports, or still the finite-time approximation [[TASK-0110]] found orders of magnitude short of convergence? | **resolved 2026-07-26: no (before this task), now yes — and the closed form is now directly, numerically confirmed exact on real data, not just algebraically derived.** Wired `run_frozen_verdict(use_converged_limit=True)` (already-existing TASK-0130 machinery, never previously called with it) and swapped the winner's own occupation to `time_averaged_ctqw_converged` directly; old `T_MAX=15`/`N_STEPS=500` module constants deleted, a renamed/scoped-down pair kept only for the 3 genuinely different, still-finite-by-design uses (candidate-selection heuristic, GSR snapshot, `ablation()`'s per-term diagnostic) this task does not touch. Real AAKV `t_max*` checked directly on all 5 targets touched: 83,834x-420,682x the shipped `t_max=15` (extends, not just repeats, TASK-0110's own 3-target range). **Per explicit user request, a genuine brute-force integration was run all the way to each target's own real `t_max*`** (877K-4.6M steps, up to 12.3 wall-hours for CARDIAC_MYOSIN) and compared directly against the closed form: agreement to 1e-6 to 1e-7 on every target — floating-point noise, not an approximation gap. First attempt at this validation lost all progress when a harness-tracked background job was killed by session teardown (0/5 complete, ~15-18min in) — a live confirmation of `LONG_JOB_CONVENTION.md`'s own warning about that detachment mechanism; re-run OS-detached and sequentially (uncoordinated 5-way parallelism on the first attempt caused a real 5-26x slowdown). Cross-check against already-reported numbers: KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN match TASK-0113's own TASK-0130 cross-validation exactly; **PTP1B's converged AUC (0.4859) does not match the ASD generalization set's own PTP1B row (0.2050, `BEATS_CHANCE_NOT_FLOOR`) — confirmed to be a finite-time-vs-converged discrepancy (re-running at the literal old `t_max=15` reproduces 0.2050 exactly), and PTP1B's verdict flips to `NO_SIGNAL_IN_APO`** under the corrected convention, flagged as needing a follow-up correction to that table, not silently absorbed. | [[TASK-0159]], [[TASK-0130]], [[TASK-0110]], [[TASK-0146]], [[TASK-0113]], [[TASK-0081]], [[TASK-0127]] |
 | 40 | How many scored cells has this program actually run against real target labels, program-wide — and does the number of reported positives exceed what that testing volume alone would produce at α=0.05, per `PANEL_REVIEW_2026-07-25.md`'s own framing? | **resolved 2026-07-25: 226 real-target scored cells, confirming (and modestly exceeding) the review's own "~200+" estimate — expected false positives at α=0.05 ≈ 11.3.** Using [[TASK-0158]]'s corrected-null re-run (not the pre-correction numbers): **zero** confirmed, corrected-null-surviving positives program-wide. `dcc_low`, the one prior Bonferroni survivor, lost significance on both CARDIAC_MYOSIN and PTP1B under the compact-patch null. One cell remains genuinely unresolved rather than confirmed: [[TASK-0145]]'s BCR_ABL1 transport result uses a scattered null TASK-0158 found is *more* anti-conservative than the one that removed `dcc_low`'s significance, and was not itself re-run — treated as unconfirmed, not counted as a survivor. **The project has fewer positives than pure chance predicts, not merely "not clearly in excess of it."** Full enumeration table: this document's own "Program-level multiple-comparison budget" section above. | [[TASK-0161]], [[TASK-0158]], [[TASK-0149]], [[TASK-0151]], [[TASK-0145]] |
 | 41 | Does the shipped `connectivity_matrix.npz` deliverable actually satisfy the challenge's own §5 "N×N quantum connectivity matrix" requirement — quantum-defined, all-pairs, and dense? | **resolved 2026-07-27: no (before this task) — classical, seeded, and sparse, failing on all 3 counts; now yes, additively.** New `propagators.quantum_connectivity_matrix` (`P_inf(i,j)=sum_k \|v_k(i)\|^2\|v_k(j)\|^2`, one `(N,N)@(N,N)` product from the same eigendecomposition `time_averaged_ctqw_converged` already needs — no second diagonalization). Exact symmetry and row-sum-to-1 both derived and confirmed numerically; real-data check on all 3 mandatory targets shows the new matrix at density 1.000 vs. the old matrix's 0.014-0.057 (falling as N grows) — a decisive, measured confirmation of the "not dense" fix specifically. **Design choice checked, not assumed**: the plain per-eigenvector formula (not TASK-0130's own degenerate-block-corrected form) matches `time_averaged_ctqw_converged`'s independently-computed single-source column to 1e-16 to 1e-17 (machine precision) on every mandatory target — real `H_new` spectra are near- not exactly-degenerate, so the simpler formula this task's own Intent Contract specifies is confirmed exact in practice, not merely assumed safe. Wired additively into both `run_target` and `run_target_no_ground_truth` as `quantum_connectivity_matrix.npz`, the pre-existing classical file untouched and still written. | [[TASK-0160]], [[TASK-0130]] |
+
+| 42 | Does replacing `block_bootstrap_ci`'s sequence-index blocking with a spatially compact k-NN block — matching a real pocket's own geometry, `PANEL_REVIEW_2026-07-25.md` W6/V4 — widen CIs for currently-surviving/near-surviving positives, as the review's own text predicts? | **resolved 2026-07-27: the tool is built and validated correctly, but the real-data direction is mixed, not uniform widening — reported honestly.** New `metrics.spatial_block_bootstrap_ci` (k-NN block, drop-in signature). Regression checks pass: exact convergence to sequence-block behavior on a 1D-line synthetic control, and 1.4x–2.4x widening on a globule control once an accidental sequence/3D correlation in the naive fixture (a random-walk build order) was found and removed. **On real transport data (TASK-0145's BCR_ABL1 family plus KRAS_G12C/PTP1B's own `H_new` cells, [[TASK-0158]]'s own flagged near-survivors): 4/5 cells got *narrower*, not wider** (ratios 0.83–0.98; only KRAS_G12C widened, 1.27x) — plausibly because real secondary structure keeps genuine local sequence stretches spatially coherent too, unlike the idealized synthetic control. Practical bottom line unaffected: no cell anywhere in this project has ever had a non-overlapping CI (confirmed by direct grep before this task started), and every re-checked cell still overlaps its floor's CI under the corrected method — no verdict flips either direction. | [[TASK-0165]], [[TASK-0158]], [[TASK-0145]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

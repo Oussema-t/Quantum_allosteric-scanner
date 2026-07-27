@@ -1,0 +1,92 @@
+{
+  "BCR_ABL1/effective_resistance": {
+    "target": "BCR_ABL1",
+    "cell": "effective_resistance",
+    "auc": 0.5979885057471265,
+    "sequence_block_ci": [
+      0.5979885057471265,
+      0.4112124497234792,
+      0.7295202291442894
+    ],
+    "sequence_block_width": 0.3183077794208102,
+    "spatial_block_ci": [
+      0.5979885057471265,
+      0.4185545386760365,
+      0.6977658881315155
+    ],
+    "spatial_block_width": 0.27921134945547904,
+    "width_ratio": 0.8771741299051169
+  },
+  "BCR_ABL1/transmission_on_L_E0": {
+    "target": "BCR_ABL1",
+    "cell": "transmission_on_L_E0",
+    "auc": 0.6984913793103449,
+    "sequence_block_ci": [
+      0.6984913793103449,
+      0.5728055487877577,
+      0.7980463320874301
+    ],
+    "sequence_block_width": 0.22524078329967245,
+    "spatial_block_ci": [
+      0.6984913793103449,
+      0.5676767643758919,
+      0.7879768960468334
+    ],
+    "spatial_block_width": 0.22030013167094153,
+    "width_ratio": 0.9780650219895675
+  },
+  "BCR_ABL1/transmission_on_H_new_E0": {
+    "target": "BCR_ABL1",
+    "cell": "transmission_on_H_new_E0",
+    "auc": 0.6362068965517241,
+    "sequence_block_ci": [
+      0.6362068965517241,
+      0.45546478873239443,
+      0.7938852937964177
+    ],
+    "sequence_block_width": 0.33842050506402327,
+    "spatial_block_ci": [
+      0.6362068965517241,
+      0.46049680720490327,
+      0.7471151026347411
+    ],
+    "spatial_block_width": 0.28661829542983785,
+    "width_ratio": 0.8469294594770924
+  },
+  "KRAS_G12C/transmission_on_H_new_E0": {
+    "target": "KRAS_G12C",
+    "cell": "transmission_on_H_new_E0",
+    "auc": 0.640176600441501,
+    "sequence_block_ci": [
+      0.640176600441501,
+      0.433979546382568,
+      0.8047650266883266
+    ],
+    "sequence_block_width": 0.3707854803057586,
+    "spatial_block_ci": [
+      0.640176600441501,
+      0.34835285174227487,
+      0.8176315022758422
+    ],
+    "spatial_block_width": 0.4692786505335674,
+    "width_ratio": 1.2656338380526362
+  },
+  "PTP1B/transmission_on_H_new_E0": {
+    "target": "PTP1B",
+    "cell": "transmission_on_H_new_E0",
+    "auc": 0.682092555331992,
+    "sequence_block_ci": [
+      0.682092555331992,
+      0.47088392211237046,
+      0.8296646209162482
+    ],
+    "sequence_block_width": 0.3587806988038777,
+    "spatial_block_ci": [
+      0.682092555331992,
+      0.4962780987128813,
+      0.7925476610327389
+    ],
+    "spatial_block_width": 0.29626956231985757,
+    "width_ratio": 0.8257678389823558
+  }
+}

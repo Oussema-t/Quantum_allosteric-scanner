@@ -304,3 +304,16 @@ explicitly excluded re-running transport, evaluation only. A follow-up task shou
 re-run this finding under `allostery.nulls.compact_patch` before it is treated as
 submission-final. Full detail: `RESULTS.md`'s own compact-null section,
 open-questions row 38; `.ai/tasks/DONE/TASK-0158-compact-null-fix-and-rerun.md`.
+
+**CI construction, 2026-07-27 ([[TASK-0165]]):** this task's own bootstrap CIs
+(all 3 quantities, all 3 targets) were computed via the project's sequence-index-
+blocked `block_bootstrap_ci` — found to block on the wrong dependence axis (same
+root mechanism as the null defect above). Re-computed under the new spatial-block
+`metrics.spatial_block_bootstrap_ci` for the BCR_ABL1 family specifically: CI width
+narrows, not widens, on 2/3 cells (`effective_resistance` 0.318→0.279,
+`transmission_on_H_new_E0` 0.338→0.287) and stays ~flat on the third
+(`transmission_on_L_E0` 0.225→0.220) — the opposite of [[TASK-0165]]'s own naive
+expectation, real and reported as such. Every cell's own CI still overlaps its
+floor's CI either way — no change to this task's own `ci_overlap=True` reading on
+any cell. Full detail: `RESULTS.md`'s own spatial-block-CI section, open-questions
+row 42; `.ai/tasks/DONE/TASK-0165-spatial-block-bootstrap.md`.

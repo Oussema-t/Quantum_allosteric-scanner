@@ -16,7 +16,13 @@ _SRC = Path(__file__).resolve().parent.parent / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
-from allostery.metrics import auc, stratified_auc, stratified_auc_summary  # noqa: E402
+from allostery.metrics import (  # noqa: E402
+    auc,
+    block_bootstrap_ci,
+    spatial_block_bootstrap_ci,
+    stratified_auc,
+    stratified_auc_summary,
+)
 
 
 class TestStratifiedAuc:
@@ -125,3 +131,111 @@ class TestStratifiedAucSummary:
         assert summary["mean_auc"] == pytest.approx(0.7)
         assert summary["max_auc"] == pytest.approx(0.7)
         assert summary["max_shell"] == 1.0
+
+
+def _globule(n=200, seed=0):
+    """`scripts/null_audit.py`'s own compact-globule fixture, reused
+    (not re-derived) -- TASK-0158's established synthetic control for
+    spatial-autocorrelation questions."""
+    rng = np.random.default_rng(seed)
+    pts = [np.zeros(3)]
+    for _ in range(n - 1):
+        for _try in range(200):
+            step = rng.normal(size=3)
+            step /= np.linalg.norm(step)
+            cand = pts[-1] + 3.8 * step
+            if np.linalg.norm(cand) < 2.2 * n ** (1 / 3) * 1.6:
+                d = np.linalg.norm(np.asarray(pts) - cand, axis=1)
+                if d.min() > 3.2:
+                    break
+        pts.append(cand)
+    return np.asarray(pts)
+
+
+class TestSpatialBlockBootstrapCi:
+    """TASK-0165 -- `spatial_block_bootstrap_ci`, `block_bootstrap_ci`'s
+    own spatial-neighbourhood-blocked companion."""
+
+    def test_matches_return_shape_of_sequence_block_version(self):
+        rng = np.random.default_rng(1)
+        n = 50
+        coords = _globule(n, seed=1)
+        scores = rng.normal(size=n)
+        labels = np.zeros(n, dtype=int)
+        labels[:10] = 1
+        result = spatial_block_bootstrap_ci(coords, scores, labels, n_boot=50, rng=rng)
+        assert len(result) == 3
+        point, lo, hi = result
+        assert lo <= point <= hi
+
+    def test_reduces_to_sequence_block_on_a_1d_line_with_matching_order(self):
+        """This function's own documented regression property: when 3D
+        coordinates collapse to a 1D line in the SAME order as sequence
+        index (`coords[i] = (i, 0, 0)`), spatial nearest-neighbours ARE
+        sequence-adjacent residues exactly -- so the two functions' own
+        resampled index sets coincide, and their CIs should match closely
+        (same `rng` state consumption differs slightly in how many
+        `rng.integers` calls happen internally, so exact equality isn't
+        expected, but the two CIs should be very close, not just
+        "both reasonable")."""
+        n = 200
+        coords = np.column_stack([np.arange(n, dtype=float), np.zeros(n), np.zeros(n)])
+        rng_state = np.random.default_rng(7)
+        scores = rng_state.normal(size=n) + 0.3 * np.sin(np.arange(n) / 5.0)
+        labels = np.zeros(n, dtype=int)
+        labels[20:30] = 1  # a sequence-contiguous (= spatially contiguous here) pocket
+
+        seq_result = block_bootstrap_ci(scores, labels, n_boot=2000, block_size=10, rng=np.random.default_rng(99))
+        spatial_result = spatial_block_bootstrap_ci(
+            coords, scores, labels, n_boot=2000, block_size=10, rng=np.random.default_rng(99)
+        )
+        assert seq_result[0] == pytest.approx(spatial_result[0])  # point estimate always matches exactly
+        assert spatial_result[1] == pytest.approx(seq_result[1], abs=0.03)
+        assert spatial_result[2] == pytest.approx(seq_result[2], abs=0.03)
+
+    def test_widens_ci_for_a_sequence_scattered_spatially_compact_pocket(self):
+        """The whole motivating case: a pocket that is spatially compact
+        but scattered in sequence index. Sequence-blocking treats its
+        residues as independent (they're far apart in the array); spatial
+        blocking correctly identifies them as correlated -- the spatial CI
+        should be markedly wider.
+
+        `_globule`'s own random-walk build order keeps *some* accidental
+        correlation between sequence index and 3D position (consecutive
+        build steps are 3.8 A apart), which real protein sequence/fold
+        relationships mostly don't preserve beyond local secondary
+        structure -- explicitly permuting sequence index against 3D
+        position removes that accident and gives a clean, realistic
+        "compact in space, scattered in sequence" fixture (checked
+        directly: without this shuffle, the widening was inconsistent
+        across seeds; with it, it is robust across every seed tried)."""
+        n = 300
+        coords = _globule(n, seed=2)
+        coords = coords[np.random.default_rng(102).permutation(n)]
+        rng = np.random.default_rng(3)
+        # A smooth score field correlated with distance from a fixed point
+        # (a stand-in for any propagator-based observable's own spatial
+        # smoothness) plus noise.
+        centre = coords[rng.integers(n)]
+        scores = -np.linalg.norm(coords - centre, axis=1) + 0.3 * rng.normal(size=n)
+
+        # Pocket: spatially compact (nearest neighbours of a random point),
+        # scattered in sequence index (the shuffle above).
+        c = rng.integers(n)
+        pocket_idx = np.argsort(np.linalg.norm(coords - coords[c], axis=1))[:14]
+        labels = np.zeros(n, dtype=int)
+        labels[pocket_idx] = 1
+
+        seq_point, seq_lo, seq_hi = block_bootstrap_ci(
+            scores, labels, n_boot=1000, block_size=10, rng=np.random.default_rng(11)
+        )
+        sp_point, sp_lo, sp_hi = spatial_block_bootstrap_ci(
+            coords, scores, labels, n_boot=1000, block_size=10, rng=np.random.default_rng(11)
+        )
+        assert sp_point == pytest.approx(seq_point)
+        seq_width = seq_hi - seq_lo
+        sp_width = sp_hi - sp_lo
+        assert sp_width > seq_width, (
+            f"spatial CI ({sp_width:.4f}) was not wider than sequence CI ({seq_width:.4f}) "
+            f"for a spatially-compact, sequence-scattered pocket"
+        )

@@ -142,6 +142,87 @@ def block_bootstrap_ci(
 
 
 # ---------------------------------------------------------------------------
+# TASK-0165 -- spatial-block bootstrap CI (`PANEL_REVIEW_2026-07-25.md` W6/V4).
+# `block_bootstrap_ci` above blocks on residue SEQUENCE index ("preserve local
+# spatial correlation" -- but pockets are spatially compact while being
+# sequence-*scattered*: two residues adjacent in 3D space are frequently far
+# apart in sequence index (a beta-sheet's paired strands, a domain interface,
+# a loop closure). The dependence structure a bootstrap needs to preserve is
+# the one the SCORE actually varies smoothly over (3D Euclidean neighbourhood,
+# same root mechanism TASK-0158 found for the permutation null, `nulls.
+# compact_patch`'s own docstring) -- not sequence adjacency, which is close
+# to irrelevant to it. Same defect, different statistical procedure.
+# ---------------------------------------------------------------------------
+
+def spatial_block_bootstrap_ci(
+    coords: np.ndarray,
+    scores: np.ndarray,
+    labels: np.ndarray,
+    n_boot: int = 1000,
+    confidence: float = 0.95,
+    block_size: int = 10,
+    rng: np.random.Generator | None = None,
+) -> tuple[float, float, float]:
+    """Spatial-block-bootstrap 95% CI for AUC -- `block_bootstrap_ci`'s own
+    drop-in companion (identical `n_boot`/`confidence`/`block_size`/`rng`
+    parameters and `(auc_point, lower, upper)` return shape; only `coords`
+    is new, since a spatial block needs 3D positions to be defined at all).
+
+    **Block construction (Implementer's own call, stated here):** for each
+    residue `i`, its own spatial block is the `block_size` nearest Euclidean
+    neighbours (inclusive of itself) -- `N` overlapping, residue-centred
+    blocks, one per residue, the direct 3D analogue of `block_bootstrap_ci`'s
+    own `N` overlapping sequence-window starting positions (the classic
+    moving-block-bootstrap construction, Kunsch 1989, applied to whichever
+    axis actually carries the dependence). A grid-partition alternative was
+    considered and rejected: a fixed grid creates hard block-boundary
+    artefacts (two residues 0.1 A apart, on opposite sides of a cell wall,
+    land in different blocks with zero shared resampling; a k-NN neighbourhood
+    has no such boundary) and needs a cell-size parameter with no natural
+    correspondence to `block_size`'s own existing "how many residues per
+    block" meaning -- k-NN reuses `block_size` directly, unmodified.
+
+    Resampling mirrors `block_bootstrap_ci` exactly, block SOURCE swapped
+    from `range(s, s+block_size)` (sequence window) to `argsort(dist to
+    coords[s])[:block_size]` (spatial neighbourhood): draw `n_blocks =
+    ceil(N/block_size)` random block-centre residues per replicate,
+    concatenate their neighbourhoods, truncate to length `N`.
+
+    **Regression property, not just claimed** (this task's own Constraint):
+    on a synthetic control with no real 3D spatial structure beyond matching
+    sequence order (residues on a 1D line, `coords[i] = (i, 0, 0)`), spatial
+    nearest-neighbours ARE sequence-adjacent residues exactly, so this
+    function's own resampled index sets coincide with `block_bootstrap_ci`'s
+    own -- asserted directly in `tests/test_metrics.py`, not assumed from the
+    construction alone.
+    """
+    if rng is None:
+        rng = np.random.default_rng(42)
+    N = len(scores)
+    n_blocks = int(np.ceil(N / block_size))
+
+    # Precompute each residue's own k-NN block once (shared across all
+    # n_boot replicates) -- the expensive part (an N x N distance matrix)
+    # done a single time, not per replicate.
+    dist = np.linalg.norm(coords[:, None, :] - coords[None, :, :], axis=-1)
+    neighbour_blocks = np.argsort(dist, axis=1)[:, :block_size]
+
+    aucs: list[float] = []
+    for _ in range(n_boot):
+        centres = rng.integers(0, N, size=n_blocks)
+        idx = np.concatenate([neighbour_blocks[c] for c in centres])[:N]
+        a = auc(scores[idx], labels[idx])
+        if not np.isnan(a):
+            aucs.append(a)
+    if not aucs:
+        return float("nan"), float("nan"), float("nan")
+    alpha = 1 - confidence
+    lo = float(np.percentile(aucs, 100 * alpha / 2))
+    hi = float(np.percentile(aucs, 100 * (1 - alpha / 2)))
+    return auc(scores, labels), lo, hi
+
+
+# ---------------------------------------------------------------------------
 # Spectral / structural stats (used in eff_rank pinning test)
 # ---------------------------------------------------------------------------
 
