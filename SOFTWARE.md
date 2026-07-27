@@ -174,6 +174,22 @@ structures exist it falls back to the 2 endpoints. 422 on self-compare / <10 sha
 ### `GET /api/active-site?pdb_id=&chains=&holo=`
 Auto-detect active/functional site. Returns `{active_site:int[], source, detail, uniprot?}`.
 
+### `GET /api/allosteric?pdb_id=&chains=A&target_name=&mode=occupation&cutoff=8.0&family=H10_disorder_supp&holo=&top_k=5&distal=0`
+**Phase-2 slice 2 (§5f/§3) — allosteric-site prediction.** CTQW seeded at the active site,
+score every residue by transfer FROM it (`quantum.predict_allosteric_sites`), spatially
+de-dup (≥8 Å apart), optional distal filter (`distal` Å from seed). Two modes (separate
+methods, separate ground truths — do NOT cross-validate): **`occupation`** = average-mixing
+matrix (`_average_mixing_matrix`; residues *inside* the pocket, validated by P@5) ·
+**`pathway`** = γ-damped Green's function (`_green`; *driver* residues outside the pocket,
+validated biologically). Operator = `build_hamiltonian(family)`, default the documented
+disorder-suppressed winner `H10_disorder_supp`, **un-tuned** (mu=1.0; per-target Optuna NOT
+applied). **The predictor sees ONLY apo coords + seed.** If a holo is known, returns
+`validation:{holo, pocket_n, p_at_k, hits, k}` = P@k of the top-k vs the holo drug pocket
+(6 Å) — *validation only, isolated to `pocket_pk`, the pocket never reaches the predictor*.
+Returns `{mode, family, operator, top_sites, top_scores, seed_n, score_all, active_site,
+validation}`. Cached. Cross-target (un-tuned): KRAS 0.6, BCR-ABL1 pathway 0.6 > occ 0.4,
+PTP1B 0.0. Rendered in the "② Quantum solving" panel (mode selector + top-5 + P@5 + 3D overlay).
+
 ### `GET /api/traps?pdb_id=&chains=A&target_name=&cutoff=8.0&active_site_mode=benchmark&family=GNM`
 **Phase-2 slice 1 (notebook §2c) — graph-trap pre-flight.** Maps residues where a CTQW would
 **stall** (localized dead-end modes of the transport operator), *before* running the allosteric

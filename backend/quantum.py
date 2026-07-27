@@ -44,6 +44,9 @@ from typing import Optional, List
 import numpy as np
 from scipy.spatial.distance import cdist
 
+# reuse the app's already-validated average-mixing machinery (§5f) — one definition, imported
+from .analysis import _average_mixing_matrix
+
 # ── exposed, overridable diagnostic thresholds (no magic numbers baked into logic) ──
 TRAP_DEGEN_TOL = 1e-3       # near-degeneracy: eigenvalue gap below this × spectral range
 TRAP_IPR_QTILE = 0.90       # a state is "localized" if its IPR is in the top 10%
@@ -223,6 +226,101 @@ def _stability_band(H):
     union = set.union(*sets) if sets else set()
     jac = [len(s & default) / max(1, len(s | default)) for s in sets]
     return core, union, (min(jac), max(jac))
+
+
+# ── Phase-2 slice 2: allosteric-site prediction (two modes, notebook §5f/§3) ─────────
+# Both seed the walk at the ACTIVE SITE and score every other residue by transfer FROM it.
+# They are DIFFERENT methods with DIFFERENT ground truths (quantum-allostery §3):
+#   occupation — average-mixing (infinite-time, coherent) transfer; picks residues INSIDE
+#                the pocket; validated by P@5 vs the holo drug-contact pocket.
+#   pathway    — Green's-function (γ-damped) transfer; picks DRIVER residues (by design
+#                often OUTSIDE the pocket); validated biologically, NOT by P@5.
+# The predictor sees ONLY apo coords + the active-site seed — never the pocket/top-5 truth.
+
+def _green(H, gamma=0.2, n_t=50):
+    """γ-damped time-integrated propagator (notebook §, 'corrected symmetric'):
+    P = Σ_t e^{-γt}|U(t)|² / Σ_t e^{-γt},  U(t)=e^{-iHt}. Commute-time-like Green's function."""
+    w, V = np.linalg.eigh(H)
+    ts = np.linspace(0.0, 8.0 / gamma, n_t)
+    P = np.zeros_like(H, dtype=float)
+    nrm = 0.0
+    for t in ts:
+        U = (V * np.exp(-1j * w * t)) @ V.conj().T
+        g = np.exp(-gamma * t)
+        P += g * np.abs(U) ** 2
+        nrm += g
+    return P / nrm
+
+
+# DEFAULT operator = the project's documented disorder-suppressed winner (quantum-allostery
+# §5: H10 penalises high-B/terminal residues so the walk runs through the rigid core).
+# Exposed + overridable; NOT tuned to any target (mu=1.0, un-tuned).
+ALLO_FAMILY = "H10_disorder_supp"
+ALLO_MU = 1.0
+ALLO_GAMMA = 0.2
+
+
+def allosteric_transfer(coords, bfac, seed_idx, mode="occupation", family=ALLO_FAMILY,
+                        cutoff=8.0, power=1.0, mu=ALLO_MU, gamma=ALLO_GAMMA):
+    """Per-residue score = mean transfer FROM the active-site seed (source excluded), on the
+    graph Hamiltonian `family`. mode='occupation' → average-mixing matrix (rigorous ∞-time,
+    §5f/§6); mode='pathway' → γ-damped Green's function."""
+    seed_idx = np.asarray(seed_idx, int)
+    H = build_hamiltonian(coords, bfac, family, {"cutoff": cutoff, "power": power, "mu": mu})
+    C = _green(H, gamma) if mode == "pathway" else _average_mixing_matrix(H)
+    s = C[seed_idx].mean(0).astype(float)
+    s[seed_idx] = -np.inf
+    return s
+
+
+def predict_allosteric_sites(coords, bfac, resnums, seed_resnums, mode="occupation", top_k=5,
+                             min_sep=8.0, distal_ang=0.0, family=ALLO_FAMILY, cutoff=8.0,
+                             power=1.0, mu=ALLO_MU, gamma=ALLO_GAMMA):
+    """Rank residues by seed-transfer, greedily SPATIALLY DE-DUPLICATED (no two picks within
+    min_sep Å) and optionally DISTAL-filtered (> distal_ang Å from the seed). Returns top_k.
+    Input is apo coords/B-factors + the active-site seed ONLY — no pocket/answer leaks in."""
+    coords = np.asarray(coords, float)
+    bfac = np.asarray(bfac, float)
+    resnums = np.asarray(resnums)
+    seed_idx = _res_indices(resnums, seed_resnums)
+    if len(seed_idx) == 0:
+        return {"error": "no active-site seed residues found in this structure"}
+    s = allosteric_transfer(coords, bfac, seed_idx, mode, family, cutoff, power, mu, gamma)
+    if distal_ang and distal_ang > 0:                        # distal-discovery: drop residues near the seed
+        near = cdist(coords, coords[seed_idx]).min(1) <= distal_ang
+        s = s.copy(); s[near] = -np.inf
+    order = [int(i) for i in np.argsort(-s) if np.isfinite(s[i])]
+    picked = []
+    for i in order:
+        if all(float(np.linalg.norm(coords[i] - coords[j])) >= min_sep for j in picked):
+            picked.append(i)
+        if len(picked) >= top_k:
+            break
+    return {
+        "mode": mode, "top_k": top_k, "family": family,
+        "operator": f"{family} · cutoff {cutoff} Å · mu {mu} (un-tuned)",
+        "distal_ang": float(distal_ang),
+        "top_sites": [int(resnums[i]) for i in picked],
+        "top_scores": [round(float(s[i]), 6) for i in picked],
+        "seed_n": int(len(seed_idx)),
+        "score_all": {int(resnums[i]): round(float(s[i]), 6)
+                      for i in order[:60]},                  # top-60 for the panel overlay
+    }
+
+
+def pocket_pk(top_sites, coords, resnums, pocket_resnums, tol=6.0, k=5):
+    """P@k of a top-k prediction vs a pocket ground truth (spherical labels, notebook evaluate):
+    a residue counts as a hit if it is within `tol` Å of any pocket residue. Validation ONLY —
+    never used by the predictor. Returns (hits, k, p_at_k)."""
+    resnums = np.asarray(resnums)
+    pk_idx = _res_indices(resnums, pocket_resnums)
+    if len(pk_idx) == 0 or not top_sites:
+        return {"hits": 0, "k": k, "p_at_k": None}
+    coords = np.asarray(coords, float)
+    within = cdist(coords, coords[pk_idx]).min(1) <= tol      # residues in/near the pocket
+    top_idx = _res_indices(resnums, top_sites[:k])
+    hits = int(within[top_idx].sum())
+    return {"hits": hits, "k": min(k, len(top_sites)), "p_at_k": round(hits / min(k, len(top_sites)), 3)}
 
 
 def _res_indices(resnums, wanted):

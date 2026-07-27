@@ -35,7 +35,7 @@ from .active_site import detect_active_site
 from .analysis import (site_potential_shift, connectivity_change, seed_readiness_shift,
                        morph_frames)
 from .data_layer import load_structure
-from .quantum import graph_trap_scan
+from .quantum import graph_trap_scan, predict_allosteric_sites, pocket_pk
 
 app = FastAPI(title="Cleveland Clinic Quantum Allosteric Scanner", version="0.2.0")
 app.add_middleware(
@@ -352,6 +352,61 @@ def traps_ep(pdb_id: str, chains: str = "A", target_name: str = None, cutoff: fl
             raise HTTPException(422, str(e))
         except Exception as e:
             raise HTTPException(422, f"trap scan failed: {e}")
+    return _cache_or_compute(params, _c)
+
+
+@app.get("/api/allosteric")
+def allosteric_ep(pdb_id: str, chains: str = "A", target_name: str = None,
+                  mode: str = "occupation", cutoff: float = 8.0, family: str = "H10_disorder_supp",
+                  active_site_mode: str = "benchmark", holo: str = None, top_k: int = 5,
+                  distal: float = 0.0):
+    """Phase-2 slice 2 (notebook §5f/§3): predict allosteric sites by CTQW seeded at the
+    ACTIVE SITE. mode='occupation' (average-mixing; pocket residues) | 'pathway' (Green's
+    function; driver residues). The predictor sees ONLY apo coords + seed. If `holo` is given
+    (or a benchmark target), P@5 vs the holo drug-contact pocket is reported — VALIDATION ONLY,
+    the pocket never reaches the predictor."""
+    pdb_id = pdb_id.strip().upper()
+    cut = _clamp_cutoff(cutoff)
+    params = {"op": "allosteric", "pdb_id": pdb_id, "chains": chains, "target_name": target_name,
+              "mode": mode, "cutoff": cut, "family": family, "active_site_mode": active_site_mode,
+              "holo": (holo or "").upper() or None, "top_k": int(top_k), "distal": float(distal)}
+
+    def _c():
+        st = load_structure(pdb_id, chains)
+        if st is None:
+            raise HTTPException(422, f"could not load {pdb_id} chain(s) {chains}")
+        cfg = resolve_systems().get(target_name) if target_name else None
+        active = []
+        if cfg is not None and active_site_mode != "auto":
+            active = list(cfg.get("catalytic", []))
+        if not active:
+            try:
+                active = detect_active_site(pdb_id, chains).get("active_site", [])
+            except Exception:
+                active = []
+        try:
+            out = predict_allosteric_sites(st["coords"], st["bfac"], st["resnums"], active,
+                                           mode=mode, top_k=int(top_k), distal_ang=float(distal),
+                                           family=family, cutoff=cut)
+        except Exception as e:
+            raise HTTPException(422, f"allosteric prediction failed: {e}")
+        if isinstance(out, dict) and out.get("error"):
+            raise HTTPException(422, out["error"])
+        out["active_site"] = sorted(int(x) for x in active)
+        # optional VALIDATION: P@5 vs the holo drug-contact pocket (never seen by the predictor)
+        use_holo = (holo or (cfg.get("holo") if cfg else None))
+        if use_holo:
+            try:
+                hchain = (cfg.get("chain") if cfg else None) or chains
+                pocket = sorted(set(r for l in ligands_and_sites(use_holo.upper(), hchain)
+                                    if l["is_drug"] for r in l["binding_site"]))
+                pv = pocket_pk(out["top_sites"], st["coords"], st["resnums"], pocket, tol=6.0, k=int(top_k))
+                out["validation"] = {"holo": use_holo.upper(), "pocket_n": len(pocket),
+                                     "p_at_k": pv["p_at_k"], "hits": pv["hits"], "k": pv["k"],
+                                     "note": "P@k vs holo drug pocket (6 Å); validation only, un-tuned operator"}
+            except Exception:
+                out["validation"] = None
+        return out
     return _cache_or_compute(params, _c)
 
 

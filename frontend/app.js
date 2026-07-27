@@ -1312,6 +1312,62 @@ $("graphapply").addEventListener("click", applyGraphMotion);
 // toggling motion mode re-renders the graph on the current region (real frames if cached)
 $("graphmode").addEventListener("change", () => { if (LAST.conn) applyConnRegion(); });
 
+// ── ② Quantum — allosteric prediction (§5f/§3) ──────────────────────────────
+$("allobtn").addEventListener("click", predictAllosteric);
+
+async function predictAllosteric() {
+  const pdb = $("pdb").value.trim();
+  if (!pdb) { $("allostatus").textContent = "Load a structure first."; return; }
+  const chain = ($("chains").value.trim() || "A").split(",")[0].trim();
+  const cutoff = parseFloat($("cutoff").value) || 8.0;
+  const target = $("target").value || "";
+  const mode = $("allomode").value;
+  const modeName = mode === "pathway" ? "pathway / driver" : "occupation / pocket";
+  const btn = $("allobtn"); btn.disabled = true;
+  $("allostatus").textContent = `Running CTQW (${modeName}) seeded at the active site…`;
+  try {
+    const url = `${API}/api/allosteric?pdb_id=${pdb}&chains=${chain}&mode=${mode}&cutoff=${cutoff}` +
+      (target ? `&target_name=${encodeURIComponent(target)}` : "");
+    const d = await fetch(url).then(async (r) => {
+      if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
+      return r.json();
+    });
+    const chip = (r) => `<span class="scard" style="margin:2px 4px 0 0"><span class="v">${r}</span></span>`;
+    const v = d.validation;
+    const pk = v && v.p_at_k != null
+      ? `<span class="scard"><span class="v" style="color:${v.p_at_k >= 0.6 ? "#6fb89e" : v.p_at_k >= 0.4 ? "#c2a04e" : "#c77b73"}">P@${v.k} = ${v.p_at_k}</span> <span class="l">${v.hits}/${v.k} vs ${v.holo} pocket</span></span>`
+      : "";
+    $("alloresult").innerHTML =
+      `<div style="margin:8px 0 4px" class="status">Predicted allosteric top-${d.top_k} (${modeName}): </div>` +
+      d.top_sites.map(chip).join("") + pk +
+      `<div class="status" style="margin-top:6px">operator: ${d.operator} · ${d.cached ? "⚡cached" : "computed"}` +
+      (v ? ` · <span style="opacity:.8">P@k is validation only (un-tuned); the pocket never reached the predictor</span>` : "") + `</div>`;
+    renderAllo3D(d, pdb, chain);
+    $("allostatus").textContent = `Done — ${modeName}.`;
+  } catch (e) {
+    $("allostatus").textContent = `Failed: ${e.message}`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// overlay predicted allosteric sites on the shared 3D viewer (pink) + active-site seed (teal)
+function renderAllo3D(d, pdb, chain) {
+  const el = $("trap3d");
+  if (!TRAPVIEW) TRAPVIEW = $3Dmol.createViewer(el, { backgroundColor: "#ffffff" });
+  $("trap3dcap").innerHTML =
+    `Predicted allosteric sites — <b style="color:#ff4d6d">pink = top-${d.top_k} (${d.mode})</b>, ` +
+    `<b style="color:#00b89c">teal = active-site seed</b>. (${d.operator})`;
+  TRAPVIEW.clear();
+  $3Dmol.download(`pdb:${pdb.toUpperCase()}`, TRAPVIEW, {}, () => {
+    TRAPVIEW.setStyle({}, { cartoon: { color: "#d9dde6" } });
+    (d.active_site || []).forEach((r) => TRAPVIEW.addStyle({ chain, resi: r, atom: "CA" }, { sphere: { color: "#00b89c", radius: 0.8 } }));
+    (d.top_sites || []).forEach((r) => TRAPVIEW.addStyle({ chain, resi: r, atom: "CA" }, { sphere: { color: "#ff4d6d", radius: 1.9 } }));
+    TRAPVIEW.zoomTo();
+    TRAPVIEW.render();
+  });
+}
+
 // ── ② Quantum — graph traps (§2c pre-flight) ────────────────────────────────
 $("trapbtn").addEventListener("click", () => scanTrapsAt(parseFloat($("cutoff").value) || 8.0));
 // cutoff buttons: re-run the whole trap scan (2D + 3D) at that contact cutoff (§2c-viz)
