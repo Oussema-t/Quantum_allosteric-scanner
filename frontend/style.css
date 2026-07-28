@@ -17,12 +17,18 @@ body {
   font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: var(--bg);
   color: var(--ink);
+  overflow-x: hidden;      /* never clip the header/title on wide or zoomed-out screens */
 }
 
 header {
-  padding: 18px 28px;
+  padding: 18px 0;         /* full-width bar; content aligned to the centered column below */
   border-bottom: 1px solid var(--border);
   background: linear-gradient(180deg, #111933, #0b1020);
+}
+.header-inner {
+  max-width: 1360px;       /* same centered column as <main> so the title lines up with the panels */
+  margin: 0 auto;
+  padding: 0 15px;
 }
 header h1 { margin: 0; font-size: 22px; }
 .brand { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
