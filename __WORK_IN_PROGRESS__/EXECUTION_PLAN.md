@@ -406,6 +406,25 @@ twice ([[TASK-0081]], [[TASK-0127]]) is fully exhausted, not partially.
 Full statement, cross-linked from [[TASK-0115]]'s own repeated-exposure
 section: `INVARIANCE_PROTOCOL.md`'s new dated addendum there.
 
+**Updated 2026-07-28: 1E.6 ([[TASK-0163]]) is Done.** fpocket and PocketMiner run
+against all 3 mandatory targets' apo structures, scored against this project's own
+holo pocket labels/AUC/floor convention. **fpocket decisively beats both this
+project's own proximity floor and its own `H_new`/CTQW headline observable on 2/3
+targets** (KRAS_G12C 0.8348, BCR_ABL1 0.8596, vs. floor 0.4818/0.5817 and actual
+0.5901/0.5266); sits just below its own floor on CARDIAC_MYOSIN (0.5345 vs.
+0.5679). PocketMiner mixed (beats actual on KRAS_G12C/CARDIAC_MYOSIN, falls short
+of floor on BCR_ABL1). ProteinLens confirmed live, no login required, but
+browser-only with no API — explicit blocker, not run, stated per this task's own
+Intent Contract rather than silently skipped. `fpocket` installed as a new,
+permanent, repo-local external dependency (`__WORK_IN_PROGRESS__/tools/fpocket/`,
+built from source, no root needed) — same disclosure convention as `ripser`/
+`optuna`. PocketMiner run in a genuinely separate, isolated repo
+(`/home/bchmura/PROJECTS/PocketMiner/`), not this one, per this task's own
+resolved access-method finding (pinned `tensorflow==2.6.2` needs Python ≤3.9,
+incompatible with this repo's Python 3.12). Full detail: `RESULTS.md`'s own
+"External classical-pocket-detection baselines" section, open-questions row 44;
+`.ai/tasks/DONE/TASK-0163-external-classical-baselines.md`.
+
 **Writing timeline stated by the review, binding constraint:** Weeks 1–2
 above (1E.1–1E.9); **start writing 2026-08-08 regardless of analysis
 state**, six pages, draft by end of week 4, internal review week 5, revise

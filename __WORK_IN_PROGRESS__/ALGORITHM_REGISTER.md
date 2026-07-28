@@ -143,19 +143,47 @@ baseline above is strong. Demo, not result.
 
 ## F. Cryptic-pocket / external baselines (cross-check + objective)
 
-**fpocket — Le Guilloux, Schmidtke, Tuffery 2009 — 4**
+**fpocket — Le Guilloux, Schmidtke, Tuffery 2009 — 4 — RUN [[TASK-0163]]**
 Apo-computable cavity-openness score — the legal objective for the perturbation
 optimizer and a standalone baseline. Fast, no force field. Use as the openness term.
+**Run against all 3 mandatory targets' apo structures (2026-07-27/28), built from
+source (`__WORK_IN_PROGRESS__/tools/fpocket/`, no root/apt needed, static-linked
+against system libm/libstdc++/libc only). Per-pocket "Score" (openness, not
+druggability) assigned per residue via pocket atom-membership files, scored against
+this project's own holo pocket labels: AUC 0.8348/0.8596/0.5345 (KRAS_G12C/
+BCR_ABL1/CARDIAC_MYOSIN) vs. this project's own floor 0.4818/0.5817/0.5679 and own
+best observable (`H_new`/CTQW) 0.5901/0.5266/0.5176. Decisively beats both the
+floor and this project's own headline observable on 2/3 targets (KRAS_G12C,
+BCR_ABL1) by a wide margin — a purely geometric, non-dynamical classical tool
+outperforms the quantum-walk observable there. On CARDIAC_MYOSIN it sits just
+below its own floor. Full detail: `RESULTS.md`'s TASK-0163 section.**
 
-**PocketMiner (GNN) — Meller, Ward, … Bowman 2023 — 4**
+**PocketMiner (GNN) — Meller, Ward, … Bowman 2023 — 4 — RUN [[TASK-0163]]**
 State-of-the-art cryptic-pocket-*location* prediction from a single structure, no MD.
 Best external baseline/cross-check: if it hits where you miss, your problem is the
 operator; if it also misses, it corroborates "pocket absent from apo." Diagnostic.
+**Web server (`pocket-miner-ui.azurewebsites.net`) confirmed DNS-dead (two
+independent tools). Run locally instead, in a separate isolated repo
+(`/home/bchmura/PROJECTS/PocketMiner/`, not this repo -- the pinned
+`tensorflow==2.6.2` stack only ships wheels for Python ≤3.9, incompatible with
+this project's own Python 3.12 environment) via a from-source Python 3.9.18 build.
+Scored against this project's own holo pocket labels: AUC 0.6932/0.5603/0.5732
+(KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN) vs. the same floor/actual numbers fpocket's
+entry above cites. Beats this project's own `H_new`/CTQW on KRAS_G12C and
+CARDIAC_MYOSIN, narrowly clears its own floor on CARDIAC_MYOSIN (+0.0053), falls
+short of both on BCR_ABL1. Full detail: `RESULTS.md`'s TASK-0163 section.**
 
-**ProteinLens / bond-to-bond propensity — Amor, Schaub, Yaliraki, Barahona 2016 — 4**
+**ProteinLens / bond-to-bond propensity — Amor, Schaub, Yaliraki, Barahona 2016 — 4 — BLOCKED [[TASK-0163]]**
 Published allosteric-site predictor (classical current-flow on an atomistic graph) with
 a web server. External diagnostic + source of the distance-bias quantile-correction and
 current-flow pathway ideas. Adopt the readout, not the all-atom graph.
+**Web server confirmed live and reachable, no login/account required -- but
+browser-only interactive UI with no discovered API/batch endpoint, so it cannot be
+run unattended the way fpocket/PocketMiner were. Not run in TASK-0163's pass;
+explicit blocker per that task's own Intent Contract ("state access-method
+blockers explicitly, do not silently skip"), not a silent omission. Manual-run
+instructions can be produced on request if a human is available to drive the
+browser session per target.**
 
 **AlloPred / PASSer / DeepAllo — 3**
 Additional external server baselines for the comparison table. Cheap to run, good for

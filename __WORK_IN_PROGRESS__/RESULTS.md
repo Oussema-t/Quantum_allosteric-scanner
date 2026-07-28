@@ -1959,6 +1959,127 @@ Full detail: `.ai/tasks/DONE/TASK-0132-gnm-transfer-entropy-baseline.md`,
 
 ---
 
+## External classical-pocket-detection baselines (fpocket, PocketMiner) (TASK-0163, 2026-07-28)
+
+**[EXECUTED, all 3 mandatory targets, real code, real data]** `PANEL_REVIEW_2026-07-25.md`
+W7/V8: the challenge explicitly scores "comparison to classical analogs," and this
+project had run one external classical comparator ([[TASK-0132]]'s GNM transfer
+entropy) against ~40 quantum-flavored observables. `ALGORITHM_REGISTER.md` rates
+fpocket, PocketMiner, and ProteinLens at 4/4 and none had ever been run. This task
+runs the two that are actually runnable in this environment and reports the third
+as an explicit, undisguised blocker per its own Intent Contract.
+
+**Access-method confirmation (done first, per this task's own Constraint):**
+- **fpocket**: no web server, no account — a local binary. Not preinstalled, no
+  root/`sudo` available in this environment. Built from source (`Discngine/fpocket`
+  tag `4.2.3`, plain `make`, no cmake/netcdf needed for the core binary despite the
+  project's own Docker recipe listing `libnetcdf-dev`) into
+  `__WORK_IN_PROGRESS__/tools/fpocket/bin/` — links only against system
+  `libm`/`libstdc++`/`libc`/`libgcc_s` (`ldd` confirmed), so this is a permanent,
+  repo-local install, not a scratch/session artifact.
+- **PocketMiner**: web server (`pocket-miner-ui.azurewebsites.net`, linked from the
+  Bowman Lab's own software page) is DNS-dead — confirmed two independent ways
+  (`curl`, `WebFetch`), both a hard resolution failure, not a timeout/rate-limit.
+  Local install requires `tensorflow==2.6.2`, which only ships wheels for Python
+  ≤3.9 — incompatible with this repo's own Python 3.12 environment. Run instead in
+  a **separate, isolated repo** (`/home/bchmura/PROJECTS/PocketMiner/`, not this
+  one), via a from-source Python 3.9.18 build (no root needed — system OpenSSL/
+  bz2/sqlite3 headers obtained via `apt-get download` + `dpkg-deb -x`, no `sudo`).
+  No account/API key needed once installed locally — model weights ship in the
+  cloned repo.
+- **ProteinLens**: web server confirmed live and reachable, **no login/account
+  required** — but browser-only interactive UI with no discovered API or batch
+  endpoint. This is a different kind of blocker than PocketMiner's (reachable, not
+  gated — just not automatable in this environment). **Not run. Explicit blocker,
+  not a silent skip**: reported here per this task's own Intent Contract rather
+  than substituted or omitted. Manual-interaction instructions can be produced on
+  request if a human is available to drive a browser session per target.
+
+**Scoring methodology — same holo-defined pocket labels, same AUC/floor convention
+this project's register already uses for every other observable** (`labels.
+build_labels`, `baselines.degree_centrality`/`euclid_from_seed_centroid`/
+`hop_from_seed`, `metrics.auc`) — no bespoke evaluation favoring either side, per
+this task's own Constraint. `scripts/task0163_external_baseline_scoring.py`.
+
+- **fpocket**: run against a full-atom apo PDB filtered the same way `clean.clean()`
+  filters its own Cα-only structures (altloc 'A' only, protein only, same target-
+  config chain selection) — fpocket needs side-chain geometry for cavity detection,
+  unlike the rest of this project's Cα-only pipeline. Per-pocket "Score" (cavity
+  openness, `ALGORITHM_REGISTER.md`'s own characterization — not "Druggability
+  Score") assigned to every residue in that pocket's own atom-membership file
+  (`pocketN_atm.pdb`); a residue belonging to multiple pockets takes the max;
+  unassigned residues score 0. Mapped onto `apo.resnums` by `(chain, resnum)`
+  lookup, not array position, since `clean()` can drop/reorder residues relative to
+  a raw fetch.
+- **PocketMiner**: per-residue predictions loaded from the separate repo's output,
+  aligned onto `apo.resnums` the same `(chain, resnum)`-lookup way, parsed from the
+  exact PDB fed to PocketMiner (not assumed positional order). A real alignment bug
+  was caught and fixed here, not silently worked around: CARDIAC_MYOSIN's apo
+  (8QYP) carries two trimethyllysine (`M3L`) residues that are `HETATM` records in
+  the PDB format — mdtraj's `protein` selection (used by PocketMiner's own
+  featurizer) recognizes them once renamed to canonical `LYS` (done before feeding
+  the structure to PocketMiner, see below), giving PocketMiner 706 residues, while
+  this project's own `clean()` genuinely excludes `M3L` entirely from `apo.resnums`
+  (prody's `protein` selector doesn't recognize the non-standard name), giving 704
+  — the resSeq-lookup alignment naturally resolves this once the parser scans
+  `HETATM` CA records too (an earlier `ATOM`-only parse undercounted PocketMiner's
+  own residue axis by exactly these 2 and tripped a length-mismatch guard); the 2
+  extra PocketMiner predictions at those positions are simply never queried, since
+  this project's own apo/pocket-label definition has no entry there either — an
+  honest, not a favorable, resolution.
+
+**A structure-preparation note, stated per this task's own disclosure
+convention**: `M3L` (a real, common myosin post-translational modification) was
+renamed to `LYS` in the PDB fed to PocketMiner only — backbone N/CA/C/O atoms are
+untouched, and PocketMiner's own featurizer (`validate_performance_on_xtals.
+process_strucs`) reads only backbone coordinates + residue-identity one-hot, never
+side-chain atoms, so this is chemically inert to its prediction and does not
+special-case a result in either tool's favor.
+
+| Target | Floor | This project's own actual (`H_new`/CTQW) | fpocket AUC | PocketMiner AUC |
+|---|---|---|---|---|
+| KRAS_G12C | 0.4818 | 0.5901 | **0.8348** | 0.6932 |
+| BCR_ABL1 | 0.5817 | 0.5266 | **0.8596** | 0.5603 |
+| CARDIAC_MYOSIN | 0.5679 | 0.5176 | 0.5345 | 0.5732 |
+
+(This project's own "actual" column is a fresh `run_challenge.py` run against the
+current, `TASK-0124`-corrected 8QYP-era CARDIAC_MYOSIN apo — not the retired
+5TBY/N=950 numbers some earlier sections of this document still cite; KRAS_G12C/
+BCR_ABL1/CARDIAC_MYOSIN floor and actual values reproduce [[TASK-0132]]'s and
+[[TASK-0124]]'s own already-published numbers exactly, cross-validating this task's
+own pipeline reconstruction rather than a freshly-invented one.)
+
+**Headline, reported plainly: fpocket — a purely geometric, non-dynamical classical
+tool with no propagator, no eigendecomposition, no active-site seed at all — beats
+both this project's own proximity floor and its own best quantum observable
+(`H_new`/CTQW) by a wide margin on 2 of 3 mandatory targets** (KRAS_G12C +0.245
+over actual, +0.353 over floor; BCR_ABL1 +0.333 over actual, +0.278 over floor).
+On CARDIAC_MYOSIN fpocket sits just below its own floor (−0.033) but still above
+this project's own actual (+0.017). This is exactly the outcome
+`PANEL_REVIEW_2026-07-25.md`'s own framing anticipated as informative either way
+("if they hit where this project misses, the operator is the bottleneck") — here
+the classical geometric method hits decisively where the quantum-walk observable
+does not, on the 2 targets where this project's own pipeline reports
+`NO_FAILURE_DETECTED`/marginal outcomes.
+
+PocketMiner (a GNN, not classical-geometric, but the other rated external
+comparator) beats this project's own actual on KRAS_G12C (+0.103) and
+CARDIAC_MYOSIN (+0.056, narrowly clearing its own floor by +0.0053), but falls
+short of both floor and actual on BCR_ABL1 (0.5603 vs. floor 0.5817).
+
+**Not attempted, per this task's own Out of Scope**: reselecting the submission
+operator based on this result, and any new observable of this project's own —
+pure external-tool benchmarking, same boundary [[TASK-0132]]'s own Done section
+already established.
+
+Full detail: `.ai/tasks/DONE/TASK-0163-external-classical-baselines.md`,
+`__WORK_IN_PROGRESS__/scripts/task0163_external_baseline_scoring.py`,
+`__WORK_IN_PROGRESS__/results_task0163_external_baselines/results.json`,
+`/home/bchmura/PROJECTS/PocketMiner/` (separate repo, PocketMiner's own
+predictions + `Instructions.md`).
+
+---
+
 ## Distance-stratified evaluation (TASK-0123, 2026-07-19) — the panel's own kill/pass test, plus a correction the panel's own criterion didn't anticipate
 
 **[EXECUTED, all 3 mandatory targets, real code, real data]**
@@ -3864,6 +3985,7 @@ entropy proxy only, stated as such, not silently expanded.
 | 42 | Does replacing `block_bootstrap_ci`'s sequence-index blocking with a spatially compact k-NN block — matching a real pocket's own geometry, `PANEL_REVIEW_2026-07-25.md` W6/V4 — widen CIs for currently-surviving/near-surviving positives, as the review's own text predicts? | **resolved 2026-07-27: the tool is built and validated correctly, but the real-data direction is mixed, not uniform widening — reported honestly.** New `metrics.spatial_block_bootstrap_ci` (k-NN block, drop-in signature). Regression checks pass: exact convergence to sequence-block behavior on a 1D-line synthetic control, and 1.4x–2.4x widening on a globule control once an accidental sequence/3D correlation in the naive fixture (a random-walk build order) was found and removed. **On real transport data (TASK-0145's BCR_ABL1 family plus KRAS_G12C/PTP1B's own `H_new` cells, [[TASK-0158]]'s own flagged near-survivors): 4/5 cells got *narrower*, not wider** (ratios 0.83–0.98; only KRAS_G12C widened, 1.27x) — plausibly because real secondary structure keeps genuine local sequence stretches spatially coherent too, unlike the idealized synthetic control. Practical bottom line unaffected: no cell anywhere in this project has ever had a non-overlapping CI (confirmed by direct grep before this task started), and every re-checked cell still overlaps its floor's CI under the corrected method — no verdict flips either direction. | [[TASK-0165]], [[TASK-0158]], [[TASK-0145]] |
 
 | 43 | Does the ensemble-redistribution mechanism the challenge's own reference [4] (Motlagh & Hilser 2014) names — a cryptic pocket exists because the conformational *ensemble* contains states where it is open, not because a signal propagates there — show real allosteric signal at Cα/GNM resolution, and is it orthogonal to the proximity confound that dominates every directed-channel observable in this register (`PANEL_REVIEW_2026-07-25.md` §7.3(1)/V9)? | **resolved 2026-07-28: no on both counts, a clean and informative double negative.** New per-residue GNM low-mode conformational entropy (`0.5*ln(2*pi*e*sigma_i^2)`, sigma_i^2 the standard Bahar/Atilgan/Erman 1997 GNM MSF formula restricted to the lowest 20 modes — a textbook differential-entropy identity applied to an existing, already-validated quantity, not invented). Scored against all 7 pocket-scoreable `status: verified` targets (MYC_MAX excluded — no pocket label exists for this IDP target): zero of 7 cells survive Bonferroni correction (α/7=0.00714); GLUCOKINASE's p=0.035 is the closest near-miss. **More informative than the null result alone**: despite having no active-site seed and no propagation step at all, ρ(entropy, −hop-from-seed) is strongly positive on every target (0.39–0.76) — this observable does NOT evade the proximity confound the way [[TASK-0140]]'s chiral circulation (orthogonal by construction) or [[TASK-0149]]'s mode-filtered PRS/DCC do. Entropy is a strictly monotonic transform of the underlying low-mode variance, so this is, in ranking terms, a test of whether raw per-residue flexibility magnitude predicts the pocket — it does not, on this data. | [[TASK-0166]], [[TASK-0161]], [[TASK-0158]], [[TASK-0123]] |
+| 44 | Does this project have any real external classical comparator beyond the single GNM transfer-entropy baseline ([[TASK-0132]]) — the challenge's own explicitly-scored "comparison to classical analogs" criterion (`PANEL_REVIEW_2026-07-25.md` §2.2/W7, §4 action item 6, V8) — given ~40 quantum-flavored observables have been run against 1? | **resolved 2026-07-28: fpocket run and decisively beats this project's own headline observable on 2/3 mandatory targets; PocketMiner run, mixed; ProteinLens blocked (browser-only, no API) and explicitly reported as such, not silently skipped.** Full detail: this document's own "External classical-pocket-detection baselines (fpocket, PocketMiner)" section below. | [[TASK-0163]], [[TASK-0132]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
