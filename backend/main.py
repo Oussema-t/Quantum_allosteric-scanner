@@ -322,14 +322,14 @@ def morph_frames_ep(apo: str, holo: str, apo_chain: str = "A", holo_chain: str =
 
 @app.get("/api/traps")
 def traps_ep(pdb_id: str, chains: str = "A", target_name: str = None, cutoff: float = 8.0,
-             active_site_mode: str = "benchmark", family: str = "GNM"):
+             active_site_mode: str = "benchmark", family: str = "GNM", method: str = "spectral"):
     """Phase-2 slice 1 (notebook §2c): graph-trap diagnostic — where a CTQW seeded at the
     active site would STALL (localized dead-end modes), with a classical-degree baseline +
     dynamical gate. Seed = the active site (benchmark metadata or auto-detected)."""
     pdb_id = pdb_id.strip().upper()
     cut = _clamp_cutoff(cutoff)
     params = {"op": "traps", "pdb_id": pdb_id, "chains": chains, "target_name": target_name,
-              "cutoff": cut, "active_site_mode": active_site_mode, "family": family}
+              "cutoff": cut, "active_site_mode": active_site_mode, "family": family, "method": method}
 
     def _c():
         st = load_structure(pdb_id, chains)
@@ -347,7 +347,7 @@ def traps_ep(pdb_id: str, chains: str = "A", target_name: str = None, cutoff: fl
                 active = []
         try:
             return graph_trap_scan(st["coords"], st["bfac"], st["resnums"],
-                                   seed_resnums=active, cutoff=cut, family=family)
+                                   seed_resnums=active, cutoff=cut, family=family, method=method)
         except ValueError as e:
             raise HTTPException(422, str(e))
         except Exception as e:

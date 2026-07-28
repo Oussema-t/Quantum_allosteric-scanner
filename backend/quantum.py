@@ -330,7 +330,8 @@ def _res_indices(resnums, wanted):
 
 
 def graph_trap_scan(coords, bfac, resnums, seed_resnums=None, cutoff=8.0, family="GNM",
-                    power=1.0, lam_exp=0.0, lam_ln=0.0, do_stability=True, do_cutoff_sweep=True):
+                    method="spectral", power=1.0, lam_exp=0.0, lam_ln=0.0,
+                    do_stability=True, do_cutoff_sweep=True):
     """Full §2c graph-trap diagnostic for ONE structure, seeded at the active site.
 
     Returns a JSON-serializable payload: operator-level traps + degree baseline + dynamical
@@ -344,27 +345,44 @@ def graph_trap_scan(coords, bfac, resnums, seed_resnums=None, cutoff=8.0, family
     H = spectral_filter(build_hamiltonian(coords, bfac, family, params), lam_exp, lam_ln)
     r = find_ctqw_traps(H)
     deg = r["degree"]
-    tn = list(r["trap_nodes"])
+    occ = trap_return_prob(H)                    # time-averaged CTQW return per residue
+    spectral_tn = list(r["trap_nodes"])
     periph = float(np.quantile(deg, TRAP_PERIPH_QT)) if N else 0.0
 
-    # classical baseline: are the traps just the lowest-degree nodes?
-    low = set(np.argsort(deg)[:max(1, len(tn))].tolist())
-    baseline_overlap = len(set(tn) & low)
-    # dynamical gate vs degree-matched control
-    occ = trap_return_prob(H)
-    validated = dynamical_gate(occ, deg, tn)
+    # the METHOD selects the primary trap set (empirically these differ a lot):
+    #   spectral  = localized eigenstates (IPR)   dynamical = highest time-avg return
+    #   classical = lowest coordination (degree). The IPR spectrum + baseline/gate below
+    # stay SPECTRAL diagnostics of the operator regardless of the chosen view.
+    method = (method or "spectral").lower()
+    n_show = len(spectral_tn) if spectral_tn else 10
+    if method == "dynamical":
+        strength = occ / (float(occ.max()) + 1e-12)
+        tn = list(np.argsort(-occ)[:n_show])
+    elif method == "classical":
+        inv = 1.0 / (deg + 1.0)
+        strength = inv / (float(inv.max()) + 1e-12)
+        tn = list(np.argsort(deg)[:n_show])
+    else:
+        method = "spectral"
+        strength = np.asarray(r["trap_strength"], float)
+        tn = spectral_tn
+
+    # spectral diagnostics (always relative to the localized-eigenstate set)
+    low = set(np.argsort(deg)[:max(1, len(spectral_tn))].tolist())
+    baseline_overlap = len(set(spectral_tn) & low)
+    validated = dynamical_gate(occ, deg, spectral_tn)
 
     def rn(idxs):
         return [int(resnums[i]) for i in idxs]
 
     out = {
-        "n_residues": int(N), "family": family, "cutoff": float(cutoff),
+        "n_residues": int(N), "family": family, "method": method, "cutoff": float(cutoff),
         "resnums": [int(x) for x in resnums],
         "eigvals": [round(float(x), 5) for x in r["eigvals"]],
         "ipr": [round(float(x), 5) for x in r["IPR"]],
         "near_degenerate": [bool(x) for x in r["near_degenerate"]],
         "degree": [int(x) for x in deg],
-        "trap_strength": [round(float(x), 5) for x in r["trap_strength"]],
+        "trap_strength": [round(float(x), 5) for x in strength],
         "trap_nodes": rn(tn),
         "trap_nodes_peripheral": rn([i for i in tn if deg[i] <= periph]),
         "dyn_gate_pass": rn(validated),

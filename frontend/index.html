@@ -290,6 +290,26 @@
           </ul>
         </div>
       </details>
+      <div class="conn-filter" style="margin-top:4px">
+        <label>Hamiltonian
+          <select id="trapfamily">
+            <option value="GNM">GNM · normalized Laplacian</option>
+            <option value="H10_disorder_supp">H10 · disorder-suppressed</option>
+            <option value="terminal_suppressed">terminal-suppressed</option>
+            <option value="H10B_disorder_bfactor">H10B · B-factor disorder</option>
+            <option value="GNM_bfactor">GNM · B-factor weighted</option>
+            <option value="rigidity_laplacian">rigidity Laplacian</option>
+          </select>
+        </label>
+        <label>Method
+          <select id="trapmethod">
+            <option value="spectral">spectral · localized eigenstates (IPR)</option>
+            <option value="dynamical">dynamical · time-avg CTQW return</option>
+            <option value="classical">classical · low coordination (degree)</option>
+          </select>
+        </label>
+        <span class="status" style="margin-left:4px">— operator + detection genuinely change the trap set</span>
+      </div>
       <button id="trapbtn" class="secondary">▶ Scan graph traps</button>
       <div id="trapcuts" class="conn-filter" style="margin-top:8px">
         <span class="cf-label">Cutoff&nbsp;(Å):</span>

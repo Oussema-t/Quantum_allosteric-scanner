@@ -1373,6 +1373,10 @@ $("trapbtn").addEventListener("click", () => scanTrapsAt(parseFloat($("cutoff").
 // cutoff buttons: re-run the whole trap scan (2D + 3D) at that contact cutoff (§2c-viz)
 document.querySelectorAll("#trapcuts .trapcut").forEach((b) =>
   b.addEventListener("click", () => scanTrapsAt(parseFloat(b.dataset.cut))));
+// changing the Hamiltonian family or the detection method re-runs at the last cutoff
+let TRAP_CUT = 8;
+["trapfamily", "trapmethod"].forEach((id) =>
+  $(id) && $(id).addEventListener("change", () => scanTrapsAt(TRAP_CUT)));
 
 function highlightTrapCut(c) {
   document.querySelectorAll("#trapcuts .trapcut").forEach((b) =>
@@ -1385,19 +1389,23 @@ async function scanTrapsAt(cutoff) {
   const chain = ($("chains").value.trim() || "A").split(",")[0].trim();
   const target = $("target").value || "";
   const mode = ($("sitemode") && $("sitemode").value) || "benchmark";
+  const family = ($("trapfamily") && $("trapfamily").value) || "GNM";
+  const method = ($("trapmethod") && $("trapmethod").value) || "spectral";
+  TRAP_CUT = cutoff;
   const btn = $("trapbtn"); btn.disabled = true;
   highlightTrapCut(cutoff);
-  setTrapStatus(`Scanning graph traps for ${pdb} @ ${cutoff} Å (seed = active site)…`);
+  setTrapStatus(`Scanning traps for ${pdb} @ ${cutoff} Å · ${family} · ${method}…`);
   try {
     const url = `${API}/api/traps?pdb_id=${pdb}&chains=${chain}&cutoff=${cutoff}` +
-      `&active_site_mode=${mode}` + (target ? `&target_name=${encodeURIComponent(target)}` : "");
+      `&family=${family}&method=${method}&active_site_mode=${mode}` +
+      (target ? `&target_name=${encodeURIComponent(target)}` : "");
     const d = await fetch(url).then(async (r) => {
       if (!r.ok) throw new Error((await r.json().catch(() => ({}))).detail || `HTTP ${r.status}`);
       return r.json();
     });
     renderTraps(d);
     renderTraps3D(d, pdb, chain);
-    setTrapStatus(`${d.n_flagged} operator traps @ ${cutoff} Å · ${d.cached ? "⚡cached" : "computed"}.`);
+    setTrapStatus(`${d.n_flagged} traps · ${d.family} · ${d.method} @ ${cutoff} Å · ${d.cached ? "⚡cached" : "computed"}.`);
   } catch (e) {
     setTrapStatus(`Failed: ${e.message}`, true);
   } finally {

@@ -190,7 +190,7 @@ Returns `{mode, family, operator, top_sites, top_scores, seed_n, score_all, acti
 validation}`. Cached. Cross-target (un-tuned): KRAS 0.6, BCR-ABL1 pathway 0.6 > occ 0.4,
 PTP1B 0.0. Rendered in the "② Quantum solving" panel (mode selector + top-5 + P@5 + 3D overlay).
 
-### `GET /api/traps?pdb_id=&chains=A&target_name=&cutoff=8.0&active_site_mode=benchmark&family=GNM`
+### `GET /api/traps?pdb_id=&chains=A&target_name=&cutoff=8.0&active_site_mode=benchmark&family=GNM&method=spectral`
 **Phase-2 slice 1 (notebook §2c) — graph-trap pre-flight.** Maps residues where a CTQW would
 **stall** (localized dead-end modes of the transport operator), *before* running the allosteric
 walk. `backend/quantum.py`: `build_hamiltonian` (GNM = `normalized_laplacian(contact_weight)`) →
@@ -204,7 +204,7 @@ stable_core, threshold_dependent, jaccard_band, cutoff_sweep[], active_site, see
 seed_trap_nodes, seed_reaches_traps}`. **Honest scope:** a CLASSICAL connectivity diagnostic
 (degree reproduces most traps), NOT allosteric-site discovery; finite-size localization, not a
 true Anderson transition; thin when `near_degen_pct` is high (e.g. BCR-ABL1 ~63%). Rendered as the
-"② Quantum — graph traps" panel (trap-strength bar + IPR spectrum).
+"② Quantum — graph traps" panel (trap-strength bar + IPR spectrum). **`family`** picks the graph Hamiltonian (GNM / H10_disorder_supp / terminal_suppressed / …) and **`method`** the detection (spectral IPR eigenstates · dynamical time-avg return · classical degree) — validated to give materially different trap sets.
 
 ### `GET /api/compare?apo=&holo=&apo_chain=A&holo_chain=`
 Superimpose holo onto apo (Kabsch) and report per-residue Cα displacement.
