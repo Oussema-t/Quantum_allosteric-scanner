@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cleveland Clinic · Quantum Allosteric Scanner — Team AuraQu</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
+  <!-- reliable CDN (jsdelivr) for 3Dmol; falls back to 3Dmol.org if it fails -->
+  <script src="https://cdn.jsdelivr.net/npm/3dmol@2/build/3Dmol-min.js"
+          onerror="this.onerror=null;var s=document.createElement('script');s.src='https://3Dmol.org/build/3Dmol-min.js';document.head.appendChild(s);"></script>
   <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
 </head>
 <body>
