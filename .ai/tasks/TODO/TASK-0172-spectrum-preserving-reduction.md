@@ -1,8 +1,8 @@
-# TASK-0158 Spectrum-preserving Hamiltonian reduction (Krylov / Schur complement) with a retention proof
+# TASK-0172 Spectrum-preserving Hamiltonian reduction (Krylov / Schur complement) with a retention proof
 
 ## Context
 
-- ID: TASK-0158
+- ID: TASK-0172
 - Title: replace/augment the current naive community-merge coarse-graining
   with a **controlled** reduction that provably preserves the transport
   signal — Krylov subspace projection (exact for the seeded walk) and
@@ -18,6 +18,19 @@
   the correction below).
 - Priority: **P1 — this closes a stated challenge requirement that the
   current code does not meet.**
+- **Renumbered from TASK-0158, 2026-07-28**: this task was originally
+  filed as TASK-0158, colliding with the already-existing, already-Done,
+  heavily-cross-linked `TASK-0158-compact-null-fix-and-rerun.md`
+  (permutation-null correction, `PANEL_REVIEW_2026-07-25.md` §2.3). A
+  first attempt to fix this (commit `9670af0`) renumbered it to
+  TASK-0171, which itself collided with a concurrently-filed, unrelated
+  TASK-0171 (reverse-direction coupling test, HOLO comparison) and was
+  reverted (`8f76102`). Found via a full repo-wide collision scan,
+  requested after that revert — confirmed via grep that no other file
+  anywhere references this content under either TASK-0158 or TASK-0171;
+  every existing "TASK-0158" cross-link in the repo (14 other files)
+  refers unambiguously to the compact-null-fix task, so this rename
+  requires no cross-link updates elsewhere. Content otherwise unchanged.
 
 ## Why this is not already done
 
