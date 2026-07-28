@@ -3719,6 +3719,92 @@ Full detail: `.ai/tasks/DONE/TASK-0165-spatial-block-bootstrap.md`,
 
 ---
 
+## Per-residue GNM low-mode conformational entropy — the ensemble/entropic mechanism (TASK-0166, `PANEL_REVIEW_2026-07-25.md` §7.3(1)/V9, 2026-07-28)
+
+**Tests the challenge's own reference [4] (Motlagh & Hilser, *Nature* 2014)
+directly for the first time in this program: allostery as ensemble
+*redistribution*, not signal *transmission*.** Every other observable in
+this register seeds at the active site and asks "where does something
+propagate" — a directed-channel picture. This one has no seed and no
+propagation step at all: it scores each residue by its own accessible
+conformational ensemble under the apo structure's GNM low-mode subspace,
+independent of the active site's location.
+
+**Formalism (literature-confirmed, not invented, resolving this task's own
+filed Open Question):** the founding GNM paper (Bahar, Atilgan & Erman,
+*Fold. Des.* 2:173-181, 1997) establishes that each residue's fluctuation is
+Gaussian-distributed with variance `sigma_i^2 = sum_k (1/lambda_k) U_ik^2`
+— the standard MSF formula, here restricted to the lowest `n_modes=20`
+Kirchhoff eigenmodes (matching the register's own established low-mode-
+subspace convention, e.g. `compute_learnability`'s `n_modes=20`). The
+differential entropy of a Gaussian, `h = 0.5*ln(2*pi*e*sigma^2)`, is a
+textbook information-theory identity (Cover & Thomas, *Elements of
+Information Theory*, Thm. 8.4.1). New `allostery.conformational_entropy`
+combines these — no new physics, an existing identity applied to an
+existing, already-validated GNM quantity. **Noted explicitly**: entropy is
+a strictly increasing function of the underlying variance, so every
+AUC/ranking result below is, by construction, identical to what raw
+`gnm_lowmode_variance` alone would give (confirmed as a direct test,
+`test_conformational_entropy.py`) — this observable is a Gaussian-entropy
+*reframing* of low-mode flexibility, not an independent ranking.
+
+**Real-target scoring, all 7 pocket-scoreable `status: verified` targets**
+(3 mandatory + PTP1B/GLUCOKINASE/CASPASE1/CASPASE7; MYC_MAX excluded — its
+own config states `allosteric_pocket_exists: false`, no pocket label
+exists to score against). TASK-0123 distance-stratified AUC (well-powered-
+shell max) + TASK-0158's corrected compact-patch permutation null
+(`nulls.compact_patch` used directly — this task postdates TASK-0158, no
+reason to use the superseded scattered draw even once):
+
+| Target | Well-powered max AUC (shell) | Null p-value | Bonferroni (α/7=0.00714) | ρ(entropy, −hop) | ρ(entropy, −euclid) |
+|---|---|---|---|---|---|
+| KRAS_G12C | 0.730 (shell 2) | 0.241 | no | 0.544 | 0.623 |
+| BCR_ABL1 | 0.741 (shell 3) | 0.326 | no | 0.585 | 0.541 |
+| CARDIAC_MYOSIN | 0.623 (shell 3) | 0.394 | no | 0.763 | 0.764 |
+| PTP1B | 0.356 (shell 3) | 0.712 | no | 0.694 | 0.782 |
+| GLUCOKINASE | 0.971 (shell 3) | 0.035 | **no** | 0.651 | 0.610 |
+| CASPASE1 | 0.371 (shell 1) | 0.677 | no | 0.390 | 0.505 |
+| CASPASE7 | 0.353 (shell 2) | 0.718 | no | 0.559 | 0.759 |
+
+**Headline: a clean negative, consistent with [[TASK-0161]]'s program-wide
+finding.** Zero of 7 cells survive Bonferroni correction. GLUCOKINASE's
+raw p=0.035 is the closest to significance anywhere in this table but does
+not clear the 7-target-corrected bar (0.00714) — reported as the honest
+near-miss it is, not rounded up.
+
+**A second, arguably more informative negative: this observable is not
+proximity-orthogonal, despite having no seed or propagation step at
+all.** ρ(entropy, −hop) is strongly positive on every target (0.39–0.76),
+matching the same confound magnitude found pervasively elsewhere in this
+register (e.g. [[TASK-0146]]'s +0.68 to +0.72). Unlike [[TASK-0140]]'s
+chiral circulation (proximity-orthogonal *by construction*) or
+[[TASK-0149]]'s low-mode PRS/DCC (mode-filtered specifically to weaken
+this confound), nothing about a Gaussian-entropy reframing of GNM low-mode
+flexibility structurally guarantees independence from distance-to-seed —
+and empirically it does not deliver any. This task's own Planned
+Validation asked exactly this question ("does entropy-based ranking
+correlate with, or is orthogonal to, the proximity floor") and the answer
+is a clear, direct "correlates," not "orthogonal" — the ensemble mechanism,
+at least as operationalized here (a per-residue flexibility magnitude, not
+a distributional/mode-diversity measure — see the module's own docstring
+for why that narrower reading of the Intent Contract was chosen over the
+broader "discretized Shannon entropy over mode-participation weights"
+alternative), does not evade the confound that has dominated every
+directed-channel observable in this program either.
+
+Scope boundary honored per this task's own Out of Scope: no MD, no full
+ensemble reweighting/Boltzmann conformer sampling — a mode-participation
+entropy proxy only, stated as such, not silently expanded.
+
+9 new unit tests (`tests/test_conformational_entropy.py`), full suite:
+971 passed, 2 xfailed, 0 failed. Full detail:
+`.ai/tasks/DONE/TASK-0166-ensemble-entropy-observable.md`,
+`RESULTS/results_task0166_ensemble_entropy/ensemble_entropy_real_run.json`,
+`src/allostery/conformational_entropy.py`,
+`scripts/ensemble_entropy_real_run.py`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -3776,6 +3862,8 @@ Full detail: `.ai/tasks/DONE/TASK-0165-spatial-block-bootstrap.md`,
 | 41 | Does the shipped `connectivity_matrix.npz` deliverable actually satisfy the challenge's own §5 "N×N quantum connectivity matrix" requirement — quantum-defined, all-pairs, and dense? | **resolved 2026-07-27: no (before this task) — classical, seeded, and sparse, failing on all 3 counts; now yes, additively.** New `propagators.quantum_connectivity_matrix` (`P_inf(i,j)=sum_k \|v_k(i)\|^2\|v_k(j)\|^2`, one `(N,N)@(N,N)` product from the same eigendecomposition `time_averaged_ctqw_converged` already needs — no second diagonalization). Exact symmetry and row-sum-to-1 both derived and confirmed numerically; real-data check on all 3 mandatory targets shows the new matrix at density 1.000 vs. the old matrix's 0.014-0.057 (falling as N grows) — a decisive, measured confirmation of the "not dense" fix specifically. **Design choice checked, not assumed**: the plain per-eigenvector formula (not TASK-0130's own degenerate-block-corrected form) matches `time_averaged_ctqw_converged`'s independently-computed single-source column to 1e-16 to 1e-17 (machine precision) on every mandatory target — real `H_new` spectra are near- not exactly-degenerate, so the simpler formula this task's own Intent Contract specifies is confirmed exact in practice, not merely assumed safe. Wired additively into both `run_target` and `run_target_no_ground_truth` as `quantum_connectivity_matrix.npz`, the pre-existing classical file untouched and still written. | [[TASK-0160]], [[TASK-0130]] |
 
 | 42 | Does replacing `block_bootstrap_ci`'s sequence-index blocking with a spatially compact k-NN block — matching a real pocket's own geometry, `PANEL_REVIEW_2026-07-25.md` W6/V4 — widen CIs for currently-surviving/near-surviving positives, as the review's own text predicts? | **resolved 2026-07-27: the tool is built and validated correctly, but the real-data direction is mixed, not uniform widening — reported honestly.** New `metrics.spatial_block_bootstrap_ci` (k-NN block, drop-in signature). Regression checks pass: exact convergence to sequence-block behavior on a 1D-line synthetic control, and 1.4x–2.4x widening on a globule control once an accidental sequence/3D correlation in the naive fixture (a random-walk build order) was found and removed. **On real transport data (TASK-0145's BCR_ABL1 family plus KRAS_G12C/PTP1B's own `H_new` cells, [[TASK-0158]]'s own flagged near-survivors): 4/5 cells got *narrower*, not wider** (ratios 0.83–0.98; only KRAS_G12C widened, 1.27x) — plausibly because real secondary structure keeps genuine local sequence stretches spatially coherent too, unlike the idealized synthetic control. Practical bottom line unaffected: no cell anywhere in this project has ever had a non-overlapping CI (confirmed by direct grep before this task started), and every re-checked cell still overlaps its floor's CI under the corrected method — no verdict flips either direction. | [[TASK-0165]], [[TASK-0158]], [[TASK-0145]] |
+
+| 43 | Does the ensemble-redistribution mechanism the challenge's own reference [4] (Motlagh & Hilser 2014) names — a cryptic pocket exists because the conformational *ensemble* contains states where it is open, not because a signal propagates there — show real allosteric signal at Cα/GNM resolution, and is it orthogonal to the proximity confound that dominates every directed-channel observable in this register (`PANEL_REVIEW_2026-07-25.md` §7.3(1)/V9)? | **resolved 2026-07-28: no on both counts, a clean and informative double negative.** New per-residue GNM low-mode conformational entropy (`0.5*ln(2*pi*e*sigma_i^2)`, sigma_i^2 the standard Bahar/Atilgan/Erman 1997 GNM MSF formula restricted to the lowest 20 modes — a textbook differential-entropy identity applied to an existing, already-validated quantity, not invented). Scored against all 7 pocket-scoreable `status: verified` targets (MYC_MAX excluded — no pocket label exists for this IDP target): zero of 7 cells survive Bonferroni correction (α/7=0.00714); GLUCOKINASE's p=0.035 is the closest near-miss. **More informative than the null result alone**: despite having no active-site seed and no propagation step at all, ρ(entropy, −hop-from-seed) is strongly positive on every target (0.39–0.76) — this observable does NOT evade the proximity confound the way [[TASK-0140]]'s chiral circulation (orthogonal by construction) or [[TASK-0149]]'s mode-filtered PRS/DCC do. Entropy is a strictly monotonic transform of the underlying low-mode variance, so this is, in ranking terms, a test of whether raw per-residue flexibility magnitude predicts the pocket — it does not, on this data. | [[TASK-0166]], [[TASK-0161]], [[TASK-0158]], [[TASK-0123]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
