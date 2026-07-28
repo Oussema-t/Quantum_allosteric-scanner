@@ -1,0 +1,65 @@
+{
+  "KRAS_G12C": {
+    "target": "KRAS_G12C",
+    "n_residues": 169,
+    "pocket_size": 18,
+    "floor_aucs": {
+      "degree_centrality": 0.4817880794701987,
+      "euclid_from_seed_centroid": 0.4683590875643856,
+      "hop_from_seed": 0.48123620309050774
+    },
+    "floor_auc_max": 0.4817880794701987,
+    "fpocket": {
+      "auc": 0.834805003679176,
+      "n_pockets": 10,
+      "n_residues_assigned": 77
+    },
+    "pocketminer": {
+      "auc": 0.6931567328918322,
+      "n_matched": 169,
+      "n_total_apo": 169
+    }
+  },
+  "BCR_ABL1": {
+    "target": "BCR_ABL1",
+    "n_residues": 451,
+    "pocket_size": 16,
+    "floor_aucs": {
+      "degree_centrality": 0.4933189655172414,
+      "euclid_from_seed_centroid": 0.46063218390804594,
+      "hop_from_seed": 0.5816810344827587
+    },
+    "floor_auc_max": 0.5816810344827587,
+    "fpocket": {
+      "auc": 0.8596264367816093,
+      "n_pockets": 37,
+      "n_residues_assigned": 185
+    },
+    "pocketminer": {
+      "auc": 0.5603448275862069,
+      "n_matched": 451,
+      "n_total_apo": 451
+    }
+  },
+  "CARDIAC_MYOSIN": {
+    "target": "CARDIAC_MYOSIN",
+    "n_residues": 704,
+    "pocket_size": 13,
+    "floor_aucs": {
+      "degree_centrality": 0.40003339641545144,
+      "euclid_from_seed_centroid": 0.5678503840587776,
+      "hop_from_seed": 0.4803517755760882
+    },
+    "floor_auc_max": 0.5678503840587776,
+    "fpocket": {
+      "auc": 0.5344539686073695,
+      "n_pockets": 55,
+      "n_residues_assigned": 108
+    },
+    "pocketminer": {
+      "auc": 0.573193810531003,
+      "n_matched": 704,
+      "n_total_apo": 704
+    }
+  }
+}
