@@ -4018,6 +4018,121 @@ Full detail: `.ai/tasks/DONE/TASK-0162-reverse-direction-coupling-test.md`,
 
 ---
 
+## Benchmark discriminability audit — can the mandatory target set certify *any* method? (TASK-0169, `PANEL_REVIEW_2026-07-28-external.md` §6/§7, 2026-07-28)
+
+**The project's current narrative is "we could not find quantum advantage for
+allosteric site prediction, and we built a rigorous apparatus that proves we
+could not." That is honest and defensible, but modest — a negative result
+about one team's approach.** A stronger, evidenced claim is available and is
+consolidated here for the first time — until now it was scattered across a
+YAML comment, several open-questions rows, and five separate task Done
+sections, with no single artifact stating the aggregate:
+
+> **The mandatory benchmark cannot currently certify a working method, and we
+> can demonstrate that with our own apparatus.**
+
+Framed as measurement, not criticism, per this task's own Constraint — these
+are structural properties of a benchmark assembled from the available PDB
+entries at challenge-authoring time, not an accusation that the organizers
+erred. All three mandatory targets are still reported in full per the
+challenge's own §5; this is context alongside them, not a substitute.
+
+**Every row independently re-verified against RCSB directly by this task
+(live REST API / cross-referenced structure entries), not relayed from
+memory or a prior task's own text** — per this task's own Constraint, and
+because doing so caught one real, stale number (below):
+
+| Target | Established defect | Re-verified |
+|---|---|---|
+| CARDIAC_MYOSIN | Challenge Table 1's named validation structure **6C1H does not contain mavacamten** | **Re-confirmed live, 2026-07-28**: RCSB REST API, `nonpolymer_bound_components = ['ADP', 'MG']` only; the 3 polymer entities are actin (rabbit), unconventional myosin-Ib (rat), and calmodulin — no myosin motor domain, no XB2. This project's own substituted validation structure (8QYR) *does* contain XB2/mavacamten (RCSB-reconfirmed 2026-07-06, and independently corroborated by a second structure, 9GZ1, TASK-0124) — the challenge's own named structure fails, this project's substitute passes. |
+| CARDIAC_MYOSIN | Challenge-specified apo **5TBY is a 20 Å docked homology model**; replacing it with 8QYP erased the target's only positive result | **Re-confirmed live**: 5TBY's own RCSB title reads *"...OBTAINED BY HOMOLOGY MODELING... RIGIDLY FITTED TO... 3D-RECONSTRUCTION"*, method=EM, resolution=20.0 Å exactly. 8QYP confirmed X-ray, 2.759 Å, drug-free (ADP/MG/VO4, no XB2). Actual AUC: **0.7912 (5TBY) → 0.5176 (8QYP)** ([[TASK-0124]]'s own executed re-run) — resolving the structure removed the result. |
+| KRAS_G12C | Switch-II pocket **overlaps the active site** — a "distal" prediction task is partly a self-hit task | **Re-verified directly** (fresh geometric check, this task): minimum Cα–Cα distance between an active-site residue and a pocket residue is **3.75 Å** (van der Waals contact range); mean nearest-neighbor distance 9.85 Å. Pocket residues 9–11 sit immediately adjacent to the active-site block (12–19, includes the G12C mutation site and P-loop). **A stale number caught and corrected**: this task's own filing cited the proximity floor as "0.798" — that is TASK-0094's original, pre-[[TASK-0118]]/[[TASK-0121]]/[[TASK-0130]] number; the current, fully-corrected floor (`COMPETENCE_MAP.md`, recomputed under the closed-form propagator) is **0.4818**, not 0.798. Both numbers support the same qualitative point (a trivial baseline scores respectably), but the current one is what should be cited going forward. |
+| BCR_ABL1 | Myristoyl pocket is **pre-formed in the apo structure**, not cryptic | **Re-cited from an already-executed measurement**, not re-run: [[TASK-0120]]/[[TASK-0139]]'s own apo→holo pocket-RMSD-vs-background ratio is **0.49** — the pocket moves *less* than background upon ligand binding, the opposite of a cryptic-opening signature, consistent with TASK-0104's independent "apo-computable structural prior, not communication signal" mechanism finding. |
+| All 3 | **fpocket, a 2009 classical geometric tool with no dynamics, no eigendecomposition, and no active-site seed, beats this project's own best quantum-flavored observable on 2/3 mandatory targets** | **Re-cited from an already-executed real run** ([[TASK-0163]], this document's own "External classical-pocket-detection baselines" section, real code/real data): KRAS_G12C fpocket **0.8348** vs. this project's actual 0.5901 (floor 0.4818); BCR_ABL1 fpocket **0.8596** vs. actual 0.5266 (floor 0.5817); CARDIAC_MYOSIN fpocket 0.5345 vs. actual 0.5176 (floor 0.5679, fpocket sits just below it). |
+| ASD extension | Generalization pool **fully exhausted** — 0 of 6 remaining draft configs are resolvable | **Re-cited from an already-executed audit** ([[TASK-0164]]): 6 real `status: draft` targets remain; 5 already RCSB-verified permanently blocked ([[TASK-0127]]); the 6th (`GROEL_SUBUNIT`), independently RCSB-verified by that task, has two separate permanent blockers of its own (partial biological assembly; a 7-chain-protein ligand `labels.py`'s methodology cannot handle). Zero of 6 qualify. |
+
+**Per-target discriminability verdict, 3 axes stated plainly** ([[TASK-0167.002]]'s
+own detection-limit work is still TODO/unclaimed as of this writing — no axis 4,
+per this task's own conditional scope):
+
+**KRAS_G12C** — (1) *Ground truth valid?* **Yes**, unambiguously (6OIM
+RCSB-reconfirmed to contain MOV/sotorasib, no discrepancy). (2) *Task the
+stated task?* **No** — the pocket is 3.75 Å from the active site at closest
+approach; "distal allosteric prediction" partially reduces to "predict
+something adjacent to the seed," a task every proximity-based method
+structurally favors. (3) *Task non-trivial?* **No** — fpocket (0.8348, purely
+geometric, no seed) decisively beats both the corrected floor (0.4818) and
+this project's own best observable (0.5901, itself not statistically
+decided against its own floor — CI overlaps).
+
+**BCR_ABL1** — (1) *Ground truth valid?* **Yes** (5MO4 RCSB-reconfirmed,
+no flagged discrepancy). (2) *Task the stated task?* **No** — the myristoyl
+pocket is measurably pre-formed in apo (RMSD ratio 0.49, moves less than
+background), not cryptic; the "predict the cryptic pocket" framing does not
+describe what is actually being measured here. (3) *Task non-trivial?*
+**No** — fpocket (0.8596) beats both floor (0.5817) and actual (0.5266) by
+a wide margin.
+
+**CARDIAC_MYOSIN** — (1) *Ground truth valid?* **Split, stated precisely, not
+averaged away** — the challenge's own named validation structure (6C1H) does
+NOT contain the ligand (re-confirmed live, above); this project's own
+substituted structure (8QYR) does, independently corroborated by a second,
+different-species/different-method structure (9GZ1). A referee checking the
+challenge's own Table 1 literally will not find mavacamten in the named
+entry. (2) *Task the stated task?* **Unresolved, not evidenced either way**
+— no equivalent apo-vs-holo pocket-RMSD measurement has been run for this
+target's own current (8QYP/8QYR) structure pair the way KRAS_G12C/BCR_ABL1
+have; stated as a real gap, not assumed. (3) *Task non-trivial?* **Weakly
+yes** — fpocket (0.5345) does not clear its own floor (0.5679, −0.033),
+though it does edge out this project's own actual (0.5176, +0.017); the
+weakest evidence for the "non-trivial" reading among the 3 targets, but not
+a clean fail either.
+
+**c-Myc/1NKP is deliberately not a table row** (this task's own Open
+Question, resolved as recommended): it carries no ground truth by design
+(`holo_pdb: null`, scored on cross-operator consensus + fpocket docking
+viability only, [[TASK-0080]]) — the discriminability question does not
+apply in the same form (there is no label to be trivially or non-trivially
+recovered). Nothing in this audit bears on that target's own reporting.
+
+**On how hard to push the fpocket finding** (this task's own second Open
+Question, resolved as recommended): reported prominently above, without
+editorializing — the numbers (0.8348/0.8596 vs. this project's own 0.5901/
+0.5266) are self-explanatory, and any additional framing would only weaken
+a comparison that already speaks for itself.
+
+**Specification of a certifying benchmark** (the constructive half — what
+would need to be true for the mandatory-target framework to actually
+distinguish a working method from a broken one):
+
+1. **Holo structures verified to contain the named ligand** — not assumed
+   from a challenge document, checked directly against RCSB before use
+   (exactly the gap 6C1H exposes).
+2. **Pockets verified both distal *and* absent in apo** — a genuine
+   cryptic-pocket criterion (e.g. this project's own apo→holo pocket-RMSD-
+   vs-background ratio, [[TASK-0120]]), not a bare drug-contact proxy that
+   can silently include a pocket that is pre-formed (BCR_ABL1) or adjacent
+   to the seed (KRAS_G12C).
+3. **A stated geometric-baseline floor per target**, run and reported
+   *before* any dynamical/quantum method is scored — if a 2009 classical
+   tool with no dynamics already wins, that is load-bearing information
+   about what the benchmark is actually testing, not an afterthought.
+4. **At least one target with mechanism-validated, not drug-derived,
+   ground truth** — every current label is a drug-contact proxy for
+   allostery, not a direct measurement of an allosteric mechanism (see
+   [[TASK-0170]]).
+5. **A published detection limit for the scoring protocol** — for any
+   target where the method's own limit of detection exceeds plausible
+   physical coupling strength, a negative result is uninformative about
+   that target specifically, and a benchmark should say so rather than let
+   a null result read as a method failure ([[TASK-0167]]/[[TASK-0167.002]]).
+
+Full detail: `.ai/tasks/DONE/TASK-0169-benchmark-discriminability-audit.md`,
+`COMPETENCE_MAP.md`'s own "Benchmark discriminability audit" section,
+open-questions row 46.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -4079,6 +4194,7 @@ Full detail: `.ai/tasks/DONE/TASK-0162-reverse-direction-coupling-test.md`,
 | 43 | Does the ensemble-redistribution mechanism the challenge's own reference [4] (Motlagh & Hilser 2014) names — a cryptic pocket exists because the conformational *ensemble* contains states where it is open, not because a signal propagates there — show real allosteric signal at Cα/GNM resolution, and is it orthogonal to the proximity confound that dominates every directed-channel observable in this register (`PANEL_REVIEW_2026-07-25.md` §7.3(1)/V9)? | **resolved 2026-07-28: no on both counts, a clean and informative double negative.** New per-residue GNM low-mode conformational entropy (`0.5*ln(2*pi*e*sigma_i^2)`, sigma_i^2 the standard Bahar/Atilgan/Erman 1997 GNM MSF formula restricted to the lowest 20 modes — a textbook differential-entropy identity applied to an existing, already-validated quantity, not invented). Scored against all 7 pocket-scoreable `status: verified` targets (MYC_MAX excluded — no pocket label exists for this IDP target): zero of 7 cells survive Bonferroni correction (α/7=0.00714); GLUCOKINASE's p=0.035 is the closest near-miss. **More informative than the null result alone**: despite having no active-site seed and no propagation step at all, ρ(entropy, −hop-from-seed) is strongly positive on every target (0.39–0.76) — this observable does NOT evade the proximity confound the way [[TASK-0140]]'s chiral circulation (orthogonal by construction) or [[TASK-0149]]'s mode-filtered PRS/DCC do. Entropy is a strictly monotonic transform of the underlying low-mode variance, so this is, in ranking terms, a test of whether raw per-residue flexibility magnitude predicts the pocket — it does not, on this data. | [[TASK-0166]], [[TASK-0161]], [[TASK-0158]], [[TASK-0123]] |
 | 44 | Does this project have any real external classical comparator beyond the single GNM transfer-entropy baseline ([[TASK-0132]]) — the challenge's own explicitly-scored "comparison to classical analogs" criterion (`PANEL_REVIEW_2026-07-25.md` §2.2/W7, §4 action item 6, V8) — given ~40 quantum-flavored observables have been run against 1? | **resolved 2026-07-28: fpocket run and decisively beats this project's own headline observable on 2/3 mandatory targets; PocketMiner run, mixed; ProteinLens blocked (browser-only, no API) and explicitly reported as such, not silently skipped.** Full detail: this document's own "External classical-pocket-detection baselines (fpocket, PocketMiner)" section below. | [[TASK-0163]], [[TASK-0132]] |
 | 45 | Does allosteric coupling reciprocate — does seeding at the (holo-labeled) pocket and scoring into the active site (the direction real allosteric experiments actually measure) reproduce the forward-direction (active-site-seeded) signal every observable in this register has been scored on so far? | **resolved 2026-07-28: no, decisively — a real, target/observable-dependent asymmetry, not a reciprocal-channel picture.** 5 observables (`time_averaged_ctqw_converged`, `prs_low`/`dcc_low` at k=20, `R_eff`, `T(E=0)` on `H_new`) × 5 targets (3 mandatory + PTP1B/CASPASE7): forward clears its own proximity floor in 10/25 cells (40%), reverse in only 4/25 (16%), both directions in only 2/25 (8%). **The single starkest cell is this project's own strongest whole-graph result**: CARDIAC_MYOSIN `prs_low` forward AUC 0.836 collapses to reverse AUC 0.321 (anti-correlated, below its own floor). Background Spearman ρ (forward vs. reverse score vectors, residues outside both labeled sets) is mostly strongly positive (mean 0.61) — the asymmetry concentrates in the labeled sets specifically, the rest of the protein's own coupling structure is largely reciprocal even on cells with a large labeled-set AUC collapse. Forward numbers reproduce every already-published value exactly (an implicit consistency check); reverse is a new measurement, no prior verdict changes. A real scale effect on PTP1B/CASPASE7 (only 5 active-site residues each) elevates their own reverse floor to 0.90-0.91. | [[TASK-0162]], [[TASK-0130]], [[TASK-0149]], [[TASK-0145]], [[TASK-0094]] |
+| 46 | Is the mandatory 3-target benchmark actually capable of certifying a working allosteric-site predictor, as distinct from a broken one — consolidating this project's own already-scattered benchmark-integrity findings into one explicit verdict? | **resolved 2026-07-28: no, on all 3 mandatory targets, on at least one of three axes each — re-verified directly against RCSB, not relayed.** KRAS_G12C: ground truth valid, but the pocket is 3.75 Å from the active site (re-measured directly) and fpocket (0.8348, purely geometric) decisively beats both the corrected floor (0.4818) and this project's own actual (0.5901) — fails "distal" and "non-trivial." BCR_ABL1: ground truth valid, but the pocket is measurably pre-formed in apo (RMSD ratio 0.49, [[TASK-0120]]/[[TASK-0139]]) and fpocket (0.8596) again crushes both floor and actual — fails "cryptic" and "non-trivial." CARDIAC_MYOSIN: the challenge's own named validation structure (6C1H) does **not** contain mavacamten (re-confirmed live: `nonpolymer_bound_components=['ADP','MG']` only) — this project's own substituted structure (8QYR) does — fails "ground truth valid" for the challenge's own literal Table 1 entry. **A stale number caught in the process**: the filing task's own "0.798" KRAS_G12C floor citation is TASK-0094's pre-[[TASK-0118]]/[[TASK-0121]]/[[TASK-0130]] number; the current, fully-corrected floor is 0.4818 — corrected here, not silently propagated. Constructive half: a 5-point specification for a benchmark that *could* certify a method (verified holo ligand content; verified-distal-and-cryptic pockets, not drug-contact proxies; a mandatory geometric-baseline floor per target; ≥1 mechanism-validated ground truth target ([[TASK-0170]]); a published detection limit ([[TASK-0167]])). Framed as measurement, not criticism, per this task's own Constraint. | [[TASK-0169]], [[TASK-0124]], [[TASK-0163]], [[TASK-0164]], [[TASK-0104]], [[TASK-0094]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

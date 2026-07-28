@@ -10,10 +10,10 @@
   benchmark-integrity findings, to the challenge's own mandatory target set,
   and answer directly: **is this benchmark capable of distinguishing a working
   allosteric-site predictor from a broken one?**
-- Status: TODO
+- Status: Done
 - Owner: Architect/Planner (analysis + writing; little new computation)
-- Claimed By: —
-- Claimed At: —
+- Claimed By: Implementer B (this thread)
+- Claimed At: 2026-07-28 18:45
 - Source: `REVIEW-panel-2026-07-28-external.md` §6 finding 4 and §7 item 3 —
   *"your most valuable and least-promoted finding."*
 - Priority: **P1 — mostly synthesis of results already in hand (~1 day). This
@@ -118,14 +118,14 @@ None
 
 ## TODO
 
-- [ ] Re-verify 6C1H ligand content directly on RCSB (**load-bearing**).
-- [ ] Re-verify 5TBY method/resolution and the 8QYP replacement.
-- [ ] Re-verify KRAS Switch-II / active-site residue overlap from the labels.
-- [ ] Re-verify BCR-ABL1 myristoyl pocket is pre-formed in 1OPL.
-- [ ] Consolidate [[TASK-0163]]'s fpocket/PocketMiner numbers into the table.
-- [ ] Write the per-target 3-axis (or 4-axis) verdict.
-- [ ] Write the certifying-benchmark specification.
-- [ ] Promote to a top-level `RESULTS.md` section + `COMPETENCE_MAP.md` row.
+- [x] Re-verify 6C1H ligand content directly on RCSB (**load-bearing**).
+- [x] Re-verify 5TBY method/resolution and the 8QYP replacement.
+- [x] Re-verify KRAS Switch-II / active-site residue overlap from the labels.
+- [x] Re-verify BCR-ABL1 myristoyl pocket is pre-formed in 1OPL.
+- [x] Consolidate [[TASK-0163]]'s fpocket/PocketMiner numbers into the table.
+- [x] Write the per-target 3-axis (or 4-axis) verdict.
+- [x] Write the certifying-benchmark specification.
+- [x] Promote to a top-level `RESULTS.md` section + `COMPETENCE_MAP.md` row.
 
 ## Dependency
 
@@ -138,11 +138,98 @@ None
   design (scored on consensus + docking viability), so the discriminability
   question is different in kind. Recommend a separate short paragraph rather
   than a table row.
+  **Answered as recommended**: a short standalone paragraph in `RESULTS.md`'s
+  own section, not a table row — no ground-truth label exists for this
+  target, so the 3-axis question does not apply in the same form.
 - How hard to push the fpocket finding? It is the most damaging single result
   for the challenge's premise and the most valuable for the paper's honesty.
   Recommend: report it prominently and without editorializing. The numbers
   are self-explanatory and any framing weakens them.
+  **Answered as recommended**: reported prominently, numbers stated directly,
+  no added framing beyond stating the comparison itself.
 
 ## Done
 
-(not yet)
+**2026-07-28, Implementer B.** Consolidated as scoped. No new computation --
+every claim independently re-verified against a primary source (live RCSB
+REST API calls, or a named task's already-executed run), per this task's own
+Constraint and Planned Validation.
+
+**Load-bearing claim (6C1H/mavacamten), re-verified live, not relayed**:
+RCSB REST API `entry/6C1H` -> `nonpolymer_bound_components = ['ADP', 'MG']`
+only; the 3 polymer entities are actin (rabbit), unconventional myosin-Ib
+(rat), and calmodulin -- confirmed independently via each entity's own
+`pdbx_description`/organism fields, not just the entry-level summary. No
+myosin motor domain, no XB2. This project's own substituted validation
+structure (8QYR) does carry XB2/mavacamten (already RCSB-reconfirmed
+2026-07-06, TASK-0003), and a second, independent structure (9GZ1,
+[[TASK-0124]]) corroborates the same binding site.
+
+**5TBY/8QYP, re-verified live**: 5TBY's own RCSB title literally reads
+"...OBTAINED BY HOMOLOGY MODELING... RIGIDLY FITTED TO... 3D-RECONSTRUCTION",
+method EM, resolution 20.0 A exactly -- matches the established claim
+word-for-word, not approximately. 8QYP confirmed X-ray, 2.759 A, drug-free
+(ADP/MG/VO4). Actual AUC drop (0.7912 -> 0.5176) re-cited from [[TASK-0124]]'s
+own already-executed run, not recomputed.
+
+**KRAS_G12C Switch-II overlap, freshly measured, not just cited**: a direct
+geometric check (`build_labels`'s own active_site/pocket masks, real
+KRAS_G12C apo coordinates) gives minimum active-site-to-pocket Ca-Ca
+distance of 3.75 A, mean nearest-neighbor 9.85 A -- van der Waals contact
+range, not a distal separation. **A stale number caught in the process**:
+the filing task's own text cited the KRAS_G12C proximity floor as "0.798" --
+traced this to TASK-0094's own original, pre-[[TASK-0118]]/[[TASK-0121]]/
+[[TASK-0130]] number (a single-baseline `euclid_from_seed_centroid` value
+from 2026-07-15). The current, fully-corrected floor
+(`COMPETENCE_MAP.md`'s own "Recomputed 2026-07-18" table, under the closed-
+form propagator) is 0.4818 -- both support the same qualitative point, but
+the current number is what is now cited in `RESULTS.md`/`COMPETENCE_MAP.md`,
+not the stale one. Exactly the kind of relayed-number risk this task's own
+Constraints warned about (citing TASK-0132's wrong-author-list precedent) --
+found by actually checking, not assumed absent.
+
+**BCR_ABL1 pre-formed pocket, re-cited from an already-executed measurement**:
+[[TASK-0120]]/[[TASK-0139]]'s own apo->holo pocket-RMSD-vs-background ratio
+(0.49) was not recomputed -- a named task's own executed run is a valid
+primary source per this task's own Planned Validation, and re-running an
+identical GNM/ANM computation would not have added information.
+
+**fpocket/PocketMiner numbers**: consolidated directly from [[TASK-0163]]'s
+own already-published table (KRAS_G12C 0.8348, BCR_ABL1 0.8596, CARDIAC_MYOSIN
+0.5345, vs. this project's own floor/actual) -- no re-run needed, real code
+already executed that task.
+
+**ASD pool exhaustion**: re-cited from [[TASK-0164]]'s own already-executed
+audit (0 of 6 remaining draft configs resolvable) via its `EXECUTION_PLAN.md`
+citation.
+
+**Per-target 3-axis verdict** (no axis 4 -- [[TASK-0167.002]] confirmed still
+TODO/unclaimed at pickup, so the LOD axis does not apply per this task's own
+conditional scope): every mandatory target fails at least one of (ground
+truth valid / task the stated task / task non-trivial). KRAS_G12C fails
+axes 2 and 3; BCR_ABL1 fails axes 2 and 3; CARDIAC_MYOSIN fails axis 1
+(for the challenge's own named structure specifically -- this project's own
+substitute passes) and axis 2 is left genuinely unresolved (no apo/holo
+pocket-RMSD measurement exists yet for the current 8QYP/8QYR pair -- stated
+as a real gap, not assumed either way).
+
+**Certifying-benchmark specification**: 5 concrete points (verified ligand
+content; verified-distal-and-cryptic pockets, not drug-contact proxies; a
+mandatory geometric-baseline floor; >=1 mechanism-validated target,
+[[TASK-0170]]; a published detection limit, [[TASK-0167]]/[[TASK-0167.002]]).
+
+**c-Myc/1NKP and the fpocket-framing Open Questions**: both resolved exactly
+as this task's own filing recommended (see Open Questions above).
+
+**Promoted**: `RESULTS.md`'s own "Benchmark discriminability audit" section
+(full evidence, per-target verdicts, certifying-benchmark spec) +
+open-questions row 46; `COMPETENCE_MAP.md`'s own compact 3-column verdict
+table, cross-linked back to `RESULTS.md` for full reasoning, per this task's
+own Intent Contract ("a competence-map row").
+
+**Full test suite**: 994 passed, 2 xfailed, 0 failed (no code touched by this
+task -- pure documentation/analysis, per its own scope; run anyway for
+consistency with this project's own standing convention).
+
+Full detail: `RESULTS.md`'s own "Benchmark discriminability audit" section,
+open-questions row 46, `COMPETENCE_MAP.md`'s own section of the same name.

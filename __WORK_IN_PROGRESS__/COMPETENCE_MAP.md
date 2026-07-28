@@ -646,6 +646,27 @@ CARDIAC_MYOSIN's reading changed.
 
 ---
 
+## Benchmark discriminability audit — can the mandatory 3-target set certify a method? ([[TASK-0169]], `PANEL_REVIEW_2026-07-28-external.md` §6/§7, 2026-07-28)
+
+**Consolidated verdict, every row independently re-verified against RCSB directly by
+this task, not relayed** — full evidence and per-row citations in `RESULTS.md`'s own
+section of the same name; this is the compact competence-map reading.
+
+| Target | Ground truth valid? | Task the stated task (distal/cryptic)? | Task non-trivial (beats a geometric baseline)? |
+|---|---|---|---|
+| KRAS_G12C | Yes (6OIM confirmed MOV/sotorasib) | **No** — pocket 3.75 Å from active site (re-measured) | **No** — fpocket 0.8348 beats floor 0.4818 and actual 0.5901 |
+| BCR_ABL1 | Yes (5MO4 confirmed AY7) | **No** — pocket pre-formed in apo, RMSD ratio 0.49 | **No** — fpocket 0.8596 beats floor 0.5817 and actual 0.5266 |
+| CARDIAC_MYOSIN | **Split** — challenge's own 6C1H has no mavacamten (re-confirmed live: ADP/MG only); this project's substitute 8QYR does | Unresolved — no apo/holo pocket-RMSD run for the current 8QYP/8QYR pair | Weakly yes — fpocket 0.5345 misses its own floor 0.5679 by −0.033 |
+
+**Every mandatory target fails at least one axis.** No target passes all three. The
+single sharpest number: a 2009 classical geometric tool with no dynamics beats this
+project's own best quantum-flavored observable on 2 of 3 targets, by a wide margin,
+using no active-site seed at all. Full per-target reasoning, the c-Myc/1NKP scope note,
+and the constructive 5-point certifying-benchmark specification: `RESULTS.md`'s own
+"Benchmark discriminability audit" section.
+
+---
+
 ## Open items
 
 - **Closed-form re-run — done, closes every clock-gauge item below** ([[TASK-0130]],
