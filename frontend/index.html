@@ -269,31 +269,13 @@
 
     <!-- ── ② Quantum solving — slice 1: graph-trap pre-flight (§2c) ────────── -->
     <section class="panel quantum-panel">
-      <h2>② Quantum solving — allosteric prediction + trap pre-flight</h2>
+      <h2>② Quantum solving — step 1: find the traps · step 2: run the CTQW</h2>
 
-      <h3 style="font-size:13px;color:var(--accent);margin:4px 0 4px">Allosteric site prediction — CTQW seeded at the active site</h3>
-      <p class="hint-line">Propagate a continuous-time quantum walk <b>from the active site</b> and rank residues by transfer.
-        <b>Occupation</b> = time-averaged occupation (residues inside the pocket); <b>pathway</b> = Green's-function
-        drivers (often outside it). <b>P@5</b> = the top-5 vs the holo drug pocket — <i>validation only, the pocket
-        never reaches the predictor</i>. Operator = the documented disorder-suppressed winner, <b>un-tuned</b> (not the
-        per-target-optimized pipeline). <span style="color:#00e6c3">teal = active-site seed</span>,
-        <span style="color:#ff4d6d">pink = predicted allosteric top-5</span>.</p>
-      <div class="conn-filter" style="margin-top:6px">
-        <label>Mode
-          <select id="allomode">
-            <option value="occupation">occupation (pocket residues)</option>
-            <option value="pathway">pathway (driver residues)</option>
-          </select>
-        </label>
-        <button id="allobtn" class="secondary">▶ Predict allosteric sites</button>
-        <span id="allostatus" class="status"></span>
-      </div>
-      <div id="alloresult"></div>
-      <hr style="border:none;border-top:1px solid var(--border);opacity:.5;margin:16px 0">
-
-      <p class="hint-line">Phase-2 pre-flight, <b>before</b> running the allosteric walk: map the residues where a
-        continuous-time quantum walk would <b>stall</b> — localized dead-end modes of the transport operator.
-        <b>This is a connectivity/failure diagnostic, not an allosteric-site prediction.</b>
+      <!-- STEP 1 — trap pre-flight (run this first) -->
+      <h3 style="font-size:13px;color:var(--accent);margin:4px 0 4px">Step 1 — graph traps (pre-flight): where a CTQW would stall</h3>
+      <p class="hint-line">Run this <b>first</b>: map the residues where a continuous-time quantum walk would <b>stall</b> —
+        localized dead-end modes of the transport operator. If the active-site seed feeds into these, the CTQW ranking in
+        step 2 is less trustworthy. <b>A connectivity/failure diagnostic, not an allosteric-site prediction.</b>
         <span style="color:#00e6c3">teal = active site (the walk's seed)</span>.</p>
       <details class="help-box">
         <summary>ℹ︎ How to read these — and the honest scope</summary>
@@ -323,7 +305,31 @@
         <div id="trapbar" class="connchart" style="min-height:320px"></div>
         <div id="trapspec" class="connchart" style="min-height:320px"></div>
       </div>
-      <p id="trap3dcap" class="hint-line" style="margin:10px 0 4px"></p>
+
+      <hr style="border:none;border-top:1px solid var(--border);opacity:.5;margin:18px 0">
+
+      <!-- STEP 2 — allosteric prediction (run after checking the traps) -->
+      <h3 style="font-size:13px;color:var(--accent);margin:4px 0 4px">Step 2 — allosteric prediction: CTQW seeded at the active site</h3>
+      <p class="hint-line">Now propagate the walk <b>from the active site</b> and rank residues by transfer.
+        <b>Occupation</b> = time-averaged occupation (residues inside the pocket); <b>pathway</b> = Green's-function
+        drivers (often outside it). <b>P@5</b> = the top-5 vs the holo drug pocket — <i>validation only, the pocket
+        never reaches the predictor</i>. Operator = the documented disorder-suppressed winner, <b>un-tuned</b>.
+        <span style="color:#00e6c3">teal = active-site seed</span>,
+        <span style="color:#ff4d6d">pink = predicted allosteric top-5</span>.</p>
+      <div class="conn-filter" style="margin-top:6px">
+        <label>Mode
+          <select id="allomode">
+            <option value="occupation">occupation (pocket residues)</option>
+            <option value="pathway">pathway (driver residues)</option>
+          </select>
+        </label>
+        <button id="allobtn" class="secondary">▶ Predict allosteric sites</button>
+        <span id="allostatus" class="status"></span>
+      </div>
+      <div id="alloresult"></div>
+
+      <!-- shared 3D viewer: shows traps (step 1) or predicted sites (step 2) -->
+      <p id="trap3dcap" class="hint-line" style="margin:12px 0 4px"></p>
       <div id="trap3d" style="width:100%;height:520px;position:relative;background:#fff;border-radius:10px"></div>
     </section>
   </main>
