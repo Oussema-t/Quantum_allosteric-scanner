@@ -169,11 +169,26 @@ discriminability audit), [[TASK-0170]] (literature-validated ground truth).
 
 ## In Progress
 
-None
+**[[TASK-0167.001]] Done (2026-07-28).** `allostery.plant` built and validated;
+gate seen to pass and to fire on a constructed contaminated case. **Decisive
+finding for [[TASK-0167.002]]: a weight-only plant is structurally invisible to
+`build_H_new` and `dcc_low`** (confirmed exactly, `np.array_equal`, on real
+KRAS_G12C data at strength 0 vs. 30) — every GNM-derived `H_new` term and
+`dcc_low` itself route through `potentials._kirchhoff_eigh`, which always
+rebuilds a **binary** contact matrix from raw `coords`, never consulting `W`.
+**[[TASK-0167.002]] must score against an operator built directly from
+`W_planted`** (e.g. `hamiltonians.laplacian(W_planted)` via
+`transport.effective_resistance_from_source`/`transmission_from_source`), not
+`H_new`. Induced-coupling dose axis resolved: `R_eff`
+(`effective_resistance_from_source`'s own `1/R_eff` conductance return value,
+confirmed via its docstring, not assumed from the function name) rises
+monotonically with strength on real data (Rayleigh's law); `dcc_low` is proven
+exactly inert, not merely non-monotone, and is not usable at all. Full detail:
+`.ai/tasks/DONE/TASK-0167.001-plant-machinery-and-orthogonality-gate.md`.
 
 ## TODO
 
-- [ ] Dispatch [[TASK-0167.001]] (blocks .002 and .003).
+- [x] Dispatch [[TASK-0167.001]] (blocks .002 and .003). — Done; see In Progress note above for the scoring-scope finding .002 must apply.
 - [ ] Dispatch [[TASK-0167.002]] and [[TASK-0167.003]] in parallel once .001 lands.
 - [ ] Write the LOD paragraph into `RESULTS.md` as a top-level section, not
       an open-questions row — it is a headline result either way.
