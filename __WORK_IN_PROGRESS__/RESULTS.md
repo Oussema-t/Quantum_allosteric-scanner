@@ -3926,6 +3926,98 @@ entropy proxy only, stated as such, not silently expanded.
 
 ---
 
+## Reverse-direction coupling test — seed at the pocket, score into the active site (TASK-0162, `PANEL_REVIEW_2026-07-25.md` §2.4/V5, 2026-07-28)
+
+**Every observable in this project's register seeds at the active site and
+asks where signal goes. Real allosteric experiments measure the reverse
+direction — does binding at the candidate site perturb the active site,
+the direction that matters therapeutically — and this project has never
+computed it.** `labels.build_labels`'s own `pocket`/`active_site` masks
+are guaranteed disjoint by construction (`pocket = pocket_raw &
+~active_site & ~terminal`), so no special handling was needed to swap
+which set is the seed and which is the scored/labeled candidate set —
+new `scripts/reverse_direction_coupling_test.py` reuses every scoring
+function completely unmodified (this task's own Out of Scope), only the
+seed/label assignment swaps: **FORWARD** = source active site, label
+pocket (recomputed fresh here, matching every already-published number
+exactly — e.g. KRAS_G12C `ctqw_converged` 0.5901, identical to
+[[TASK-0130]]/[[TASK-0159]]'s own number, confirming no discrepancy was
+introduced); **REVERSE** (new) = source pocket, label active site.
+
+**5 observables ("at minimum" per this task's own Intent Contract) × 5
+targets (3 mandatory + PTP1B/CASPASE7 — this task's own Open Question
+resolved in favor of running both: compute cost is negligible, all 5
+observables are closed-form/direct linear algebra, full run under a
+minute)**: `time_averaged_ctqw_converged` ([[TASK-0130]]), `prs_low`/
+`dcc_low` at `k_modes=20` ([[TASK-0149]]'s own established default —
+not a fresh per-direction k-sweep, a deliberate scope choice: this task
+re-applies the existing best-performing observables, it does not
+re-characterize their own k-sensitivity a second time), `R_eff` (on
+`H2_combinatorial_laplacian`) and `T(E=0)` (on `H_new`) ([[TASK-0145]]).
+Each direction scored against [[TASK-0094]]'s own proximity floor,
+computed fresh in the *same* direction (i.e. the reverse floor is "how
+well do trivial distance/degree baselines *from the pocket* predict
+active-site membership," not the forward floor reused backwards).
+
+**Headline: a real, decisive, and target/observable-dependent
+asymmetry — reverse clears its own floor far less often than forward.**
+Across all 25 target × observable cells: forward clears floor in
+**10/25 (40%)**, reverse in only **4/25 (16%)**, both directions in only
+**2/25 (8%)** (KRAS_G12C `dcc_low`: fwd 0.522/rev 0.632, both clear, reverse
+even stronger; BCR_ABL1 `T(E=0)` on `H_new`: fwd 0.636/rev 0.726, both
+clear, reverse also stronger). **The single most striking cell is this
+project's own strongest whole-graph result**: CARDIAC_MYOSIN `prs_low`
+forward AUC **0.836** (clears floor 0.568) collapses to reverse AUC
+**0.321** (anti-correlated, well below its own floor 0.674) — a large,
+real, target-specific asymmetry on the project's own headline finding,
+reported plainly rather than smoothed over. (This task's own whole-graph
+AUC is not directly comparable to [[TASK-0149]]'s own distance-stratified,
+well-powered-shell max AUC (0.922) for the same cell — a deliberately
+simpler, floor-only lens applied uniformly across all 25 cells here, not
+a re-run of that task's own stratified methodology; stated explicitly, not
+conflated.)
+
+**Background asymmetry statistic** (Spearman ρ between forward and
+reverse score vectors, restricted to residues in *neither* pocket nor
+active site — this task's own explicit design choice: correlating the
+full N-residue vectors would mostly measure "does each labeled set have
+high self-occupancy in its own seeded direction," true by construction
+and not a real coupling question; the background restriction isolates
+whether residues outside either label respond similarly regardless of
+which end perturbs): **mostly strongly positive** (mean ρ=0.61, median
+0.73, range −0.44 to 0.95) — the *rest of the protein's* own coupling
+structure is largely reciprocal even on cells where the specific
+labeled-set AUC differs sharply (e.g. CARDIAC_MYOSIN `prs_low`'s own
+ρ=0.90 despite its 0.836-vs-0.321 AUC collapse — the background residues
+still respond similarly either direction; the asymmetry is concentrated
+in the labeled sets specifically, not the whole graph). Exactly 1/25 cells
+(`dcc_low`, BCR_ABL1) shows real background anti-correlation (ρ=−0.44).
+
+**No previously-reported verdict is changed by this task** — forward
+numbers reproduce already-published values exactly (a real, if implicit,
+consistency check on both this task's own script and the underlying
+propagators); reverse is a new measurement, not a correction to an old
+one. **Scale effect noted on the generalization targets**: PTP1B/CASPASE7
+both have only 5 active-site residues (vs. 14/16/18 pocket-sized sets),
+producing a much higher reverse floor (0.90–0.91, vs. 0.56–0.62 on the 3
+mandatory targets) — a 5-residue positive-label set is trivially easy for
+distance/degree baselines to nail when seeded from a nearby 7-14-residue
+region, a real scale effect stated plainly, not a target-specific anomaly.
+CASPASE7's `R_eff` reverse (0.906) is the one cell on the generalization
+set that clears this elevated bar.
+
+**No permutation-null gate applied to the reverse cells specifically**
+(this task's own scope: "pure re-application... only the seed/candidate-set
+assignment swaps," no new statistical machinery) — a natural follow-up for
+whoever next wants a Bonferroni-corrected verdict on the reverse direction
+specifically, not done here.
+
+Full detail: `.ai/tasks/DONE/TASK-0162-reverse-direction-coupling-test.md`,
+`RESULTS/results_task0162_reverse_direction/reverse_direction_coupling_test.json`,
+`scripts/reverse_direction_coupling_test.py`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -3986,6 +4078,7 @@ entropy proxy only, stated as such, not silently expanded.
 
 | 43 | Does the ensemble-redistribution mechanism the challenge's own reference [4] (Motlagh & Hilser 2014) names — a cryptic pocket exists because the conformational *ensemble* contains states where it is open, not because a signal propagates there — show real allosteric signal at Cα/GNM resolution, and is it orthogonal to the proximity confound that dominates every directed-channel observable in this register (`PANEL_REVIEW_2026-07-25.md` §7.3(1)/V9)? | **resolved 2026-07-28: no on both counts, a clean and informative double negative.** New per-residue GNM low-mode conformational entropy (`0.5*ln(2*pi*e*sigma_i^2)`, sigma_i^2 the standard Bahar/Atilgan/Erman 1997 GNM MSF formula restricted to the lowest 20 modes — a textbook differential-entropy identity applied to an existing, already-validated quantity, not invented). Scored against all 7 pocket-scoreable `status: verified` targets (MYC_MAX excluded — no pocket label exists for this IDP target): zero of 7 cells survive Bonferroni correction (α/7=0.00714); GLUCOKINASE's p=0.035 is the closest near-miss. **More informative than the null result alone**: despite having no active-site seed and no propagation step at all, ρ(entropy, −hop-from-seed) is strongly positive on every target (0.39–0.76) — this observable does NOT evade the proximity confound the way [[TASK-0140]]'s chiral circulation (orthogonal by construction) or [[TASK-0149]]'s mode-filtered PRS/DCC do. Entropy is a strictly monotonic transform of the underlying low-mode variance, so this is, in ranking terms, a test of whether raw per-residue flexibility magnitude predicts the pocket — it does not, on this data. | [[TASK-0166]], [[TASK-0161]], [[TASK-0158]], [[TASK-0123]] |
 | 44 | Does this project have any real external classical comparator beyond the single GNM transfer-entropy baseline ([[TASK-0132]]) — the challenge's own explicitly-scored "comparison to classical analogs" criterion (`PANEL_REVIEW_2026-07-25.md` §2.2/W7, §4 action item 6, V8) — given ~40 quantum-flavored observables have been run against 1? | **resolved 2026-07-28: fpocket run and decisively beats this project's own headline observable on 2/3 mandatory targets; PocketMiner run, mixed; ProteinLens blocked (browser-only, no API) and explicitly reported as such, not silently skipped.** Full detail: this document's own "External classical-pocket-detection baselines (fpocket, PocketMiner)" section below. | [[TASK-0163]], [[TASK-0132]] |
+| 45 | Does allosteric coupling reciprocate — does seeding at the (holo-labeled) pocket and scoring into the active site (the direction real allosteric experiments actually measure) reproduce the forward-direction (active-site-seeded) signal every observable in this register has been scored on so far? | **resolved 2026-07-28: no, decisively — a real, target/observable-dependent asymmetry, not a reciprocal-channel picture.** 5 observables (`time_averaged_ctqw_converged`, `prs_low`/`dcc_low` at k=20, `R_eff`, `T(E=0)` on `H_new`) × 5 targets (3 mandatory + PTP1B/CASPASE7): forward clears its own proximity floor in 10/25 cells (40%), reverse in only 4/25 (16%), both directions in only 2/25 (8%). **The single starkest cell is this project's own strongest whole-graph result**: CARDIAC_MYOSIN `prs_low` forward AUC 0.836 collapses to reverse AUC 0.321 (anti-correlated, below its own floor). Background Spearman ρ (forward vs. reverse score vectors, residues outside both labeled sets) is mostly strongly positive (mean 0.61) — the asymmetry concentrates in the labeled sets specifically, the rest of the protein's own coupling structure is largely reciprocal even on cells with a large labeled-set AUC collapse. Forward numbers reproduce every already-published value exactly (an implicit consistency check); reverse is a new measurement, no prior verdict changes. A real scale effect on PTP1B/CASPASE7 (only 5 active-site residues each) elevates their own reverse floor to 0.90-0.91. | [[TASK-0162]], [[TASK-0130]], [[TASK-0149]], [[TASK-0145]], [[TASK-0094]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
