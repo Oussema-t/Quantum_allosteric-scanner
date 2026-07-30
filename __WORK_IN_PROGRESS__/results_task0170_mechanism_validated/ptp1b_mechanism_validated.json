@@ -1,0 +1,150 @@
+{
+  "target": "PTP1B",
+  "mechanism_network_resnums": [
+    105,
+    148,
+    150,
+    152,
+    153,
+    176,
+    177,
+    178,
+    179,
+    180,
+    181,
+    185,
+    190,
+    191,
+    192,
+    193,
+    196,
+    197,
+    198,
+    200,
+    267,
+    269,
+    270,
+    276,
+    277,
+    280,
+    281,
+    282,
+    290,
+    291,
+    295
+  ],
+  "drug_pocket_resnums": [
+    187,
+    188,
+    189,
+    192,
+    193,
+    196,
+    197,
+    200,
+    276,
+    277,
+    279,
+    280,
+    281,
+    282
+  ],
+  "jaccard": 0.2857142857142857,
+  "shared_resnums": [
+    192,
+    193,
+    196,
+    197,
+    200,
+    276,
+    277,
+    280,
+    281,
+    282
+  ],
+  "mechanism_only_resnums": [
+    105,
+    148,
+    150,
+    152,
+    153,
+    176,
+    177,
+    178,
+    179,
+    180,
+    181,
+    185,
+    190,
+    191,
+    198,
+    267,
+    269,
+    270,
+    290,
+    291,
+    295
+  ],
+  "floor_mechanism_validated": {
+    "degree": 0.5340099069711248,
+    "euclid": 0.6008215537030325,
+    "hop": 0.599250936329588,
+    "max": 0.6008215537030325
+  },
+  "floor_drug_contact": {
+    "degree": 0.4846579476861167,
+    "euclid": 0.75,
+    "hop": 0.7676056338028169,
+    "max": 0.7676056338028169
+  },
+  "results": {
+    "ctqw_converged": {
+      "auc_mechanism_validated": 0.4257581249244895,
+      "auc_drug_contact": 0.4859154929577465,
+      "mech_floor_max": 0.6008215537030325,
+      "mech_ci_seq": [
+        0.3089113807757776,
+        0.5340973150033224
+      ],
+      "mech_ci_spatial": [
+        0.2935084697967652,
+        0.5131960851648352
+      ],
+      "mech_ci_overlaps_floor": false,
+      "scattered_null_percentile": 0.111,
+      "scattered_null_p": 0.889
+    },
+    "prs_low_k20": {
+      "auc_mechanism_validated": 0.42902017639241274,
+      "auc_drug_contact": 0.43687122736418516,
+      "mech_floor_max": 0.6008215537030325,
+      "mech_ci_seq": [
+        0.3025556769872464,
+        0.5717127672069533
+      ],
+      "mech_ci_spatial": [
+        0.31166856111668395,
+        0.5839280351780352
+      ],
+      "mech_ci_overlaps_floor": false,
+      "scattered_null_percentile": 0.097,
+      "scattered_null_p": 0.903
+    },
+    "dcc_low_k20": {
+      "auc_mechanism_validated": 0.5292980548507914,
+      "auc_drug_contact": 0.505281690140845,
+      "mech_floor_max": 0.6008215537030325,
+      "mech_ci_seq": [
+        0.3596021759673076,
+        0.6956601369644847
+      ],
+      "mech_ci_spatial": [
+        0.34999946988973707,
+        0.6770077338363002
+      ],
+      "mech_ci_overlaps_floor": true,
+      "scattered_null_percentile": 0.717,
+      "scattered_null_p": 0.283
+    }
+  }
+}
