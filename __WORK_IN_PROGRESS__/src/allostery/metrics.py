@@ -188,13 +188,21 @@ def spatial_block_bootstrap_ci(
     ceil(N/block_size)` random block-centre residues per replicate,
     concatenate their neighbourhoods, truncate to length `N`.
 
-    **Regression property, not just claimed** (this task's own Constraint):
-    on a synthetic control with no real 3D spatial structure beyond matching
-    sequence order (residues on a 1D line, `coords[i] = (i, 0, 0)`), spatial
-    nearest-neighbours ARE sequence-adjacent residues exactly, so this
-    function's own resampled index sets coincide with `block_bootstrap_ci`'s
-    own -- asserted directly in `tests/test_metrics.py`, not assumed from the
-    construction alone.
+    **Correction (TASK-0167.002, external review `PANEL_REVIEW_2026-07-25.md`
+    §2.2): on a 1D-line control this block does NOT coincide exactly with
+    `block_bootstrap_ci`'s own sequence window.** `block_bootstrap_ci`'s
+    window (`range(s, s+block_size)`) is asymmetric/forward-only from `s`;
+    this function's own k-NN block is symmetric/centred on its seed residue
+    -- even when 3D position matches sequence order, these are different
+    index sets (measured mean overlap ~55%, matching the review's own 54%
+    finding almost exactly). The two methods' aggregate CI *widths* are
+    close on that control (within the loose tolerance `tests/test_metrics.
+    py` originally checked), which is not the same claim as "the same index
+    sets" -- corrected here rather than left standing. See
+    `.ai/tasks/DONE/TASK-0165-spatial-block-bootstrap.md`'s own 2026-07-28
+    correction note for the full account and why no fix to either
+    construction was attempted (both options change a much larger surface
+    than this correction's own scope).
     """
     if rng is None:
         rng = np.random.default_rng(42)

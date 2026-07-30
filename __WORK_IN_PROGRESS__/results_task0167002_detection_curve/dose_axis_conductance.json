@@ -1,0 +1,128 @@
+{
+  "KRAS_G12C": {
+    "0.0": {
+      "mean_conductance": 0.727948955657818,
+      "sd_conductance": 0.06688862379942145,
+      "ratio_vs_baseline": 1.0
+    },
+    "0.5": {
+      "mean_conductance": 0.7963361192706285,
+      "sd_conductance": 0.06450668496353236,
+      "ratio_vs_baseline": 1.0939449985899241
+    },
+    "1.0": {
+      "mean_conductance": 0.8598201124541308,
+      "sd_conductance": 0.06497644657300726,
+      "ratio_vs_baseline": 1.1811544006916614
+    },
+    "2.0": {
+      "mean_conductance": 0.9770361866735069,
+      "sd_conductance": 0.0716594664256053,
+      "ratio_vs_baseline": 1.3421767818742165
+    },
+    "4.0": {
+      "mean_conductance": 1.187715190212863,
+      "sd_conductance": 0.09676820121295453,
+      "ratio_vs_baseline": 1.6315913100521904
+    },
+    "8.0": {
+      "mean_conductance": 1.5600883094015443,
+      "sd_conductance": 0.1605840549315122,
+      "ratio_vs_baseline": 2.1431287142815605
+    },
+    "16.0": {
+      "mean_conductance": 2.2195481864052664,
+      "sd_conductance": 0.2973373566471437,
+      "ratio_vs_baseline": 3.049043712686627
+    },
+    "32.0": {
+      "mean_conductance": 3.4138643494391068,
+      "sd_conductance": 0.5784568498319909,
+      "ratio_vs_baseline": 4.689702928901293
+    }
+  },
+  "BCR_ABL1": {
+    "0.0": {
+      "mean_conductance": 0.5246841599846508,
+      "sd_conductance": 0.0777806194757578,
+      "ratio_vs_baseline": 1.0
+    },
+    "0.5": {
+      "mean_conductance": 0.5679689961004463,
+      "sd_conductance": 0.0845816186545755,
+      "ratio_vs_baseline": 1.0824969370469688
+    },
+    "1.0": {
+      "mean_conductance": 0.6081542683318689,
+      "sd_conductance": 0.09116579195054618,
+      "ratio_vs_baseline": 1.1590863889423686
+    },
+    "2.0": {
+      "mean_conductance": 0.6823248138677063,
+      "sd_conductance": 0.10379425627055973,
+      "ratio_vs_baseline": 1.3004486620820936
+    },
+    "4.0": {
+      "mean_conductance": 0.8154587638206395,
+      "sd_conductance": 0.12759386741348896,
+      "ratio_vs_baseline": 1.5541897888522023
+    },
+    "8.0": {
+      "mean_conductance": 1.0495750601736211,
+      "sd_conductance": 0.17191136987235053,
+      "ratio_vs_baseline": 2.0003940279125745
+    },
+    "16.0": {
+      "mean_conductance": 1.458309783946625,
+      "sd_conductance": 0.25424767891330124,
+      "ratio_vs_baseline": 2.7794050119395384
+    },
+    "32.0": {
+      "mean_conductance": 2.179456194720692,
+      "sd_conductance": 0.4098208929122468,
+      "ratio_vs_baseline": 4.153844085524614
+    }
+  },
+  "CARDIAC_MYOSIN": {
+    "0.0": {
+      "mean_conductance": 0.5435230345601635,
+      "sd_conductance": 0.12393451024005013,
+      "ratio_vs_baseline": 1.0
+    },
+    "0.5": {
+      "mean_conductance": 0.584886327270962,
+      "sd_conductance": 0.12854689629200783,
+      "ratio_vs_baseline": 1.0761021890162779
+    },
+    "1.0": {
+      "mean_conductance": 0.6234919039459595,
+      "sd_conductance": 0.13333972659135096,
+      "ratio_vs_baseline": 1.1471305985228564
+    },
+    "2.0": {
+      "mean_conductance": 0.695045978167911,
+      "sd_conductance": 0.14334892866862628,
+      "ratio_vs_baseline": 1.2787792494026768
+    },
+    "4.0": {
+      "mean_conductance": 0.8240186207721886,
+      "sd_conductance": 0.16453319818844617,
+      "ratio_vs_baseline": 1.516069362982953
+    },
+    "8.0": {
+      "mean_conductance": 1.0517451288233286,
+      "sd_conductance": 0.20921868864567525,
+      "ratio_vs_baseline": 1.9350516205342336
+    },
+    "16.0": {
+      "mean_conductance": 1.4512981626204657,
+      "sd_conductance": 0.30148470039399883,
+      "ratio_vs_baseline": 2.670168641141223
+    },
+    "32.0": {
+      "mean_conductance": 2.1609458127461862,
+      "sd_conductance": 0.489086615451089,
+      "ratio_vs_baseline": 3.975812753722377
+    }
+  }
+}

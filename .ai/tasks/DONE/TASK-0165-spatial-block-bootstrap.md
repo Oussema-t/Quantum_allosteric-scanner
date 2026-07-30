@@ -170,3 +170,27 @@ vs. floor CI upper bound 0.721, still overlaps; same pattern on all 5 cells).
 No verdict flips either direction.
 
 **Full test suite**: 962 passed, 2 xfailed, 0 failed.
+
+**Correction, 2026-07-28 ([[TASK-0167.002]], external review `PANEL_REVIEW_2026-07-25.md` §2.2):
+the "exact reduction on a 1D line" claim above is overstated — measured directly, not
+assumed, before accepting the review's finding.** `block_bootstrap_ci`'s own sequence
+window (`arange(s, s+block_size)`) is **asymmetric/forward-only** from its start index;
+`spatial_block_bootstrap_ci`'s own k-NN block is **symmetric/centred** on its seed
+residue. On the 1D-line control these are genuinely different index sets — direct
+measurement gives **55.1% mean overlap**, matching the review's own 54% almost exactly,
+not the "coincide exactly" this task's own module docstring and regression test claimed.
+The regression test itself (`test_reduces_to_sequence_block_on_a_1d_line_with_matching_
+order`) did not catch this: it compares aggregate *CI width* with `abs=0.03` tolerance,
+loose enough that a 55%-overlapping block still produces a similar-looking bootstrap
+distribution in that specific test's own numbers — a weak proxy for "the same index
+sets," which is what the docstring actually claimed. **No fix attempted here**: making
+the two constructions truly coincide requires either an asymmetric spatial block (no
+natural definition in 3D beyond a sequence-matching special case, defeating the point of
+generalizing) or a symmetric sequence block (a change to `block_bootstrap_ci` itself,
+touching every existing CI ever reported in this project's history — a much larger,
+separate decision, out of scope for a same-day correction). [[TASK-0167.002]] instead
+dual-reports both CI methods for its own detection-curve work, per its own Constraint
+("do not silently use a method whose validation is red"). The practical conclusion this
+task's own headline reached (no verdict flips, mixed real-data direction) is unaffected —
+it never depended on exact index-set coincidence, only on the two methods' aggregate CI
+widths, which the corrected framing does not change.

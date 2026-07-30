@@ -168,16 +168,18 @@ class TestSpatialBlockBootstrapCi:
         point, lo, hi = result
         assert lo <= point <= hi
 
-    def test_reduces_to_sequence_block_on_a_1d_line_with_matching_order(self):
-        """This function's own documented regression property: when 3D
-        coordinates collapse to a 1D line in the SAME order as sequence
-        index (`coords[i] = (i, 0, 0)`), spatial nearest-neighbours ARE
-        sequence-adjacent residues exactly -- so the two functions' own
-        resampled index sets coincide, and their CIs should match closely
-        (same `rng` state consumption differs slightly in how many
-        `rng.integers` calls happen internally, so exact equality isn't
-        expected, but the two CIs should be very close, not just
-        "both reasonable")."""
+    def test_close_to_sequence_block_on_a_1d_line_with_matching_order(self):
+        """**Corrected claim (TASK-0167.002, external review §2.2)**: this
+        does NOT test that the two functions' own resampled index sets
+        coincide -- they don't (~55% mean overlap, measured directly), since
+        `block_bootstrap_ci`'s window is asymmetric/forward-only from its
+        start index while this function's own k-NN block is symmetric/
+        centred, even on a 1D line matching sequence order. This test only
+        checks that the two methods' aggregate CI *widths* land close to
+        each other on this control (a weaker property than index-set
+        coincidence, and the only one asserted here) -- kept as a
+        regression guard on that weaker property, not evidence for the
+        stronger claim this test's own name previously implied."""
         n = 200
         coords = np.column_stack([np.arange(n, dtype=float), np.zeros(n), np.zeros(n)])
         rng_state = np.random.default_rng(7)

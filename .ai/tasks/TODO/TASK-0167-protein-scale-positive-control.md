@@ -186,14 +186,28 @@ monotonically with strength on real data (Rayleigh's law); `dcc_low` is proven
 exactly inert, not merely non-monotone, and is not usable at all. Full detail:
 `.ai/tasks/DONE/TASK-0167.001-plant-machinery-and-orthogonality-gate.md`.
 
+**[[TASK-0167.002]] Done (2026-07-28) — the LOD.** Under this project's own current
+(corrected, compact, [[TASK-0158]]) null: **no target reaches 80% detection power at
+any planted strength tested, up to ~4× background conductance.** Under the superseded
+scattered null: LOD ≈2× background on 2/3 targets. The gap between those two numbers
+is the measured, quantitative cost of the [[TASK-0158]] null correction — considerably
+more severe than the external review's own "2–2.5×" estimate. Per-gate profile: gate 2
+(CI non-overlap) and the permutation-null gate are both independently binding, neither
+alone explains the failure. Non-monotonicity found on 2/3 targets, consistent with
+TASK-0167.001's own predicted channel-leakage mechanism. Compact and Rg-matched nulls
+proved empirically indistinguishable at this patch size. BCR_ABL1 never reaches 80%
+power under any null. Full detail:
+`.ai/tasks/DONE/TASK-0167.002-detection-curve-and-limit-of-detection.md`,
+`RESULTS.md`'s own "Detection curve + limit of detection" section.
+
 ## TODO
 
 - [x] Dispatch [[TASK-0167.001]] (blocks .002 and .003). — Done; see In Progress note above for the scoring-scope finding .002 must apply.
-- [ ] Dispatch [[TASK-0167.002]] and [[TASK-0167.003]] in parallel once .001 lands.
-- [ ] Write the LOD paragraph into `RESULTS.md` as a top-level section, not
-      an open-questions row — it is a headline result either way.
-- [ ] Cross-link from `COMPETENCE_MAP.md`: every "no signal" verdict there
-      should carry the LOD as its stated detection bound.
+- [x] Dispatch [[TASK-0167.002]] and [[TASK-0167.003]] in parallel once .001 lands. — [[TASK-0167.002]] Done (see In Progress note above); [[TASK-0167.003]] still TODO.
+- [x] Write the LOD paragraph into `RESULTS.md` as a top-level section, not
+      an open-questions row — it is a headline result either way. — Done, [[TASK-0167.002]]'s own "Detection curve + limit of detection" section.
+- [x] Cross-link from `COMPETENCE_MAP.md`: every "no signal" verdict there
+      should carry the LOD as its stated detection bound. — Done via a single dated status-update callout in the document's own top-caveat block (scope call stated explicitly in [[TASK-0167.002]]'s own Done section, not an edit at every individual mention).
 
 ## Dependency
 

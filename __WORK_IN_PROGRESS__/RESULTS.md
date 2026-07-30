@@ -4133,6 +4133,168 @@ open-questions row 46.
 
 ---
 
+## Detection curve + limit of detection (TASK-0167.002, 2026-07-28)
+
+**The headline sentence, with real numbers: through the historically-used
+(scattered) permutation null, this program detects a planted active-site→
+distal-patch coupling at ≥80% power once conductance (`R_eff`) rises to
+~1.9–2.1× background, on 2 of 3 mandatory targets. Through the corrected,
+spatially-compact null ([[TASK-0158]]) — the statistically correct one — no
+target reaches 80% power at any tested strength, up to 4.0–4.7× background
+conductance. The apparatus's true detection threshold, under the null this
+project now uses, is higher than anything tested here, or the tested strength
+range itself needs to extend further — this experiment cannot distinguish
+those two readings and says so plainly.**
+
+### Scope, built on [[TASK-0167.001]]'s own decisive finding
+
+Reconfirmed directly on all 3 targets before running anything else:
+`time_averaged_ctqw_converged` on `H_new`, `dcc_low`, and `prs_low` are all
+**exactly** invariant to this plant mechanism (`np.array_equal`, strength 0 vs.
+32, every target) — 3 of this program's 4 headline observables cannot be
+tested by a weight-only channel plant at all, confirmed rather than assumed
+from [[TASK-0167.001]]'s own single-target check. Their own `NO_SIGNAL_IN_APO`
+verdicts throughout this project's history carry **no stated detection bound
+from this control** — a mode/ensemble plant ([[TASK-0168]]) would be needed.
+The real, informative sweep below covers the one plant-sensitive observable
+this program's negative claims rest on: `T(E=0)` on a weighted
+`hamiltonians.laplacian(W_planted)` ([[TASK-0145]]'s own unresolved cell).
+
+### Method
+
+3 mandatory targets × 8 log-spaced strengths ({0, 0.5, 1, 2, 4, 8, 16, 32}) ×
+20 planting seeds × 3 null specifications, through the **unmodified** verdict
+pipeline (floor → CI non-overlap → stratified-AUC permutation null →
+Bonferroni), certification requiring all four gates. Checkpointed per cell
+(`scripts/positive_control_detection_curve.py`, `results_task0167002_
+detection_curve/detection_curve.json`, 480 cells, ~87 CPU-minutes). Both
+`block_bootstrap_ci` (sequence) and `spatial_block_bootstrap_ci` (spatial) are
+computed and gated on for every cell, per this task's own Constraint —
+mid-task, the external review's own claim that the spatial method's 1D-line
+regression test is invalid was verified directly (measured 55% mean block
+overlap, not the exact coincidence [[TASK-0165]]'s own docstring claimed;
+corrected there, not fixed here — see that task's own 2026-07-28 correction
+note). **In the event, both CI methods gave identical LOD values on every
+target** — the review's real, now-corrected concern did not change this
+task's own bottom line.
+
+**Real bug found and fixed before trusting any number**: the collection
+script's own `certified`/`gate4_clears_bonferroni` fields divided α by
+`len(strengths)×len(seeds)=160`, treating this experiment's own synthetic
+replicate grid as 160 simultaneous real hypothesis tests. The correct
+Bonferroni family for a real deployment of this observable is **targets**
+(matching [[TASK-0145]]'s own established convention, α=0.05/3≈0.0167), not
+this script's internal measurement device — recomputed from each cell's own
+raw, uncorrected `p_value` in `scripts/detection_curve_analysis.py`, no
+re-run needed (only the Bonferroni denominator was wrong, not the p-values).
+
+### LOD (smallest strength with P(certified) ≥ 0.80, both CI methods identical)
+
+| Target | Scattered null (historical) | Compact null ([[TASK-0158]]) | Rg-matched null |
+|---|---|---|---|
+| KRAS_G12C | **8.0** (P=1.00 [0.83,1.00]) | ∞ (max P=0.35 at s=8) | ∞ (max P=0.35 at s=8) |
+| BCR_ABL1 | ∞ (max P=0.60 at s=32) | ∞ (max P=0.00, every strength) | ∞ (max P=0.00, every strength) |
+| CARDIAC_MYOSIN | **8.0** (P=0.85 [0.62,0.97]) | ∞ (max P=0.50 at s=8) | ∞ (max P=0.50 at s=8) |
+
+**In induced-coupling units** (mean conductance seed→patch, `R_eff`'s own
+`1/R_eff` return convention, [[TASK-0167.001]]'s resolved dose axis): strength
+8 corresponds to **2.14× background** on KRAS_G12C (0.728→1.560) and **1.93×**
+on CARDIAC_MYOSIN (0.544→1.052); the grid's own top (strength 32) reaches
+**4.69×** (KRAS_G12C) and **3.97×** (CARDIAC_MYOSIN) background conductance
+without the corrected null ever reaching 80% power on any target. Full table:
+`results_task0167002_detection_curve/dose_axis_conductance.json`.
+
+**This is a direct, quantitative, and considerably more severe confirmation
+of the external review's own §2.1 "2–2.5× power cost" estimate** — measured
+here as "undetectable within the tested range" on the corrected null, not
+merely a 2–2.5× SNR reduction, on every target tried.
+
+### Per-gate failure profile — the CI gate and the null gate are BOTH independently binding
+
+Neither gate alone explains the corrected-null LOD failure (this task's own
+"as valuable as the LOD itself" instruction, taken literally): on KRAS_G12C at
+strength 32, gate 1 (beats floor) passes 100% of the time, yet gate 2 (CI
+non-overlap) *fails* 50–55% of the time even then — a real, somewhat
+counter-intuitive finding (stronger planted signal does not monotonically
+narrow/separate the score's own bootstrap CI from the floor's; a more
+concentrated, less-evenly-distributed effect plausibly produces a *noisier*
+block-resampled CI, not a tighter one — a plausible mechanism, not
+independently verified here). Even restricting to cells where gates 1 and 2
+both pass, the compact/matched-null permutation test alone caps P(certified)
+at 35–50% at every target's own best strength — both gates are real,
+independent bottlenecks, not one dominant cause.
+
+### Non-monotonicity — a real finding, not noise (Planned Validation's own sanity check)
+
+P(certified) for the compact/matched nulls is **not** monotonically
+non-decreasing in strength on 2 of 3 targets: KRAS_G12C peaks at strength 8
+(P=0.35) and *falls* to 0.05 by strength 32; CARDIAC_MYOSIN peaks at strength
+8 (P=0.50) and falls to 0.45 by strength 32. Plausible mechanism, exactly the
+one [[TASK-0167.001]]'s own Open Questions flagged as a risk and did not
+investigate further: at extreme strength the planted channel's own
+intermediate residues (negatives under the patch label) become strongly
+scored themselves, and channel leakage depresses within-shell discrimination
+enough to counteract the raw AUC gain — consistent with, not contradicting,
+[[TASK-0167.001]]'s own prediction. Not chased to a full mechanistic
+confirmation here (out of this task's own scope), but the direction and
+magnitude match the predicted mechanism closely enough to name it, not just
+flag it as unexplained noise.
+
+### Compact vs. Rg-matched null: empirically indistinguishable in this regime
+
+**Every P(certified) value is identical between the `compact` and `matched`
+null columns, on every target, at every strength** — verified this is real,
+not a bug: `nulls.compact_patch_matched` accepts on its first or second draw
+in 19/20 direct trials (±35% Rg tolerance). A fresh `compact_patch` draw of a
+fixed size already has a naturally tight Rg distribution across random seed
+choices, so it is already within the review's own matching tolerance almost
+always — the Rg-matched refinement adds no additional conservatism beyond
+plain compactness for a 14-residue patch on these targets. This is itself an
+answer to part of the external review's own over-correction question: the
+*compact-vs-scattered* gap is real and large (this section's own headline);
+the *compact-vs-Rg-matched* gap is not measurable here because the two nulls
+are not meaningfully different draws at this patch size.
+
+### BCR_ABL1's own poor showing — a real, target-specific limitation, not smoothed over
+
+BCR_ABL1 never reaches 80% power under **any** null specification, including
+the historically-lenient scattered one (max P=0.60 at the top of the grid).
+Gate 1 alone fails 60% of the time even at strength 0–4 — this target's own
+selected patch sits closer to its own pre-plant floor than KRAS_G12C's or
+CARDIAC_MYOSIN's (by construction, `select_distal_patch`'s own admission
+bar is ≤0.5, not ≤0, so patches near that boundary are legitimate draws, not
+a selection bug), and BCR_ABL1 (N=451, the largest topology after
+CARDIAC_MYOSIN) may simply have a more redundant, competitive proximity floor
+this channel-reweighting mechanism struggles to overcome. Reported as a real,
+target-specific finding, not investigated to a root cause here.
+
+### Interpretation
+
+**Every `NO_SIGNAL_IN_APO`/`BEATS_CHANCE_NOT_FLOOR` verdict this program has
+ever reported for `T(E=0)`-family observables should now be read against this
+LOD, not as an unqualified negative**: under the null this project currently
+uses (compact, [[TASK-0158]]), this apparatus has not been shown to reliably
+detect a planted coupling as strong as ~4× background conductance on any of
+the 3 mandatory targets. This does not mean weaker real signal is absent —
+only that this control has not demonstrated the pipeline *would* have caught
+it if present at the strengths tested. Per this task's own Out-Of-Scope, no
+gate, threshold, or null is adjusted in response — the corrected null stands,
+and this is reported as the honest cost of using it, exactly the framing the
+external review itself anticipated ("makes the project's negative conclusions
+safer... but makes any positive finding's CI/power less trustworthy than
+reported"). A natural follow-up (not attempted here, out of scope) is
+extending the strength grid past 32× to find where compact-null detection
+actually saturates, if it does before physically implausible coupling
+magnitudes.
+
+Full detail: `.ai/tasks/DONE/TASK-0167.002-detection-curve-and-limit-of-detection.md`,
+`results_task0167002_detection_curve/detection_curve.json`,
+`results_task0167002_detection_curve/analysis_summary.md`,
+`results_task0167002_detection_curve/dose_axis_conductance.json`,
+`scripts/positive_control_detection_curve.py`, `scripts/detection_curve_analysis.py`.
+
+---
+
 ## ENM-induced connectivity-graph shortcut hypothesis — a clean negative on specificity (TASK-0187, 2026-08-01)
 
 **Question**: does undirected ENM ("wobbling") conformational sampling create
@@ -4609,6 +4771,8 @@ Full detail: `allostery/response.py`, `tests/test_response.py`,
 | 45 | Does allosteric coupling reciprocate — does seeding at the (holo-labeled) pocket and scoring into the active site (the direction real allosteric experiments actually measure) reproduce the forward-direction (active-site-seeded) signal every observable in this register has been scored on so far? | **resolved 2026-07-28: no, decisively — a real, target/observable-dependent asymmetry, not a reciprocal-channel picture.** 5 observables (`time_averaged_ctqw_converged`, `prs_low`/`dcc_low` at k=20, `R_eff`, `T(E=0)` on `H_new`) × 5 targets (3 mandatory + PTP1B/CASPASE7): forward clears its own proximity floor in 10/25 cells (40%), reverse in only 4/25 (16%), both directions in only 2/25 (8%). **The single starkest cell is this project's own strongest whole-graph result**: CARDIAC_MYOSIN `prs_low` forward AUC 0.836 collapses to reverse AUC 0.321 (anti-correlated, below its own floor). Background Spearman ρ (forward vs. reverse score vectors, residues outside both labeled sets) is mostly strongly positive (mean 0.61) — the asymmetry concentrates in the labeled sets specifically, the rest of the protein's own coupling structure is largely reciprocal even on cells with a large labeled-set AUC collapse. Forward numbers reproduce every already-published value exactly (an implicit consistency check); reverse is a new measurement, no prior verdict changes. A real scale effect on PTP1B/CASPASE7 (only 5 active-site residues each) elevates their own reverse floor to 0.90-0.91. | [[TASK-0162]], [[TASK-0130]], [[TASK-0149]], [[TASK-0145]], [[TASK-0094]] |
 | 46 | Is the mandatory 3-target benchmark actually capable of certifying a working allosteric-site predictor, as distinct from a broken one — consolidating this project's own already-scattered benchmark-integrity findings into one explicit verdict? | **resolved 2026-07-28: no, on all 3 mandatory targets, on at least one of three axes each — re-verified directly against RCSB, not relayed.** KRAS_G12C: ground truth valid, but the pocket is 3.75 Å from the active site (re-measured directly) and fpocket (0.8348, purely geometric) decisively beats both the corrected floor (0.4818) and this project's own actual (0.5901) — fails "distal" and "non-trivial." BCR_ABL1: ground truth valid, but the pocket is measurably pre-formed in apo (RMSD ratio 0.49, [[TASK-0120]]/[[TASK-0139]]) and fpocket (0.8596) again crushes both floor and actual — fails "cryptic" and "non-trivial." CARDIAC_MYOSIN: the challenge's own named validation structure (6C1H) does **not** contain mavacamten (re-confirmed live: `nonpolymer_bound_components=['ADP','MG']` only) — this project's own substituted structure (8QYR) does — fails "ground truth valid" for the challenge's own literal Table 1 entry. **A stale number caught in the process**: the filing task's own "0.798" KRAS_G12C floor citation is TASK-0094's pre-[[TASK-0118]]/[[TASK-0121]]/[[TASK-0130]] number; the current, fully-corrected floor is 0.4818 — corrected here, not silently propagated. Constructive half: a 5-point specification for a benchmark that *could* certify a method (verified holo ligand content; verified-distal-and-cryptic pockets, not drug-contact proxies; a mandatory geometric-baseline floor per target; ≥1 mechanism-validated ground truth target ([[TASK-0170]]); a published detection limit ([[TASK-0167]])). Framed as measurement, not criticism, per this task's own Constraint. | [[TASK-0169]], [[TASK-0124]], [[TASK-0163]], [[TASK-0164]], [[TASK-0104]], [[TASK-0094]] |
 | 47 | Does the apo structure's own low-frequency linear response reach the holo-defined pocket in *any* apo-only-admissible direction — the holo-direction module's own mandatory Step 2 go/no-go gate (`HOLO_DIRECTION_MODULE.md`), run before any Step 3-5 transport/optimization work is built? | **resolved 2026-07-28: no, on all 7 pocket-scoreable `status: verified` targets — a clean, complete negative on the gate's own terms.** New `holo_direction.py` (`PERTURBATION_PROTOCOL` frozen before touching holo, `build_deformation_family`, `go_no_go_gate`). Across 60 apo-only admissible perturbations tested per target (10 lowest ANM modes × 2 signs × 3 amplitude scales, only 1-10 surviving Step 1's own bond-geometry integrity check per target — a real, apo-only finding in itself), **zero ever creates a contact-graph edge between an active-site and pocket residue that apo doesn't already have, and no target's CO(10) clears the 0.5 overlap threshold either** (max 0.4652, KRAS_G12C). Per the spec's own explicit "build the rest only for the targets that clear it" instruction, Steps 3-5 are not built for any target — there is none to build them for. Two real bugs found+fixed while running this: `go_no_go_gate` initially hardcoded `chain_map=None` instead of `chain_map_from_config` (the TASK-0144 differing-apo/holo-chain-letter issue, broke 2 targets outright until fixed); CASPASE7's labeled pocket has zero holo correspondence in the alignment at all (CO genuinely undefined, reported as NaN not a misleading number, verdict conservatively defaults `NO_GO`). Independent, converging evidence for the same reframe [[TASK-0162]]'s forward/reverse asymmetry and [[TASK-0163]]'s fpocket result already raised. | [[TASK-0015]], [[TASK-0005]], [[TASK-0150]], [[TASK-0152]], [[TASK-0162]], [[TASK-0163]] |
+
+| 48 | Does this project's verdict pipeline (floor → CI → permutation null → Bonferroni) actually detect a real, planted, confound-orthogonal allosteric coupling if one is present, and what is the limit of detection (LOD) in interpretable units? | **resolved 2026-07-28: yes, under the historical (scattered) null — LOD ≈2× background conductance on 2/3 targets; no, under the corrected (compact) null — no target reaches 80% power at any strength tested, up to ~4× background.** [[TASK-0167.001]]'s own decisive finding reconfirmed first: `H_new`/`dcc_low`/`prs_low` are exactly plant-invariant, so only `T(E=0)` on a weighted Laplacian could be swept. 3 targets × 8 strengths × 20 seeds × 3 nulls × 2 CI methods, unmodified pipeline, all gates in series. Both CI methods gave identical LODs (the external review's own spatial-CI 1D-line concern, verified real — 55% block overlap, not exact coincidence — did not change the bottom line; corrected in [[TASK-0165]]). Per-gate profile: gate 2 (CI non-overlap) and the permutation-null gate are BOTH independently binding at high strength, neither alone explains the corrected-null failure. Real non-monotonicity found on 2/3 targets (P(certified) peaks then falls at the highest strength), consistent with TASK-0167.001's own predicted channel-leakage mechanism. Compact and Rg-matched nulls proved empirically indistinguishable at this patch size (verified, not assumed). BCR_ABL1 never reaches 80% power under any null. A real Bonferroni-family bug (dividing by the synthetic replicate grid instead of by targets) was found and fixed in analysis, not in the already-expensive collection run. | [[TASK-0167]], [[TASK-0167.001]], [[TASK-0158]], [[TASK-0165]], [[TASK-0145]], [[TASK-0161]] |
 
 ## Holo-direction module Step 2 go/no-go gate (TASK-0015, 2026-07-28)
 

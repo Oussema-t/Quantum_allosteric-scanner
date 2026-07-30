@@ -38,6 +38,28 @@ gated tasks below), that gap is stated explicitly, not filled with an estimate.
 > than remaining a qualitative flag. This top-level caveat is kept for the historical
 > record of what was unknown when this document was first written, not as this document's
 > current uncertainty inventory — see the "Open items" section near the end for that.**
+>
+> **Status update, 2026-07-28 ([[TASK-0167.002]]): every `NO_SIGNAL_IN_APO` verdict for
+> `T(E=0)`-family observables below now has a stated detection bound, not an unqualified
+> negative.** A protein-scale positive control (planted, confound-orthogonal active-site→
+> distal-patch coupling, `allostery.plant`) measured this apparatus's own limit of
+> detection through the unmodified verdict pipeline: under this project's own current
+> (spatially-compact, [[TASK-0158]]) permutation null, **no target reached 80% detection
+> power at any planted strength tested, up to ~4× background conductance (`R_eff`)** — the
+> apparatus has not been shown to catch a coupling this strong if it were present, on any
+> mandatory target. (Under the superseded scattered null, LOD was ≈2× background
+> conductance on 2/3 targets — the gap between these two numbers is itself the measured
+> cost of the [[TASK-0158]] null correction, not a discrepancy to resolve.) This document's
+> own `H_new`/`dcc_low`/`prs_low` rows are **not** covered by this bound at all — those
+> observables are exactly invariant to this plant mechanism ([[TASK-0167.001]]), so this
+> control says nothing about their own detection power; only `T(E=0)`/transport-family rows
+> carry the ~4×-background LOD above. Full detail: `RESULTS.md`'s own "Detection curve +
+> limit of detection" section, open-questions row 48;
+> `.ai/tasks/DONE/TASK-0167.002-detection-curve-and-limit-of-detection.md`. **Scope note**:
+> per this task's own compute/time budget, this callout is the single stated detection
+> bound for the whole document rather than an edit at every individual `NO_SIGNAL_IN_APO`
+> mention scattered through the body below (dozens of occurrences) — read every such
+> mention for a `T(E=0)`/transport-family observable against this bound.**
 
 > **SUPERSEDED 2026-07-16 by [[TASK-0118]] — the table below is a full recompute, not an
 > edit of the old one. `REVIEW-panel-2026-07-16-v2` (§2.1) found that the numbers this
