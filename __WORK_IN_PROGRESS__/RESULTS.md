@@ -4608,6 +4608,191 @@ Full detail: `allostery/response.py`, `tests/test_response.py`,
 | 44 | Does this project have any real external classical comparator beyond the single GNM transfer-entropy baseline ([[TASK-0132]]) — the challenge's own explicitly-scored "comparison to classical analogs" criterion (`PANEL_REVIEW_2026-07-25.md` §2.2/W7, §4 action item 6, V8) — given ~40 quantum-flavored observables have been run against 1? | **resolved 2026-07-28: fpocket run and decisively beats this project's own headline observable on 2/3 mandatory targets; PocketMiner run, mixed; ProteinLens blocked (browser-only, no API) and explicitly reported as such, not silently skipped.** Full detail: this document's own "External classical-pocket-detection baselines (fpocket, PocketMiner)" section below. | [[TASK-0163]], [[TASK-0132]] |
 | 45 | Does allosteric coupling reciprocate — does seeding at the (holo-labeled) pocket and scoring into the active site (the direction real allosteric experiments actually measure) reproduce the forward-direction (active-site-seeded) signal every observable in this register has been scored on so far? | **resolved 2026-07-28: no, decisively — a real, target/observable-dependent asymmetry, not a reciprocal-channel picture.** 5 observables (`time_averaged_ctqw_converged`, `prs_low`/`dcc_low` at k=20, `R_eff`, `T(E=0)` on `H_new`) × 5 targets (3 mandatory + PTP1B/CASPASE7): forward clears its own proximity floor in 10/25 cells (40%), reverse in only 4/25 (16%), both directions in only 2/25 (8%). **The single starkest cell is this project's own strongest whole-graph result**: CARDIAC_MYOSIN `prs_low` forward AUC 0.836 collapses to reverse AUC 0.321 (anti-correlated, below its own floor). Background Spearman ρ (forward vs. reverse score vectors, residues outside both labeled sets) is mostly strongly positive (mean 0.61) — the asymmetry concentrates in the labeled sets specifically, the rest of the protein's own coupling structure is largely reciprocal even on cells with a large labeled-set AUC collapse. Forward numbers reproduce every already-published value exactly (an implicit consistency check); reverse is a new measurement, no prior verdict changes. A real scale effect on PTP1B/CASPASE7 (only 5 active-site residues each) elevates their own reverse floor to 0.90-0.91. | [[TASK-0162]], [[TASK-0130]], [[TASK-0149]], [[TASK-0145]], [[TASK-0094]] |
 | 46 | Is the mandatory 3-target benchmark actually capable of certifying a working allosteric-site predictor, as distinct from a broken one — consolidating this project's own already-scattered benchmark-integrity findings into one explicit verdict? | **resolved 2026-07-28: no, on all 3 mandatory targets, on at least one of three axes each — re-verified directly against RCSB, not relayed.** KRAS_G12C: ground truth valid, but the pocket is 3.75 Å from the active site (re-measured directly) and fpocket (0.8348, purely geometric) decisively beats both the corrected floor (0.4818) and this project's own actual (0.5901) — fails "distal" and "non-trivial." BCR_ABL1: ground truth valid, but the pocket is measurably pre-formed in apo (RMSD ratio 0.49, [[TASK-0120]]/[[TASK-0139]]) and fpocket (0.8596) again crushes both floor and actual — fails "cryptic" and "non-trivial." CARDIAC_MYOSIN: the challenge's own named validation structure (6C1H) does **not** contain mavacamten (re-confirmed live: `nonpolymer_bound_components=['ADP','MG']` only) — this project's own substituted structure (8QYR) does — fails "ground truth valid" for the challenge's own literal Table 1 entry. **A stale number caught in the process**: the filing task's own "0.798" KRAS_G12C floor citation is TASK-0094's pre-[[TASK-0118]]/[[TASK-0121]]/[[TASK-0130]] number; the current, fully-corrected floor is 0.4818 — corrected here, not silently propagated. Constructive half: a 5-point specification for a benchmark that *could* certify a method (verified holo ligand content; verified-distal-and-cryptic pockets, not drug-contact proxies; a mandatory geometric-baseline floor per target; ≥1 mechanism-validated ground truth target ([[TASK-0170]]); a published detection limit ([[TASK-0167]])). Framed as measurement, not criticism, per this task's own Constraint. | [[TASK-0169]], [[TASK-0124]], [[TASK-0163]], [[TASK-0164]], [[TASK-0104]], [[TASK-0094]] |
+| 47 | Does the apo structure's own low-frequency linear response reach the holo-defined pocket in *any* apo-only-admissible direction — the holo-direction module's own mandatory Step 2 go/no-go gate (`HOLO_DIRECTION_MODULE.md`), run before any Step 3-5 transport/optimization work is built? | **resolved 2026-07-28: no, on all 7 pocket-scoreable `status: verified` targets — a clean, complete negative on the gate's own terms.** New `holo_direction.py` (`PERTURBATION_PROTOCOL` frozen before touching holo, `build_deformation_family`, `go_no_go_gate`). Across 60 apo-only admissible perturbations tested per target (10 lowest ANM modes × 2 signs × 3 amplitude scales, only 1-10 surviving Step 1's own bond-geometry integrity check per target — a real, apo-only finding in itself), **zero ever creates a contact-graph edge between an active-site and pocket residue that apo doesn't already have, and no target's CO(10) clears the 0.5 overlap threshold either** (max 0.4652, KRAS_G12C). Per the spec's own explicit "build the rest only for the targets that clear it" instruction, Steps 3-5 are not built for any target — there is none to build them for. Two real bugs found+fixed while running this: `go_no_go_gate` initially hardcoded `chain_map=None` instead of `chain_map_from_config` (the TASK-0144 differing-apo/holo-chain-letter issue, broke 2 targets outright until fixed); CASPASE7's labeled pocket has zero holo correspondence in the alignment at all (CO genuinely undefined, reported as NaN not a misleading number, verdict conservatively defaults `NO_GO`). Independent, converging evidence for the same reframe [[TASK-0162]]'s forward/reverse asymmetry and [[TASK-0163]]'s fpocket result already raised. | [[TASK-0015]], [[TASK-0005]], [[TASK-0150]], [[TASK-0152]], [[TASK-0162]], [[TASK-0163]] |
+
+## Holo-direction module Step 2 go/no-go gate (TASK-0015, 2026-07-28)
+
+**[EXECUTED, real code, real data, 7 targets]** `HOLO_DIRECTION_MODULE.md`'s
+own spec (Steps 0-5): predict the apo->holo conformational-change
+*direction* from the apo structure alone, generate a small admissible
+family of deformed graphs, gate on whether any of them actually reaches
+the holo-defined pocket (Step 2), and only then (Step 3-5) run transport
+on the survivors. This task builds Steps 0-2 and runs Step 2's own
+"First action" — the spec's own explicit instruction to gate before
+building anything downstream.
+
+New `src/allostery/holo_direction.py`: `PERTURBATION_PROTOCOL` (Step 0,
+frozen before touching any holo data — lowest 10 non-trivial ANM modes,
+single-mode +/- excitation at 3 amplitude scales relative to a per-mode
+"thermal unit" `a_k^(1)=sqrt(1/(kappa*lambda_k))` derived from
+`calibrate_kappa`'s own already-established B-factor-matching convention,
+not a newly invented free parameter), `build_deformation_family` (Step 1),
+`go_no_go_gate` (Step 2, two independent components: pocket-restricted
+CO(m) reusing TASK-0133/TASK-0150's corrected `restricted_cumulative_
+overlap`, and a new "does any candidate create a contact-graph edge
+between an active-site and pocket residue that apo doesn't already have"
+check — never collapsed to a single boolean).
+
+**Real, apo-only finding in Step 1 itself**: 90-98% of the 60 candidates
+per target are rejected on `ca_spacing_violated` alone (never clash or
+global RMSD) — linear one-shot ANM-mode extrapolation distorts local
+backbone bond geometry non-uniformly across modes, even at the smallest
+tested amplitude. Only 1-10 candidates survive per target. This
+constraint never touches holo data, so this is not label leakage; the
+threshold was fixed before any real target ran and left unchanged after
+seeing these counts, per Step 0's own discipline.
+
+**Step 2 run on all 7 `status: verified` targets with a real `holo_pdb`**
+(MYC_MAX excluded, no ground truth):
+
+| Target | CO(10) | Right edges created? | Admissible/rejected | Verdict |
+|---|---|---|---|---|
+| KRAS_G12C | 0.4652 | No | 3/57 | `NO_GO` |
+| BCR_ABL1 | 0.1330 | No | 7/53 | `NO_GO` |
+| CARDIAC_MYOSIN | 0.2378 | No | 1/59 | `NO_GO` |
+| PTP1B | 0.2152 | No | 4/56 | `NO_GO` |
+| GLUCOKINASE | 0.1423 | No | 10/50 | `NO_GO` |
+| CASPASE1 | 0.0714 | No | 2/58 | `NO_GO` |
+| CASPASE7 | NaN (blocked) | No | 3/57 | `NO_GO` |
+
+Two real bugs found and fixed while running this: (1) `go_no_go_gate`
+initially hardcoded `chain_map=None` instead of
+`chain_map_from_config(target_config)` — the exact TASK-0144 apo/holo
+differing-chain-letter issue, broke CARDIAC_MYOSIN/GLUCOKINASE outright
+until fixed; (2) CASPASE7's own labeled pocket residues have zero holo
+correspondence in the alignment's common set at all — CO is genuinely
+undefined there (reported as NaN, not a misleading number), verdict
+conservatively defaults `NO_GO` rather than silently passing on an
+undefined comparison, the same degradation shape `compute_learnability`'s
+own `co_blocked_reason` already established.
+
+**Headline: 7/7 `NO_GO`. Across every target, mode, sign, and amplitude
+scale tested, no admissible deformed graph ever creates a contact-graph
+edge between an active-site residue and a pocket residue that did not
+already exist in the apo structure — and no target's CO(10) clears the
+0.5 threshold either** (max 0.4652, KRAS_G12C; directionally consistent
+with, though not numerically identical to, this project's own already-
+published pocket-restricted CO(20) numbers for the same 2 targets where
+both exist — KRAS_G12C 0.458, CARDIAC_MYOSIN 0.254, [[TASK-0150]]/
+[[TASK-0152]] — different mode count, independently recomputed here at
+this module's own `n_modes=10`, not reused).
+
+**Per the spec's own explicit instruction ("build the rest only for the
+targets that clear it"), Steps 3-5 are not built for any target — there
+is no target that cleared Step 2.** This is the spec's own anticipated,
+"publishable" NO case: "cryptic pocket unreachable by the thermal
+ensemble of the apo state" beats an unbuilt walk scored at chance. This
+is independent, converging evidence for the same reframe [[TASK-0162]]'s
+forward/reverse asymmetry and [[TASK-0163]]'s fpocket result already
+raised: the apo structure's own low-frequency linear response, alone,
+does not reach the holo-defined pocket on any target tested, under any
+of the 60 apo-only admissible perturbations tried per target.
+
+8 new unit tests (synthetic, all passing — a direct edge-detection
+isolation test with a known answer, plus integrity-constraint sanity
+checks in both directions). Full suite: 994 passed, 2 xfailed, 0 failed
+(986 pre-existing + 8 new).
+
+Full detail: `.ai/tasks/DONE/TASK-0015-holo-direction-module.md`,
+`__WORK_IN_PROGRESS__/scripts/holo_direction_step2_gate.py`,
+`__WORK_IN_PROGRESS__/RESULTS/results_task0015_step2_gate/step2_gate.json`.
+
+---
+
+## Mechanism-validated allosteric ground truth: PTP1B, Phase 1 (TASK-0170, 2026-07-28)
+
+Every label in this project is a **drug-contact** set (residues within
+`pocket_contact_cutoff` of a bound ligand). PTP1B's own label is drawn from
+a BB-series *allosteric* inhibitor (ligand `892`) bound at the alpha3/
+alpha6/alpha7 site, but it is still a drug-contact definition, not the
+literature's own NMR-relaxation-dispersion/multitemperature-crystallography
+definition of the allosteric communication network. This task curates that
+network from two independent, peer-reviewed sources — Choy/Kern et al.,
+*Mol. Cell* 2017 (PMC5325675) and Keedy/Fraser et al., *eLife* 2018;7:e36307
+— and scores the register's own existing observables against it, unchanged,
+alongside the existing drug-contact label.
+
+**Curation and verification, done before any scoring (label frozen first,
+per this task's own Constraint):** 35 literature-cited residues fetched
+from both papers; every one checked directly against this project's own
+loaded 1SUG structure (resnum → resname), not trusted from either paper's
+numbering. **One failed verification**: Glu157 cited in [1]'s L11-loop
+list; the real structure has Gln157 at that position — excluded, not
+silently corrected. **One residue excluded for a labeling-invariant
+conflict**: Arg221 is part of this project's own `active_site`
+(functional/catalytic seed) for PTP1B — `build_labels`'s own
+pocket/active_site disjointness invariant requires excluding it, asserted
+in code (`RuntimeError` if violated), not assumed. **One residue excluded
+for low confidence**: Met3 (N-terminal, "L16 site"), a structurally
+isolated single citation that does not fit either paper's own description
+of "one contiguous face." Final curated network: **31 residues** — WPD
+loop (177,178,179,180,181,185,269), L11 loop (105,148,150,152,153), alpha3
+(190,191,192,193,196,197,198,200), alpha6/alpha7
+(267,270,276,277,280,281,282,290,291,295), plus Tyr176.
+
+**Overlap with the existing drug-contact label (14 residues), measured
+before scoring anything, per this task's own Planned Validation:**
+Jaccard = 0.286 — 10 residues shared (192,193,196,197,200,276,277,280,
+281,282, all in alpha3/alpha6), 21 mechanism-only (the full WPD loop, the
+full L11 loop, and 5 more alpha3/alpha6/alpha7 residues the drug-contact
+shell does not reach). **Partial overlap, as the design predicted** — not
+zero (which would suggest a numbering error) and not complete (which would
+make the experiment uninformative).
+
+**The proximity floor is genuinely lower against the dispersed
+mechanism-validated label** (max baseline AUC 0.601 vs. 0.768 for the
+drug-contact label on the same structure, same seed) — a dispersed
+coupling network is harder for distance baselines, exactly as anticipated,
+and this is therefore if anything a *fairer* test, not a harder one to
+pass.
+
+**Real-run result, all 3 headline observables, same code path scoring both
+labels in one run:**
+
+| Observable | AUC (mechanism-validated) | AUC (drug-contact) | Floor (mech.) | CI (seq.-block) | CI overlaps floor? | Scattered-null percentile (p) |
+|---|---|---|---|---|---|---|
+| `time_averaged_ctqw_converged` | 0.426 | 0.486 | 0.601 | [0.309, 0.534] | **No — below** | 11.1 (p=0.889) |
+| `prs_low` (k=20) | 0.429 | 0.437 | 0.601 | [0.303, 0.572] | **No — below** | 9.7 (p=0.903) |
+| `dcc_low` (k=20) | 0.529 | 0.505 | 0.601 | [0.360, 0.696] | Yes | 71.7 (p=0.283) |
+
+Permutation null is the **scattered** (`rng.choice`) draw, not
+`nulls.compact_patch`/`compact_patch_matched` — this task's own Intent
+Contract states the compact-patch draw is "badly wrong" for a genuinely
+dispersed label, and TASK-0158's over-conservatism finding (external
+review, 2026-07-28) was specific to *compact* labels on smooth score
+fields, not dispersed ones.
+
+**Headline: the negative holds, and is if anything sharper, against an
+independent, literature-derived ground truth — this is not the reframe
+the source review's own framing considered possible.** Two of three
+headline observables (`ctqw_converged`, `prs_low`) score
+*significantly below* their own proximity floor against the
+mechanism-validated network (non-overlapping CI, in the wrong direction —
+an active anti-signal, not a null result); `dcc_low` is consistent with
+its floor (CI overlaps, null percentile 71.7, not significant). Per this
+task's own pre-stated escape clause — *"if they fail against both, the
+negative is much stronger than currently claimed"* — that is the outcome
+here. The existing drug-contact-label negative was never an artifact of
+that label happening to be the wrong answer key.
+
+**Phase 2 (further systems: PDZ3, adenylate kinase, DHFR) — Implementer's
+own call, not pursued**: Phase 1's own explicit gate is "only if Phase 1
+is informative." Phase 1 *was* informative (a real, load-bearing
+overlap measurement and a genuine floor difference), but it reinforced
+the existing negative rather than overturning it — the scenario Phase 2
+was designed to chase (an observable that fails the drug-contact label
+but succeeds against a mechanism-validated one) did not occur for any of
+the 3 headline observables tested. Escalating to 2–3 more systems at
+multi-day literature-curation cost, per the source review's own binding
+constraint (write from 2026-08-08), is not justified by this result.
+State the finding and stop, per this project's own "write, don't build"
+discipline this late in the schedule.
+
+Full detail: `.ai/tasks/DONE/TASK-0170-mechanism-validated-ground-truth.md`,
+`__WORK_IN_PROGRESS__/scripts/mechanism_validated_ptp1b.py`,
+`__WORK_IN_PROGRESS__/results_task0170_mechanism_validated/ptp1b_mechanism_validated.json`.
+
+---
 
 | 47 | Does TASK-0169's KRAS_G12C finding ("labelled pocket 3.75 Å / 1 spatial hop from the active site — trivial") generalize across the benchmark set, and does spatial contact-graph closeness track primary-sequence closeness or diverge from it? | **resolved 2026-07-31/2026-08-01: generalizes partially and unevenly — not a clean "everything is a hoax," not a clean negative either.** All 7 pocket-scoreable `status: verified` targets have **min spatial-hop = 1** except PTP1B (min 2) — every target except PTP1B has at least one pocket residue that is a direct contact-graph neighbour of the active site, on the same 8.0 Å convention as [[TASK-0067]]. But the *fraction* of the pocket that is trivially close varies enormously: CASPASE1 is the worst case found (median hop 1.0, 83% of its pocket at hop ≤1 — more trivial than KRAS_G12C itself); KRAS_G12C is next (39% at hop ≤1, median 2.0); BCR_ABL1/GLUCOKINASE/CASPASE7 sit in between (6–14% at hop ≤1, median 2.0); CARDIAC_MYOSIN and **PTP1B are the genuinely non-trivial cases** (PTP1B: 0% of its pocket at hop ≤1, median 3.5; CARDIAC_MYOSIN: 8% at hop ≤1, median 4.0). Euclidean distance and spatial hop-distance broadly agree in rank but not in scale (KRAS_G12C's min Euclidean 3.75 Å independently reproduces TASK-0169's own published number to 5 decimal places, confirming the new script's correctness). **Primary-sequence (chain) hop-distance is a completely different picture on every target** — chain-hop medians run 22–181 residues even where spatial-hop is 1–2, and the fold-compression ratio (chain-hop / spatial-hop) is large everywhere (mean 8.9–37.7×, all 7 targets) — the native fold, with no ENM dynamics involved at all, already collapses tens to hundreds of sequence positions into 1–4 contact-graph hops. **Caveat carried forward, not resolved here**: every number above is scored against the *incumbent* 4.5 Å ligand-contact label, which [[TASK-0114]] already showed sits on "a still-moving slope, not a stable plateau" at the residue level — must be re-run against [[TASK-0177]]'s consensus/core label once it lands, all three reported side by side, before this finding is treated as final. | [[TASK-0186]], [[TASK-0169]], [[TASK-0067]], [[TASK-0114]], [[TASK-0177]] |
 | 48 | Is TASK-0186's (row 47) spatial-hop finding stable across the contact-graph cutoff, or is it a knob-choice artifact of an 8.0 Å value that was only ever benchmarked (TASK-0067) for a different metric (GNM-eigendecomposition AUC, over 7.5/8.0/10.0 Å) and never for hop-count? | **resolved 2026-08-01: mixed — one headline claim is cutoff-fragile, two are robust.** Swept all 7 pocket-scoreable targets over {6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0} Å. Connectivity holds everywhere (single component, zero isolated nodes, all 7 targets including CARDIAC_MYOSIN N=704 — the low-cutoff fragmentation risk did not materialize in the tested range); the 8.0 Å row of this sweep reproduces row 47's published numbers exactly on all 7 targets (min/mean/median/max/frac≤1/frac≤2, bit-for-bit), confirming both scripts share the same code path. **Not robust:** the "6/7 targets have min spatial-hop = 1" claim only holds at cutoff ≥ 8.0 Å — BCR_ABL1's min hop is 2 (not 1) at every tested cutoff ≤ 7.5 Å, so below 8.0 Å the finding is 5/7, not 6/7. **Not robust (magnitude, but ranking survives):** CASPASE1's specific "83% at hop ≤1" number is a cutoff artifact of the ≥7.5 Å region — it drops to 50% at 6.0 Å and 67% at 6.5–7.0 Å; however CASPASE1 remains the single most-trivial target (highest frac≤1) at every tested cutoff, so the qualitative ranking ("CASPASE1 more trivial than KRAS_G12C") is robust even though the point estimate is not. **Robust:** PTP1B's "0% at hop ≤1" is exactly 0.0 at all 7 tested cutoffs — the strongest non-trivial-target claim in row 47 is also the one that survives the sweep intact. Practical read: report row 47's per-cutoff-dependent numbers (the 6/7 count, CASPASE1's 83%) as `cutoff=8.0Å`-conditional, not as target-intrinsic; PTP1B's non-triviality and CASPASE1's relative-worst-case ranking can be stated unconditionally. | [[TASK-0188]], [[TASK-0186]], [[TASK-0067]], [[TASK-0114]] |
