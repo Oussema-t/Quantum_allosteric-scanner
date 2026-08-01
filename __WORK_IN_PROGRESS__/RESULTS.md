@@ -4133,6 +4133,94 @@ open-questions row 46.
 
 ---
 
+## ENM-induced connectivity-graph shortcut hypothesis — a clean negative on specificity (TASK-0187, 2026-08-01)
+
+**Question**: does undirected ENM ("wobbling") conformational sampling create
+new contact-graph edges that shorten the active-site<->pocket hop-distance
+below its static-apo value, *specifically* to the real pocket rather than
+generically across the whole graph — reframing propagation observables as
+walking a dynamically rewiring graph rather than a static one, per the
+orchestrating user's own conceptual request (2026-07-31)? Deliberately
+undirected (no MD, no target, no direction — same closed-form-equipartition
+legality argument as [[TASK-0185]]) and topology-focused (contact-graph
+edges, not cavity/volume), to stay clear of [[TASK-0015]]'s directed
+deformation and [[TASK-0185]]'s cavity-search territory.
+
+**Positive-control target**: PTP1B, selected from [[TASK-0186]]'s own
+numbers — the only one of 7 pocket-scoreable targets with static-apo min
+spatial-hop = 2 and 0% of pocket at hop<=1 (median hop 3.5), the most room
+for a dynamic shortcut to matter and the lowest static fold-compression
+ratio (8.9x) of the set.
+
+**Method**: new `allostery.shortcuts` module. Step 1 — 2000 closed-form
+equipartition Gaussian draws in ANM mode space (amplitude_k ~
+N(0, sqrt(kT/lambda_k)), kT=20, 20 softest non-rigid-body modes, same
+method as [[TASK-0185]]'s reference prototype), reusing
+`superpose.anm_modes` (already-confirmed 3N x 3N ANM Hessian) rather than
+re-deriving. **Blocking MSF cross-check, run before any downstream step**
+(this task's own Constraint — the reference prototype has no such check):
+empirical per-residue MSF over the 2000-sample ensemble vs. the analytic
+`kT * sum_k ||v_ik||^2 / lambda_k` prediction — Pearson r=0.9998, median
+relative error 1.26%, decisively passing the pre-registered gate
+(r>=0.90, rel. error<=25%). Step 2 — per-sample hop-distance
+recomputation on the real pocket via `baselines.hop_from_seed`, same
+8.0 Å contact convention as [[TASK-0067]]/[[TASK-0186]], no new geometric
+constant invented. Step 3 — the pre-registered specificity test (fixed in
+the task file *before* this step ran): 30 matched decoys via
+`plant.select_distal_patch` ([[TASK-0167.001]], same size, genuinely
+distal, floor-blind), PASS requires both (a) real-pocket shortcut rate
+above the 95th percentile of the 30 decoy rates, and (b) the gap above the
+decoy median >= 10 percentage points (added specifically so a large-N
+significant-but-trivial gap could not pass alone). Step 4 — real
+holo-native contact-graph hop-distance via `_holo_native_labels`
+([[TASK-0067]]), for context.
+
+**Result: a clean, decisive negative — real pocket shortcuts *less* than
+generic distal decoys, not more.** Real-pocket shortcut rate 1.7% (34/2000
+samples) vs. decoy rates ranging 0%-52.5% (median 12.9%, 95th percentile
+51.9%) across the 30 matched decoys — real pocket sits below the decoy
+*median*, not just short of the 95th-percentile significance bar.
+Effect size (real - decoy median) = **-0.112**, the wrong sign entirely;
+both the significance leg and the material-effect-size leg of the
+pre-registered gate fail. Static apo hop = 2 (matches [[TASK-0186]]
+exactly, a direct cross-script sanity check); the real holo-native
+contact graph's own active-site<->pocket hop is also 2 (Step 4) — the
+real deposited holo structure does not show this particular pocket
+having collapsed to hop 1 either, consistent with the dynamic-shortcut
+hypothesis not finding purchase here. Full run: 16.2s wall-clock (fast —
+no long-job handling needed), `results_task0187_shortcut_hypothesis/results.json`.
+
+**Reading**: for PTP1B specifically, Cα-level undirected ENM wobbling does
+not produce a pocket-specific contact-graph shortcut — whatever residual
+noise-level shortening the contact graph shows under sampling (the ~13%
+median decoy rate is itself non-trivial, worth separate note) is not
+concentrated on the real allosteric site any more than on a matched
+generic distal patch. Per the task's own pre-registered TODO ordering,
+**not extended to CARDIAC_MYOSIN or the remaining targets** — the gate for
+doing so ("positive control clears its gate") was not met. Per this
+project's own culture (TASK-0185's own backbone-layer negative, TASK-0143's
+graph-openness FAIL), this is reported as a legitimate negative, not
+softened: if a cryptic-pocket-relevant dynamic effect exists here, this
+result's own Open Questions (below) suggest it more plausibly lives at
+the side-chain layer a backbone-only Cα ENM cannot reach, matching
+[[TASK-0185]]'s own suspicion about its parallel cavity-opening question.
+
+**Open items, not resolved here**: (1) whether the same negative
+replicates on CARDIAC_MYOSIN (the secondary candidate TASK-0186 named) —
+untested, since the gate closed on PTP1B; (2) whether a side-chain-layer
+model (unreachable by Cα ENM) would show a different result, the same
+open question TASK-0185's own filing already flagged for its parallel
+cavity-opening hypothesis — a shared failure mode across two
+forward-proposal tasks, worth a single cross-reference in [[TASK-0184]]'s
+narrative rather than repeating in each task's own Done section.
+
+Full detail: `.ai/tasks/DONE/TASK-0187-enm-connectivity-shortcut-hypothesis.md`
+(Done section), `__WORK_IN_PROGRESS__/src/allostery/shortcuts.py`,
+`__WORK_IN_PROGRESS__/scripts/shortcut_hypothesis_measurement.py`,
+`__WORK_IN_PROGRESS__/tests/test_shortcuts.py`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -4198,6 +4286,8 @@ open-questions row 46.
 
 | 47 | Does TASK-0169's KRAS_G12C finding ("labelled pocket 3.75 Å / 1 spatial hop from the active site — trivial") generalize across the benchmark set, and does spatial contact-graph closeness track primary-sequence closeness or diverge from it? | **resolved 2026-07-31/2026-08-01: generalizes partially and unevenly — not a clean "everything is a hoax," not a clean negative either.** All 7 pocket-scoreable `status: verified` targets have **min spatial-hop = 1** except PTP1B (min 2) — every target except PTP1B has at least one pocket residue that is a direct contact-graph neighbour of the active site, on the same 8.0 Å convention as [[TASK-0067]]. But the *fraction* of the pocket that is trivially close varies enormously: CASPASE1 is the worst case found (median hop 1.0, 83% of its pocket at hop ≤1 — more trivial than KRAS_G12C itself); KRAS_G12C is next (39% at hop ≤1, median 2.0); BCR_ABL1/GLUCOKINASE/CASPASE7 sit in between (6–14% at hop ≤1, median 2.0); CARDIAC_MYOSIN and **PTP1B are the genuinely non-trivial cases** (PTP1B: 0% of its pocket at hop ≤1, median 3.5; CARDIAC_MYOSIN: 8% at hop ≤1, median 4.0). Euclidean distance and spatial hop-distance broadly agree in rank but not in scale (KRAS_G12C's min Euclidean 3.75 Å independently reproduces TASK-0169's own published number to 5 decimal places, confirming the new script's correctness). **Primary-sequence (chain) hop-distance is a completely different picture on every target** — chain-hop medians run 22–181 residues even where spatial-hop is 1–2, and the fold-compression ratio (chain-hop / spatial-hop) is large everywhere (mean 8.9–37.7×, all 7 targets) — the native fold, with no ENM dynamics involved at all, already collapses tens to hundreds of sequence positions into 1–4 contact-graph hops. **Caveat carried forward, not resolved here**: every number above is scored against the *incumbent* 4.5 Å ligand-contact label, which [[TASK-0114]] already showed sits on "a still-moving slope, not a stable plateau" at the residue level — must be re-run against [[TASK-0177]]'s consensus/core label once it lands, all three reported side by side, before this finding is treated as final. | [[TASK-0186]], [[TASK-0169]], [[TASK-0067]], [[TASK-0114]], [[TASK-0177]] |
 | 48 | Is TASK-0186's (row 47) spatial-hop finding stable across the contact-graph cutoff, or is it a knob-choice artifact of an 8.0 Å value that was only ever benchmarked (TASK-0067) for a different metric (GNM-eigendecomposition AUC, over 7.5/8.0/10.0 Å) and never for hop-count? | **resolved 2026-08-01: mixed — one headline claim is cutoff-fragile, two are robust.** Swept all 7 pocket-scoreable targets over {6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0} Å. Connectivity holds everywhere (single component, zero isolated nodes, all 7 targets including CARDIAC_MYOSIN N=704 — the low-cutoff fragmentation risk did not materialize in the tested range); the 8.0 Å row of this sweep reproduces row 47's published numbers exactly on all 7 targets (min/mean/median/max/frac≤1/frac≤2, bit-for-bit), confirming both scripts share the same code path. **Not robust:** the "6/7 targets have min spatial-hop = 1" claim only holds at cutoff ≥ 8.0 Å — BCR_ABL1's min hop is 2 (not 1) at every tested cutoff ≤ 7.5 Å, so below 8.0 Å the finding is 5/7, not 6/7. **Not robust (magnitude, but ranking survives):** CASPASE1's specific "83% at hop ≤1" number is a cutoff artifact of the ≥7.5 Å region — it drops to 50% at 6.0 Å and 67% at 6.5–7.0 Å; however CASPASE1 remains the single most-trivial target (highest frac≤1) at every tested cutoff, so the qualitative ranking ("CASPASE1 more trivial than KRAS_G12C") is robust even though the point estimate is not. **Robust:** PTP1B's "0% at hop ≤1" is exactly 0.0 at all 7 tested cutoffs — the strongest non-trivial-target claim in row 47 is also the one that survives the sweep intact. Practical read: report row 47's per-cutoff-dependent numbers (the 6/7 count, CASPASE1's 83%) as `cutoff=8.0Å`-conditional, not as target-intrinsic; PTP1B's non-triviality and CASPASE1's relative-worst-case ranking can be stated unconditionally. | [[TASK-0188]], [[TASK-0186]], [[TASK-0067]], [[TASK-0114]] |
+
+| 49 | Does undirected ENM ("wobbling") conformational sampling create new contact-graph edges that shorten the active-site<->pocket hop-distance *specifically* to the real pocket (not generically, [[TASK-0186]]/row 47's static baseline as the pre-ENM comparison point), and does any such shortening approach the real holo topology's own hop-distance? | **resolved 2026-08-01: no — a clean, decisive negative on the positive-control target.** PTP1B (TASK-0186's only genuinely non-trivial case, min static hop=2, 0% pocket at hop<=1): real-pocket shortcut rate 1.7% over 2000 ANM-equipartition samples (MSF cross-check r=0.9998, passed) vs. 30 matched decoys ranging 0-52.5% (median 12.9%) — real pocket sits *below* the decoy median, effect size -0.112 (wrong sign), fails both legs of the pre-registered specificity gate. Holo-native contact graph's own hop-distance for this pocket is also 2, unchanged from static apo. Not extended past the positive control per the task's own pre-registered gate. | [[TASK-0187]], [[TASK-0186]], [[TASK-0185]], [[TASK-0167.001]], [[TASK-0067]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

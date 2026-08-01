@@ -1,0 +1,7 @@
+{"event": "run_start", "run_name": "task0187_shortcut_hypothesis", "environment": {"hostname": "Bartoszs-MacBook-Pro.local", "pid": 65756, "platform": "macOS-26.6-x86_64-i386-64bit-Mach-O", "thread_env": {"OMP_NUM_THREADS": "4", "OPENBLAS_NUM_THREADS": "4", "MKL_NUM_THREADS": "4", "NUMEXPR_NUM_THREADS": "4", "VECLIB_MAXIMUM_THREADS": "4"}, "versions": {"python": "3.13.4", "numpy": "2.5.1", "scipy": "1.18.0", "optuna": "4.9.0"}, "timestamp": "2026-08-01T15:59:01"}}
+{"event": "step", "label": "PTP1B:labels", "wall_elapsed_s": 0.687, "cpu_elapsed_s": 0.595, "n_residues": 298, "n_active": 5, "n_pocket": 14}
+{"event": "step", "label": "PTP1B:msf_cross_check", "wall_elapsed_s": 0.837, "cpu_elapsed_s": 0.871, "ok": true, "pearson_r": 0.9998426204916574, "median_rel_error": 0.012647873425538431, "min_pearson_r": 0.9, "max_median_rel_error": 0.25, "n_samples": 2000}
+{"event": "step", "label": "PTP1B:step2_real_pocket", "wall_elapsed_s": 15.384, "cpu_elapsed_s": 15.357, "static_hop": 2.0, "rate": 0.017, "min_sample_hop": 1.0}
+{"event": "step", "label": "PTP1B:step3_specificity", "wall_elapsed_s": 16.341, "cpu_elapsed_s": 16.307, "passed": false, "significant": false, "material": false, "real_rate": 0.017, "decoy_p95": 0.518925, "decoy_median": 0.12925, "effect_size": -0.11225}
+{"event": "step", "label": "PTP1B:step4_holo_native", "wall_elapsed_s": 16.354, "cpu_elapsed_s": 16.32, "holo_target_hop": 2.0}
+{"event": "run_finish", "wall_elapsed_s": 16.355, "cpu_elapsed_s": 16.321, "n_targets": 1}
