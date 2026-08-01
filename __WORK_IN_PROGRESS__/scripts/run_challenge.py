@@ -12,6 +12,15 @@ results dict (including `_diagnosis`), since TASK-0079.005's own Intent
 Contract needs that on disk for manual inspection, not just in memory --
 to `__WORK_IN_PROGRESS__/results/<target_name>/`.
 
+TASK-0180: also clusters the top-scoring residues into spatially
+deduplicated sites (`sites.cluster_sites` -- fixes `assemble_hit_list`'s
+own no-dedup defect, see that module's docstring), attaches a `"sites"`
+key to `hit_list.json` additively (existing residue-level keys byte-
+identical, pinned by `test_run_challenge.py`), and writes a fifth
+deliverable, `end_to_end.json` (+ one appended `RESULTS.md` section) --
+the apo -> predicted-pocket -> verified-in-holo statement, every clause
+filled or explicitly marked unavailable.
+
 Orchestration glue only: this script does not reimplement any part of the
 FROZEN-gating (that is `protocol.run_frozen_verdict`'s job, tested in
 isolation, TASK-0079.003's own Constraint) and does not invent a new
@@ -90,6 +99,14 @@ from allostery.pathways import edge_propensity, edge_propensity_to_matrix  # noq
 from allostery.propagators import quantum_connectivity_matrix, time_averaged_ctqw_converged  # noqa: E402
 from allostery.protocol import run_frozen_verdict  # noqa: E402
 from allostery.report import assemble_hit_list, no_ground_truth_report, verdict_template  # noqa: E402
+from allostery.sites import (  # noqa: E402
+    cluster_sites,
+    end_to_end_record,
+    site_chance_level,
+    site_hit_metrics,
+    site_knob_sweep,
+    site_proximity_floor,
+)
 from allostery.superpose import compute_learnability  # noqa: E402
 
 def _log(msg: str) -> None:
@@ -401,6 +418,26 @@ def run_target(target_name: str, output_dir: Path) -> dict:
         hits = assemble_hit_list(winner_occ, labels_obj, resnums=apo.resnums, k=5)
         report_text = verdict_template(result, provenance="frozen")
 
+        # TASK-0180: spatially deduplicated sites, on top of the same
+        # winner_occ/source/labels_obj.pocket already computed above --
+        # additive only, nothing above this point is touched. TASK-0177's
+        # consensus label is still In Progress (no frozen labels exist
+        # yet, confirmed by reading that task file) -- this uses the
+        # incumbent `labels_obj.pocket` (the `pocket_contact_cutoff`
+        # contact label, per this task's own stated fallback) and records
+        # that provenance explicitly, not silently.
+        _log(f"{target_name}: clustering top-scoring residues into sites...")
+        t0 = time.monotonic()
+        site_result = cluster_sites(apo.coords, winner_occ, resnums=apo.resnums)
+        site_hit = site_hit_metrics(site_result["top_sites"], labels_obj.pocket, apo.coords)
+        chance = site_chance_level(apo.coords, len(apo.resnums), labels_obj.pocket)
+        proximity_floor = site_proximity_floor(apo.coords, source, labels_obj.pocket)
+        knob_spread = site_knob_sweep(apo.coords, winner_occ, labels_obj.pocket)
+        _log(
+            f"{target_name}: site clustering done in {time.monotonic() - t0:.1f}s -- "
+            f"{len(site_result['top_sites'])} site(s), knob_spread={knob_spread['verdict']}"
+        )
+
         target_dir.mkdir(parents=True, exist_ok=True)
         np.savez(target_dir / "connectivity_matrix.npz", matrix=matrix, resnums=apo.resnums)
         np.savez(target_dir / "quantum_connectivity_matrix.npz", matrix=q_matrix, resnums=apo.resnums)
@@ -409,11 +446,52 @@ def run_target(target_name: str, output_dir: Path) -> dict:
                 "indices": hits["indices"].tolist(),
                 "resnums": hits["resnums"].tolist() if hits["resnums"] is not None else None,
                 "scores": hits["scores"].tolist(),
+                # TASK-0180: additive-only key -- indices/resnums/scores
+                # above stay byte-identical, pinned by
+                # test_run_challenge.py::test_residue_level_keys_unchanged_by_site_addition.
+                "sites": {
+                    "top_sites": site_result["top_sites"],
+                    "hit_metrics": site_hit,
+                    "chance_level": chance,
+                    "proximity_floor": proximity_floor["hit_metrics"],
+                    "knob_spread": knob_spread,
+                },
             }, f, indent=2)
         with open(target_dir / "report.txt", "w") as f:
             f.write(report_text)
+        verdict_json = _jsonify(result)
         with open(target_dir / "verdict.json", "w") as f:
-            json.dump(_jsonify(result), f, indent=2)
+            json.dump(verdict_json, f, indent=2)
+
+        residue_level = {
+            "AUC_apo_Hnew_optimised": verdict_json.get("AUC_apo_Hnew_optimised"),
+            "diagnosis": verdict_json.get("_diagnosis"),
+            "diagnosis_score_ci": verdict_json.get("_diagnosis_score_ci"),
+            "diagnosis_floor_ci": verdict_json.get("_diagnosis_floor_ci"),
+            "diagnosis_ci_overlap": verdict_json.get("_diagnosis_ci_overlap"),
+        }
+        end_to_end = end_to_end_record(
+            target_name=target_name,
+            apo_pdb=target_config.get("apo_pdb"),
+            holo_pdb=target_config.get("holo_pdb"),
+            label_source=f"incumbent_{pocket_cutoff}A_contact",
+            cluster_result=site_result,
+            site_hit=site_hit,
+            chance=chance,
+            floor=proximity_floor["hit_metrics"],
+            knob_spread=knob_spread,
+            residue_level=residue_level,
+        )
+        with open(target_dir / "end_to_end.json", "w") as f:
+            json.dump(end_to_end, f, indent=2)
+        # Appended to output_dir's own RESULTS.md, not the repo-root file
+        # -- keeps each run's own summary alongside its own outputs and
+        # (deliberately) keeps a bare `run_target` call, including every
+        # test in this suite, from mutating the checked-in root
+        # RESULTS.md as a side effect. Merging a run's summary into the
+        # root file is a separate, human-reviewed step.
+        with open(output_dir / "RESULTS.md", "a") as f:
+            f.write(f"\n## {target_name}\n\n{end_to_end['statement']}\n")
 
         _log(f"{target_name}: DONE in {time.monotonic() - run_start:.1f}s total")
         return {"target": target_name, "ok": True, "diagnosis": result.get("_diagnosis")}

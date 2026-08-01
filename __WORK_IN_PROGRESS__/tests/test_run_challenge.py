@@ -130,6 +130,40 @@ class TestRunTarget:
         assert hits["resnums"] is not None
         assert len(hits["resnums"]) == len(hits["indices"])
 
+    def test_residue_level_hit_list_keys_unchanged_by_site_addition(self, mocked_target, tmp_path):
+        """TASK-0180 Constraint: `hit_list.json`'s residue-level output
+        (`indices`/`resnums`/`scores`) must stay exactly as before after
+        adding the new `"sites"` key -- additive only, no existing key
+        renamed/removed/reshaped."""
+        run_challenge.run_target("SYNTH", tmp_path)
+        with open(tmp_path / "SYNTH" / "hit_list.json") as f:
+            hits = json.load(f)
+
+        assert set(hits.keys()) == {"indices", "resnums", "scores", "sites"}
+        assert 0 < len(hits["indices"]) <= 5
+        assert len(hits["resnums"]) == len(hits["indices"])
+        assert len(hits["scores"]) == len(hits["indices"])
+
+    def test_hit_list_sites_key_present_with_expected_shape(self, mocked_target, tmp_path):
+        run_challenge.run_target("SYNTH", tmp_path)
+        with open(tmp_path / "SYNTH" / "hit_list.json") as f:
+            hits = json.load(f)
+        sites = hits["sites"]
+        assert set(sites.keys()) == {
+            "top_sites", "hit_metrics", "chance_level", "proximity_floor", "knob_spread",
+        }
+        assert isinstance(sites["top_sites"], list)
+        assert sites["knob_spread"]["verdict"] in ("STABLE", "UNSTABLE")
+
+    def test_end_to_end_json_written_with_statement(self, mocked_target, tmp_path):
+        run_challenge.run_target("SYNTH", tmp_path)
+        with open(tmp_path / "SYNTH" / "end_to_end.json") as f:
+            end_to_end = json.load(f)
+        assert end_to_end["target"] == "SYNTH"
+        assert end_to_end["label_source"].startswith("incumbent_")
+        assert isinstance(end_to_end["statement"], str) and len(end_to_end["statement"]) > 0
+        assert "residue_level" in end_to_end and "diagnosis" in end_to_end["residue_level"]
+
     def test_report_renders_frozen_with_no_dev_banner(self, mocked_target, tmp_path):
         run_challenge.run_target("SYNTH", tmp_path)
         text = (tmp_path / "SYNTH" / "report.txt").read_text()
