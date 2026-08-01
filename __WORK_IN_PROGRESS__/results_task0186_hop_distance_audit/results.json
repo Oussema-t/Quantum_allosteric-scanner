@@ -1,0 +1,317 @@
+[
+  {
+    "target": "KRAS_G12C",
+    "ok": true,
+    "label": "incumbent",
+    "pocket_contact_cutoff_A": 4.5,
+    "hop_graph_cutoff_A": 8.0,
+    "n_residues": 169,
+    "n_active_site": 18,
+    "n_pocket": 18,
+    "n_pocket_spatially_unreachable": 0,
+    "n_pocket_chain_unreachable": 0,
+    "euclid_min_A": {
+      "min": 3.7530389020099437,
+      "mean": 11.863324916906276,
+      "median": 13.080373691379759,
+      "max": 20.78746663256492,
+      "frac_le_1": 0.0,
+      "frac_le_2": 0.0,
+      "frac_le_3": 0.0
+    },
+    "spatial_hop": {
+      "min": 1.0,
+      "mean": 2.1666666666666665,
+      "median": 2.0,
+      "max": 4.0,
+      "frac_le_1": 0.3888888888888889,
+      "frac_le_2": 0.5555555555555556,
+      "frac_le_3": 0.8888888888888888
+    },
+    "chain_hop": {
+      "min": 1.0,
+      "mean": 19.944444444444443,
+      "median": 22.0,
+      "max": 39.0,
+      "frac_le_1": 0.1111111111111111,
+      "frac_le_2": 0.16666666666666666,
+      "frac_le_3": 0.2222222222222222
+    },
+    "fold_compression_ratio_chain_over_spatial": {
+      "mean": 10.273148148148147,
+      "median": 9.0,
+      "n": 18
+    },
+    "elapsed_s": 1.0
+  },
+  {
+    "target": "BCR_ABL1",
+    "ok": true,
+    "label": "incumbent",
+    "pocket_contact_cutoff_A": 4.5,
+    "hop_graph_cutoff_A": 8.0,
+    "n_residues": 451,
+    "n_active_site": 26,
+    "n_pocket": 16,
+    "n_pocket_spatially_unreachable": 0,
+    "n_pocket_chain_unreachable": 0,
+    "euclid_min_A": {
+      "min": 7.522204065298945,
+      "mean": 12.853480830245763,
+      "median": 11.30569971659601,
+      "max": 19.7594062157748,
+      "frac_le_1": 0.0,
+      "frac_le_2": 0.0,
+      "frac_le_3": 0.0
+    },
+    "spatial_hop": {
+      "min": 1.0,
+      "mean": 2.5,
+      "median": 2.0,
+      "max": 4.0,
+      "frac_le_1": 0.0625,
+      "frac_le_2": 0.625,
+      "frac_le_3": 0.8125
+    },
+    "chain_hop": {
+      "min": 6.0,
+      "mean": 51.0625,
+      "median": 55.5,
+      "max": 90.0,
+      "frac_le_1": 0.0,
+      "frac_le_2": 0.0,
+      "frac_le_3": 0.0
+    },
+    "fold_compression_ratio_chain_over_spatial": {
+      "mean": 21.197916666666668,
+      "median": 24.0,
+      "n": 16
+    },
+    "elapsed_s": 0.4
+  },
+  {
+    "target": "CARDIAC_MYOSIN",
+    "ok": true,
+    "label": "incumbent",
+    "pocket_contact_cutoff_A": 4.5,
+    "hop_graph_cutoff_A": 8.0,
+    "n_residues": 704,
+    "n_active_site": 18,
+    "n_pocket": 13,
+    "n_pocket_spatially_unreachable": 0,
+    "n_pocket_chain_unreachable": 0,
+    "euclid_min_A": {
+      "min": 3.8089754527956705,
+      "mean": 16.574284027989844,
+      "median": 17.622757417612036,
+      "max": 23.902057505578888,
+      "frac_le_1": 0.0,
+      "frac_le_2": 0.0,
+      "frac_le_3": 0.0
+    },
+    "spatial_hop": {
+      "min": 1.0,
+      "mean": 3.6153846153846154,
+      "median": 4.0,
+      "max": 6.0,
+      "frac_le_1": 0.07692307692307693,
+      "frac_le_2": 0.15384615384615385,
+      "frac_le_3": 0.46153846153846156
+    },
+    "chain_hop": {
+      "min": 1.0,
+      "mean": 126.46153846153847,
+      "median": 181.0,
+      "max": 237.0,
+      "frac_le_1": 0.07692307692307693,
+      "frac_le_2": 0.07692307692307693,
+      "frac_le_3": 0.07692307692307693
+    },
+    "fold_compression_ratio_chain_over_spatial": {
+      "mean": 37.710256410256406,
+      "median": 39.333333333333336,
+      "n": 13
+    },
+    "elapsed_s": 0.8
+  },
+  {
+    "target": "PTP1B",
+    "ok": true,
+    "label": "incumbent",
+    "pocket_contact_cutoff_A": 4.5,
+    "hop_graph_cutoff_A": 8.0,
+    "n_residues": 298,
+    "n_active_site": 5,
+    "n_pocket": 14,
+    "n_pocket_spatially_unreachable": 0,
+    "n_pocket_chain_unreachable": 0,
+    "euclid_min_A": {
+      "min": 13.37858684615083,
+      "mean": 17.682954736838223,
+      "median": 16.295828091341544,
+      "max": 25.444061271738832,
+      "frac_le_1": 0.0,
+      "frac_le_2": 0.0,
+      "frac_le_3": 0.0
+    },
+    "spatial_hop": {
+      "min": 2.0,
+      "mean": 3.642857142857143,
+      "median": 3.5,
+      "max": 5.0,
+      "frac_le_1": 0.0,
+      "frac_le_2": 0.07142857142857142,
+      "frac_le_3": 0.5
+    },
+    "chain_hop": {
+      "min": 10.0,
+      "mean": 34.785714285714285,
+      "median": 22.5,
+      "max": 61.0,
+      "frac_le_1": 0.0,
+      "frac_le_2": 0.0,
+      "frac_le_3": 0.0
+    },
+    "fold_compression_ratio_chain_over_spatial": {
+      "mean": 8.876190476190475,
+      "median": 7.5,
+      "n": 14
+    },
+    "elapsed_s": 0.2
+  },
+  {
+    "target": "GLUCOKINASE",
+    "ok": true,
+    "label": "incumbent",
+    "pocket_contact_cutoff_A": 4.5,
+    "hop_graph_cutoff_A": 8.0,
+    "n_residues": 448,
+    "n_active_site": 5,
+    "n_pocket": 17,
+    "n_pocket_spatially_unreachable": 0,
+    "n_pocket_chain_unreachable": 0,
+    "euclid_min_A": {
+      "min": 3.7938837620570287,
+      "mean": 10.537946855470878,
+      "median": 10.669279357107486,
+      "max": 16.748203366331563,
+      "frac_le_1": 0.0,
+      "frac_le_2": 0.0,
+      "frac_le_3": 0.0
+    },
+    "spatial_hop": {
+      "min": 1.0,
+      "mean": 2.0588235294117645,
+      "median": 2.0,
+      "max": 3.0,
+      "frac_le_1": 0.11764705882352941,
+      "frac_le_2": 0.8235294117647058,
+      "frac_le_3": 1.0
+    },
+    "chain_hop": {
+      "min": 1.0,
+      "mean": 68.82352941176471,
+      "median": 48.0,
+      "max": 146.0,
+      "frac_le_1": 0.058823529411764705,
+      "frac_le_2": 0.11764705882352941,
+      "frac_le_3": 0.11764705882352941
+    },
+    "fold_compression_ratio_chain_over_spatial": {
+      "mean": 30.941176470588236,
+      "median": 24.0,
+      "n": 17
+    },
+    "elapsed_s": 0.4
+  },
+  {
+    "target": "CASPASE1",
+    "ok": true,
+    "label": "incumbent",
+    "pocket_contact_cutoff_A": 4.5,
+    "hop_graph_cutoff_A": 8.0,
+    "n_residues": 255,
+    "n_active_site": 5,
+    "n_pocket": 6,
+    "n_pocket_spatially_unreachable": 0,
+    "n_pocket_chain_unreachable": 0,
+    "euclid_min_A": {
+      "min": 3.797278104116158,
+      "mean": 6.279924991033076,
+      "median": 5.904962961051148,
+      "max": 10.995322914766986,
+      "frac_le_1": 0.0,
+      "frac_le_2": 0.0,
+      "frac_le_3": 0.0
+    },
+    "spatial_hop": {
+      "min": 1.0,
+      "mean": 1.1666666666666667,
+      "median": 1.0,
+      "max": 2.0,
+      "frac_le_1": 0.8333333333333334,
+      "frac_le_2": 1.0,
+      "frac_le_3": 1.0
+    },
+    "chain_hop": {
+      "min": 1.0,
+      "mean": 24.0,
+      "median": 25.0,
+      "max": 51.0,
+      "frac_le_1": 0.3333333333333333,
+      "frac_le_2": 0.3333333333333333,
+      "frac_le_3": 0.3333333333333333
+    },
+    "fold_compression_ratio_chain_over_spatial": {
+      "mean": 19.75,
+      "median": 19.25,
+      "n": 6
+    },
+    "elapsed_s": 0.2
+  },
+  {
+    "target": "CASPASE7",
+    "ok": true,
+    "label": "incumbent",
+    "pocket_contact_cutoff_A": 4.5,
+    "hop_graph_cutoff_A": 8.0,
+    "n_residues": 461,
+    "n_active_site": 5,
+    "n_pocket": 7,
+    "n_pocket_spatially_unreachable": 0,
+    "n_pocket_chain_unreachable": 0,
+    "euclid_min_A": {
+      "min": 5.673115722422734,
+      "mean": 11.154091578896077,
+      "median": 9.410979438931951,
+      "max": 19.593400317453828,
+      "frac_le_1": 0.0,
+      "frac_le_2": 0.0,
+      "frac_le_3": 0.0
+    },
+    "spatial_hop": {
+      "min": 1.0,
+      "mean": 2.2857142857142856,
+      "median": 2.0,
+      "max": 4.0,
+      "frac_le_1": 0.14285714285714285,
+      "frac_le_2": 0.7142857142857143,
+      "frac_le_3": 0.8571428571428571
+    },
+    "chain_hop": {
+      "min": 43.0,
+      "mean": 57.714285714285715,
+      "median": 52.0,
+      "max": 92.0,
+      "frac_le_1": 0.0,
+      "frac_le_2": 0.0,
+      "frac_le_3": 0.0
+    },
+    "fold_compression_ratio_chain_over_spatial": {
+      "mean": 28.214285714285715,
+      "median": 25.5,
+      "n": 7
+    },
+    "elapsed_s": 0.4
+  }
+]
