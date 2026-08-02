@@ -1,0 +1,511 @@
+{
+  "pre_registered_hypothesis": "The converged, time-averaged observable is provably phase-free (TASK-0130, exact to 1e-6 against 12.3h of brute-force integration): dephasing has nothing left to destroy once the relevant phases have already averaged out. Prediction, stated before running: the time-sampled-averaged circuit (this task's circuit realization of that observable) will show LESS top-5 ranking degradation under gate noise, at matched depth and error rate, than a single finite-time snapshot circuit (TASK-0068's original convention). A result showing equal or worse degradation falsifies this prediction and is reported as such, not softened.",
+  "coarse_size_simulatable": 12,
+  "coarse_size_transpile_only": 20,
+  "nisq_trotter_steps": 5,
+  "n_time_samples": 6,
+  "step1_convergence": {
+    "KRAS_G12C": {
+      "n_qubits": 10,
+      "t_max": 200.0,
+      "n_time_samples": 6,
+      "trotter_steps_per_sample": 5,
+      "exact_occupation": [
+        0.16757275020664905,
+        0.08379837117532174,
+        0.18544360390514306,
+        0.11168200382981074,
+        0.06950730516648297,
+        0.04934570993013554,
+        0.09110010430197824,
+        0.08258392614176356,
+        0.11163214852280144,
+        0.047334076819913765
+      ],
+      "circuit_occupation": [
+        0.09402654723664267,
+        0.05288940296348327,
+        0.2519199128142364,
+        0.08688190350708729,
+        0.07739791112682294,
+        0.08380880094155281,
+        0.053119508935179305,
+        0.14807450422341673,
+        0.07602088813730991,
+        0.07586062011426781
+      ],
+      "l1_distance": 0.4056942545137166,
+      "top5_overlap": 0.42857142857142855,
+      "elapsed_s": 6.1
+    },
+    "BCR_ABL1": {
+      "n_qubits": 12,
+      "t_max": 200.0,
+      "n_time_samples": 6,
+      "trotter_steps_per_sample": 5,
+      "exact_occupation": [
+        0.045052897271137086,
+        0.05167869268431082,
+        0.11107170627652198,
+        0.11654289994108043,
+        0.1106264692093472,
+        0.25390478793932364,
+        0.15578314574728158,
+        0.037186946554564275,
+        0.024059088204877118,
+        0.015236459566949377,
+        0.0366168141602249,
+        0.042240092444381656
+      ],
+      "circuit_occupation": [
+        0.037442306881934395,
+        0.09183204554229289,
+        0.0792516074692463,
+        0.08398793162206435,
+        0.1093032620110118,
+        0.2071716757567369,
+        0.06170931165006851,
+        0.05393599973460255,
+        0.04078464454509936,
+        0.08253921920671366,
+        0.030040879942525744,
+        0.12200111563770373
+      ],
+      "l1_distance": 0.4413834904226578,
+      "top5_overlap": 0.42857142857142855,
+      "elapsed_s": 89.6
+    },
+    "CARDIAC_MYOSIN": {
+      "n_qubits": 12,
+      "t_max": 127.80812467932864,
+      "n_time_samples": 6,
+      "trotter_steps_per_sample": 5,
+      "exact_occupation": [
+        0.038386962118003916,
+        0.0564140603936083,
+        0.05481395664749096,
+        0.11559865113744867,
+        0.1751504863537037,
+        0.12767952509353353,
+        0.09665648080073179,
+        0.07671426729064004,
+        0.0895028420902871,
+        0.07082950347143,
+        0.053268045971889035,
+        0.04498521863123299
+      ],
+      "circuit_occupation": [
+        0.03415171287437024,
+        0.07537908520069282,
+        0.06499190060125397,
+        0.041152491490469296,
+        0.2903690126699779,
+        0.07948244861563569,
+        0.08851429368816692,
+        0.0784223987912226,
+        0.09661077185171789,
+        0.03330643275277235,
+        0.09186103321514781,
+        0.025758418248570242
+      ],
+      "l1_distance": 0.38354108716478996,
+      "top5_overlap": 0.6666666666666666,
+      "elapsed_s": 106.4
+    },
+    "MYC_MAX": {
+      "n_qubits": 9,
+      "t_max": 97.05609202042906,
+      "n_time_samples": 6,
+      "trotter_steps_per_sample": 5,
+      "exact_occupation": [
+        0.031858517241443736,
+        0.03766962816871283,
+        0.12433771563569357,
+        0.1337394116719429,
+        0.0671425203268539,
+        0.10329090282996571,
+        0.11365454464309663,
+        0.2387089331011512,
+        0.14959782638113947
+      ],
+      "circuit_occupation": [
+        0.1423642816758006,
+        0.04107998054738747,
+        0.13145184904601862,
+        0.07246897148886196,
+        0.10435982142301096,
+        0.08454268282644152,
+        0.05660450179913237,
+        0.2611932658479078,
+        0.10593464534543733
+      ],
+      "l1_distance": 0.3614637681325417,
+      "top5_overlap": 0.42857142857142855,
+      "elapsed_s": 1.0
+    }
+  },
+  "step2_noise_comparison": {
+    "KRAS_G12C": {
+      "snapshot_t": 200.0,
+      "rows": [
+        {
+          "error_rate": 0.0,
+          "snapshot_top5_overlap": 1.0,
+          "time_averaged_top5_overlap": 1.0
+        },
+        {
+          "error_rate": 0.005,
+          "snapshot_top5_overlap": 0.6666666666666666,
+          "time_averaged_top5_overlap": 0.6666666666666666
+        },
+        {
+          "error_rate": 0.01,
+          "snapshot_top5_overlap": 0.42857142857142855,
+          "time_averaged_top5_overlap": 0.42857142857142855
+        },
+        {
+          "error_rate": 0.02,
+          "snapshot_top5_overlap": 0.1111111111111111,
+          "time_averaged_top5_overlap": 0.42857142857142855
+        },
+        {
+          "error_rate": 0.05,
+          "snapshot_top5_overlap": 0.1111111111111111,
+          "time_averaged_top5_overlap": 0.25
+        }
+      ],
+      "elapsed_s": 40.6
+    },
+    "BCR_ABL1": {
+      "snapshot_t": 200.0,
+      "rows": [
+        {
+          "error_rate": 0.0,
+          "snapshot_top5_overlap": 1.0,
+          "time_averaged_top5_overlap": 1.0
+        },
+        {
+          "error_rate": 0.005,
+          "snapshot_top5_overlap": 0.6666666666666666,
+          "time_averaged_top5_overlap": 0.42857142857142855
+        },
+        {
+          "error_rate": 0.01,
+          "snapshot_top5_overlap": 0.42857142857142855,
+          "time_averaged_top5_overlap": 0.25
+        },
+        {
+          "error_rate": 0.02,
+          "snapshot_top5_overlap": 0.42857142857142855,
+          "time_averaged_top5_overlap": 0.25
+        },
+        {
+          "error_rate": 0.05,
+          "snapshot_top5_overlap": 0.25,
+          "time_averaged_top5_overlap": 0.25
+        }
+      ],
+      "elapsed_s": 625.0
+    },
+    "CARDIAC_MYOSIN": {
+      "snapshot_t": 127.80812467932864,
+      "rows": [
+        {
+          "error_rate": 0.0,
+          "snapshot_top5_overlap": 1.0,
+          "time_averaged_top5_overlap": 1.0
+        },
+        {
+          "error_rate": 0.005,
+          "snapshot_top5_overlap": 0.6666666666666666,
+          "time_averaged_top5_overlap": 0.6666666666666666
+        },
+        {
+          "error_rate": 0.01,
+          "snapshot_top5_overlap": 0.6666666666666666,
+          "time_averaged_top5_overlap": 0.6666666666666666
+        },
+        {
+          "error_rate": 0.02,
+          "snapshot_top5_overlap": 0.6666666666666666,
+          "time_averaged_top5_overlap": 0.6666666666666666
+        },
+        {
+          "error_rate": 0.05,
+          "snapshot_top5_overlap": 0.42857142857142855,
+          "time_averaged_top5_overlap": 0.6666666666666666
+        }
+      ],
+      "elapsed_s": 717.2
+    },
+    "MYC_MAX": {
+      "snapshot_t": 97.05609202042906,
+      "rows": [
+        {
+          "error_rate": 0.0,
+          "snapshot_top5_overlap": 1.0,
+          "time_averaged_top5_overlap": 1.0
+        },
+        {
+          "error_rate": 0.005,
+          "snapshot_top5_overlap": 0.6666666666666666,
+          "time_averaged_top5_overlap": 1.0
+        },
+        {
+          "error_rate": 0.01,
+          "snapshot_top5_overlap": 0.6666666666666666,
+          "time_averaged_top5_overlap": 1.0
+        },
+        {
+          "error_rate": 0.02,
+          "snapshot_top5_overlap": 0.6666666666666666,
+          "time_averaged_top5_overlap": 0.42857142857142855
+        },
+        {
+          "error_rate": 0.05,
+          "snapshot_top5_overlap": 0.42857142857142855,
+          "time_averaged_top5_overlap": 0.42857142857142855
+        }
+      ],
+      "elapsed_s": 7.1
+    }
+  },
+  "step3_resource_table": [
+    {
+      "target": "KRAS_G12C",
+      "n_residues_full": 169,
+      "n_active_site": 18,
+      "full_resolution": {
+        "n_qubits": 169,
+        "n_terms": 809,
+        "trotter_steps": 4138,
+        "circuit_depth": 70346,
+        "two_qubit_gates": 3347642,
+        "energy_scale": 0.3198185515039009
+      },
+      "coarse_grained": [
+        {
+          "n_target": 12,
+          "n_clusters_actual": 10,
+          "analytic": {
+            "n_qubits": 10,
+            "n_terms": 25,
+            "trotter_steps": 3133,
+            "circuit_depth": 31330,
+            "two_qubit_gates": 78325,
+            "energy_scale": 1.58293221366838
+          },
+          "transpiled_ibm_sherbrooke": {
+            "depth": 1859,
+            "two_qubit_gate_count": 905,
+            "transpile_time_s": 0.22
+          },
+          "transpiled_iqm_garnet_topology": {
+            "depth": 965,
+            "two_qubit_gate_count": 725,
+            "transpile_time_s": 0.01
+          }
+        },
+        {
+          "n_target": 20,
+          "n_clusters_actual": 10,
+          "analytic": {
+            "n_qubits": 10,
+            "n_terms": 25,
+            "trotter_steps": 3133,
+            "circuit_depth": 31330,
+            "two_qubit_gates": 78325,
+            "energy_scale": 1.58293221366838
+          },
+          "transpiled_ibm_sherbrooke": {
+            "depth": 2014,
+            "two_qubit_gate_count": 968,
+            "transpile_time_s": 0.02
+          },
+          "transpiled_iqm_garnet_topology": {
+            "depth": 1011,
+            "two_qubit_gate_count": 743,
+            "transpile_time_s": 0.01
+          }
+        }
+      ]
+    },
+    {
+      "target": "BCR_ABL1",
+      "n_residues_full": 451,
+      "n_active_site": 26,
+      "full_resolution": {
+        "n_qubits": 451,
+        "n_terms": 2099,
+        "trotter_steps": 20385,
+        "circuit_depth": 326160,
+        "two_qubit_gates": 42788115,
+        "energy_scale": 0.44071705771062075
+      },
+      "coarse_grained": [
+        {
+          "n_target": 12,
+          "n_clusters_actual": 12,
+          "analytic": {
+            "n_qubits": 12,
+            "n_terms": 24,
+            "trotter_steps": 7952,
+            "circuit_depth": 71568,
+            "two_qubit_gates": 190848,
+            "energy_scale": 2.574170675358445
+          },
+          "transpiled_ibm_sherbrooke": {
+            "depth": 1662,
+            "two_qubit_gate_count": 810,
+            "transpile_time_s": 0.02
+          },
+          "transpiled_iqm_garnet_topology": {
+            "depth": 834,
+            "two_qubit_gate_count": 675,
+            "transpile_time_s": 0.01
+          }
+        },
+        {
+          "n_target": 20,
+          "n_clusters_actual": 14,
+          "analytic": {
+            "n_qubits": 14,
+            "n_terms": 33,
+            "trotter_steps": 9938,
+            "circuit_depth": 89442,
+            "two_qubit_gates": 327954,
+            "energy_scale": 2.4541440393640714
+          },
+          "transpiled_ibm_sherbrooke": {
+            "depth": 2565,
+            "two_qubit_gate_count": 1341,
+            "transpile_time_s": 0.03
+          },
+          "transpiled_iqm_garnet_topology": {
+            "depth": 1075,
+            "two_qubit_gate_count": 996,
+            "transpile_time_s": 0.01
+          }
+        }
+      ]
+    },
+    {
+      "target": "CARDIAC_MYOSIN",
+      "n_residues_full": 704,
+      "n_active_site": 18,
+      "full_resolution": {
+        "n_qubits": 704,
+        "n_terms": 3387,
+        "trotter_steps": 36867,
+        "circuit_depth": 626739,
+        "two_qubit_gates": 124868529,
+        "energy_scale": 0.466575656740165
+      },
+      "coarse_grained": [
+        {
+          "n_target": 12,
+          "n_clusters_actual": 12,
+          "analytic": {
+            "n_qubits": 12,
+            "n_terms": 28,
+            "trotter_steps": 6843,
+            "circuit_depth": 68430,
+            "two_qubit_gates": 191604,
+            "energy_scale": 2.2107118459959674
+          },
+          "transpiled_ibm_sherbrooke": {
+            "depth": 2123,
+            "two_qubit_gate_count": 1040,
+            "transpile_time_s": 0.03
+          },
+          "transpiled_iqm_garnet_topology": {
+            "depth": 941,
+            "two_qubit_gate_count": 833,
+            "transpile_time_s": 0.01
+          }
+        },
+        {
+          "n_target": 20,
+          "n_clusters_actual": 15,
+          "analytic": {
+            "n_qubits": 15,
+            "n_terms": 38,
+            "trotter_steps": 13603,
+            "circuit_depth": 149633,
+            "two_qubit_gates": 516914,
+            "energy_scale": 2.6756992272011635
+          },
+          "transpiled_ibm_sherbrooke": {
+            "depth": 2295,
+            "two_qubit_gate_count": 1486,
+            "transpile_time_s": 0.03
+          },
+          "transpiled_iqm_garnet_topology": {
+            "depth": 1368,
+            "two_qubit_gate_count": 1216,
+            "transpile_time_s": 0.01
+          }
+        }
+      ]
+    },
+    {
+      "target": "MYC_MAX",
+      "n_residues_full": 171,
+      "n_active_site": 5,
+      "full_resolution": {
+        "n_qubits": 171,
+        "n_terms": 748,
+        "trotter_steps": 4805,
+        "circuit_depth": 72075,
+        "two_qubit_gates": 3594140,
+        "energy_scale": 0.3584207267429713
+      },
+      "coarse_grained": [
+        {
+          "n_target": 12,
+          "n_clusters_actual": 9,
+          "analytic": {
+            "n_qubits": 9,
+            "n_terms": 17,
+            "trotter_steps": 2118,
+            "circuit_depth": 16944,
+            "two_qubit_gates": 36006,
+            "energy_scale": 1.5783243913512783
+          },
+          "transpiled_ibm_sherbrooke": {
+            "depth": 1138,
+            "two_qubit_gate_count": 556,
+            "transpile_time_s": 0.02
+          },
+          "transpiled_iqm_garnet_topology": {
+            "depth": 617,
+            "two_qubit_gate_count": 460,
+            "transpile_time_s": 0.01
+          }
+        },
+        {
+          "n_target": 20,
+          "n_clusters_actual": 9,
+          "analytic": {
+            "n_qubits": 9,
+            "n_terms": 17,
+            "trotter_steps": 2118,
+            "circuit_depth": 16944,
+            "two_qubit_gates": 36006,
+            "energy_scale": 1.5783243913512783
+          },
+          "transpiled_ibm_sherbrooke": {
+            "depth": 1010,
+            "two_qubit_gate_count": 538,
+            "transpile_time_s": 0.02
+          },
+          "transpiled_iqm_garnet_topology": {
+            "depth": 634,
+            "two_qubit_gate_count": 454,
+            "transpile_time_s": 0.01
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -142,6 +142,53 @@ def top_k_overlap(occ_a: np.ndarray, occ_b: np.ndarray, k: int) -> float:
     return len(top_a & top_b) / len(union) if union else 1.0
 
 
+def time_sampled_converged_occupation(
+    H_coarse: np.ndarray,
+    source: int,
+    t_values,
+    trotter_steps: int,
+    dephasing_gamma: float = 0.0,
+    noise_model=None,
+) -> np.ndarray:
+    """TASK-0182 -- circuit-realized approximation of `propagators.
+    time_averaged_ctqw_converged`'s exact t->infinity closed form.
+
+    A fixed-depth Trotter circuit only ever produces a snapshot at one
+    `t`; there is no "infinite-time" circuit. This is the only way a
+    circuit can approach a *time-averaged* observable: run the circuit at
+    each `t` in `t_values` and average the resulting occupation vectors --
+    the direct circuit-model analogue of `time_averaged_ctqw`'s own
+    `np.linspace(0, t_max, n_steps)` Riemann-sum convention (same
+    averaging idea, evaluated by simulation instead of the closed-form
+    eigendecomposition). Caller picks `t_values`, typically
+    `np.linspace(0, t_max, n_samples)` with `t_max` from
+    `propagators.min_adequate_t_max(H_coarse, kind="time_averaged_ctqw")`
+    -- not re-derived here, reused as-is.
+
+    `trotter_steps` is held **fixed across every sampled `t`** (not scaled
+    per-`t` the way `coarse.trotter_cost`'s high-accuracy prescription
+    would), deliberately: TASK-0068 already found scaling step count with
+    the high-accuracy error budget produces circuits that do not finish in
+    NISQ-relevant time (3133 steps for a 10-qubit graph, a ~188,000-gate
+    circuit killed after 69 CPU-minutes). A fixed, small `trotter_steps`
+    keeps every sample at the same NISQ-plausible depth; the resulting
+    approximation error (this function does not converge to the exact
+    answer at fixed depth as `len(t_values) -> inf`, only as `trotter_steps
+    -> inf` too) is exactly what this task's own noise-free-limit
+    convergence check (Planned Validation, run before any noisy result is
+    trusted) is for -- report the residual against
+    `time_averaged_ctqw_converged`, do not assume it is negligible.
+    """
+    occs = [
+        simulate_occupation(
+            build_xy_walk_circuit(H_coarse, float(t), trotter_steps, source, dephasing_gamma),
+            noise_model=noise_model,
+        )
+        for t in t_values
+    ]
+    return np.mean(occs, axis=0)
+
+
 def run_noise_sweep(
     H_coarse: np.ndarray,
     source: int,

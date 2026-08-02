@@ -20,6 +20,7 @@ from allostery.noise import (  # noqa: E402
     build_xy_walk_circuit,
     run_noise_sweep,
     simulate_occupation,
+    time_sampled_converged_occupation,
     top_k_overlap,
 )
 
@@ -190,3 +191,67 @@ class TestRunNoiseSweep:
             H, source=0, t=1.0, trotter_steps_grid=[2], error_rates=[0.05], k=2, dephasing_gamma=0.1,
         )
         assert rows[0]["dephasing_gamma"] == pytest.approx(0.1)
+
+
+class TestTimeSampledConvergedOccupation:
+    """TASK-0182 -- circuit-model approximation of `propagators.
+    time_averaged_ctqw_converged`'s exact t->infinity closed form. A fixed
+    depth circuit only ever gives a snapshot at one t; this function's
+    whole reason to exist is averaging several such snapshots, so the
+    tests here are about that averaging behavior, not re-testing
+    `simulate_occupation`/`build_xy_walk_circuit` themselves (already
+    covered above)."""
+
+    def test_output_sums_to_one_and_matches_node_count(self):
+        H = _ring_graph(5)
+        occ = time_sampled_converged_occupation(H, source=0, t_values=[0.5, 1.0, 1.5], trotter_steps=3)
+        assert occ.shape == (5,)
+        assert occ.sum() == pytest.approx(1.0, abs=1e-6)
+
+    def test_single_t_value_of_zero_leaves_everything_at_the_seed(self):
+        H = _ring_graph(5)
+        occ = time_sampled_converged_occupation(H, source=2, t_values=[0.0], trotter_steps=3)
+        expected = np.zeros(5)
+        expected[2] = 1.0
+        np.testing.assert_allclose(occ, expected, atol=1e-9)
+
+    def test_averaging_over_more_t_values_moves_toward_the_exact_converged_limit(self):
+        """Not exact convergence (fixed `trotter_steps`, see this
+        function's own docstring on why) -- but denser time sampling over
+        the same window should not move *away* from the closed-form
+        answer. Ring graph has real degeneracies (TASK-0130's own grouping
+        logic handles those), giving a real, non-trivial exact target to
+        compare against."""
+        from allostery.propagators import time_averaged_ctqw_converged
+
+        H = _ring_graph(6)
+        exact = time_averaged_ctqw_converged(H, source=0)
+
+        sparse = time_sampled_converged_occupation(H, source=0, t_values=np.linspace(0, 20, 3), trotter_steps=4)
+        dense = time_sampled_converged_occupation(H, source=0, t_values=np.linspace(0, 20, 20), trotter_steps=4)
+
+        l1_sparse = np.abs(sparse - exact).sum()
+        l1_dense = np.abs(dense - exact).sum()
+        assert l1_dense <= l1_sparse + 1e-6
+
+    def test_noise_model_is_applied_to_every_sampled_circuit(self):
+        """Same qualitative check as `TestSimulateOccupationNoisy` above,
+        applied through the averaging wrapper: a real error rate must
+        measurably break single-excitation-subspace conservation even
+        after averaging over several t samples."""
+        H = _ring_graph(5)
+        noise_model = build_noise_model(depolarizing_prob=0.1, amp_damping_prob=0.1)
+        occ_noisy = time_sampled_converged_occupation(
+            H, source=0, t_values=[0.5, 1.0, 1.5], trotter_steps=4, noise_model=noise_model
+        )
+        assert abs(occ_noisy.sum() - 1.0) > 0.02
+
+    def test_zero_error_rate_noise_model_matches_noiseless(self):
+        H = _ring_graph(4)
+        t_values = [0.5, 1.0]
+        occ_ideal = time_sampled_converged_occupation(H, source=0, t_values=t_values, trotter_steps=2)
+        noise_model = build_noise_model(depolarizing_prob=0.0, amp_damping_prob=0.0)
+        occ_zero_noise = time_sampled_converged_occupation(
+            H, source=0, t_values=t_values, trotter_steps=2, noise_model=noise_model
+        )
+        np.testing.assert_allclose(occ_ideal, occ_zero_noise, atol=1e-6)

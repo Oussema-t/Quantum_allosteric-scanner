@@ -1,0 +1,174 @@
+{
+  "median_2q_error_ibm_sherbrooke": 0.00778809624800933,
+  "fidelity_threshold": 0.5,
+  "targets": {
+    "KRAS_G12C": {
+      "active_site_provenance": "func_ligand-contact:GDP",
+      "retention": [
+        {
+          "n_target": 12,
+          "n_clusters_actual": 10,
+          "top10_jaccard_retention": 0.0,
+          "spearman_retention": 0.03868866952601135
+        },
+        {
+          "n_target": 20,
+          "n_clusters_actual": 10,
+          "top10_jaccard_retention": 0.0,
+          "spearman_retention": 0.03868866952601135
+        }
+      ],
+      "feasibility": {
+        "full_resolution": {
+          "n_qubits": 169,
+          "two_qubit_gates_analytic": 3347642,
+          "estimated_circuit_fidelity": 0.0,
+          "clears_threshold": false
+        },
+        "coarse_grained": [
+          {
+            "n_target": 12,
+            "n_qubits_actual": 10,
+            "transpiled_two_qubit_gates_ibm": 905,
+            "estimated_circuit_fidelity": 0.000845302015506608,
+            "clears_threshold": false
+          },
+          {
+            "n_target": 20,
+            "n_qubits_actual": 10,
+            "transpiled_two_qubit_gates_ibm": 968,
+            "estimated_circuit_fidelity": 0.0005165248095441957,
+            "clears_threshold": false
+          }
+        ],
+        "verdict": "FAULT_TOLERANT_ONLY"
+      }
+    },
+    "BCR_ABL1": {
+      "active_site_provenance": "func_ligand-contact:NIL",
+      "retention": [
+        {
+          "n_target": 12,
+          "n_clusters_actual": 12,
+          "top10_jaccard_retention": 0.17647058823529413,
+          "spearman_retention": 0.024510548160903357
+        },
+        {
+          "n_target": 20,
+          "n_clusters_actual": 14,
+          "top10_jaccard_retention": 0.05263157894736842,
+          "spearman_retention": 0.05856634682310083
+        }
+      ],
+      "feasibility": {
+        "full_resolution": {
+          "n_qubits": 451,
+          "two_qubit_gates_analytic": 42788115,
+          "estimated_circuit_fidelity": 0.0,
+          "clears_threshold": false
+        },
+        "coarse_grained": [
+          {
+            "n_target": 12,
+            "n_qubits_actual": 12,
+            "transpiled_two_qubit_gates_ibm": 810,
+            "estimated_circuit_fidelity": 0.0017766045308388063,
+            "clears_threshold": false
+          },
+          {
+            "n_target": 20,
+            "n_qubits_actual": 14,
+            "transpiled_two_qubit_gates_ibm": 1341,
+            "estimated_circuit_fidelity": 2.7960485717695075e-05,
+            "clears_threshold": false
+          }
+        ],
+        "verdict": "FAULT_TOLERANT_ONLY"
+      }
+    },
+    "CARDIAC_MYOSIN": {
+      "active_site_provenance": "func_ligand-contact:ADP",
+      "retention": [
+        {
+          "n_target": 12,
+          "n_clusters_actual": 12,
+          "top10_jaccard_retention": 0.0,
+          "spearman_retention": 0.26468348420292803
+        },
+        {
+          "n_target": 20,
+          "n_clusters_actual": 15,
+          "top10_jaccard_retention": 0.0,
+          "spearman_retention": 0.10148874677065396
+        }
+      ],
+      "feasibility": {
+        "full_resolution": {
+          "n_qubits": 704,
+          "two_qubit_gates_analytic": 124868529,
+          "estimated_circuit_fidelity": 0.0,
+          "clears_threshold": false
+        },
+        "coarse_grained": [
+          {
+            "n_target": 12,
+            "n_qubits_actual": 12,
+            "transpiled_two_qubit_gates_ibm": 1040,
+            "estimated_circuit_fidelity": 0.0002941781180929188,
+            "clears_threshold": false
+          },
+          {
+            "n_target": 20,
+            "n_qubits_actual": 15,
+            "transpiled_two_qubit_gates_ibm": 1486,
+            "estimated_circuit_fidelity": 8.998860155933717e-06,
+            "clears_threshold": false
+          }
+        ],
+        "verdict": "FAULT_TOLERANT_ONLY"
+      }
+    },
+    "MYC_MAX": {
+      "active_site_provenance": "top-degree fallback",
+      "retention": [
+        {
+          "n_target": 12,
+          "n_clusters_actual": 9,
+          "top10_jaccard_retention": 0.0,
+          "spearman_retention": 0.07223505265507876
+        },
+        {
+          "n_target": 20,
+          "n_clusters_actual": 9,
+          "top10_jaccard_retention": 0.0,
+          "spearman_retention": 0.07223505265507876
+        }
+      ],
+      "feasibility": {
+        "full_resolution": {
+          "n_qubits": 171,
+          "two_qubit_gates_analytic": 3594140,
+          "estimated_circuit_fidelity": 0.0,
+          "clears_threshold": false
+        },
+        "coarse_grained": [
+          {
+            "n_target": 12,
+            "n_qubits_actual": 9,
+            "transpiled_two_qubit_gates_ibm": 556,
+            "estimated_circuit_fidelity": 0.0129438887693196,
+            "clears_threshold": false
+          },
+          {
+            "n_target": 20,
+            "n_qubits_actual": 9,
+            "transpiled_two_qubit_gates_ibm": 538,
+            "estimated_circuit_fidelity": 0.014899955709999588,
+            "clears_threshold": false
+          }
+        ],
+        "verdict": "FAULT_TOLERANT_ONLY"
+      }
+    }
+  }
+}
