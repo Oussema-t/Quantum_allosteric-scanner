@@ -1,0 +1,233 @@
+{
+  "KRAS_G12C": {
+    "target": "KRAS_G12C",
+    "n_residues": 169,
+    "n_active_site": 18,
+    "kappa": 1.0,
+    "patch_size": 6,
+    "rho_raw_abs_ddg_vs_neg_hop": 0.9349838368710985,
+    "rho_specificity_vs_neg_hop": 0.0024803041586372223,
+    "scoring": {
+      "incumbent": {
+        "available": true,
+        "n_pocket": 18,
+        "floor_auc": 0.5463659147869674,
+        "auc_raw_abs_ddg": 0.5288220551378446,
+        "auc_specificity": 0.47034252297410195
+      },
+      "core": {
+        "available": true,
+        "n_pocket": 3,
+        "floor_auc": 0.45608108108108103,
+        "auc_raw_abs_ddg": 0.3198198198198198,
+        "auc_specificity": 0.38063063063063063
+      },
+      "consensus": {
+        "available": true,
+        "n_pocket": 15,
+        "floor_auc": 0.5502450980392157,
+        "auc_raw_abs_ddg": 0.5171568627450981,
+        "auc_specificity": 0.4294117647058824
+      }
+    },
+    "elapsed_s": 0.6
+  },
+  "BCR_ABL1": {
+    "target": "BCR_ABL1",
+    "n_residues": 451,
+    "n_active_site": 26,
+    "kappa": 1.0,
+    "patch_size": 6,
+    "rho_raw_abs_ddg_vs_neg_hop": 0.9153476269856922,
+    "rho_specificity_vs_neg_hop": 0.04360015766630861,
+    "scoring": {
+      "incumbent": {
+        "available": true,
+        "n_pocket": 16,
+        "floor_auc": 0.6186583129584352,
+        "auc_raw_abs_ddg": 0.562041564792176,
+        "auc_specificity": 0.3650672371638142
+      },
+      "core": {
+        "available": true,
+        "n_pocket": 10,
+        "floor_auc": 0.6690361445783133,
+        "auc_raw_abs_ddg": 0.6132530120481928,
+        "auc_specificity": 0.3626506024096386
+      },
+      "consensus": {
+        "available": true,
+        "n_pocket": 16,
+        "floor_auc": 0.6186583129584352,
+        "auc_raw_abs_ddg": 0.562041564792176,
+        "auc_specificity": 0.3650672371638142
+      }
+    },
+    "elapsed_s": 0.6
+  },
+  "CARDIAC_MYOSIN": {
+    "target": "CARDIAC_MYOSIN",
+    "n_residues": 704,
+    "n_active_site": 18,
+    "kappa": 1.0,
+    "patch_size": 6,
+    "rho_raw_abs_ddg_vs_neg_hop": 0.8961141271088613,
+    "rho_specificity_vs_neg_hop": 0.01778339140167337,
+    "scoring": {
+      "incumbent": {
+        "available": true,
+        "n_pocket": 13,
+        "floor_auc": 0.5828094639387359,
+        "auc_raw_abs_ddg": 0.48074065607497996,
+        "auc_specificity": 0.487369985141159
+      },
+      "core": {
+        "available": true,
+        "n_pocket": 15,
+        "floor_auc": 0.5781420765027323,
+        "auc_raw_abs_ddg": 0.4743169398907104,
+        "auc_specificity": 0.4870342771982116
+      },
+      "consensus": {
+        "available": true,
+        "n_pocket": 15,
+        "floor_auc": 0.5781420765027323,
+        "auc_raw_abs_ddg": 0.4743169398907104,
+        "auc_specificity": 0.4870342771982116
+      }
+    },
+    "elapsed_s": 0.9
+  },
+  "PTP1B": {
+    "target": "PTP1B",
+    "n_residues": 298,
+    "n_active_site": 5,
+    "kappa": 1.0,
+    "patch_size": 6,
+    "rho_raw_abs_ddg_vs_neg_hop": 0.8764381503555344,
+    "rho_specificity_vs_neg_hop": -0.012869576617195047,
+    "scoring": {
+      "incumbent": {
+        "available": true,
+        "n_pocket": 14,
+        "floor_auc": 0.4920634920634921,
+        "auc_raw_abs_ddg": 0.2818740399385561,
+        "auc_specificity": 0.5138248847926267
+      },
+      "core": {
+        "available": true,
+        "n_pocket": 6,
+        "floor_auc": 0.6181765389082462,
+        "auc_raw_abs_ddg": 0.34610917537746805,
+        "auc_specificity": 0.6986062717770035
+      },
+      "consensus": {
+        "available": true,
+        "n_pocket": 14,
+        "floor_auc": 0.4920634920634921,
+        "auc_raw_abs_ddg": 0.2818740399385561,
+        "auc_specificity": 0.5138248847926267
+      }
+    },
+    "elapsed_s": 0.4
+  },
+  "GLUCOKINASE": {
+    "target": "GLUCOKINASE",
+    "n_residues": 448,
+    "n_active_site": 5,
+    "kappa": 1.0,
+    "patch_size": 6,
+    "rho_raw_abs_ddg_vs_neg_hop": 0.880983719636907,
+    "rho_specificity_vs_neg_hop": 0.019874780695696523,
+    "scoring": {
+      "incumbent": {
+        "available": true,
+        "n_pocket": 17,
+        "floor_auc": 0.8630212648439658,
+        "auc_raw_abs_ddg": 0.8731703949185309,
+        "auc_specificity": 0.6972521402927369
+      },
+      "core": {
+        "available": true,
+        "n_pocket": 17,
+        "floor_auc": 0.8573598453465894,
+        "auc_raw_abs_ddg": 0.8896023198011599,
+        "auc_specificity": 0.7499999999999999
+      },
+      "consensus": {
+        "available": true,
+        "n_pocket": 17,
+        "floor_auc": 0.8573598453465894,
+        "auc_raw_abs_ddg": 0.8896023198011599,
+        "auc_specificity": 0.7499999999999999
+      }
+    },
+    "elapsed_s": 0.5
+  },
+  "CASPASE1": {
+    "target": "CASPASE1",
+    "n_residues": 255,
+    "n_active_site": 5,
+    "kappa": 1.0,
+    "patch_size": 6,
+    "rho_raw_abs_ddg_vs_neg_hop": 0.8690196112406637,
+    "rho_specificity_vs_neg_hop": 0.02130894048166293,
+    "scoring": {
+      "incumbent": {
+        "available": true,
+        "n_pocket": 6,
+        "floor_auc": 0.9193989071038251,
+        "auc_raw_abs_ddg": 0.8517759562841529,
+        "auc_specificity": 0.48292349726775957
+      },
+      "core": {
+        "available": true,
+        "n_pocket": 3,
+        "floor_auc": 0.8542510121457491,
+        "auc_raw_abs_ddg": 0.7827260458839406,
+        "auc_specificity": 0.42914979757085014
+      },
+      "consensus": {
+        "available": true,
+        "n_pocket": 5,
+        "floor_auc": 0.9077551020408163,
+        "auc_raw_abs_ddg": 0.8253061224489796,
+        "auc_specificity": 0.4114285714285715
+      }
+    },
+    "elapsed_s": 0.3
+  },
+  "CASPASE7": {
+    "target": "CASPASE7",
+    "n_residues": 461,
+    "n_active_site": 5,
+    "kappa": 1.0,
+    "patch_size": 6,
+    "rho_raw_abs_ddg_vs_neg_hop": 0.7134205000036936,
+    "rho_specificity_vs_neg_hop": -0.006359611122972465,
+    "scoring": {
+      "incumbent": {
+        "available": true,
+        "n_pocket": 7,
+        "floor_auc": 0.7581928094177537,
+        "auc_raw_abs_ddg": 0.832325803372574,
+        "auc_specificity": 0.7340120903595292
+      },
+      "core": {
+        "available": true,
+        "n_pocket": 3,
+        "floor_auc": 0.8476821192052979,
+        "auc_raw_abs_ddg": 0.8903605592347315,
+        "auc_specificity": 0.6931567328918322
+      },
+      "consensus": {
+        "available": true,
+        "n_pocket": 6,
+        "floor_auc": 0.7855555555555556,
+        "auc_raw_abs_ddg": 0.8096296296296297,
+        "auc_specificity": 0.6940740740740741
+      }
+    },
+    "elapsed_s": 0.5
+  }
+}

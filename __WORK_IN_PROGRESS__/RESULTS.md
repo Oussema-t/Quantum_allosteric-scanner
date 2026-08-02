@@ -4421,6 +4421,131 @@ Full detail: `.ai/tasks/DONE/TASK-0185-conformational-search-reformulation.md`
 
 ---
 
+## Binding-response coupling free energy (TASK-0178, 2026-08-02)
+
+**Question**: every observable in this register has the shape "seed
+somewhere, watch where amplitude goes" — a propagating signal. Allosteric
+inhibition is not that; it is a *response* to a constraint (a ligand binds,
+the accessible ensemble changes, the active site loses propensity). For a
+Gaussian network `(1/2) x^T K x`, a ligand at site S is a set of added
+cross-links `P_S`, and the coupling free energy between two sites is exact
+and closed-form: `ddG(A,B) = F(K+P_A+P_B) - F(K+P_A) - F(K+P_B) + F(K)`,
+`F(K) = (kT/2) ln pdet(K)`. **Classical**, not quantum — stated plainly,
+per this task's own Open Question.
+
+**Method**: new `allostery.response` (`ligand_stiffness`, `coupling_free_energy`,
+`coupling_profile`, `active_site_rigidification`, `coupling_specificity`).
+`coupling_profile` uses a matrix-determinant-lemma low-rank shortcut (two
+base eigendecompositions instead of `2N`) — **derived and numerically
+verified against brute force to <1e-10** (actual: ~4e-14) before use, per
+the Constraint. `coupling_free_energy` independently reproduces the
+external reference prototype's own real number
+(`ddG(active,pocket)=-6.965844e-07` on its 249-node synthetic fold) to
+1.6e-13 — validates the whole module against a second, independent
+implementation, not just internal self-consistency.
+
+**Four mandatory gates, all pass** (`tests/test_response.py`, 14 tests):
+reciprocity (`|ddG(A,B)-ddG(B,A)|` exact to <1e-9 over 21 pairs, 3
+topologies); zero-coupling (exactly 0 on a disconnected graph); an
+independent entropy cross-check (`ddG` equals the negative of the
+analogous double-difference of Gaussian differential entropy, to <1e-8 —
+two routes, one number); and the low-rank-shortcut verification above.
+
+**The dumbbell gate found a real, disclosed complication before it found
+an answer.** Run first, literally, against [[TASK-0103]]'s own
+`build_dumbbell_network` fixture (mandatory, per the Constraint): every
+`|ddG|` value returned was within 1-2 orders of magnitude of pure
+eigh/log-determinant numerical noise (~1e-12 to 1e-10), regardless of
+`kappa` (checked 0.1-1000, no monotonic trend) — **not a code bug**
+(independently confirmed via the reference-prototype match above), but a
+real finding: that fixture's near-complete 12-node cliques leave a bound
+site's added stiffness almost fully redundant with what's already there,
+and its own negative-diagonal "well" convention (built for
+`ground_state_relaxation`'s `exp(-Ht)` picture) makes `K` indefinite,
+outside this module's valid domain. **Neither the pre-registered PASS nor
+the pre-registered FAILURE** — a third, disclosed outcome. Resolved with a
+geometrically realistic adaptation (the reference prototype's own
+well-conditioned two-lobe/plant construction, extended to three lobes,
+well modelled as a genuine positive-diagonal rigidification): **on this
+fixture, the gate passes cleanly and decisively both ways** (C2: drug
+ddG=0.79 vs decoy ddG=0.10; C3: decoy ddG=0.74 vs drug ddG=0.037) — tracks
+the coupling, not the well.
+
+**Real-target run, all 7 pocket-scoreable targets, GNM/Kirchhoff (`enm_cutoff`,
+same convention as the rest of this register), κ=1.0.** Per the Constraint,
+**`rho(score,-hop)` reported before any AUC**:
+
+| Target | rho(raw \|ddG\|, -hop) | rho(specificity, -hop) |
+|---|---|---|
+| KRAS_G12C | +0.935 | +0.002 |
+| BCR_ABL1 | +0.915 | +0.044 |
+| CARDIAC_MYOSIN | +0.896 | +0.018 |
+| PTP1B | +0.876 | -0.013 |
+| GLUCOKINASE | +0.881 | +0.020 |
+| CASPASE1 | +0.869 | +0.021 |
+| CASPASE7 | +0.713 | -0.006 |
+
+**The raw-magnitude confound is exactly as severe as feared** (+0.71 to
++0.94, matching the +0.61 to +0.97 range this project's other observables
+already carry) — confirming raw `|ddG|` must never be reported as a
+result, exactly per the Constraint. **The shell-normalisation decisively
+removes it on every one of the 7 real targets** (all 7 within ±0.044 of
+zero) — a materially *cleaner* real-data transfer than [[TASK-0149]]'s own
+precedent (predicted 0.08-0.16, observed -0.51 to +0.63 on real data);
+this task's own pre-registered decorrelation claim holds up better on real
+data than the project's own most relevant prior case.
+
+**AUC vs. floor, all three of [[TASK-0177]]'s labels, specificity vs. raw
+(never substituted)**: no target/label cell decisively clears its own
+floor. The one candidate worth naming honestly: PTP1B's `core` label
+clears its floor at the point estimate (specificity AUC 0.699 vs. floor
+0.618, +0.081) — checked further with a 300-replicate `compact_patch`
+permutation null (matched patch size, not scattered): **p=0.132, not
+significant even uncorrected**, let alone against the ~21-cell family this
+task itself adds to [[TASK-0161]]'s multiplicity budget. No other cell
+comes as close. Full table: `results_task0178_response_coupling/results.json`.
+
+**Kappa KNOB, characterised**: swept 0.1-10.0 on KRAS_G12C — `rho`
+(+0.040 to +0.023) and AUC (0.396 to 0.363) both drift slightly but
+monotonically, no verdict flip anywhere in the swept range ([[TASK-0075]]'s
+own precedent for reporting this explicitly).
+
+**Lightweight LOD probe** (explicitly narrower than [[TASK-0167.002]]'s
+own still-TODO full protocol — one target, one observable, no CI/null/
+Bonferroni chain, flagged as such, not presented as a certified LOD):
+reusing [[TASK-0167.001]]'s `plant`/`select_distal_patch` machinery on
+real KRAS_G12C topology, the reference prototype's own strength grid,
+5 seeds/strength. **A clean, monotonically increasing detection curve on
+real protein data** (mean AUC 0.520 → 0.555 → 0.614 → 0.731 → 0.854 at
+strengths 0/1.5/4/10/30) — crosses an informal 0.7 "detectable" bar
+between strength 4 and 10, comparable to (slightly better than) the
+reference prototype's own synthetic-fold estimate (detectable from
+strength 1.5, a *different* fold/labelling so not directly comparable
+strength-for-strength). Confirms the observable's sensitivity mechanism
+transfers to real topology; a certified target/null/observable-matched LOD
+vs. CTQW remains [[TASK-0167.002]]'s own deliverable, not duplicated here.
+
+**Pre-registered falsification, resolved**: *"if `rho(score,-hop)` on real
+targets stays above ~0.6, or the LOD is no better than CTQW's, this
+observable class adds nothing."* **Neither condition holds** — `rho`
+drops to ≈0 on every target (decisively below 0.6) and the LOD probe shows
+real, monotonic sensitivity on real topology. This is not, however, a
+positive result for allosteric detection on the current 7 targets: the
+specificity statistic is real, well-behaved, and well-decorrelated from
+distance, but no target/label cell shows a real (permutation-null-surviving)
+positive once decorrelated. **Recorded as: methodologically validated and
+adds a genuinely new, non-proximity-confounded statistic to the register;
+tested honestly on real targets and found no exploitable signal there
+(one point-estimate candidate, PTP1B/core, explicitly ruled out by its own
+null).**
+
+Full detail: `allostery/response.py`, `tests/test_response.py`,
+`scripts/task0178_response_coupling.py`, `scripts/task0178_lod_probe.py`,
+`results_task0178_response_coupling/results.json`,
+`results_task0178_response_coupling/lod_probe_kras_g12c.json`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -4491,6 +4616,7 @@ Full detail: `.ai/tasks/DONE/TASK-0185-conformational-search-reformulation.md`
 | 50 | Does the incumbent 4.5 Å ligand-contact pocket label converge with independent structural-biology routes to the same residue set (contact-cutoff sweep, ΔSASA burial, ligand-stripped cavity detection, depositor SITE annotation), and does the headline observable's floor-clearing verdict depend on which convergent label is used? | **resolved 2026-08-02: convergence is real but partial on every target (no empty `core`), and 4/7 targets flip floor-clearing status depending on label choice — the flip is the finding, per this task's own Intent Contract.** New `allostery.consensus_labels` (C1 contact sweep 3.5-6.0Å / C2 ΔSASA / C3 fpocket-on-stripped-holo / C4 depositor SITE records), run on all 7 pocket-scoreable targets. KRAS_G12C has the *worst* agreement of any target (core=3/18) despite being the most-scrutinized in the project. **Negative control real finding**: CARDIAC_MYOSIN's consensus procedure converges on `EDO` (a cryoprotectant, not a drug) — root-caused to C4 (the only criterion independent of "is there a real cavity/burial here") being structurally unavailable for that entry (8QYR has no legacy SITE records), which also explains why CARDIAC_MYOSIN/GLUCOKINASE are the only two targets with `resolution=0.0` — a degenerate unanimity-of-3 artifact, not strong evidence, flagged in `targets.yaml` itself. Re-scoring `H_new`+`time_averaged_ctqw_converged` against incumbent/core/consensus side by side (sanity-checked: KRAS_G12C incumbent AUC reproduces TASK-0159's published 0.5901 exactly) flips floor-clearing verdicts on BCR_ABL1/PTP1B/CASPASE7 (small high-confidence `core` clears where the larger sets don't) and KRAS_G12C (incumbent/consensus clear, `core` falls below floor) — no target's overall competence-map status changes sign. Frozen into `targets.yaml`'s new `pocket_label` block, generated programmatically, never hand-transcribed. | [[TASK-0176]], [[TASK-0114]], [[TASK-0169]], [[TASK-0163]], [[TASK-0144]], [[TASK-0186]], [[TASK-0130]], [[TASK-0159]] |
 
 | 51 | Does reframing cryptic-pocket prediction as ENM-ensemble search (fpocket as oracle, not competitor) actually recover the real holo pocket on real apo structures, at what frequency, and does the backbone-layer rare-event quantum-search argument survive measurement on real data (not just the synthetic toy model)? | **resolved 2026-08-02: recovery works but specificity is target-dependent, and the rare-event argument fails on real data too, corroborating the synthetic finding.** Positive control (BCR_ABL1) passes convincingly (80% ensemble hit rate, matches static apo's own 87.5% overlap). Real-vs-decoy specificity: BCR_ABL1 gap 0.29 (0.800 vs 0.510), KRAS_G12C gap 0.13 (0.500 vs 0.370), **CARDIAC_MYOSIN no specificity at all** (0.200 vs 0.190). n_modes sweep on BCR_ABL1 (5/20/40): real-pocket recovery stays high throughout (0.983/0.800/0.783) — not rare, matching the synthetic reference's own p=0.244-0.694 — fatal to a Grover-style backbone rare-event claim on real targets, not just the toy model. Quantum claim moves to the side-chain layer (NP-hard rotamer packing), full formulation deferred to [[TASK-0181]] Phase B (in progress elsewhere) rather than duplicated. | [[TASK-0185]], [[TASK-0163]], [[TASK-0187]], [[TASK-0167.001]], [[TASK-0169]], [[TASK-0181]] |
+| 52 | Does the exact Gaussian-network binding-response coupling free energy `ddG` (a *response* to a bound ligand, not a propagating signal — the collaborator's own reframing) find real allosteric signal once its proven proximity confound (rho +0.71 to +0.97, as bad as every propagation observable in this register) is removed by a distance-shell-normalised specificity statistic? | **resolved 2026-08-02: methodologically decisive, empirically negative.** New `allostery.response`; independently reproduces the external reference prototype's own real number to 1.6e-13; reciprocity/zero-coupling/entropy-cross-check/low-rank-shortcut (<1e-10 vs brute force) gates all pass. The mandatory dumbbell gate found a real complication on TASK-0103's native fixture first (signal below numerical noise floor, root-caused not asserted) before passing cleanly on a geometrically realistic adaptation. **On all 7 real targets, `rho(specificity,-hop)` collapses from +0.71/+0.94 (raw) to within ±0.044 of zero** — a cleaner real-data transfer than [[TASK-0149]]'s own precedent. No target/label cell clears its floor with a surviving permutation null (PTP1B/core's point-estimate margin, the only candidate, p=0.132). A lightweight LOD probe (own limited scope, not [[TASK-0167.002]]'s full protocol) shows a clean, monotonic real-topology detection curve (AUC 0.52→0.85, strengths 0-30). Pre-registered falsification did not fire (rho did drop below 0.6; the LOD is real) — but no exploitable real signal was found on the current benchmark set either. Adds ~21 cells to [[TASK-0161]]'s multiplicity budget (not re-run here, flagged for the next full budget pass). | [[TASK-0177]], [[TASK-0103]], [[TASK-0145]], [[TASK-0149]], [[TASK-0167.001]], [[TASK-0123]], [[TASK-0158]], [[TASK-0161]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
