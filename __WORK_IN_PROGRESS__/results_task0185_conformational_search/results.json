@@ -1,0 +1,115 @@
+[
+  {
+    "target": "BCR_ABL1",
+    "ok": true,
+    "n_residues": 451,
+    "n_pocket": 16,
+    "n_active": 26,
+    "msf_cross_check": {
+      "ok": true,
+      "pearson_r": 0.9998960369261817,
+      "median_rel_error": 0.07620418985320143,
+      "min_pearson_r": 0.9,
+      "max_median_rel_error": 0.25,
+      "n_samples": 100
+    },
+    "static_apo_real_overlap_frac": 0.875,
+    "n_modes": 20,
+    "kT": 20.0,
+    "n_ensemble": 100,
+    "real_hit_rate": 0.8,
+    "decoy_hit_rate": 0.51,
+    "real_mean_overlap": 0.65375,
+    "decoy_mean_overlap": 0.46125,
+    "n_errors": 0,
+    "n_modes_sweep": {
+      "5": {
+        "ok": true,
+        "msf_cross_check": {
+          "ok": true,
+          "pearson_r": 0.9997064503819743,
+          "median_rel_error": 0.13387152405779654,
+          "min_pearson_r": 0.9,
+          "max_median_rel_error": 0.25,
+          "n_samples": 60
+        },
+        "n_samples": 60,
+        "errors": 0,
+        "real_hit_rate": 0.9833333333333333,
+        "decoy_hit_rate": 0.4,
+        "real_mean_overlap": 0.8177083333333334,
+        "decoy_mean_overlap": 0.421875
+      },
+      "40": {
+        "ok": true,
+        "msf_cross_check": {
+          "ok": true,
+          "pearson_r": 0.9996686249341543,
+          "median_rel_error": 0.08860024585498932,
+          "min_pearson_r": 0.9,
+          "max_median_rel_error": 0.25,
+          "n_samples": 60
+        },
+        "n_samples": 60,
+        "errors": 0,
+        "real_hit_rate": 0.7833333333333333,
+        "decoy_hit_rate": 0.2,
+        "real_mean_overlap": 0.6322916666666667,
+        "decoy_mean_overlap": 0.3375
+      }
+    },
+    "elapsed_s": 294.1
+  },
+  {
+    "target": "KRAS_G12C",
+    "ok": true,
+    "n_residues": 169,
+    "n_pocket": 18,
+    "n_active": 18,
+    "msf_cross_check": {
+      "ok": true,
+      "pearson_r": 0.9955369502155246,
+      "median_rel_error": 0.06955347382807854,
+      "min_pearson_r": 0.9,
+      "max_median_rel_error": 0.25,
+      "n_samples": 100
+    },
+    "static_apo_real_overlap_frac": 0.6111111111111112,
+    "n_modes": 20,
+    "kT": 20.0,
+    "n_ensemble": 100,
+    "real_hit_rate": 0.5,
+    "decoy_hit_rate": 0.37,
+    "real_mean_overlap": 0.4850000000000001,
+    "decoy_mean_overlap": 0.4444444444444444,
+    "n_errors": 0,
+    "n_modes_sweep": {},
+    "elapsed_s": 37.5
+  },
+  {
+    "target": "CARDIAC_MYOSIN",
+    "ok": true,
+    "n_residues": 704,
+    "n_pocket": 13,
+    "n_active": 18,
+    "msf_cross_check": {
+      "ok": true,
+      "pearson_r": 0.9931143969219864,
+      "median_rel_error": 0.05669499057810298,
+      "min_pearson_r": 0.9,
+      "max_median_rel_error": 0.25,
+      "n_samples": 100
+    },
+    "static_apo_real_overlap_frac": 0.9230769230769231,
+    "n_modes": 20,
+    "kT": 20.0,
+    "n_ensemble": 100,
+    "real_hit_rate": 0.2,
+    "decoy_hit_rate": 0.19,
+    "real_mean_overlap": 0.3984615384615384,
+    "decoy_mean_overlap": 0.3907692307692308,
+    "n_errors": 0,
+    "n_modes_sweep": {},
+    "elapsed_s": 186.6
+  }
+]

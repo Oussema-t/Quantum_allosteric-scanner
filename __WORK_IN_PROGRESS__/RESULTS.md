@@ -4348,6 +4348,79 @@ project's hard rule). Full detail: `allostery/consensus_labels.py`,
 
 ---
 
+## Conformational-search reformulation — one real-data measurement, mixed result (TASK-0185, 2026-08-02)
+
+**Reformulation**: cryptic-pocket prediction reframed from *residue
+scoring on a static apo structure* to *search over an ENM-generated
+conformational ensemble for structures in which the pocket forms* —
+inverting [[TASK-0163]]'s fpocket result from competitor to oracle
+("search for the conformation where fpocket fires," not "out-score
+fpocket on apo"). Legal under §Constraint 3 (closed-form ANM-mode
+Gaussian draws, no integrator, no trajectory — same argument as
+[[TASK-0187]]). Full write-up:
+`__WORK_IN_PROGRESS__/documentation/CONFORMATIONAL_SEARCH.md`.
+
+**The one real-data measurement** (this task's own Intent Contract,
+"not a build"): 100-sample closed-form ANM ensembles (n_modes=20, kT=20,
+8.0 Å cutoff) run through the already-vendored fpocket
+(`tools/fpocket/bin/fpocket`, [[TASK-0163]]) via a new rigid
+per-residue Cα-driven full-atom displacement (stated approximation:
+bond lengths/side-chain conformation held fixed, only rigid-body
+position moves), on all 3 mandatory targets. MSF cross-check ([[TASK-0187]]'s
+gate, reused) passed cleanly on all 3 (r=0.993-1.000). 0 fpocket errors
+across 300 samples.
+
+**Positive control (BCR_ABL1, run first per this task's own Planned
+Validation) passes convincingly**: static apo alone covers 87.5% of the
+real pocket via fpocket; ensemble real-pocket hit rate 80.0% — the
+procedure clearly finds an already-open pocket at high frequency,
+validating the method before trusting anything else.
+
+**Real-vs-decoy hit rate (>=50% overlap with a single detected fpocket
+cavity, matched-size distal decoy via `plant.select_distal_patch`,
+[[TASK-0167.001]]), honestly mixed across the 3 mandatory targets:**
+
+| Target | real hit rate | decoy hit rate | reading |
+|---|---|---|---|
+| BCR_ABL1 | 0.800 | 0.510 | specific, gap 0.29 — but BCR_ABL1 is cavity-rich (37 detected pockets on the static structure alone), so the decoy rate is not small either |
+| KRAS_G12C | 0.500 | 0.370 | modest specificity, gap 0.13 — matches this target's own known partial crypticity ([[TASK-0169]]) |
+| CARDIAC_MYOSIN | 0.200 | 0.190 | **no specificity** — real and decoy indistinguishable at this sample size, a clean negative for this target |
+
+**The rare-event/quantum-claim measurement — corroborates the original
+synthetic-toy-model finding on real data.** n_modes sweep on BCR_ABL1
+(N=60/point): real-pocket recovery stays high across the whole tested
+range (n_modes=5: 0.983, 20: 0.800, 40: 0.783) — **pocket recovery is not
+a rare event on real data either**, matching the synthetic two-lobe
+toy model's own p=0.244-0.694 finding
+(`conformational_search_prototype_REFERENCE.py`). This is fatal to a
+Grover-style backbone-layer rare-event search claim on real targets, not
+just the synthetic control: real-pocket recovery here costs on the order
+of 1-8 classical draws per hit even on the weakest target, never
+approaching a regime where amplitude amplification would matter. The
+real-vs-decoy specificity gap is *not* monotonic in n_modes (0.583 / 0.290
+/ 0.583 at n_modes=5/20/40) — reported as observed, not smoothed.
+
+**Where the quantum claim moves, not resolved here**: to the side-chain
+layer (discrete, NP-hard rotamer packing, Pierce & Winfree 2002) — the
+full QUBO formulation (encoding, qubit count, falsification criteria) is
+[[TASK-0181]] Phase B's own deliverable, in progress concurrently on
+another thread as of this writing, deliberately not duplicated here to
+avoid two diverging specs (per this task's own Intent Contract
+instruction to cross-reference, not re-derive).
+
+**Boundary recorded, not actioned**: this task's own filing recommends
+[[TASK-0015]]/`HOLO_DIRECTION_MODULE.md` be re-scoped or closed since this
+task subsumes its motivation (directed single-deformation prediction vs.
+this task's undirected full-ensemble search) — not actioned here since
+TASK-0015 is claimed elsewhere; flagged for [[TASK-0184]]'s narrative.
+
+Full detail: `.ai/tasks/DONE/TASK-0185-conformational-search-reformulation.md`
+(Done section), `documentation/CONFORMATIONAL_SEARCH.md`,
+`scripts/conformational_search_measurement.py`,
+`results_task0185_conformational_search/results.json`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -4416,6 +4489,8 @@ project's hard rule). Full detail: `allostery/consensus_labels.py`,
 
 | 49 | Does undirected ENM ("wobbling") conformational sampling create new contact-graph edges that shorten the active-site<->pocket hop-distance *specifically* to the real pocket (not generically, [[TASK-0186]]/row 47's static baseline as the pre-ENM comparison point), and does any such shortening approach the real holo topology's own hop-distance? | **resolved 2026-08-01: no — a clean, decisive negative on the positive-control target.** PTP1B (TASK-0186's only genuinely non-trivial case, min static hop=2, 0% pocket at hop<=1): real-pocket shortcut rate 1.7% over 2000 ANM-equipartition samples (MSF cross-check r=0.9998, passed) vs. 30 matched decoys ranging 0-52.5% (median 12.9%) — real pocket sits *below* the decoy median, effect size -0.112 (wrong sign), fails both legs of the pre-registered specificity gate. Holo-native contact graph's own hop-distance for this pocket is also 2, unchanged from static apo. Not extended past the positive control per the task's own pre-registered gate. | [[TASK-0187]], [[TASK-0186]], [[TASK-0185]], [[TASK-0167.001]], [[TASK-0067]] |
 | 50 | Does the incumbent 4.5 Å ligand-contact pocket label converge with independent structural-biology routes to the same residue set (contact-cutoff sweep, ΔSASA burial, ligand-stripped cavity detection, depositor SITE annotation), and does the headline observable's floor-clearing verdict depend on which convergent label is used? | **resolved 2026-08-02: convergence is real but partial on every target (no empty `core`), and 4/7 targets flip floor-clearing status depending on label choice — the flip is the finding, per this task's own Intent Contract.** New `allostery.consensus_labels` (C1 contact sweep 3.5-6.0Å / C2 ΔSASA / C3 fpocket-on-stripped-holo / C4 depositor SITE records), run on all 7 pocket-scoreable targets. KRAS_G12C has the *worst* agreement of any target (core=3/18) despite being the most-scrutinized in the project. **Negative control real finding**: CARDIAC_MYOSIN's consensus procedure converges on `EDO` (a cryoprotectant, not a drug) — root-caused to C4 (the only criterion independent of "is there a real cavity/burial here") being structurally unavailable for that entry (8QYR has no legacy SITE records), which also explains why CARDIAC_MYOSIN/GLUCOKINASE are the only two targets with `resolution=0.0` — a degenerate unanimity-of-3 artifact, not strong evidence, flagged in `targets.yaml` itself. Re-scoring `H_new`+`time_averaged_ctqw_converged` against incumbent/core/consensus side by side (sanity-checked: KRAS_G12C incumbent AUC reproduces TASK-0159's published 0.5901 exactly) flips floor-clearing verdicts on BCR_ABL1/PTP1B/CASPASE7 (small high-confidence `core` clears where the larger sets don't) and KRAS_G12C (incumbent/consensus clear, `core` falls below floor) — no target's overall competence-map status changes sign. Frozen into `targets.yaml`'s new `pocket_label` block, generated programmatically, never hand-transcribed. | [[TASK-0176]], [[TASK-0114]], [[TASK-0169]], [[TASK-0163]], [[TASK-0144]], [[TASK-0186]], [[TASK-0130]], [[TASK-0159]] |
+
+| 51 | Does reframing cryptic-pocket prediction as ENM-ensemble search (fpocket as oracle, not competitor) actually recover the real holo pocket on real apo structures, at what frequency, and does the backbone-layer rare-event quantum-search argument survive measurement on real data (not just the synthetic toy model)? | **resolved 2026-08-02: recovery works but specificity is target-dependent, and the rare-event argument fails on real data too, corroborating the synthetic finding.** Positive control (BCR_ABL1) passes convincingly (80% ensemble hit rate, matches static apo's own 87.5% overlap). Real-vs-decoy specificity: BCR_ABL1 gap 0.29 (0.800 vs 0.510), KRAS_G12C gap 0.13 (0.500 vs 0.370), **CARDIAC_MYOSIN no specificity at all** (0.200 vs 0.190). n_modes sweep on BCR_ABL1 (5/20/40): real-pocket recovery stays high throughout (0.983/0.800/0.783) — not rare, matching the synthetic reference's own p=0.244-0.694 — fatal to a Grover-style backbone rare-event claim on real targets, not just the toy model. Quantum claim moves to the side-chain layer (NP-hard rotamer packing), full formulation deferred to [[TASK-0181]] Phase B (in progress elsewhere) rather than duplicated. | [[TASK-0185]], [[TASK-0163]], [[TASK-0187]], [[TASK-0167.001]], [[TASK-0169]], [[TASK-0181]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
