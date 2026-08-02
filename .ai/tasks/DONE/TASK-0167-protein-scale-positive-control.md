@@ -12,7 +12,7 @@
   *planted*, confound-orthogonal, genuinely distal allosteric coupling on a
   real apo topology — and report the **limit of detection (LOD)**: the
   smallest planted coupling the apparatus can certify.
-- Status: TODO
+- Status: Done
 - Owner: Architect/Planner (this file) — subtasks to Implementer
 - Claimed By: —
 - Claimed At: —
@@ -200,10 +200,33 @@ power under any null. Full detail:
 `.ai/tasks/DONE/TASK-0167.002-detection-curve-and-limit-of-detection.md`,
 `RESULTS.md`'s own "Detection curve + limit of detection" section.
 
+**[[TASK-0167.003]] Done (2026-07-31) — the dispute settled, both directions
+true at once.** 500-patch-per-target measured false-positive rate: the
+scattered null is confirmed anti-conservative on BCR_ABL1 (18.8% vs. 5%
+nominal, ~3.8×); compact/matched show no anti-conservative bias anywhere
+(α̂ ≤0.2%) on the one plant-sensitive observable available
+(`T(E=0)`, per [[TASK-0167.001]]'s own scoring-scope finding). **Separately,
+the calibration statistic (real pocket Rg vs. each null's own draw
+distribution, all 7 pocket-scoreable targets) confirms the external
+review's over-correction concern generally**: real pockets sit at the
+0th percentile of the scattered null's own Rg distribution (far more
+compact) and the ~97th-100th percentile of the compact null's (far more
+dispersed) on every target tested — the compact null's own draws are
+measurably too tight relative to any real pocket. Both findings are the
+same fact read two ways: a systematically-too-compact null draw
+population produces very few false certifications (Part A) *and* is a
+poor geometric model of the real answer key (Part B). Concordance with
+.002's own `strength=0` row checked, no disagreement (.002's small
+20-sample cells were simply underpowered to resolve BCR_ABL1's
+anti-conservatism, which 500 samples do). Recommends the calibration
+statistic become `INVARIANCE_PROTOCOL.md`'s fourth invariant class
+(CALIBRATION), now validated on real data rather than proposed. Full
+detail: `.ai/tasks/DONE/TASK-0167.003-zero-plant-specificity-and-null-calibration.md`.
+
 ## TODO
 
 - [x] Dispatch [[TASK-0167.001]] (blocks .002 and .003). — Done; see In Progress note above for the scoring-scope finding .002 must apply.
-- [x] Dispatch [[TASK-0167.002]] and [[TASK-0167.003]] in parallel once .001 lands. — [[TASK-0167.002]] Done (see In Progress note above); [[TASK-0167.003]] still TODO.
+- [x] Dispatch [[TASK-0167.002]] and [[TASK-0167.003]] in parallel once .001 lands. — Both Done, see In Progress notes above.
 - [x] Write the LOD paragraph into `RESULTS.md` as a top-level section, not
       an open-questions row — it is a headline result either way. — Done, [[TASK-0167.002]]'s own "Detection curve + limit of detection" section.
 - [x] Cross-link from `COMPETENCE_MAP.md`: every "no signal" verdict there
@@ -231,4 +254,30 @@ power under any null. Full detail:
 
 ## Done
 
-(not yet)
+**2026-07-31, Architect/Planner.** All 3 subtasks Done — see each one's
+own summary in the "In Progress" section above (kept there rather than
+duplicated here, per this project's own no-duplicate-numbers
+convention). Closing statement, the headline this whole task existed to
+produce:
+
+**The apparatus has a real, measured detection limit, and the corrected
+(compact/matched) null is not the source of the program's zero-positives
+finding.** Under the full, unmodified verdict pipeline, no target
+reaches 80% detection power at any planted coupling strength tested (up
+to ~4× background conductance, [[TASK-0167.002]]) — this is now a
+measurement, not an assumption, and it means every `NO_SIGNAL_IN_APO`
+verdict in this project's register can be stated with an explicit bound:
+*"no signal above our measured LOD."* Separately, [[TASK-0167.003]]
+settled the external review's own null-over-correction dispute: the
+compact/matched nulls are not anti-conservative (measured α̂ ≤0.2%), so
+[[TASK-0158]]'s original correction was not a mistake in that direction
+— but they ARE geometrically over-compact relative to every real pocket
+in this project's register (calibration-statistic percentiles
+0.97–1.00), a real, separate, now-measured property worth carrying into
+`INVARIANCE_PROTOCOL.md` as its own invariant class. The program's
+central negative result now rests on a characterized instrument, not an
+unfalsifiable one.
+
+Full detail: each subtask's own Done section; `RESULTS.md`'s own
+"Detection curve + limit of detection" and "Zero-plant specificity and
+null-calibration" sections.
