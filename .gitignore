@@ -9,6 +9,7 @@ venv/
 pdb_cache/
 outputs/
 *.pdb
+*.cif
 
 # TASK-0079 end-to-end run outputs (__WORK_IN_PROGRESS__/scripts/run_challenge.py):
 # regeneratable per-target connectivity matrix / hit list / report / verdict,
