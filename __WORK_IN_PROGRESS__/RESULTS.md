@@ -4770,10 +4770,12 @@ Full detail: `allostery/response.py`, `tests/test_response.py`,
 | 44 | Does this project have any real external classical comparator beyond the single GNM transfer-entropy baseline ([[TASK-0132]]) — the challenge's own explicitly-scored "comparison to classical analogs" criterion (`PANEL_REVIEW_2026-07-25.md` §2.2/W7, §4 action item 6, V8) — given ~40 quantum-flavored observables have been run against 1? | **resolved 2026-07-28: fpocket run and decisively beats this project's own headline observable on 2/3 mandatory targets; PocketMiner run, mixed; ProteinLens blocked (browser-only, no API) and explicitly reported as such, not silently skipped.** Full detail: this document's own "External classical-pocket-detection baselines (fpocket, PocketMiner)" section below. | [[TASK-0163]], [[TASK-0132]] |
 | 45 | Does allosteric coupling reciprocate — does seeding at the (holo-labeled) pocket and scoring into the active site (the direction real allosteric experiments actually measure) reproduce the forward-direction (active-site-seeded) signal every observable in this register has been scored on so far? | **resolved 2026-07-28: no, decisively — a real, target/observable-dependent asymmetry, not a reciprocal-channel picture.** 5 observables (`time_averaged_ctqw_converged`, `prs_low`/`dcc_low` at k=20, `R_eff`, `T(E=0)` on `H_new`) × 5 targets (3 mandatory + PTP1B/CASPASE7): forward clears its own proximity floor in 10/25 cells (40%), reverse in only 4/25 (16%), both directions in only 2/25 (8%). **The single starkest cell is this project's own strongest whole-graph result**: CARDIAC_MYOSIN `prs_low` forward AUC 0.836 collapses to reverse AUC 0.321 (anti-correlated, below its own floor). Background Spearman ρ (forward vs. reverse score vectors, residues outside both labeled sets) is mostly strongly positive (mean 0.61) — the asymmetry concentrates in the labeled sets specifically, the rest of the protein's own coupling structure is largely reciprocal even on cells with a large labeled-set AUC collapse. Forward numbers reproduce every already-published value exactly (an implicit consistency check); reverse is a new measurement, no prior verdict changes. A real scale effect on PTP1B/CASPASE7 (only 5 active-site residues each) elevates their own reverse floor to 0.90-0.91. | [[TASK-0162]], [[TASK-0130]], [[TASK-0149]], [[TASK-0145]], [[TASK-0094]] |
 | 46 | Is the mandatory 3-target benchmark actually capable of certifying a working allosteric-site predictor, as distinct from a broken one — consolidating this project's own already-scattered benchmark-integrity findings into one explicit verdict? | **resolved 2026-07-28: no, on all 3 mandatory targets, on at least one of three axes each — re-verified directly against RCSB, not relayed.** KRAS_G12C: ground truth valid, but the pocket is 3.75 Å from the active site (re-measured directly) and fpocket (0.8348, purely geometric) decisively beats both the corrected floor (0.4818) and this project's own actual (0.5901) — fails "distal" and "non-trivial." BCR_ABL1: ground truth valid, but the pocket is measurably pre-formed in apo (RMSD ratio 0.49, [[TASK-0120]]/[[TASK-0139]]) and fpocket (0.8596) again crushes both floor and actual — fails "cryptic" and "non-trivial." CARDIAC_MYOSIN: the challenge's own named validation structure (6C1H) does **not** contain mavacamten (re-confirmed live: `nonpolymer_bound_components=['ADP','MG']` only) — this project's own substituted structure (8QYR) does — fails "ground truth valid" for the challenge's own literal Table 1 entry. **A stale number caught in the process**: the filing task's own "0.798" KRAS_G12C floor citation is TASK-0094's pre-[[TASK-0118]]/[[TASK-0121]]/[[TASK-0130]] number; the current, fully-corrected floor is 0.4818 — corrected here, not silently propagated. Constructive half: a 5-point specification for a benchmark that *could* certify a method (verified holo ligand content; verified-distal-and-cryptic pockets, not drug-contact proxies; a mandatory geometric-baseline floor per target; ≥1 mechanism-validated ground truth target ([[TASK-0170]]); a published detection limit ([[TASK-0167]])). Framed as measurement, not criticism, per this task's own Constraint. | [[TASK-0169]], [[TASK-0124]], [[TASK-0163]], [[TASK-0164]], [[TASK-0104]], [[TASK-0094]] |
-| 47 | Does the apo structure's own low-frequency linear response reach the holo-defined pocket in *any* apo-only-admissible direction — the holo-direction module's own mandatory Step 2 go/no-go gate (`HOLO_DIRECTION_MODULE.md`), run before any Step 3-5 transport/optimization work is built? | **resolved 2026-07-28: no, on all 7 pocket-scoreable `status: verified` targets — a clean, complete negative on the gate's own terms.** New `holo_direction.py` (`PERTURBATION_PROTOCOL` frozen before touching holo, `build_deformation_family`, `go_no_go_gate`). Across 60 apo-only admissible perturbations tested per target (10 lowest ANM modes × 2 signs × 3 amplitude scales, only 1-10 surviving Step 1's own bond-geometry integrity check per target — a real, apo-only finding in itself), **zero ever creates a contact-graph edge between an active-site and pocket residue that apo doesn't already have, and no target's CO(10) clears the 0.5 overlap threshold either** (max 0.4652, KRAS_G12C). Per the spec's own explicit "build the rest only for the targets that clear it" instruction, Steps 3-5 are not built for any target — there is none to build them for. Two real bugs found+fixed while running this: `go_no_go_gate` initially hardcoded `chain_map=None` instead of `chain_map_from_config` (the TASK-0144 differing-apo/holo-chain-letter issue, broke 2 targets outright until fixed); CASPASE7's labeled pocket has zero holo correspondence in the alignment at all (CO genuinely undefined, reported as NaN not a misleading number, verdict conservatively defaults `NO_GO`). Independent, converging evidence for the same reframe [[TASK-0162]]'s forward/reverse asymmetry and [[TASK-0163]]'s fpocket result already raised. | [[TASK-0015]], [[TASK-0005]], [[TASK-0150]], [[TASK-0152]], [[TASK-0162]], [[TASK-0163]] |
+| 47 | Does the apo structure's own low-frequency linear response reach the holo-defined pocket in *any* apo-only-admissible direction — the holo-direction module's own mandatory Step 2 go/no-go gate (`HOLO_DIRECTION_MODULE.md`), run before any Step 3-5 transport/optimization work is built? | **resolved 2026-07-28, corrected same day (user-flagged, two rounds — see this document's own "Holo-direction module Step 2 go/no-go gate" section's correction block for the full account): the original "direct active-site<->pocket edge" test was the wrong quantity (active site and pocket are distal by this project's own definition, so a direct-contact test can never fire regardless of the deformation) — fixed to a graph-hop shortcut test, then cutoff-swept {4.5, 6.0, 8.0, 10.0} Å after a second challenge on robustness. **Final: `shortcut_verdict_across_grid` = `NO_GO` on all 7 targets at every cutoff tested**, including PTP1B/BCR_ABL1, where a real 6-10 hop apo-side gap exists at the strictest cutoff — Step 1's own narrow admissible family (1-10 candidates/target) is too small to bridge even a moderate topological gap, not merely "there is no gap to bridge." No target's CO(10) clears the 0.5 overlap threshold either (max 0.4652, KRAS_G12C). The headline verdict (7/7 `NO_GO`) is unchanged by either correction. Per the spec's own explicit "build the rest only for the targets that clear it" instruction, Steps 3-5 are not built for any target. Two real bugs found+fixed while running this: `go_no_go_gate` initially hardcoded `chain_map=None` instead of `chain_map_from_config` (the TASK-0144 differing-apo/holo-chain-letter issue, broke 2 targets outright until fixed); CASPASE7's labeled pocket has zero holo correspondence in the alignment at all (CO genuinely undefined, reported as NaN not a misleading number, verdict conservatively defaults `NO_GO`). Independent, converging evidence for the same reframe [[TASK-0162]]'s forward/reverse asymmetry and [[TASK-0163]]'s fpocket result already raised. | [[TASK-0015]], [[TASK-0005]], [[TASK-0150]], [[TASK-0152]], [[TASK-0162]], [[TASK-0163]], [[TASK-0067]], [[TASK-0114]] |
 
 | 48 | Does this project's verdict pipeline (floor → CI → permutation null → Bonferroni) actually detect a real, planted, confound-orthogonal allosteric coupling if one is present, and what is the limit of detection (LOD) in interpretable units? | **resolved 2026-07-28: yes, under the historical (scattered) null — LOD ≈2× background conductance on 2/3 targets; no, under the corrected (compact) null — no target reaches 80% power at any strength tested, up to ~4× background.** [[TASK-0167.001]]'s own decisive finding reconfirmed first: `H_new`/`dcc_low`/`prs_low` are exactly plant-invariant, so only `T(E=0)` on a weighted Laplacian could be swept. 3 targets × 8 strengths × 20 seeds × 3 nulls × 2 CI methods, unmodified pipeline, all gates in series. Both CI methods gave identical LODs (the external review's own spatial-CI 1D-line concern, verified real — 55% block overlap, not exact coincidence — did not change the bottom line; corrected in [[TASK-0165]]). Per-gate profile: gate 2 (CI non-overlap) and the permutation-null gate are BOTH independently binding at high strength, neither alone explains the corrected-null failure. Real non-monotonicity found on 2/3 targets (P(certified) peaks then falls at the highest strength), consistent with TASK-0167.001's own predicted channel-leakage mechanism. Compact and Rg-matched nulls proved empirically indistinguishable at this patch size (verified, not assumed). BCR_ABL1 never reaches 80% power under any null. A real Bonferroni-family bug (dividing by the synthetic replicate grid instead of by targets) was found and fixed in analysis, not in the already-expensive collection run. | [[TASK-0167]], [[TASK-0167.001]], [[TASK-0158]], [[TASK-0165]], [[TASK-0145]], [[TASK-0161]] |
 | 49 | Is KRAS_G12C's floor-clearing result (this project's one target with a marginal surviving signal) robust to the choice of apo structural draw, or a lucky draw — and is the apo structure it has always been drawn from even the correct genotype (`REVIEW-panel-2026-07-28-external.md` §2/§5C)? | **resolved 2026-07-30: a lucky draw, decisively, AND drawn from the wrong genotype.** `targets.yaml`'s current `apo_pdb: 4OBE` is confirmed wild-type (Gly12), not G12C — RCSB's own title ("GDP-bound Human KRas") and its own `pdbx_database_related` field (cross-referencing true G12C entries as merely *related to* it) both independently confirm this; every prior KRAS_G12C number in this project was computed against the wrong mutant. Swept 10 independently RCSB-verified true-G12C, GDP+Mg-only, X-ray apo structures (1.04–2.41 Å) through the unmodified pipeline, holo/cutoffs/seed fixed: AUC ranges 0.408–0.595 (spread 0.187, matching [[TASK-0124]]'s own 0.27 CARDIAC_MYOSIN swing), median 0.482 (below chance), only 3/10 (30%) floor-clear, and P@5 is exactly 0.000 on all 10 (vs. the mislabeled 4OBE's own 0.200). The number this project has always reported sits at the high end of a distribution centered on chance, drawn from a structure that is not even the target's own claimed mutant. | [[TASK-0155]], [[TASK-0124]], [[TASK-0094]] |
+| 50 | Is two-boson Hong-Ou-Mandel path interference (the one genuinely non-reducible multi-particle residual left in this program's search space) worth building before the 2026-08-08 writing freeze, per `PANEL_REVIEW_2026-07-25.md`'s own later deprioritization instruction? | **resolved 2026-08-02: filed, not built, per the review's own explicit instruction.** Precondition Gate satisfied first: the non-reducibility argument is real (the HOM cross-term depends on relative phase, information [[TASK-0130]]'s converged-limit observable provably discards, per [[TASK-0146]]). 3 governing citations independently re-verified (Valiant 1979; Terhal & DiVincenzo 2002; Aaronson & Arkhipov 2011). Honest ceiling: a 2×2 permanent equals a 2×2 determinant in cost — even a clean positive at k=2 would be a better observable, not a demonstrated quantum advantage. Filed as a forward-proposal note, `EXECUTION_PLAN.md`'s Phase 1E. | [[TASK-0157]], [[TASK-0130]], [[TASK-0146]] |
+| 51 | Does [[TASK-0162]]'s forward/reverse coupling asymmetry — computed on apo topology throughout — reproduce when the identical 5-observable x 5-target comparison is re-run holo-native end-to-end, matching [[TASK-0067]]'s own established apo-vs-holo diagnostic precedent for a different observable family? | **resolved 2026-08-02: no — a real, materially different result from TASK-0067's own "tiny gap" precedent, not a reproduction.** Forward floor-clear drops from 10/25 (apo, matches TASK-0162 exactly) to 6/25 (holo), with 10/25 individual cells flipping verdict; reverse floor-clear stays 4/25 in aggregate but only 2/25 cells overlap. Mean |apo-vs-holo gap| (0.133 forward / 0.119 reverse) is an order of magnitude larger than TASK-0067's own bare-operator gap (0.081/0.061) — concentrated in `T_E0_Hnew` (transmission on `H_new`, up to -0.40) and `dcc_low` (up to -0.41), extending [[TASK-0153]]'s own already-flagged `dcc_low` apo/holo complication rather than contradicting it. `ctqw_converged`/`R_eff`/`prs_low` stay closer to TASK-0067's "small gap" pattern on most cells but not all (KRAS_G12C's `ctqw_converged` forward verdict itself flips). Diagnostic only, per TASK-0067's own caveat, never a submission-path result. | [[TASK-0171]], [[TASK-0162]], [[TASK-0067]], [[TASK-0153]], [[TASK-0169]] |
 
 ## Holo-direction module Step 2 go/no-go gate (TASK-0015, 2026-07-28)
 
@@ -4861,6 +4863,26 @@ checks in both directions). Full suite: 994 passed, 2 xfailed, 0 failed
 Full detail: `.ai/tasks/DONE/TASK-0015-holo-direction-module.md`,
 `__WORK_IN_PROGRESS__/scripts/holo_direction_step2_gate.py`,
 `__WORK_IN_PROGRESS__/RESULTS/results_task0015_step2_gate/step2_gate.json`.
+
+**Correction, same day, user-flagged, two rounds:** the "right edges
+created?" test above required a *direct* active-site↔pocket contact-graph
+edge — wrong, since this project's own pocket/active-site labels are
+distal by definition (`labels.build_labels`'s own exclusion assembly);
+a direct-contact test can never fire on a genuinely distal pair
+regardless of what the deformation does. Fixed to a graph-hop *shortcut*
+test instead (does any admissible deformation shorten the active-site↔
+pocket contact-graph hop distance, via `baselines.hop_from_seed`) — the
+right quantity for a distal-by-definition pair. A second challenge (is
+this reading robust to the contact-graph cutoff, the same knob
+[[TASK-0067]]/[[TASK-0114]] already established as worth sweeping
+elsewhere in this register) led to sweeping {4.5, 6.0, 8.0, 10.0} Å.
+**Final: `shortcut_verdict_across_grid` = `NO_GO` on all 7 targets at
+every cutoff tested**, including PTP1B/BCR_ABL1, where a real 6-10 hop
+apo-side gap exists at the strictest (4.5 Å) cutoff — Step 1's own narrow
+admissible family (1-10 candidates/target) is too small to bridge even a
+moderate topological gap, not merely "there is no gap to bridge." The
+headline verdict (7/7 `NO_GO`) is unchanged by either correction; the
+mechanism explaining it is now the correct one.
 
 ---
 
@@ -5052,6 +5074,120 @@ filed to stress-test.
 Full detail: `.ai/tasks/DONE/TASK-0155-apo-structure-sensitivity-sweep.md`,
 `RESULTS/results_task0155_apo_sensitivity/apo_sensitivity_sweep.json`,
 `scripts/apo_structure_sensitivity_sweep.py`.
+
+---
+
+## Two-boson Hong-Ou-Mandel path interference (TASK-0157, forward-proposal note, 2026-08-02)
+
+**Filed, not built — per `PANEL_REVIEW_2026-07-25.md`'s own later, dated,
+explicit instruction to describe this as the principled next rung in the
+forward-proposal section rather than spend implementation time on it
+before the deadline.** This supersedes the task's own original Intent
+Contract (construct the k=2 symmetrized Hilbert space, a synthetic
+falsifier, real-target scoring) — corrected at pickup, not abandoned
+mid-execution.
+
+**Precondition Gate satisfied first** (required before any `N²`-cost work
+regardless of whether it is ultimately built): the non-reducibility
+argument is real, not merely asserted. For two non-interacting bosons
+from distinct sources, the coincidence probability `|ψ(i,j;t)|²` expands
+into Falsifier C's own already-dead product term plus a genuine
+interference cross-term `2·Re[c_i(t)c_j'(t)(c_j(t)c_i'(t))^*]` that
+depends on the *relative phase* between two single-particle amplitude
+paths — information every converged/time-averaged observable in this
+register ([[TASK-0130]]) provably discards ([[TASK-0146]]'s own
+phase-free-at-convergence finding). This is the one genuinely
+non-reducible multi-particle residual left in this program's search space
+(fermions reduce to determinants, in P — Terhal & DiVincenzo 2002; naive
+interacting co-occupation is Falsifier C, already near-dead; anyons have
+no formalism on a 3D contact graph).
+
+**3 governing citations independently re-verified** via live search
+against each paper's own abstract/venue, not relayed from the filing
+text: Valiant 1979 (*Theoretical Computer Science* 8:189-201, the
+permanent is #P-complete), Terhal & DiVincenzo 2002 (*Phys. Rev. A*
+65:032325, noninteracting-fermion/matchgate circuits are classically
+simulable), Aaronson & Arkhipov 2011 (STOC 2011, linear-optics hardness
+needs many photons across `m=O(n²)` modes). All three confirm the task's
+own characterization exactly.
+
+**Honest ceiling, stated from the primary sources directly**: a 2×2
+permanent is exactly as easy to compute as a 2×2 determinant — no
+complexity separation exists at k=2. Even a clean positive HOM-bunching
+finding at this scale would be a *better observable*, not a demonstrated
+quantum advantage, which needs the asymptotic photon number this task's
+own scope was never going to reach.
+
+**Not built, per the review's own explicit deprioritization, not a
+partial result**: no k=2 symmetrized Hilbert space, no synthetic
+falsifier, no real-target scoring. Filed as a forward-proposal note in
+`EXECUTION_PLAN.md`'s Phase 1E instead.
+
+Full detail: `.ai/tasks/DONE/TASK-0157-two-boson-hom-interference.md`,
+`EXECUTION_PLAN.md`'s own Phase 1E forward-proposal note.
+
+---
+
+## Reverse-direction coupling test on HOLO topology (TASK-0171, comparison to TASK-0162, 2026-08-02)
+
+**The apo-vs-holo gap here is NOT small in [[TASK-0067]]'s own precedent
+sense — it is large enough to flip 10 of 25 (40%) forward floor-clearing
+verdicts, concentrated in two specific observables.** [[TASK-0162]]'s own
+forward/reverse coupling test ran every propagation on **apo** topology
+exclusively (`build_H_new(apo.coords, ...)`, confirmed directly from that
+script before starting this one) — holo was used there only to derive
+labels. This re-runs the identical 5-observable × 5-target (3 mandatory +
+PTP1B/CASPASE7) forward/reverse comparison **holo-native end-to-end**:
+`H_new`/`H2_combinatorial_laplacian` built from `holo.coords`/
+`holo.bfactors`, and `_holo_native_labels` ([[TASK-0067]]'s own holo-frame
+label construction, imported verbatim) for the pocket/active-site masks —
+not apo-numbered indices ported onto holo's coordinate array. Every
+scoring function reused completely unmodified from TASK-0162 (this task's
+own Out of Scope: no new observable). **Diagnostic only, never a
+submission prediction**, same caveat TASK-0067 stated for its own holo
+run.
+
+**Forward direction**: apo floor-clears 10/25 (40%, matches TASK-0162's
+own reported number exactly — a consistency check), holo floor-clears
+only 6/25 (24%). 10/25 individual cells flip verdict (7 lose clearance
+apo→holo, 3 gain). **Reverse direction**: apo and holo floor-clear the
+same total count, 4/25 (16%) each — but not the same 4 cells; 2/25 flip
+(1 lose, 1 gain), netting to zero aggregate change.
+
+**Gap magnitude, per-cell, stated explicitly per this task's own
+requirement**: mean |gap| is 0.133 (forward) / 0.119 (reverse) — an order
+of magnitude *larger* than TASK-0067's own "tiny apo/holo gap" finding
+for the bare GNM operator (row 2 above: 0.081/0.061), though comparable
+to [[TASK-0153]]'s own already-flagged `dcc_low` complication on
+CARDIAC_MYOSIN (gap −0.303, "the opposite of a clean ceiling reading").
+Two observables account for most of the largest gaps: **`T_E0_Hnew`**
+(transmission on `H_new` at E=0) shows the single largest gap in both
+directions (PTP1B forward −0.400, KRAS_G12C forward −0.344, CASPASE7
+forward −0.292, PTP1B reverse −0.389, KRAS_G12C reverse −0.209) and
+**`dcc_low`** (CASPASE7 reverse −0.411, CARDIAC_MYOSIN forward −0.273) —
+extending, not contradicting, TASK-0153's own finding that `dcc_low`
+specifically does not get a clean apo/holo ceiling reading.
+`ctqw_converged`/`R_eff`/`prs_low` are comparatively closer to TASK-0067's
+own "small gap" pattern on most cells (11/25 forward and 18/25 reverse
+cells overall have a gap smaller than that cell's own floor-vs-actual
+margin), but not uniformly — `ctqw_converged` alone causes KRAS_G12C's
+forward verdict to flip (apo 0.590 floor-clearing → holo 0.410, well
+below its own floor).
+
+**One-line verdict, per this task's own explicit ask**: this observable
+family behaves *differently* from TASK-0067's own precedent — the
+apo-vs-holo gap is real and large enough to change which cells clear
+their floor, not a diagnostic non-event. Forward direction is measurably
+less floor-clearing on holo than on apo (24% vs. 40%); reverse direction
+is unchanged in aggregate count but not in which cells. Consistent with
+[[TASK-0169]]'s own benchmark-discriminability finding and
+[[TASK-0015]]'s Step 2 gate: this program's headline observables are
+sensitive to exactly the structural details (apo vs. holo topology) a
+robust allosteric signal should arguably be less sensitive to.
+
+Full detail: `.ai/tasks/DONE/TASK-0171-reverse-direction-coupling-test-holo.md`,
+`RESULTS/results_task0171_reverse_direction_holo/reverse_direction_coupling_test_holo.json`,
+`scripts/reverse_direction_coupling_test_holo.py`.
 
 ---
 
