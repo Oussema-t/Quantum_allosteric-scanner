@@ -9,12 +9,16 @@ pytest ...` invocation. A thread picks a preset name; it cannot smuggle
 arbitrary pytest/shell arguments through this wrapper -- that is the actual
 safety property `.claude/settings.json` whitelists.
 
-Scoped to the two real, currently-existing local Python test surfaces:
-`__WORK_IN_PROGRESS__/tests/` (research code) and `backend/test_*.py`
-(product/QAS code). Playwright-based UI/API presets (TASK-0021, TASK-0022)
-are a separate, still-blocked effort (TASK-0026.002/TASK-0026 parent
-recovery of `agents-tools/capability-runner.sh`) and are intentionally out
-of scope here -- no Playwright config or test files exist in this repo yet.
+Scoped to the real, currently-existing local Python test surfaces:
+`__WORK_IN_PROGRESS__/tests/` (research code), `backend/test_*.py`
+(product/QAS code), and (TASK-0072) `test_golden_value_cross_tree_drift.py`
+at the repo root -- the cross-tree drift regression guard, which needs
+both trees importable at once (hence `WIP_SRC` on `PYTHONPATH` even though
+its own file lives outside `__WORK_IN_PROGRESS__/`). Playwright-based
+UI/API presets (TASK-0021, TASK-0022) are a separate, still-blocked effort
+(TASK-0026.002/TASK-0026 parent recovery of `agents-tools/capability-
+runner.sh`) and are intentionally out of scope here -- no Playwright
+config or test files exist in this repo yet.
 
 No third-party dependencies -- stdlib only. Always runs against the local
 working tree, never against Render.
@@ -38,7 +42,8 @@ Presets:
     wip-potentials    __WORK_IN_PROGRESS__/tests/test_potentials.py
     wip-all           __WORK_IN_PROGRESS__/tests/ (whole directory)
     backend           backend/test_geometry.py backend/test_analysis.py backend/test_analysis_characterization.py
-    all               wip-all + backend
+    cross-tree        test_golden_value_cross_tree_drift.py (TASK-0072 -- needs both trees, hence WIP_SRC too)
+    all               wip-all + backend + cross-tree
 """
 import argparse
 import json
@@ -72,9 +77,10 @@ PRESETS = {
         ["backend/test_geometry.py", "backend/test_analysis.py", "backend/test_analysis_characterization.py"],
         None,
     ),
+    "cross-tree": (["test_golden_value_cross_tree_drift.py"], WIP_SRC),
     "all": (
         ["__WORK_IN_PROGRESS__/tests", "backend/test_geometry.py", "backend/test_analysis.py",
-         "backend/test_analysis_characterization.py"],
+         "backend/test_analysis_characterization.py", "test_golden_value_cross_tree_drift.py"],
         WIP_SRC,
     ),
 }
