@@ -1,0 +1,102 @@
+{
+  "verdict": "CLOSED",
+  "canonical_weights": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "k": 5,
+  "n_qubo_strict_wins": 0,
+  "n_targets": 3,
+  "per_target": {
+    "KRAS_G12C": {
+      "weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "k": 5,
+      "qubo_indices_local": [
+        28,
+        29,
+        41,
+        42,
+        43
+      ],
+      "qubo_value": 22.30355608704167,
+      "qubo_hit_at_1": false,
+      "qubo_hit_at_3": false,
+      "greedy_indices_local": [
+        20,
+        48,
+        21,
+        22,
+        23
+      ],
+      "greedy_hit_at_1": true,
+      "greedy_hit_at_3": false
+    },
+    "BCR_ABL1": {
+      "weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "k": 5,
+      "qubo_indices_local": [
+        362,
+        363,
+        364,
+        365,
+        366
+      ],
+      "qubo_value": 23.28837003176116,
+      "qubo_hit_at_1": false,
+      "qubo_hit_at_3": false,
+      "greedy_indices_local": [
+        214,
+        234,
+        206,
+        238,
+        184
+      ],
+      "greedy_hit_at_1": false,
+      "greedy_hit_at_3": false
+    },
+    "CARDIAC_MYOSIN": {
+      "weights": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "k": 5,
+      "qubo_indices_local": [
+        68,
+        69,
+        70,
+        71,
+        72
+      ],
+      "qubo_value": 20.692435284016558,
+      "qubo_hit_at_1": false,
+      "qubo_hit_at_3": false,
+      "greedy_indices_local": [
+        89,
+        90,
+        54,
+        91,
+        88
+      ],
+      "greedy_hit_at_1": false,
+      "greedy_hit_at_3": false
+    }
+  }
+}
