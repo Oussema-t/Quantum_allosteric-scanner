@@ -4221,6 +4221,133 @@ Full detail: `.ai/tasks/DONE/TASK-0187-enm-connectivity-shortcut-hypothesis.md`
 
 ---
 
+## Consensus holo-pocket ground truth (TASK-0177, 2026-08-02)
+
+**Question**: the pocket label every AUC/floor/CI/null in this project's
+226-cell register is computed against (`labels.holo_pocket_mask`, one HET
+group, one 4.5 Å contact cutoff) has itself never been validated — only
+swept once ([[TASK-0114]], "a still-moving slope, not a stable plateau")
+and shown, on 2/3 mandatory targets, to not measure what it claims
+([[TASK-0169]]: KRAS_G12C's pocket is 3.75 Å — 1 spatial hop — from the
+active site; BCR_ABL1's pocket moves *less* than background, i.e.
+pre-formed, not cryptic). Does a **consensus** across mutually independent
+routes to the same residue set converge, and what is the honest
+uncertainty on the answer?
+
+**Method**: new `allostery.consensus_labels` module, four per-residue
+criteria plus two target-level qualifiers, all mapped onto apo numbering
+through the same `_needleman_wunsch_map`/`chain_map_from_config`
+([[TASK-0144]]) path C1 already used, with `active_site`/`terminal`
+excluded from every criterion before assembly (same SEAM-0003 invariant
+`labels.build_labels` already enforces):
+
+- **C1** ligand heavy-atom contact, swept 3.5–6.0 Å (union across cutoffs) — the incumbent, generalized.
+- **C2** ΔSASA on ligand removal (`freesasa`, hand-checked: KRAS_G12C Cys12 buries 41.2 Å², His95 67.5 Å² — real, not noise). **Real bug caught before trusting any number**: `freesasa.Structure`'s default options silently ignore HETATM records, so the ligand's own atoms were never in the "with-ligand" SASA calc either way — `with`/`without` came back byte-identical until `options={"hetatm": True}` was set.
+- **C3** geometric cavity in holo with the ligand stripped (vendored `fpocket`, TASK-0163's binary — rebuilt from source for this session's arm64 macOS host, `ARCH=MACOSXARM64`, the repo's own `makefile` ships a matching but never-wired plugin dir; the checked-in Linux static archive doesn't link on this platform). The correct cavity is identified post-stripping by proximity of its member residues to the (unstripped) ligand's own coordinates.
+- **C4** depositor/software SITE records (legacy-PDB `REMARK 800`/`SITE`, auto-generated at deposition — independent of every computation this module does itself, since it reuses someone else's already-computed answer). **Unavailable on 2/7 targets** (CARDIAC_MYOSIN/8QYR, GLUCOKINASE/3H1V — no SITE records in either entry), reported as unavailable, not approximated.
+- **C5** crypticity (target-level): apo vs. holo fpocket cavity volume ratio.
+- **C6** distality (target-level): Euclidean + spatial contact-graph hop (8.0 Å, [[TASK-0067]]'s convention) to the active site, re-run against `core`/`consensus` alongside the incumbent label per [[TASK-0186]]'s own flagged follow-up.
+
+**Consensus** = ≥3-of-{n criteria available} vote; **core** = all available
+criteria agree; **shell** = consensus minus core; **resolution** =
+`|shell|/|core|`. Unavailable criteria are excluded from both numerator and
+denominator (a target with only 3 available criteria needs unanimous
+agreement for *either* core or consensus — this is load-bearing, see the
+negative-control finding below).
+
+**Negative control** (Planned Validation's own hard requirement): re-ran the
+full machinery with `drug_ligand` swapped to a real buffer/cryoprotectant
+HET group confirmed present in the same holo entry (not invented — grepped
+live against each target's actual ligand set). KRAS_G12C vs. `MG`: **passes**
+cleanly (core=0, consensus=1/18 residues — no convergence). **CARDIAC_MYOSIN
+vs. `EDO` (ethylene glycol): fails — core=consensus=7 residues, all 3
+available criteria (C1/C2/C3) agree on a cryoprotectant.** Diagnosed, not
+hand-waved: this is the direct consequence of C4 being structurally
+unavailable for this entry — C1–C3 alone measure "is there a real
+burial/contact/cavity here," which is true of *any* molecule sitting in a
+real surface groove, cryoprotectant or drug. Only C4 (external annotation)
+can distinguish "real binding site" from "crystallization artifact in a
+pocket," and it doesn't exist for 8QYR. **Consequence stated explicitly**:
+CARDIAC_MYOSIN's and GLUCOKINASE's `resolution=0.0` (core==consensus,
+`shell` empty) is not evidence of strong agreement — it is the degenerate
+unanimity-of-3 case the negative control just showed can converge on the
+wrong answer. Flagged in `targets.yaml`'s own `pocket_label` block for both
+targets, not silently shipped as a clean result.
+
+**Per-target summary** (residue counts; `resolution` = |shell|/|core|):
+
+| Target | incumbent (4.5 Å) | core | consensus | shell | resolution | C4 available? |
+|---|---|---|---|---|---|---|
+| KRAS_G12C | 18 | 3 | 15 | 12 | 4.00 | yes |
+| BCR_ABL1 | 16 | 10 | 16 | 6 | 0.60 | yes |
+| CARDIAC_MYOSIN | 13 | 15 | 15 | 0 | 0.00 | **no — see caveat** |
+| PTP1B | 14 | 6 | 14 | 8 | 1.33 | yes |
+| GLUCOKINASE | 17 | 17 | 17 | 0 | 0.00 | **no — see caveat** |
+| CASPASE1 | 6 | 3 | 5 | 2 | 0.67 | yes |
+| CASPASE7 | 7 | 3 | 6 | 3 | 1.00 | yes |
+
+**Headline: convergence is real but partial, never total, and the two
+"perfect" (`resolution=0.0`) results are the two targets whose negative
+control cannot be trusted.** KRAS_G12C has the *worst* agreement (core is
+only 3/18 of the incumbent set) despite being the most-scrutinized target in
+the whole project — the four criteria genuinely disagree about most of its
+labelled pocket. No target has an empty `core` (the "not verifiable"
+outcome the Intent Contract explicitly allows for) — every target clears
+the minimum bar, but usually with a real, now-quantified shell.
+
+**C5/C6 target-level qualifiers**: crypticity ratios (apo cavity vol / holo
+cavity vol) are 0.45–2.01 across all 7 targets — every target has *some*
+apo-side cavity overlapping the mapped pocket (no target is "fully cryptic"
+in this sense; PTP1B is the most cryptic, ratio 0.45, consistent with it
+being the one target with real headroom, see below). C6 distality against
+`consensus` reproduces [[TASK-0186]]'s own incumbent-label numbers closely
+(min spatial-hop = 1 on 6/7 targets, PTP1B the sole exception at min hop 2 —
+the two independent runs agree to the residue): the "trivially close"
+finding is not an artifact of the old label.
+
+**Re-scoring the headline observable** (`build_H_new` + `time_averaged_ctqw_converged`,
+[[TASK-0130]]/[[TASK-0159]]'s shipped convention, `coherent=False`) against
+all three labels side by side, **never substituting** — sanity-checked first:
+KRAS_G12C's incumbent-label AUC reproduces TASK-0159's published 0.5901
+exactly.
+
+| Target | floor (vs. incumbent) | AUC incumbent | AUC core | AUC consensus | verdict flip? |
+|---|---|---|---|---|---|
+| KRAS_G12C | 0.482 | 0.590 | 0.307 | 0.562 | **yes** — clears floor on incumbent/consensus, falls *below* floor on core |
+| BCR_ABL1 | 0.582 | 0.527 | **0.580** | 0.527 | **yes** — core clears the floor (barely), incumbent/consensus don't |
+| CARDIAC_MYOSIN | 0.568 | 0.518 | 0.489 | 0.489 | no (all three miss) |
+| PTP1B | 0.485 | 0.486 | **0.562** | 0.486 | **yes** — core clears, incumbent/consensus sit at the floor |
+| GLUCOKINASE | 0.853 | 0.649 | 0.657 | 0.657 | no (all three miss, large margin) |
+| CASPASE1 | 0.907 | 0.663 | 0.525 | 0.598 | no (all three miss, large margin) |
+| CASPASE7 | 0.754 | 0.594 | **0.753** | 0.620 | **yes** — core clears the floor, incumbent/consensus don't |
+
+**The flip itself is the finding, per this task's own Intent Contract.**
+4/7 targets change floor-clearing verdict depending on which of the three
+labels scores them — on 3 of those 4 (BCR_ABL1, PTP1B, CASPASE7) it is the
+small, high-confidence `core` set that clears the floor while the larger
+incumbent/consensus sets do not, the opposite of "more label agreement is
+always better for the observable." No target's overall competence-map
+status (none currently clear their floor decisively, per [[TASK-0129]]/
+[[TASK-0131]]) changes sign here — this is a resolution/framing result, not
+a new positive claim, per this task's own Out-Of-Scope constraint (no
+observable/floor/null/CI logic touched).
+
+**Recommendation on the Open Question** (which label is headline): **not
+adopted here** — this task reports all three, per its own "never
+substitute" constraint, and leaves the choice to [[TASK-0176]]/[[TASK-0184]]'s
+narrative decision, now with the flip table above as direct evidence for
+that decision rather than an assumption.
+
+Frozen into `config/targets.yaml`'s new `pocket_label` block per target
+(`core`/`consensus`/`shell`/`incumbent_4_5A`, all as `[chain, resnum]`
+pairs — generated programmatically by
+`scripts/task0177_consensus_labels.py`, never hand-transcribed, per this
+project's hard rule). Full detail: `allostery/consensus_labels.py`,
+`scripts/task0177_consensus_labels.py`,
+`results_task0177_consensus_labels/results.json`.
+
+---
+
 ## Index of open questions from this run
 
 | # | Question | Status | Task |
@@ -4288,6 +4415,7 @@ Full detail: `.ai/tasks/DONE/TASK-0187-enm-connectivity-shortcut-hypothesis.md`
 | 48 | Is TASK-0186's (row 47) spatial-hop finding stable across the contact-graph cutoff, or is it a knob-choice artifact of an 8.0 Å value that was only ever benchmarked (TASK-0067) for a different metric (GNM-eigendecomposition AUC, over 7.5/8.0/10.0 Å) and never for hop-count? | **resolved 2026-08-01: mixed — one headline claim is cutoff-fragile, two are robust.** Swept all 7 pocket-scoreable targets over {6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0} Å. Connectivity holds everywhere (single component, zero isolated nodes, all 7 targets including CARDIAC_MYOSIN N=704 — the low-cutoff fragmentation risk did not materialize in the tested range); the 8.0 Å row of this sweep reproduces row 47's published numbers exactly on all 7 targets (min/mean/median/max/frac≤1/frac≤2, bit-for-bit), confirming both scripts share the same code path. **Not robust:** the "6/7 targets have min spatial-hop = 1" claim only holds at cutoff ≥ 8.0 Å — BCR_ABL1's min hop is 2 (not 1) at every tested cutoff ≤ 7.5 Å, so below 8.0 Å the finding is 5/7, not 6/7. **Not robust (magnitude, but ranking survives):** CASPASE1's specific "83% at hop ≤1" number is a cutoff artifact of the ≥7.5 Å region — it drops to 50% at 6.0 Å and 67% at 6.5–7.0 Å; however CASPASE1 remains the single most-trivial target (highest frac≤1) at every tested cutoff, so the qualitative ranking ("CASPASE1 more trivial than KRAS_G12C") is robust even though the point estimate is not. **Robust:** PTP1B's "0% at hop ≤1" is exactly 0.0 at all 7 tested cutoffs — the strongest non-trivial-target claim in row 47 is also the one that survives the sweep intact. Practical read: report row 47's per-cutoff-dependent numbers (the 6/7 count, CASPASE1's 83%) as `cutoff=8.0Å`-conditional, not as target-intrinsic; PTP1B's non-triviality and CASPASE1's relative-worst-case ranking can be stated unconditionally. | [[TASK-0188]], [[TASK-0186]], [[TASK-0067]], [[TASK-0114]] |
 
 | 49 | Does undirected ENM ("wobbling") conformational sampling create new contact-graph edges that shorten the active-site<->pocket hop-distance *specifically* to the real pocket (not generically, [[TASK-0186]]/row 47's static baseline as the pre-ENM comparison point), and does any such shortening approach the real holo topology's own hop-distance? | **resolved 2026-08-01: no — a clean, decisive negative on the positive-control target.** PTP1B (TASK-0186's only genuinely non-trivial case, min static hop=2, 0% pocket at hop<=1): real-pocket shortcut rate 1.7% over 2000 ANM-equipartition samples (MSF cross-check r=0.9998, passed) vs. 30 matched decoys ranging 0-52.5% (median 12.9%) — real pocket sits *below* the decoy median, effect size -0.112 (wrong sign), fails both legs of the pre-registered specificity gate. Holo-native contact graph's own hop-distance for this pocket is also 2, unchanged from static apo. Not extended past the positive control per the task's own pre-registered gate. | [[TASK-0187]], [[TASK-0186]], [[TASK-0185]], [[TASK-0167.001]], [[TASK-0067]] |
+| 50 | Does the incumbent 4.5 Å ligand-contact pocket label converge with independent structural-biology routes to the same residue set (contact-cutoff sweep, ΔSASA burial, ligand-stripped cavity detection, depositor SITE annotation), and does the headline observable's floor-clearing verdict depend on which convergent label is used? | **resolved 2026-08-02: convergence is real but partial on every target (no empty `core`), and 4/7 targets flip floor-clearing status depending on label choice — the flip is the finding, per this task's own Intent Contract.** New `allostery.consensus_labels` (C1 contact sweep 3.5-6.0Å / C2 ΔSASA / C3 fpocket-on-stripped-holo / C4 depositor SITE records), run on all 7 pocket-scoreable targets. KRAS_G12C has the *worst* agreement of any target (core=3/18) despite being the most-scrutinized in the project. **Negative control real finding**: CARDIAC_MYOSIN's consensus procedure converges on `EDO` (a cryoprotectant, not a drug) — root-caused to C4 (the only criterion independent of "is there a real cavity/burial here") being structurally unavailable for that entry (8QYR has no legacy SITE records), which also explains why CARDIAC_MYOSIN/GLUCOKINASE are the only two targets with `resolution=0.0` — a degenerate unanimity-of-3 artifact, not strong evidence, flagged in `targets.yaml` itself. Re-scoring `H_new`+`time_averaged_ctqw_converged` against incumbent/core/consensus side by side (sanity-checked: KRAS_G12C incumbent AUC reproduces TASK-0159's published 0.5901 exactly) flips floor-clearing verdicts on BCR_ABL1/PTP1B/CASPASE7 (small high-confidence `core` clears where the larger sets don't) and KRAS_G12C (incumbent/consensus clear, `core` falls below floor) — no target's overall competence-map status changes sign. Frozen into `targets.yaml`'s new `pocket_label` block, generated programmatically, never hand-transcribed. | [[TASK-0176]], [[TASK-0114]], [[TASK-0169]], [[TASK-0163]], [[TASK-0144]], [[TASK-0186]], [[TASK-0130]], [[TASK-0159]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

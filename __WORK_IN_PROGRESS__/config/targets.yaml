@@ -64,6 +64,14 @@ targets:
     pocket_contact_cutoff: 4.5
     drug_ligand: MOV
     func_ligand: ["GDP"]
+    pocket_label:
+      method: consensus  # TASK-0177: >=3-of-{n_available} vote across C1(contact 3.5-6.0A)/C2(dSASA)/C3(fpocket cavity)/C4(depositor SITE); core=all-agree. Frozen under frozen_context by scripts/task0177_consensus_labels.py -- do not hand-edit, regenerate.
+      criteria_available: ["C1_contact", "C2_dsasa", "C3_fpocket_holo", "C4_depositor_site"]
+      resolution_shell_over_core: 4.0
+      core: [["A", 95], ["A", 96], ["A", 99]]
+      consensus: [["A", 9], ["A", 10], ["A", 34], ["A", 59], ["A", 60], ["A", 61], ["A", 62], ["A", 63], ["A", 68], ["A", 72], ["A", 92], ["A", 95], ["A", 96], ["A", 99], ["A", 103]]
+      shell: [["A", 9], ["A", 10], ["A", 34], ["A", 59], ["A", 60], ["A", 61], ["A", 62], ["A", 63], ["A", 68], ["A", 72], ["A", 92], ["A", 103]]
+      incumbent_4_5A: [["A", 9], ["A", 10], ["A", 11], ["A", 34], ["A", 58], ["A", 59], ["A", 60], ["A", 61], ["A", 62], ["A", 63], ["A", 68], ["A", 69], ["A", 72], ["A", 95], ["A", 96], ["A", 99], ["A", 100], ["A", 103]]
     status: verified
     verified: true
     confidence: 0.95
@@ -95,6 +103,14 @@ targets:
     pocket_contact_cutoff: 4.5
     drug_ligand: AY7
     func_ligand: ["NIL"]
+    pocket_label:
+      method: consensus  # TASK-0177: >=3-of-{n_available} vote across C1(contact 3.5-6.0A)/C2(dSASA)/C3(fpocket cavity)/C4(depositor SITE); core=all-agree. Frozen under frozen_context by scripts/task0177_consensus_labels.py -- do not hand-edit, regenerate.
+      criteria_available: ["C1_contact", "C2_dsasa", "C3_fpocket_holo", "C4_depositor_site"]
+      resolution_shell_over_core: 0.6
+      core: [["A", 356], ["A", 359], ["A", 360], ["A", 363], ["A", 448], ["A", 451], ["A", 452], ["A", 453], ["A", 481], ["A", 487]]
+      consensus: [["A", 351], ["A", 356], ["A", 359], ["A", 360], ["A", 363], ["A", 448], ["A", 451], ["A", 452], ["A", 453], ["A", 454], ["A", 456], ["A", 481], ["A", 482], ["A", 483], ["A", 484], ["A", 487]]
+      shell: [["A", 351], ["A", 454], ["A", 456], ["A", 482], ["A", 483], ["A", 484]]
+      incumbent_4_5A: [["A", 351], ["A", 356], ["A", 359], ["A", 360], ["A", 363], ["A", 448], ["A", 451], ["A", 452], ["A", 453], ["A", 454], ["A", 456], ["A", 481], ["A", 482], ["A", 483], ["A", 484], ["A", 487]]
     status: verified
     verified: true
     confidence: 0.90
@@ -139,6 +155,14 @@ targets:
     pocket_contact_cutoff: 4.5
     drug_ligand: XB2
     func_ligand: ["ADP", "ATP"]
+    pocket_label:
+      method: consensus  # TASK-0177: >=3-of-{n_available} vote across C1(contact 3.5-6.0A)/C2(dSASA)/C3(fpocket cavity)/C4(depositor SITE); core=all-agree. Frozen under frozen_context by scripts/task0177_consensus_labels.py -- do not hand-edit, regenerate.
+      criteria_available: ["C1_contact", "C2_dsasa", "C3_fpocket_holo"]  # C4 unavailable: 8QYR has no legacy SITE records -- core==consensus here is degenerate (unanimity of only 3 criteria), NOT strong agreement; see RESULTS.md negative-control caveat.
+      resolution_shell_over_core: 0.0
+      core: [["A", 120], ["A", 146], ["A", 163], ["A", 164], ["A", 167], ["A", 168], ["A", 170], ["A", 666], ["A", 710], ["A", 711], ["A", 712], ["A", 713], ["A", 717], ["A", 721], ["A", 722]]
+      consensus: [["A", 120], ["A", 146], ["A", 163], ["A", 164], ["A", 167], ["A", 168], ["A", 170], ["A", 666], ["A", 710], ["A", 711], ["A", 712], ["A", 713], ["A", 717], ["A", 721], ["A", 722]]
+      shell: []
+      incumbent_4_5A: [["A", 120], ["A", 163], ["A", 164], ["A", 167], ["A", 168], ["A", 170], ["A", 666], ["A", 710], ["A", 711], ["A", 712], ["A", 713], ["A", 721], ["A", 722]]
     status: verified
     verified: true
     confidence: 0.90
@@ -278,6 +302,14 @@ targets:
     pocket_contact_cutoff: 4.5
     drug_ligand: "892"
     func_ligand: ["pTyr / active-site Cys215 (descriptive marker, not a ligand code)"]
+    pocket_label:
+      method: consensus  # TASK-0177: >=3-of-{n_available} vote across C1(contact 3.5-6.0A)/C2(dSASA)/C3(fpocket cavity)/C4(depositor SITE); core=all-agree. Frozen under frozen_context by scripts/task0177_consensus_labels.py -- do not hand-edit, regenerate.
+      criteria_available: ["C1_contact", "C2_dsasa", "C3_fpocket_holo", "C4_depositor_site"]
+      resolution_shell_over_core: 1.3333333333333333
+      core: [["A", 189], ["A", 192], ["A", 193], ["A", 196], ["A", 276], ["A", 280]]
+      consensus: [["A", 187], ["A", 188], ["A", 189], ["A", 192], ["A", 193], ["A", 196], ["A", 197], ["A", 200], ["A", 276], ["A", 277], ["A", 279], ["A", 280], ["A", 281], ["A", 282]]
+      shell: [["A", 187], ["A", 188], ["A", 197], ["A", 200], ["A", 277], ["A", 279], ["A", 281], ["A", 282]]
+      incumbent_4_5A: [["A", 187], ["A", 188], ["A", 189], ["A", 192], ["A", 193], ["A", 196], ["A", 197], ["A", 200], ["A", 276], ["A", 277], ["A", 279], ["A", 280], ["A", 281], ["A", 282]]
     status: verified
     verified: true
     confidence: 0.85
@@ -315,6 +347,14 @@ targets:
     pocket_contact_cutoff: 4.5
     drug_ligand: TK1
     func_ligand: ["Glucose"]
+    pocket_label:
+      method: consensus  # TASK-0177: >=3-of-{n_available} vote across C1(contact 3.5-6.0A)/C2(dSASA)/C3(fpocket cavity)/C4(depositor SITE); core=all-agree. Frozen under frozen_context by scripts/task0177_consensus_labels.py -- do not hand-edit, regenerate.
+      criteria_available: ["C1_contact", "C2_dsasa", "C3_fpocket_holo"]  # C4 unavailable: 3H1V has no legacy SITE records -- core==consensus here is degenerate (unanimity of only 3 criteria), NOT strong agreement; see RESULTS.md negative-control caveat.
+      resolution_shell_over_core: 0.0
+      core: [["A", 61], ["A", 62], ["A", 63], ["A", 64], ["A", 65], ["A", 66], ["A", 96], ["A", 97], ["A", 98], ["A", 159], ["A", 210], ["A", 211], ["A", 214], ["A", 215], ["A", 218], ["A", 221], ["A", 235]]
+      consensus: [["A", 61], ["A", 62], ["A", 63], ["A", 64], ["A", 65], ["A", 66], ["A", 96], ["A", 97], ["A", 98], ["A", 159], ["A", 210], ["A", 211], ["A", 214], ["A", 215], ["A", 218], ["A", 221], ["A", 235]]
+      shell: []
+      incumbent_4_5A: [["A", 61], ["A", 62], ["A", 63], ["A", 64], ["A", 65], ["A", 96], ["A", 97], ["A", 98], ["A", 159], ["A", 210], ["A", 211], ["A", 214], ["A", 215], ["A", 218], ["A", 220], ["A", 221], ["A", 235]]
     status: verified
     verified: true
     confidence: 0.60
@@ -382,6 +422,14 @@ targets:
     pocket_contact_cutoff: 4.5
     drug_ligand: F1G
     func_ligand: ["substrate"]
+    pocket_label:
+      method: consensus  # TASK-0177: >=3-of-{n_available} vote across C1(contact 3.5-6.0A)/C2(dSASA)/C3(fpocket cavity)/C4(depositor SITE); core=all-agree. Frozen under frozen_context by scripts/task0177_consensus_labels.py -- do not hand-edit, regenerate.
+      criteria_available: ["C1_contact", "C2_dsasa", "C3_fpocket_holo", "C4_depositor_site"]
+      resolution_shell_over_core: 0.6666666666666666
+      core: [["A", 258], ["B", 331], ["B", 390]]
+      consensus: [["A", 258], ["A", 282], ["A", 286], ["B", 331], ["B", 390]]
+      shell: [["A", 282], ["A", 286]]
+      incumbent_4_5A: [["A", 258], ["A", 282], ["A", 286], ["B", 331], ["B", 333], ["B", 390]]
     status: verified
     verified: true
     confidence: 0.75
@@ -420,6 +468,14 @@ targets:
     pocket_contact_cutoff: 4.5
     drug_ligand: FXN
     func_ligand: ["substrate"]
+    pocket_label:
+      method: consensus  # TASK-0177: >=3-of-{n_available} vote across C1(contact 3.5-6.0A)/C2(dSASA)/C3(fpocket cavity)/C4(depositor SITE); core=all-agree. Frozen under frozen_context by scripts/task0177_consensus_labels.py -- do not hand-edit, regenerate.
+      criteria_available: ["C1_contact", "C2_dsasa", "C3_fpocket_holo", "C4_depositor_site"]
+      resolution_shell_over_core: 1.0
+      core: [["B", 514], ["B", 521], ["B", 523]]
+      consensus: [["B", 459], ["B", 483], ["B", 513], ["B", 514], ["B", 521], ["B", 523]]
+      shell: [["B", 459], ["B", 483], ["B", 513]]
+      incumbent_4_5A: [["B", 459], ["B", 483], ["B", 513], ["B", 514], ["B", 515], ["B", 521], ["B", 523]]
     status: verified
     verified: true
     confidence: 0.75

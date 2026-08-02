@@ -1,0 +1,1026 @@
+{
+  "targets": {
+    "KRAS_G12C": {
+      "target": "KRAS_G12C",
+      "criteria": {
+        "C1_contact": {
+          "available": true,
+          "n": 24,
+          "detail": {
+            "per_cutoff_n": {
+              "3.5": 12,
+              "4.0": 17,
+              "4.5": 21,
+              "5.0": 22,
+              "5.5": 24,
+              "6.0": 27
+            }
+          }
+        },
+        "C2_dsasa": {
+          "available": true,
+          "n": 19,
+          "detail": {
+            "n_residues_buried": 22,
+            "threshold_A2": 1.0,
+            "max_delta_A2": 67.46
+          }
+        },
+        "C3_fpocket_holo": {
+          "available": true,
+          "n": 4,
+          "detail": {
+            "n_pockets_detected": 11,
+            "chosen_pocket_id": 9,
+            "chosen_pocket_score": -0.084,
+            "chosen_pocket_volume": 181.596,
+            "mean_dist_to_ligand_A": 4.45
+          }
+        },
+        "C4_depositor_site": {
+          "available": true,
+          "n": 14,
+          "detail": {
+            "site_id": "AC3",
+            "n_residues_listed": 16,
+            "n_mapped": 16
+          }
+        }
+      },
+      "core": {
+        "available": true,
+        "n": 3
+      },
+      "consensus": {
+        "available": true,
+        "n": 15
+      },
+      "shell": {
+        "available": true,
+        "n": 12
+      },
+      "incumbent": {
+        "available": true,
+        "n": 18
+      },
+      "resolution_shell_over_core": 4.0,
+      "task_validity": {
+        "drug_present": true,
+        "crypticity": {
+          "available": true,
+          "apo_cavity_found": true,
+          "apo_volume": 364.204,
+          "holo_volume": 181.596,
+          "volume_ratio_apo_over_holo": 2.006,
+          "overlap_n_residues": 3,
+          "n_pockets_detected_apo": 10
+        },
+        "c6_vs_consensus": {
+          "available": true,
+          "euclid_min_A": 3.8355382933820383,
+          "euclid_mean_A": 11.898599331287446,
+          "spatial_hop": {
+            "min": 1.0,
+            "mean": 2.1333333333333333,
+            "median": 2.0
+          },
+          "spatial_hop_frac_le_1": 0.3333333333333333,
+          "chain_hop": {
+            "min": 1.0,
+            "mean": 20.333333333333332,
+            "median": 22.0
+          },
+          "n_pocket": 15
+        },
+        "c6_vs_incumbent": {
+          "available": true,
+          "euclid_min_A": 3.7530389020099437,
+          "euclid_mean_A": 11.863324916906276,
+          "spatial_hop": {
+            "min": 1.0,
+            "mean": 2.1666666666666665,
+            "median": 2.0
+          },
+          "spatial_hop_frac_le_1": 0.3888888888888889,
+          "chain_hop": {
+            "min": 1.0,
+            "mean": 19.944444444444443,
+            "median": 22.0
+          },
+          "n_pocket": 18
+        }
+      },
+      "rescore_headline_observable": {
+        "incumbent": {
+          "available": true,
+          "n_pocket": 18,
+          "auc_H_new_ctqw_converged": 0.5901398086828551
+        },
+        "core": {
+          "available": true,
+          "n_pocket": 3,
+          "auc_H_new_ctqw_converged": 0.3072289156626506
+        },
+        "consensus": {
+          "available": true,
+          "n_pocket": 15,
+          "auc_H_new_ctqw_converged": 0.5619047619047619
+        }
+      },
+      "floor_auc_max_vs_incumbent": 0.4817880794701987,
+      "elapsed_s": 1.6
+    },
+    "BCR_ABL1": {
+      "target": "BCR_ABL1",
+      "criteria": {
+        "C1_contact": {
+          "available": true,
+          "n": 23,
+          "detail": {
+            "per_cutoff_n": {
+              "3.5": 5,
+              "4.0": 18,
+              "4.5": 20,
+              "5.0": 23,
+              "5.5": 24,
+              "6.0": 27
+            }
+          }
+        },
+        "C2_dsasa": {
+          "available": true,
+          "n": 16,
+          "detail": {
+            "n_residues_buried": 20,
+            "threshold_A2": 1.0,
+            "max_delta_A2": 44.13
+          }
+        },
+        "C3_fpocket_holo": {
+          "available": true,
+          "n": 16,
+          "detail": {
+            "n_pockets_detected": 31,
+            "chosen_pocket_id": 7,
+            "chosen_pocket_score": 0.061,
+            "chosen_pocket_volume": 706.853,
+            "mean_dist_to_ligand_A": 5.28
+          }
+        },
+        "C4_depositor_site": {
+          "available": true,
+          "n": 10,
+          "detail": {
+            "site_id": "AC2",
+            "n_residues_listed": 13,
+            "n_mapped": 13
+          }
+        }
+      },
+      "core": {
+        "available": true,
+        "n": 10
+      },
+      "consensus": {
+        "available": true,
+        "n": 16
+      },
+      "shell": {
+        "available": true,
+        "n": 6
+      },
+      "incumbent": {
+        "available": true,
+        "n": 16
+      },
+      "resolution_shell_over_core": 0.6,
+      "task_validity": {
+        "drug_present": true,
+        "crypticity": {
+          "available": true,
+          "apo_cavity_found": true,
+          "apo_volume": 509.577,
+          "holo_volume": 706.853,
+          "volume_ratio_apo_over_holo": 0.721,
+          "overlap_n_residues": 14,
+          "n_pockets_detected_apo": 37
+        },
+        "c6_vs_consensus": {
+          "available": true,
+          "euclid_min_A": 7.522204065298945,
+          "euclid_mean_A": 12.853480830245763,
+          "spatial_hop": {
+            "min": 1.0,
+            "mean": 2.5,
+            "median": 2.0
+          },
+          "spatial_hop_frac_le_1": 0.0625,
+          "chain_hop": {
+            "min": 6.0,
+            "mean": 51.0625,
+            "median": 55.5
+          },
+          "n_pocket": 16
+        },
+        "c6_vs_incumbent": {
+          "available": true,
+          "euclid_min_A": 7.522204065298945,
+          "euclid_mean_A": 12.853480830245763,
+          "spatial_hop": {
+            "min": 1.0,
+            "mean": 2.5,
+            "median": 2.0
+          },
+          "spatial_hop_frac_le_1": 0.0625,
+          "chain_hop": {
+            "min": 6.0,
+            "mean": 51.0625,
+            "median": 55.5
+          },
+          "n_pocket": 16
+        }
+      },
+      "rescore_headline_observable": {
+        "incumbent": {
+          "available": true,
+          "n_pocket": 16,
+          "auc_H_new_ctqw_converged": 0.5265804597701149
+        },
+        "core": {
+          "available": true,
+          "n_pocket": 10,
+          "auc_H_new_ctqw_converged": 0.5798185941043084
+        },
+        "consensus": {
+          "available": true,
+          "n_pocket": 16,
+          "auc_H_new_ctqw_converged": 0.5265804597701149
+        }
+      },
+      "floor_auc_max_vs_incumbent": 0.5816810344827587,
+      "elapsed_s": 3.5
+    },
+    "CARDIAC_MYOSIN": {
+      "target": "CARDIAC_MYOSIN",
+      "criteria": {
+        "C1_contact": {
+          "available": true,
+          "n": 15,
+          "detail": {
+            "per_cutoff_n": {
+              "3.5": 6,
+              "4.0": 11,
+              "4.5": 15,
+              "5.0": 16,
+              "5.5": 16,
+              "6.0": 18
+            }
+          }
+        },
+        "C2_dsasa": {
+          "available": true,
+          "n": 15,
+          "detail": {
+            "n_residues_buried": 17,
+            "threshold_A2": 1.0,
+            "max_delta_A2": 39.01
+          }
+        },
+        "C3_fpocket_holo": {
+          "available": true,
+          "n": 33,
+          "detail": {
+            "n_pockets_detected": 51,
+            "chosen_pocket_id": 51,
+            "chosen_pocket_score": -0.435,
+            "chosen_pocket_volume": 2021.57,
+            "mean_dist_to_ligand_A": 8.66
+          }
+        },
+        "C4_depositor_site": {
+          "available": false,
+          "n": null,
+          "detail": {
+            "reason": "no SITE records in entry"
+          }
+        }
+      },
+      "core": {
+        "available": true,
+        "n": 15
+      },
+      "consensus": {
+        "available": true,
+        "n": 15
+      },
+      "shell": {
+        "available": true,
+        "n": 0
+      },
+      "incumbent": {
+        "available": true,
+        "n": 13
+      },
+      "resolution_shell_over_core": 0.0,
+      "task_validity": {
+        "drug_present": true,
+        "crypticity": {
+          "available": true,
+          "apo_cavity_found": true,
+          "apo_volume": 2571.62,
+          "holo_volume": 2021.57,
+          "volume_ratio_apo_over_holo": 1.272,
+          "overlap_n_residues": 27,
+          "n_pockets_detected_apo": 55
+        },
+        "c6_vs_consensus": {
+          "available": true,
+          "euclid_min_A": 3.8089754527956705,
+          "euclid_mean_A": 16.877377208964486,
+          "spatial_hop": {
+            "min": 1.0,
+            "mean": 3.6666666666666665,
+            "median": 4.0
+          },
+          "spatial_hop_frac_le_1": 0.06666666666666667,
+          "chain_hop": {
+            "min": 1.0,
+            "mean": 125.6,
+            "median": 181.0
+          },
+          "n_pocket": 15
+        },
+        "c6_vs_incumbent": {
+          "available": true,
+          "euclid_min_A": 3.8089754527956705,
+          "euclid_mean_A": 16.574284027989844,
+          "spatial_hop": {
+            "min": 1.0,
+            "mean": 3.6153846153846154,
+            "median": 4.0
+          },
+          "spatial_hop_frac_le_1": 0.07692307692307693,
+          "chain_hop": {
+            "min": 1.0,
+            "mean": 126.46153846153847,
+            "median": 181.0
+          },
+          "n_pocket": 13
+        }
+      },
+      "rescore_headline_observable": {
+        "incumbent": {
+          "available": true,
+          "n_pocket": 13,
+          "auc_H_new_ctqw_converged": 0.5176444394968274
+        },
+        "core": {
+          "available": true,
+          "n_pocket": 15,
+          "auc_H_new_ctqw_converged": 0.48911465892597966
+        },
+        "consensus": {
+          "available": true,
+          "n_pocket": 15,
+          "auc_H_new_ctqw_converged": 0.48911465892597966
+        }
+      },
+      "floor_auc_max_vs_incumbent": 0.5678503840587776,
+      "elapsed_s": 7.3
+    },
+    "PTP1B": {
+      "target": "PTP1B",
+      "criteria": {
+        "C1_contact": {
+          "available": true,
+          "n": 18,
+          "detail": {
+            "per_cutoff_n": {
+              "3.5": 6,
+              "4.0": 12,
+              "4.5": 14,
+              "5.0": 14,
+              "5.5": 14,
+              "6.0": 18
+            }
+          }
+        },
+        "C2_dsasa": {
+          "available": true,
+          "n": 14,
+          "detail": {
+            "n_residues_buried": 14,
+            "threshold_A2": 1.0,
+            "max_delta_A2": 114.58
+          }
+        },
+        "C3_fpocket_holo": {
+          "available": true,
+          "n": 13,
+          "detail": {
+            "n_pockets_detected": 17,
+            "chosen_pocket_id": 5,
+            "chosen_pocket_score": 0.085,
+            "chosen_pocket_volume": 718.394,
+            "mean_dist_to_ligand_A": 5.2
+          }
+        },
+        "C4_depositor_site": {
+          "available": true,
+          "n": 9,
+          "detail": {
+            "site_id": "AC2",
+            "n_residues_listed": 9,
+            "n_mapped": 9
+          }
+        }
+      },
+      "core": {
+        "available": true,
+        "n": 6
+      },
+      "consensus": {
+        "available": true,
+        "n": 14
+      },
+      "shell": {
+        "available": true,
+        "n": 8
+      },
+      "incumbent": {
+        "available": true,
+        "n": 14
+      },
+      "resolution_shell_over_core": 1.3333333333333333,
+      "task_validity": {
+        "drug_present": true,
+        "crypticity": {
+          "available": true,
+          "apo_cavity_found": true,
+          "apo_volume": 321.03,
+          "holo_volume": 718.394,
+          "volume_ratio_apo_over_holo": 0.447,
+          "overlap_n_residues": 5,
+          "n_pockets_detected_apo": 19
+        },
+        "c6_vs_consensus": {
+          "available": true,
+          "euclid_min_A": 13.37858684615083,
+          "euclid_mean_A": 17.682954736838223,
+          "spatial_hop": {
+            "min": 2.0,
+            "mean": 3.642857142857143,
+            "median": 3.5
+          },
+          "spatial_hop_frac_le_1": 0.0,
+          "chain_hop": {
+            "min": 10.0,
+            "mean": 34.785714285714285,
+            "median": 22.5
+          },
+          "n_pocket": 14
+        },
+        "c6_vs_incumbent": {
+          "available": true,
+          "euclid_min_A": 13.37858684615083,
+          "euclid_mean_A": 17.682954736838223,
+          "spatial_hop": {
+            "min": 2.0,
+            "mean": 3.642857142857143,
+            "median": 3.5
+          },
+          "spatial_hop_frac_le_1": 0.0,
+          "chain_hop": {
+            "min": 10.0,
+            "mean": 34.785714285714285,
+            "median": 22.5
+          },
+          "n_pocket": 14
+        }
+      },
+      "rescore_headline_observable": {
+        "incumbent": {
+          "available": true,
+          "n_pocket": 14,
+          "auc_H_new_ctqw_converged": 0.4859154929577465
+        },
+        "core": {
+          "available": true,
+          "n_pocket": 6,
+          "auc_H_new_ctqw_converged": 0.562214611872146
+        },
+        "consensus": {
+          "available": true,
+          "n_pocket": 14,
+          "auc_H_new_ctqw_converged": 0.4859154929577465
+        }
+      },
+      "floor_auc_max_vs_incumbent": 0.4846579476861167,
+      "elapsed_s": 1.9
+    },
+    "GLUCOKINASE": {
+      "target": "GLUCOKINASE",
+      "criteria": {
+        "C1_contact": {
+          "available": true,
+          "n": 24,
+          "detail": {
+            "per_cutoff_n": {
+              "3.5": 9,
+              "4.0": 19,
+              "4.5": 21,
+              "5.0": 22,
+              "5.5": 23,
+              "6.0": 31
+            }
+          }
+        },
+        "C2_dsasa": {
+          "available": true,
+          "n": 17,
+          "detail": {
+            "n_residues_buried": 22,
+            "threshold_A2": 1.0,
+            "max_delta_A2": 65.27
+          }
+        },
+        "C3_fpocket_holo": {
+          "available": true,
+          "n": 27,
+          "detail": {
+            "n_pockets_detected": 21,
+            "chosen_pocket_id": 21,
+            "chosen_pocket_score": -0.275,
+            "chosen_pocket_volume": 1770.703,
+            "mean_dist_to_ligand_A": 6.52
+          }
+        },
+        "C4_depositor_site": {
+          "available": false,
+          "n": null,
+          "detail": {
+            "reason": "no SITE records in entry"
+          }
+        }
+      },
+      "core": {
+        "available": true,
+        "n": 17
+      },
+      "consensus": {
+        "available": true,
+        "n": 17
+      },
+      "shell": {
+        "available": true,
+        "n": 0
+      },
+      "incumbent": {
+        "available": true,
+        "n": 17
+      },
+      "resolution_shell_over_core": 0.0,
+      "task_validity": {
+        "drug_present": true,
+        "crypticity": {
+          "available": true,
+          "apo_cavity_found": true,
+          "apo_volume": 1214.962,
+          "holo_volume": 1770.703,
+          "volume_ratio_apo_over_holo": 0.686,
+          "overlap_n_residues": 19,
+          "n_pockets_detected_apo": 26
+        },
+        "c6_vs_consensus": {
+          "available": true,
+          "euclid_min_A": 3.7938837620570287,
+          "euclid_mean_A": 10.86325215764911,
+          "spatial_hop": {
+            "min": 1.0,
+            "mean": 2.1176470588235294,
+            "median": 2.0
+          },
+          "spatial_hop_frac_le_1": 0.11764705882352941,
+          "chain_hop": {
+            "min": 1.0,
+            "mean": 76.47058823529412,
+            "median": 109.0
+          },
+          "n_pocket": 17
+        },
+        "c6_vs_incumbent": {
+          "available": true,
+          "euclid_min_A": 3.7938837620570287,
+          "euclid_mean_A": 10.537946855470878,
+          "spatial_hop": {
+            "min": 1.0,
+            "mean": 2.0588235294117645,
+            "median": 2.0
+          },
+          "spatial_hop_frac_le_1": 0.11764705882352941,
+          "chain_hop": {
+            "min": 1.0,
+            "mean": 68.82352941176471,
+            "median": 48.0
+          },
+          "n_pocket": 17
+        }
+      },
+      "rescore_headline_observable": {
+        "incumbent": {
+          "available": true,
+          "n_pocket": 17,
+          "auc_H_new_ctqw_converged": 0.6493790091442609
+        },
+        "core": {
+          "available": true,
+          "n_pocket": 17,
+          "auc_H_new_ctqw_converged": 0.6570219735225877
+        },
+        "consensus": {
+          "available": true,
+          "n_pocket": 17,
+          "auc_H_new_ctqw_converged": 0.6570219735225877
+        }
+      },
+      "floor_auc_max_vs_incumbent": 0.8531458987307219,
+      "elapsed_s": 3.4
+    },
+    "CASPASE1": {
+      "target": "CASPASE1",
+      "criteria": {
+        "C1_contact": {
+          "available": true,
+          "n": 11,
+          "detail": {
+            "per_cutoff_n": {
+              "3.5": 4,
+              "4.0": 5,
+              "4.5": 6,
+              "5.0": 7,
+              "5.5": 10,
+              "6.0": 12
+            }
+          }
+        },
+        "C2_dsasa": {
+          "available": true,
+          "n": 9,
+          "detail": {
+            "n_residues_buried": 9,
+            "threshold_A2": 1.0,
+            "max_delta_A2": 47.7
+          }
+        },
+        "C3_fpocket_holo": {
+          "available": true,
+          "n": 7,
+          "detail": {
+            "n_pockets_detected": 21,
+            "chosen_pocket_id": 12,
+            "chosen_pocket_score": 0.003,
+            "chosen_pocket_volume": 218.141,
+            "mean_dist_to_ligand_A": 6.97
+          }
+        },
+        "C4_depositor_site": {
+          "available": true,
+          "n": 6,
+          "detail": {
+            "site_id": "AC1",
+            "n_residues_listed": 6,
+            "n_mapped": 6
+          }
+        }
+      },
+      "core": {
+        "available": true,
+        "n": 3
+      },
+      "consensus": {
+        "available": true,
+        "n": 5
+      },
+      "shell": {
+        "available": true,
+        "n": 2
+      },
+      "incumbent": {
+        "available": true,
+        "n": 6
+      },
+      "resolution_shell_over_core": 0.6666666666666666,
+      "task_validity": {
+        "drug_present": true,
+        "crypticity": {
+          "available": true,
+          "apo_cavity_found": true,
+          "apo_volume": 236.62,
+          "holo_volume": 218.141,
+          "volume_ratio_apo_over_holo": 1.085,
+          "overlap_n_residues": 3,
+          "n_pockets_detected_apo": 16
+        },
+        "c6_vs_consensus": {
+          "available": true,
+          "euclid_min_A": 3.836873075826199,
+          "euclid_mean_A": 6.776454368416459,
+          "spatial_hop": {
+            "min": 1.0,
+            "mean": 1.2,
+            "median": 1.0
+          },
+          "spatial_hop_frac_le_1": 0.8,
+          "chain_hop": {
+            "min": 1.0,
+            "mean": 28.6,
+            "median": 37.0
+          },
+          "n_pocket": 5
+        },
+        "c6_vs_incumbent": {
+          "available": true,
+          "euclid_min_A": 3.797278104116158,
+          "euclid_mean_A": 6.279924991033076,
+          "spatial_hop": {
+            "min": 1.0,
+            "mean": 1.1666666666666667,
+            "median": 1.0
+          },
+          "spatial_hop_frac_le_1": 0.8333333333333334,
+          "chain_hop": {
+            "min": 1.0,
+            "mean": 24.0,
+            "median": 25.0
+          },
+          "n_pocket": 6
+        }
+      },
+      "rescore_headline_observable": {
+        "incumbent": {
+          "available": true,
+          "n_pocket": 6,
+          "auc_H_new_ctqw_converged": 0.6633199464524766
+        },
+        "core": {
+          "available": true,
+          "n_pocket": 3,
+          "auc_H_new_ctqw_converged": 0.5251322751322751
+        },
+        "consensus": {
+          "available": true,
+          "n_pocket": 5,
+          "auc_H_new_ctqw_converged": 0.5984
+        }
+      },
+      "floor_auc_max_vs_incumbent": 0.9069611780455153,
+      "elapsed_s": 1.6
+    },
+    "CASPASE7": {
+      "target": "CASPASE7",
+      "criteria": {
+        "C1_contact": {
+          "available": true,
+          "n": 8,
+          "detail": {
+            "per_cutoff_n": {
+              "3.5": 4,
+              "4.0": 9,
+              "4.5": 9,
+              "5.0": 11,
+              "5.5": 12,
+              "6.0": 14
+            }
+          }
+        },
+        "C2_dsasa": {
+          "available": true,
+          "n": 15,
+          "detail": {
+            "n_residues_buried": 18,
+            "threshold_A2": 1.0,
+            "max_delta_A2": 40.59
+          }
+        },
+        "C3_fpocket_holo": {
+          "available": true,
+          "n": 6,
+          "detail": {
+            "n_pockets_detected": 33,
+            "chosen_pocket_id": 31,
+            "chosen_pocket_score": -0.048,
+            "chosen_pocket_volume": 333.575,
+            "mean_dist_to_ligand_A": 5.75
+          }
+        },
+        "C4_depositor_site": {
+          "available": true,
+          "n": 5,
+          "detail": {
+            "site_id": "AC1",
+            "n_residues_listed": 6,
+            "n_mapped": 6
+          }
+        }
+      },
+      "core": {
+        "available": true,
+        "n": 3
+      },
+      "consensus": {
+        "available": true,
+        "n": 6
+      },
+      "shell": {
+        "available": true,
+        "n": 3
+      },
+      "incumbent": {
+        "available": true,
+        "n": 7
+      },
+      "resolution_shell_over_core": 1.0,
+      "task_validity": {
+        "drug_present": true,
+        "crypticity": {
+          "available": true,
+          "apo_cavity_found": true,
+          "apo_volume": 649.987,
+          "holo_volume": 333.575,
+          "volume_ratio_apo_over_holo": 1.949,
+          "overlap_n_residues": 3,
+          "n_pockets_detected_apo": 24
+        },
+        "c6_vs_consensus": {
+          "available": true,
+          "euclid_min_A": 5.673115722422734,
+          "euclid_mean_A": 11.57466010066854,
+          "spatial_hop": {
+            "min": 1.0,
+            "mean": 2.3333333333333335,
+            "median": 2.0
+          },
+          "spatial_hop_frac_le_1": 0.16666666666666666,
+          "chain_hop": {
+            "min": 43.0,
+            "mean": 58.833333333333336,
+            "median": 52.5
+          },
+          "n_pocket": 6
+        },
+        "c6_vs_incumbent": {
+          "available": true,
+          "euclid_min_A": 5.673115722422734,
+          "euclid_mean_A": 11.154091578896077,
+          "spatial_hop": {
+            "min": 1.0,
+            "mean": 2.2857142857142856,
+            "median": 2.0
+          },
+          "spatial_hop_frac_le_1": 0.14285714285714285,
+          "chain_hop": {
+            "min": 43.0,
+            "mean": 57.714285714285715,
+            "median": 52.0
+          },
+          "n_pocket": 7
+        }
+      },
+      "rescore_headline_observable": {
+        "incumbent": {
+          "available": true,
+          "n_pocket": 7,
+          "auc_H_new_ctqw_converged": 0.5937696664568911
+        },
+        "core": {
+          "available": true,
+          "n_pocket": 3,
+          "auc_H_new_ctqw_converged": 0.7532751091703057
+        },
+        "consensus": {
+          "available": true,
+          "n_pocket": 6,
+          "auc_H_new_ctqw_converged": 0.6201465201465202
+        }
+      },
+      "floor_auc_max_vs_incumbent": 0.7542479546884834,
+      "elapsed_s": 3.2
+    }
+  },
+  "negative_controls": {
+    "KRAS_G12C": {
+      "target": "KRAS_G12C",
+      "decoy_ligand": "MG",
+      "criteria": {
+        "C1_contact": {
+          "available": true,
+          "n": 7,
+          "detail": {
+            "per_cutoff_n": {
+              "3.5": 1,
+              "4.0": 2,
+              "4.5": 5,
+              "5.0": 9,
+              "5.5": 9,
+              "6.0": 11
+            }
+          }
+        },
+        "C2_dsasa": {
+          "available": true,
+          "n": 4,
+          "detail": {
+            "n_residues_buried": 6,
+            "threshold_A2": 1.0,
+            "max_delta_A2": 15.96
+          }
+        },
+        "C3_fpocket_holo": {
+          "available": true,
+          "n": 5,
+          "detail": {
+            "n_pockets_detected": 11,
+            "chosen_pocket_id": 6,
+            "chosen_pocket_score": -0.058,
+            "chosen_pocket_volume": 289.808,
+            "mean_dist_to_ligand_A": 9.4
+          }
+        },
+        "C4_depositor_site": {
+          "available": true,
+          "n": 0,
+          "detail": {
+            "site_id": "AC1",
+            "n_residues_listed": 1,
+            "n_mapped": 1
+          }
+        }
+      },
+      "core": {
+        "available": true,
+        "n": 0
+      },
+      "consensus": {
+        "available": true,
+        "n": 1
+      },
+      "resolution_shell_over_core": "inf"
+    },
+    "CARDIAC_MYOSIN": {
+      "target": "CARDIAC_MYOSIN",
+      "decoy_ligand": "EDO",
+      "criteria": {
+        "C1_contact": {
+          "available": true,
+          "n": 11,
+          "detail": {
+            "per_cutoff_n": {
+              "3.5": 4,
+              "4.0": 8,
+              "4.5": 10,
+              "5.0": 10,
+              "5.5": 10,
+              "6.0": 11
+            }
+          }
+        },
+        "C2_dsasa": {
+          "available": true,
+          "n": 7,
+          "detail": {
+            "n_residues_buried": 7,
+            "threshold_A2": 1.0,
+            "max_delta_A2": 11.25
+          }
+        },
+        "C3_fpocket_holo": {
+          "available": true,
+          "n": 11,
+          "detail": {
+            "n_pockets_detected": 51,
+            "chosen_pocket_id": 15,
+            "chosen_pocket_score": 0.002,
+            "chosen_pocket_volume": 292.185,
+            "mean_dist_to_ligand_A": 5.96
+          }
+        },
+        "C4_depositor_site": {
+          "available": false,
+          "n": null,
+          "detail": {
+            "reason": "no SITE records in entry"
+          }
+        }
+      },
+      "core": {
+        "available": true,
+        "n": 7
+      },
+      "consensus": {
+        "available": true,
+        "n": 7
+      },
+      "resolution_shell_over_core": 0.0
+    }
+  }
+}
