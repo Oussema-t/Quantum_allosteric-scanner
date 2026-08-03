@@ -151,3 +151,32 @@ tracked) still refuses with the original error message — the fix
 narrows the guard, it does not remove it.
 
 No change to `_in_scope`'s path-traversal boundary, no new dependency.
+
+**Addendum, same day, 2026-08-03 (Architect) — two real bugs found while
+dogfooding this fix on a second live duplicate ([[TASK-0073]]/[[TASK-0198]]'s
+own `TASK-0073` instance), fixed immediately rather than left for a
+follow-up:**
+
+1. **`_is_tracked` checked the index, not `HEAD`.** Once a deletion is
+   staged (e.g. the first path in a multi-path `stage --expect` call
+   within a commit-prep sequence), `git ls-files` no longer lists it at
+   all — a second `stage --expect` call that legitimately needs to
+   re-declare the same path (required, since `stage`'s self-verification
+   demands the *full* intended set every call, not an incremental one)
+   would then wrongly read it as untracked/typo'd. Fixed by checking
+   `git cat-file -e HEAD:<path>` instead — `HEAD` does not move until the
+   actual commit, so it stays correct across the whole staged-but-
+   uncommitted window, unlike the index.
+2. **A bare `git add` on an already-fully-staged deletion errors** — `git
+   add <path>` has nothing left to do once a path's staged state already
+   matches the working tree (no file, deletion already staged), and git
+   itself refuses with `fatal: pathspec ... did not match any files`.
+   Fixed by filtering `expect` against `_staged_paths()` before calling
+   `git add`, so only paths that actually need adding are passed to it —
+   the self-verification afterward still checks the *complete* `expect`
+   set unchanged, so a real mismatch is still caught exactly as before.
+
+Both found and fixed in the same working session that shipped the
+original fix, via real reuse (not a synthetic re-test) — confirmed by
+successfully staging `TASK-0073`'s stray duplicate alongside two other
+unrelated files in one `stage --expect` call after both fixes landed.

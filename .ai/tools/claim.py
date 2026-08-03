@@ -1139,14 +1139,26 @@ def _in_scope(rel_path):
 
 def _is_tracked(rel_path):
     # type: (str) -> bool
-    """True if rel_path is tracked by git at HEAD/index, regardless of
-    whether it currently exists on disk -- same `git ls-files
-    --error-unmatch` primitive `_perform_transition` already uses to
-    decide `git mv` vs. a plain filesystem move, not a second way of
-    asking git the same question (TASK-0197)."""
+    """True if rel_path exists at HEAD, regardless of whether it currently
+    exists on disk or is currently staged.
+
+    Checks HEAD (`git cat-file -e HEAD:<path>`), not the index (`git
+    ls-files`) -- found the difference matters in real use, same session:
+    once a deletion is staged (e.g. a first `stage --expect` call in a
+    multi-file commit-prep sequence), `git ls-files` no longer lists that
+    path at all, so a second `--expect` call including the same path
+    (needed because `stage`'s self-verification requires the *full*
+    intended set every time) would wrongly read it as untracked/typo'd.
+    HEAD does not move until the actual commit, so it stays correct
+    across that whole staged-but-uncommitted window -- unlike
+    `_perform_transition`'s own `git ls-files --error-unmatch` check
+    (TASK-0027/TASK-0029), which intentionally asks "is this staged right
+    now" for a different purpose (deciding `git mv` vs. a plain filesystem
+    move on a file that, at that point in `move`'s flow, has not yet had
+    anything staged for it this session)."""
     return (
         subprocess.run(
-            ["git", "ls-files", "--error-unmatch", rel_path],
+            ["git", "cat-file", "-e", "HEAD:%s" % rel_path],
             cwd=REPO_ROOT,
             capture_output=True,
         ).returncode
@@ -1200,7 +1212,19 @@ def cmd_stage(args):
         )
         return 1
 
-    subprocess.run(["git", "add", "--"] + expect, cwd=REPO_ROOT, check=True)
+    # A path already staged exactly as intended (e.g. a deletion staged by
+    # an earlier `stage` call in the same commit-prep sequence -- `stage`
+    # requires the *full* intended set on every call, per its own
+    # self-verification below, so a legitimately-repeated path is normal,
+    # not a caller mistake) has nothing left for `git add` to do -- and a
+    # bare `git add` on such a path errors ("pathspec ... did not match
+    # any files"), found in real use, same session as TASK-0197 itself.
+    # Only add what isn't already staged; the self-verification afterward
+    # still checks the complete `expect` set regardless.
+    already_staged = _staged_paths()
+    to_add = [p for p in expect if p not in already_staged]
+    if to_add:
+        subprocess.run(["git", "add", "--"] + to_add, cwd=REPO_ROOT, check=True)
 
     unexpected, missing = _compare_staged(set(expect))
     if unexpected or missing:
