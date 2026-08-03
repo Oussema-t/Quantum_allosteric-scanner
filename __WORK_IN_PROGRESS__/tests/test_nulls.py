@@ -83,6 +83,47 @@ class TestCompactPatchMatched:
         with np.testing.assert_raises(RuntimeError):
             compact_patch_matched(coords, 14, rng, target_rg=0.001, tol=0.01, max_attempts=200)
 
+    def test_return_attempts_false_is_byte_identical_default(self):
+        """TASK-0190: return_attempts defaults False -- every existing
+        call site's return shape (bare idx) is unaffected."""
+        coords = make_globule(400, seed=4)
+        rng1 = np.random.default_rng(5)
+        rng2 = np.random.default_rng(5)
+        idx_default = compact_patch_matched(coords, 14, rng1, target_rg=6.0, tol=0.35)
+        idx_explicit = compact_patch_matched(coords, 14, rng2, target_rg=6.0, tol=0.35, return_attempts=False)
+        assert isinstance(idx_default, np.ndarray)
+        np.testing.assert_array_equal(idx_default, idx_explicit)
+
+    def test_return_attempts_true_returns_idx_and_count(self):
+        coords = make_globule(400, seed=4)
+        rng = np.random.default_rng(5)
+        idx, n_attempts = compact_patch_matched(coords, 14, rng, target_rg=6.0, tol=0.35, return_attempts=True)
+        rg = radius_of_gyration(coords, idx)
+        assert 0.65 * 6.0 <= rg <= 1.35 * 6.0
+        assert isinstance(n_attempts, int)
+        assert n_attempts >= 1
+
+    def test_return_attempts_count_matches_manual_replay(self):
+        """The reported attempt count is exactly the number of
+        compact_patch draws consumed -- verified by replaying the same
+        seeded rng manually and counting draws until the same acceptance
+        condition first holds."""
+        coords = make_globule(400, seed=4)
+        target_rg, tol = 6.0, 0.35
+        lo, hi = target_rg * (1 - tol), target_rg * (1 + tol)
+
+        rng_a = np.random.default_rng(9)
+        _, n_attempts = compact_patch_matched(coords, 14, rng_a, target_rg=target_rg, tol=tol, return_attempts=True)
+
+        rng_b = np.random.default_rng(9)
+        manual_count = 0
+        while True:
+            manual_count += 1
+            idx = compact_patch(coords, 14, rng_b)
+            if lo <= radius_of_gyration(coords, idx) <= hi:
+                break
+        assert manual_count == n_attempts
+
 
 class TestCorrectedNullRestoresCalibration:
     """Reproduces `null_audit2.py`'s own numbers directly (not assumed),

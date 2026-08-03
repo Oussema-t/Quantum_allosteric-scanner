@@ -84,7 +84,8 @@ def compact_patch_matched(
     target_rg: float,
     tol: float = 0.35,
     max_attempts: int = 200_000,
-) -> np.ndarray:
+    return_attempts: bool = False,
+):
     """`compact_patch`, rejection-sampled to also match a target radius
     of gyration within `+/- tol` (fractional) -- the review's own
     documented extension ("optionally match the real pocket's radius of
@@ -100,13 +101,22 @@ def compact_patch_matched(
     discipline for rejection-sampled nulls (`closure.matched_spread_
     null`'s own precedent: TASK-0143 found this genuinely infeasible on
     4/7 real targets, and reported that rather than silently loosening
-    the tolerance)."""
+    the tolerance).
+
+    `return_attempts` (TASK-0190, additive -- default `False`, every
+    existing call site's return shape is byte-identical): when `True`,
+    returns `(idx, n_attempts)` instead of bare `idx` -- needed to
+    report the rejection-sampling acceptance rate when drawing at a
+    real (possibly high-percentile, per [[TASK-0167.003]] Part B) target
+    Rg, per that task's own "record the rejection-sampling acceptance
+    rate" Constraint. Not exposed any other way (the function has no
+    other side channel), so this is additive surface, not a workaround."""
     lo, hi = target_rg * (1.0 - tol), target_rg * (1.0 + tol)
-    for _ in range(max_attempts):
+    for attempt in range(1, max_attempts + 1):
         idx = compact_patch(coords, size, rng)
         rg = radius_of_gyration(coords, idx)
         if lo <= rg <= hi:
-            return idx
+            return (idx, attempt) if return_attempts else idx
     raise RuntimeError(
         f"compact_patch_matched: no compact patch with radius of gyration in "
         f"[{lo:.3f}, {hi:.3f}] (target {target_rg:.3f} +/- {tol:.0%}) found "
