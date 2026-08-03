@@ -125,3 +125,7 @@
   passed, 1 xpassed, 0 failed.
 - No public function signature, return shape, or sign convention changed
   on either side — pure internal dedup, per this task's own Out Of Scope.
+
+**Cross-linked, 2026-08-03 ([[TASK-0073]]):** the two independent
+`_kirchhoff_eigh`/`_normalized_dcc` implementations this task built are
+now a registered, VERIFIED seam — [[SEAM-0013]].

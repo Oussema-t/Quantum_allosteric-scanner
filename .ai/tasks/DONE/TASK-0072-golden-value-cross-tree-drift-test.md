@@ -147,3 +147,9 @@ detection checks, 1 reference-structure-determinism sanity check.
 passed, 0 failed. `python3 .ai/tools/pytest_local.py all --json` (`wip-all` +
 `backend` + `cross-tree`, all three real local test surfaces together) — 1096
 passed, 2 xfailed, 0 failed.
+
+**Cross-linked, 2026-08-03 ([[TASK-0073]]):** this test suite is now the
+registered seam-test for two VERIFIED records — [[SEAM-0013]] (the
+Kirchhoff/DCC primitive parity `TestKirchhoffEighCrossTreeParity`/
+`TestNormalizedDccCrossTreeParity` establish) and [[SEAM-0014]] (the
+resolved GNM cutoff `TestGoldenCutoffConstant` pins).

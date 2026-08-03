@@ -283,3 +283,9 @@ row records "backend's 8.0 Å default does not need to change" without
 repeating the scope limit, which reads as covering the headline operator
 when it doesn't. Filed `TASK-0113` to re-run this same cutoff/weight
 question against `H_new` directly rather than reopening this task.
+
+**Cross-linked, 2026-08-03 ([[TASK-0073]]):** the resolved 8.0 Å cutoff
+this task pinned is now a registered, VERIFIED seam — [[SEAM-0014]] —
+scoped specifically to the GNM-operator-construction call sites this
+benchmark covered (see that record's own scope note before extending it
+to any other 8.0-valued constant elsewhere in the codebase).
