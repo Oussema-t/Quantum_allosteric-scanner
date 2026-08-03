@@ -164,6 +164,19 @@ numbers carry a 95% block-bootstrap CI ([[TASK-0112]]), wired in directly.**
 > changed — re-anchoring to a true-G12C apo is a register-wide re-run,
 > explicitly out of this caveat task's scope.
 
+> **CAVEAT ([[TASK-0193]], 2026-08-03): this table's CARDIAC_MYOSIN row is itself
+> stale — it predates [[TASK-0124]]'s 2026-07-20 apo replacement (5TBY→8QYP) by
+> two days and is still computed on the retired 950-residue 5TBY structure.**
+> The CARDIAC_MYOSIN narrative section below already contains the real,
+> post-TASK-0124 numbers (floor=0.5679, ceiling=0.6452, actual=0.5176,
+> `NO_SIGNAL_IN_APO`, −65.4% headroom, N=704) — a **worse** diagnosis than this
+> row shows (`NO_SIGNAL_IN_APO`, not `BEATS_CHANCE_NOT_FLOOR`). Read the
+> CARDIAC_MYOSIN section's own ending as this document's current state for that
+> target, not this row. Not corrected in place here — no number is re-run or
+> silently overwritten, per this project's own convention — but flagged so this
+> row is not read as current when it is five weeks stale by the document's own
+> internal evidence.
+
 **Headline: KRAS_G12C's point-estimate diagnosis changes** (`NO_SIGNAL_IN_APO` under
 TASK-0129 -> `NO_FAILURE_DETECTED` here) — the actual result's point estimate now clears
 its own floor by a real margin, a genuine change once the clock gauge is fully removed
@@ -310,7 +323,16 @@ TASK-0118's own sources for the table directly above:
   `run_frozen_verdict` call, unlike whatever produced the stale field the old table's
   own text warned about).
 
-### KRAS_G12C — "ceiling below floor" is retracted; the actual result is still below floor
+### KRAS_G12C — "ceiling below floor" is retracted (historical narrative, ends at [[TASK-0129]] — superseded, see banner)
+
+> **SUPERSEDED FOR HEADING PURPOSES, 2026-08-03 ([[TASK-0193]]): this section's own
+> heading ("the actual result is still below floor") was accurate through
+> [[TASK-0129]] but is reversed by [[TASK-0130]]'s current table above — actual
+> (0.5901) now clears floor (0.4818), `NO_FAILURE_DETECTED` (CI still overlaps,
+> not a decided win). The chronological narrative below (TASK-0118 → TASK-0129)
+> is preserved verbatim for the old-vs-new record, same convention the tables
+> above this section already use — read the current headline table for this
+> document's actual current state, not this section's own heading.**
 
 > **CAVEAT ([[TASK-0155]], 2026-07-30; propagated here [[TASK-0192]], 2026-08-03):
 > every number in this section, and every historical number below it, is
@@ -358,7 +380,17 @@ indistinguishable from chance, not a clean floor-clearing win. Read together wit
 CARDIAC_MYOSIN below: **the clock fix does not push every target's numbers the same
 direction** — it revealed real headroom here, and erased an apparent positive there.
 
-### BCR_ABL1 — actual scores below its own floor (recomputed, same shape as before)
+### BCR_ABL1 — actual scores below its own floor (historical narrative, ends at [[TASK-0129]] — superseded, see banner)
+
+> **SUPERSEDED FOR HEADING PURPOSES, 2026-08-03 ([[TASK-0193]]): this section's
+> narrative ends at [[TASK-0129]] (floor 0.5817, ceiling 0.6716, actual 0.5305,
+> `NO_SIGNAL_IN_APO`). [[TASK-0130]]'s current table above carries this target's
+> real current numbers (floor 0.5817, ceiling 0.6671, actual 0.5266,
+> `NO_SIGNAL_IN_APO`) — the diagnosis and qualitative shape are unchanged (this
+> heading's own claim happens to still hold), but the point estimates below are
+> stale by the small pre/post-TASK-0130 clock-fix margin. Preserved verbatim for
+> the old-vs-new record; read the headline table for this document's current
+> state, not this section's own numbers.**
 
 **[[TASK-0118]], 2026-07-16: numbers recomputed, qualitative finding unchanged.**
 Headroom is a well-defined but negative fraction: the shipped pipeline's actual CTQW
@@ -431,7 +463,25 @@ open, unexplained tension for a future task to resolve, exactly as this task's o
 Intent Contract asked for ("report the relationship explicitly, don't silently
 reconcile or silently ignore the discrepancy").
 
-### CARDIAC_MYOSIN — now clears its own floor, but for two confounded reasons, neither of which is a clean win
+### CARDIAC_MYOSIN — historical narrative (TASK-0118 → TASK-0129 → TASK-0124); this section's OWN ending is the document's real current state, not the headline table above
+
+> **SUPERSEDED FOR HEADING PURPOSES, 2026-08-03 ([[TASK-0193]]) — with a genuinely
+> different shape than the KRAS_G12C/BCR_ABL1 sections above: read this note
+> before the headline table, not after.** This section's own chronology already
+> reverses itself twice (TASK-0129's clock fix erases TASK-0118's positive;
+> [[TASK-0124]]'s 2026-07-20 apo replacement — 5TBY→8QYP, N 950→704 — erases it a
+> second, independent way) and ends, within this section, at real numbers
+> (floor=0.5679, ceiling=0.6452, actual=0.5176, `NO_SIGNAL_IN_APO`, −65.4%
+> headroom) that were **never propagated up to the headline table above**, whose
+> own CARDIAC_MYOSIN row (floor=0.7921, actual=0.7272, `BEATS_CHANCE_NOT_FLOOR`)
+> is dated 2026-07-18 ([[TASK-0130]]) — two days *before* TASK-0124's apo swap,
+> and still computed on the retired 5TBY structure (N=950, not 704). **The
+> headline table's own CARDIAC_MYOSIN row is the stale one here, not this
+> section** — the inverse of the KRAS_G12C/BCR_ABL1 pattern above. No number is
+> re-run or changed by this note (Out of Scope, [[TASK-0193]]); flagged so a
+> reader does not take the headline table's CARDIAC_MYOSIN row as this
+> document's true current state. A follow-up task should propagate this
+> section's own TASK-0124 row into the headline table directly — not done here.
 
 **[[TASK-0118]], 2026-07-16: diagnosis changed from `INSUFFICIENT_RESOLUTION` to
 `NO_FAILURE_DETECTED`, for two independent reasons — read both before treating this as
@@ -636,7 +686,11 @@ labels) found:
   max-search procedure produces against a same-sized random label.** This target's
   "headroom" claim, carried in this document since TASK-0082, was never real evidence of
   operator-family capacity — it was the winner's-curse bias inherent in reporting a
-  maximum over 60 draws.
+  maximum over 60 draws. **([[TASK-0193]] note, 2026-08-03: this bullet's own numbers
+  (ceiling 0.8297) predate [[TASK-0124]]'s 2026-07-20 apo swap and are computed on the
+  retired 5TBY structure — see this document's CARDIAC_MYOSIN section for the current,
+  post-swap numbers. The null was not re-run against the new structure; not attempted
+  here, out of this reconciliation task's own scope.)**
 
 **The honest headline is now target-specific, not uniform**: `H_new` under CTQW
 propagation shows real, if unconfirmed-at-Bonferroni-correction, headroom over trivial
