@@ -4805,6 +4805,7 @@ the same collision.
 | 57 | Does reframing cryptic-pocket prediction as ENM-ensemble search (fpocket as oracle, not competitor) actually recover the real holo pocket on real apo structures, at what frequency, and does the backbone-layer rare-event quantum-search argument survive measurement on real data (not just the synthetic toy model)? | **resolved 2026-08-02: recovery works but specificity is target-dependent, and the rare-event argument fails on real data too, corroborating the synthetic finding.** Positive control (BCR_ABL1) passes convincingly (80% ensemble hit rate, matches static apo's own 87.5% overlap). Real-vs-decoy specificity: BCR_ABL1 gap 0.29 (0.800 vs 0.510), KRAS_G12C gap 0.13 (0.500 vs 0.370), **CARDIAC_MYOSIN no specificity at all** (0.200 vs 0.190). n_modes sweep on BCR_ABL1 (5/20/40): real-pocket recovery stays high throughout (0.983/0.800/0.783) — not rare, matching the synthetic reference's own p=0.244-0.694 — fatal to a Grover-style backbone rare-event claim on real targets, not just the toy model. Quantum claim moves to the side-chain layer (NP-hard rotamer packing), full formulation deferred to [[TASK-0181]] Phase B (in progress elsewhere) rather than duplicated. | [[TASK-0185]], [[TASK-0163]], [[TASK-0187]], [[TASK-0167.001]], [[TASK-0169]], [[TASK-0181]] |
 | 58 | Does the exact Gaussian-network binding-response coupling free energy `ddG` (a *response* to a bound ligand, not a propagating signal — the collaborator's own reframing) find real allosteric signal once its proven proximity confound (rho +0.71 to +0.97, as bad as every propagation observable in this register) is removed by a distance-shell-normalised specificity statistic? | **resolved 2026-08-02: methodologically decisive, empirically negative.** New `allostery.response`; independently reproduces the external reference prototype's own real number to 1.6e-13; reciprocity/zero-coupling/entropy-cross-check/low-rank-shortcut (<1e-10 vs brute force) gates all pass. The mandatory dumbbell gate found a real complication on TASK-0103's native fixture first (signal below numerical noise floor, root-caused not asserted) before passing cleanly on a geometrically realistic adaptation. **On all 7 real targets, `rho(specificity,-hop)` collapses from +0.71/+0.94 (raw) to within ±0.044 of zero** — a cleaner real-data transfer than [[TASK-0149]]'s own precedent. No target/label cell clears its floor with a surviving permutation null (PTP1B/core's point-estimate margin, the only candidate, p=0.132). A lightweight LOD probe (own limited scope, not [[TASK-0167.002]]'s full protocol) shows a clean, monotonic real-topology detection curve (AUC 0.52→0.85, strengths 0-30). Pre-registered falsification did not fire (rho did drop below 0.6; the LOD is real) — but no exploitable real signal was found on the current benchmark set either. Adds ~21 cells to [[TASK-0161]]'s multiplicity budget (not re-run here, flagged for the next full budget pass). | [[TASK-0177]], [[TASK-0103]], [[TASK-0145]], [[TASK-0149]], [[TASK-0167.001]], [[TASK-0123]], [[TASK-0158]], [[TASK-0161]] |
 | 59 | Does reframing site identification as constrained *selection* (a k-subset QUBO maximising member quality + spatial cohesion + allosteric coupling − anti-confound proximity − distality, NP-hard via densest-k-subgraph) beat *ranking* (greedy top-k on score alone) classically, on the 3 mandatory targets, at a pre-registered canonical weight point — the cheap gate [[TASK-0181]]'s own Constraint requires before any quantum formulation is attempted? | **resolved 2026-08-02: no — gate CLOSED, 0/3 strict wins, robust to solver noise.** New `allostery.selection` (hand-rolled exact enumeration + swap-based simulated annealing over exactly-k subsets — no `dimod`/QUBO-library dependency added; cardinality enforced structurally, not by penalty). At the canonical weight point `(a,b,c,d,e)=(1,1,1,1,1)`, `k=5`, 8-restart best-by-objective search (a single SA run is noisy — caught directly: one KRAS_G12C run flipped hit/miss between two calls differing only in iteration count): KRAS_G12C QUBO misses (greedy top-k hits), BCR_ABL1 and CARDIAC_MYOSIN both miss. Not a solver-quality artifact — the 3 pre-registered controls (degenerate-case reduces exactly to greedy top-k; anti-confound term measurably repels the seed; SA reaches the exact brute-force optimum on a `C(12,3)=220` instance) all pass, and on KRAS_G12C the QUBO's own best-found set scores higher on its own objective (22.30 vs. greedy's 6.61) yet still misses the labelled pocket — the canonical-weight objective genuinely optimises toward a different region than the true pocket on the one target where it mattered most. Per the pre-registered gate: **Phase A reported closed, no quantum formulation built, full 14-target × weight/k grid not run** (corrected target count — `config/targets.yaml` has 14 usable targets, not 12; `LDH` is deliberately `omitted_targets`, TASK-0003). Phase B (side-chain rotamer-packing QUBO — the layer [[TASK-0185]]/row 57 already deferred its own quantum claim to) shipped as a formulation-only write-up regardless, per this task's own scope. Adds 3 cells to [[TASK-0161]]'s multiplicity budget (gate-decision cells only; the unrun full grid's ~896 potential cells do not enter the budget). | [[TASK-0180]], [[TASK-0163]], [[TASK-0167.001]], [[TASK-0185]], [[TASK-0161]] |
+| 60 | Is a structured (mode-resolved) vibronic bath — specific ANM normal modes resonantly coupled to specific site-energy gaps — worth building before the 2026-09-15 forward-proposal deadline, per `PANEL_REVIEW_2026-07-25.md`'s own deprioritization instruction, and can the coupling model at least be defined and literature-grounded now? | **resolved 2026-08-03: filed, not built, per the review's own explicit instruction — the required coupling-model definition and citation verification are done.** 2 citations independently re-verified (Christensson/Kauffmann/Pullerits/Mančal 2012, J. Phys. Chem. B 116:7449; Patra & Tiwari 2022, J. Chem. Phys. 156:184115, more directly on-point for *selective* site-specific enhancement). Standard Holstein-type site-diagonal coupling mapped onto this project's own quantities: site energies = `H_new`'s diagonal, bath modes = `superpose.anm_modes` (reused, not re-derived), coupling strength ∝ mode eigenvector displacement at each residue, resonance condition `ω_k≈\|H_new_ii−H_new_jj\|`. Honest ceiling stated: this is a proposed, literature-grounded mapping, not a validated model — the actual Redfield/structured-bath evolution, synthetic falsifier, and real-target scoring are the deferred, highest-implementation-cost work, not attempted here. | [[TASK-0147]], [[TASK-0041]], [[TASK-0141]], [[TASK-0157]], [[TASK-0120]], [[TASK-0133]] |
 
 **Architect cross-reference note, 2026-08-03 (reconstructed; not a new
 resolved question — a pattern across rows 55/57/58/59 worth stating once,
@@ -5184,6 +5185,83 @@ falsifier, no real-target scoring. Filed as a forward-proposal note in
 `EXECUTION_PLAN.md`'s Phase 1E instead.
 
 Full detail: `.ai/tasks/DONE/TASK-0157-two-boson-hom-interference.md`,
+`EXECUTION_PLAN.md`'s own Phase 1E forward-proposal note.
+
+---
+
+## Structured-bath vibronic resonance (TASK-0147, forward-proposal note, 2026-08-03)
+
+**Filed, not built — per `PANEL_REVIEW_2026-07-25.md`'s own later, dated,
+explicit instruction** ("[[TASK-0147]] (vibronic/structured bath — most
+quantum-biology-grounded remaining idea, highest implementation cost)...
+describe in the forward-proposal section, do not spend implementation
+time before 2026-09-15") — the same treatment [[TASK-0157]] received on
+the same day this task was picked up. This supersedes the task's own
+original Intent Contract (build the structured-bath master equation, a
+synthetic falsifier, real-target scoring) — corrected at pickup, not
+abandoned mid-execution.
+
+**This task's own Intent Contract requires one deliverable regardless of
+whether the full model is ever built: define and justify a mode-resolved
+vibronic coupling model, citing the literature it is grounded in — done
+here.** `haken_strobl` (this project's existing ENAQT machinery) is
+Markovian, unstructured, single-rate dephasing; the question is whether a
+*structured* bath — specific vibrational modes resonantly coupled to
+specific site-energy gaps — enhances transport to a specific site rather
+than uniformly relaxing toward classical diffusion, the way
+[[TASK-0141]]'s already-negative flat-rate sweep found.
+
+**2 governing citations independently re-verified** via live search
+against each paper's own abstract/venue, not relayed from the filing
+text:
+- **Christensson, Kauffmann, Pullerits & Mančal (2012), "Origin of
+  Long-Lived Coherences in Light-Harvesting Complexes," J. Phys. Chem. B
+  116(25):7449–7454.** Confirmed: a vibronic-exciton model explains
+  long-lived 2D-spectral oscillations in the FMO complex via resonance
+  between a vibrational mode's frequency and the excitonic energy gap
+  between chromophore sites — matches this task's own original citation
+  exactly.
+- **Patra & Tiwari (2022), "Vibronic Resonance Along Effective Modes
+  Mediates Selective Energy Transfer in Excitonically Coupled
+  Aggregates," J. Chem. Phys. 156:184115.** Confirmed, and more directly
+  on-point than the task's own original citation: vibronic resonance
+  along *specific* normal modes produces *selective* (site-specific, not
+  uniform) transfer enhancement — the real literature basis for this
+  task's own central premise that a structured bath can favor one
+  candidate site over another, which the first citation alone
+  establishes coherence-longevity for but not site-selectivity as
+  sharply.
+
+**Mode-resolved coupling model, defined and justified**: both papers use
+Holstein-type, site-diagonal linear vibronic coupling —
+`H = H_el + H_vib + H_el-vib`, `H_el-vib = Σ_i Σ_k g_{i,k}(b_k+b_k^†)|i⟩⟨i|`
+— gated by the resonance condition `ω_k ≈ |ε_i − ε_j|` (a vibrational
+quantum matching the excitonic gap between a specific site pair, not a
+generic bath property). Mapping this project's own already-computed
+quantities onto that standard form (an explicit Implementer's-call
+translation — Cα ANM normal modes are not literally chromophore
+vibrations; the formalism is ported, not its physical system):
+site energies `ε_i` = `H_new`'s own diagonal; bath modes = the ANM's own
+normal modes (`superpose.anm_modes`, `ω_k=√λ_k`, already computed for
+the learnability gate, [[TASK-0120]]/[[TASK-0133]], reused not
+re-derived); coupling strength `g_{i,k}` ∝ mode `k`'s own eigenvector
+displacement magnitude at residue `i`, `|v_k(i)|` — exactly this task's
+own suggested definition; resonance condition for a candidate pair
+`(i,j)`: `ω_k` close to `|H_new_ii − H_new_jj|`.
+
+**Honest ceiling, stated per this task's own Constraint**: this mapping
+is a real, literature-grounded, dimensionally-consistent translation of
+a standard coupling form onto existing project quantities — a *proposed*
+model, not a validated one. The actual structured-bath evolution (full
+Redfield: per-mode system-bath correlation functions, secular-
+approximation validity checks, numerical propagation of an `N²×N²`
+Liouville-space density matrix — or a justified simplified secular/
+rate-based approximation) is genuinely the highest-implementation-cost
+item this batch's own filing review already flagged it as, and is
+exactly the work explicitly deferred past the submission deadline. No
+synthetic falsification gate and no real-target scoring were run.
+
+Full detail: `.ai/tasks/DONE/TASK-0147-vibronic-resonance-structured-bath.md`,
 `EXECUTION_PLAN.md`'s own Phase 1E forward-proposal note.
 
 ---

@@ -407,6 +407,26 @@ demonstrated quantum advantage, which needs asymptotic photon number
 (`m=O(n^2)` modes) this task's own scope does not reach. Filed, not built,
 per the deprioritization above.
 
+**Forward-proposal note ([[TASK-0147]], writing not code, 2026-08-03 — the
+task's own required coupling-model definition and citation-verification,
+completed without building the structured-bath evolution per the
+deprioritization above):** a structured (mode-resolved) vibronic bath —
+specific ANM normal modes resonantly coupled to specific site-energy gaps,
+rather than `haken_strobl`'s existing flat-rate dephasing — is grounded in
+2 independently-verified citations (Christensson/Kauffmann/Pullerits/
+Mančal 2012, *J. Phys. Chem. B* 116:7449, vibronic-exciton coherence
+longevity; Patra & Tiwari 2022, *J. Chem. Phys.* 156:184115, more directly
+on-point for *selective* site-specific transfer enhancement along specific
+modes). Standard Holstein-type site-diagonal coupling
+(`H_el-vib = Σ g_{i,k}(b_k+b_k^†)|i⟩⟨i|`, resonance `ω_k≈|ε_i−ε_j|`) mapped
+onto this project's own quantities: site energies = `H_new`'s diagonal,
+bath modes = the ANM's own normal modes (`superpose.anm_modes`, reused),
+coupling strength ∝ mode eigenvector displacement per residue. **Honest
+ceiling**: a proposed, literature-grounded mapping, not a validated model
+— the actual Redfield/structured-bath master equation is the deferred,
+highest-implementation-cost work this batch's own filing review already
+flagged, full derivation in `RESULTS.md`'s own section of the same name.
+
 **Updated 2026-07-25: 1E.7 ([[TASK-0164]]) is Done — real, decisive negative,
 not a partial result.** Re-checked `config/targets.yaml`'s remaining draft
 pool directly rather than assuming 3 resolvable configs exist: 6 real
