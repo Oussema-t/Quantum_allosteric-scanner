@@ -14,6 +14,7 @@ from allostery.diagnostics import (
     OPERATOR_DEGENERATE,
     PERM_LEAK_THRESHOLD,
     FailureClassification,
+    assert_gate_reachable,
     classify_failure,
     detect_permutation_leak,
     operator_diagnostics,
@@ -486,3 +487,40 @@ class TestClassifyFailureBootstrapCI:
         r1 = classify_failure(scores, self.LABELS, return_ci=True, ci_rng=np.random.default_rng(3))
         r2 = classify_failure(scores, self.LABELS, return_ci=True, ci_rng=np.random.default_rng(3))
         assert r1.score_ci == r2.score_ci
+
+
+class TestAssertGateReachable:
+    """TASK-0189 -- the reachability guard that would have caught
+    `zero_plant_specificity.py:154`'s Bonferroni-family bug mechanically.
+    Demonstrates the failure against the *actual* buggy constants first
+    (this task's own Planned Validation: "demonstrate it, don't assert
+    it"), then confirms it passes against the corrected ones.
+    """
+
+    def test_fails_against_the_actual_bug_found_in_zero_plant_specificity(self):
+        """The exact constants at fault: ALPHA=0.05, family=len(STRENGTHS)*
+        N_SEEDS=8*20=160 (0.05/160=3.125e-4), N_PERM_REPS=1000
+        (1/1000=1e-3 > 3.125e-4) -- unreachable, must raise."""
+        with pytest.raises(ValueError, match="unreachable"):
+            assert_gate_reachable(alpha=0.05, family_size=160, n_reps=1000)
+
+    def test_fails_against_the_matched_null_variant_too(self):
+        """MATCHED_N_PERM_REPS=200 (1/200=5e-3) is even further from
+        reachable at the same buggy family size."""
+        with pytest.raises(ValueError, match="unreachable"):
+            assert_gate_reachable(alpha=0.05, family_size=160, n_reps=200)
+
+    def test_passes_against_the_corrected_constants(self):
+        """REAL_BONFERRONI_ALPHA = 0.05/3 = 0.01667 (TASK-0145's own
+        across-targets convention) is comfortably above both reachable
+        floors (1e-3, 5e-3) -- no re-run of the expensive collection
+        pass was needed, confirmed here, not assumed."""
+        assert assert_gate_reachable(alpha=0.05, family_size=3, n_reps=1000) is True
+        assert assert_gate_reachable(alpha=0.05, family_size=3, n_reps=200) is True
+
+    def test_boundary_is_strict_not_inclusive(self):
+        """alpha/family exactly equal to 1/n_reps is still unreachable --
+        a gate that can only ever fire at its own single smallest
+        possible p-value is not meaningfully testing that alpha."""
+        with pytest.raises(ValueError):
+            assert_gate_reachable(alpha=0.1, family_size=1, n_reps=10)  # 0.1 == 1/10

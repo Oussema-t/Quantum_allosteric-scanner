@@ -151,7 +151,21 @@ def part_a_specificity(target_name: str, n_patches: int = N_TEST_PATCHES) -> dic
         for spec in ("scattered", "compact")
     }
 
-    bonferroni_alpha = ALPHA / (len(STRENGTHS) * N_SEEDS)  # same family bar .002 uses
+    # TASK-0189 (Reviewer finding F1, 2026-08-03): this is `.002`'s own
+    # COLLECTION-script constant (`positive_control_detection_curve.py:236`),
+    # copied here without ever fixing the comment's claim -- it is the wrong
+    # deployment-level family (treats this script's own internal
+    # strength/seed replicate grid as 160 simultaneous real hypothesis
+    # tests, not TASK-0145's "correct across targets" convention), AND at
+    # `3.125e-4` it sits below `1/N_PERM_REPS=1e-3` (`1/MATCHED_N_PERM_REPS
+    # =5e-3`), so `gate4` could only ever fire at `p_value == 0.0` exactly.
+    # `.002` corrects this in a *separate analysis script*
+    # (`detection_curve_analysis.py`'s own `REAL_BONFERRONI_ALPHA=0.05/3`);
+    # this collection script's own `certified`/`alpha_measured` fields below
+    # inherit the same defect and must NOT be read as the deployment-level
+    # false-positive rate -- `zero_plant_specificity_analysis.py` is the
+    # corrected re-analysis, mirroring `.002`'s own pattern exactly.
+    bonferroni_alpha = ALPHA / (len(STRENGTHS) * N_SEEDS)
     cells = []
     rng_patches = np.random.default_rng(3_000_000)
     for i in range(n_patches):
@@ -198,6 +212,12 @@ def part_a_specificity(target_name: str, n_patches: int = N_TEST_PATCHES) -> dic
         if (i + 1) % 100 == 0:
             _log(f"{target_name}: {i+1}/{n_patches} patches done")
 
+    # TASK-0189: `certified`/`alpha_measured` below use `bonferroni_alpha`
+    # (the uncorrected, unreachable family bar -- see that constant's own
+    # comment above). Kept as-is here for provenance/reproducibility of the
+    # raw collection output -- `zero_plant_specificity_analysis.py` is
+    # where the deployment-level (TASK-0145 family=3) corrected numbers are
+    # actually computed, from these same cells' own stored raw `p_value`.
     alpha_measured = {}
     for spec in NULL_SPECS:
         certs = np.array([c["nulls"][spec]["certified"] for c in cells])

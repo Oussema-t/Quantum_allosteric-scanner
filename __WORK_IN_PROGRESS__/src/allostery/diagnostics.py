@@ -443,3 +443,47 @@ def detect_permutation_leak(
         None if np.isnan(result["perm_mean"]) else bool(result["perm_mean"] > threshold)
     )
     return result
+
+
+# ---------------------------------------------------------------------------
+# TASK-0189 -- certification-gate reachability guard
+# ---------------------------------------------------------------------------
+# A permutation-style p-value (`(null_stat >= real_stat).mean()` over
+# `n_reps` replicates) can never be smaller than `1/n_reps` -- it is a
+# fraction with that denominator. A Bonferroni-corrected certification gate
+# with `alpha/family_size` below that floor can therefore only ever fire at
+# `p_value == 0.0` exactly, silently truncating a real certification test
+# into a much stricter (and differently-shaped) one than its own stated
+# alpha implies. Found live in `scripts/zero_plant_specificity.py:154`
+# (TASK-0189, Reviewer finding F1): `ALPHA / (len(STRENGTHS) * N_SEEDS)` =
+# `3.125e-4`, below `1/N_PERM_REPS = 1e-3` -- the exact defect this guard
+# exists to catch mechanically rather than by a reviewer re-deriving the
+# arithmetic by hand.
+
+def assert_gate_reachable(alpha: float, family_size: int, n_reps: int) -> bool:
+    """Raise `ValueError` if a Bonferroni-corrected certification gate at
+    `alpha/family_size` sits at or below the smallest non-zero p-value
+    `n_reps` permutation replicates can produce (`1/n_reps`) -- the gate
+    could then only ever fire at `p_value == 0.0`, not at the alpha it
+    claims to test. Returns `True` if reachable (never `False` -- an
+    unreachable gate is a construction error to fix, not a value to
+    branch on silently, matching this task's own "a test failure, not a
+    silent one" Intent Contract).
+
+    `alpha`/`family_size` are the *corrected* deployment-level values
+    (e.g. `0.05/3`, TASK-0145's own "correct across targets" convention),
+    not a measurement device's own internal replicate-grid family size --
+    computing the right family is the caller's job; this function only
+    checks that whatever family was declared leaves the gate reachable
+    given how many permutation replicates back it.
+    """
+    corrected_alpha = alpha / family_size
+    reachable_floor = 1.0 / n_reps
+    if reachable_floor >= corrected_alpha:
+        raise ValueError(
+            f"certification gate unreachable: alpha/family = {corrected_alpha:.6g} "
+            f"<= 1/n_reps = {reachable_floor:.6g} (n_reps={n_reps}) -- this gate can "
+            "only ever fire at p_value == 0.0, not at its own stated alpha. Raise "
+            "n_reps, widen alpha, or shrink family_size before trusting this gate."
+        )
+    return True
