@@ -55,7 +55,17 @@ targets:
   # ---------------------------------------------------------------------
 
   KRAS_G12C:
-    apo_pdb: 4OBE
+    apo_pdb: 4OBE   # TASK-0155 (2026-07-30) / TASK-0192 (2026-08-03): 4OBE is
+                    # WILD-TYPE KRAS, not G12C -- chain A residue 12 is GLY,
+                    # confirmed directly against the deposited structure
+                    # (independently re-verified twice). Kept unchanged: every
+                    # historical number in this register is conditioned on
+                    # this value; swapping it silently would invalidate the
+                    # whole apo-side register. See RESULTS.md's "Apo-structure
+                    # sensitivity sweep" section and COMPETENCE_MAP.md's
+                    # KRAS_G12C caveats -- this is also a lucky-draw outlier
+                    # among 10 verified true-G12C structures (median AUC
+                    # below chance, P@5=0.000 on all ten).
     holo_pdb: 6OIM
     chains: ["A"]
     keep_nucleic: false

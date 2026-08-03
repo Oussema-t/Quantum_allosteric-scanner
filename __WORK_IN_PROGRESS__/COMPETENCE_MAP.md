@@ -148,6 +148,22 @@ numbers carry a 95% block-bootstrap CI ([[TASK-0112]]), wired in directly.**
 | BCR_ABL1 | 0.5817 [0.414, 0.720] | 0.6671 [0.530, 0.784] | 0.5266 [0.381, 0.662] | `NO_SIGNAL_IN_APO` | **−64.5%** | Yes |
 | CARDIAC_MYOSIN | 0.7921 [0.577, 0.913] | 0.8297 [0.615, 0.926] | 0.7272 [0.549, 0.853] | `BEATS_CHANCE_NOT_FLOOR` | **−173.0%** | Yes |
 
+> **CAVEAT ([[TASK-0155]], 2026-07-30; propagated here [[TASK-0192]], 2026-08-03):
+> KRAS_G12C's entire row above is computed against `apo_pdb: 4OBE`, which is
+> wild-type KRAS, not G12C** (chain A residue 12 is GLY, re-verified directly
+> against the deposited structure twice independently — [[TASK-0155]]'s own
+> RCSB sequence check and a second, direct re-check for this task). This row's
+> already-weak `NO_FAILURE_DETECTED` verdict (CI-overlapping, not statistically
+> decided even on its own terms) is additionally **a lucky draw on the wrong
+> genotype**: across 10 independently RCSB-verified true-G12C apo structures
+> scored through this exact pipeline, median AUC is 0.482 (below chance) and
+> **P@5 = 0.000 on all ten** — only the mislabeled 4OBE produces a nonzero
+> P@5 (0.200). Read this table's KRAS_G12C row as **not a surviving result**,
+> not as the project's strongest row. Full distribution: `RESULTS.md`'s "Apo-
+> structure sensitivity sweep" section. No number in this table has been
+> changed — re-anchoring to a true-G12C apo is a register-wide re-run,
+> explicitly out of this caveat task's scope.
+
 **Headline: KRAS_G12C's point-estimate diagnosis changes** (`NO_SIGNAL_IN_APO` under
 TASK-0129 -> `NO_FAILURE_DETECTED` here) — the actual result's point estimate now clears
 its own floor by a real margin, a genuine change once the clock gauge is fully removed
@@ -295,6 +311,20 @@ TASK-0118's own sources for the table directly above:
   own text warned about).
 
 ### KRAS_G12C — "ceiling below floor" is retracted; the actual result is still below floor
+
+> **CAVEAT ([[TASK-0155]], 2026-07-30; propagated here [[TASK-0192]], 2026-08-03):
+> every number in this section, and every historical number below it, is
+> computed against `apo_pdb: 4OBE` — confirmed **wild-type KRAS, not G12C**
+> (chain A residue 12 is GLY; re-verified directly against the deposited
+> structure, independently of [[TASK-0155]]'s own RCSB check). [[TASK-0155]]
+> additionally scored this exact pipeline against 10 verified true-G12C apo
+> structures: median AUC 0.482 (below chance), floor-clear 3/10, **P@5 = 0.000
+> on all ten** (vs. 4OBE's own 0.200) — this target's entire narrative below
+> describes a wrong-genotype, lucky-draw result, not a robust one. Both halves
+> matter: wrong mutant, and an outlier draw even conditional on the (wrong)
+> structure being fixed. No number below is changed by this caveat; a
+> re-anchor to a true-G12C apo is a separate, register-wide re-run, not
+> attempted here.**
 
 **[[TASK-0118]], 2026-07-16: retracted.** The pre-recompute claim ("the ceiling itself
 does not clear the floor... the strongest form of honest NO this competence map can

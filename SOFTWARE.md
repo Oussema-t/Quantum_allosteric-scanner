@@ -219,12 +219,22 @@ Errors (422): self-comparison; no drug-bearing chain.
 
 | Key | Protein | apo | holo | Drug | Site |
 |---|---|---|---|---|---|
-| KRAS_G12C | KRAS G12C (GTPase) | 4OBE | 6OIM | Sotorasib (MOV) | Switch-II pocket |
+| KRAS_G12C | KRAS G12C (GTPase) | 4OBE ⚠️¹ | 6OIM | Sotorasib (MOV) | Switch-II pocket |
 | BCR_ABL1 | BCR-ABL1 (kinase) | 1OPL | 5MO4 | Asciminib (AY7) | Myristoyl pocket |
 | CARDIAC_MYOSIN | β-cardiac myosin | 5TBY | 6C1H (challenge) / 8QYR (validation) | Mavacamten (XB2) | Mavacamten site |
 | MYC_MAX | c-Myc (IDP) | 1NKP | none | — | none (discovery only) |
 | PTP1B | PTP1B (phosphatase) | 1SUG | 1T49 | BB inhibitor (892) | Allosteric BB site |
 | GLUCOKINASE | Glucokinase | 1V4S | 3H1V | GKA (TK1) | GKA site |
+
+¹ **4OBE is wild-type KRAS, not G12C** (chain A residue 12 is GLY, confirmed
+directly against the deposited structure — [[TASK-0155]]/[[TASK-0192]],
+2026-07-30/2026-08-03). Kept unchanged — a swap is a research-register-wide
+re-run, out of this flag's scope — but every KRAS_G12C benchmark number
+computed against this apo structure should be read with that caveat. See
+`__WORK_IN_PROGRESS__/RESULTS.md`'s "Apo-structure sensitivity sweep" section
+(10 verified true-G12C apo structures score at median AUC below chance,
+P@5=0.000 on all ten — this structure's own result is also a lucky draw,
+independent of the genotype error).
 
 ---
 

@@ -15,6 +15,22 @@ the ground truth for validating the predicted allosteric site.
 
 SYSTEMS = {
 
+    # TASK-0155 (2026-07-30) / TASK-0192 (2026-08-03): `apo="4OBE"` is
+    # WILD-TYPE KRAS, not G12C -- chain A residue 12 is GLY, confirmed
+    # directly against the deposited structure (independently re-verified
+    # twice). This means `covalent_anchor=12`/`top5_full_named`'s "CYS12"
+    # below describe the *biological* G12C target this app presents, but
+    # the actual apo geometry fed into the live GNM/comparison pipeline is
+    # a Gly12 (wild-type) structure -- a real, unresolved apo/label
+    # mismatch, not a defensible modelling choice as currently shipped.
+    # Decision (recorded, not left implied): NOT fixed here -- swapping
+    # `apo` is a register-wide re-run (out of this flag's scope, matching
+    # __WORK_IN_PROGRESS__/config/targets.yaml's own identical decision).
+    # Whether to re-anchor to a true-G12C apo before the submission freeze
+    # is an open team decision, not an omission -- see
+    # __WORK_IN_PROGRESS__/RESULTS.md's "Apo-structure sensitivity sweep"
+    # (10 verified true-G12C candidates already assembled, median AUC
+    # below chance) and COMPETENCE_MAP.md's KRAS_G12C caveats.
     "KRAS_G12C": dict(
         apo="4OBE", holo="6OIM", chain="A",
         disease="Oncology", target_class="GTPase", site_name="Switch-II pocket",
