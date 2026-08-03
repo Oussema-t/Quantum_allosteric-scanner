@@ -81,6 +81,21 @@ GIT-COMMIT. Ticket ids reuse `reserve-next`'s generalized
 allocate-with-retry logic (now parameterized by prefix, shared with
 TASK-XXXX allocation) rather than a second allocator.
 
+Extended for TASK-0042: every claim-producing subcommand (`claim`,
+`reserve-next`, `scq-enter`) now records `session_id` (read from the
+`CLAUDE_CODE_SESSION_ID` environment variable, never a caller-supplied
+argument) alongside the existing free-text `claimant` label -- `claimant`
+answers "what role holds this" (HITL-facing), `session_id` answers "which
+exact running session, precisely" (what the `git_commit_guard_hook.py`
+PreToolUse hook checks a commit/push attempt against). `status` surfaces
+both.
+
+Extended for TASK-0197: `stage --expect <path>` no longer refuses a path
+that is absent from disk if that path is still tracked by git -- a real
+deletion to stage, not a typo. `_is_tracked()` (a `git ls-files
+--error-unmatch` check) distinguishes the two; a genuinely never-tracked
+missing path still refuses with the original error.
+
 No third-party dependencies -- stdlib only.
 
 Usage:
@@ -1122,6 +1137,23 @@ def _in_scope(rel_path):
     return first in STAGE_ALLOWED_PREFIXES
 
 
+def _is_tracked(rel_path):
+    # type: (str) -> bool
+    """True if rel_path is tracked by git at HEAD/index, regardless of
+    whether it currently exists on disk -- same `git ls-files
+    --error-unmatch` primitive `_perform_transition` already uses to
+    decide `git mv` vs. a plain filesystem move, not a second way of
+    asking git the same question (TASK-0197)."""
+    return (
+        subprocess.run(
+            ["git", "ls-files", "--error-unmatch", rel_path],
+            cwd=REPO_ROOT,
+            capture_output=True,
+        ).returncode
+        == 0
+    )
+
+
 def cmd_stage(args):
     expect = list(args.expect)
 
@@ -1148,11 +1180,22 @@ def cmd_stage(args):
         )
         return 1
 
+    # TASK-0197: absent-from-disk splits into two different cases that
+    # os.path.exists() alone cannot tell apart -- a typo (never tracked,
+    # still an error) vs. a legitimate deletion of a previously-tracked
+    # file (allowed through to `git add`, which stages removals for a
+    # tracked-but-missing pathspec since Git 2.0 -- no `git rm` needed as
+    # a separate call). Real incident, 2026-08-03: cleaning up a duplicate
+    # task file (tracked in two locations after another thread's commit)
+    # had no whitelisted path forward, forcing a bare `git add` outside
+    # this tool entirely.
     missing_on_disk = [p for p in expect if not os.path.exists(os.path.join(REPO_ROOT, p))]
-    if missing_on_disk:
+    untracked_missing = [p for p in missing_on_disk if not _is_tracked(p)]
+    if untracked_missing:
         print(
-            "error: --expect names paths that do not exist on disk: %s"
-            % ", ".join(missing_on_disk),
+            "error: --expect names paths that do not exist on disk and are "
+            "not tracked by git (check for a typo): %s"
+            % ", ".join(untracked_missing),
             file=sys.stderr,
         )
         return 1
