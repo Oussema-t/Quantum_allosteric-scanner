@@ -127,69 +127,106 @@ def _minimal_family(coords_admissible_list, eigvecs_shape):
     )
 
 
-def test_go_no_go_gate_detects_new_active_site_pocket_edge():
-    """Two residues (indices 0 and N-1) start far apart (no apo contact at
-    cutoff=5.0); one admissible candidate moves them within contact
-    range -- the gate must report right_edges_found=True and name that
-    exact pair."""
-    coords = COORDS.copy()
-    coords[-1] = coords[0] + np.array([20.0, 0.0, 0.0])  # push residue N-1 far from residue 0
+# A controlled 1D chain (not the helix fixture): residues at x=0,1,...,15,
+# spacing 1.0 apart, cutoff=1.5 -- every residue is in contact ONLY with
+# its immediate chain neighbor, no accidental shortcuts, hop distance
+# between residue i and j is exactly |i-j|. Active site = residue 0,
+# pocket = residue 15 (distal, apo hop distance 15) -- the two never
+# become direct neighbors in any of these tests, per the corrected
+# semantics: what's tested is whether a *shortcut edge elsewhere in the
+# graph* (never touching either labeled residue) reduces the hop
+# distance between them, not whether they become adjacent themselves.
+_CHAIN_N = 16
+_BRIDGE_CUTOFF = 4.0
+
+
+def _two_cluster_coords():
+    """Two disconnected clusters (0-3, 4-7, each internally complete at
+    this cutoff -- max internal pairwise distance 3.0 < 4.0) plus one
+    free residue (8) parked far from everything -- apo has 3 disconnected
+    components, so active site (0, cluster A) cannot reach pocket
+    (7, cluster B) at all. Residue 8 has no apo edges to lose, so moving
+    it can only ever *add* connectivity, never remove an existing bond --
+    unlike relocating an already load-bearing chain member, which was
+    this test's own first, wrong construction (accidentally disconnects
+    the member's own original neighbors at the same time it connects a
+    new one, net effect: no shortcut, or worse)."""
+    coords = np.zeros((9, 3))
+    coords[0:4, 0] = [0.0, 1.0, 2.0, 3.0]      # cluster A, active site = 0
+    coords[4:8, 0] = [10.0, 11.0, 12.0, 13.0]  # cluster B, pocket = 7
+    coords[8] = [1000.0, 0.0, 0.0]             # free bridge residue, isolated in apo
+    return coords
+
+
+def test_go_no_go_gate_detects_shortcut_from_a_bridge_not_touching_labeled_sets():
+    """apo: active site (0) and pocket (7) sit in disconnected components
+    -- unreachable, hop_from_seed's own N+1 penalty (10). Moving the free
+    residue 8 to bridge the two clusters (within cutoff of both cluster
+    A's edge, residue 3, and cluster B's edge, residue 4) creates a
+    4-hop path (0-3-8-4-7) without residues 0 or 7 ever moving or
+    touching each other -- exactly the "shortcut elsewhere in the graph"
+    case this gate is meant to catch."""
+    coords = _two_cluster_coords()
     apo = _Struct(coords)
     holo = _Struct(coords)  # CO curve irrelevant to this test's own assertion
 
-    active_site_mask = np.zeros(N, dtype=bool)
+    active_site_mask = np.zeros(9, dtype=bool)
     active_site_mask[0] = True
-    pocket_mask = np.zeros(N, dtype=bool)
-    pocket_mask[-1] = True
+    pocket_mask = np.zeros(9, dtype=bool)
+    pocket_mask[7] = True
 
     coords_deformed = coords.copy()
-    coords_deformed[-1] = coords[0] + np.array([2.0, 0.0, 0.0])  # now well within cutoff=5.0
-    family = _minimal_family([coords_deformed], eigvecs_shape=(3 * N, 1))
+    coords_deformed[8] = [6.5, 0.0, 0.0]  # 3.5 from residue 3 (x=3) and residue 4 (x=10), both < cutoff 4.0
+    family = _minimal_family([coords_deformed], eigvecs_shape=(3 * 9, 1))
 
-    result = go_no_go_gate(apo, holo, {}, active_site_mask, pocket_mask, family, cutoff=5.0)
-    assert result["right_edges_found"] is True
-    assert (0, N - 1) in result["new_edge_candidates"][0]["new_edges"]
+    result = go_no_go_gate(apo, holo, {}, active_site_mask, pocket_mask, family, cutoff=_BRIDGE_CUTOFF)
+    assert result["apo_hop_min"] == 10.0  # unreachable, hop_from_seed's own n+1 penalty (n=9 residues)
+    assert result["shortcut_found"] is True
+    assert result["best_hop_min"] == 4.0
+    assert result["shortcut_candidates"][0]["hop_reduction"] == pytest.approx(6.0)
 
 
-def test_go_no_go_gate_no_new_edges_when_apo_already_in_contact():
-    """Negative control: if the active site and pocket are already in
-    apo contact, no candidate should ever count as creating a *new*
-    edge, even if the same pair remains in contact after deformation."""
-    coords = COORDS.copy()
+def test_go_no_go_gate_no_shortcut_when_deformation_creates_no_new_contact():
+    """Negative control: moving the free residue somewhere still isolated
+    from both clusters must report no shortcut."""
+    coords = _two_cluster_coords()
     apo = _Struct(coords)
     holo = _Struct(coords)
 
-    active_site_mask = np.zeros(N, dtype=bool)
+    active_site_mask = np.zeros(9, dtype=bool)
     active_site_mask[0] = True
-    pocket_mask = np.zeros(N, dtype=bool)
-    pocket_mask[1] = True  # sequential neighbor -- always in contact at any reasonable cutoff
+    pocket_mask = np.zeros(9, dtype=bool)
+    pocket_mask[7] = True
 
-    family = _minimal_family([coords.copy()], eigvecs_shape=(3 * N, 1))
-    result = go_no_go_gate(apo, holo, {}, active_site_mask, pocket_mask, family, cutoff=10.0)
-    assert result["right_edges_found"] is False
-    assert result["n_candidates_with_new_edges"] == 0
+    coords_deformed = coords.copy()
+    coords_deformed[8] = [2000.0, 0.0, 0.0]  # still isolated from both clusters
+    family = _minimal_family([coords_deformed], eigvecs_shape=(3 * 9, 1))
+
+    result = go_no_go_gate(apo, holo, {}, active_site_mask, pocket_mask, family, cutoff=_BRIDGE_CUTOFF)
+    assert result["shortcut_found"] is False
+    assert result["n_candidates_with_shortcut"] == 0
+    assert result["best_hop_min"] == result["apo_hop_min"]
 
 
 def test_go_no_go_gate_verdict_combines_both_components():
     """PARTIAL when the two components disagree -- never silently
     collapsed to GO or NO_GO in either direction."""
-    coords = COORDS.copy()
+    coords = _two_cluster_coords()
     apo = _Struct(coords)
     holo = _Struct(coords)
-    active_site_mask = np.zeros(N, dtype=bool)
+    active_site_mask = np.zeros(9, dtype=bool)
     active_site_mask[0] = True
-    pocket_mask = np.zeros(N, dtype=bool)
-    pocket_mask[-1] = True
+    pocket_mask = np.zeros(9, dtype=bool)
+    pocket_mask[7] = True
 
-    coords[-1] = coords[0] + np.array([20.0, 0.0, 0.0])
     coords_deformed = coords.copy()
-    coords_deformed[-1] = coords[0] + np.array([2.0, 0.0, 0.0])
-    family = _minimal_family([coords_deformed], eigvecs_shape=(3 * N, 1))
+    coords_deformed[8] = [6.5, 0.0, 0.0]
+    family = _minimal_family([coords_deformed], eigvecs_shape=(3 * 9, 1))
 
-    # co_final will be 0.0 here (holo == pre-shift coords, alignment trivial,
-    # delta_r ~ 0) -- co_go False, right_edges_found True -> PARTIAL.
+    # co_final will be 0.0 here (holo == apo, delta_r ~ 0) -- co_go False,
+    # shortcut_found True -> PARTIAL.
     result = go_no_go_gate(apo, holo, {}, active_site_mask, pocket_mask, family,
-                            cutoff=5.0, co_threshold=0.5)
+                            cutoff=_BRIDGE_CUTOFF, co_threshold=0.5)
     assert result["verdict"] == "PARTIAL"
-    assert result["right_edges_found"] is True
+    assert result["shortcut_found"] is True
     assert result["co_go"] is False

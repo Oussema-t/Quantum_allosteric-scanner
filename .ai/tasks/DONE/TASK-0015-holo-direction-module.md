@@ -208,3 +208,77 @@ amplitude must reject, vanishing amplitude must never reject), new
 xfailed, 0 failed (986 pre-existing + 8 new). Full detail: `RESULTS.md`'s
 own "Holo-direction module Step 2 go/no-go gate" section,
 `RESULTS/results_task0015_step2_gate/step2_gate.json`.
+
+---
+
+**CORRECTED, same day (2026-07-28), user-flagged, in two rounds.** The
+"right edges" component above tested the **wrong quantity**: a *direct*
+new contact edge forming between an active-site residue and a pocket
+residue. The active site and pocket are **distal by this project's own
+definition** (`CLAUDE.md`'s own "active site is the anchor, allosteric
+site is distal") — requiring them to become direct neighbors is far too
+strict and not what Step 2 is meant to test; a real allosteric channel is
+a *shortcut somewhere in the graph* (a new edge between two residues that
+are neither the active site nor the pocket) that *shortens the path*
+between them, matching Step 4's own transport framing (CTQW/ENAQT runs on
+the whole deformed graph, not a hand-picked residue pair). Fixed:
+`go_no_go_gate`'s second component now measures whether any admissible
+candidate reduces the graph-hop distance (`baselines.hop_from_seed`,
+already-tested multi-source BFS) between the active-site set and the
+pocket set — a shortcut anywhere, never required to touch either labeled
+residue directly. 8 unit tests rebuilt around a hand-verified two-
+disconnected-cluster-plus-free-bridge-residue construction (the original
+chain-relocation fixture was itself wrong: moving an already load-bearing
+chain member both added and removed edges at once, masking the mechanism
+being tested).
+
+**First re-run (single cutoff = each target's own configured
+`enm_cutoff`, typically 8.0 Å): apo hop(active↔pocket) = 1 on 6/7 targets,
+2 on PTP1B.** Cross-checked directly against real coordinates before
+trusting it (KRAS_G12C: min Cα–Cα active-site↔pocket distance 3.75 Å,
+exactly reproducing [[TASK-0169]]'s own independently-published number
+for the same pair; BCR_ABL1 7.52 Å, GLUCOKINASE 3.79 Å, both correctly
+under their own 8.0 Å cutoff) — the hop=1 reading itself is real, not a
+computation bug.
+
+**User-flagged second round: is "connected" here the same thing as
+"spatially within a fairly generous 8 Å cutoff," and is that cutoff
+robust?** Checked directly, not assumed: swept the contact-graph cutoff
+{4.5, 6.0, 8.0, 10.0} Å (4.5 Å matches this project's own pocket-labeling
+cutoff; the full grid brackets tight-to-loose, matching
+`cumulative_overlap_gate`'s own established knob-sweep discipline,
+INV-0001) and recomputed the shortcut test at every point, reusing the
+same deformation family (contact cutoff doesn't affect Step 1's own
+`anm_cutoff`). **Real, informative finding**: the "already adjacent"
+reading is cutoff-*robust* for 4/7 targets (KRAS_G12C, CARDIAC_MYOSIN,
+GLUCOKINASE, CASPASE1 — hop=1 at every cutoff from 4.5 to 10.0 Å) but a
+cutoff-*artifact* of the 8.0 Å default for 3/7 (BCR_ABL1: hop 6→2→1→1;
+PTP1B: hop 10→4→2→2; CASPASE7: hop 3→1→1→1 across the same grid) — at
+the strictest tested cutoff, PTP1B and BCR_ABL1 genuinely do have a
+substantial apo-side gap (10 and 6 hops respectively), which the
+shortcut hypothesis could, in principle, meaningfully test.
+
+**Final headline: even where a real, substantial gap exists at a strict
+cutoff, the shortcut is never found, at any cutoff, on any target.**
+`shortcut_verdict_across_grid` (GO only if every grid point finds a
+shortcut, NO_GO only if none do, else UNSTABLE — never collapsed to a
+single point estimate) is `NO_GO` on all 7 targets at all 4 cutoffs
+tested, including PTP1B and BCR_ABL1 where there was genuine room to
+improve. The reason is Step 1's own admissible-family size, not a
+graph-definition artifact: only 1–10 candidates survive the bond-
+geometry integrity constraint per target (already documented above),
+and this small, purely local, single-mode-at-a-time family is simply too
+narrow to bridge even a moderate topological gap — a different, and
+more decisive, mechanism than the first round's "there is no gap to
+bridge in the first place" reading, which held only for 4/7 targets and
+only at the project's own generous default cutoff.
+
+The combined Step 2 verdict is unchanged (7/7 `NO_GO`, since CO also
+never clears 0.5 at any cutoff — CO doesn't depend on the contact-graph
+cutoff at all, only on `anm_cutoff`) and Steps 3–5 remain not built for
+any target, per the same "build the rest only for targets that clear it"
+instruction. `scripts/holo_direction_step2_gate.py` now sweeps the
+cutoff grid by default and reports the full per-cutoff breakdown, not a
+single value. The original single-cutoff table/headline above is left in
+place, marked superseded by this block, not deleted, per this project's
+own correction convention.

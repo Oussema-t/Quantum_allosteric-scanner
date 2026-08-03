@@ -57,10 +57,24 @@ def _load_apo_holo(target_name: str, target_config: dict):
     return apo, holo
 
 
+# Contact-graph cutoff sweep for the shortcut component -- the project's
+# own default `enm_cutoff` (typically 8.0 A) is one point on a real KNOB,
+# not a fixed physical constant (INV-0001/cumulative_overlap_gate's own
+# precedent: cutoff is swept, never picked once and trusted). 4.5 A
+# matches this project's own pocket-labeling cutoff (already established
+# elsewhere, not a new arbitrary number); 10.0 A is this module's own
+# ANM cutoff default. Bracket a tight-to-loose range rather than trust
+# one target-configured value, since a spot check found the "active site
+# and pocket already adjacent" reading is cutoff-robust for some targets
+# and a pure artifact of the 8.0 A default for others (BCR_ABL1, PTP1B,
+# CASPASE7 -- real hop 5-10 at 4.5-6.0 A, collapsing to 1-2 only at
+# 8.0-10.0 A).
+CONTACT_CUTOFF_GRID = (4.5, 6.0, 8.0, 10.0)
+
+
 def run_one(target_name: str) -> dict:
     target_config = load_target_config(target_name)
     pocket_cutoff = float(target_config.get("pocket_contact_cutoff", DEFAULT_POCKET_CUTOFF))
-    contact_cutoff = float(target_config.get("enm_cutoff", 10.0))
 
     apo, holo = _load_apo_holo(target_name, target_config)
     labels_obj = build_labels(apo, holo, target_config, cutoff=pocket_cutoff)
@@ -77,18 +91,35 @@ def run_one(target_name: str) -> dict:
     _log(f"{target_name}: family built in {time.monotonic() - t0:.1f}s "
          f"({len(family['admissible'])} admissible, {len(family['rejected'])} rejected)")
 
-    result = go_no_go_gate(
-        apo, holo, target_config, labels_obj.active_site, labels_obj.pocket, family,
-        cutoff=contact_cutoff, chain_map=chain_map_from_config(target_config),
-    )
-    result["target"] = target_name
-    result["n_residues"] = len(apo.resnums)
-    result["pocket_size"] = int(labels_obj.pocket.sum())
-    result["active_site_size"] = int(labels_obj.active_site.sum())
-    _log(f"{target_name}: verdict={result['verdict']} "
-         f"(CO={result['co_final']:.4f}, right_edges={result['right_edges_found']}, "
-         f"{result['n_candidates_with_new_edges']}/{result['n_admissible']} admissible candidates)")
-    return result
+    chain_map = chain_map_from_config(target_config)
+    grid = {}
+    for cutoff in CONTACT_CUTOFF_GRID:
+        r = go_no_go_gate(
+            apo, holo, target_config, labels_obj.active_site, labels_obj.pocket, family,
+            cutoff=cutoff, chain_map=chain_map,
+        )
+        grid[cutoff] = r
+        _log(f"{target_name} @ cutoff={cutoff}: verdict={r['verdict']} "
+             f"(CO={r['co_final']:.4f}, apo_hop={r['apo_hop_min']:.1f}->{r['best_hop_min']:.1f}, "
+             f"shortcut={r['shortcut_found']}, {r['n_candidates_with_shortcut']}/{r['n_admissible']})")
+
+    shortcuts = [g["shortcut_found"] for g in grid.values()]
+    if all(shortcuts):
+        shortcut_verdict = "GO"
+    elif not any(shortcuts):
+        shortcut_verdict = "NO_GO"
+    else:
+        shortcut_verdict = "UNSTABLE"  # depends on which cutoff was run -- never collapsed to a point estimate
+
+    return {
+        "target": target_name,
+        "n_residues": len(apo.resnums),
+        "pocket_size": int(labels_obj.pocket.sum()),
+        "active_site_size": int(labels_obj.active_site.sum()),
+        "cutoff_grid": {str(c): r for c, r in grid.items()},
+        "shortcut_verdict_across_grid": shortcut_verdict,
+        "co_final": grid[CONTACT_CUTOFF_GRID[-1]]["co_final"],  # CO doesn't depend on contact cutoff, same at every grid point
+    }
 
 
 def main():
@@ -110,13 +141,18 @@ def main():
     print("\n=== TASK-0015 Step 2 go/no-go gate ===")
     print(f"protocol: n_modes={PERTURBATION_PROTOCOL['n_modes']}, "
           f"amplitude_scales={PERTURBATION_PROTOCOL['amplitude_scales']}")
+    co_threshold = 0.5
     for t, r in results.items():
         if "error" in r:
             print(f"{t}: ERROR {r['error']}")
             continue
-        print(f"{t}: {r['verdict']} -- CO={r['co_final']:.4f} (go={r['co_go']}), "
-              f"right_edges={r['right_edges_found']} "
-              f"({r['n_candidates_with_new_edges']}/{r['n_admissible']} candidates)")
+        co_go = r["co_final"] >= co_threshold if r["co_final"] == r["co_final"] else False  # NaN-safe
+        per_cutoff = ", ".join(
+            f"{c}A:hop{g['apo_hop_min']:.0f}->{g['best_hop_min']:.0f}"
+            for c, g in r["cutoff_grid"].items()
+        )
+        print(f"{t}: shortcut_verdict={r['shortcut_verdict_across_grid']} CO={r['co_final']:.4f} (go={co_go}) "
+              f"[{per_cutoff}]")
 
 
 if __name__ == "__main__":

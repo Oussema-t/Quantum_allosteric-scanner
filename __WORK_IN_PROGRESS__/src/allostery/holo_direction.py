@@ -3,7 +3,10 @@
 Predicts the *direction* of the apo->holo conformational change from the
 apo structure alone, generates a small family of admissible deformed
 graphs, and (once Step 2's gate clears) runs transport on each -- goal is
-to recover statically-hidden active-site->pocket edges. Steps 0-2 only;
+to recover statically-hidden shortcuts in the active-site->pocket graph
+distance (the active site and pocket are distal by this project's own
+definition, so this is a path-shortening/shortcut test, not a test for a
+direct new edge between the two labeled sets themselves). Steps 0-2 only;
 Steps 3-5 are explicitly gated on Step 2's own per-target verdict (the
 spec's own "First action") and are Out Of Scope for this module until
 that gate has been run and recorded, per `HOLO_DIRECTION_MODULE.md`'s own
@@ -23,7 +26,7 @@ from typing import Optional
 
 import numpy as np
 
-from .hamiltonians import contact_matrix
+from .baselines import hop_from_seed
 from .superpose import align_apo_holo, anm_modes, calibrate_kappa, restricted_cumulative_overlap
 
 
@@ -165,20 +168,29 @@ def go_no_go_gate(
        against `family`, which was built at that same mode count; not
        necessarily equal to the project's already-published n_modes=20
        number).
-    2. **Right edges** -- does any admissible candidate in `family` create
-       a contact-graph edge between an active-site residue and a pocket
-       residue that does not exist in the apo graph at all? (`contact_
-       matrix`, binary, same `cutoff` convention as the rest of the
-       register.)
+    2. **Shortcut** -- does any admissible candidate in `family` shorten
+       the graph-hop distance between the active site and the pocket
+       relative to the apo graph? The active site and the pocket are
+       **distal by this project's own definition** (`CLAUDE.md`'s own
+       "active site is the anchor, allosteric site is distal"), so
+       requiring a *direct* new active-site<->pocket edge is far too
+       strict and not what this test should mean -- what matters is
+       whether a new edge *anywhere* in the graph (not necessarily
+       touching either labeled set) creates a shortcut that reduces the
+       shortest path between them, exactly per HOLO_DIRECTION_MODULE.md's
+       own transport framing (Step 4 runs CTQW/ENAQT on the deformed
+       *graph*, not on a hand-picked pair of residues). Reuses
+       `baselines.hop_from_seed`'s already-tested multi-source BFS
+       (binary contact graph, same `cutoff` convention as the rest of the
+       register) rather than reimplementing shortest-path logic.
 
     GO requires **both**: CO clearing `co_threshold` alone means the holo
     direction is inside the admissible manifold in *some* generic sense,
-    but not that it specifically creates the missing active-site<->pocket
-    edge; conversely a spurious new edge with no real overlap support is
-    not evidence either. Returns both components plus the combined
-    verdict -- never a single collapsed boolean, per this project's own
-    "grid, not a point estimate" convention (`cumulative_overlap_gate`'s
-    own precedent).
+    but not that it specifically shortens the active-site<->pocket path;
+    conversely a shortcut with no real overlap support is not evidence
+    either. Returns both components plus the combined verdict -- never a
+    single collapsed boolean, per this project's own "grid, not a point
+    estimate" convention (`cumulative_overlap_gate`'s own precedent).
     """
     alignment = align_apo_holo(apo, holo, chain_map=chain_map)
     eigvecs = family["eigvecs"]
@@ -193,33 +205,29 @@ def go_no_go_gate(
         co_curve = restricted_cumulative_overlap(apo, alignment, eigvecs, measurable_pocket)
         co_final = float(co_curve[-1]) if len(co_curve) else float("nan")
 
-    apo_A = contact_matrix(apo.coords, cutoff=cutoff, weight="binary")
     active_idx = np.where(active_site_mask)[0]
     pocket_idx = np.where(pocket_mask)[0]
-    apo_edges = set()
-    for i in active_idx:
-        for j in pocket_idx:
-            if apo_A[i, j] > 0:
-                apo_edges.add((int(i), int(j)))
 
-    new_edge_candidates = []
+    apo_hop = -hop_from_seed(apo.coords, active_idx, cutoff=cutoff)  # negate hop_from_seed's own "-dist" convention back to real hop counts
+    apo_hop_min = float(apo_hop[pocket_idx].min())
+
+    shortcut_candidates = []
+    best_hop_min = apo_hop_min
     for entry in family["admissible"]:
-        A_new = contact_matrix(entry["coords"], cutoff=cutoff, weight="binary")
-        new_pairs = []
-        for i in active_idx:
-            for j in pocket_idx:
-                if A_new[i, j] > 0 and (int(i), int(j)) not in apo_edges:
-                    new_pairs.append((int(i), int(j)))
-        if new_pairs:
-            new_edge_candidates.append(dict(mode=entry["mode"], sign=entry["sign"],
-                                             scale=entry["scale"], new_edges=new_pairs))
+        deformed_hop = -hop_from_seed(entry["coords"], active_idx, cutoff=cutoff)
+        hop_min = float(deformed_hop[pocket_idx].min())
+        best_hop_min = min(best_hop_min, hop_min)
+        if hop_min < apo_hop_min:
+            shortcut_candidates.append(dict(mode=entry["mode"], sign=entry["sign"], scale=entry["scale"],
+                                             apo_hop_min=apo_hop_min, deformed_hop_min=hop_min,
+                                             hop_reduction=apo_hop_min - hop_min))
 
-    right_edges_found = len(new_edge_candidates) > 0
+    shortcut_found = len(shortcut_candidates) > 0
     co_go = bool(np.isfinite(co_final) and co_final >= co_threshold)
 
-    if co_go and right_edges_found:
+    if co_go and shortcut_found:
         verdict = "GO"
-    elif not co_go and not right_edges_found:
+    elif not co_go and not shortcut_found:
         verdict = "NO_GO"
     else:
         verdict = "PARTIAL"  # the two components disagree -- a real, reportable outcome, not forced either way
@@ -231,9 +239,11 @@ def go_no_go_gate(
         co_go=co_go,
         co_threshold=co_threshold,
         n_measurable_pocket=len(measurable_pocket),
-        right_edges_found=right_edges_found,
-        n_candidates_with_new_edges=len(new_edge_candidates),
-        new_edge_candidates=new_edge_candidates,
+        apo_hop_min=apo_hop_min,
+        best_hop_min=best_hop_min,
+        shortcut_found=shortcut_found,
+        n_candidates_with_shortcut=len(shortcut_candidates),
+        shortcut_candidates=shortcut_candidates,
         n_admissible=len(family["admissible"]),
         n_rejected=len(family["rejected"]),
     )
