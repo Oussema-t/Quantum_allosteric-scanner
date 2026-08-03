@@ -131,7 +131,7 @@ None
 - [x] Re-run [[TASK-0068]] noise sweep under the converged propagator, with
       the phase-free-robustness prediction pre-registered. Pre-registered
       before running (see `PRE_REGISTERED_HYPOTHESIS` in the script and
-      RESULTS.md row 51) — **falsified on balance** (supported on 2/4
+      RESULTS.md row 56) — **falsified on balance** (supported on 2/4
       targets, contradicted on BCR_ABL1, a wash on CARDIAC_MYOSIN).
 - [x] Resource table: 4 targets × ≥3 resolutions, transpiled. Full + 2
       coarse resolutions (Louvain-actual N≈9-15), transpiled against a real
@@ -180,7 +180,11 @@ None
 ## Done
 
 - 2026-08-02 (Implementer D). Full pass on the 3 mandatory targets +
-  MYC_MAX. Full detail: `RESULTS.md` row 51. Artifacts:
+  MYC_MAX. Full detail: `RESULTS.md` row 56 (renumbered 2026-08-03 after a
+  real row-51 collision with [[TASK-0185]] wiped rows 47-53 of this
+  document in a later concurrent commit — see that row's own "Recovery
+  note" for the full account; this citation was correct when written).
+  Artifacts:
   `scripts/hardware_resource_accounting.py` (Steps 1-3),
   `scripts/hardware_feasibility_verdict.py` (Steps 4-5),
   `noise.time_sampled_converged_occupation` (new, tested, ADD-only),
