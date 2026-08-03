@@ -6,7 +6,9 @@
 - Title: recover [[TASK-0167.003]]'s never-committed `RESULTS.md` section,
   refresh [[TASK-0161]]'s multiplicity budget to the current cell count, and
   fix the stale forward-reference in [[TASK-0178]]'s section.
-- Status: TODO
+- Status: Done
+- Resolution: done
+- Resolution Note: Recovered TASK-0167.003's lost RESULTS.md section (F3); recounted TASK-0161's multiplicity budget, +140 cells across 10 tasks, new total 366, still zero confirmed positives (F5); fixed TASK-0178's stale still-TODO reference to TASK-0167.002 (F8); no scientific number re-derived
 - Owner: Implementer
 - Claimed By: —
 - Claimed At: —
@@ -101,12 +103,15 @@ protocol "still-TODO." It was Done four days before that section was written.
 
 ## TODO
 
-- [ ] `git pull --rebase`; re-read `RESULTS.md`'s current section boundaries.
-- [ ] Reconstruct the zero-plant/null-calibration section from the task file.
-- [ ] Recount scored cells since 2026-07-25; state the method + per-task increments.
-- [ ] Decide + record the diagnostic-cell counting rule.
-- [ ] Fix the TASK-0178 "still-TODO" reference.
-- [ ] Verify every cross-reference into the recovered section resolves.
+- [x] `git pull --rebase`; re-read `RESULTS.md`'s current section boundaries
+  — branch was already up to date with `origin/bartosz` (nothing to pull);
+  a concurrent thread's own staged TASK-0190 rename blocked rebase mode
+  briefly, left untouched (not mine), re-read section boundaries directly.
+- [x] Reconstruct the zero-plant/null-calibration section from the task file.
+- [x] Recount scored cells since 2026-07-25; state the method + per-task increments.
+- [x] Decide + record the diagnostic-cell counting rule.
+- [x] Fix the TASK-0178 "still-TODO" reference.
+- [x] Verify every cross-reference into the recovered section resolves.
 
 ## Dependency
 
@@ -121,9 +126,79 @@ protocol "still-TODO." It was Done four days before that section was written.
   ways: they were never used to claim a positive (exclude), but they were
   scored against real labels and could have produced one (include).
   [[TASK-0161]]'s own rule decides; if silent, this task decides and records.
+  **Decided**: cells scored against a synthetically planted patch or a
+  synthetic decoy (not the real drug-pocket answer key) do not count —
+  matches the frozen table's own existing exclusion of dumbbell gates and
+  negative controls. This excludes the entire TASK-0167.001/.002/.003
+  positive-control program (they measure the apparatus's own operating
+  characteristics, not a comparison against a real label that could itself
+  be reported as a finding). Recorded in `RESULTS.md`'s new Recount
+  addendum with the full exclusion table and reasons, not just this line.
 - Is the recovered section's Part A worth publishing at all before
   [[TASK-0189]] lands, or does a `[PENDING]` marker read worse than the gap?
+  **Moot**: [[TASK-0189]] landed same-day (2026-08-03), before this task
+  picked up — the recovered section carries its corrected numbers directly,
+  no `[PENDING]` marker needed.
 
 ## Done
 
-—
+**2026-08-03, Implementer B.** All three defects (F3/F5/F8) fixed in
+`RESULTS.md`, additively — no scientific number re-derived, per the
+Constraint.
+
+**F3 (lost section) — recovered.** New `## Zero-plant specificity and
+null-calibration (TASK-0167.003, 2026-07-31)` section, reconstructed
+directly from `.ai/tasks/DONE/TASK-0167.003-*.md`'s own Done section (the
+record survived there completely — Parts A/B/C, the concordance check, the
+verdict, all present). Part A carries [[TASK-0189]]'s 2026-08-03 correction
+applied directly (that task landed same day, before this one picked up, so
+no `[PENDING]` marker was needed) — quoted [[TASK-0189]]'s own "quotable
+as-is" verdict sentence verbatim rather than re-deriving it, per that task's
+own explicit hand-off. Opens with a dated recovery-note banner explaining
+the loss (commit `92aa669`'s own message, the concurrent TASK-0157 clash,
+zero follow-up) — the same transparency convention this project already
+uses for superseded tables, applied to a *recovered* section instead of a
+*corrected* one. `grep -n "zero-plant\|null-calibration" RESULTS.md` now
+returns real hits (was 0); every `TASK-0167.003` cross-reference in the
+file resolves (checked directly, 5 hits, all consistent).
+
+**F5 (stale budget) — recounted, not overwritten.** [[TASK-0161]]'s own
+226-cell table is left untouched (frozen at 2026-07-25, per convention); a
+new "Recount, 2026-08-03" addendum walks every task closed since then using
+the *identical* method (same p-value/AUC-vs-floor/Bonferroni criterion,
+same synthetic-exclusion rule), with a full per-task increment table:
++140 cells across 10 task families (TASK-0162 25, TASK-0163 6, TASK-0166 7,
+TASK-0171 50, TASK-0177 14, TASK-0178 21 [self-stated], TASK-0181 3
+[self-stated], TASK-0185 3, TASK-0187 1, TASK-0155 10) — new total **366**,
+expected false positives **≈18.3** (was ≈11.3). Still **zero** confirmed
+positives program-wide — stated plainly as a *stronger*, not weaker,
+position, per the Constraint ("say that plainly rather than letting it read
+as a quiet upward revision"). A parallel exclusion table names every
+Done-since-2026-07-25 task that does *not* add cells, with a one-line reason
+each (TASK-0160/0164/0165/0167.001-003/0169/0180/0182/0186/0188, plus
+TASK-0190/0172/0176/0183/0184 excluded as not-yet-Done) — this is the
+"second person can reproduce the number" requirement, checkable line by
+line, not just an asserted total. Added a one-line pointer from
+[[TASK-0161]]'s own open-questions row (the other place "226" appears) to
+this addendum, so a reader who stops at that row isn't left with the stale
+number — same top-to-bottom-consistency discipline [[TASK-0193]] applied to
+`COMPETENCE_MAP.md` the same session.
+
+**F8 (stale forward-reference) — fixed.** [[TASK-0178]]'s section no longer
+calls [[TASK-0167.002]] "still-TODO"; reworded to state it was Done four
+days before that section was written, and to clarify *why* TASK-0178's own
+LOD probe is narrower rather than duplicative (different observable,
+different scoring target — synthetic planted patches vs. this task's real
+per-target specificity statistic).
+
+**Coordination**: sequenced after [[TASK-0192]]/[[TASK-0193]] (same session,
+same thread) rather than in parallel — no collision, `git status` showed
+only this task's own files before staging. `git pull --rebase` found
+nothing to pull (branch already up to date with `origin/bartosz`); a
+concurrent thread's own staged TASK-0190 rename blocked rebase mode
+momentarily and was left untouched, not stashed or discarded.
+
+**Not attempted, explicitly out of scope**: re-deriving any scientific
+number (Constraint); the open-questions-table protection convention
+([[TASK-0195]]'s own territory, already filed separately); re-running
+TASK-0190's own still-in-progress Rg-matched-null work.

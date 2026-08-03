@@ -3695,6 +3695,76 @@ the corrected gauge — included would double-count, not add real comparisons.
 
 Full detail: `.ai/tasks/DONE/TASK-0161-program-level-multiplicity-budget.md`.
 
+### Recount, 2026-08-03 ([[TASK-0191]]) — the 226-cell total above is frozen at 2026-07-25; 10 tasks landed real-target scored cells since
+
+**The table above is preserved verbatim, not edited in place** (this
+project's no-silent-overwrite convention) — this addendum applies the exact
+same method (walk every `.ai/tasks/DONE/*.md` file closed after 2026-07-25
+that reports a p-value, permutation-null percentile, Bonferroni comparison,
+or AUC-vs-floor result against a **real** target's labels; exclude
+synthetic-only positive-controls/negative-controls, the same exclusion the
+frozen table above already applies) and shows the per-task increments so a
+second person can reproduce the new total mechanically.
+
+| Family (owning task) | Cells | Composition |
+|---|---|---|
+| Reverse-direction coupling, apo ([[TASK-0162]]) | 25 | 5 observables × 5 targets |
+| External classical baselines ([[TASK-0163]]) | 6 | 2 baselines (fpocket, PocketMiner) × 3 mandatory targets |
+| Ensemble/entropic observable ([[TASK-0166]]) | 7 | 7 pocket-scoreable targets × 1 observable |
+| Reverse-direction coupling, holo ([[TASK-0171]]) | 50 | (forward + reverse) × 5 observables × 5 targets |
+| Consensus-label rescoring ([[TASK-0177]]) | 14 | 7 targets × 2 new label variants (`core`, `consensus`; the pre-existing `incumbent` label is not a new cell) |
+| Binding-response coupling specificity ([[TASK-0178]]) | 21 | self-stated by the task's own section ("the ~21-cell family this task itself adds") |
+| Selection-as-QUBO gate decision ([[TASK-0181]]) | 3 | self-stated by the task's own section (gate-decision cells only; the un-run full 14-target grid does not enter the budget) |
+| Conformational-search specificity gate ([[TASK-0185]]) | 3 | 3 mandatory targets × 1 specificity-vs-decoy comparison each |
+| ENM connectivity-graph shortcut hypothesis ([[TASK-0187]]) | 1 | PTP1B × 1 comparison (real-pocket shortcut rate vs. 30 matched decoys) |
+| Apo-structure sensitivity sweep ([[TASK-0155]]) | 10 | KRAS_G12C × 10 independently RCSB-verified true-G12C apo structures |
+| **Subtotal, new since 2026-07-25** | **140** | |
+| **New grand total (226 + 140)** | **366** | |
+
+**The budget moves in the project's favour, stated plainly rather than left
+to read as a quiet upward revision**: more scored cells at a fixed α makes
+"fewer confirmed positives than chance predicts" a *stronger* claim, not a
+weaker one. **Expected false positives at α=0.05: 0.05 × 366 ≈ 18.3**
+(was ≈11.3). **Observed, corrected-null-surviving positives program-wide:
+still zero** — none of the 10 new task families above report a Bonferroni
+survivor (TASK-0162/0171's own cited floor-clear fractions are AUC-vs-floor
+counts, not corrected-null-surviving significance claims; TASK-0177/0178's
+own sections explicitly report no surviving cell; TASK-0163/0166/0181/0185/
+0187/0155 report no positive either). **Zero confirmed positives against an
+expected ~18.3 is a stronger position than zero against ~11.3.**
+
+**Diagnostic-cell counting rule, decided and recorded (this task's own Open
+Question)**: cells scored against a **synthetically planted** patch or a
+**synthetic decoy** ligand — not the real drug-pocket answer key — do **not**
+count toward this budget, matching the frozen table's own precedent for
+excluding dumbbell gates and negative controls. On this rule, [[TASK-0167.001]]/
+[[TASK-0167.002]]/[[TASK-0167.003]]'s entire positive-control/specificity-
+measurement program (planted-channel detection curves, zero-plant
+false-positive rates) is excluded — those tasks measure the *apparatus's own
+operating characteristics* (its power and its false-positive rate), not
+comparisons against real target labels that could themselves be a reported
+"finding." Also excluded, with reasons stated so the rule is checkable, not
+just asserted:
+
+| Task | Reason excluded |
+|---|---|
+| [[TASK-0160]] | Engineering deliverable (dense quantum connectivity matrix), no p-value/AUC-vs-floor comparison |
+| [[TASK-0164]] | Zero new ASD candidate targets qualified — nothing to score |
+| [[TASK-0165]] | Re-checks CI method on already-counted cells (same non-double-counting precedent the frozen table above already applies to [[TASK-0123]]) |
+| [[TASK-0167.001]]/[[TASK-0167.002]]/[[TASK-0167.003]] | Synthetic positive-control/specificity measurement — see diagnostic-cell rule above |
+| [[TASK-0169]] | Pure re-verification/synthesis, no code touched, no new scoring |
+| [[TASK-0180]] | Infrastructure (site-clustering module wired into `run_challenge.py`) + a 2-target linkage-cutoff robustness check; no p-value/Bonferroni family reported |
+| [[TASK-0182]] | Hardware/resource accounting (qubit/gate/depth tables, one Braket-style execution) — not AUC-vs-label scoring |
+| [[TASK-0186]]/[[TASK-0188]] | Geometric/topological distance diagnostics (Euclidean/graph-hop), not a scored AUC/p-value against labels |
+| [[TASK-0190]] | Status: In Progress, not Done — excluded from this recount, included in the next one once it lands |
+| [[TASK-0172]]/[[TASK-0176]]/[[TASK-0183]]/[[TASK-0184]] | Status: TODO — not yet run |
+
+**Recount is reproducible by construction**: every increment above is either
+the owning task's own self-stated cell count (quoted) or a one-line
+arithmetic derivation from its Done section, and every exclusion states its
+reason — a second person re-deriving from the same 10 task files should
+land on the same 140 and the same 366.
+
 ---
 
 ## A genuine dense quantum connectivity matrix (TASK-0160, `PANEL_REVIEW_2026-07-25.md` W3, 2026-07-27)
@@ -4295,6 +4365,154 @@ Full detail: `.ai/tasks/DONE/TASK-0167.002-detection-curve-and-limit-of-detectio
 
 ---
 
+## Zero-plant specificity and null-calibration (TASK-0167.003, 2026-07-31)
+
+> **Recovery note ([[TASK-0191]], 2026-08-03): this section was written on
+> 2026-07-31 but deliberately withheld from commit `92aa669` — that commit's
+> own message states a concurrent thread's uncommitted [[TASK-0157]] edit
+> shared the same working-tree file, and splitting them was "left to a
+> follow-up rather than risking either thread's content." No follow-up
+> landed; `grep -n "zero-plant\|null-calibration" RESULTS.md` returned zero
+> hits until this recovery, even though both `.ai/tasks/DONE/TASK-0167.003-*.md`
+> and that commit message cite this section as "Full detail." Reconstructed
+> directly from that task file's own Done section (the record survived there
+> completely) — same failure class as `Q-0001`/[[TASK-0107]] on `COMMON.md`:
+> an unprotected concurrent write to a shared synthesis file lost the
+> synthesis, not the underlying record. Part A below carries [[TASK-0189]]'s
+> 2026-08-03 correction applied directly, not published as originally run.**
+
+**With `strength=0` (no planted coupling at all, `W` bit-identical to
+unplanted — asserted, not assumed), how often does the full verdict
+pipeline certify a randomly placed distal compact patch?** The real,
+end-to-end false-positive rate, under each of [[TASK-0158]]'s three null
+specifications, plus a direct calibration check of each null's own
+geometry against the real pocket's.
+
+### Method
+
+Reused [[TASK-0167.002]]'s own `_prepare_target`/`_well_powered_max` helpers
+directly (imported, not re-derived) so this task is a genuine second route
+to the same false-positive rate, not a duplicate of the first. 500 randomly
+placed distal compact patches per (target, observable), same admission
+criteria as .002's planted patches (distal, floor-AUC ≤0.5 pre-draw), pushed
+through the complete certification chain. **A real, documented optimization
+over naively copying .002's per-cell loop**: at `strength=0`, `plant_channel`
+returns `W0` bit-identical (re-verified here, not assumed), so the score is
+one fixed vector per target; the scattered/compact permutation null is also
+patch-independent (depends only on `pocket_size`, fixed at 14) and
+precomputed once per target rather than redrawn 500 times — only the
+Rg-matched null genuinely depends on the tested patch and is redrawn per
+patch (at a documented, reduced 200 replicates rather than 1000).
+
+### Part A — measured false-positive rate, 3 mandatory targets, 500 distal patches each
+
+**Corrected by [[TASK-0189]], 2026-08-03 — the number below supersedes this
+task's own original run.** The original collection script certified against
+`bonferroni_alpha = ALPHA / (len(STRENGTHS) * N_SEEDS)` = 0.05/160 ≈ 3.125e-4
+— copied from [[TASK-0167.002]]'s own *collection*-script constant without
+that task's matching *analysis*-stage correction to the real deployment
+family (targets, α=0.05/3≈0.0167, [[TASK-0145]]'s convention). At that
+denominator the certification gate was also structurally unreachable (the
+smallest non-zero p-value, `1/1000` or `1/200` for the matched null, exceeds
+3.125e-4), so it could only ever fire at `p_value == 0.0` exactly — the
+original table measured certification under a ~53× stricter, partly
+unreachable bar, not "against a 5% nominal bar" as originally described.
+[[TASK-0189]] recomputed from the same stored raw `p_value` fields at the
+corrected, reachable α (confirmed reachable first:
+`assert_gate_reachable(0.01667, family_size=3, n_reps=1000/200)` both hold)
+— no collection re-run needed, only the denominator was wrong:
+
+| Target | Scattered α̂ (95% CI) | Compact α̂ (95% CI) | Matched α̂ (95% CI) |
+|---|---|---|---|
+| KRAS_G12C | 0.000 [0.000, 0.007] | 0.000 [0.000, 0.007] | 0.000 [0.000, 0.007] |
+| BCR_ABL1 | **0.230** [0.194, 0.269] | 0.000 [0.000, 0.007] | **0.034** [0.020, 0.054] |
+| CARDIAC_MYOSIN | 0.030 [0.017, 0.049] | 0.000 [0.000, 0.007] | 0.000 [0.000, 0.007] |
+
+(Nominal α = 0.05/3 ≈ 0.01667, the corrected, reachable bar — TASK-0145's
+across-*targets* Bonferroni family, not this measurement device's own
+internal replicate grid.) **[[TASK-0189]]'s own verdict sentence, quoted
+as-is**: *"The qualitative verdict is unchanged: the compact null remains
+uniformly non-anti-conservative (α̂=0.000 on all 3 targets, unchanged), and
+the scattered null's BCR_ABL1 anti-conservatism is confirmed, not weakened
+(18.8% → 23.0%, if anything a stronger finding). What changes is the matched
+null's own previously-reported '≤0.2% on every cell' claim — BCR_ABL1's
+corrected matched α̂ is 3.4% (was an artificially tiny, gate-truncated 0.2%),
+still comfortably below the 5% nominal single-test bar and still not
+anti-conservative, but a materially different number than originally
+published, now real and reachable rather than a gate artifact."* This is on
+`transmission_from_source(E=0)` on a weighted `hamiltonians.laplacian` — the
+one plant-sensitive observable this program's positive-control apparatus can
+exercise ([[TASK-0167.001]]'s own finding that `H_new`/`dcc_low`/`ctqw` are
+plant-blind); not a re-test of the external review's own `dcc_low`-specific
+synthetic audit.
+
+### Part B — the calibration statistic: real pocket Rg vs. each null's own draw distribution, all 7 pocket-scoreable targets
+
+| Target | Real pocket Rg | Scattered null: real-pocket percentile | Compact null: real-pocket percentile |
+|---|---|---|---|
+| KRAS_G12C | 8.49 | 0.0 | 1.000 |
+| BCR_ABL1 | 7.45 | 0.0 | 0.968 |
+| CARDIAC_MYOSIN | 9.63 | 0.0 | 1.000 |
+| PTP1B | 7.97 | 0.0 | 1.000 |
+| GLUCOKINASE | 8.69 | 0.0 | 1.000 |
+| CASPASE1 | 6.42 | 0.0 | 0.997 |
+| CASPASE7 | 10.84 | 0.0 | 1.000 |
+
+**The decisive, general, observable-independent confirmation of the external
+review's over-correction concern — measured directly on real data.** The
+scattered null's own draws are, without exception, far less compact than any
+real pocket (percentile 0.0 on all 7 — the real pocket sits below the
+*minimum* of 2000 scattered draws' own Rg every time). The compact null's
+own draws are, almost without exception, *more* compact than the real pocket
+(percentile ≥0.97 on all 7, exactly 1.000 on 5/7) — real pockets are
+systematically more dispersed than a pure k-NN ball, confirming the external
+review's own synthetic finding ("the ball is ~30% more compact than a
+surface patch") generalizes to every real target in this project's register.
+
+### Part C — positive control on the calibration statistic itself
+
+Reference Rg = 5.98 (median of compact draws, KRAS_G12C topology). A
+deliberately scattered draw registers at percentile 0.0 (correctly
+anti-conservative-direction); a deliberately over-compact draw (half-size
+k-NN) registers at percentile 1.0 (correctly over-conservative-direction).
+The statistic detects both known-bad extremes as designed.
+
+### Concordance with TASK-0167.002's own `strength=0` row — checked, no disagreement
+
+.002's own 20-seed `strength=0` cells: KRAS_G12C 0/20 all 3 nulls, BCR_ABL1
+1/20 scattered / 0/20 compact / 0/20 matched, CARDIAC_MYOSIN 0/20 all 3
+nulls. Every one is statistically consistent with this task's own 500-patch
+measurement at the corrected rate (e.g. BCR_ABL1 scattered: a 20-draw
+binomial sample at true rate 0.230 lands at exactly 1/20 with modest but
+unremarkable probability — inside a 95% prediction interval). **No bug found
+in either measurement** — the two routes agree; this task's own larger
+sample simply resolves BCR_ABL1's scattered-null anti-conservatism with
+enough precision to be decisive (20 samples cannot distinguish a 5% true
+rate from a 23% one; 500 can).
+
+### Verdict on the null-calibration dispute
+
+**Compact and Rg-matched nulls are the calibrated choice on real data — not
+because they are conservative in the false-positive-rate sense (Part A), but
+because real pockets are measurably more dispersed than either draw's own
+geometry (Part B).** Both are true simultaneously: a null built from a
+systematically-too-compact patch population produces few false
+certifications (conservative in the α sense) *and* is a poor geometric model
+of the actual answer key (over-compact in the calibration-statistic sense) —
+the same underlying fact read two ways, not a contradiction. **Recommend the
+calibration statistic itself (Part B's own percentile check) become
+`INVARIANCE_PROTOCOL.md`'s fourth class, CALIBRATION**, per the external
+review's own suggestion — validated on real data across all 7 targets, not
+just proposed.
+
+Full detail: `.ai/tasks/DONE/TASK-0167.003-zero-plant-specificity-and-null-calibration.md`,
+`.ai/tasks/DONE/TASK-0189-zero-plant-bonferroni-family-and-unreachable-gate.md`,
+`results_task0167003_specificity/zero_plant_specificity_full.json`,
+`results_task0167003_specificity/part_a_corrected.json`,
+`scripts/zero_plant_specificity.py`, `scripts/zero_plant_specificity_analysis.py`.
+
+---
+
 ## ENM-induced connectivity-graph shortcut hypothesis — a clean negative on specificity (TASK-0187, 2026-08-01)
 
 **Question**: does undirected ENM ("wobbling") conformational sampling create
@@ -4673,8 +4891,12 @@ monotonically, no verdict flip anywhere in the swept range ([[TASK-0075]]'s
 own precedent for reporting this explicitly).
 
 **Lightweight LOD probe** (explicitly narrower than [[TASK-0167.002]]'s
-own still-TODO full protocol — one target, one observable, no CI/null/
-Bonferroni chain, flagged as such, not presented as a certified LOD):
+own full protocol — [[TASK-0167.002]] was Done four days before this
+section was written, but its detection-curve/LOD machinery scores
+synthetic planted patches, not this task's real per-target specificity
+statistic; "narrower," not "duplicated" — one target, one observable, no
+CI/null/Bonferroni chain, flagged as such, not presented as a certified
+LOD):
 reusing [[TASK-0167.001]]'s `plant`/`select_distal_patch` machinery on
 real KRAS_G12C topology, the reference prototype's own strength grid,
 5 seeds/strength. **A clean, monotonically increasing detection curve on
@@ -4761,7 +4983,7 @@ Full detail: `allostery/response.py`, `tests/test_response.py`,
 
 | 38 | Does replacing the uniformly *scattered* permutation-null draw (`rng.choice`) with a spatially *compact* one — matching real pockets' own geometry — remove this project's strongest positive findings, per `PANEL_REVIEW_2026-07-25.md` §2.3's own pre-registered falsification statement? | **resolved 2026-07-25: yes — the falsification statement fires.** New `allostery.nulls.compact_patch`, validated against the external audit's own reproduced numbers (4.8x inflation at α=0.05, rising to 42x at α=0.001, ~0x on a white-noise control) and confirmed to restore near-nominal calibration (1.36x, ~0x) when both legs of the comparison use the corrected draw. Re-running every named dependent task ([[TASK-0149]], [[TASK-0151]], [[TASK-0142]], [[TASK-0133]], [[TASK-0139]], [[TASK-0152]]) side by side with the original: `dcc_low`'s Bonferroni-significance is removed on **both** CARDIAC_MYOSIN (p: 0.000→0.060, fails even uncorrected α=0.05) and PTP1B (p: 0.001→0.019, fails its own Bonferroni bar) — the review's own named pre-registered condition for reporting the program's strongest observable family as a negative result. H2 and learnability nulls were already non-significant and only weaken further (no verdict change). **[[TASK-0145]]'s transport null, evaluated but explicitly not re-run (Out of Scope), is exposed to the same defect even more severely** (7.0x/242x vs. 4.8x/42x) — flagged as a live, urgent open item for a follow-up task, not silently assumed exempt because its own construction differs. | [[TASK-0158]], [[TASK-0149]], [[TASK-0151]], [[TASK-0142]], [[TASK-0133]], [[TASK-0139]], [[TASK-0152]], [[TASK-0145]], [[TASK-0143]] |
 | 39 | Does the shipped end-to-end pipeline (`scripts/run_challenge.py`) actually compute its headline AUC/hit-list via the same converged closed-form propagator ([[TASK-0130]]) the project's own corrected science reports, or still the finite-time approximation [[TASK-0110]] found orders of magnitude short of convergence? | **resolved 2026-07-26: no (before this task), now yes — and the closed form is now directly, numerically confirmed exact on real data, not just algebraically derived.** Wired `run_frozen_verdict(use_converged_limit=True)` (already-existing TASK-0130 machinery, never previously called with it) and swapped the winner's own occupation to `time_averaged_ctqw_converged` directly; old `T_MAX=15`/`N_STEPS=500` module constants deleted, a renamed/scoped-down pair kept only for the 3 genuinely different, still-finite-by-design uses (candidate-selection heuristic, GSR snapshot, `ablation()`'s per-term diagnostic) this task does not touch. Real AAKV `t_max*` checked directly on all 5 targets touched: 83,834x-420,682x the shipped `t_max=15` (extends, not just repeats, TASK-0110's own 3-target range). **Per explicit user request, a genuine brute-force integration was run all the way to each target's own real `t_max*`** (877K-4.6M steps, up to 12.3 wall-hours for CARDIAC_MYOSIN) and compared directly against the closed form: agreement to 1e-6 to 1e-7 on every target — floating-point noise, not an approximation gap. First attempt at this validation lost all progress when a harness-tracked background job was killed by session teardown (0/5 complete, ~15-18min in) — a live confirmation of `LONG_JOB_CONVENTION.md`'s own warning about that detachment mechanism; re-run OS-detached and sequentially (uncoordinated 5-way parallelism on the first attempt caused a real 5-26x slowdown). Cross-check against already-reported numbers: KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN match TASK-0113's own TASK-0130 cross-validation exactly; **PTP1B's converged AUC (0.4859) does not match the ASD generalization set's own PTP1B row (0.2050, `BEATS_CHANCE_NOT_FLOOR`) — confirmed to be a finite-time-vs-converged discrepancy (re-running at the literal old `t_max=15` reproduces 0.2050 exactly), and PTP1B's verdict flips to `NO_SIGNAL_IN_APO`** under the corrected convention, flagged as needing a follow-up correction to that table, not silently absorbed. | [[TASK-0159]], [[TASK-0130]], [[TASK-0110]], [[TASK-0146]], [[TASK-0113]], [[TASK-0081]], [[TASK-0127]] |
-| 40 | How many scored cells has this program actually run against real target labels, program-wide — and does the number of reported positives exceed what that testing volume alone would produce at α=0.05, per `PANEL_REVIEW_2026-07-25.md`'s own framing? | **resolved 2026-07-25: 226 real-target scored cells, confirming (and modestly exceeding) the review's own "~200+" estimate — expected false positives at α=0.05 ≈ 11.3.** Using [[TASK-0158]]'s corrected-null re-run (not the pre-correction numbers): **zero** confirmed, corrected-null-surviving positives program-wide. `dcc_low`, the one prior Bonferroni survivor, lost significance on both CARDIAC_MYOSIN and PTP1B under the compact-patch null. One cell remains genuinely unresolved rather than confirmed: [[TASK-0145]]'s BCR_ABL1 transport result uses a scattered null TASK-0158 found is *more* anti-conservative than the one that removed `dcc_low`'s significance, and was not itself re-run — treated as unconfirmed, not counted as a survivor. **The project has fewer positives than pure chance predicts, not merely "not clearly in excess of it."** Full enumeration table: this document's own "Program-level multiple-comparison budget" section above. | [[TASK-0161]], [[TASK-0158]], [[TASK-0149]], [[TASK-0151]], [[TASK-0145]] |
+| 40 | How many scored cells has this program actually run against real target labels, program-wide — and does the number of reported positives exceed what that testing volume alone would produce at α=0.05, per `PANEL_REVIEW_2026-07-25.md`'s own framing? | **resolved 2026-07-25: 226 real-target scored cells, confirming (and modestly exceeding) the review's own "~200+" estimate — expected false positives at α=0.05 ≈ 11.3.** Using [[TASK-0158]]'s corrected-null re-run (not the pre-correction numbers): **zero** confirmed, corrected-null-surviving positives program-wide. `dcc_low`, the one prior Bonferroni survivor, lost significance on both CARDIAC_MYOSIN and PTP1B under the compact-patch null. One cell remains genuinely unresolved rather than confirmed: [[TASK-0145]]'s BCR_ABL1 transport result uses a scattered null TASK-0158 found is *more* anti-conservative than the one that removed `dcc_low`'s significance, and was not itself re-run — treated as unconfirmed, not counted as a survivor. **The project has fewer positives than pure chance predicts, not merely "not clearly in excess of it."** Full enumeration table: this document's own "Program-level multiple-comparison budget" section above. **[[TASK-0191]] recount, 2026-08-03: 10 tasks landed real-target scored cells since this row's own 2026-07-25 freeze — new total 366 cells (140 new), expected false positives ≈18.3. Still zero confirmed positives — a stronger, not weaker, position. See that section's own "Recount" addendum, not this row, for the current number.** | [[TASK-0161]], [[TASK-0158]], [[TASK-0149]], [[TASK-0151]], [[TASK-0145]], [[TASK-0191]] |
 | 41 | Does the shipped `connectivity_matrix.npz` deliverable actually satisfy the challenge's own §5 "N×N quantum connectivity matrix" requirement — quantum-defined, all-pairs, and dense? | **resolved 2026-07-27: no (before this task) — classical, seeded, and sparse, failing on all 3 counts; now yes, additively.** New `propagators.quantum_connectivity_matrix` (`P_inf(i,j)=sum_k \|v_k(i)\|^2\|v_k(j)\|^2`, one `(N,N)@(N,N)` product from the same eigendecomposition `time_averaged_ctqw_converged` already needs — no second diagonalization). Exact symmetry and row-sum-to-1 both derived and confirmed numerically; real-data check on all 3 mandatory targets shows the new matrix at density 1.000 vs. the old matrix's 0.014-0.057 (falling as N grows) — a decisive, measured confirmation of the "not dense" fix specifically. **Design choice checked, not assumed**: the plain per-eigenvector formula (not TASK-0130's own degenerate-block-corrected form) matches `time_averaged_ctqw_converged`'s independently-computed single-source column to 1e-16 to 1e-17 (machine precision) on every mandatory target — real `H_new` spectra are near- not exactly-degenerate, so the simpler formula this task's own Intent Contract specifies is confirmed exact in practice, not merely assumed safe. Wired additively into both `run_target` and `run_target_no_ground_truth` as `quantum_connectivity_matrix.npz`, the pre-existing classical file untouched and still written. | [[TASK-0160]], [[TASK-0130]] |
 
 | 42 | Does replacing `block_bootstrap_ci`'s sequence-index blocking with a spatially compact k-NN block — matching a real pocket's own geometry, `PANEL_REVIEW_2026-07-25.md` W6/V4 — widen CIs for currently-surviving/near-surviving positives, as the review's own text predicts? | **resolved 2026-07-27: the tool is built and validated correctly, but the real-data direction is mixed, not uniform widening — reported honestly.** New `metrics.spatial_block_bootstrap_ci` (k-NN block, drop-in signature). Regression checks pass: exact convergence to sequence-block behavior on a 1D-line synthetic control, and 1.4x–2.4x widening on a globule control once an accidental sequence/3D correlation in the naive fixture (a random-walk build order) was found and removed. **On real transport data (TASK-0145's BCR_ABL1 family plus KRAS_G12C/PTP1B's own `H_new` cells, [[TASK-0158]]'s own flagged near-survivors): 4/5 cells got *narrower*, not wider** (ratios 0.83–0.98; only KRAS_G12C widened, 1.27x) — plausibly because real secondary structure keeps genuine local sequence stretches spatially coherent too, unlike the idealized synthetic control. Practical bottom line unaffected: no cell anywhere in this project has ever had a non-overlapping CI (confirmed by direct grep before this task started), and every re-checked cell still overlaps its floor's CI under the corrected method — no verdict flips either direction. | [[TASK-0165]], [[TASK-0158]], [[TASK-0145]] |
