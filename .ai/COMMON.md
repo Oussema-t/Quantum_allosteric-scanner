@@ -131,7 +131,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0039 | `clean.py`'s alt-loc handling always keeps `'A'`, never implements the docstring's "or highest occupancy" fallback | Implementer | TODO | P2 | 2026-07-05 | — | — | `.ai/tasks/TODO/TASK-0039-clean-py-altloc-occupancy-fallback.md` |
 | TASK-0040 | `potentials.py` recomputes the GNM eigendecomposition redundantly in `_gnm_msf`/`V_C`/`V_M` — no shared context, unlike `backend/analysis.py::gnm_context` | Implementer | TODO | P2 | 2026-07-05 | — | — | `.ai/tasks/TODO/TASK-0040-potentials-shared-gnm-context.md` |
 | TASK-0041 | `propagators.haken_strobl` never checks `solve_ivp`'s `sol.success` flag — a failed integration would silently return as if it succeeded. **Before implementing, checked reachability**: RK45 succeeds (fast, <1s) throughout this project's real gamma range (up to `gamma=100`, `dephasing_sweep`'s own ceiling); becomes impractically slow (not `success=False`) only around `gamma=1000-10000`, ~10-100x beyond any real call site -- a genuinely defensive gap, not a live bug. Added the `sol.success` check (raises `RuntimeError` naming gamma/t/status/message) regardless, plus 2 new regression tests (realistic-range pass, mocked-failure raise, since a genuine failure proved impractical to trigger with real physical parameters) | Implementer | Done | P2 | 2026-07-05 | — | — | `.ai/tasks/DONE/TASK-0041-haken-strobl-solve-ivp-success-check.md` |
-| TASK-0042 | Hook-enforce the `GIT-COMMIT` gate via a Claude Code `PreToolUse` hook (upgrades TASK-0028's advisory lock to a blocking one) — filed as a handoff for Toolsmith, justified by this session's repeated real coordination incidents | Toolsmith | TODO | P1 | 2026-07-05 | — | — | `.ai/tasks/TODO/TASK-0042-hook-enforced-commit-gate.md` |
+| TASK-0042 | Hook-enforce the `GIT-COMMIT` gate via a Claude Code `PreToolUse` hook (upgrades TASK-0028's advisory lock to a blocking one) — filed as a handoff for Toolsmith, justified by this session's repeated real coordination incidents | Toolsmith | Done | P1 | 2026-07-05 | — | — | `.ai/tasks/DONE/TASK-0042-hook-enforced-commit-gate.md` |
 | TASK-0043 | Split `bartosz` into a `scaffold` branch (40 commits, PR-ready toward `main`) holding back the one product-code commit (TASK-0030) as its own chunk — push/PR step blocked on user credentials, not available in this sandbox | Architect/Planner | Done | P1 | 2026-07-05 | — | — | `.ai/tasks/DONE/TASK-0043-scaffold-branch-split.md` |
 | TASK-0044 | Reconcile the "Python 3.9" convention (CLAUDE.md/SOFTWARE.md/AGENTS.md) against the actual 3.11.9 Render runtime and a `biotite==0.41.0` pin requiring 3.10+ — no documented rationale found for 3.9 | Architect/Planner | TODO | P2 | 2026-07-06 | — | — | `.ai/tasks/TODO/TASK-0044-python-version-convention-reconciliation.md` |
 | TASK-0045 | Extend `claim.py` with an atomic `reserve-next` task-id allocator — filed after this exact task number collided with a concurrent thread's TASK-0045 (see TASK-0046), which is the live incident motivating it | Toolsmith | Done | P1 | 2026-07-07 | — | — | `.ai/tasks/DONE/TASK-0045-highest-task-lookup-tool.md` |
@@ -324,13 +324,24 @@ see the claim-before-start rule under "Current Rules" below.
   way `claim` does (`--force --reason TEXT` to override); moving to `DONE`
   auto-releases the claim by default (`--keep-claim` to opt out). `--as` is
   always required.
-- **Claim `GIT-COMMIT` before staging anything you intend to commit
-  (TASK-0028, workflow completed by TASK-0029) — but the claim alone is
-  advisory, not enforced; `commit-guard` is the real safety net (see
-  `.ai/memory/questions/toolsmith/answered/Q-0001-*.md` for a real
-  incident where a non-honoring thread's `git add` landed in another
-  thread's staged index despite the lock being held; hardening this into
-  an actually-blocking hook is TASK-0042, TODO).** Full sequence:
+- **Claim `GIT-COMMIT` before staging anything you intend to commit**
+  (TASK-0028, workflow completed by TASK-0029). **As of TASK-0042
+  (2026-08-03), `git commit`/`git push` Bash calls are hook-enforced, not
+  merely advisory**: a `PreToolUse` hook (`.ai/tools/git_commit_guard_hook.py`,
+  registered in `.claude/settings.json`) denies the call outright unless
+  `GIT-COMMIT` is currently claimed **by this exact session** — locks now
+  record `session_id` (from `CLAUDE_CODE_SESSION_ID`) alongside the
+  free-text `claimant` label specifically so the hook can check identity,
+  not just existence; a stale/foreign claim, a legacy lock with no
+  recorded session_id, or no claim at all all deny, with a distinguishing
+  reason each. See `.ai/memory/questions/toolsmith/answered/Q-0001-*.md`
+  for the real incident (a non-honoring thread's `git add` landing in
+  another thread's staged index) that motivated hardening this in the
+  first place. **What the hook does *not* cover**: it verifies the *claim*,
+  not your *file list* — `commit-guard --expect <paths>` below is still a
+  manual step and still the real defense against staging the wrong files;
+  a held claim only proves you're allowed to commit *something* right now,
+  not that what's staged is what you intended. Full sequence:
   1. `python3 .ai/tools/claim.py claim GIT-COMMIT "<your label>"` before
      the *first* `git add` of a commit-bound change, not right before
      `git commit`. If another thread holds it, `claim` refuses and names
@@ -338,9 +349,7 @@ see the claim-before-start rule under "Current Rules" below.
      `--force --reason --hitl-override` yourself — that combination
      requires an explicit human instruction in the current conversation,
      not an agent's own judgment call, unlike the advisory task-row
-     override above. **Holding this claim does not stop a thread that
-     never checks it** — treat it as a courtesy signal other cooperating
-     threads read, not a lock the filesystem enforces.
+     override above.
   2. `python3 .ai/tools/claim.py commit-guard --expect-empty` — fail fast
      if the index isn't actually clean, before you touch it (beats
      staging first and discovering contamination after).

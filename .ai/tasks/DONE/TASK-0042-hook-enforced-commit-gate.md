@@ -7,7 +7,7 @@
   the agent remembers to run it" to hook-enforced — a Claude Code
   `PreToolUse` hook that blocks `git commit`/`git push` Bash calls unless
   the calling session currently holds the `GIT-COMMIT` claim
-- Status: TODO
+- Status: Done
 - Owner: Toolsmith
 - Claimed By: —
 - Claimed At: —
@@ -100,20 +100,22 @@ None
 
 ## TODO
 
-- [ ] Confirm the installed Claude Code version supports the `"if"`
+- [x] Confirm the installed Claude Code version supports the `"if"`
       matcher field; if not, filter on the full command string inside the
-      script instead.
-- [ ] Decide hook placement: `.claude/settings.json` (shared, ships with
+      script instead. **Not relied on** — matched all `Bash` calls and did
+      the git-subcommand filtering inside the script, per this file's own
+      documented fallback, rather than spend time confirming an optional
+      feature this task doesn't actually need.
+- [x] Decide hook placement: `.claude/settings.json` (shared, ships with
       the repo, protects every thread) vs `.claude/settings.local.json`
-      (per-machine). Recommend the shared file — this is meant to protect
-      every thread working this repo, not one operator's preference.
-- [ ] Write the wrapper script; register it as a `PreToolUse` hook matched
+      (per-machine). **Shared file used**, per this file's own recommendation.
+- [x] Write the wrapper script; register it as a `PreToolUse` hook matched
       on `Bash`.
-- [ ] Implement the minimum-viable deny condition (deny git commit/push if
+- [x] Implement the minimum-viable deny condition (deny git commit/push if
       `GIT-COMMIT` is unclaimed by the calling session).
-- [ ] Update `.ai/COMMON.md`'s Current Rules to state the gate is now
+- [x] Update `.ai/COMMON.md`'s Current Rules to state the gate is now
       enforced, not advisory-only, once landed.
-- [ ] Run Planned Validation (3 cases above).
+- [x] Run Planned Validation (3 cases above) — extended to 6, see Done.
 
 ## Dependency
 
@@ -132,20 +134,87 @@ None
   automatically enforce `commit-guard`), or does that require the agent
   to persist its `--expect` list somewhere the hook can read (e.g.
   alongside the `GIT-COMMIT` lock file) before this becomes more than a
-  claim-existence check? Recommend shipping the claim-check-only version
-  first and revisiting once it's proven in practice, rather than solving
-  both at once.
-- Should the lock file start storing `session_id` (available on every
-  hook invocation) alongside — or instead of — the free-text `claimant`
-  label, so the hook can verify "this exact session holds the claim"
-  rather than trusting a string an agent could type for any session? This
-  closes a real, if minor, gap: nothing today stops a thread from
-  claiming under a label that doesn't match its actual session identity.
+  claim-existence check? **Shipped as recommended** — claim-identity check
+  only (see Done). Full `--expect` enforcement stays a real follow-up, not
+  attempted here.
+- **Resolved (Bartosz, 2026-08-03): both fields, different readers.**
+  `claimant` stays the free-text label — answers "what role is this claim"
+  for a human reading `.ai/COMMON.md`/`claim.py status`. `session_id`
+  (read from `CLAUDE_CODE_SESSION_ID`, never a CLI argument) answers "which
+  exact running session, precisely" — what the hook actually checks a
+  commit attempt against, and what closes the spoofing gap this question
+  originally named (a caller could type any `claimant` string; it cannot
+  fabricate its own environment's session id). Implemented in
+  `claim.py`'s `session_id()` helper, written on every lock (`claim`,
+  `reserve-next`, `scq-enter`), surfaced in `status`'s output.
 - `.claude/settings.json` vs `.claude/settings.local.json` precedence is
-  not documented upstream (confirmed via doc lookup, not assumed) — worth
-  an empirical test logged here if it turns out to matter for where this
-  hook must live to apply repo-wide rather than per-machine.
+  not documented upstream (confirmed via doc lookup, not assumed) — moot
+  for this task: the shared file was used and works (Planned Validation
+  below), so this is left as a genuinely open question for whoever
+  eventually needs `.local.json` specifically, not resolved here.
 
 ## Done
 
-(not yet)
+**2026-08-03, Architect.** Two parts, per the resolved Open Question above.
+
+**Part 1 — `claim.py`: `session_id` alongside `claimant` on every lock.**
+New `session_id()` helper reads `CLAUDE_CODE_SESSION_ID` from the
+environment (confirmed present on every Bash call in this environment,
+a 36-char value, present via direct `env` inspection before relying on
+it — not assumed from the hook-input schema alone). Written into the lock
+dict in `cmd_claim` (covers both the plain-claim and `--force`-override
+branches, which share the same `data` dict), `cmd_reserve_next`, and both
+branches of `cmd_scq_enter` (new ticket and re-entering-in-place). `status`
+(both the single-id and full-listing forms) now prints
+`claimed by 'X' [session xxxxxxxx...] at ...` via a new `_short_sid()`
+helper — absent session_id (a lock written before this change, or claimed
+outside a Claude Code session) prints `no-session-id` explicitly rather
+than a blank, so it reads as "unverifiable", not "fine."
+
+**Part 2 — the hook.** `.ai/tools/git_commit_guard_hook.py`, registered
+under `hooks.PreToolUse` in `.claude/settings.json` (shared file, matcher
+`"Bash"`, no reliance on the optional `"if"` command-filter — regex
+filtering for `git commit`/`git push` done inside the script instead, per
+this file's own documented fallback). Imports `claim.py` directly
+(`read_lock`) rather than shelling out to `status` and parsing text —
+one implementation of the lock format, not two.
+
+**Fails closed, not open** — every ambiguous state denies rather than
+allows: unclaimed lock, a lock with no recorded `session_id` (legacy or
+non-Claude-Code claim), or a caller with no incoming `session_id`, all
+deny with a specific, distinguishing reason rather than a generic message
+or (worse) silent passage.
+
+**Planned Validation, all 3 original cases plus 3 more found worth
+checking while building:**
+1. Unrelated `Bash` command (`ls -la`) → allowed, no hook output. Confirmed.
+2. `git commit`, `GIT-COMMIT` unclaimed → denied, names the exact `claim`
+   command to run. Confirmed.
+3. `git commit`, `GIT-COMMIT` claimed by a different `session_id` → denied,
+   names the current claimant and both (truncated) session ids, and the
+   two legitimate ways to proceed (release, or a human-instructed
+   `--force --reason --hitl-override`). Confirmed.
+4. `git commit`, `GIT-COMMIT` claimed by *this* `session_id` → allowed,
+   no hook output. Confirmed.
+5. `git push`, held by this session → allowed (the same regex covers both
+   verbs, per this task's own original scope). Confirmed.
+6. `git commit-tree` (a plumbing look-alike) → allowed, not treated as a
+   real commit — confirms the word-boundary regex doesn't over-match.
+   Confirmed.
+7. **Fail-closed check, added beyond the original 3**: a hand-crafted
+   legacy-format lock with no `session_id` field → denied with a message
+   naming exactly that ("identity cannot be verified"), not silently
+   allowed. Confirmed — this is the case a less careful implementation
+   would get wrong.
+
+**`.ai/COMMON.md`'s Current Rules** updated: the `GIT-COMMIT` claim-before-
+staging bullet now states the gate is hook-enforced for `git commit`/
+`git push` specifically (denies at the tool-call level, not merely
+advisory), while still noting the hook is an identity check on the lock,
+not a substitute for `commit-guard --expect`'s file-list verification —
+that half of the discipline remains manual.
+
+**Not done, flagged not hidden**: automatic `commit-guard --expect`
+enforcement inside the hook (this task's own Out Of Scope); hardening any
+command beyond the `git commit`/`git push` family; the `.local.json`
+precedence question above.

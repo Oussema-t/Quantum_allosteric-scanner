@@ -163,6 +163,33 @@ def now_str():
     return datetime.now().strftime("%Y-%m-%d %H:%M")
 
 
+def session_id():
+    # type: () -> Optional[str]
+    """The calling Claude Code session's own id, read from the environment
+    -- never a CLI argument, so a caller cannot type an arbitrary value for
+    "who is claiming this" (TASK-0042's own Open Question: labels are
+    free-text and spoofable, this is not). `claimant` stays the free-text
+    human/HITL-facing label ("what role is this" -- Implementer A,
+    Architect, ...); `session_id` is the machine-facing identity ("which
+    exact running session, precisely" -- what the PreToolUse hook checks
+    a commit attempt against). None outside a Claude Code session (e.g. a
+    human running claim.py by hand at a terminal) -- callers must treat
+    that as "identity unverifiable", not as an identity of its own."""
+    return os.environ.get("CLAUDE_CODE_SESSION_ID")
+
+
+def _short_sid(lock):
+    # type: (dict) -> str
+    """Display form of a lock's recorded session_id: first 8 chars, or an
+    explicit marker when absent -- absent means either a lock written
+    before this field existed, or one claimed outside a Claude Code
+    session (a human running claim.py by hand). Never fabricate a value;
+    callers (including the PreToolUse hook) must treat "no-session-id" as
+    unverifiable identity, not as a wildcard match."""
+    sid = lock.get("session_id")
+    return (sid[:8] + "...") if sid else "no-session-id"
+
+
 def read_lock(task_id):
     # type: (str) -> Optional[dict]
     path = lock_path(task_id)
@@ -228,6 +255,7 @@ def cmd_claim(args):
         "claimant": args.claimant,
         "claimed_at": now_str(),
         "note": args.note,
+        "session_id": session_id(),
     }
 
     try:
@@ -381,7 +409,13 @@ def cmd_reserve_next(args):
     task_id = _allocate_numbered_lock(
         "TASK",
         on_disk_max,
-        {"claimant": args.claimant, "claimed_at": now_str(), "note": args.note, "reserved": True},
+        {
+            "claimant": args.claimant,
+            "claimed_at": now_str(),
+            "note": args.note,
+            "reserved": True,
+            "session_id": session_id(),
+        },
         "task_id",
     )
     if task_id is None:
@@ -449,8 +483,8 @@ def cmd_status(args):
             print("%s: unclaimed" % task_id)
         else:
             print(
-                "%s: claimed by %r at %s"
-                % (task_id, lock["claimant"], lock["claimed_at"])
+                "%s: claimed by %r [session %s] at %s"
+                % (task_id, lock["claimant"], _short_sid(lock), lock["claimed_at"])
             )
         if task_id == "GIT-COMMIT":
             _print_scq_queue()
@@ -472,8 +506,8 @@ def cmd_status(args):
         else:
             dangling = ""  # special resource (e.g. GIT-COMMIT), not a task file
         print(
-            "%s: claimed by %r at %s%s"
-            % (task_id, lock["claimant"], lock["claimed_at"], dangling)
+            "%s: claimed by %r [session %s] at %s%s"
+            % (task_id, lock["claimant"], _short_sid(lock), lock["claimed_at"], dangling)
         )
     _print_scq_queue()
     return 0
@@ -1231,6 +1265,7 @@ def cmd_scq_enter(args):
                 "files": args.files,
                 "message": args.message,
                 "message_body": message_body,
+                "session_id": session_id(),
             }
             with open(lock_path(ticket), "w") as f:
                 json.dump(data, f, indent=2)
@@ -1247,6 +1282,7 @@ def cmd_scq_enter(args):
             "files": args.files,
             "message": args.message,
             "message_body": message_body,
+            "session_id": session_id(),
         },
         "ticket",
     )
