@@ -218,3 +218,26 @@ that half of the discipline remains manual.
 enforcement inside the hook (this task's own Out Of Scope); hardening any
 command beyond the `git commit`/`git push` family; the `.local.json`
 precedence question above.
+
+**Regression found and fixed same day, 2026-08-03 (Architect), severity:
+high.** The hook's registered `command` used a path relative to the
+invoking shell's cwd (`python3 .ai/tools/git_commit_guard_hook.py`). The
+Bash tool's cwd persists across calls in a session; the moment any call
+`cd`'d into a subdirectory (e.g. `__WORK_IN_PROGRESS__/`), *every*
+subsequent Bash call — not just `git commit`/`git push`, the hook fires
+on the `Bash` matcher for all of them — failed outright with a Python
+`FileNotFoundError`, since the hook process's own cwd tracked the shell's,
+not a fixed repo root. This blocked all Bash usage in that state, a far
+larger blast radius than the narrow git-commit gate this task intended.
+Fixed by changing the registered command to resolve the repo root
+dynamically via `git rev-parse --show-toplevel` rather than assuming any
+fixed cwd — portable across machines (no hardcoded absolute path, unlike
+the alternative of hardcoding this machine's own path, which would have
+broken the hook on every other machine's checkout of this multi-person
+repo) and robust to cwd drift within a session. Confirmed fixed by
+reproducing the exact failure (`cd` into a subdirectory, run any Bash
+command) both before and after the fix. **Lesson for the next thread
+that registers a hook command**: never assume a fixed/repo-root cwd for a
+`PreToolUse` hook matched on `Bash` — the tool's own cwd persistence
+across calls makes that assumption fail exactly when a normal `cd`
+happens, not in some exotic edge case.
