@@ -56,15 +56,17 @@ flowchart TB
 flowchart LR
   main --> pipeline & compare & analysis & active_site & discovery & rcsb & systems
   pipeline --> data_layer & systems & active_site & analysis & discovery
-  discovery --> rcsb & data_layer & systems
+  discovery --> rcsb & data_layer & systems & geometry
   active_site --> rcsb & discovery
-  analysis --> data_layer
+  analysis --> data_layer & geometry
   compare --> data_layer & rcsb
   rcsb --> data_layer
 ```
 
-`data_layer` and `systems` are the leaves (no internal deps). `main` wires everything and
-serves the frontend. No module imports `main` (avoids cycles).
+`data_layer`, `systems`, and `geometry` are the leaves (no internal deps). `main` wires
+everything and serves the frontend. No module imports `main` (avoids cycles). `geometry`
+(TASK-0030, 2026-07-05) dedupes the Kabsch-alignment code `discovery` and `analysis`
+previously each implemented independently.
 
 ---
 
@@ -120,10 +122,15 @@ Quantum_allosteric-scanner/
 │   ├── pipeline.py      build_view orchestrator + structure_to_pdb_text
 │   ├── data_layer.py    RCSB fetch + Cα/B-factor extraction
 │   ├── rcsb.py          structure intel + chem_comp ligand classifier
+│   ├── rcsb_extract.py  standalone RCSB apo→holo extraction (fetch_structure/
+│   │                    fetch_ligand/fetch_apo_holo/fetch_intermediates);
+│   │                    not yet wired into the API (see TASK-0034)
 │   ├── discovery.py     UniProt + holo search + complete_apo
 │   ├── active_site.py   UniProt→PDB active-site detection
 │   ├── analysis.py      GNM site potentials (§5b/§5c/§5d)
 │   ├── compare.py       Kabsch superpose + drug-bearing-chain resolution
+│   ├── geometry.py      shared Kabsch fit/apply/align (dedupes discovery.py/
+│   │                    analysis.py's previously-independent implementations)
 │   └── systems.py       benchmark target metadata
 ├── frontend/            index.html · app.js · style.css
 ├── render.yaml          Render Blueprint (deploy)
@@ -157,6 +164,11 @@ Newest first; one line per change, **dated + signed** so teammates can see what 
 when: `- YYYY-MM-DD · <name> · <summary>`. See [COLLABORATION.md](COLLABORATION.md).
 
 - 2026-08-03 · Implementer B · Flagged (not fixed) a genotype error propagating out of the research register into the live app: `backend/systems.py`'s `KRAS_G12C` entry ships `apo="4OBE"` with `covalent_anchor=12`/`top5_full_named=["CYS12",...]`, but 4OBE is wild-type KRAS (chain A residue 12 is GLY, re-verified directly), not G12C — found by `__WORK_IN_PROGRESS__`'s TASK-0155 and independently re-confirmed. Added a dated code comment recording the apo/label mismatch as a real, unresolved inconsistency (not a defensible modelling choice as shipped); no apo swap, no response-shape change — that is a register-wide re-run, explicitly out of scope here. `SOFTWARE.md`'s benchmark table and `__WORK_IN_PROGRESS__/config/targets.yaml`/`COMPETENCE_MAP.md` carry the same flag (TASK-0192).
+- **[Retroactive entry, backfilled 2026-08-03 by TASK-0194 — written five weeks after the fact, not at commit time; see that task for why.]** 2026-07-12 · Implementer · New `backend/analysis.py::coherence_sensitivity`-adjacent test coverage: `test_analysis_characterization.py` pins current live output of `gnm_context`/`site_potentials`/`quantum_seed_readiness`/`connectivity_change` before any future convergence work touches them (TASK-0074). No behavior change.
+- **[Retroactive entry, backfilled 2026-08-03 by TASK-0194.]** 2026-07-12 · Implementer · `backend/analysis.py` gains a shared Kirchhoff-context + DCC (dynamic cross-correlation) numpy helper, deduping independently-derived pseudo-inverse math that previously lived only in the `__WORK_IN_PROGRESS__/src/allostery` research tree (TASK-0066). No response-shape change.
+- **[Retroactive entry, backfilled 2026-08-03 by TASK-0194.]** 2026-07-12 · Implementer · `backend/data_layer.py::fetch()`'s exception handling broadened from `urllib.error.HTTPError` only to `(URLError, socket.timeout, TimeoutError)` (TASK-0031) — a transient RCSB DNS/connection failure or timeout now degrades to the same clean `POST /api/load` 422 the app already gives for a bad PDB ID, instead of an unhandled 500. `SOFTWARE.md`'s `/api/load` error-response line updated to note the widened trigger set (message/status code themselves unchanged).
+- **[Retroactive entry, backfilled 2026-08-03 by TASK-0194.]** 2026-07-11 · Implementer · Escape RCSB-sourced strings (chain IDs, ligand names, titles) before `innerHTML` injection in `frontend/app.js` (TASK-0032) — a High-severity XSS finding from a commit review; RCSB-sourced text could otherwise inject arbitrary HTML/script into the page. No API response-shape change.
+- **[Retroactive entry, backfilled 2026-08-03 by TASK-0194.]** 2026-07-05 · Implementer · New `backend/geometry.py` — dedupes the Kabsch-alignment implementation previously duplicated between `backend/analysis.py::_kabsch_rotate` and `backend/discovery.py::_kabsch` (TASK-0030) into one shared, unit-tested module (`test_geometry.py`). `discovery.py` and `analysis.py` now both import `kabsch_fit`/`kabsch_apply`/`kabsch_align` from it. Added to §2's dependency diagram and §5's directory layout in the same commit as this backfill (TASK-0194) — it was missing from both for five weeks.
 - 2026-06-28 · Oussema · Fix real-structures graph: it intersected residues across ALL frames (smaller node set → fewer edges → fragmented graph) and could read a different cutoff. Now `morph_frames` builds on the **canonical apo∩holo set** (identical nodes/edges/cutoff to the connectivity graph); intermediates only reposition residues they contain, missing ones follow the apo→holo line (returns `coverage[]`). Frontend sends `LAST.conn.cutoff` so both modes match exactly.
 - 2026-06-28 · Oussema · 3D graph: the **Region selector now drives the real-structures animation too** — changing X/Y region re-filters the real keyframes (by residue number) so the graph animates only the selected region; cached as `LAST.frames`, applied via `subsetFrames` in `applyConnRegion`; motion-mode toggle re-renders on the current region.
 - 2026-06-28 · Oussema · 3D graph animation real-structures mode now **auto-discovers** intermediates: the user only picks **how many frames** (the protein is already chosen). `discovery.same_protein_entries` (UniProt→RCSB) + `analysis._auto_intermediates` order other PDB structures of the same protein along apo→holo by a best-fit-RMSD progress coordinate and pick n−2 evenly. `/api/morph-frames` param is now `n_frames` (2–8), not manual ids; UI is a Frames count, not an id box.
