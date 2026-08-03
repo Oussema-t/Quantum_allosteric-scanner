@@ -18,10 +18,12 @@
   one launched at the active site and one swept across candidate
   residues — as a per-candidate coupling score that tests *path
   interference*, not co-location.
-- Status: TODO
+- Status: Done
+  `PANEL_REVIEW_2026-07-25.md`'s own explicit, dated instruction — see
+  this file's own provenance note above and its Done section below)
 - Owner: Implementer
-- Claimed By: —
-- Claimed At: —
+- Claimed By: Implementer B (this thread)
+- Claimed At: 2026-08-02 22:02
 - Source: the "multi-walking / boson-walk" idea (2026-07-20 conversation,
   previously unfiled; Architect rating attached in-thread). Filed now,
   scoped to the ONLY residual that has not already been ruled out — see
@@ -116,14 +118,18 @@ None
 
 ## TODO
 
-- [ ] Write the non-reducibility precondition paragraph (gate).
-- [ ] Verify Valiant / Terhal-DiVincenzo / Aaronson-Arkhipov citations.
-- [ ] Construct k=2 symmetrized bosonic space + evolution from existing H_0.
-- [ ] Synthetic falsifier: bunching vs coupling at equal distance,
-      distinguishable from single-particle-squared?
-- [ ] If passes: real-target scoring vs floor, CIs, permutation null.
-- [ ] Report, with the honest ceiling (better observable != quantum
-      advantage at k=2).
+- [x] Write the non-reducibility precondition paragraph (gate).
+- [x] Verify Valiant / Terhal-DiVincenzo / Aaronson-Arkhipov citations.
+- [~] Construct k=2 symmetrized bosonic space + evolution from existing H_0.
+      **Not done, deliberately** — superseded by `PANEL_REVIEW_2026-07-25.md`'s
+      own explicit "file, do not build before the deadline" instruction
+      (dated after this task's own original filing; see provenance note).
+- [~] Synthetic falsifier — **not done, same reason as above.**
+- [~] Real-target scoring — **not applicable, gated on the falsifier above,
+      which was never run.**
+- [x] Report, with the honest ceiling (better observable != quantum
+      advantage at k=2) — done as a forward-proposal write-up, not a
+      real-data result.
 
 ## Dependency
 
@@ -138,7 +144,64 @@ None
   connected correlation) — state and justify; connected correlation was
   flagged in-thread as partly a time-averaging artifact, so define
   carefully.
+  **Answered as a recommendation, not resolved by running code**: the
+  finite-time (not time-averaged) coincidence probability `P(i,j;t)=
+  |psi(i,j;t)|^2` at a stated snapshot/short window. Time-averaging
+  integrates the interference cross-term to ~0 for a non-degenerate
+  spectrum — the same mechanism TASK-0130's own closed form exploits
+  deliberately for the single-particle case — which would silently
+  collapse this observable back into Falsifier C's already-dead product
+  quantity. Connected correlation not recommended as primary, for the
+  same reason the in-thread flag raised.
 
 ## Done
 
-(not yet)
+**2026-08-02, Implementer B.** Scope corrected on pickup, per this task's
+own renumbering note and `PANEL_REVIEW_2026-07-25.md`'s own later, dated,
+explicit instruction: *"file, do not build before the deadline... Describe
+it in the forward-proposal section as the principled next rung. Do not
+spend two weeks on it."* This supersedes the Intent Contract's own literal
+"construct the k=2 space / synthetic falsifier / real-target scoring"
+instructions, written before that deprioritization decision existed --
+not abandoned mid-execution, corrected at the start, per direct
+confirmation the renumbering note itself already endorses (it cites the
+same review).
+
+**Precondition Gate satisfied** (required before any `N^2` work regardless
+of whether that work is ultimately built): the non-reducibility argument
+is real, not asserted. For two non-interacting bosons from distinct
+sources, the coincidence probability `|psi(i,j;t)|^2` expands into
+Falsifier C's own dead product term plus a genuine interference cross-term
+`2*Re[c_i(t)c_j'(t)(c_j(t)c_i'(t))^*]` that depends on the *relative
+phase* between two single-particle amplitude paths -- information every
+converged/time-averaged observable in this register ([[TASK-0130]])
+provably discards ([[TASK-0146]]'s own phase-free-at-convergence finding).
+Full derivation: `RESULTS.md`'s own section of this task's name.
+
+**3 governing citations independently re-verified via live search against
+each paper's own abstract/venue**, not relayed from the task's own filing
+text: Valiant 1979 (Theoretical Computer Science 8, 189-201, permanent is
+#P-complete), Terhal & DiVincenzo 2002 (Phys. Rev. A 65, 032325,
+noninteracting-fermion/matchgate circuits classically simulable), Aaronson
+& Arkhipov 2011 (STOC 2011, linear-optics hardness needs many photons
+across `m=O(n^2)` modes). All three confirm the task's own characterization
+of each result exactly.
+
+**Honest ceiling stated, sourced from the primary citations directly**: a
+2x2 permanent is exactly as easy as a 2x2 determinant -- no complexity
+separation exists at k=2. Even a clean positive HOM-bunching finding would
+be a *better observable*, not a demonstrated quantum advantage, which
+needs asymptotic photon number this task's own scope was never going to
+reach.
+
+**Not built, per the review's own explicit deprioritization, not a partial
+result**: no k=2 symmetrized Hilbert space, no synthetic falsifier, no
+real-target scoring. Filed as a forward-proposal item instead.
+
+**Full test suite**: 1063 passed, 2 xfailed, 0 failed (no code touched by
+this task -- pure citation-verified writing, per its own corrected scope;
+run anyway for consistency with this project's own standing convention).
+
+Full detail: `RESULTS.md`'s own "Two-boson Hong-Ou-Mandel interference"
+section, open-questions row 50, `EXECUTION_PLAN.md`'s own Phase 1E
+forward-proposal note.

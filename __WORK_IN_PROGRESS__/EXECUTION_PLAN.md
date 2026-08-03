@@ -388,6 +388,25 @@ remaining idea, highest implementation cost); Hodge-L1 half of
 in the forward-proposal section, do not spend implementation time before
 2026-09-15.
 
+**Forward-proposal note ([[TASK-0157]], writing not code, 2026-08-02 — the
+task's own Precondition Gate and citation-verification requirement,
+completed without building the k=2 space per the deprioritization above):**
+two-boson Hong-Ou-Mandel path interference is the one non-reducible
+multi-particle residual (fermions reduce to determinants, in P — Terhal &
+DiVincenzo 2002; naive interacting co-occupation is Falsifier C, already
+near-negative; anyons have no formalism on a 3D contact graph). The genuine
+HOM bunching cross-term depends on the *relative phase* between two
+single-particle amplitude paths — provably discarded by every converged/
+time-averaged observable already in this register ([[TASK-0146]]) — a real
+non-reducibility argument, not an assertion, full derivation in
+`RESULTS.md`'s own section of the same name. **Honest ceiling, restated from
+the primary sources (Valiant 1979; Aaronson & Arkhipov 2011), all
+independently re-verified**: a 2x2 permanent is exactly as easy as a 2x2
+determinant — a clean positive at k=2 would be a *better observable*, not a
+demonstrated quantum advantage, which needs asymptotic photon number
+(`m=O(n^2)` modes) this task's own scope does not reach. Filed, not built,
+per the deprioritization above.
+
 **Updated 2026-07-25: 1E.7 ([[TASK-0164]]) is Done — real, decisive negative,
 not a partial result.** Re-checked `config/targets.yaml`'s remaining draft
 pool directly rather than assuming 3 resolvable configs exist: 6 real
