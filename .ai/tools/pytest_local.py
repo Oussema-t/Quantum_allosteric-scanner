@@ -33,6 +33,7 @@ exactly as before -- purely additive, not a behavior change for that case.
 
 Usage:
     pytest_local.py <preset> [--json]
+    pytest_local.py --file <test_module.py> [--json]
     pytest_local.py --list
 
 Presets:
@@ -44,16 +45,34 @@ Presets:
     backend           backend/test_geometry.py backend/test_analysis.py backend/test_analysis_characterization.py
     cross-tree        test_golden_value_cross_tree_drift.py (TASK-0072 -- needs both trees, hence WIP_SRC too)
     all               wip-all + backend + cross-tree
+
+--file <basename> (TASK-0196): run exactly one test module under
+__WORK_IN_PROGRESS__/tests/ by exact basename, e.g.
+`--file test_response.py` -- for any of the (currently 53, growing)
+test files that don't have a hand-named preset above, without waiting on
+the full `wip-all` run. Validated, not free-form: the basename must match
+`test_*.py` exactly (no path separators, no `..`) AND must exist on disk
+-- a well-formed but wrong/typo'd name fails with a clear message rather
+than a silent no-op or a confusing pytest error. Mutually exclusive with
+the positional preset. Reuses the same PYTHONPATH/interpreter resolution
+as every preset above -- not a second code path.
 """
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 WIP_SRC = str(REPO_ROOT / "__WORK_IN_PROGRESS__" / "src")
+WIP_TESTS_DIR = REPO_ROOT / "__WORK_IN_PROGRESS__" / "tests"
+
+# TASK-0196: basename-exact, no path separators or traversal reach this --
+# `^test_...\.py$` anchored on the full string, checked before any
+# filesystem access.
+_TEST_FILE_RE = re.compile(r"^test_[A-Za-z0-9_]+\.py$")
 
 
 def _resolve_interpreter():
@@ -86,8 +105,11 @@ PRESETS = {
 }
 
 
-def run_preset(name):
-    targets, extra_pythonpath = PRESETS[name]
+def _run_targets(targets, extra_pythonpath):
+    # type: (list, object) -> tuple
+    """Shared execution path: same interpreter resolution, PYTHONPATH
+    plumbing, and pytest-missing diagnostic for both preset mode and
+    `--file` mode (TASK-0196) -- one code path, not two."""
     interpreter = _resolve_interpreter()
     cmd = [interpreter, "-m", "pytest", "-q"] + targets
     env = os.environ.copy()
@@ -104,23 +126,75 @@ def run_preset(name):
     return cmd, result
 
 
+def run_preset(name):
+    targets, extra_pythonpath = PRESETS[name]
+    return _run_targets(targets, extra_pythonpath)
+
+
+def validate_test_file(basename):
+    # type: (str) -> Path
+    """TASK-0196: format check first (cheap, no filesystem access), then
+    existence -- in that order, so a path-traversal-shaped argument is
+    rejected before it ever reaches `Path.is_file()`. Raises SystemExit
+    with a clear, specific reason on either failure; returns the resolved
+    Path only when both checks pass."""
+    if not _TEST_FILE_RE.match(basename):
+        raise SystemExit(
+            f"error: --file {basename!r} is not a valid test module name -- "
+            "must match test_<name>.py exactly (no path separators, no '..', "
+            "basename only)"
+        )
+    path = WIP_TESTS_DIR / basename
+    if not path.is_file():
+        raise SystemExit(
+            f"error: --file {basename!r} does not exist under "
+            f"{WIP_TESTS_DIR.relative_to(REPO_ROOT)}/ -- check spelling; "
+            "`pytest_local.py --list` does not enumerate individual files, "
+            "only presets, so a typo here is not caught by that list"
+        )
+    return path
+
+
+def run_file(basename):
+    # type: (str) -> tuple
+    path = validate_test_file(basename)
+    rel = path.relative_to(REPO_ROOT).as_posix()
+    return _run_targets([rel], WIP_SRC)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("preset", nargs="?", choices=sorted(PRESETS))
+    parser.add_argument(
+        "--file",
+        metavar="BASENAME",
+        help="run exactly one test_*.py file under __WORK_IN_PROGRESS__/tests/ "
+        "by basename (TASK-0196) -- mutually exclusive with the preset "
+        "positional; validated (format + existence), not free-form",
+    )
     parser.add_argument("--list", action="store_true", help="print available presets and exit")
     parser.add_argument("--json", action="store_true", help="emit a machine-readable summary instead of raw pytest output")
     args = parser.parse_args()
 
-    if args.list or not args.preset:
+    if args.preset and args.file:
+        parser.error("give either a preset or --file, not both")
+
+    if args.list or not (args.preset or args.file):
         for name, (targets, _) in sorted(PRESETS.items()):
             print(f"{name}: {' '.join(targets)}")
+        print("--file <basename>: any test_*.py under __WORK_IN_PROGRESS__/tests/ (TASK-0196)")
         sys.exit(0 if args.list else 2)
 
-    cmd, result = run_preset(args.preset)
+    if args.file:
+        selector = f"wip-file:{args.file}"
+        cmd, result = run_file(args.file)
+    else:
+        selector = args.preset
+        cmd, result = run_preset(args.preset)
 
     if args.json:
         print(json.dumps({
-            "preset": args.preset,
+            "preset": selector,
             "cmd": cmd,
             "returncode": result.returncode,
             "passed": result.returncode == 0,
