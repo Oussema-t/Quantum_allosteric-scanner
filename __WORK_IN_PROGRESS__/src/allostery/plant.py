@@ -191,6 +191,65 @@ def plant_channel(
     return W_planted, report
 
 
+def plant_mode(
+    W: np.ndarray,
+    seed_idx,
+    target_idx,
+    strength: float,
+    rng: np.random.Generator,
+) -> tuple:
+    """TASK-0168 -- Plant B: a *correlated-mode* perturbation, the mirror
+    image of `plant_channel`'s strengthening. Softens every edge crossing
+    the boundary of `G = seed_idx UNION target_idx` versus the rest of the
+    structure (divides its weight by `(1 + strength)`), intended to make a
+    low collective (Kirchhoff-Laplacian) eigenmode concentrate coordinated,
+    same-sign amplitude on `G` -- without adding, removing, or strengthening
+    any edge *within* `G` (including the direct seed<->target path, which
+    is untouched here, unlike `plant_channel`'s whole purpose).
+
+    `rng` is accepted for interface symmetry with `plant_channel`
+    (unused -- this construction is deterministic given
+    `W`/`seed_idx`/`target_idx`/`strength`, there is no random draw to make).
+
+    Same `strength == 0.0` identity guarantee as `plant_channel`: returns
+    `W` bit-identical, no boundary computed.
+
+    **Not proven orthogonal to a channel effect by construction** -- see
+    this module's own TASK-0168 caller for the required empirical spectral
+    check (`verify_mode_plant_spectral_effect` in
+    `scripts/mechanism_discriminating_plant.py`); TASK-0168's own Open
+    Questions flags this as a real, unresolved possibility, not assumed
+    away here.
+    """
+    seed_idx = _source_indices(seed_idx)
+    target_idx = _source_indices(target_idx)
+    W_planted = W.copy()
+
+    if strength == 0.0:
+        return W_planted, PlantReport(
+            strength=0.0, n_paths_requested=0, n_paths_applied=0,
+            n_paths_failed=0, edges_modified=[], seed_idx=seed_idx, target_idx=target_idx,
+        )
+
+    group = set(seed_idx.tolist()) | set(target_idx.tolist())
+    rows, cols = np.nonzero(np.triu(W, k=1))
+    edges_to_soften = []
+    for i, j in zip(rows.tolist(), cols.tolist()):
+        if (i in group) != (j in group):  # exactly one endpoint in G: a boundary edge
+            edges_to_soften.append((i, j))
+
+    for i, j in edges_to_soften:
+        W_planted[i, j] /= 1.0 + strength
+        W_planted[j, i] /= 1.0 + strength
+
+    report = PlantReport(
+        strength=strength, n_paths_requested=0, n_paths_applied=len(edges_to_soften),
+        n_paths_failed=0, edges_modified=sorted(edges_to_soften),
+        seed_idx=seed_idx, target_idx=target_idx,
+    )
+    return W_planted, report
+
+
 def select_distal_patch(
     coords: np.ndarray,
     W: np.ndarray,

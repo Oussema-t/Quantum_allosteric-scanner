@@ -5760,6 +5760,179 @@ Full detail: `.ai/tasks/DONE/TASK-0171-reverse-direction-coupling-test-holo.md`,
 
 ---
 
+## Mechanism-discriminating plant — partial, target-dependent discrimination, mostly below this project's own certification bar (TASK-0168, 2026-08-04)
+
+**Question**: plant two physically different allosteric mechanisms into
+real apo topology and test whether the "directed-channel" observable
+family (`ctqw`/`T(E)`) and the "ensemble/mode" family (`dcc_low`/
+`prs_low`) detect only the mechanism each is justified on — the
+protein-scale generalization of [[TASK-0103]]'s 44-node dumbbell double
+dissociation.
+
+**A real structural finding, forced this task to re-scope before any
+grid ran**: this project's real-pipeline observables (`ctqw_converged`
+on `H_new`, `dcc_low`, `prs_low`, `ground_state_relaxation`/
+`mode_coparticipation` as actually called in `run_challenge.py`) are
+**exactly plant-invariant** to any weight-only perturbation of `W` —
+confirmed directly by reading every construction path
+([[TASK-0167.001]]/[[TASK-0167.002]]'s own already-established finding,
+re-verified before building on it), not merely "not yet wired." Every
+one of them rebuilds its own operator fresh from raw `coords` with a
+hardcoded unweighted contact matrix. Only `transmission_from_source` on
+a directly-built `hamiltonians.laplacian(W_planted)` responds in the
+real pipeline. This task's own observable set was built around that
+constraint rather than around it: `T(E=0)` and `time_averaged_
+ctqw_converged` applied directly to `laplacian(W_planted)` (matching
+[[TASK-0103]]'s own dumbbell-test convention, not a deviation from it),
+`ground_state_relaxation` the same way (the dumbbell's own well-tracker
+control), and a **new** `dcc_low_from_L` adapter — `lowmode_predictor.
+dcc_low`'s exact math, parameterized on an externally-given Laplacian
+instead of an internal coords-rebuild (verified bit-identical to real
+`dcc_low` on the equivalent unweighted graph before trusting it). Real
+`dcc_low`/`prs_low` remain structurally unable to see either plant at
+all — no `W` argument exists — and are reported as such, included only
+in the pre-plant redundancy matrix, not the live grid.
+
+**Plant B, new** (`allostery.plant.plant_mode`): the mirror image of
+`plant_channel` — softens (divides by `1+strength`) every edge crossing
+the boundary of `{seed} UNION {target patch}` versus the rest of the
+structure, rather than strengthening a path between them. Passes
+`assert_confound_orthogonal` on both targets across the full strength
+sweep (new regression test added to `tests/test_plant.py`, 6 new tests,
+mirroring `plant_channel`'s own coverage).
+
+**Mandatory scale-check (Planned Validation): PASSED, on both targets.**
+[[TASK-0103]]'s 44-node double dissociation reproduces at protein scale
+using a real diagonal-well construction (not either of this task's two
+named mechanisms) plus `plant_channel`: GSR tracks the well (mean AUC
+0.996 KRAS_G12C / 0.719 BCR_ABL1) but not the channel (0.559 / 0.508,
+chance); CTQW tracks the channel (0.640 / 0.566) but not the well (0.0 /
+0.0 on both — a clean anti-correlation, not just "no signal"). Weaker on
+BCR_ABL1 than KRAS_G12C but the qualifying direction holds on both.
+
+**Main 2-mechanism grid**: 480 cells, 0 errors (2 targets x 2 mechanisms
+x 4 observables x 3 strengths {0,4,16} x 10 seeds — explicit,
+stated scope-narrowing from TASK-0167.002's own larger grid: CARDIAC_MYOSIN
+dropped, 10 not 20 seeds [this task's own Constraint floor], one CI
+method [spatial] and 2 not 3 null specs [scattered+compact], both trims
+justified directly by TASK-0167.002's own finding that the dropped
+options were statistically indistinguishable from the kept ones).
+Certification pipeline (gate1 floor / gate2 CI non-overlap / gate3
+permutation null / gate4 Bonferroni, N=3 real-deployment family) reused
+unmodified from `positive_control_detection_curve.py`.
+
+**Point-estimate discrimination is real and mostly replicates across
+targets for the channel family; the one ensemble-family candidate does
+not:**
+
+| Observable | Family | KRAS_G12C (channel: s0→s16 / mode: s0→s16) | BCR_ABL1 (channel / mode) |
+|---|---|---|---|
+| `T(E=0)` | channel | 0.208→0.698 (rises) / 0.208→0.084 (falls) | 0.474→0.653 (rises) / 0.474→0.002 (collapses) |
+| `ctqw_converged` | channel | 0.323→0.692 (rises) / 0.323→0.355 (flat) | 0.372→0.597 (rises) / 0.372→0.330 (flat/falls) |
+| `dcc_low_from_L` | ensemble | 0.553→0.340 (falls) / 0.553→0.751 (**rises**) | 0.305→0.348 (flat) / 0.305→0.095 (**falls**) |
+| `ground_state_relaxation` | control | 0.181→0.672 (rises) / 0.181→0.107 (falls) | 0.326→0.599 (rises) / 0.326→0.140 (falls) |
+
+`T(E=0)`/`ctqw_converged` (channel family) show a clean, mechanism-specific,
+**replicated (2/2 targets)** pattern: rising AUC with channel strength,
+flat-to-falling with mode strength — exactly the "detects the mechanism
+it's justified on" signature this task set out to test, at the
+point-estimate level. `dcc_low_from_L` shows the hoped-for **opposite**
+signature (mode-specific rise) cleanly on KRAS_G12C but **does not
+replicate on BCR_ABL1** (falls under both mechanisms there, less under
+channel) — a genuine, reported-not-forced non-generalization, not a
+second confirmed discriminator. `ground_state_relaxation`, run here
+*without* an explicit diagonal well (neither named mechanism plants one),
+behaves like a de facto third channel-family member on both targets —
+its well-tracking behavior (confirmed real, above) is conditional on an
+actual energy well being present, which is a real and useful distinction
+this task's design surfaced, not assumed in advance.
+
+**Certification (gate1-4): mostly does not clear, extending TASK-0167.002's
+own headline finding to a second mechanism.** Under the corrected
+(compact-patch) null, P(certified) exceeds 0.30 in only 2 of the 32
+(observable x mechanism x target) curves tested (`ctqw_converged`/channel
+on BCR_ABL1 at s=16, P=0.30; same cell KRAS_G12C at s=4, P=0.20) and
+never reaches the 0.80 LOD bar anywhere in the tested strength range (up
+to ~2.6-2.9x baseline conductance for the channel plant, down to
+~0.25-0.32x for the mode plant, per the dose-axis calibration below) —
+**the real, replicated point-estimate discrimination above does not (yet)
+rise to this project's own formal certification standard at physically
+modest plant strengths.** This is the same corrected-null power gap
+TASK-0167.002 found for the channel plant alone, now shown to apply
+across both mechanisms and the new ensemble-family adapter too.
+
+**Dose axis** (`transport.effective_resistance_from_source` on
+`laplacian(W_planted)`, mean conductance seed→patch, 3-seed average):
+channel plant raises conductance to 2.61x (KRAS_G12C)/2.89x (BCR_ABL1)
+baseline at strength=16; mode plant lowers it to 0.253x/0.319x —
+reasonably but not perfectly matched in log-magnitude (log-ratio 0.96 vs
+1.37 for KRAS_G12C, 1.06 vs 1.14 for BCR_ABL1) at the strengths actually
+used, not forced to an exact match.
+
+**Pre-plant redundancy** (Spearman rho, real/unplanted scores, both
+targets): `T(E=0)`/`ctqw`/`ground_state_relaxation` (all computed on the
+same unplanted `L0`) cluster substantially (rho 0.5-0.9) — largely
+redundant with each other pre-plant, unsurprising since all three are
+different transforms of the same static operator. `dcc_low_from_L0` and
+real `dcc_low` correlate at rho 0.99-1.00 (expected, near-identical
+math). **`prs_low` is the one genuinely non-redundant observable in the
+full named set on both targets** — rho -0.32 to 0.12 with everything
+else, including its own GNM-family sibling `dcc_low`.
+
+**Plant B's own spectral-effect verification (this task's own explicit
+"most likely to fail silently" check): real but weak, and does not
+replicate cleanly across targets.** KRAS_G12C: same-sign seed/target
+co-amplitude on the lowest 5 Kirchhoff modes rises from 1/5 pre-plant to
+4/5 post-plant, though the co-amplitude *magnitude* mostly shrinks rather
+than grows on the modes that flip. BCR_ABL1: no net improvement (3/5
+same-sign both pre- and post-plant, with different modes flipping in
+each direction) — the intended "one dominant coordinated low mode"
+signature was not cleanly produced on this target. Reported plainly per
+this task's own Open Questions anticipation that a clean separation might
+not be achievable by construction.
+
+**Verdict (feeds back into [[TASK-0161]]'s effective-multiplicity
+framing, as this task's own Intent Contract requires): partially
+discriminating, not simply redundant, but weaker and less general than
+hoped.** The channel family (`T(E=0)`/`ctqw_converged`) genuinely
+detects its own named mechanism and not the other, replicated on both
+targets, at the point-estimate level — real mechanistic structure exists,
+arguing against treating the observable set as one undifferentiated
+number. But: (a) that discrimination mostly does not clear this project's
+own formal certification bar at the strengths tested: the register's
+"zero confirmed positives" framing is not contradicted by this task, it
+is reinforced from a second angle; (b) the one candidate ensemble-family
+discriminator (`dcc_low_from_L`) does not generalize across targets; (c)
+`dcc_low`/`prs_low` as actually deployed cannot see either mechanism at
+all, a structural fact independent of this task's own findings; (d)
+`T(E=0)`/`ctqw`/`GSR` are substantially redundant with each other
+pre-plant. Net effect on TASK-0161's flat multiplicity budget: **do not
+treat the ~40-observable register as fully redundant (real
+mechanism-specific structure exists) or as fully independent (the
+channel-family trio is highly correlated, and the ensemble family is
+mostly structurally blind to this entire class of perturbation) — the
+effective number of independent tests depends on which mechanism a real
+signal would take, a distinction the current flat budget does not
+capture.**
+
+**Cross-reference (found after this section was written, not folded in
+above)**: [[TASK-0199]] split its own register-wide redundancy
+measurement out of this task's own redundancy checkbox and ran a far
+more thorough version — 28 real observable types, 5 targets,
+participation-ratio effective rank ~2.6-4.1 of 28 on every target. Read
+that task as the authoritative source on register-wide redundancy; this
+section's own 7-observable pre-plant rho matrix is a consistent, much
+narrower, planted-context corroboration, not a competing measurement.
+
+Full detail: `.ai/tasks/DONE/TASK-0168-mechanism-discriminating-plant.md`
+(Done section), `src/allostery/plant.py::plant_mode`,
+`scripts/mechanism_discriminating_plant.py`,
+`results_task0168_mechanism_discriminating_plant/grid.json`.
+
+---
+
+| 60 | Does each observable family (directed-channel: `ctqw`/`T(E)`; ensemble/mode: `dcc_low`/`prs_low`) detect only the mechanism it is justified on — planting a stiff channel vs. a new correlated-mode perturbation into the same real apo topology, the protein-scale generalization of [[TASK-0103]]'s 44-node dumbbell double dissociation? | **resolved 2026-08-04: partially discriminating, not simply redundant, but weaker and less general than hoped, and mostly below this project's own certification bar.** Forced re-scope first: real-pipeline observables (`ctqw_converged` on `H_new`, `dcc_low`, `prs_low`) are exactly plant-invariant to any weight-only perturbation (re-confirmed, [[TASK-0167.001]]/[[TASK-0167.002]]'s own finding) — scored instead on `laplacian(W_planted)` directly, [[TASK-0103]]'s own dumbbell convention. Mandatory scale-check **passed on both targets** (GSR tracks a real well, AUC 0.72-1.00; CTQW does not, AUC 0.0; reciprocal for a channel plant). Main grid (480 cells, 0 errors, 2 targets): `T(E=0)`/`ctqw_converged` (channel family) show a clean, **replicated (2/2 targets)** mechanism-specific point-estimate response (rising with channel strength, flat/falling with mode strength). New `dcc_low_from_L` adapter (ensemble family, `dcc_low`'s exact math on an externally-given Laplacian) shows the hoped-for opposite (mode-specific) signature on KRAS_G12C only — **does not replicate on BCR_ABL1**. Under this project's own corrected-null certification pipeline, almost nothing reaches 80% detection power at the strengths tested — real point-estimate discrimination mostly does not (yet) clear the formal bar, extending [[TASK-0167.002]]'s own finding to a second mechanism. Pre-plant: `T(E=0)`/`ctqw`/`GSR` substantially redundant (rho 0.5-0.9); `prs_low` the one genuinely non-redundant observable measured. Plant B's own spectral verification: real but weak, does not replicate across targets. Feeds back into [[TASK-0161]]: neither "fully redundant" nor "fully independent" — effective multiplicity depends on which mechanism a real signal would take. | [[TASK-0168]], [[TASK-0103]], [[TASK-0167.001]], [[TASK-0167.002]], [[TASK-0161]], [[TASK-0145]], [[TASK-0149]] |
+
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
 (or `.ai/tasks/TODO/` if not yet closed — check `.ai/COMMON.md`'s registry

@@ -24,6 +24,7 @@ from allostery.plant import (  # noqa: E402
     PlantReport,
     assert_confound_orthogonal,
     plant_channel,
+    plant_mode,
     select_distal_patch,
 )
 from allostery.transport import effective_resistance_from_source  # noqa: E402
@@ -205,6 +206,94 @@ class TestPlantChannelReachabilityAndEffect:
         assert report.edges_modified == []
 
 
+class TestPlantModeIdentity:
+    def test_zero_strength_returns_bit_identical_W(self):
+        coords = _helix_coords()
+        W = contact_matrix(coords, cutoff=8.0, weight="invdist")
+        seed_idx = np.array([0, 1, 2])
+        target_idx = np.array([40, 41, 42])
+        W_planted, report = plant_mode(W, seed_idx, target_idx, strength=0.0, rng=np.random.default_rng(1))
+        assert np.array_equal(W, W_planted)
+        assert report.strength == 0.0
+        assert report.edges_modified == []
+
+    def test_zero_strength_is_a_true_copy_not_a_view(self):
+        coords = _helix_coords()
+        W = contact_matrix(coords, cutoff=8.0, weight="invdist")
+        seed_idx = np.array([0, 1, 2])
+        target_idx = np.array([40, 41, 42])
+        W_planted, _ = plant_mode(W, seed_idx, target_idx, strength=0.0, rng=np.random.default_rng(1))
+        W_planted[0, 1] = -999.0
+        assert W[0, 1] != -999.0
+
+
+class TestPlantModeEffect:
+    def test_unweighted_adjacency_unchanged(self):
+        coords = _helix_coords()
+        W = contact_matrix(coords, cutoff=8.0, weight="invdist")
+        seed_idx = np.array([0, 1, 2])
+        target_idx = np.array([40, 41, 42])
+        W_planted, _ = plant_mode(W, seed_idx, target_idx, strength=30.0, rng=np.random.default_rng(1))
+        assert np.array_equal(W > 0, W_planted > 0)
+
+    def test_boundary_edges_only_softened_never_strengthened(self):
+        """Every reweighted (i,j) has exactly one endpoint in
+        {seed_idx} UNION {target_idx}, and its weight strictly decreased."""
+        coords = _helix_coords()
+        W = contact_matrix(coords, cutoff=8.0, weight="invdist")
+        seed_idx = np.array([0, 1, 2])
+        target_idx = np.array([40, 41, 42])
+        group = set(seed_idx.tolist()) | set(target_idx.tolist())
+        W_planted, report = plant_mode(W, seed_idx, target_idx, strength=5.0, rng=np.random.default_rng(1))
+        assert len(report.edges_modified) > 0
+        for i, j in report.edges_modified:
+            assert (i in group) != (j in group)
+            assert W_planted[i, j] == pytest.approx(W[i, j] / 6.0)  # 1/(1+strength)
+
+    def test_within_group_and_within_rest_edges_untouched(self):
+        """Edges with both endpoints in the group, or both outside it,
+        must be bit-identical pre/post -- this is the property that
+        distinguishes plant_mode from plant_channel (which touches a
+        specific path's edges regardless of group membership)."""
+        coords = _helix_coords()
+        W = contact_matrix(coords, cutoff=8.0, weight="invdist")
+        seed_idx = np.array([0, 1, 2])
+        target_idx = np.array([40, 41, 42])
+        group = set(seed_idx.tolist()) | set(target_idx.tolist())
+        W_planted, report = plant_mode(W, seed_idx, target_idx, strength=5.0, rng=np.random.default_rng(1))
+        modified = set(report.edges_modified)
+        n = len(coords)
+        for i in range(n):
+            for j in range(i + 1, n):
+                if W[i, j] == 0:
+                    continue
+                same_side = (i in group) == (j in group)
+                if same_side:
+                    assert (i, j) not in modified
+                    assert W_planted[i, j] == pytest.approx(W[i, j])
+
+    def test_conductance_across_the_boundary_falls_with_strength(self):
+        """The mirror image of plant_channel's own rising-conductance
+        test: softening the group's boundary must strictly lower
+        conductance from a residue just inside the group to one just
+        outside it (Rayleigh monotonicity, weaker edges -> less
+        conductance) -- if this failed, the plant would be inert."""
+        coords = _helix_coords()
+        W = contact_matrix(coords, cutoff=8.0, weight="invdist")
+        seed_idx = np.array([0, 1, 2])
+        target_idx = np.array([40, 41, 42])
+
+        conductances = []
+        for s in (0.0, 1.0, 5.0, 10.0, 30.0):
+            W_planted, _ = plant_mode(W, seed_idx, target_idx, strength=s, rng=np.random.default_rng(1))
+            L_planted = laplacian(W_planted, normalised=False)
+            cond = effective_resistance_from_source(L_planted, seed_idx)
+            conductances.append(float(cond[target_idx].mean()))
+
+        assert conductances == sorted(conductances, reverse=True)
+        assert conductances[0] > conductances[-1] * 2  # a real, not marginal, fall
+
+
 class TestAssertConfoundOrthogonal:
     def test_passes_across_a_strength_sweep(self):
         coords = _helix_coords()
@@ -217,6 +306,24 @@ class TestAssertConfoundOrthogonal:
 
         for s in (0.0, 1.0, 5.0, 10.0, 30.0):
             W_planted, _ = plant_channel(W, seed_idx, target_idx, strength=s, n_paths=10, rng=np.random.default_rng(1))
+            pre, post = assert_confound_orthogonal(W, W_planted, coords, seed_idx, label, cutoff=8.0)
+            assert pre == post
+
+    def test_passes_across_a_strength_sweep_for_plant_mode(self):
+        """Same gate, TASK-0168's own plant_mode -- confirms the
+        orthogonality property (never touching coords, never adding/
+        removing edges) holds for the mode plant too, not just the
+        channel plant it was originally written for."""
+        coords = _helix_coords()
+        W = contact_matrix(coords, cutoff=8.0, weight="invdist")
+        seed_idx = np.array([0, 1, 2])
+        target_idx = np.array([40, 41, 42])
+        n = len(coords)
+        label = np.zeros(n, dtype=int)
+        label[target_idx] = 1
+
+        for s in (0.0, 1.0, 5.0, 10.0, 30.0):
+            W_planted, _ = plant_mode(W, seed_idx, target_idx, strength=s, rng=np.random.default_rng(1))
             pre, post = assert_confound_orthogonal(W, W_planted, coords, seed_idx, label, cutoff=8.0)
             assert pre == post
 
