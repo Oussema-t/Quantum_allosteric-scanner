@@ -248,6 +248,48 @@ def eff_rank(eigenvalues: np.ndarray) -> float:
     return float(np.exp(-np.sum(p * np.log(p))))
 
 
+# ---------------------------------------------------------------------------
+# TASK-0199 -- participation-ratio effective rank of a correlation matrix
+# (the register's own "did we test 40 things or one thing 40 times"
+# statistic). A different definition from `eff_rank` above (Roy &
+# Vetterli's entropy-based one) -- confirmed distinct, not a duplicate;
+# TASK-0199 uses this one as primary and `eff_rank` as a sweep companion.
+# ---------------------------------------------------------------------------
+
+def participation_ratio_rank(eigenvalues: np.ndarray) -> float:
+    """Participation ratio of a spectrum: `(sum(lambda))^2 / sum(lambda^2)`.
+
+    For an `M x M` correlation matrix (unit diagonal, `sum(lambda) = M`),
+    this ranges `[1, M]` -- `1` if the matrix has a single dominant
+    component (every variable perfectly correlated, one underlying
+    quantity), `M` if the matrix is the identity (every variable
+    orthogonal, fully independent). Continuous, no arbitrary threshold --
+    this task's own stated reason for preferring it over a fixed
+    variance-explained cutoff, which is reported alongside as a sanity
+    check, not a substitute.
+    """
+    ev = np.asarray(eigenvalues, dtype=float)
+    s1 = ev.sum()
+    s2 = float(np.sum(ev ** 2))
+    if s2 < 1e-300:
+        return 1.0
+    return float((s1 ** 2) / s2)
+
+
+def variance_explained_count(eigenvalues: np.ndarray, threshold: float = 0.90) -> int:
+    """Smallest `k` such that the top-`k` eigenvalues (descending) sum to
+    at least `threshold` fraction of the total -- the threshold-based
+    sanity-check companion `participation_ratio_rank`'s own docstring
+    promises, never a substitute for it."""
+    ev = np.sort(np.asarray(eigenvalues, dtype=float))[::-1]
+    total = ev.sum()
+    if total < 1e-300:
+        return 0
+    cumulative = np.cumsum(ev) / total
+    k = int(np.searchsorted(cumulative, threshold) + 1)
+    return min(k, len(ev))
+
+
 def ipr(v: np.ndarray) -> float:
     """Inverse Participation Ratio of an eigenvector: Σ v_i^4 / (Σ v_i^2)^2."""
     v2 = v ** 2

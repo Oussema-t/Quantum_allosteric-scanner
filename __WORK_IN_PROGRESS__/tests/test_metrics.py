@@ -19,9 +19,12 @@ if str(_SRC) not in sys.path:
 from allostery.metrics import (  # noqa: E402
     auc,
     block_bootstrap_ci,
+    eff_rank,
+    participation_ratio_rank,
     spatial_block_bootstrap_ci,
     stratified_auc,
     stratified_auc_summary,
+    variance_explained_count,
 )
 
 
@@ -241,3 +244,65 @@ class TestSpatialBlockBootstrapCi:
             f"spatial CI ({sp_width:.4f}) was not wider than sequence CI ({seq_width:.4f}) "
             f"for a spatially-compact, sequence-scattered pocket"
         )
+
+
+class TestParticipationRatioRank:
+    """TASK-0199 -- the primary effective-rank statistic for the
+    cross-observable correlation matrix. Both controls are the ones this
+    task's own Planned Validation specifies: identity (fully independent)
+    -> rank ~= M; single-dominant-component -> rank ~= 1.
+    """
+
+    def test_identity_spectrum_gives_full_rank(self):
+        """A correlation matrix of M mutually orthogonal variables has
+        eigenvalues all equal to 1 -- participation ratio = M exactly."""
+        M = 10
+        eigenvalues = np.ones(M)
+        assert participation_ratio_rank(eigenvalues) == pytest.approx(M)
+
+    def test_single_dominant_component_gives_rank_one(self):
+        """All variance in one eigenvalue (M-1 exactly-zero eigenvalues,
+        the rest summing to trace=M) -- participation ratio = 1."""
+        M = 10
+        eigenvalues = np.zeros(M)
+        eigenvalues[0] = M
+        assert participation_ratio_rank(eigenvalues) == pytest.approx(1.0)
+
+    def test_intermediate_case_between_bounds(self):
+        """Two equal dominant components, rest zero -- rank should land
+        at exactly 2 (participation ratio of two equal eigenvalues)."""
+        M = 10
+        eigenvalues = np.zeros(M)
+        eigenvalues[:2] = M / 2
+        assert participation_ratio_rank(eigenvalues) == pytest.approx(2.0)
+
+    def test_matches_eff_rank_direction_but_is_a_different_statistic(self):
+        """eff_rank (entropy-based) and participation_ratio_rank both
+        drop for a more concentrated spectrum and both rise for a flatter
+        one -- but are not numerically identical, confirming they are
+        genuinely two different definitions, not a duplicate."""
+        concentrated = np.array([8.0, 1.0, 0.5, 0.5])
+        flat = np.array([2.5, 2.5, 2.5, 2.5])
+        assert participation_ratio_rank(concentrated) < participation_ratio_rank(flat)
+        assert eff_rank(concentrated) < eff_rank(flat)
+        # Both correctly converge to exactly M on a perfectly flat spectrum
+        # (degenerate case for either formula) -- the two definitions only
+        # diverge numerically on a genuinely non-uniform one.
+        assert participation_ratio_rank(concentrated) != pytest.approx(eff_rank(concentrated))
+
+
+class TestVarianceExplainedCount:
+    def test_needs_all_components_when_flat(self):
+        eigenvalues = np.array([1.0, 1.0, 1.0, 1.0])
+        assert variance_explained_count(eigenvalues, threshold=0.90) == 4
+
+    def test_one_component_suffices_when_dominant(self):
+        eigenvalues = np.array([100.0, 0.01, 0.01, 0.01])
+        assert variance_explained_count(eigenvalues, threshold=0.90) == 1
+
+    def test_threshold_90_le_threshold_95(self):
+        rng = np.random.default_rng(0)
+        eigenvalues = np.abs(rng.normal(size=8)) + 0.1
+        k90 = variance_explained_count(eigenvalues, threshold=0.90)
+        k95 = variance_explained_count(eigenvalues, threshold=0.95)
+        assert k90 <= k95
