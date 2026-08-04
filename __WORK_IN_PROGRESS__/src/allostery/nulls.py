@@ -31,10 +31,39 @@ matched` adds the review's own suggested extension (radius-of-gyration
 matching against a target scale) via rejection sampling, mirroring
 `closure.matched_spread_null`'s own established convention (TASK-0143)
 for the same kind of matched-null problem.
+
+**TASK-0201 -- `graph_walk_patch`, a second compact-ish family with a
+much wider Rg reach.** [[TASK-0190]] measured, directly (20,000
+unconstrained draws), that `compact_patch`'s own Rg support has a hard
+ceiling for CARDIAC_MYOSIN (7.784) and PTP1B (7.134) that sits BELOW
+those targets' own real pocket Rg (9.628, 7.969) -- not a rare tail
+event, a structural impossibility (`p99.9 == max` on both). **Why the
+ceiling exists**: `compact_patch` always takes the `size` *closest*
+points to its seed -- by construction, the tightest possible packing
+available in that seed's own local neighbourhood. It can never "reach
+past" a near point to include a farther one, so across every possible
+seed, its achievable spread is bounded by how anisotropic the densest
+local packing in the structure gets -- for a Cα chain with roughly
+uniform local density, that ceiling is low and does not vary much with
+seed choice. Real pockets, in contrast, often line a surface groove or
+cleft -- topologically contiguous (every member residue neighbours
+another member) but geometrically elongated, not a tight 3-D ball.
+`graph_walk_patch` models this directly: randomized connected growth on
+the residue contact graph (an Eden-growth process) rather than
+Euclidean-nearest-neighbour selection -- each newly added residue only
+needs to be adjacent to something already in the growing patch, not
+close to the original seed, so the walk can wander along a curved
+surface path and reach much larger spread for the same cardinality.
+Verified empirically (not assumed) on both targets TASK-0190 found
+infeasible: max Rg over 20,000 draws is 14.6 (CARDIAC_MYOSIN, vs. real
+9.628) and 14.0 (PTP1B, vs. real 7.969) -- both real Rg values sit
+comfortably inside the support, not at its edge.
 """
 from __future__ import annotations
 
 import numpy as np
+
+from .hamiltonians import contact_matrix
 
 
 def compact_patch(coords: np.ndarray, size: int, rng: np.random.Generator) -> np.ndarray:
@@ -121,4 +150,98 @@ def compact_patch_matched(
         f"compact_patch_matched: no compact patch with radius of gyration in "
         f"[{lo:.3f}, {hi:.3f}] (target {target_rg:.3f} +/- {tol:.0%}) found "
         f"within {max_attempts} attempts"
+    )
+
+
+# ---------------------------------------------------------------------------
+# TASK-0201 -- graph-walk patch: a second compact-ish family that can
+# actually reach real pocket Rg where compact_patch structurally cannot.
+# See this module's own docstring for the mechanism.
+# ---------------------------------------------------------------------------
+
+def build_adjacency(coords: np.ndarray, cutoff: float = 8.0) -> list:
+    """One-time O(N^2) contact-graph neighbour list -- build once, reuse
+    across many `graph_walk_patch` draws (a rejection-sampling loop
+    calling `graph_walk_patch` thousands of times must not rebuild the
+    contact matrix on every attempt). Returns a list of `(deg_i,)`
+    int arrays, one per residue, matching `hamiltonians.contact_matrix`'s
+    own `cutoff`/`weight="binary"` convention (the same graph
+    `baselines.hop_from_seed` and this project's ENM machinery use)."""
+    W = contact_matrix(coords, cutoff=cutoff, weight="binary")
+    return [np.nonzero(row)[0] for row in W]
+
+
+def graph_walk_patch(adjacency: list, size: int, rng: np.random.Generator) -> np.ndarray:
+    """A spatially contiguous same-size null label grown by randomized
+    connected expansion (Eden growth) on the residue contact graph --
+    `size` residues, each (after the first) adjacent to something
+    already in the growing patch, but with NO requirement of being
+    close to the original seed the way `compact_patch`'s Euclidean
+    nearest-neighbour selection has. This is what lets it reach a much
+    wider radius-of-gyration range for the same patch size (this
+    module's own docstring has the full mechanism and the empirical
+    numbers that motivated it, TASK-0201).
+
+    `adjacency`: `build_adjacency(coords, cutoff)`'s own output.
+
+    Frontier candidates are drawn from a **sorted** list, not a raw
+    Python `set` iterated directly -- `set` iteration order is a CPython
+    implementation detail, not part of the language guarantee, and this
+    function must be exactly reproducible given a fixed `rng` state
+    (the same discipline `compact_patch`'s own `np.argsort` already
+    follows).
+
+    Restarts from a fresh random seed if the current connected
+    component is exhausted before reaching `size` (possible, if rare,
+    for a small isolated component) -- never returns short of `size`.
+    """
+    n = len(adjacency)
+    while True:
+        seed = int(rng.integers(n))
+        included = {seed}
+        frontier = set(adjacency[seed].tolist()) - included
+        stalled = False
+        while len(included) < size:
+            if not frontier:
+                stalled = True
+                break
+            nxt = int(rng.choice(sorted(frontier)))
+            included.add(nxt)
+            frontier |= set(adjacency[nxt].tolist())
+            frontier -= included
+        if not stalled:
+            return np.array(sorted(included), dtype=int)
+
+
+def graph_walk_patch_matched(
+    coords: np.ndarray,
+    adjacency: list,
+    size: int,
+    rng: np.random.Generator,
+    *,
+    target_rg: float,
+    tol: float = 0.35,
+    max_attempts: int = 200_000,
+    return_attempts: bool = False,
+):
+    """`graph_walk_patch`, rejection-sampled to also match a target
+    radius of gyration within `+/- tol` (fractional) -- the
+    `graph_walk_patch` analogue of `compact_patch_matched`, built
+    specifically for targets where `compact_patch_matched` cannot
+    genuinely centre on `target_rg` because `compact_patch`'s own
+    support does not reach it at all (TASK-0190's own finding on
+    CARDIAC_MYOSIN/PTP1B). Same rejection-sampling / `RuntimeError`-on-
+    infeasibility / `return_attempts` contract as `compact_patch_
+    matched`, for direct drop-in comparison.
+    """
+    lo, hi = target_rg * (1.0 - tol), target_rg * (1.0 + tol)
+    for attempt in range(1, max_attempts + 1):
+        idx = graph_walk_patch(adjacency, size, rng)
+        rg = radius_of_gyration(coords, idx)
+        if lo <= rg <= hi:
+            return (idx, attempt) if return_attempts else idx
+    raise RuntimeError(
+        f"graph_walk_patch_matched: no graph-walk patch with radius of "
+        f"gyration in [{lo:.3f}, {hi:.3f}] (target {target_rg:.3f} +/- "
+        f"{tol:.0%}) found within {max_attempts} attempts"
     )

@@ -19,7 +19,15 @@ if str(_SCRIPTS) not in sys.path:
 from allostery.baselines import hop_from_seed
 from allostery.lowmode_predictor import dcc_low
 from allostery.metrics import stratified_auc
-from allostery.nulls import compact_patch, compact_patch_from_pool, compact_patch_matched, radius_of_gyration
+from allostery.nulls import (
+    build_adjacency,
+    compact_patch,
+    compact_patch_from_pool,
+    compact_patch_matched,
+    graph_walk_patch,
+    graph_walk_patch_matched,
+    radius_of_gyration,
+)
 from null_audit import make_globule, scattered_patch, well_powered_max  # noqa: E402
 
 
@@ -123,6 +131,118 @@ class TestCompactPatchMatched:
             if lo <= radius_of_gyration(coords, idx) <= hi:
                 break
         assert manual_count == n_attempts
+
+
+class TestGraphWalkPatch:
+    """TASK-0201: a second compact-ish family, grown by randomized
+    connected expansion on the residue contact graph rather than
+    Euclidean-nearest-neighbour selection -- built specifically because
+    `compact_patch`'s own Rg support has a hard, real ceiling
+    (TASK-0190's finding) that sits below real pocket Rg on 2/3 targets
+    tested."""
+
+    def test_returns_requested_size(self):
+        coords = make_globule(200, seed=1)
+        adjacency = build_adjacency(coords, cutoff=10.0)
+        rng = np.random.default_rng(0)
+        idx = graph_walk_patch(adjacency, 14, rng)
+        assert len(idx) == 14
+        assert len(set(idx.tolist())) == 14
+
+    def test_is_contiguous_on_the_contact_graph(self):
+        """Every member (after the seed) must be graph-adjacent to at
+        least one other member -- 'contiguous', the property that
+        distinguishes this from a scattered draw, even though its
+        Euclidean footprint is wider than compact_patch's."""
+        coords = make_globule(200, seed=1)
+        adjacency = build_adjacency(coords, cutoff=10.0)
+        rng = np.random.default_rng(2)
+        for _ in range(20):
+            idx = graph_walk_patch(adjacency, 14, rng)
+            idx_set = set(idx.tolist())
+            for i in idx_set:
+                neighbours = set(adjacency[i].tolist())
+                assert neighbours & (idx_set - {i}), (
+                    f"residue {i} has no neighbour within the drawn patch -- not contiguous"
+                )
+
+    def test_deterministic_given_rng_state(self):
+        coords = make_globule(100, seed=3)
+        adjacency = build_adjacency(coords, cutoff=10.0)
+        idx1 = graph_walk_patch(adjacency, 10, np.random.default_rng(42))
+        idx2 = graph_walk_patch(adjacency, 10, np.random.default_rng(42))
+        np.testing.assert_array_equal(idx1, idx2)
+
+    def test_reaches_wider_rg_than_compact_patch(self):
+        """The whole point: on the same coords/size, graph_walk_patch's
+        own max Rg over many draws must exceed compact_patch's own max
+        by a real margin -- not just occasionally, reliably."""
+        coords = make_globule(300, seed=2)
+        adjacency = build_adjacency(coords, cutoff=10.0)
+        rng_c = np.random.default_rng(1)
+        rng_w = np.random.default_rng(1)
+        compact_rgs = [radius_of_gyration(coords, compact_patch(coords, 14, rng_c)) for _ in range(300)]
+        walk_rgs = [radius_of_gyration(coords, graph_walk_patch(adjacency, 14, rng_w)) for _ in range(300)]
+        assert max(walk_rgs) > 1.3 * max(compact_rgs)
+
+
+class TestGraphWalkPatchMatched:
+    def test_matches_target_radius_of_gyration_within_tolerance(self):
+        coords = make_globule(400, seed=4)
+        adjacency = build_adjacency(coords, cutoff=10.0)
+        rng = np.random.default_rng(5)
+        target_rg = 6.0
+        idx = graph_walk_patch_matched(coords, adjacency, 14, rng, target_rg=target_rg, tol=0.35)
+        rg = radius_of_gyration(coords, idx)
+        assert 0.65 * target_rg <= rg <= 1.35 * target_rg
+
+    def test_reaches_a_target_beyond_compact_patchs_own_ceiling(self):
+        """The actual fix under test: a target_rg that compact_patch_
+        matched cannot reach at all (RuntimeError) must be reachable by
+        graph_walk_patch_matched on the identical coords/size."""
+        coords = make_globule(300, seed=2)
+        adjacency = build_adjacency(coords, cutoff=10.0)
+
+        # Find compact_patch's own empirical ceiling first.
+        rng_c = np.random.default_rng(1)
+        compact_max = max(
+            radius_of_gyration(coords, compact_patch(coords, 14, rng_c)) for _ in range(500)
+        )
+        beyond_ceiling = compact_max * 1.3
+
+        with np.testing.assert_raises(RuntimeError):
+            compact_patch_matched(
+                coords, 14, np.random.default_rng(6), target_rg=beyond_ceiling,
+                tol=0.05, max_attempts=2000,
+            )
+
+        idx = graph_walk_patch_matched(
+            coords, adjacency, 14, np.random.default_rng(6), target_rg=beyond_ceiling,
+            tol=0.20, max_attempts=20_000,
+        )
+        rg = radius_of_gyration(coords, idx)
+        assert 0.80 * beyond_ceiling <= rg <= 1.20 * beyond_ceiling
+
+    def test_raises_when_infeasible(self):
+        coords = make_globule(100, seed=6)
+        adjacency = build_adjacency(coords, cutoff=10.0)
+        rng = np.random.default_rng(7)
+        with np.testing.assert_raises(RuntimeError):
+            graph_walk_patch_matched(
+                coords, adjacency, 14, rng, target_rg=0.001, tol=0.01, max_attempts=200,
+            )
+
+    def test_return_attempts_true_returns_idx_and_count(self):
+        coords = make_globule(400, seed=4)
+        adjacency = build_adjacency(coords, cutoff=10.0)
+        rng = np.random.default_rng(5)
+        idx, n_attempts = graph_walk_patch_matched(
+            coords, adjacency, 14, rng, target_rg=6.0, tol=0.35, return_attempts=True,
+        )
+        rg = radius_of_gyration(coords, idx)
+        assert 0.65 * 6.0 <= rg <= 1.35 * 6.0
+        assert isinstance(n_attempts, int)
+        assert n_attempts >= 1
 
 
 class TestCorrectedNullRestoresCalibration:

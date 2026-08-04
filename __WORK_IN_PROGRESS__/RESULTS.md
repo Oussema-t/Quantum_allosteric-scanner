@@ -3733,6 +3733,20 @@ own sections explicitly report no surviving cell; TASK-0163/0166/0181/0185/
 0187/0155 report no positive either). **Zero confirmed positives against an
 expected ~18.3 is a stronger position than zero against ~11.3.**
 
+> **CAVEAT ([[TASK-0201]], 2026-08-04): this "zero confirmed positives"
+> claim no longer holds without qualification.** [[TASK-0190]] found
+> `dcc_low`'s previously-reported matched-null test (CARDIAC_MYOSIN, PTP1B)
+> ran against a null that could not structurally reach either target's real
+> pocket Rg; [[TASK-0201]] built a null that can and re-ran both cells at
+> decisive precision (20,000 replicates). **CARDIAC_MYOSIN still fails
+> (p=0.025 vs. bar 0.0083); PTP1B's `dcc_low` (k=10) now survives its own
+> pre-registered bar (p=0.0027 vs. 0.003125, CI slightly straddling)** — a
+> mixed result under TASK-0190's own pre-registered reading rule, not the
+> complete negative this section states. See this document's own "A null
+> that can actually reach real pocket Rg" section for the full numbers.
+> Not corrected in place here (no-silent-overwrite) — flagged for whoever
+> next touches this headline number or [[TASK-0184]]'s narrative.
+
 **Diagnostic-cell counting rule, decided and recorded (this task's own Open
 Question)**: cells scored against a **synthetically planted** patch or a
 **synthetic decoy** ligand — not the real drug-pocket answer key — do **not**
@@ -4513,6 +4527,199 @@ Full detail: `.ai/tasks/DONE/TASK-0167.003-zero-plant-specificity-and-null-calib
 
 ---
 
+## A null that can actually reach real pocket Rg — and one cell's verdict flips (TASK-0190 finding + TASK-0201 fix, 2026-08-03/04)
+
+> **Note on this section's own provenance**: [[TASK-0190]] (Done, 2026-08-03)
+> has **no `RESULTS.md` section of its own** — the same synthesis gap
+> [[TASK-0191]] fixed for [[TASK-0167.003]] recurred one task later. This
+> section covers both: TASK-0190's own finding (recapped, cited to its task
+> file for full detail — not claimed as this task's own work) and
+> [[TASK-0201]]'s fix + re-run built directly on it. Flagged, not silently
+> absorbed: TASK-0190's own section should still be written by whoever owns
+> that backfill; this section does not substitute for it.
+
+### TASK-0190's finding: `compact_patch_matched` cannot genuinely reach real pocket Rg for CARDIAC_MYOSIN/PTP1B
+
+The external review's §2.1 P0 ask was to re-test `dcc_low`
+(CARDIAC_MYOSIN, PTP1B) and `T(E=0)` (BCR_ABL1) against a null matched to
+each target's **real** pocket radius of gyration — not a synthetic patch's
+own Rg, which is what `compact_patch_matched`'s only two prior call sites
+did (`target_rg` derived from a `select_distal_patch` draw, itself drawn
+from `compact_patch` — "matched ≈ compact" true by construction, not a
+finding). TASK-0190 ran the real-pocket-Rg version and, per its own Planned
+Validation ("verify the matched null's own draw-Rg distribution actually
+centres on `target_rg` — do not assume rejection sampling worked"), found a
+structural problem:
+
+| Target | Real pocket Rg | `compact_patch`'s own max (20,000 draws) | Matched-null accepted-draw mean Rg |
+|---|---|---|---|
+| CARDIAC_MYOSIN | 9.628 | **7.784** (hard ceiling, never exceeded) | 6.544 |
+| PTP1B | 7.969 | **7.134** (hard ceiling, never exceeded) | 6.024 |
+| BCR_ABL1 | 7.448 | 8.287 (within range) | 6.501 |
+
+For CARDIAC_MYOSIN and PTP1B, the real pocket's own Rg is **above the
+maximum Rg a contiguous k-NN ball of that pocket's size can ever produce**
+on that target's geometry (`p99.9 == max`, a hard support boundary, not a
+rare tail event). `tol=0.35`'s wide acceptance window never raised
+`RuntimeError` — its lower bound overlaps `compact_patch`'s own natural
+upper tail, so it silently accepted draws dominated by that tail instead of
+genuinely centring near `target_rg`. Despite this, TASK-0190's own
+pre-registered survival evaluation (run before this defect was fully
+characterised) found `dcc_low` still failed to clear its bar on both
+targets under the miscentred matched null (p=0.033 CARDIAC_MYOSIN,
+p=0.019 PTP1B) — reasoned as still defensible because the miscentred draws,
+though short of target, were measurably *more* dispersed than plain
+`compact` draws (hence more lenient, not less). Full detail:
+`.ai/tasks/DONE/TASK-0190-real-pocket-rg-matched-null.md`.
+
+### TASK-0201: why the ceiling exists, and a construction that reaches it
+
+`compact_patch` always takes the `size` Euclidean-*closest* points to a
+random seed — by construction the tightest possible packing available in
+that seed's own local neighbourhood; it can never "reach past" a near point
+to include a farther one. Across every possible seed, its achievable spread
+is bounded by how anisotropic the densest local packing gets, and for a Cα
+chain at roughly uniform local density, that ceiling is low and does not
+vary much with seed choice. Real pockets, per [[TASK-0167.003]] Part B,
+sit at the 97th–100th percentile of `compact_patch`'s own Rg distribution
+on **every** target tested — real pockets often line a surface groove or
+cleft: topologically contiguous, but geometrically elongated, not a tight
+3-D ball.
+
+New `nulls.graph_walk_patch`: randomized connected growth (Eden growth) on
+the residue contact graph rather than Euclidean-nearest-neighbour
+selection — each newly added residue only needs to be adjacent to
+something already in the growing patch, not close to the original seed, so
+the walk can wander along a curved surface path and reach far greater
+spread for the same cardinality. **Verified empirically before trusting
+it** (this task's own Constraint, the exact check TASK-0190 itself used to
+catch the original defect): 20,000 unconstrained draws on both previously-
+infeasible targets —
+
+| Target | Real pocket Rg | `graph_walk_patch` max (20,000 draws) | Real-pocket percentile of unconstrained support |
+|---|---|---|---|
+| CARDIAC_MYOSIN | 9.628 | **14.152** | 83.8th |
+| PTP1B | 7.969 | **14.299** | 17.9th |
+
+Both real Rg values now sit **inside** the support, not at its edge — PTP1B's
+real pocket is not even in the upper tail of `graph_walk_patch`'s own
+distribution. `graph_walk_patch_matched` (same rejection-sampling/
+`RuntimeError`/`return_attempts` contract as `compact_patch_matched`, for
+direct comparison) accepted-draw mean Rg came in at 8.613 (CARDIAC_MYOSIN,
+target 9.628) and 8.775 (PTP1B, target 7.969) — materially closer to target
+than `compact_patch_matched`'s own 6.544/6.024, a real improvement in
+centring, though still short of exact (the acceptance window's own
+asymmetric proximity to the proposal distribution's mode remains a residual
+effect, reported not hidden).
+
+### Re-run, `dcc_low` (CARDIAC_MYOSIN, PTP1B), 20,000 replicates per cell — decisive precision, all three nulls side by side
+
+Reused TASK-0190's own pre-registered survival bars unchanged (TASK-0149's
+6-comparison bar for CARDIAC_MYOSIN, TASK-0151's 16-comparison bar for
+PTP1B) and its own evaluation logic (point-estimate `p < bar`), per this
+task's own Out-Of-Scope ("reuse it, do not re-litigate it"). Replicate
+count raised from TASK-0190's own 1,000 to 20,000 once a near-bar p-value
+turned up at lower precision — at `p≈0.003`, `n=1,000` gives a Monte Carlo
+SE of ≈0.0017, too coarse to read a boundary call; `n=20,000` tightens
+that to ≈0.0004.
+
+**Ordering-consistency check passed on all 8 cells** (`p(scattered) ≤
+p(matched) ≤ p(compact)`, TASK-0190's own Planned Validation) — no
+violations, the strongest available evidence this is a real result, not an
+artifact of the new construction.
+
+| Target | k | p(scattered) | p(matched, graph-walk) [95% CI] | p(compact) | AUC | Bar | Survives? |
+|---|---|---|---|---|---|---|---|
+| CARDIAC_MYOSIN | 5 | 0.0071 | 0.1294 [0.1248, 0.1341] | 0.1356 | 0.903 | 0.00833 | No |
+| CARDIAC_MYOSIN | 10 | 0.0024 | 0.0972 [0.0931, 0.1013] | 0.1221 | 0.931 | 0.00833 | No |
+| CARDIAC_MYOSIN | 15 | 0.0004 | 0.0254 [0.0232, 0.0276] | 0.0642 | 0.966 | 0.00833 | No |
+| CARDIAC_MYOSIN | 20 | 0.0003 | 0.0282 [0.0259, 0.0304] | 0.0606 | 0.962 | 0.00833 | No |
+| PTP1B | 5 | 0.2266 | 0.3373 [0.3308, 0.3439] | 0.3897 | 0.704 | 0.003125 | No |
+| **PTP1B** | **10** | **0.0003** | **0.0027 [0.0020, 0.0035]** | **0.0160** | **1.000** | **0.003125** | **Yes** |
+| PTP1B | 15 | 0.0016 | 0.0238 [0.0217, 0.0260] | 0.0497 | 0.955 | 0.003125 | No |
+| PTP1B | 20 | 0.0012 | 0.0279 [0.0257, 0.0302] | 0.0695 | 0.955 | 0.003125 | No |
+
+**CARDIAC_MYOSIN's own verdict is unchanged and decisive**: min p (0.0254,
+k=15) sits 3× above its own bar — TASK-0190's own "does not survive"
+conclusion holds, now measured against a null that genuinely reaches this
+target's real pocket Rg rather than one that could not.
+
+**PTP1B's `dcc_low` (k=10) survives its pre-registered bar under this
+null: p=0.0027 < 0.003125.** Read exactly, honestly, without overclaiming:
+the point estimate clears the bar by TASK-0190's own stated criterion
+(`p < bar`, the same comparison that task used throughout), but the 95%
+Monte Carlo CI ([0.0020, 0.0035]) slightly straddles it — the upper CI
+bound (0.0035) sits just above 0.003125. This is not a clean, CI-decisive
+win; it is a real, reproducible point-estimate survival with residual
+Monte Carlo uncertainty at the boundary, reported as such. `real_auc=1.000`
+at k=10 independently matches [[TASK-0151]]'s own already-published
+"well-powered max AUC 1.000 at k=10" number for this exact cell — not a
+new or different effect, the same extremely strong separation this project
+has measured multiple times, now surviving a correctly-specified null for
+the first time.
+
+**Mechanism, stated not just observed**: a genuinely-dispersed null does
+not automatically make every cell's p-value larger. `dcc_low` (low-mode
+dynamic cross-correlation) plausibly scores tight, spatially compact
+patches systematically higher than topologically-elongated ones of the
+same size, independent of location — if so, a null drawn from more
+branching/dispersed shapes (even though Rg-matched to the real, more-
+dispersed pocket) produces a *lower* null-score distribution than
+`compact_patch`'s own tight balls, making the real (compact) high-scoring
+pocket look *more* extreme relative to it, not less. This is consistent
+with, not contradicted by, the ordering check (`p_matched` sits between
+`p_scattered` and `p_compact` in *strictness*-of-null terms, not
+necessarily in resulting p-value magnitude for every possible score field)
+— reported as a plausible mechanism, not independently verified further
+here (out of this task's own scope).
+
+### Does TASK-0190's own reasoning hold up, or was it wrong? (this task's own required question, answered directly)
+
+**Partially wrong, on the one cell that mattered.** TASK-0190 argued: *"A
+null that could actually reach `target_rg`... could only make the null
+more lenient still, not less — so this result is not overturned by fixing
+the centring defect."* That reasoning held for CARDIAC_MYOSIN (still fails,
+by a wide margin) but not for PTP1B (now survives). The flaw in the
+original reasoning: "more dispersed" and "more lenient for this specific
+score field" are not the same property — TASK-0190 assumed leniency tracks
+dispersion monotonically for any observable, which is false for `dcc_low`
+specifically, per the mechanism above. **TASK-0190's own pre-registered
+reading rule now applies literally**: *"If exactly one [cell] survives,
+§5.3's statement, read literally, does NOT fire — the honest report in
+that case is a mixed result... not smoothed into either 'complete negative'
+or 'the program has a positive.'"* Per that rule, fixed and pre-registered
+by TASK-0190 itself before any of these numbers existed: **the program's
+`dcc_low` family is now a mixed result (CARDIAC_MYOSIN falsified, PTP1B
+survives), not the complete negative TASK-0190 and [[TASK-0161]]/
+[[TASK-0191]]'s "zero confirmed positives program-wide" headline currently
+state.**
+
+**This is flagged, not resolved, here** — deciding how PTP1B's survival
+should be framed for [[TASK-0184]]'s submission narrative (a genuine
+positive result, single-target, CI-boundary-adjacent, under a null built
+specifically because the prior one couldn't reach this test) is a
+narrative/scope decision for that task's own owner, not this
+null-construction fix. What this task owes, and delivers: the corrected
+number, checked every way this project's own established discipline
+requires (ordering check, replicate-count convergence, independent AUC
+cross-reference, CI reported not hidden), handed off cleanly.
+
+### Additive changes
+
+`nulls.graph_walk_patch`/`nulls.graph_walk_patch_matched`/`nulls.
+build_adjacency` (new, ADD-only — every existing `nulls.py` function
+unchanged). 24 new tests (`tests/test_nulls.py::TestGraphWalkPatch`/
+`TestGraphWalkPatchMatched`). Full suite:
+`.venv/bin/python3 -m pytest -q tests/` — 1122 passed, 1 skipped, 2 xfailed,
+no regressions.
+
+Full detail: `.ai/tasks/DONE/TASK-0190-real-pocket-rg-matched-null.md`,
+`.ai/tasks/IN_PROGRESS/TASK-0201-rg-reaching-compact-null-construction.md`,
+`results_task0201_graph_walk_matched_null/results.json`,
+`scripts/graph_walk_matched_null_rerun.py`.
+
+---
+
 ## ENM-induced connectivity-graph shortcut hypothesis — a clean negative on specificity (TASK-0187, 2026-08-01)
 
 **Question**: does undirected ENM ("wobbling") conformational sampling create
@@ -4983,7 +5190,7 @@ Full detail: `allostery/response.py`, `tests/test_response.py`,
 
 | 38 | Does replacing the uniformly *scattered* permutation-null draw (`rng.choice`) with a spatially *compact* one — matching real pockets' own geometry — remove this project's strongest positive findings, per `PANEL_REVIEW_2026-07-25.md` §2.3's own pre-registered falsification statement? | **resolved 2026-07-25: yes — the falsification statement fires.** New `allostery.nulls.compact_patch`, validated against the external audit's own reproduced numbers (4.8x inflation at α=0.05, rising to 42x at α=0.001, ~0x on a white-noise control) and confirmed to restore near-nominal calibration (1.36x, ~0x) when both legs of the comparison use the corrected draw. Re-running every named dependent task ([[TASK-0149]], [[TASK-0151]], [[TASK-0142]], [[TASK-0133]], [[TASK-0139]], [[TASK-0152]]) side by side with the original: `dcc_low`'s Bonferroni-significance is removed on **both** CARDIAC_MYOSIN (p: 0.000→0.060, fails even uncorrected α=0.05) and PTP1B (p: 0.001→0.019, fails its own Bonferroni bar) — the review's own named pre-registered condition for reporting the program's strongest observable family as a negative result. H2 and learnability nulls were already non-significant and only weaken further (no verdict change). **[[TASK-0145]]'s transport null, evaluated but explicitly not re-run (Out of Scope), is exposed to the same defect even more severely** (7.0x/242x vs. 4.8x/42x) — flagged as a live, urgent open item for a follow-up task, not silently assumed exempt because its own construction differs. | [[TASK-0158]], [[TASK-0149]], [[TASK-0151]], [[TASK-0142]], [[TASK-0133]], [[TASK-0139]], [[TASK-0152]], [[TASK-0145]], [[TASK-0143]] |
 | 39 | Does the shipped end-to-end pipeline (`scripts/run_challenge.py`) actually compute its headline AUC/hit-list via the same converged closed-form propagator ([[TASK-0130]]) the project's own corrected science reports, or still the finite-time approximation [[TASK-0110]] found orders of magnitude short of convergence? | **resolved 2026-07-26: no (before this task), now yes — and the closed form is now directly, numerically confirmed exact on real data, not just algebraically derived.** Wired `run_frozen_verdict(use_converged_limit=True)` (already-existing TASK-0130 machinery, never previously called with it) and swapped the winner's own occupation to `time_averaged_ctqw_converged` directly; old `T_MAX=15`/`N_STEPS=500` module constants deleted, a renamed/scoped-down pair kept only for the 3 genuinely different, still-finite-by-design uses (candidate-selection heuristic, GSR snapshot, `ablation()`'s per-term diagnostic) this task does not touch. Real AAKV `t_max*` checked directly on all 5 targets touched: 83,834x-420,682x the shipped `t_max=15` (extends, not just repeats, TASK-0110's own 3-target range). **Per explicit user request, a genuine brute-force integration was run all the way to each target's own real `t_max*`** (877K-4.6M steps, up to 12.3 wall-hours for CARDIAC_MYOSIN) and compared directly against the closed form: agreement to 1e-6 to 1e-7 on every target — floating-point noise, not an approximation gap. First attempt at this validation lost all progress when a harness-tracked background job was killed by session teardown (0/5 complete, ~15-18min in) — a live confirmation of `LONG_JOB_CONVENTION.md`'s own warning about that detachment mechanism; re-run OS-detached and sequentially (uncoordinated 5-way parallelism on the first attempt caused a real 5-26x slowdown). Cross-check against already-reported numbers: KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN match TASK-0113's own TASK-0130 cross-validation exactly; **PTP1B's converged AUC (0.4859) does not match the ASD generalization set's own PTP1B row (0.2050, `BEATS_CHANCE_NOT_FLOOR`) — confirmed to be a finite-time-vs-converged discrepancy (re-running at the literal old `t_max=15` reproduces 0.2050 exactly), and PTP1B's verdict flips to `NO_SIGNAL_IN_APO`** under the corrected convention, flagged as needing a follow-up correction to that table, not silently absorbed. | [[TASK-0159]], [[TASK-0130]], [[TASK-0110]], [[TASK-0146]], [[TASK-0113]], [[TASK-0081]], [[TASK-0127]] |
-| 40 | How many scored cells has this program actually run against real target labels, program-wide — and does the number of reported positives exceed what that testing volume alone would produce at α=0.05, per `PANEL_REVIEW_2026-07-25.md`'s own framing? | **resolved 2026-07-25: 226 real-target scored cells, confirming (and modestly exceeding) the review's own "~200+" estimate — expected false positives at α=0.05 ≈ 11.3.** Using [[TASK-0158]]'s corrected-null re-run (not the pre-correction numbers): **zero** confirmed, corrected-null-surviving positives program-wide. `dcc_low`, the one prior Bonferroni survivor, lost significance on both CARDIAC_MYOSIN and PTP1B under the compact-patch null. One cell remains genuinely unresolved rather than confirmed: [[TASK-0145]]'s BCR_ABL1 transport result uses a scattered null TASK-0158 found is *more* anti-conservative than the one that removed `dcc_low`'s significance, and was not itself re-run — treated as unconfirmed, not counted as a survivor. **The project has fewer positives than pure chance predicts, not merely "not clearly in excess of it."** Full enumeration table: this document's own "Program-level multiple-comparison budget" section above. **[[TASK-0191]] recount, 2026-08-03: 10 tasks landed real-target scored cells since this row's own 2026-07-25 freeze — new total 366 cells (140 new), expected false positives ≈18.3. Still zero confirmed positives — a stronger, not weaker, position. See that section's own "Recount" addendum, not this row, for the current number.** | [[TASK-0161]], [[TASK-0158]], [[TASK-0149]], [[TASK-0151]], [[TASK-0145]], [[TASK-0191]] |
+| 40 | How many scored cells has this program actually run against real target labels, program-wide — and does the number of reported positives exceed what that testing volume alone would produce at α=0.05, per `PANEL_REVIEW_2026-07-25.md`'s own framing? | **resolved 2026-07-25: 226 real-target scored cells, confirming (and modestly exceeding) the review's own "~200+" estimate — expected false positives at α=0.05 ≈ 11.3.** Using [[TASK-0158]]'s corrected-null re-run (not the pre-correction numbers): **zero** confirmed, corrected-null-surviving positives program-wide. `dcc_low`, the one prior Bonferroni survivor, lost significance on both CARDIAC_MYOSIN and PTP1B under the compact-patch null. One cell remains genuinely unresolved rather than confirmed: [[TASK-0145]]'s BCR_ABL1 transport result uses a scattered null TASK-0158 found is *more* anti-conservative than the one that removed `dcc_low`'s significance, and was not itself re-run — treated as unconfirmed, not counted as a survivor. **The project has fewer positives than pure chance predicts, not merely "not clearly in excess of it."** Full enumeration table: this document's own "Program-level multiple-comparison budget" section above. **[[TASK-0191]] recount, 2026-08-03: 10 tasks landed real-target scored cells since this row's own 2026-07-25 freeze — new total 366 cells (140 new), expected false positives ≈18.3. Still zero confirmed positives — a stronger, not weaker, position. See that section's own "Recount" addendum, not this row, for the current number.** **[[TASK-0201]], 2026-08-04: "zero confirmed positives" no longer holds unqualified — a null that can genuinely reach real pocket Rg (the prior one structurally could not) makes PTP1B's `dcc_low` (k=10) survive its own pre-registered bar (p=0.0027 vs. 0.003125); CARDIAC_MYOSIN still fails. See this document's own "A null that can actually reach real pocket Rg" section.** | [[TASK-0161]], [[TASK-0158]], [[TASK-0149]], [[TASK-0151]], [[TASK-0145]], [[TASK-0191]], [[TASK-0201]] |
 | 41 | Does the shipped `connectivity_matrix.npz` deliverable actually satisfy the challenge's own §5 "N×N quantum connectivity matrix" requirement — quantum-defined, all-pairs, and dense? | **resolved 2026-07-27: no (before this task) — classical, seeded, and sparse, failing on all 3 counts; now yes, additively.** New `propagators.quantum_connectivity_matrix` (`P_inf(i,j)=sum_k \|v_k(i)\|^2\|v_k(j)\|^2`, one `(N,N)@(N,N)` product from the same eigendecomposition `time_averaged_ctqw_converged` already needs — no second diagonalization). Exact symmetry and row-sum-to-1 both derived and confirmed numerically; real-data check on all 3 mandatory targets shows the new matrix at density 1.000 vs. the old matrix's 0.014-0.057 (falling as N grows) — a decisive, measured confirmation of the "not dense" fix specifically. **Design choice checked, not assumed**: the plain per-eigenvector formula (not TASK-0130's own degenerate-block-corrected form) matches `time_averaged_ctqw_converged`'s independently-computed single-source column to 1e-16 to 1e-17 (machine precision) on every mandatory target — real `H_new` spectra are near- not exactly-degenerate, so the simpler formula this task's own Intent Contract specifies is confirmed exact in practice, not merely assumed safe. Wired additively into both `run_target` and `run_target_no_ground_truth` as `quantum_connectivity_matrix.npz`, the pre-existing classical file untouched and still written. | [[TASK-0160]], [[TASK-0130]] |
 
 | 42 | Does replacing `block_bootstrap_ci`'s sequence-index blocking with a spatially compact k-NN block — matching a real pocket's own geometry, `PANEL_REVIEW_2026-07-25.md` W6/V4 — widen CIs for currently-surviving/near-surviving positives, as the review's own text predicts? | **resolved 2026-07-27: the tool is built and validated correctly, but the real-data direction is mixed, not uniform widening — reported honestly.** New `metrics.spatial_block_bootstrap_ci` (k-NN block, drop-in signature). Regression checks pass: exact convergence to sequence-block behavior on a 1D-line synthetic control, and 1.4x–2.4x widening on a globule control once an accidental sequence/3D correlation in the naive fixture (a random-walk build order) was found and removed. **On real transport data (TASK-0145's BCR_ABL1 family plus KRAS_G12C/PTP1B's own `H_new` cells, [[TASK-0158]]'s own flagged near-survivors): 4/5 cells got *narrower*, not wider** (ratios 0.83–0.98; only KRAS_G12C widened, 1.27x) — plausibly because real secondary structure keeps genuine local sequence stretches spatially coherent too, unlike the idealized synthetic control. Practical bottom line unaffected: no cell anywhere in this project has ever had a non-overlapping CI (confirmed by direct grep before this task started), and every re-checked cell still overlaps its floor's CI under the corrected method — no verdict flips either direction. | [[TASK-0165]], [[TASK-0158]], [[TASK-0145]] |
@@ -5028,6 +5235,8 @@ the same collision.
 | 58 | Does the exact Gaussian-network binding-response coupling free energy `ddG` (a *response* to a bound ligand, not a propagating signal — the collaborator's own reframing) find real allosteric signal once its proven proximity confound (rho +0.71 to +0.97, as bad as every propagation observable in this register) is removed by a distance-shell-normalised specificity statistic? | **resolved 2026-08-02: methodologically decisive, empirically negative.** New `allostery.response`; independently reproduces the external reference prototype's own real number to 1.6e-13; reciprocity/zero-coupling/entropy-cross-check/low-rank-shortcut (<1e-10 vs brute force) gates all pass. The mandatory dumbbell gate found a real complication on TASK-0103's native fixture first (signal below numerical noise floor, root-caused not asserted) before passing cleanly on a geometrically realistic adaptation. **On all 7 real targets, `rho(specificity,-hop)` collapses from +0.71/+0.94 (raw) to within ±0.044 of zero** — a cleaner real-data transfer than [[TASK-0149]]'s own precedent. No target/label cell clears its floor with a surviving permutation null (PTP1B/core's point-estimate margin, the only candidate, p=0.132). A lightweight LOD probe (own limited scope, not [[TASK-0167.002]]'s full protocol) shows a clean, monotonic real-topology detection curve (AUC 0.52→0.85, strengths 0-30). Pre-registered falsification did not fire (rho did drop below 0.6; the LOD is real) — but no exploitable real signal was found on the current benchmark set either. Adds ~21 cells to [[TASK-0161]]'s multiplicity budget (not re-run here, flagged for the next full budget pass). | [[TASK-0177]], [[TASK-0103]], [[TASK-0145]], [[TASK-0149]], [[TASK-0167.001]], [[TASK-0123]], [[TASK-0158]], [[TASK-0161]] |
 | 59 | Does reframing site identification as constrained *selection* (a k-subset QUBO maximising member quality + spatial cohesion + allosteric coupling − anti-confound proximity − distality, NP-hard via densest-k-subgraph) beat *ranking* (greedy top-k on score alone) classically, on the 3 mandatory targets, at a pre-registered canonical weight point — the cheap gate [[TASK-0181]]'s own Constraint requires before any quantum formulation is attempted? | **resolved 2026-08-02: no — gate CLOSED, 0/3 strict wins, robust to solver noise.** New `allostery.selection` (hand-rolled exact enumeration + swap-based simulated annealing over exactly-k subsets — no `dimod`/QUBO-library dependency added; cardinality enforced structurally, not by penalty). At the canonical weight point `(a,b,c,d,e)=(1,1,1,1,1)`, `k=5`, 8-restart best-by-objective search (a single SA run is noisy — caught directly: one KRAS_G12C run flipped hit/miss between two calls differing only in iteration count): KRAS_G12C QUBO misses (greedy top-k hits), BCR_ABL1 and CARDIAC_MYOSIN both miss. Not a solver-quality artifact — the 3 pre-registered controls (degenerate-case reduces exactly to greedy top-k; anti-confound term measurably repels the seed; SA reaches the exact brute-force optimum on a `C(12,3)=220` instance) all pass, and on KRAS_G12C the QUBO's own best-found set scores higher on its own objective (22.30 vs. greedy's 6.61) yet still misses the labelled pocket — the canonical-weight objective genuinely optimises toward a different region than the true pocket on the one target where it mattered most. Per the pre-registered gate: **Phase A reported closed, no quantum formulation built, full 14-target × weight/k grid not run** (corrected target count — `config/targets.yaml` has 14 usable targets, not 12; `LDH` is deliberately `omitted_targets`, TASK-0003). Phase B (side-chain rotamer-packing QUBO — the layer [[TASK-0185]]/row 57 already deferred its own quantum claim to) shipped as a formulation-only write-up regardless, per this task's own scope. Adds 3 cells to [[TASK-0161]]'s multiplicity budget (gate-decision cells only; the unrun full grid's ~896 potential cells do not enter the budget). | [[TASK-0180]], [[TASK-0163]], [[TASK-0167.001]], [[TASK-0185]], [[TASK-0161]] |
 | 60 | Is a structured (mode-resolved) vibronic bath — specific ANM normal modes resonantly coupled to specific site-energy gaps — worth building before the 2026-09-15 forward-proposal deadline, per `PANEL_REVIEW_2026-07-25.md`'s own deprioritization instruction, and can the coupling model at least be defined and literature-grounded now? | **resolved 2026-08-03: filed, not built, per the review's own explicit instruction — the required coupling-model definition and citation verification are done.** 2 citations independently re-verified (Christensson/Kauffmann/Pullerits/Mančal 2012, J. Phys. Chem. B 116:7449; Patra & Tiwari 2022, J. Chem. Phys. 156:184115, more directly on-point for *selective* site-specific enhancement). Standard Holstein-type site-diagonal coupling mapped onto this project's own quantities: site energies = `H_new`'s diagonal, bath modes = `superpose.anm_modes` (reused, not re-derived), coupling strength ∝ mode eigenvector displacement at each residue, resonance condition `ω_k≈\|H_new_ii−H_new_jj\|`. Honest ceiling stated: this is a proposed, literature-grounded mapping, not a validated model — the actual Redfield/structured-bath evolution, synthetic falsifier, and real-target scoring are the deferred, highest-implementation-cost work, not attempted here. | [[TASK-0147]], [[TASK-0041]], [[TASK-0141]], [[TASK-0157]], [[TASK-0120]], [[TASK-0133]] |
+
+| 60 | [[TASK-0190]] found `compact_patch_matched` cannot genuinely reach real pocket Rg for CARDIAC_MYOSIN/PTP1B (a hard support ceiling, not a rare tail event) — does a null construction exist that can, and does fixing the centring defect change `dcc_low`'s already-published "does not survive" verdict on either target? | **resolved 2026-08-04: a construction exists (new `nulls.graph_walk_patch`, randomized connected growth on the contact graph instead of Euclidean-nearest-neighbour selection — verified to reach real pocket Rg on both targets, 20,000 unconstrained draws, real Rg sits at the 83.8th/17.9th percentile of support, not the edge) — and yes, the verdict changes, on exactly one of the two cells.** CARDIAC_MYOSIN's own "does not survive" conclusion holds, decisively (min p=0.0254 vs. bar 0.00833, 20,000 replicates). **PTP1B's `dcc_low` (k=10) now survives its own pre-registered bar: p=0.0027 vs. 0.003125** (95% CI [0.0020,0.0035], point estimate clears, CI slightly straddles — reported exactly, not rounded to a clean win). Ordering check (`p_scattered<=p_matched<=p_compact`) passed on all 8 cells tested — strong evidence this is real, not an artifact. Real, stated mechanism for why TASK-0190's own "a more-reaching null could only be more lenient" reasoning was wrong for this one cell: dispersion and leniency-for-this-specific-score-field are not the same property for `dcc_low`, which plausibly favours geometrically tight patches independent of location. Per TASK-0190's own pre-registered reading rule ("if exactly one survives... a mixed result, not smoothed into complete negative"), this is now a mixed result, not the complete negative [[TASK-0161]]/[[TASK-0191]]'s "zero confirmed positives" headline currently states — flagged in both places, not corrected in place, and handed to whoever owns [[TASK-0184]]'s narrative to decide how it's framed. | [[TASK-0190]], [[TASK-0158]], [[TASK-0149]], [[TASK-0151]], [[TASK-0167.003]], [[TASK-0161]], [[TASK-0191]] |
 
 **Architect cross-reference note, 2026-08-03 (reconstructed; not a new
 resolved question — a pattern across rows 55/57/58/59 worth stating once,
