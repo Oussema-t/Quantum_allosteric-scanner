@@ -255,3 +255,18 @@ None
 
   **RESULTS.md**: new dated section + open-questions row 60 (both
   appended). Full `pytest tests/ -q` run before closing out (see commit).
+
+  **Cross-reference, found after this task's own analysis was already
+  written (registry check before moving to DONE), not incorporated into
+  the numbers above but recorded here**: [[TASK-0199]] (Done, 2026-08-03,
+  Implementer A) split its own redundancy measurement out of this task's
+  redundancy checkbox and ran a far more thorough version register-wide
+  -- 28 real observable types, 5 targets, participation-ratio effective
+  rank ~2.6-4.1 of 28 on every target (a ~9x redundancy factor). This
+  task's own small 7-observable pre-plant rho matrix (`T(E=0)`/`ctqw`/
+  `GSR` clustering at rho 0.5-0.9, `prs_low` standing genuinely apart) is
+  a consistent, much narrower special case of TASK-0199's own headline
+  finding, not a contradiction of it -- TASK-0199 is the authoritative
+  source for the register-wide redundancy question; this task's own
+  matrix should be read as a planted-context corroboration on a small
+  subset, not re-cited as the primary redundancy result.
