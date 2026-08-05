@@ -3747,6 +3747,35 @@ expected ~18.3 is a stronger position than zero against ~11.3.**
 > Not corrected in place here (no-silent-overwrite) — flagged for whoever
 > next touches this headline number or [[TASK-0184]]'s narrative.
 
+> **CAVEAT ([[TASK-0199]], 2026-08-04): the "~18.3" expectation itself is
+> the wrong denominator — the 28 observable types this budget is built
+> from are not independent.** Measured directly (cross-observable
+> Spearman correlation matrix, participation-ratio effective rank, 5
+> targets spanning N=169-704): the 28 types collapse to an effective rank
+> of **~3**, a **~9× redundancy factor** (28/3 ≈ 9.3), consistent across
+> every target tested (2.6-4.1, no wild swing). Rescaling the 366-cell
+> total by that same factor (illustrative, proportional — not a full
+> cell-by-cell re-derivation, see that task's own Done section for why)
+> gives **~39 effectively-independent cells, expected false positives
+> `0.05 × 39 ≈ 2`** — down from ~18.3, not up. **This section's own
+> rhetorical move ("more cells makes zero-confirmed-positives a stronger
+> claim") runs the wrong direction once redundancy is accounted for: more
+> *non-independent* cells do not strengthen the claim.** Not corrected in
+> place here (no-silent-overwrite) — flagged for whoever next touches
+> this headline number or [[TASK-0184]]'s narrative, same as the caveat
+> immediately above.
+>
+> **Combined, honest reading (both caveats together, [[TASK-0205]],
+> 2026-08-05):** the observed count is **no longer zero** (PTP1B's
+> `dcc_low` survives its own bar, per the caveat above) **and** the
+> expectation it is measured against is **~2, not ~18.3** (per this
+> caveat). Read plainly: one observed survivor against an expected ~2 is
+> a real, if modest, claim — not the "stronger than the review
+> anticipated" position this section's own headline sentence still
+> asserts below. Both halves of the original argument moved against the
+> program; neither is softened here, both are stated because a referee
+> will check this arithmetic.
+
 **Diagnostic-cell counting rule, decided and recorded (this task's own Open
 Question)**: cells scored against a **synthetically planted** patch or a
 **synthetic decoy** ligand — not the real drug-pocket answer key — do **not**

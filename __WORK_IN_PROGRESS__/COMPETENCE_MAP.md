@@ -61,6 +61,53 @@ gated tasks below), that gap is stated explicitly, not filled with an estimate.
 > mention scattered through the body below (dozens of occurrences) — read every such
 > mention for a `T(E=0)`/transport-family observable against this bound.**
 
+> **Status update, 2026-08-05 ([[TASK-0199]]/[[TASK-0200]]/[[TASK-0201]], filed
+> together via [[TASK-0205]]): three findings change how "zero confirmed
+> positives" reads across this whole document, not any single row.**
+>
+> - **[[TASK-0199]] — the register's observables are not independent.** Measured
+>   (cross-observable Spearman matrix, 5 targets, N=169-704): the ~28 distinct
+>   observable types collapse to an effective rank of **~3**, a **~9×
+>   redundancy factor**. This does not overturn any per-target verdict below —
+>   it reframes what the *count* of negatives means: this program tested one
+>   structural quantity (propagation on a static, seed-anchored contact graph)
+>   thoroughly and from many angles, not ~28 independent quantities. See
+>   `RESULTS.md`'s "Program-level multiple-comparison budget" section for the
+>   rescaled expected-false-positive arithmetic (~18.3 → ~2).
+> - **[[TASK-0201]] — PTP1B is no longer a clean negative.** [[TASK-0190]]
+>   found the previously-used null (`compact_patch_matched`) has a hard,
+>   structural Rg ceiling below CARDIAC_MYOSIN's and PTP1B's own real pocket
+>   Rg — not a rare-tail statistical fact, a geometric one, so any
+>   "does not survive its own null" verdict on those two cells was
+>   unreliable at the source. [[TASK-0201]] built `graph_walk_patch_matched`,
+>   a null construction that can genuinely reach real pocket Rg on both
+>   targets, and re-ran at 20,000 replicates. Result: flips PTP1B's `dcc_low`
+>   (k=10) to survive its own
+>   pre-registered bar: p=0.0027 vs. bar 0.003125 (95% CI [0.0020, 0.0035] —
+>   point estimate clears, CI slightly straddles), `real_auc=1.000`,
+>   independently matching [[TASK-0151]]'s own already-published number for
+>   this exact cell. CARDIAC_MYOSIN, re-run under the same corrected null,
+>   still fails (p=0.0254 vs. bar 0.00833). This is a **mixed result**, not a
+>   complete negative — see the PTP1B section below for the full statement,
+>   scoped explicitly against the mandatory-target table's own `H_new`/CTQW
+>   numbers (a different observable family, not superseded by this finding).
+> - **[[TASK-0200]] — the one classical-vs-quantum comparison in the register
+>   that was ever run is head-to-head, not conditional.** Restricting to
+>   fpocket's own ambiguous band and re-deriving the floor *within* that band
+>   (not inheriting the global floor, which would manufacture a false
+>   positive): no dynamics observable resolves residues geometry cannot,
+>   across 3 targets × 3 observables × 4 band widths — a clean, consistent
+>   negative on the forward direction, with a positive control confirming the
+>   pipeline can detect a real signal when one is planted. **Strict subset, not
+>   a characterized positive niche.**
+>
+> None of these three retroactively changes a floor/ceiling/actual number
+> already reported below (no-silent-overwrite) — they change how the
+> program-wide pattern of negatives should be read, and (for PTP1B
+> specifically) add a genuine, if modest, exception to that pattern. Full
+> detail in each task's own Done section and in `RESULTS.md`'s own sections
+> of the same names.
+
 > **SUPERSEDED 2026-07-16 by [[TASK-0118]] — the table below is a full recompute, not an
 > edit of the old one. `REVIEW-panel-2026-07-16-v2` (§2.1) found that the numbers this
 > document previously reported were gauge-contaminated: `run_challenge.py`'s floor/actual
@@ -660,6 +707,27 @@ chance) on a target none of this project's prior review history has examined. Fu
 selection rationale (including two ASD candidates that failed independent RCSB
 verification and were not used) in `.ai/tasks/DONE/TASK-0081-generalization-set-asd-
 targets.md`.
+
+> **PTP1B carries the program's only surviving positive, a different
+> observable from the table row above ([[TASK-0201]], 2026-08-04, filed into
+> this document via [[TASK-0205]]).** The `Actual AUC`/`Max floor` row above
+> is `H_new`/CTQW-family (`BEATS_CHANCE_NOT_FLOOR`, unaffected by this
+> finding — not superseded, a different quantity). Separately, in the
+> lowmode/dynamic-cross-correlation family: `dcc_low` (k=10) survives its own
+> pre-registered Bonferroni bar under a null construction verified to
+> genuinely reach real pocket Rg (`graph_walk_patch_matched`, [[TASK-0201]] —
+> the prior null, [[TASK-0190]] found, had a hard structural Rg ceiling below
+> this target's real pocket geometry, so its earlier "does not survive"
+> reading on this cell was unreliable at the source). **p=0.0027 against a
+> pre-registered bar of 0.003125 (95% CI [0.0020, 0.0035] — point estimate
+> clears, CI slightly straddles the bar, reported exactly, not rounded to a
+> clean win); `real_auc=1.000`, independently matching [[TASK-0151]]'s own
+> already-published number for this exact cell.** This is the one cell,
+> program-wide, that survives a corrected null against a real target label —
+> see `RESULTS.md`'s "Program-level multiple-comparison budget" caveats and
+> "A null that can actually reach real pocket Rg" section for the full
+> program-wide context. Framing this for the submission narrative is
+> [[TASK-0184]]'s call, not this document's.
 
 ---
 
