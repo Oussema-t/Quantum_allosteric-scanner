@@ -1,0 +1,40 @@
+{"event": "run_start", "run_name": "control_effort_scoring", "environment": {"hostname": "Bartoszs-MacBook-Pro.local", "pid": 13563, "platform": "macOS-26.6-x86_64-i386-64bit-Mach-O", "thread_env": {"OMP_NUM_THREADS": "4", "OPENBLAS_NUM_THREADS": "4", "MKL_NUM_THREADS": "4", "NUMEXPR_NUM_THREADS": "4", "VECLIB_MAXIMUM_THREADS": "4"}, "versions": {"python": "3.13.4", "numpy": "2.5.1", "scipy": "1.18.0", "optuna": "4.9.0"}, "timestamp": "2026-08-04T11:39:47"}}
+{"event": "step", "label": "KRAS_G12C_loaded", "wall_elapsed_s": 0.847, "cpu_elapsed_s": 0.684, "n_residues": 169, "n_active_site": 18, "n_pocket": 18}
+{"event": "step", "label": "KRAS_G12C_control_effort_done", "wall_elapsed_s": 15.48, "cpu_elapsed_s": 45.642, "n_feasible": 22, "elapsed_s": 15.4}
+{"event": "step", "label": "KRAS_G12C_prs_done", "wall_elapsed_s": 15.535, "cpu_elapsed_s": 45.723}
+{"event": "step", "label": "KRAS_G12C_control_effort_scored", "wall_elapsed_s": 16.644, "cpu_elapsed_s": 46.819, "whole_auc": 0.4271523178807947, "n_scorable_shells": 4, "mean_auc": 0.4826388888888889, "max_auc": 0.5, "max_shell": 2.0}
+{"event": "step", "label": "KRAS_G12C_prs_low_scored", "wall_elapsed_s": 17.705, "cpu_elapsed_s": 47.879, "whole_auc": 0.4808682855040471, "n_scorable_shells": 4, "mean_auc": 0.5064087301587301, "max_auc": 0.5952380952380952, "max_shell": 2.0}
+{"event": "step", "label": "KRAS_G12C_permutation_null_done", "wall_elapsed_s": 22.8, "cpu_elapsed_s": 52.961, "observed_mean_stratified": 0.4826388888888889, "null_mean": 0.5003021835663032, "perm_p": 0.6683316683316683}
+{"event": "step", "label": "BCR_ABL1_loaded", "wall_elapsed_s": 23.263, "cpu_elapsed_s": 53.421, "n_residues": 451, "n_active_site": 26, "n_pocket": 16}
+{"event": "step", "label": "BCR_ABL1_control_effort_done", "wall_elapsed_s": 254.8, "cpu_elapsed_s": 861.39, "n_feasible": 5, "elapsed_s": 232.0}
+{"event": "step", "label": "BCR_ABL1_prs_done", "wall_elapsed_s": 255.472, "cpu_elapsed_s": 862.616}
+{"event": "step", "label": "BCR_ABL1_control_effort_scored", "wall_elapsed_s": 256.668, "cpu_elapsed_s": 863.792, "whole_auc": 0.4942528735632184, "n_scorable_shells": 4, "mean_auc": 0.5, "max_auc": 0.5, "max_shell": 1.0}
+{"event": "step", "label": "BCR_ABL1_prs_low_scored", "wall_elapsed_s": 257.819, "cpu_elapsed_s": 864.942, "whole_auc": 0.1875, "n_scorable_shells": 4, "mean_auc": 0.2515972524911312, "max_auc": 0.43915343915343913, "max_shell": 3.0}
+{"event": "step", "label": "BCR_ABL1_permutation_null_done", "wall_elapsed_s": 264.714, "cpu_elapsed_s": 871.808, "observed_mean_stratified": 0.5, "null_mean": 0.49968808815715565, "perm_p": 0.5574425574425574}
+{"event": "step", "label": "CARDIAC_MYOSIN_loaded", "wall_elapsed_s": 265.544, "cpu_elapsed_s": 872.633, "n_residues": 704, "n_active_site": 18, "n_pocket": 13}
+{"event": "step", "label": "CARDIAC_MYOSIN_control_effort_done", "wall_elapsed_s": 1045.511, "cpu_elapsed_s": 3776.595, "n_feasible": 8, "elapsed_s": 780.8}
+{"event": "step", "label": "CARDIAC_MYOSIN_prs_done", "wall_elapsed_s": 1047.529, "cpu_elapsed_s": 3780.588}
+{"event": "step", "label": "CARDIAC_MYOSIN_control_effort_scored", "wall_elapsed_s": 1048.803, "cpu_elapsed_s": 3781.85, "whole_auc": 0.49421128798842257, "n_scorable_shells": 6, "mean_auc": 0.5, "max_auc": 0.5, "max_shell": 1.0}
+{"event": "step", "label": "CARDIAC_MYOSIN_prs_low_scored", "wall_elapsed_s": 1050.02, "cpu_elapsed_s": 3783.056, "whole_auc": 0.8356896359790715, "n_scorable_shells": 6, "mean_auc": 0.8314513843814094, "max_auc": 0.921875, "max_shell": 3.0}
+{"event": "step", "label": "CARDIAC_MYOSIN_permutation_null_done", "wall_elapsed_s": 1056.016, "cpu_elapsed_s": 3789.028, "observed_mean_stratified": 0.5, "null_mean": 0.4993794957010582, "perm_p": 0.8281718281718282}
+{"event": "run_finish", "wall_elapsed_s": 1056.02, "cpu_elapsed_s": 3789.029, "n_targets": 3}
+{"event": "run_start", "run_name": "control_effort_scoring", "environment": {"hostname": "Bartoszs-MacBook-Pro.local", "pid": 40547, "platform": "macOS-26.6-x86_64-i386-64bit-Mach-O", "thread_env": {"OMP_NUM_THREADS": "4", "OPENBLAS_NUM_THREADS": "4", "MKL_NUM_THREADS": "4", "NUMEXPR_NUM_THREADS": "4", "VECLIB_MAXIMUM_THREADS": "4"}, "versions": {"python": "3.13.4", "numpy": "2.5.1", "scipy": "1.18.0", "optuna": "4.9.0"}, "timestamp": "2026-08-04T15:47:00"}}
+{"event": "step", "label": "KRAS_G12C_loaded", "wall_elapsed_s": 0.822, "cpu_elapsed_s": 0.668, "n_residues": 169, "n_active_site": 18, "n_pocket": 18}
+{"event": "step", "label": "KRAS_G12C_control_effort_done", "wall_elapsed_s": 17.065, "cpu_elapsed_s": 47.513, "n_feasible": 29, "elapsed_s": 16.9}
+{"event": "step", "label": "KRAS_G12C_prs_done", "wall_elapsed_s": 17.122, "cpu_elapsed_s": 47.594}
+{"event": "step", "label": "KRAS_G12C_control_effort_scored", "wall_elapsed_s": 18.26, "cpu_elapsed_s": 48.723, "whole_auc": 0.4584253127299485, "n_scorable_shells": 4, "mean_auc": 0.5009920634920635, "max_auc": 0.5158730158730158, "max_shell": 1.0}
+{"event": "step", "label": "KRAS_G12C_prs_low_scored", "wall_elapsed_s": 19.35, "cpu_elapsed_s": 49.81, "whole_auc": 0.4808682855040471, "n_scorable_shells": 4, "mean_auc": 0.5064087301587301, "max_auc": 0.5952380952380952, "max_shell": 2.0}
+{"event": "step", "label": "KRAS_G12C_permutation_null_done", "wall_elapsed_s": 24.632, "cpu_elapsed_s": 55.069, "observed_mean_stratified": 0.5009920634920635, "null_mean": 0.500029743565075, "perm_p": 0.4825174825174825}
+{"event": "step", "label": "BCR_ABL1_loaded", "wall_elapsed_s": 25.106, "cpu_elapsed_s": 55.54, "n_residues": 451, "n_active_site": 26, "n_pocket": 16}
+{"event": "step", "label": "BCR_ABL1_control_effort_done", "wall_elapsed_s": 249.288, "cpu_elapsed_s": 854.632, "n_feasible": 94, "elapsed_s": 224.7}
+{"event": "step", "label": "BCR_ABL1_prs_done", "wall_elapsed_s": 249.953, "cpu_elapsed_s": 855.817}
+{"event": "step", "label": "BCR_ABL1_control_effort_scored", "wall_elapsed_s": 251.18, "cpu_elapsed_s": 857.034, "whole_auc": 0.39195402298850573, "n_scorable_shells": 4, "mean_auc": 0.4040421195652174, "max_auc": 0.5, "max_shell": 3.0}
+{"event": "step", "label": "BCR_ABL1_prs_low_scored", "wall_elapsed_s": 252.415, "cpu_elapsed_s": 858.259, "whole_auc": 0.1875, "n_scorable_shells": 4, "mean_auc": 0.2515972524911312, "max_auc": 0.43915343915343913, "max_shell": 3.0}
+{"event": "step", "label": "BCR_ABL1_permutation_null_done", "wall_elapsed_s": 259.485, "cpu_elapsed_s": 865.236, "observed_mean_stratified": 0.4040421195652174, "null_mean": 0.5014197194398319, "perm_p": 0.99000999000999}
+{"event": "step", "label": "CARDIAC_MYOSIN_loaded", "wall_elapsed_s": 260.35, "cpu_elapsed_s": 866.09, "n_residues": 704, "n_active_site": 18, "n_pocket": 13}
+{"event": "step", "label": "CARDIAC_MYOSIN_control_effort_done", "wall_elapsed_s": 1052.066, "cpu_elapsed_s": 3790.866, "n_feasible": 41, "elapsed_s": 792.6}
+{"event": "step", "label": "CARDIAC_MYOSIN_prs_done", "wall_elapsed_s": 1054.168, "cpu_elapsed_s": 3794.95}
+{"event": "step", "label": "CARDIAC_MYOSIN_control_effort_scored", "wall_elapsed_s": 1055.475, "cpu_elapsed_s": 3796.236, "whole_auc": 0.4703328509406657, "n_scorable_shells": 6, "mean_auc": 0.47390875319247733, "max_auc": 0.5, "max_shell": 3.0}
+{"event": "step", "label": "CARDIAC_MYOSIN_prs_low_scored", "wall_elapsed_s": 1056.703, "cpu_elapsed_s": 3797.458, "whole_auc": 0.8356896359790715, "n_scorable_shells": 6, "mean_auc": 0.8314513843814094, "max_auc": 0.921875, "max_shell": 3.0}
+{"event": "step", "label": "CARDIAC_MYOSIN_permutation_null_done", "wall_elapsed_s": 1062.912, "cpu_elapsed_s": 3803.633, "observed_mean_stratified": 0.47390875319247733, "null_mean": 0.5011240973776248, "perm_p": 0.7142857142857143}
+{"event": "run_finish", "wall_elapsed_s": 1062.915, "cpu_elapsed_s": 3803.635, "n_targets": 3}
