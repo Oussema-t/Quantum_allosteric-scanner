@@ -30,6 +30,7 @@ Central coordination hub for the repo-local agent scaffold.
 - weekly timeline overlay: `.ai/tasks/PLANS/PLAN-01.07.26.md`
 - seam protocol (TASK-0050): `.ai/reference/SEAM_PROTOCOL.md`, registry at `.ai/seams/`
 - invariance protocol (TASK-0051): `.ai/reference/INVARIANCE_PROTOCOL.md`, registry at `.ai/invariants/`
+- merge conflict protocol (TASK-0202): `.ai/reference/MERGE_CONFLICT_PROTOCOL.md`
 
 ## Source Of Truth
 
@@ -283,6 +284,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0200 | Conditional-on-fpocket residual analysis — **resolved: strict subset, asymmetric.** Forward (dynamics \| fpocket): no cell on any of 3 targets x 3 representative observables x 4 swept band widths beats its within-band floor and clears the within-band permutation null — clean, consistent negative. Reverse (fpocket \| dynamics): one cell (BCR_ABL1 `dcc_low`, one window) crosses the pre-registered bar but fails this task's own robustness rule (does not survive the other 3 swept windows) — disqualified, reported as a suggestive sub-threshold pattern only. Positive control (planted, geometry-blind) confirms the pipeline can detect a real signal; negative control confirms the null-clearance criterion rejects chance floor-beats. fpocket's recomputed AUC did not match TASK-0163's published numbers on any target (diagnosed — label/chains/determinism all ruled out; likely vendored-binary drift, not chased further) | Implementer | Done | P1 | 2026-08-03 | — | — | `.ai/tasks/DONE/TASK-0200-conditional-on-fpocket-residual-analysis.md` |
 | TASK-0201 | A null construction that can actually reach real-pocket Rg — TASK-0190 found `compact_patch_matched` never raises on CARDIAC_MYOSIN/PTP1B but silently fails to centre on `target_rg`: the k-NN-ball construction has a hard Rg ceiling (20,000-draw max 7.784/7.134) below the real pocket's own Rg (9.628/7.969) — structurally unreachable, not rare. Build + verify an alternative whose Rg support genuinely covers real pocket geometry; re-run the two affected `dcc_low` cells against it. Does not change TASK-0190's own negative verdict (a genuinely-reaching null would only be more lenient) | Implementer | Done | P2 | 2026-08-03 | — | — | `.ai/tasks/DONE/TASK-0201-rg-reaching-compact-null-construction.md` |
 | TASK-0156 | Rank residues by minimum GRAPE control-energy `E_i` to steer the CTQW from the active-site seed to each residue (Khaneja et al. 2005), the classical analogue being Atilgan & Atilgan 2009's PRS — **resolved: no, chance-level on all 3 mandatory targets** (stratified AUC 0.501/0.404/0.474, permutation p=0.48/0.99/0.71). Synthetic dumbbell gate passed (tracks planted coupling at equal hop-distance) and kill-switch passed (rho=0.56, not a distance proxy) before scoring. A size-blind fixed horizon T=15 first produced a degenerate all-0.5-AUC artifact on the 2 larger targets (near-zero feasible fraction); this project's own gap-based `min_adequate_t_max` rescaling was checked and also failed to fix it (KRAS/BCR_ABL1 have near-identical spectral gaps); fixed via a label-blind per-target feasibility-rate search instead. T/F sensitivity check confirms rankings are stable (rho 0.73-0.89) while AUC stays at chance — a real negative, not a hyperparameter artifact | Implementer | Done | P2 | 2026-08-04 | — | — | `.ai/tasks/DONE/TASK-0156-control-effort-scanning.md` |
+| TASK-0202 | Adopt a merge/rebase conflict resolution protocol — `.ai/reference/MERGE_CONFLICT_PROTOCOL.md`, grounded in 3 real incidents (COMMON.md whole-file collision `Q-0001`/TASK-0107; RESULTS.md silent row-loss recovered `61b8096`, TASK-0195 still open for the deeper fix; TASK-0189/TASK-0073's `claim.py move` duplicate-file defect, TASK-0198 open). Headline rules: `git merge-tree --write-tree` preview before rebasing (non-destructive); rebase not merge; on COMMON.md/RESULTS.md conflicts specifically, keep both sides, verify by row-count increase, never `--ours`/`--theirs`; GIT-COMMIT claim covers the whole rebase-through-push window. Filed after a real 11-ahead/1-behind `bartosz`/`origin/bartosz` divergence, verified clean via the protocol's own pre-check before acting | Architect/Planner | In Progress | P1 | 2026-08-05 | Architect | 2026-08-05 | `.ai/tasks/IN_PROGRESS/TASK-0202-adopt-merge-conflict-protocol.md` |
 
 ## Current Rules
 
@@ -387,6 +389,20 @@ see the claim-before-start rule under "Current Rules" below.
   — no table, not reportable. "Invariant on our test set" is a trigger to
   widen the transformation group, not a green light — see
   `.ai/invariants/README.md` and [[pitfalls#P-0001]].
+- **Merge conflict protocol (TASK-0202).** `git fetch` + `git branch -vv`
+  before assuming you're in sync — a real divergence sat unnoticed for
+  two days before being caught. Before rebasing, preview non-destructively
+  with `git merge-tree --write-tree <local> <remote>` (exit 0 = clean, no
+  guessing). Always rebase onto the remote, never a merge commit — keeps
+  this repo's one-task-one-commit history intact. On a genuine conflict in
+  `COMMON.md`'s registry or `RESULTS.md`'s findings/open-questions table
+  specifically (both append-only ledgers): **keep both sides, never
+  `--ours`/`--theirs`** — verify by row/section count increasing, not by
+  "no conflict markers remain" (a clean-looking merge silently dropped
+  `RESULTS.md` rows 47-53 once already, recovered in `61b8096`). This
+  ledger-file rule does not generalize to ordinary source-code conflicts.
+  `GIT-COMMIT` claim covers the whole rebase-through-push window, not just
+  one commit. Full protocol: `.ai/reference/MERGE_CONFLICT_PROTOCOL.md`.
 
 ## Open Questions
 

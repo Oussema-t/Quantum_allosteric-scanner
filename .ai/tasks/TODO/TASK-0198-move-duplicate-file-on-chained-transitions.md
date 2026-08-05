@@ -104,6 +104,11 @@ cause — do not fix blind.
 - [[TASK-0197]] (Done) — the `stage` capability used to fix both known
   instances by hand; this task fixes the tool that produced them, not a
   duplicate of that work.
+- [[TASK-0202]] (In Progress) — cross-linked, not a dependency: adopts the
+  general merge-conflict resolution protocol, which cites this task's own
+  two known instances as one of its three motivating incidents. Related,
+  distinct failure mode (this is an index/HEAD desync from `claim.py move`
+  itself, not a merge/rebase conflict).
 
 ## Open Questions
 

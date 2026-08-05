@@ -118,6 +118,11 @@ Two independent weaknesses, and they need different fixes:
   tooling half.
 - [[TASK-0065]] (Done) — SCQ visibility.
 - [[TASK-0191]] — the loss this task is meant to prevent recurring.
+- [[TASK-0202]] (In Progress) — cross-linked, not a dependency: adopts the
+  general merge-conflict resolution protocol as the *manual process* that
+  applies until this task's own tooling fix lands. This task remains the
+  deeper, `RESULTS.md`-specific fix (task-ID cross-references, a
+  staleness/lock mechanism) — TASK-0202 does not substitute for it.
 
 ## Open Questions
 
