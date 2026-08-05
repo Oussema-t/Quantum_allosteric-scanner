@@ -1,0 +1,325 @@
+[
+  {
+    "target": "KRAS_G12C",
+    "ok": true,
+    "label": "incumbent",
+    "n_residues": 169,
+    "n_active_site": 18,
+    "n_pocket": 18,
+    "hyperparameters": {
+      "T": 15.0,
+      "n_slices": 20,
+      "fidelity_target": 0.4,
+      "penalty_weight": 5000.0,
+      "n_iters": 500,
+      "lr": 0.05
+    },
+    "n_feasible": 29,
+    "proximity_floor_whole_graph_auc": {
+      "degree": 0.4817880794701987,
+      "euclid": 0.4683590875643856,
+      "hop": 0.48123620309050774
+    },
+    "proximity_floor_max_whole_graph_auc": 0.4817880794701987,
+    "control_effort": {
+      "whole_graph_auc": 0.4584253127299485,
+      "whole_graph_auc_ci": [
+        0.38375530352357623,
+        0.5591947855312634
+      ],
+      "stratified": {
+        "1.0": {
+          "auc": 0.5158730158730158,
+          "n_pos": 7,
+          "n_neg": 36
+        },
+        "2.0": {
+          "auc": 0.4880952380952381,
+          "n_pos": 3,
+          "n_neg": 42
+        },
+        "3.0": {
+          "auc": 0.5,
+          "n_pos": 6,
+          "n_neg": 28
+        },
+        "4.0": {
+          "auc": 0.5,
+          "n_pos": 2,
+          "n_neg": 25
+        }
+      },
+      "stratified_summary": {
+        "n_scorable_shells": 4,
+        "mean_auc": 0.5009920634920635,
+        "max_auc": 0.5158730158730158,
+        "max_shell": 1.0
+      }
+    },
+    "prs_low_classical_baseline": {
+      "whole_graph_auc": 0.4808682855040471,
+      "whole_graph_auc_ci": [
+        0.2218375387710621,
+        0.7047684021900126
+      ],
+      "stratified": {
+        "1.0": {
+          "auc": 0.43253968253968256,
+          "n_pos": 7,
+          "n_neg": 36
+        },
+        "2.0": {
+          "auc": 0.5952380952380952,
+          "n_pos": 3,
+          "n_neg": 42
+        },
+        "3.0": {
+          "auc": 0.5178571428571428,
+          "n_pos": 6,
+          "n_neg": 28
+        },
+        "4.0": {
+          "auc": 0.48,
+          "n_pos": 2,
+          "n_neg": 25
+        }
+      },
+      "stratified_summary": {
+        "n_scorable_shells": 4,
+        "mean_auc": 0.5064087301587301,
+        "max_auc": 0.5952380952380952,
+        "max_shell": 2.0
+      }
+    },
+    "permutation_null": {
+      "n_permutations": 1000,
+      "observed_mean_stratified_auc": 0.5009920634920635,
+      "null_mean": 0.500029743565075,
+      "null_std": 0.05046382179956494,
+      "p_value": 0.4825174825174825
+    },
+    "elapsed_s": 24.5
+  },
+  {
+    "target": "BCR_ABL1",
+    "ok": true,
+    "label": "incumbent",
+    "n_residues": 451,
+    "n_active_site": 26,
+    "n_pocket": 16,
+    "hyperparameters": {
+      "T": 40.02958579881657,
+      "n_slices": 20,
+      "fidelity_target": 0.4,
+      "penalty_weight": 5000.0,
+      "n_iters": 500,
+      "lr": 0.05
+    },
+    "n_feasible": 94,
+    "proximity_floor_whole_graph_auc": {
+      "degree": 0.4933189655172414,
+      "euclid": 0.46063218390804594,
+      "hop": 0.5816810344827587
+    },
+    "proximity_floor_max_whole_graph_auc": 0.5816810344827587,
+    "control_effort": {
+      "whole_graph_auc": 0.39195402298850573,
+      "whole_graph_auc_ci": [
+        0.33221088118319664,
+        0.44197965778460563
+      ],
+      "stratified": {
+        "1.0": {
+          "auc": 0.16304347826086957,
+          "n_pos": 1,
+          "n_neg": 92
+        },
+        "2.0": {
+          "auc": 0.453125,
+          "n_pos": 9,
+          "n_neg": 64
+        },
+        "3.0": {
+          "auc": 0.5,
+          "n_pos": 3,
+          "n_neg": 63
+        },
+        "4.0": {
+          "auc": 0.5,
+          "n_pos": 3,
+          "n_neg": 76
+        }
+      },
+      "stratified_summary": {
+        "n_scorable_shells": 4,
+        "mean_auc": 0.4040421195652174,
+        "max_auc": 0.5,
+        "max_shell": 3.0
+      }
+    },
+    "prs_low_classical_baseline": {
+      "whole_graph_auc": 0.1875,
+      "whole_graph_auc_ci": [
+        0.06524802632795312,
+        0.3107289876528345
+      ],
+      "stratified": {
+        "1.0": {
+          "auc": 0.04347826086956519,
+          "n_pos": 1,
+          "n_neg": 92
+        },
+        "2.0": {
+          "auc": 0.24305555555555558,
+          "n_pos": 9,
+          "n_neg": 64
+        },
+        "3.0": {
+          "auc": 0.43915343915343913,
+          "n_pos": 3,
+          "n_neg": 63
+        },
+        "4.0": {
+          "auc": 0.28070175438596495,
+          "n_pos": 3,
+          "n_neg": 76
+        }
+      },
+      "stratified_summary": {
+        "n_scorable_shells": 4,
+        "mean_auc": 0.2515972524911312,
+        "max_auc": 0.43915343915343913,
+        "max_shell": 3.0
+      }
+    },
+    "permutation_null": {
+      "n_permutations": 1000,
+      "observed_mean_stratified_auc": 0.4040421195652174,
+      "null_mean": 0.5014197194398319,
+      "null_std": 0.042873311001758035,
+      "p_value": 0.99000999000999
+    },
+    "elapsed_s": 234.9
+  },
+  {
+    "target": "CARDIAC_MYOSIN",
+    "ok": true,
+    "label": "incumbent",
+    "n_residues": 704,
+    "n_active_site": 18,
+    "n_pocket": 13,
+    "hyperparameters": {
+      "T": 62.485207100591715,
+      "n_slices": 20,
+      "fidelity_target": 0.4,
+      "penalty_weight": 5000.0,
+      "n_iters": 500,
+      "lr": 0.05
+    },
+    "n_feasible": 41,
+    "proximity_floor_whole_graph_auc": {
+      "degree": 0.40003339641545144,
+      "euclid": 0.5678503840587776,
+      "hop": 0.4803517755760882
+    },
+    "proximity_floor_max_whole_graph_auc": 0.5678503840587776,
+    "control_effort": {
+      "whole_graph_auc": 0.4703328509406657,
+      "whole_graph_auc_ci": [
+        0.4459805036812336,
+        0.4883898109000652
+      ],
+      "stratified": {
+        "1.0": {
+          "auc": 0.3561643835616438,
+          "n_pos": 1,
+          "n_neg": 73
+        },
+        "2.0": {
+          "auc": 0.4872881355932203,
+          "n_pos": 1,
+          "n_neg": 118
+        },
+        "3.0": {
+          "auc": 0.5,
+          "n_pos": 4,
+          "n_neg": 144
+        },
+        "4.0": {
+          "auc": 0.5,
+          "n_pos": 4,
+          "n_neg": 126
+        },
+        "5.0": {
+          "auc": 0.5,
+          "n_pos": 2,
+          "n_neg": 99
+        },
+        "6.0": {
+          "auc": 0.5,
+          "n_pos": 1,
+          "n_neg": 81
+        }
+      },
+      "stratified_summary": {
+        "n_scorable_shells": 6,
+        "mean_auc": 0.47390875319247733,
+        "max_auc": 0.5,
+        "max_shell": 3.0
+      }
+    },
+    "prs_low_classical_baseline": {
+      "whole_graph_auc": 0.8356896359790715,
+      "whole_graph_auc_ci": [
+        0.6638365342208992,
+        0.9197536255105965
+      ],
+      "stratified": {
+        "1.0": {
+          "auc": 0.547945205479452,
+          "n_pos": 1,
+          "n_neg": 73
+        },
+        "2.0": {
+          "auc": 0.864406779661017,
+          "n_pos": 1,
+          "n_neg": 118
+        },
+        "3.0": {
+          "auc": 0.921875,
+          "n_pos": 4,
+          "n_neg": 144
+        },
+        "4.0": {
+          "auc": 0.8492063492063492,
+          "n_pos": 4,
+          "n_neg": 126
+        },
+        "5.0": {
+          "auc": 0.9040404040404041,
+          "n_pos": 2,
+          "n_neg": 99
+        },
+        "6.0": {
+          "auc": 0.9012345679012346,
+          "n_pos": 1,
+          "n_neg": 81
+        }
+      },
+      "stratified_summary": {
+        "n_scorable_shells": 6,
+        "mean_auc": 0.8314513843814094,
+        "max_auc": 0.921875,
+        "max_shell": 3.0
+      }
+    },
+    "permutation_null": {
+      "n_permutations": 1000,
+      "observed_mean_stratified_auc": 0.47390875319247733,
+      "null_mean": 0.5011240973776248,
+      "null_std": 0.03925654206149473,
+      "p_value": 0.7142857142857143
+    },
+    "elapsed_s": 803.4
+  }
+]

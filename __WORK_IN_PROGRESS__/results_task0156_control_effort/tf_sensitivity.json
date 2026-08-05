@@ -1,0 +1,55 @@
+{
+  "target": "KRAS_G12C",
+  "combos": [
+    {
+      "tag": "primary",
+      "T": 15.0,
+      "fidelity_target": 0.4,
+      "n_feasible": 29,
+      "stratified_summary": {
+        "n_scorable_shells": 4,
+        "mean_auc": 0.5009920634920635,
+        "max_auc": 0.5158730158730158,
+        "max_shell": 1.0
+      }
+    },
+    {
+      "tag": "shorter_T_lower_F",
+      "T": 8.0,
+      "fidelity_target": 0.3,
+      "n_feasible": 18,
+      "stratified_summary": {
+        "n_scorable_shells": 4,
+        "mean_auc": 0.4930555555555556,
+        "max_auc": 0.5,
+        "max_shell": 2.0
+      }
+    },
+    {
+      "tag": "longer_T_higher_F",
+      "T": 25.0,
+      "fidelity_target": 0.5,
+      "n_feasible": 38,
+      "stratified_summary": {
+        "n_scorable_shells": 4,
+        "mean_auc": 0.4766865079365079,
+        "max_auc": 0.5,
+        "max_shell": 3.0
+      }
+    }
+  ],
+  "rank_correlations": {
+    "primary_vs_shorter_T_lower_F": {
+      "rho": 0.8125182764358009,
+      "p": 5.463070638646427e-41
+    },
+    "primary_vs_longer_T_higher_F": {
+      "rho": 0.8935286929118048,
+      "p": 5.811662738724924e-60
+    },
+    "shorter_T_lower_F_vs_longer_T_higher_F": {
+      "rho": 0.7306242184972142,
+      "p": 1.7737477913768624e-29
+    }
+  }
+}

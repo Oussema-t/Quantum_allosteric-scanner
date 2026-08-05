@@ -1,0 +1,22 @@
+{
+  "target": "KRAS_G12C",
+  "n_residues": 169,
+  "n_active_site": 18,
+  "n_feasible": 22,
+  "hyperparameters": {
+    "T": 15.0,
+    "n_slices": 20,
+    "fidelity_target": 0.5,
+    "penalty_weight": 5000.0,
+    "n_iters": 500,
+    "lr": 0.05
+  },
+  "rho_score_vs_neg_hop": -0.5604150532671034,
+  "p_score_vs_neg_hop": 2.320618038080076e-15,
+  "rho_score_vs_neg_euclid": -0.5522993264189129,
+  "p_score_vs_neg_euclid": 7.014778767351393e-15,
+  "max_abs_rho": 0.5604150532671034,
+  "verdict": "PROCEED -- not a simple distance proxy",
+  "scan_elapsed_s": 15.1,
+  "total_elapsed_s": 15.8
+}
