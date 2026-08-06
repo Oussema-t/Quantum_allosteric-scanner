@@ -120,10 +120,38 @@ pre-stated falsification check, not declared a win by default):
 
 ## Status
 
-Formulation only, per this task's own In-Scope bullet ("state the encoding...
-qubit count, and falsification criteria... Do not build it"). Not implemented.
-No rotamer library, pairwise energy table, or cavity-detection integration
-exists in this repository as of this writing (`src/allostery/` has no
-`rotamer.py`/`packing.py` module) — a future task would need to source or
-build all three before Phase B's classical baseline (falsification criterion
-1) could even be run.
+**CLOSED — falsification criterion #1 run and failed, 2026-08-06 ([[TASK-0204]]).**
+
+`[[TASK-0204]]` sourced a real classical packer (vendored, MIT-licensed
+EvoEF2, `tools/evoef2/`, minimally patched to expose greedy/random
+single-pass rotamer choice alongside its own shipped simulated-annealing
+optimizer — no hand-rolled energy function, per criterion #3) and ran the
+classical baseline this Status section previously said had not been built.
+
+Pre-registered bar: optimized (`SideChainRepack`, 8 seeded trials) hit-rate
+must strictly exceed greedy's (`GreedyRepack`, 1 deterministic trial) single
+hit/miss, on **both** KRAS_G12C and BCR_ABL1 (2/2). Measured:
+
+| Target | native sanity | greedy | optimized (8 trials) | random (8 trials) | passes? |
+|---|---|---|---|---|---|
+| KRAS_G12C | miss (drug=0.001) | miss | 0/8 (0.0) | 0/8 (0.0) | No |
+| BCR_ABL1 | **hit** (drug=0.566) | **hit** | 0/8 (0.0) | 0/8 (0.0) | No |
+
+**Criterion #1 fails, 0/2 (bar was 2/2).** On BCR_ABL1 the ceiling case
+applies explicitly (greedy already hits, optimized does not exceed rate
+1.0 — a fail per this task's own pre-registered rule, not read as an
+automatic pass). Notably, SA-optimized repacking scored *worse* than the
+naive greedy baseline on BCR_ABL1 (0/8 vs. 1/1) — energy minimization over
+the full rotamer objective (self + pairwise terms across the window plus
+EvoEF2's own automatically-included repack shell) tends to pack side chains
+*tighter*, which is not the same objective as opening an fpocket-druggable
+cavity; nothing here suggests the optimizer was mis-run.
+
+Per criterion #1's own stated consequence and Phase A's binding precedent:
+**no quantum formulation is built for this objective.** Rare-event-rate
+measurement (the amplitude-amplification precondition) was gated on
+criterion #1 passing and is therefore not applicable — a closed result, not
+an open question. Full trial-level numbers:
+`results_task0204_rotamer_repack_baseline/results.json`; task file:
+`.ai/tasks/DONE/TASK-0204-*.md`; `RESULTS.md` §"Phase B rotamer-QUBO
+classical baseline — criterion #1 closes the route".

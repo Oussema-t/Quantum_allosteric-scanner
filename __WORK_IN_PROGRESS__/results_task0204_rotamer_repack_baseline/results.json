@@ -1,0 +1,352 @@
+{
+  "KRAS_G12C": {
+    "target": "KRAS_G12C",
+    "window": [
+      [
+        "A",
+        60
+      ],
+      [
+        "A",
+        68
+      ],
+      [
+        "A",
+        9
+      ],
+      [
+        "A",
+        61
+      ],
+      [
+        "A",
+        58
+      ],
+      [
+        "A",
+        59
+      ],
+      [
+        "A",
+        10
+      ],
+      [
+        "A",
+        96
+      ],
+      [
+        "A",
+        62
+      ],
+      [
+        "A",
+        72
+      ],
+      [
+        "A",
+        69
+      ],
+      [
+        "A",
+        100
+      ]
+    ],
+    "design_chain": "B",
+    "native_sanity": {
+      "overlap_frac": 0.75,
+      "druggability_score": 0.001,
+      "hit": false,
+      "n_pockets": 10
+    },
+    "greedy": {
+      "overlap_frac": 0.3333333333333333,
+      "druggability_score": 0.278,
+      "hit": false,
+      "n_pockets": 10
+    },
+    "optimized_trials": [
+      {
+        "overlap_frac": 0.5,
+        "druggability_score": 0.009,
+        "hit": false,
+        "n_pockets": 12
+      },
+      {
+        "overlap_frac": 0.5,
+        "druggability_score": 0.174,
+        "hit": false,
+        "n_pockets": 11
+      },
+      {
+        "overlap_frac": 0.3333333333333333,
+        "druggability_score": 0.333,
+        "hit": false,
+        "n_pockets": 12
+      },
+      {
+        "overlap_frac": 0.3333333333333333,
+        "druggability_score": 0.037,
+        "hit": false,
+        "n_pockets": 11
+      },
+      {
+        "overlap_frac": 0.5,
+        "druggability_score": 0.341,
+        "hit": false,
+        "n_pockets": 11
+      },
+      {
+        "overlap_frac": 0.4166666666666667,
+        "druggability_score": 0.643,
+        "hit": false,
+        "n_pockets": 12
+      },
+      {
+        "overlap_frac": 0.5,
+        "druggability_score": 0.264,
+        "hit": false,
+        "n_pockets": 10
+      },
+      {
+        "overlap_frac": 0.3333333333333333,
+        "druggability_score": 0.085,
+        "hit": false,
+        "n_pockets": 11
+      }
+    ],
+    "random_trials": [
+      {
+        "overlap_frac": 0.3333333333333333,
+        "druggability_score": 0.552,
+        "hit": false,
+        "n_pockets": 12
+      },
+      {
+        "overlap_frac": 0.25,
+        "druggability_score": 0.302,
+        "hit": false,
+        "n_pockets": 9
+      },
+      {
+        "overlap_frac": 0.25,
+        "druggability_score": 0.604,
+        "hit": false,
+        "n_pockets": 12
+      },
+      {
+        "overlap_frac": 0.4166666666666667,
+        "druggability_score": 0.355,
+        "hit": false,
+        "n_pockets": 11
+      },
+      {
+        "overlap_frac": 0.3333333333333333,
+        "druggability_score": 0.001,
+        "hit": false,
+        "n_pockets": 9
+      },
+      {
+        "overlap_frac": 0.5,
+        "druggability_score": 0.188,
+        "hit": false,
+        "n_pockets": 9
+      },
+      {
+        "overlap_frac": 0.4166666666666667,
+        "druggability_score": 0.012,
+        "hit": false,
+        "n_pockets": 13
+      },
+      {
+        "overlap_frac": 0.25,
+        "druggability_score": 0.763,
+        "hit": false,
+        "n_pockets": 11
+      }
+    ],
+    "summary": {
+      "optimized_hit_rate": 0.0,
+      "optimized_n_valid": 8,
+      "greedy_hit": false,
+      "random_hit_rate": 0.0,
+      "random_n_valid": 8,
+      "criterion_1_passes_this_target": false
+    },
+    "elapsed_s": 34.1
+  },
+  "BCR_ABL1": {
+    "target": "BCR_ABL1",
+    "window": [
+      [
+        "A",
+        452
+      ],
+      [
+        "A",
+        451
+      ],
+      [
+        "A",
+        453
+      ],
+      [
+        "A",
+        483
+      ],
+      [
+        "A",
+        359
+      ],
+      [
+        "A",
+        454
+      ],
+      [
+        "A",
+        356
+      ],
+      [
+        "A",
+        448
+      ],
+      [
+        "A",
+        360
+      ],
+      [
+        "A",
+        482
+      ],
+      [
+        "A",
+        484
+      ],
+      [
+        "A",
+        481
+      ]
+    ],
+    "design_chain": "B",
+    "native_sanity": {
+      "overlap_frac": 0.9166666666666666,
+      "druggability_score": 0.566,
+      "hit": true,
+      "n_pockets": 37
+    },
+    "greedy": {
+      "overlap_frac": 0.5,
+      "druggability_score": 0.537,
+      "hit": true,
+      "n_pockets": 38
+    },
+    "optimized_trials": [
+      {
+        "overlap_frac": 0.4166666666666667,
+        "druggability_score": 0.439,
+        "hit": false,
+        "n_pockets": 38
+      },
+      {
+        "overlap_frac": 0.25,
+        "druggability_score": 0.063,
+        "hit": false,
+        "n_pockets": 38
+      },
+      {
+        "overlap_frac": 0.4166666666666667,
+        "druggability_score": 0.086,
+        "hit": false,
+        "n_pockets": 39
+      },
+      {
+        "overlap_frac": 0.3333333333333333,
+        "druggability_score": 0.047,
+        "hit": false,
+        "n_pockets": 37
+      },
+      {
+        "overlap_frac": 0.5,
+        "druggability_score": 0.086,
+        "hit": false,
+        "n_pockets": 38
+      },
+      {
+        "overlap_frac": 0.3333333333333333,
+        "druggability_score": 0.006,
+        "hit": false,
+        "n_pockets": 38
+      },
+      {
+        "overlap_frac": 0.3333333333333333,
+        "druggability_score": 0.12,
+        "hit": false,
+        "n_pockets": 37
+      },
+      {
+        "overlap_frac": 0.5,
+        "druggability_score": 0.086,
+        "hit": false,
+        "n_pockets": 39
+      }
+    ],
+    "random_trials": [
+      {
+        "overlap_frac": 0.4166666666666667,
+        "druggability_score": 0.1,
+        "hit": false,
+        "n_pockets": 39
+      },
+      {
+        "overlap_frac": 0.4166666666666667,
+        "druggability_score": 0.876,
+        "hit": false,
+        "n_pockets": 35
+      },
+      {
+        "overlap_frac": 0.3333333333333333,
+        "druggability_score": 0.756,
+        "hit": false,
+        "n_pockets": 37
+      },
+      {
+        "overlap_frac": 0.4166666666666667,
+        "druggability_score": 0.327,
+        "hit": false,
+        "n_pockets": 38
+      },
+      {
+        "overlap_frac": 0.3333333333333333,
+        "druggability_score": 0.002,
+        "hit": false,
+        "n_pockets": 37
+      },
+      {
+        "overlap_frac": 0.4166666666666667,
+        "druggability_score": 0.007,
+        "hit": false,
+        "n_pockets": 39
+      },
+      {
+        "overlap_frac": 0.5,
+        "druggability_score": 0.399,
+        "hit": false,
+        "n_pockets": 37
+      },
+      {
+        "overlap_frac": 0.4166666666666667,
+        "druggability_score": 0.19,
+        "hit": false,
+        "n_pockets": 38
+      }
+    ],
+    "summary": {
+      "optimized_hit_rate": 0.0,
+      "optimized_n_valid": 8,
+      "greedy_hit": true,
+      "random_hit_rate": 0.0,
+      "random_n_valid": 8,
+      "criterion_1_passes_this_target": false
+    },
+    "elapsed_s": 39.2
+  }
+}

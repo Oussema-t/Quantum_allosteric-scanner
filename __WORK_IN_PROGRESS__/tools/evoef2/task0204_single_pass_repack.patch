@@ -1,0 +1,115 @@
+diff --git a/src/EnergyOptimization.cpp b/src/EnergyOptimization.cpp
+index 4076ecb..0d89793 100644
+--- a/src/EnergyOptimization.cpp
++++ b/src/EnergyOptimization.cpp
+@@ -827,3 +827,31 @@ int SimulatedAnnealingOptimizationForSCP(Structure* pStructure,RotamerList* pLis
+ }
+ 
+ 
++
++
++/* TASK-0204 (Quantum_allosteric-scanner), added to the vendored EvoEF2
++   source -- see EnergyOptimization.h for the full rationale. Reuses
++   SequenceGenerateInitialSequenceSeed/SequenceGenerateRandomSeed and
++   StructureShowMinEnergyStructure exactly as SimulatedAnnealingOptimization
++   ForSCP (above) does; the only change is that no SA loop runs between
++   seed generation and structure output. */
++int SinglePassRepackForSCP(Structure* pStructure,RotamerList* pList,char* deschn,char* programpath,char* prf,char* ss,char* sa,char* phipsi,int mode){
++  srand((unsigned int)time(NULL));
++  Sequence seed;
++  SequenceCreate(&seed);
++
++  if(mode==0){
++    printf("single-pass repack: greedy (lowest self-energy per site, no pairwise)\n");
++    SequenceGenerateInitialSequenceSeed(pStructure,pList,&seed);
++  }
++  else{
++    printf("single-pass repack: random (uniform-random rotamer per site)\n");
++    SequenceGenerateRandomSeed(&seed,pList);
++  }
++
++  StructureCalcSequenceEnergy(pStructure,&seed,deschn,programpath,prf,ss,sa,phipsi);
++  StructureShowMinEnergyStructure(pStructure,&seed,BEST_STRUCT);
++
++  SequenceDestroy(&seed);
++  return Success;
++}
+diff --git a/src/EnergyOptimization.h b/src/EnergyOptimization.h
+index acbbf77..c0571e5 100644
+--- a/src/EnergyOptimization.h
++++ b/src/EnergyOptimization.h
+@@ -72,5 +72,20 @@ int ReannealingOptimization(Structure* pStructure,RotamerList* pList,char* desch
+ int SimulatedAnnealingOptimizationForSCP(Structure* pStructure,RotamerList* pList,char* deschn,char* programpath,char* prf,char* ss,char* sa,char* phipsi,char* design_rotindex_file,char* fastafile);
+ int MetropolisCriteriaForSCP(Sequence* pOld,Sequence* pBest,Structure* pStructure,RotamerList* pList,StringArray** ppRotamerType,IntArray** ppRotamerCount,int *seqIndex,double temp,int stepCount, FILE* fp,FILE *fp2,char* deschn,char* programpath, char* prf, char* ss, char* sa, char* phipsi);
+ 
++/* TASK-0204 (Quantum_allosteric-scanner) -- single-pass, no-SA repack.
++   Exposes EvoEF2's own pre-existing SequenceGenerateInitialSequenceSeed
++   (lowest-self-energy-per-site, ignores pairwise terms -- "greedy") and
++   SequenceGenerateRandomSeed (uniform-random rotamer per site --
++   "random") seed-generation functions, which the shipped SideChainRepack
++   command computes internally only as an SA *starting point* and then
++   immediately overwrites via simulated annealing. This function performs
++   NO annealing -- it writes the seed sequence itself as the final
++   structure, using EvoEF2's own real rotamer library, self-energy table
++   and structure-writing code throughout (no new energy function, no new
++   rotamer geometry -- a minimal dispatch change, not a physics change).
++   mode: 0 = greedy (SequenceGenerateInitialSequenceSeed), 1 = random
++   (SequenceGenerateRandomSeed). */
++int SinglePassRepackForSCP(Structure* pStructure,RotamerList* pList,char* deschn,char* programpath,char* prf,char* ss,char* sa,char* phipsi,int mode);
++
+ 
+ #endif
+diff --git a/src/Main.cpp b/src/Main.cpp
+index 8cc2521..25cf1ed 100644
+--- a/src/Main.cpp
++++ b/src/Main.cpp
+@@ -159,6 +159,8 @@ BOOL CheckCommandName(char* queryname){
+     "CheckResiInLab",
+     "SideChainRepack",
+     "GetResiMinRMSD",
++    "GreedyRepack",
++    "RandomRepack",
+     NULL
+   };
+ 
+@@ -573,6 +575,40 @@ int main(int argc, char* argv[]){
+     SimulatedAnnealingOptimizationForSCP(&structure,&rotList,DES_CHAINS,PROGRAM_PATH,TGT_PRF,TGT_SS,TGT_SA,TGT_PHIPSI,ROTINDEXFILE,SEQFILE);
+   }
+ 
++  else if(!strcmp(cmdname,"GreedyRepack") || !strcmp(cmdname,"RandomRepack")){
++    /* TASK-0204 (Quantum_allosteric-scanner): identical setup to
++       SideChainRepack above (wildtype-identity rotamer generation, real
++       self-energy table) but a single-pass seed instead of simulated
++       annealing -- see EnergyOptimization.h/.cpp's own comments. */
++    if(FLAG_BBDEP_ROTLIB==TRUE){
++      BBdepRotamerLib bbrotlib;
++      BBdepRotamerLibCreate(&bbrotlib,FILE_ROTLIB);
++      StructureGenerateWildtypeRotamersByBBdepRotLib(&structure,&bbrotlib,&atomParam,&resiTopo,DES_CHAINS);
++      BBdepRotamerLibDestroy(&bbrotlib);
++    }
++    else{
++      BBindRotamerLib rotlib;
++      BBindRotamerLibCreate(&rotlib, FILE_ROTLIB);
++      StructureGenerateWildtypeRotamers(&structure,&rotlib,&atomParam,&resiTopo,DES_CHAINS);
++      BBindRotamerLibDestroy(&rotlib);
++    }
++    AAppTable aapptable;
++    RamaTable ramatable;
++    AApropensityTableReadFromFile(&aapptable,FILE_AAPROPENSITY);
++    RamaTableReadFromFile(&ramatable,FILE_RAMACHANDRAN);
++    StructureShowDesignSites(&structure, stdout);
++    SelfEnergyGenerateWithBBdepEnergy(&structure,&aapptable,&ramatable,FILE_SELF_ENERGY);
++    RotamerList rotList;
++    RotamerListCreateFromStructure(&rotList, &structure);
++    RotamerListWrite(&rotList,ROT_LIST_ALL);
++    SelfEnergyReadAndCheck(&structure,&rotList,FILE_SELF_ENERGY);
++    RotamerListWrite(&rotList,ROT_LIST_SEC);
++    RotamerListRead(&rotList,ROT_LIST_SEC);
++    StructureShowDesignSitesAfterRotamerDelete(&structure,&rotList,stdout);
++    int mode = !strcmp(cmdname,"GreedyRepack") ? 0 : 1;
++    SinglePassRepackForSCP(&structure,&rotList,DES_CHAINS,PROGRAM_PATH,TGT_PRF,TGT_SS,TGT_SA,TGT_PHIPSI,mode);
++  }
++
+   else if(!strcmp(cmdname, "ProteinDesign")){
+     if(FLAG_BBDEP_ROTLIB==TRUE){
+       BBdepRotamerLib bbrotlib;
