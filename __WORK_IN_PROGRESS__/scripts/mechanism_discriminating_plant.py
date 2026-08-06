@@ -152,11 +152,22 @@ def score_dcc(L, seed_idx):
     return dcc_low_from_L(L, seed_idx, k_modes=20)
 
 
+def score_dcc_k10(L, seed_idx):
+    """TASK-0203: [[TASK-0201]]'s actual PTP1B survival is `dcc_low` at
+    `k_modes=10`, not this module's own `k_modes=20` default (chosen for
+    cross-target consistency with [[TASK-0199]]'s representative set).
+    Additive registry entry -- does not touch `score_dcc`/`dcc_low_from_L`
+    or any existing KRAS_G12C/BCR_ABL1 cell, which are keyed by observable
+    name (`dcc_low_from_L`) and would be unaffected regardless."""
+    return dcc_low_from_L(L, seed_idx, k_modes=10)
+
+
 OBSERVABLES = {
     "T_E0": {"family": "channel", "score_fn": score_T},
     "ctqw_converged": {"family": "channel", "score_fn": score_ctqw},
     "ground_state_relaxation": {"family": "control", "score_fn": score_gsr},
     "dcc_low_from_L": {"family": "ensemble", "score_fn": score_dcc},
+    "dcc_low_from_L_k10": {"family": "ensemble", "score_fn": score_dcc_k10},
 }
 
 PLANTS = {

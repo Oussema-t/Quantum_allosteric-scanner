@@ -16,6 +16,8 @@ if str(_SCRIPTS) not in sys.path:
 
 from fpocket_conditional_analysis import (  # noqa: E402
     ALPHA,
+    FAMILY_SIZE,
+    TARGETS,
     band_mask,
     compact_null_within_band,
     conditional_cell,
@@ -140,4 +142,10 @@ class TestConditionalCell:
         assert cell["adds_information"] == (cell["beats_floor"] and cell["clears_null"])
 
     def test_alpha_matches_pre_registered_family_size(self):
-        assert ALPHA == pytest.approx(0.05 / 18)
+        """TASK-0203: FAMILY_SIZE is now computed from len(TARGETS)
+        (3 observables x N targets x 2 directions), not hand-maintained
+        -- this is the exact guard against the defect class TASK-0189
+        found (a Bonferroni denominator silently drifting out of sync
+        with what was actually run)."""
+        assert FAMILY_SIZE == 3 * len(TARGETS) * 2
+        assert ALPHA == pytest.approx(0.05 / FAMILY_SIZE)

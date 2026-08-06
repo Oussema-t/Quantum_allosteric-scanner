@@ -55,16 +55,40 @@ from task0163_external_baseline_scoring import (  # noqa: E402
 )
 
 OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0200_fpocket_conditional"
-TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
+# TASK-0203: PTP1B added (the target carrying TASK-0201's own surviving
+# positive, never covered by this script before); CASPASE7 attempted per
+# this task's own "if cheap" hedge. KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN
+# unchanged -- re-running this script reproduces their own cells
+# byte-identically (this task's own wiring check), since nothing about
+# their own computation path changed.
+TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN", "PTP1B", "CASPASE7"]
 PUBLISHED_FPOCKET_AUC = {"KRAS_G12C": 0.8348, "BCR_ABL1": 0.8596, "CARDIAC_MYOSIN": 0.5345}
+# PTP1B/CASPASE7 have no TASK-0163 published number (that task covered
+# only the 3 mandatory targets) -- sanity check below is skipped, not
+# silently treated as passing, when a target has no published value.
 REPRESENTATIVE_OBSERVABLES = ["H_new_occ", "dcc_low", "R_eff"]
 BAND_WINDOWS = [(20, 80), (30, 70), (40, 70), (50, 90)]  # (40, 70) is primary
 PRIMARY_WINDOW = (40, 70)
 MIN_POS_WELL_POWERED = 3
 N_PERM_REPS = 1000
 PERM_SEED = 123
-FAMILY_SIZE = 18  # 3 observables x 3 targets x 2 directions
+# TASK-0203: family size now depends on how many targets actually run
+# (CASPASE7 may fail/be skipped) -- computed from the declared TARGETS
+# list, not hand-maintained, so it can never silently drift out of sync
+# with the targets actually scored (TASK-0189's own defect class).
+FAMILY_SIZE = 3 * len(TARGETS) * 2  # 3 observables x N targets x 2 directions
 ALPHA = 0.05 / FAMILY_SIZE
+
+# TASK-0203 Leg 1: TASK-0201's actual PTP1B survival is dcc_low at
+# k_modes=10, not the k=20 "representative" TASK-0199 chose for
+# cross-target consistency. Tested here as one additional, clearly
+# separate, single-target replication check -- NOT part of
+# REPRESENTATIVE_OBSERVABLES/FAMILY_SIZE (would silently change every
+# other target's own already-published family-size context) -- compared
+# against the same updated ALPHA for consistency, per this task's own
+# "no exceptions for a conditional analysis" reading rule.
+K10_REPLICATION_TARGET = "PTP1B"
+K10_REPLICATION_K_MODES = 10
 
 
 def _log(msg: str) -> None:
@@ -191,8 +215,8 @@ def run_target(target_name: str) -> dict:
     _log(f"{target_name}: running fpocket...")
     fp_scores = _fpocket_scores(prep, target_name)
     fp_auc = float(auc_fn(fp_scores, pocket))
-    published = PUBLISHED_FPOCKET_AUC[target_name]
-    sanity_ok = abs(fp_auc - published) < 1e-3
+    published = PUBLISHED_FPOCKET_AUC.get(target_name)
+    sanity_ok = (abs(fp_auc - published) < 1e-3) if published is not None else None
     _log(f"{target_name}: fpocket AUC={fp_auc:.4f} (published {published}) sanity_ok={sanity_ok}")
 
     _log(f"{target_name}: computing representative observables...")
@@ -221,11 +245,40 @@ def run_target(target_name: str) -> dict:
             )
             reverse[obs_name][f"{lo}-{hi}"] = cell
 
-    return {
+    result = {
         "target": target_name, "n_residues": prep["n_residues"],
         "fpocket_auc": fp_auc, "fpocket_auc_published": published, "sanity_ok": sanity_ok,
         "forward_conditional": forward, "reverse_conditional": reverse,
     }
+
+    if target_name == K10_REPLICATION_TARGET:
+        _log(f"{target_name}: computing k={K10_REPLICATION_K_MODES} TASK-0201 replication check...")
+        dcc_low_k10 = dcc_low(coords, source, cutoff=cutoff, k_modes=K10_REPLICATION_K_MODES)
+        k10_forward = {}
+        k10_reverse = {}
+        for lo, hi in BAND_WINDOWS:
+            k10_forward[f"{lo}-{hi}"] = conditional_cell(
+                coords, source, cutoff, pocket, fp_scores, dcc_low_k10,
+                lo_pct=lo, hi_pct=hi, nonzero_only=True,
+            )
+            k10_reverse[f"{lo}-{hi}"] = conditional_cell(
+                coords, source, cutoff, pocket, dcc_low_k10, fp_scores,
+                lo_pct=lo, hi_pct=hi, nonzero_only=False,
+            )
+        primary_k10 = k10_forward[f"{PRIMARY_WINDOW[0]}-{PRIMARY_WINDOW[1]}"]
+        _log(
+            f"{target_name}: k=10 replication forward primary band n={primary_k10['band_size']} "
+            f"pos={primary_k10['band_positives']} well_powered={primary_k10['well_powered']}"
+        )
+        result["k10_replication"] = {
+            "k_modes": K10_REPLICATION_K_MODES,
+            "note": "TASK-0203: the exact dcc_low k value TASK-0201's PTP1B survival used "
+                    "(graph_walk_patch_matched null there; compact_patch null here -- not the same "
+                    "test, see this task's own pre-registration for the null-mismatch caveat).",
+            "forward_conditional": k10_forward, "reverse_conditional": k10_reverse,
+        }
+
+    return result
 
 
 NEGATIVE_CONTROL_WINDOW = (20, 80)  # primary (40,70) is underpowered by construction (see pre-registration)

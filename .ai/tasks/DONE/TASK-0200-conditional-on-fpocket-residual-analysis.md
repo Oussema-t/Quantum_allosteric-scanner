@@ -264,6 +264,17 @@ rules, mirrored.
 
 ## Done
 
+**2026-08-06 cross-link ([[TASK-0203]]):** PTP1B — the target carrying
+[[TASK-0201]]'s own surviving positive — added to this script's `TARGETS`
+after this task's own filing. Leg 1's forward-direction result there is
+**inconclusive, not negative**: every representative observable (and the
+specific `dcc_low` k=10 cell that survived) is underpowered at all 4
+swept band widths, because fpocket itself performs only near chance on
+PTP1B (AUC 0.42) — a genuinely different regime from the 3 mandatory
+targets this task's own "strict subset" verdict was based on. That
+verdict is not overturned (it was never claimed to cover PTP1B), but does
+not extend to it either. Full account: [[TASK-0203]]'s own Done section.
+
 **2026-08-04, Implementer A.**
 
 ### Verdict: strict subset, asymmetric — dynamics adds nothing fpocket lacks; fpocket may add something dynamics lacks (suggestive, not confirmed)

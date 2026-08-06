@@ -1028,6 +1028,781 @@
           }
         }
       }
+    },
+    "PTP1B": {
+      "target": "PTP1B",
+      "n_residues": 298,
+      "fpocket_auc": 0.4235412474849095,
+      "fpocket_auc_published": null,
+      "sanity_ok": null,
+      "forward_conditional": {
+        "H_new_occ": {
+          "20-80": {
+            "band_size": 84,
+            "band_positives": 2,
+            "well_powered": false,
+            "auc": null
+          },
+          "30-70": {
+            "band_size": 54,
+            "band_positives": 0,
+            "well_powered": false,
+            "auc": null
+          },
+          "40-70": {
+            "band_size": 44,
+            "band_positives": 0,
+            "well_powered": false,
+            "auc": null
+          },
+          "50-90": {
+            "band_size": 39,
+            "band_positives": 2,
+            "well_powered": false,
+            "auc": null
+          }
+        },
+        "dcc_low": {
+          "20-80": {
+            "band_size": 84,
+            "band_positives": 2,
+            "well_powered": false,
+            "auc": null
+          },
+          "30-70": {
+            "band_size": 54,
+            "band_positives": 0,
+            "well_powered": false,
+            "auc": null
+          },
+          "40-70": {
+            "band_size": 44,
+            "band_positives": 0,
+            "well_powered": false,
+            "auc": null
+          },
+          "50-90": {
+            "band_size": 39,
+            "band_positives": 2,
+            "well_powered": false,
+            "auc": null
+          }
+        },
+        "R_eff": {
+          "20-80": {
+            "band_size": 84,
+            "band_positives": 2,
+            "well_powered": false,
+            "auc": null
+          },
+          "30-70": {
+            "band_size": 54,
+            "band_positives": 0,
+            "well_powered": false,
+            "auc": null
+          },
+          "40-70": {
+            "band_size": 44,
+            "band_positives": 0,
+            "well_powered": false,
+            "auc": null
+          },
+          "50-90": {
+            "band_size": 39,
+            "band_positives": 2,
+            "well_powered": false,
+            "auc": null
+          }
+        }
+      },
+      "reverse_conditional": {
+        "H_new_occ": {
+          "20-80": {
+            "band_size": 178,
+            "band_positives": 14,
+            "well_powered": true,
+            "auc": 0.40352787456445993,
+            "floor_max": 0.5265679442508711,
+            "floor_aucs": {
+              "degree_centrality": 0.5265679442508711,
+              "euclid_from_seed_centroid": 0.17290940766550522,
+              "hop_from_seed": 0.17312717770034844
+            },
+            "beats_floor": false,
+            "null_p_value": 0.6535353535353535,
+            "null_n_reps_used": 990,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "30-70": {
+            "band_size": 118,
+            "band_positives": 10,
+            "well_powered": true,
+            "auc": 0.3370370370370371,
+            "floor_max": 0.6527777777777778,
+            "floor_aucs": {
+              "degree_centrality": 0.6527777777777778,
+              "euclid_from_seed_centroid": 0.15648148148148147,
+              "hop_from_seed": 0.13333333333333333
+            },
+            "beats_floor": false,
+            "null_p_value": 0.8219461697722568,
+            "null_n_reps_used": 966,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "40-70": {
+            "band_size": 89,
+            "band_positives": 8,
+            "well_powered": true,
+            "auc": 0.330246913580247,
+            "floor_max": 0.7098765432098765,
+            "floor_aucs": {
+              "degree_centrality": 0.7098765432098765,
+              "euclid_from_seed_centroid": 0.12654320987654324,
+              "hop_from_seed": 0.10570987654320989
+            },
+            "beats_floor": false,
+            "null_p_value": 0.8146997929606625,
+            "null_n_reps_used": 966,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "50-90": {
+            "band_size": 119,
+            "band_positives": 9,
+            "well_powered": true,
+            "auc": 0.40454545454545465,
+            "floor_max": 0.4267676767676768,
+            "floor_aucs": {
+              "degree_centrality": 0.4267676767676768,
+              "euclid_from_seed_centroid": 0.06868686868686869,
+              "hop_from_seed": 0.06767676767676767
+            },
+            "beats_floor": false,
+            "null_p_value": 0.7597137014314929,
+            "null_n_reps_used": 978,
+            "clears_null": false,
+            "adds_information": false
+          }
+        },
+        "dcc_low": {
+          "20-80": {
+            "band_size": 178,
+            "band_positives": 10,
+            "well_powered": true,
+            "auc": 0.4053571428571429,
+            "floor_max": 0.5663690476190477,
+            "floor_aucs": {
+              "degree_centrality": 0.5663690476190477,
+              "euclid_from_seed_centroid": 0.25,
+              "hop_from_seed": 0.19761904761904764
+            },
+            "beats_floor": false,
+            "null_p_value": 0.6987704918032787,
+            "null_n_reps_used": 976,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "30-70": {
+            "band_size": 118,
+            "band_positives": 8,
+            "well_powered": true,
+            "auc": 0.3471590909090909,
+            "floor_max": 0.5835227272727271,
+            "floor_aucs": {
+              "degree_centrality": 0.5835227272727271,
+              "euclid_from_seed_centroid": 0.2625,
+              "hop_from_seed": 0.20738636363636365
+            },
+            "beats_floor": false,
+            "null_p_value": 0.7768508863399375,
+            "null_n_reps_used": 959,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "40-70": {
+            "band_size": 89,
+            "band_positives": 7,
+            "well_powered": true,
+            "auc": 0.31533101045296164,
+            "floor_max": 0.5566202090592334,
+            "floor_aucs": {
+              "degree_centrality": 0.5566202090592334,
+              "euclid_from_seed_centroid": 0.26132404181184665,
+              "hop_from_seed": 0.2038327526132404
+            },
+            "beats_floor": false,
+            "null_p_value": 0.77007700770077,
+            "null_n_reps_used": 909,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "50-90": {
+            "band_size": 119,
+            "band_positives": 9,
+            "well_powered": true,
+            "auc": 0.3378787878787879,
+            "floor_max": 0.48737373737373735,
+            "floor_aucs": {
+              "degree_centrality": 0.48737373737373735,
+              "euclid_from_seed_centroid": 0.09898989898989899,
+              "hop_from_seed": 0.07626262626262624
+            },
+            "beats_floor": false,
+            "null_p_value": 0.772972972972973,
+            "null_n_reps_used": 925,
+            "clears_null": false,
+            "adds_information": false
+          }
+        },
+        "R_eff": {
+          "20-80": {
+            "band_size": 178,
+            "band_positives": 12,
+            "well_powered": true,
+            "auc": 0.3571787148594377,
+            "floor_max": 0.5675200803212851,
+            "floor_aucs": {
+              "degree_centrality": 0.5675200803212851,
+              "euclid_from_seed_centroid": 0.20783132530120482,
+              "hop_from_seed": 0.20532128514056225
+            },
+            "beats_floor": false,
+            "null_p_value": 0.8224489795918367,
+            "null_n_reps_used": 980,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "30-70": {
+            "band_size": 118,
+            "band_positives": 11,
+            "well_powered": true,
+            "auc": 0.3547153780798641,
+            "floor_max": 0.5900594732370434,
+            "floor_aucs": {
+              "degree_centrality": 0.5900594732370434,
+              "euclid_from_seed_centroid": 0.18946474086661005,
+              "hop_from_seed": 0.1554800339847069
+            },
+            "beats_floor": false,
+            "null_p_value": 0.7739872068230277,
+            "null_n_reps_used": 938,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "40-70": {
+            "band_size": 89,
+            "band_positives": 7,
+            "well_powered": true,
+            "auc": 0.37369337979094075,
+            "floor_max": 0.6341463414634148,
+            "floor_aucs": {
+              "degree_centrality": 0.6341463414634148,
+              "euclid_from_seed_centroid": 0.14634146341463417,
+              "hop_from_seed": 0.13414634146341461
+            },
+            "beats_floor": false,
+            "null_p_value": 0.6692056583242655,
+            "null_n_reps_used": 919,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "50-90": {
+            "band_size": 119,
+            "band_positives": 4,
+            "well_powered": true,
+            "auc": 0.5152173913043477,
+            "floor_max": 0.5304347826086957,
+            "floor_aucs": {
+              "degree_centrality": 0.5304347826086957,
+              "euclid_from_seed_centroid": 0.060869565217391314,
+              "hop_from_seed": 0.08913043478260868
+            },
+            "beats_floor": false,
+            "null_p_value": 0.42471443406022846,
+            "null_n_reps_used": 963,
+            "clears_null": false,
+            "adds_information": false
+          }
+        }
+      },
+      "k10_replication": {
+        "k_modes": 10,
+        "note": "TASK-0203: the exact dcc_low k value TASK-0201's PTP1B survival used (graph_walk_patch_matched null there; compact_patch null here -- not the same test, see this task's own pre-registration for the null-mismatch caveat).",
+        "forward_conditional": {
+          "20-80": {
+            "band_size": 84,
+            "band_positives": 2,
+            "well_powered": false,
+            "auc": null
+          },
+          "30-70": {
+            "band_size": 54,
+            "band_positives": 0,
+            "well_powered": false,
+            "auc": null
+          },
+          "40-70": {
+            "band_size": 44,
+            "band_positives": 0,
+            "well_powered": false,
+            "auc": null
+          },
+          "50-90": {
+            "band_size": 39,
+            "band_positives": 2,
+            "well_powered": false,
+            "auc": null
+          }
+        },
+        "reverse_conditional": {
+          "20-80": {
+            "band_size": 178,
+            "band_positives": 13,
+            "well_powered": true,
+            "auc": 0.39230769230769236,
+            "floor_max": 0.4734265734265734,
+            "floor_aucs": {
+              "degree_centrality": 0.4734265734265734,
+              "euclid_from_seed_centroid": 0.24195804195804196,
+              "hop_from_seed": 0.21864801864801864
+            },
+            "beats_floor": false,
+            "null_p_value": 0.7497435897435898,
+            "null_n_reps_used": 975,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "30-70": {
+            "band_size": 118,
+            "band_positives": 4,
+            "well_powered": true,
+            "auc": 0.6480263157894737,
+            "floor_max": 0.3903508771929825,
+            "floor_aucs": {
+              "degree_centrality": 0.3903508771929825,
+              "euclid_from_seed_centroid": 0.24342105263157895,
+              "hop_from_seed": 0.3234649122807018
+            },
+            "beats_floor": true,
+            "null_p_value": 0.15698924731182795,
+            "null_n_reps_used": 930,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "40-70": {
+            "band_size": 89,
+            "band_positives": 2,
+            "well_powered": false,
+            "auc": null
+          },
+          "50-90": {
+            "band_size": 119,
+            "band_positives": 7,
+            "well_powered": true,
+            "auc": 0.3431122448979591,
+            "floor_max": 0.5223214285714285,
+            "floor_aucs": {
+              "degree_centrality": 0.5223214285714285,
+              "euclid_from_seed_centroid": 0.10204081632653061,
+              "hop_from_seed": 0.07971938775510201
+            },
+            "beats_floor": false,
+            "null_p_value": 0.7770193401592719,
+            "null_n_reps_used": 879,
+            "clears_null": false,
+            "adds_information": false
+          }
+        }
+      }
+    },
+    "CASPASE7": {
+      "target": "CASPASE7",
+      "n_residues": 461,
+      "fpocket_auc": 0.6170547514159849,
+      "fpocket_auc_published": null,
+      "sanity_ok": null,
+      "forward_conditional": {
+        "H_new_occ": {
+          "20-80": {
+            "band_size": 98,
+            "band_positives": 3,
+            "well_powered": true,
+            "auc": 0.7052631578947368,
+            "floor_max": 0.8771929824561404,
+            "floor_aucs": {
+              "degree_centrality": 0.6298245614035087,
+              "euclid_from_seed_centroid": 0.8771929824561404,
+              "hop_from_seed": 0.48245614035087714
+            },
+            "beats_floor": false,
+            "null_p_value": 0.31993299832495814,
+            "null_n_reps_used": 597,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "30-70": {
+            "band_size": 58,
+            "band_positives": 3,
+            "well_powered": true,
+            "auc": 0.6545454545454545,
+            "floor_max": 0.896969696969697,
+            "floor_aucs": {
+              "degree_centrality": 0.6303030303030303,
+              "euclid_from_seed_centroid": 0.896969696969697,
+              "hop_from_seed": 0.4636363636363636
+            },
+            "beats_floor": false,
+            "null_p_value": 0.35498839907192575,
+            "null_n_reps_used": 431,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "40-70": {
+            "band_size": 45,
+            "band_positives": 3,
+            "well_powered": true,
+            "auc": 0.626984126984127,
+            "floor_max": 0.873015873015873,
+            "floor_aucs": {
+              "degree_centrality": 0.6150793650793651,
+              "euclid_from_seed_centroid": 0.873015873015873,
+              "hop_from_seed": 0.3888888888888889
+            },
+            "beats_floor": false,
+            "null_p_value": 0.4046920821114369,
+            "null_n_reps_used": 341,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "50-90": {
+            "band_size": 62,
+            "band_positives": 3,
+            "well_powered": true,
+            "auc": 0.5932203389830508,
+            "floor_max": 0.7966101694915254,
+            "floor_aucs": {
+              "degree_centrality": 0.5734463276836158,
+              "euclid_from_seed_centroid": 0.7966101694915254,
+              "hop_from_seed": 0.36158192090395475
+            },
+            "beats_floor": false,
+            "null_p_value": 0.5253012048192771,
+            "null_n_reps_used": 415,
+            "clears_null": false,
+            "adds_information": false
+          }
+        },
+        "dcc_low": {
+          "20-80": {
+            "band_size": 98,
+            "band_positives": 3,
+            "well_powered": true,
+            "auc": 0.5824561403508772,
+            "floor_max": 0.8771929824561404,
+            "floor_aucs": {
+              "degree_centrality": 0.6298245614035087,
+              "euclid_from_seed_centroid": 0.8771929824561404,
+              "hop_from_seed": 0.48245614035087714
+            },
+            "beats_floor": false,
+            "null_p_value": 0.423785594639866,
+            "null_n_reps_used": 597,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "30-70": {
+            "band_size": 58,
+            "band_positives": 3,
+            "well_powered": true,
+            "auc": 0.5939393939393939,
+            "floor_max": 0.896969696969697,
+            "floor_aucs": {
+              "degree_centrality": 0.6303030303030303,
+              "euclid_from_seed_centroid": 0.896969696969697,
+              "hop_from_seed": 0.4636363636363636
+            },
+            "beats_floor": false,
+            "null_p_value": 0.46403712296983757,
+            "null_n_reps_used": 431,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "40-70": {
+            "band_size": 45,
+            "band_positives": 3,
+            "well_powered": true,
+            "auc": 0.49206349206349204,
+            "floor_max": 0.873015873015873,
+            "floor_aucs": {
+              "degree_centrality": 0.6150793650793651,
+              "euclid_from_seed_centroid": 0.873015873015873,
+              "hop_from_seed": 0.3888888888888889
+            },
+            "beats_floor": false,
+            "null_p_value": 0.533724340175953,
+            "null_n_reps_used": 341,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "50-90": {
+            "band_size": 62,
+            "band_positives": 3,
+            "well_powered": true,
+            "auc": 0.5028248587570621,
+            "floor_max": 0.7966101694915254,
+            "floor_aucs": {
+              "degree_centrality": 0.5734463276836158,
+              "euclid_from_seed_centroid": 0.7966101694915254,
+              "hop_from_seed": 0.36158192090395475
+            },
+            "beats_floor": false,
+            "null_p_value": 0.5349397590361445,
+            "null_n_reps_used": 415,
+            "clears_null": false,
+            "adds_information": false
+          }
+        },
+        "R_eff": {
+          "20-80": {
+            "band_size": 98,
+            "band_positives": 3,
+            "well_powered": true,
+            "auc": 0.6701754385964912,
+            "floor_max": 0.8771929824561404,
+            "floor_aucs": {
+              "degree_centrality": 0.6298245614035087,
+              "euclid_from_seed_centroid": 0.8771929824561404,
+              "hop_from_seed": 0.48245614035087714
+            },
+            "beats_floor": false,
+            "null_p_value": 0.3232830820770519,
+            "null_n_reps_used": 597,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "30-70": {
+            "band_size": 58,
+            "band_positives": 3,
+            "well_powered": true,
+            "auc": 0.6787878787878787,
+            "floor_max": 0.896969696969697,
+            "floor_aucs": {
+              "degree_centrality": 0.6303030303030303,
+              "euclid_from_seed_centroid": 0.896969696969697,
+              "hop_from_seed": 0.4636363636363636
+            },
+            "beats_floor": false,
+            "null_p_value": 0.3689095127610209,
+            "null_n_reps_used": 431,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "40-70": {
+            "band_size": 45,
+            "band_positives": 3,
+            "well_powered": true,
+            "auc": 0.6428571428571428,
+            "floor_max": 0.873015873015873,
+            "floor_aucs": {
+              "degree_centrality": 0.6150793650793651,
+              "euclid_from_seed_centroid": 0.873015873015873,
+              "hop_from_seed": 0.3888888888888889
+            },
+            "beats_floor": false,
+            "null_p_value": 0.3548387096774194,
+            "null_n_reps_used": 341,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "50-90": {
+            "band_size": 62,
+            "band_positives": 3,
+            "well_powered": true,
+            "auc": 0.5875706214689265,
+            "floor_max": 0.7966101694915254,
+            "floor_aucs": {
+              "degree_centrality": 0.5734463276836158,
+              "euclid_from_seed_centroid": 0.7966101694915254,
+              "hop_from_seed": 0.36158192090395475
+            },
+            "beats_floor": false,
+            "null_p_value": 0.4506024096385542,
+            "null_n_reps_used": 415,
+            "clears_null": false,
+            "adds_information": false
+          }
+        }
+      },
+      "reverse_conditional": {
+        "H_new_occ": {
+          "20-80": {
+            "band_size": 276,
+            "band_positives": 7,
+            "well_powered": true,
+            "auc": 0.6147105682421667,
+            "floor_max": 0.7594264471587892,
+            "floor_aucs": {
+              "degree_centrality": 0.5966542750929368,
+              "euclid_from_seed_centroid": 0.7594264471587892,
+              "hop_from_seed": 0.7079129049389273
+            },
+            "beats_floor": false,
+            "null_p_value": 0.2676767676767677,
+            "null_n_reps_used": 990,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "30-70": {
+            "band_size": 184,
+            "band_positives": 4,
+            "well_powered": true,
+            "auc": 0.5631944444444444,
+            "floor_max": 0.6833333333333333,
+            "floor_aucs": {
+              "degree_centrality": 0.48750000000000004,
+              "euclid_from_seed_centroid": 0.6833333333333333,
+              "hop_from_seed": 0.6666666666666666
+            },
+            "beats_floor": false,
+            "null_p_value": 0.34295227524972255,
+            "null_n_reps_used": 901,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "40-70": {
+            "band_size": 138,
+            "band_positives": 3,
+            "well_powered": true,
+            "auc": 0.4839506172839506,
+            "floor_max": 0.7814814814814814,
+            "floor_aucs": {
+              "degree_centrality": 0.508641975308642,
+              "euclid_from_seed_centroid": 0.6246913580246913,
+              "hop_from_seed": 0.7814814814814814
+            },
+            "beats_floor": false,
+            "null_p_value": 0.4647713226205192,
+            "null_n_reps_used": 809,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "50-90": {
+            "band_size": 184,
+            "band_positives": 4,
+            "well_powered": true,
+            "auc": 0.6152777777777777,
+            "floor_max": 0.8083333333333333,
+            "floor_aucs": {
+              "degree_centrality": 0.46944444444444444,
+              "euclid_from_seed_centroid": 0.8083333333333333,
+              "hop_from_seed": 0.6888888888888889
+            },
+            "beats_floor": false,
+            "null_p_value": 0.2429245283018868,
+            "null_n_reps_used": 848,
+            "clears_null": false,
+            "adds_information": false
+          }
+        },
+        "dcc_low": {
+          "20-80": {
+            "band_size": 276,
+            "band_positives": 3,
+            "well_powered": true,
+            "auc": 0.6953601953601953,
+            "floor_max": 0.8925518925518926,
+            "floor_aucs": {
+              "degree_centrality": 0.48595848595848595,
+              "euclid_from_seed_centroid": 0.8925518925518926,
+              "hop_from_seed": 0.5805860805860806
+            },
+            "beats_floor": false,
+            "null_p_value": 0.1871345029239766,
+            "null_n_reps_used": 855,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "30-70": {
+            "band_size": 184,
+            "band_positives": 2,
+            "well_powered": false,
+            "auc": null
+          },
+          "40-70": {
+            "band_size": 138,
+            "band_positives": 1,
+            "well_powered": false,
+            "auc": null
+          },
+          "50-90": {
+            "band_size": 184,
+            "band_positives": 6,
+            "well_powered": true,
+            "auc": 0.5215355805243446,
+            "floor_max": 0.6844569288389513,
+            "floor_aucs": {
+              "degree_centrality": 0.601123595505618,
+              "euclid_from_seed_centroid": 0.6844569288389513,
+              "hop_from_seed": 0.6418539325842697
+            },
+            "beats_floor": false,
+            "null_p_value": 0.42525399129172714,
+            "null_n_reps_used": 689,
+            "clears_null": false,
+            "adds_information": false
+          }
+        },
+        "R_eff": {
+          "20-80": {
+            "band_size": 276,
+            "band_positives": 4,
+            "well_powered": true,
+            "auc": 0.6130514705882353,
+            "floor_max": 0.8759191176470589,
+            "floor_aucs": {
+              "degree_centrality": 0.47840073529411764,
+              "euclid_from_seed_centroid": 0.8759191176470589,
+              "hop_from_seed": 0.6626838235294118
+            },
+            "beats_floor": false,
+            "null_p_value": 0.29366812227074235,
+            "null_n_reps_used": 916,
+            "clears_null": false,
+            "adds_information": false
+          },
+          "30-70": {
+            "band_size": 184,
+            "band_positives": 0,
+            "well_powered": false,
+            "auc": null
+          },
+          "40-70": {
+            "band_size": 138,
+            "band_positives": 0,
+            "well_powered": false,
+            "auc": null
+          },
+          "50-90": {
+            "band_size": 184,
+            "band_positives": 5,
+            "well_powered": true,
+            "auc": 0.6094972067039107,
+            "floor_max": 0.7128491620111732,
+            "floor_aucs": {
+              "degree_centrality": 0.3458100558659218,
+              "euclid_from_seed_centroid": 0.7128491620111732,
+              "hop_from_seed": 0.6748603351955308
+            },
+            "beats_floor": false,
+            "null_p_value": 0.2761904761904762,
+            "null_n_reps_used": 840,
+            "clears_null": false,
+            "adds_information": false
+          }
+        }
+      }
     }
   },
   "negative_control": {
@@ -1077,6 +1852,6 @@
     ],
     "plant_detected_within_band": true
   },
-  "family_size": 18,
-  "alpha": 0.002777777777777778
+  "family_size": 30,
+  "alpha": 0.0016666666666666668
 }

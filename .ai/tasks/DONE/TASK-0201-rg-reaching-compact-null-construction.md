@@ -277,3 +277,24 @@ unchanged, not re-litigated. BCR_ABL1's `T(E=0)` cell not re-run — its
 target Rg (7.448) was already within `compact_patch`'s own natural range
 per TASK-0190's own finding, so it was never in this task's own scope
 (only CARDIAC_MYOSIN/PTP1B's structurally-unreachable cells were).
+
+## Cross-reference, 2026-08-06 ([[TASK-0203]], Implementer A)
+
+This task's own PTP1B `dcc_low` (k=10) survival — the program's one
+surviving positive, certified under `graph_walk_patch_matched` — was
+tested by the two experiments that would explain it. Mechanism test
+([[TASK-0168]]'s 2-mechanism plant grid): decisive negative for the
+ensemble/mode signature — at k=10, `dcc_low` shows a channel-type
+response instead (rises with channel-plant strength, falls with
+mode-plant strength). Conditional-on-fpocket test ([[TASK-0200]]'s
+script): inconclusive, underpowered at every swept band width on this
+target (fpocket itself performs only near chance on PTP1B, AUC 0.42).
+**Net effect: this survival's strongest possible interpretation — a
+real, mechanistically-supported, non-redundant finding — is now ruled
+out.** Whether it is real-but-unexplained or a pure statistical survival
+remains open, blocked on power, not resolved here. Also note: both
+[[TASK-0200]] and [[TASK-0168]]'s own scripts test this cell under
+`nulls.compact_patch`, not the `graph_walk_patch_matched` null that
+actually produced the survival — a real null-mismatch this task's own
+survival number is not directly re-tested against. Full account:
+[[TASK-0203]]'s own Done section.

@@ -270,3 +270,16 @@ None
   source for the register-wide redundancy question; this task's own
   matrix should be read as a planted-context corroboration on a small
   subset, not re-cited as the primary redundancy result.
+
+- **Cross-reference, 2026-08-06 ([[TASK-0203]], Implementer A)**: this
+  task's own 2-mechanism grid was run on PTP1B (the target carrying
+  [[TASK-0201]]'s surviving `dcc_low` k=10 positive, not among this
+  task's own KRAS_G12C/BCR_ABL1). Result, decisive: at k=10, `dcc_low`
+  shows a **channel-type** response (rises with channel strength, falls
+  with mode strength) -- the opposite of the mode/ensemble signature this
+  task's own `"family": "ensemble"` label for `dcc_low_from_L` implies,
+  and opposite to the partial confirmation found on KRAS_G12C. At the
+  k=20 this task's own grid uses, PTP1B shows no clean dissociation
+  either (both mechanisms raise the AUC). Full account, including the
+  additive `dcc_low_from_L_k10` observable this required:
+  [[TASK-0203]]'s own Done section.
