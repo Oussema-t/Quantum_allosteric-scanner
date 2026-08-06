@@ -131,6 +131,22 @@ gated tasks below), that gap is stated explicitly, not filled with an estimate.
 > under both number sets). Full detail: `RESULTS.md`'s own TASK-0206
 > section, `tools/fpocket/PROVENANCE.json`.
 
+> **Status update, 2026-08-06 (Architect, [[TASK-0207]]):** the "~3 axes"
+> figure cited above ([[TASK-0199]]) has since been named, not just
+> counted. PC1 (46.5-60.6% of variance, every target) is the
+> Hamiltonian-occupancy family, substantially the seed-proximity confound
+> (`-hop`/`-euclid` load there in 7/10 pairs) — not a separable
+> mechanistic axis. PC2 (7.9-10.5%, stable on 4/5 targets) is driven
+> specifically by `prs_low`, independently corroborating [[TASK-0168]]'s
+> "genuinely non-redundant observable" finding. PC3 does not survive
+> across targets (3 different labels in 5 targets) — no stable third
+> axis. The pre-hypothesized "directed channel" axis never dominates a
+> component on any target; it is a real, [[TASK-0168]]-confirmed response
+> to active perturbation, not a major source of passive correlational
+> variance. Read "~3 axes" as "~2 stable, nameable axes plus noise," not
+> three mechanistically distinguishable ones. Full detail:
+> `.ai/tasks/DONE/TASK-0207-label-the-principal-components.md`.
+
 > **SUPERSEDED 2026-07-16 by [[TASK-0118]] — the table below is a full recompute, not an
 > edit of the old one. `REVIEW-panel-2026-07-16-v2` (§2.1) found that the numbers this
 > document previously reported were gauge-contaminated: `run_challenge.py`'s floor/actual
