@@ -114,7 +114,9 @@ pre-stated falsification check, not declared a win by default):
    structures (or a physically comparable cavity-detection tool), not an
    internal geometric heuristic invented for this objective alone — the same
    "the bar that actually matters" standard Phase A held itself to
-   (TASK-0163's 0.8348/0.8596 fpocket numbers).
+   (TASK-0163's 0.8348/0.8596 fpocket numbers — superseded 2026-08-06,
+   [[TASK-0206]]: use 0.7910/0.8618, the current pinned/authoritative
+   set, `tools/fpocket/PROVENANCE.json`, when this validation is built).
 
 ## Status
 

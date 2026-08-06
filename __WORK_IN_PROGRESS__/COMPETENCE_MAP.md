@@ -108,6 +108,29 @@ gated tasks below), that gap is stated explicitly, not filled with an estimate.
 > detail in each task's own Done section and in `RESULTS.md`'s own sections
 > of the same names.
 
+> **Status update, 2026-08-06 ([[TASK-0206]]): the fpocket AUCs cited
+> throughout this document's discriminability section below (0.8348/0.8596/
+> 0.5345, KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN) are from a build that could not
+> be reproduced and are superseded, not deleted.** [[TASK-0200]] recomputed
+> fpocket on a different machine and got materially different numbers
+> (0.7910/0.8618/0.5303) — root-caused to `tools/fpocket/bin/` being
+> gitignored (upstream's own convention): only the build recipe is version
+> controlled, never the binary bytes, so each machine independently built
+> its own previously-unpinned fpocket. Confirmed directly via git identity:
+> [[TASK-0163]]'s original run committed under `chmura.quantum@gmail.com`,
+> [[TASK-0200]]'s recompute under a different machine's git identity. The
+> binary's own printed version banner ("fpocket 4.0") is not trustworthy as
+> a pin — this build exposes a flag (`-P`/`--custom_pocket`) that matches
+> upstream fpocket 4.1's own release notes, so the banner string is stale
+> across the whole 4.x line. **The recomputed set (0.7910/0.8618/0.5303) is
+> now authoritative** (reproducible twice on this machine, SHA256-pinned in
+> `tools/fpocket/PROVENANCE.json`, golden-value-tested in
+> `tests/test_fpocket_pin.py`) — read every `0.8348`/`0.8596`/`0.5345`
+> mention below as the superseded number, not the current one. No verdict
+> below changes sign (fpocket still beats floor and actual on 2/3 targets
+> under both number sets). Full detail: `RESULTS.md`'s own TASK-0206
+> section, `tools/fpocket/PROVENANCE.json`.
+
 > **SUPERSEDED 2026-07-16 by [[TASK-0118]] — the table below is a full recompute, not an
 > edit of the old one. `REVIEW-panel-2026-07-16-v2` (§2.1) found that the numbers this
 > document previously reported were gauge-contaminated: `run_challenge.py`'s floor/actual

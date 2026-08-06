@@ -156,7 +156,11 @@ best observable (`H_new`/CTQW) 0.5901/0.5266/0.5176. Decisively beats both the
 floor and this project's own headline observable on 2/3 targets (KRAS_G12C,
 BCR_ABL1) by a wide margin — a purely geometric, non-dynamical classical tool
 outperforms the quantum-walk observable there. On CARDIAC_MYOSIN it sits just
-below its own floor. Full detail: `RESULTS.md`'s TASK-0163 section.**
+below its own floor. Full detail: `RESULTS.md`'s TASK-0163 section.
+**Superseded 2026-08-06 ([[TASK-0206]]): these AUCs came from a since-
+unreproducible machine-specific binary build; authoritative set is
+0.7910/0.8618/0.5303, same targets, same verdict — see `RESULTS.md`'s
+"fpocket binary drift" section and `tools/fpocket/PROVENANCE.json`.**
 
 **PocketMiner (GNN) — Meller, Ward, … Bowman 2023 — 4 — RUN [[TASK-0163]]**
 State-of-the-art cryptic-pocket-*location* prediction from a single structure, no MD.

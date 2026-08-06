@@ -2036,6 +2036,12 @@ process_strucs`) reads only backbone coordinates + residue-identity one-hot, nev
 side-chain atoms, so this is chemically inert to its prediction and does not
 special-case a result in either tool's favor.
 
+**[[TASK-0206]], 2026-08-06: this table's fpocket column is superseded, not
+retracted** — a different machine could not reproduce these numbers
+(0.7910/0.8618/0.5303, root-caused to an unpinned per-machine binary build).
+Kept on record; see this document's own dated "fpocket binary drift" section
+below for the authoritative set and the diagnosis.
+
 | Target | Floor | This project's own actual (`H_new`/CTQW) | fpocket AUC | PocketMiner AUC |
 |---|---|---|---|---|
 | KRAS_G12C | 0.4818 | 0.5901 | **0.8348** | 0.6932 |
@@ -4155,6 +4161,18 @@ challenge's own §5; this is context alongside them, not a substitute.
 memory or a prior task's own text** — per this task's own Constraint, and
 because doing so caught one real, stale number (below):
 
+**[[TASK-0206]], 2026-08-06: every fpocket AUC in this table's "All 3" row
+(0.8348/0.8596/0.5345) is superseded** — a different machine could not
+reproduce them (0.7910/0.8618/0.5303, now the pinned/authoritative set,
+`tools/fpocket/PROVENANCE.json`) — root-caused to an unpinned per-machine
+binary build, not a code or label bug. No verdict in this row changes
+(fpocket still beats floor and actual on 2/3 targets under either number
+set). Kept below verbatim, per this document's own no-silent-overwrite
+convention; see this document's own dated "fpocket binary drift" section
+for the full diagnosis. This one callout covers every `0.8348`/`0.8596`/
+`0.5345` mention in this section (5 occurrences below), not edited
+individually.
+
 | Target | Established defect | Re-verified |
 |---|---|---|
 | CARDIAC_MYOSIN | Challenge Table 1's named validation structure **6C1H does not contain mavacamten** | **Re-confirmed live, 2026-07-28**: RCSB REST API, `nonpolymer_bound_components = ['ADP', 'MG']` only; the 3 polymer entities are actin (rabbit), unconventional myosin-Ib (rat), and calmodulin — no myosin motor domain, no XB2. This project's own substituted validation structure (8QYR) *does* contain XB2/mavacamten (RCSB-reconfirmed 2026-07-06, and independently corroborated by a second structure, 9GZ1, TASK-0124) — the challenge's own named structure fails, this project's substitute passes. |
@@ -5960,8 +5978,98 @@ Full detail: `.ai/tasks/DONE/TASK-0168-mechanism-discriminating-plant.md`
 
 ---
 
+## fpocket binary drift — root-caused to two machines, each with an unpinned build (TASK-0206, 2026-08-06)
+
+**The problem**: [[TASK-0163]]'s published fpocket AUCs (0.8348/0.8596/
+0.5345, KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN — this project's single most-cited
+classical-comparator figure, quoted throughout `COMPETENCE_MAP.md`'s
+discriminability section and this document's own table above) could not be
+reproduced by [[TASK-0200]] (0.7910/0.8618/0.5303) — a real, material shift
+on KRAS_G12C (Δ0.044), small on the other two. [[TASK-0200]] ruled out the
+pocket label, chain selection, non-determinism, and a parsing bug by direct
+check before concluding the vendored binary itself had drifted.
+
+**Root cause, found by checking git identity, not assumed**: `tools/
+fpocket/bin/` is gitignored — `git ls-files tools/fpocket/` shows only
+`README.md` and `bin/.gitignore` ever tracked; the binary itself is a local
+build artifact, never committed. The README's own recipe (`git clone
+--branch 4.2.3 ...`) is the only thing version-controlled. [[TASK-0163]]'s
+commit (`2655a5d`) was authored under git identity `Bartosz
+<chmura.quantum@gmail.com>`; [[TASK-0200]]'s commit (`ca4281e`) under a
+different machine's git identity — **two machines, each building its own
+independently-compiled, never-pinned fpocket binary**, is sufficient by
+itself to explain the drift without any code or data bug. (Raised directly
+by the orchestrating user, 2026-08-06 — "the two results were obtained on
+two different machines... maybe that is in any way involved in the
+outcome" — confirmed correct.)
+
+**The candidate root cause named in this task's own filing (a
+[[TASK-0177]] arm64 rebuild event) does not hold up**: `git log --oneline
+-- tools/fpocket/bin/fpocket` returns nothing (never tracked, so no rebuild
+commit exists to find), and the currently-vendored binary is arm64 Mach-O
+on this machine regardless — there is no "before/after" binary to diff.
+The two-machine explanation supersedes the single-machine-drift-over-time
+hypothesis, not an addition to it.
+
+**The binary's own version banner cannot be trusted as a pin**: running it
+prints `fpocket 4.0`, but this build exposes `-P`/`--custom_pocket`, a
+flag upstream's own release notes attribute to fpocket 4.1 ("Explicit
+pocket definition") — the version string is stale/hardcoded across the
+whole 4.x release line (checked directly against `github.com/Discngine/
+fpocket`'s tags and release notes, not assumed), not evidence of which
+exact tag either machine actually built. SHA256 of the binary's own bytes
+is the only unambiguous fingerprint available without instrumenting the
+build itself.
+
+**Full root cause not chased further, per this task's own explicit
+Constraint** ("if the drift cannot be root-caused within a reasonable box,
+say so and pin the current build anyway"): whether the remaining gap is a
+genuinely different upstream commit (a stale local clone predating the
+README's 4.2.3 pin) or a compiler/toolchain-level floating-point
+difference from nominally the same source was not resolved. **Recomputing
+on the other machine — the user's own suggestion — would settle this, but
+is not achievable from this environment** (this session runs on one
+machine only); flagged as an open, actionable item for whoever has access
+to the other machine, not something completable here.
+
+**What was pinned**: `tools/fpocket/PROVENANCE.json` (SHA256, hostname,
+banner, build recipe, both AUC sets with attribution) + new
+`allostery.baselines.fpocket_provenance()` (computes the same fingerprint
+for any binary, callable by any future script alongside its own run) +
+`tests/test_fpocket_pin.py` — a real-target, network-and-binary-gated
+golden-value regression test (`backend/test_analysis.py`'s own real-target
+pin convention, [[TASK-0072]]'s cross-tree drift test's own spirit): pins
+both the binary's SHA256 and KRAS_G12C's fpocket AUC, ran for real in this
+environment (not skipped), passed. A synthetic test directly demonstrates
+the failure mode Planned Validation required ("must fail against a
+deliberately altered invocation before it passes against the pinned one"):
+a binary with different bytes produces a different SHA256 than the pinned
+record, confirmed.
+
+**Authoritative set, decided per this task's own recommendation**: the
+freshly recomputed numbers (0.7910228108903605 / 0.8617816091954023 /
+0.5302794166759435) — reproducible on this machine (re-run fresh by this
+task, exact match to [[TASK-0200]]'s own numbers, confirming same-machine
+determinism), SHA256-pinned, golden-value-tested. [[TASK-0163]]'s original
+numbers are kept on record everywhere they were already cited (no
+retraction), flagged as superseded via one callout per document/section
+(`COMPETENCE_MAP.md`'s top caveat block, this document's own table above
+and discriminability section) — not edited at every individual mention,
+per this project's own established convention for exactly this situation
+([[TASK-0167.002]]'s identical scope call). **No verdict changes**:
+fpocket still beats floor and actual on 2/3 mandatory targets under either
+number set — this task changes a magnitude, not a finding.
+
+Full detail: `.ai/tasks/DONE/TASK-0206-fpocket-binary-drift.md` (Done
+section), `tools/fpocket/PROVENANCE.json`, `tools/fpocket/README.md`,
+`tests/test_fpocket_pin.py`.
+
+---
+
 | 60 | Does each observable family (directed-channel: `ctqw`/`T(E)`; ensemble/mode: `dcc_low`/`prs_low`) detect only the mechanism it is justified on — planting a stiff channel vs. a new correlated-mode perturbation into the same real apo topology, the protein-scale generalization of [[TASK-0103]]'s 44-node dumbbell double dissociation? | **resolved 2026-08-04: partially discriminating, not simply redundant, but weaker and less general than hoped, and mostly below this project's own certification bar.** Forced re-scope first: real-pipeline observables (`ctqw_converged` on `H_new`, `dcc_low`, `prs_low`) are exactly plant-invariant to any weight-only perturbation (re-confirmed, [[TASK-0167.001]]/[[TASK-0167.002]]'s own finding) — scored instead on `laplacian(W_planted)` directly, [[TASK-0103]]'s own dumbbell convention. Mandatory scale-check **passed on both targets** (GSR tracks a real well, AUC 0.72-1.00; CTQW does not, AUC 0.0; reciprocal for a channel plant). Main grid (480 cells, 0 errors, 2 targets): `T(E=0)`/`ctqw_converged` (channel family) show a clean, **replicated (2/2 targets)** mechanism-specific point-estimate response (rising with channel strength, flat/falling with mode strength). New `dcc_low_from_L` adapter (ensemble family, `dcc_low`'s exact math on an externally-given Laplacian) shows the hoped-for opposite (mode-specific) signature on KRAS_G12C only — **does not replicate on BCR_ABL1**. Under this project's own corrected-null certification pipeline, almost nothing reaches 80% detection power at the strengths tested — real point-estimate discrimination mostly does not (yet) clear the formal bar, extending [[TASK-0167.002]]'s own finding to a second mechanism. Pre-plant: `T(E=0)`/`ctqw`/`GSR` substantially redundant (rho 0.5-0.9); `prs_low` the one genuinely non-redundant observable measured. Plant B's own spectral verification: real but weak, does not replicate across targets. Feeds back into [[TASK-0161]]: neither "fully redundant" nor "fully independent" — effective multiplicity depends on which mechanism a real signal would take. | [[TASK-0168]], [[TASK-0103]], [[TASK-0167.001]], [[TASK-0167.002]], [[TASK-0161]], [[TASK-0145]], [[TASK-0149]] |
 | 61 | Does ranking residues by *minimum control energy* `E_i` to steer the CTQW's population from the active-site seed to each residue (GRAPE optimal control, a proximity-orthogonal-by-construction observable per this task's own re-scoping from "control the walk" to "read the cost of control") separate allosteric residues from distance, beating the classical PRS baseline (Atilgan & Atilgan 2009)? | **resolved 2026-08-04: no — a clean, decisive negative on all 3 mandatory targets, properly powered after catching and fixing a real instrumentation bug mid-run.** New `allostery.control_effort` (GRAPE, Khaneja et al. 2005, citation verified against the live article; control channels restricted to the active-site seed residues only, Implementer's call — see module docstring for the 3-part justification). Correctness gated before any real data: analytic gradient matches finite-difference to 1e-4; Trotterized propagation matches exact `scipy.expm` to 1e-3; plain gradient descent oscillated rather than converged on a real target (caught by instrumenting per-iteration fidelity, not assumed) — switched to Adam, confirmed smooth convergence. **Synthetic dumbbell gate passed**: on two identical-topology, identical-hop-distance chains differing only in edge weight, `E_i` correctly ranks the strongly-coupled chain's end below (cheaper to reach than) the weakly-coupled twin — this observable tracks coupling strength, not just distance, unlike a naive proximity floor. **Pre-registered kill-switch passed** on KRAS_G12C (rho=0.56 vs. distance, well under the 0.85 STOP bar) -- proceeded to full scoring. **Instrumentation bug caught mid-pipeline**: a single fixed horizon `T=15` (calibrated on KRAS_G12C, N=169) left BCR_ABL1/CARDIAC_MYOSIN's feasible fraction near zero (1/451, 1/704) — almost every residue collapsed to the same "infeasible" sentinel score, mechanically forcing stratified AUC to exactly 0.5 in every single shell by ties, a scoring artifact, not a physical result (caught by exactly this project's own "0.5 everywhere is suspicious" convention). **A "more physical" fix was tried and rejected before settling on the actual one**: this project's own established gap-based horizon rule (`propagators.min_adequate_t_max`, rows 36/39, built for exactly the "one time constant regardless of energy scale" failure mode) predicts `T~1/gap`; KRAS_G12C and BCR_ABL1's `H_new` spectral gaps are nearly identical (0.0364 vs 0.0374), so that rule prescribes nearly the same T for both and, checked directly, still leaves BCR_ABL1 at 2/91 feasible on a subsample — the degeneracy survives it. T was instead found per target by a label-blind empirical search (feasible *fraction* on a subsample, blind to which residues are pocket, targeting a comparable range across targets) — `T=15*(N/169)` reports where that search landed, not a derived physical law; feasibility here evidently depends on more than `H_0`'s spectral gap alone (plausibly seed/N coverage fraction, which varies far more across these targets: 10.7%/5.8%/2.6%). `F` lowered from 0.5 to 0.4 uniformly. This restored healthy feasible fractions (17%, 21%, 6%) before re-running. **Final result, properly powered**: distance-stratified mean AUC at chance on all 3 targets (KRAS_G12C 0.501, BCR_ABL1 0.404, CARDIAC_MYOSIN 0.474), permutation-null p-values 0.48/0.99/0.71 (none significant; BCR_ABL1 is actually *worse* than its own null, p=0.99). **T/F sensitivity check** (task's own Constraint): residue *rankings* are stable and reproducible across 3 different (T,F) choices on KRAS_G12C (Spearman rho 0.73-0.89, all p<1e-28) while stratified AUC stays at chance regardless (0.477-0.501) — confirms the null is a real absence of signal, not hyperparameter noise. Classical PRS baseline (`prs_low`, already in the register) is itself weak/mixed on this same stratified lens (0.51/0.25/0.83) — not a case of a strong classical baseline this observable simply failed to beat. **ASD unseen-set scoring not run**, per the task's own pre-registered gate ("if the mandatory set clears") — it did not. Single-excitation-subspace, classically simulable throughout; a negative here is a negative *observable* finding, not evidence against a quantum speedup claim (none was made). | [[TASK-0156]], [[TASK-0094]], [[TASK-0112]], [[TASK-0123]], [[TASK-0130]] |
+
+| 62 | [[TASK-0163]]'s published fpocket AUCs (the register's single most-cited classical comparator) could not be reproduced by [[TASK-0200]] on a different machine — is the vendored binary itself the cause, and can it be pinned? | **resolved 2026-08-06: yes, root-caused to two machines each building their own unpinned local binary — confirmed via git identity, not assumed — and pinned going forward.** `tools/fpocket/bin/` is gitignored, only the build recipe is version-controlled; [[TASK-0163]]'s commit used git identity `chmura.quantum@gmail.com`, [[TASK-0200]]'s a different machine's identity. The binary's own version banner ("fpocket 4.0") is stale/hardcoded across the 4.x line (this build exposes a 4.1-era flag), not a trustworthy pin — SHA256 is. New `tools/fpocket/PROVENANCE.json` + `allostery.baselines.fpocket_provenance()` + `tests/test_fpocket_pin.py` (real-target golden-value test, ran for real, passed). Authoritative set: the freshly recomputed numbers (reproduced twice on this machine). Full root cause (different upstream commit vs. compiler/arch difference) not chased further, per this task's own explicit sanction to pin without full root-cause; recomputing on the other machine, as directly suggested, would settle it but isn't achievable from this environment. No verdict changes on either number set. | [[TASK-0206]], [[TASK-0163]], [[TASK-0200]], [[TASK-0177]], [[TASK-0072]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`

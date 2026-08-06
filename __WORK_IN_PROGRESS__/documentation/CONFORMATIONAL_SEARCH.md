@@ -14,8 +14,10 @@ present. That is a simpler explanation of the register's own pattern than
 any mechanism hypothesis tested to date — see this task's filing (Context
 section, `.ai/tasks/DONE/TASK-0185-conformational-search-reformulation.md`)
 for the supporting table (BCR_ABL1 pre-formed / apo-holo pocket RMSD ratio
-0.49 / fpocket AUC 0.8596 vs. KRAS_G12C genuinely cryptic-but-overlapping
-the active site).
+0.49 / fpocket AUC 0.8596 [superseded 2026-08-06, [[TASK-0206]]: 0.8618,
+same reading — a since-unreproducible machine-specific binary build, see
+`RESULTS.md`'s "fpocket binary drift" section] vs. KRAS_G12C genuinely
+cryptic-but-overlapping the active site).
 
 Reframing the problem as **search over an ENM-generated conformational
 ensemble for structures in which the pocket forms** inverts [[TASK-0163]]'s

@@ -19,8 +19,11 @@ without guaranteed network access or the fpocket binary installed.
 """
 from __future__ import annotations
 
+import hashlib
+import platform
 import re
 import shutil
+import socket
 import subprocess
 import tempfile
 from pathlib import Path
@@ -271,6 +274,48 @@ def fpocket_baseline(pdb_path: str, timeout: float = 120.0) -> dict:
         return {"error": f"fpocket timed out after {timeout}s"}
     except Exception as e:
         return {"error": f"fpocket_baseline: {e}"}
+
+
+def fpocket_provenance(binary_path) -> dict:
+    """TASK-0206 -- a pinnable fingerprint of exactly which `fpocket`
+    binary produced a run, recorded because [[TASK-0163]]'s original
+    AUCs (0.8348/0.8596/0.5345, KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN) could
+    not be reproduced ([[TASK-0200]]: 0.7910/0.8618/0.5303) and the root
+    cause traced to two different machines each building their own
+    unpinned local `fpocket` binary (`tools/fpocket/bin/` is gitignored,
+    per upstream convention -- only the build recipe is version
+    controlled, never the binary itself).
+
+    **The binary's own self-reported banner ("fpocket 4.0") is NOT
+    trustworthy as a version pin** -- checked directly against upstream
+    (the `-P`/`--custom_pocket` flag this build exposes matches fpocket
+    4.1's own "Explicit pocket definition" release, so the banner string
+    is stale/hardcoded across the 4.x line, not evidence of which exact
+    tag was built. SHA256 of the binary's own bytes is the only
+    unambiguous pin available without instrumenting the build itself.
+
+    Returns `{"sha256": ..., "banner": ..., "hostname": ...,
+    "platform": ..., "binary_path": ...}`, or `{"error": ...}` if the
+    binary is missing (never raises, matching this module's own
+    external-tool-wrapper convention)."""
+    binary_path = Path(binary_path)
+    if not binary_path.exists():
+        return {"error": f"fpocket binary not found at {binary_path}"}
+
+    sha256 = hashlib.sha256(binary_path.read_bytes()).hexdigest()
+    try:
+        result = subprocess.run([str(binary_path)], capture_output=True, text=True, timeout=10)
+        banner = result.stdout.strip() or result.stderr.strip()
+    except Exception as e:  # noqa: BLE001 -- provenance capture must never block a real run
+        banner = f"<banner capture failed: {e}>"
+
+    return {
+        "sha256": sha256,
+        "banner": banner,
+        "hostname": socket.gethostname(),
+        "platform": platform.platform(),
+        "binary_path": str(binary_path),
+    }
 
 
 def _parse_fpocket_info(text: str) -> list:

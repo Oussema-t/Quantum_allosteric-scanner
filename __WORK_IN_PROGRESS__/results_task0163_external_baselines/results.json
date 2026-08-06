@@ -10,14 +10,12 @@
     },
     "floor_auc_max": 0.4817880794701987,
     "fpocket": {
-      "auc": 0.834805003679176,
+      "auc": 0.7910228108903605,
       "n_pockets": 10,
       "n_residues_assigned": 77
     },
     "pocketminer": {
-      "auc": 0.6931567328918322,
-      "n_matched": 169,
-      "n_total_apo": 169
+      "error": "residue-count mismatch or missing prediction file (apo N=169, PocketMiner prediction N=0)"
     }
   },
   "BCR_ABL1": {
@@ -31,14 +29,12 @@
     },
     "floor_auc_max": 0.5816810344827587,
     "fpocket": {
-      "auc": 0.8596264367816093,
+      "auc": 0.8617816091954023,
       "n_pockets": 37,
-      "n_residues_assigned": 185
+      "n_residues_assigned": 170
     },
     "pocketminer": {
-      "auc": 0.5603448275862069,
-      "n_matched": 451,
-      "n_total_apo": 451
+      "error": "residue-count mismatch or missing prediction file (apo N=451, PocketMiner prediction N=0)"
     }
   },
   "CARDIAC_MYOSIN": {
@@ -52,14 +48,12 @@
     },
     "floor_auc_max": 0.5678503840587776,
     "fpocket": {
-      "auc": 0.5344539686073695,
+      "auc": 0.5302794166759435,
       "n_pockets": 55,
-      "n_residues_assigned": 108
+      "n_residues_assigned": 115
     },
     "pocketminer": {
-      "auc": 0.573193810531003,
-      "n_matched": 704,
-      "n_total_apo": 704
+      "error": "residue-count mismatch or missing prediction file (apo N=704, PocketMiner prediction N=0)"
     }
   }
 }

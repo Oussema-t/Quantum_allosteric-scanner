@@ -451,7 +451,10 @@ holo pocket labels/AUC/floor convention. **fpocket decisively beats both this
 project's own proximity floor and its own `H_new`/CTQW headline observable on 2/3
 targets** (KRAS_G12C 0.8348, BCR_ABL1 0.8596, vs. floor 0.4818/0.5817 and actual
 0.5901/0.5266); sits just below its own floor on CARDIAC_MYOSIN (0.5345 vs.
-0.5679). PocketMiner mixed (beats actual on KRAS_G12C/CARDIAC_MYOSIN, falls short
+0.5679). **Superseded 2026-08-06 ([[TASK-0206]]): these fpocket AUCs came
+from a since-unreproducible machine-specific binary; authoritative set is
+0.7910/0.8618/0.5303 (same verdict) — `RESULTS.md`'s "fpocket binary
+drift" section.** PocketMiner mixed (beats actual on KRAS_G12C/CARDIAC_MYOSIN, falls short
 of floor on BCR_ABL1). ProteinLens confirmed live, no login required, but
 browser-only with no API — explicit blocker, not run, stated per this task's own
 Intent Contract rather than silently skipped. `fpocket` installed as a new,

@@ -1,0 +1,23 @@
+{
+  "_comment": "TASK-0206. Pin for the vendored fpocket binary that produced the authoritative AUC set (see README.md and RESULTS.md's TASK-0206 section). Regenerate via allostery.baselines.fpocket_provenance('tools/fpocket/bin/fpocket') after any rebuild and diff against this file before trusting a new run.",
+  "pinned_date": "2026-08-06",
+  "sha256": "0267f6d3207c27684367772f70f8530e463f49f63b881adcce0d3262676d48ba",
+  "hostname": "Bartoszs-MacBook-Pro",
+  "platform_python_reports": "macOS-26.6-x86_64-i386-64bit-Mach-O",
+  "banner_version_string": "fpocket 4.0",
+  "banner_version_string_caveat": "NOT a trustworthy version pin -- this build exposes -P/--custom_pocket (fpocket 4.1's own 'Explicit pocket definition' feature per upstream release notes), so the '4.0' banner is a stale/hardcoded string across the 4.x line, not evidence of which exact tag was built. sha256 above is the only unambiguous pin.",
+  "build_recipe": "README.md's own pinned recipe: git clone --branch 4.2.3 --depth 1 https://github.com/Discngine/fpocket.git",
+  "authoritative_auc_set": {
+    "KRAS_G12C": 0.7910228108903605,
+    "BCR_ABL1": 0.8617816091954023,
+    "CARDIAC_MYOSIN": 0.5302794166759435,
+    "note": "Re-confirmed reproducible on this machine/binary twice (TASK-0200's own run, and this task's own re-run) -- same-machine determinism holds. Supersedes TASK-0163's original 0.8348/0.8596/0.5345, which this machine/binary cannot reproduce and which cannot currently be re-verified (no access to the machine that produced them from this environment)."
+  },
+  "superseded_auc_set_TASK_0163": {
+    "KRAS_G12C": 0.8348,
+    "BCR_ABL1": 0.8596,
+    "CARDIAC_MYOSIN": 0.5345,
+    "git_identity_that_committed_it": "Bartosz <chmura.quantum@gmail.com>",
+    "note": "Not reproducible on this machine/binary. Root cause: tools/fpocket/bin/ is gitignored (upstream convention) -- only the build recipe is version controlled, never the binary bytes -- so each machine's fpocket is an independently-built, unpinned-until-now artifact. Whether the difference is a genuinely different build (wrong tag / stale local clone predating the README's 4.2.3 pin) or a compiler/architecture-level floating-point difference from nominally the same source was not resolved further (this task's own Constraint explicitly permits pinning without full root-cause). Kept on record, not deleted, per this project's no-overwrite convention."
+  }
+}
