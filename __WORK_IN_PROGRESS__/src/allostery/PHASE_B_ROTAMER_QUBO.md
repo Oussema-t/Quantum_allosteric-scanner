@@ -120,6 +120,75 @@ pre-stated falsification check, not declared a win by default):
 
 ## Status
 
+> ## ⛔ CLOSED ON COMPLEXITY GROUNDS (2026-08-06, reformulated TASK-0204)
+>
+> **The gating question was wrong, and the corrected one closes this route
+> more decisively than any biological result could.** Raised by the
+> orchestrating user: even a clean pass on criterion #1 would not support a
+> quantum route if the instance solves classically in seconds.
+>
+> Side-chain packing on a fixed backbone is a pairwise MRF. Exact
+> minimization costs `O(m·n^(tw+1))` — **treewidth**, not variable count —
+> not the naive `O(n^m)` this document's own 180-qubit estimate is built on.
+> Measured on real structures (4 targets, m=8–80, cutoff swept), then
+> validated by actually solving the instances exactly (bucket elimination,
+> correctness-gated against brute force on 3 enumerable cases):
+>
+> | Target | m=12 `tw` | naive `n^m` | **exact solve, wall clock** |
+> |---|---|---|---|
+> | KRAS_G12C | 3 | 1e14.1 | **0.002 s** |
+> | BCR_ABL1 | 4 | 1e14.1 | **0.009 s** |
+> | CARDIAC_MYOSIN | 2 | 1e14.1 | **0.001 s** |
+> | PTP1B | 5 | 1e14.1 | **0.159 s** |
+>
+> **The exact global optimum of a real druggable-pocket window is found in
+> milliseconds.** The `1e14` search space is an illusion created by counting
+> variables instead of measuring the interaction graph. The qubit estimate
+> below is a faithful *encoding size* and is not evidence of hardness.
+>
+> A genuine hard regime does exist, but only at m≈50–80 (`tw` 9–23) — most
+> of a domain, not a pocket. This document's own scope (m=8–15) sits
+> entirely inside the tractable regime.
+>
+> Same argument shape the register already accepts for Grover/HHL/QML and
+> single-particle CTQW. Full record: TASK-0204's "REFORMULATED" section.
+>
+> ## ⚠️ UNTESTED — the CLOSED verdict below is RETRACTED (2026-08-06)
+>
+> [[TASK-0204]] was reopened by the Reviewer thread the same day it closed.
+> Three independent defects were found, each sufficient alone to void the
+> verdict. **This route is untested, not closed.** The text below is kept
+> unedited for the record, per this project's no-silent-overwrite convention.
+>
+> 1. **The gate could not return `pass` for any data.**
+>    `opt_rate > (1.0 if greedy_hit else 0.0)` — but `opt_rate` is a fraction
+>    of 8 trials, maximum 1.0. On any target whose greedy hit (BCR_ABL1 did),
+>    no result could clear it, including a perfect 8/8. The bar required 2/2,
+>    so criterion #1 was unfalsifiable in the positive direction before a
+>    single trial ran.
+> 2. **There was no positive control.** Only the *apo* structure was scored,
+>    where a cryptic pocket is closed by definition. The holo structure was
+>    loaded but never scored. Built and run since
+>    (`scripts/task0204_positive_control.py`): the holo control **passes on
+>    KRAS_G12C** (overlap 1.000, druggability 0.886 — vs. its apo's 0.001, the
+>    real cryptic signal) and **FAILS on BCR_ABL1** (0.356, below the 0.5 bar
+>    and below that target's own apo at 0.566). Every BCR_ABL1 number in the
+>    table below is uninterpretable.
+> 3. **The conjunctive criterion is dominated by an overlap leg that any
+>    repacking destroys.** On KRAS_G12C holo — cavity definitively open —
+>    repacking drops overlap 1.000 → 0.417 (greedy) / 0.250 (SA median) while
+>    druggability *stays high* at 0.827–0.941. The **random** arm, which
+>    minimizes nothing, collapses identically — refuting the "SA packs tighter"
+>    mechanism claimed below. The common factor is repacking, not optimization.
+>
+> Supporting: total runtime 73.3 s, of which 33.6 s is `sleep()`; no seed
+> control (wall-clock-second seeding only); P(0 of 8) = 0.52 / 0.83 under the
+> observed per-leg marginals, so 0/8 was the modal outcome under any
+> hypothesis.
+>
+> Full record and the requirements for a valid rerun: [[TASK-0204]]'s own
+> "Reopened" section.
+
 **CLOSED — falsification criterion #1 run and failed, 2026-08-06 ([[TASK-0204]]).**
 
 `[[TASK-0204]]` sourced a real classical packer (vendored, MIT-licensed

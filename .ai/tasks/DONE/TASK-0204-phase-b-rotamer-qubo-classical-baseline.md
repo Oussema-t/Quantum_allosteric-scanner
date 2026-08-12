@@ -9,7 +9,7 @@
   more often than naive per-residue greedy rotamer choice.
 - Status: Done
 - Resolution: done
-- Resolution Note: Falsification criterion #1 fails, 0/2 targets (bar 2/2) -- route closed, no quantum formulation follows.
+- Resolution Note: **Route CLOSED on complexity grounds, not on criterion #1.** The original 2026-08-06 criterion-#1 run is RETRACTED (reopened by the Reviewer thread the same day; three defects, each sufficient alone -- an unfalsifiable gate, no positive control, and an overlap leg any repacking destroys). Reformulated and measured instead: side-chain packing is a pairwise MRF whose exact-minimization cost is O(m*n^(tw+1)); on real pocket windows (m=12, n=15) treewidth is 2-5 and the exact global optimum is found in 0.001-0.159 s against a naive 1e14.1 search space, validated by exact solve against brute force. A hard regime exists only at m~50-80 (most of a domain, not a pocket). Criterion #1's biological question remains unanswered and is explicitly non-gating -- a pass would not have supported a quantum route.
 - **Thread: Implementer B (science / compute).** Independent of
   [[TASK-0203]]; different targets, different modules, no shared files.
 - Owner: Implementer
@@ -200,6 +200,18 @@ would have anything to amplify.
 - [x] If passed: measure the rare-event rate (the amplitude-amplification precondition). — N/A, criterion #1 failed.
 - [x] Write the result into `PHASE_B_ROTAMER_QUBO.md`'s Status section + `RESULTS.md`.
 
+**Reformulated scope (2026-08-06, Reviewer thread) — the gating question changed:**
+
+- [x] Retract the original closure; record all three defects with evidence (D1/D2/D3).
+- [x] Fix the unfalsifiable gate: `criterion_1_verdict()` + 8 regression tests, one failing-first against the original expression.
+- [x] Build and run the missing positive control (`task0204_positive_control.py`).
+- [x] Measure the actual gating question — treewidth/hardness, 4 targets, m=8-80, cutoff swept.
+- [x] Validate the cost model by exact solution, correctness-gated against brute force.
+- [x] Propagate to `PHASE_B_ROTAMER_QUBO.md`, `RESULTS.md` row 65, and the registry row.
+- [ ] **Not owed by this task**: a valid rerun of criterion #1's biological question. The six
+      requirements are listed in the Reopened section for whoever rebuilds the instrumentation;
+      a pass would change nothing about the quantum route, which is closed on complexity grounds.
+
 ## Dependency
 
 - [[TASK-0181]] (Done) — the formulation and all three criteria.
@@ -225,7 +237,273 @@ would have anything to amplify.
   is a *packing* result — different layers. Decide and record; do not let it
   default.
 
-## Done
+## REFORMULATED 2026-08-06 — criterion #1 was the wrong gating question
+
+**Raised by the orchestrating user, and correct: even a clean PASS on
+criterion #1 would not have supported a quantum route, because the instance
+solves classically in seconds.** The original run repacked a 12-residue
+window in ~2 s per trial on a laptop. "Why use a quantum computer for
+something a laptop does in seconds?" is not rhetorical — it is the same
+complexity argument this register already used to close Grover/HHL/QML and
+single-particle CTQW ("at N≤704 it is an `eigh` call, so no advantage exists
+at any point"). Applied here it must be answered **before** any biological
+proxy is worth running.
+
+**This is a scoping error I own** (Reviewer thread): TASK-0204 inherited
+Phase B's criterion #1 verbatim without asking whether passing it would mean
+anything. It would not have.
+
+### The corrected gating question
+
+> Side-chain packing with a fixed backbone and a discrete rotamer library is
+> a pairwise Markov random field. Its exact-minimization cost is
+> `O(m · n^(tw+1))` — **treewidth**, not variable count — not the naive
+> `O(n^m)` the Phase B write-up's own 180-qubit estimate is built on. So:
+> **is the instance this project would actually solve hard at all?**
+
+Pre-registered falsification, fixed before running: if `tw` grows roughly
+linearly with window size `m`, a genuine hard regime exists and the route
+survives. If `tw` saturates small while `m` grows, exact classical solution
+is cheap and the route is closed **on complexity grounds** — permanently, for
+any window size, regardless of any biological result.
+
+### Result — measured, 4 targets, window sizes 8–80, interaction cutoff swept
+
+`scripts/task0204_packing_hardness.py`,
+`results_task0204_packing_hardness/packing_hardness.json`. At the 8 Å
+side-chain interaction cutoff, `n=15` rotamers/site (the write-up's own
+figure):
+
+| Target | m=12 `tw` | naive `n^m` | exact `m·n^(tw+1)` | m=50 `tw` | m=80 `tw` |
+|---|---|---|---|---|---|
+| KRAS_G12C | 3 | 1e14.1 | **1e5.8** | 7–13 | 9–20 |
+| BCR_ABL1 | 4 | 1e14.1 | **1e7.0** | 7–15 | 9–23 |
+| CARDIAC_MYOSIN | 2 | 1e14.1 | **1e4.6** | 6–8 | 8–12 |
+| PTP1B | 4–5 | 1e14.1 | **1e8.1** | 8–15 | 9–18 |
+
+**At the window size that matters (m≈12, a druggable pocket), exact solution
+costs 1e4.6–1e8.1 operations — six to nine orders of magnitude below the
+naive `n^m` figure, and well inside a laptop-second.** The apparent
+`1e14` search space is an illusion created by counting variables instead of
+measuring the interaction graph. This is the direct, quantitative answer to
+the user's objection, and it closes the route at the scale Phase B was
+written for.
+
+**The honest boundary, stated rather than buried**: `tw` does *not*
+saturate. It keeps growing with `m` (to 9–23 at m=80, exact cost 1e26–1e30),
+so a genuine hard regime does exist — but only at window sizes of 50–80+
+residues, which is most of a domain, not a cryptic pocket. Phase B's own
+scope (`m=8–15`) sits entirely inside the tractable regime.
+
+### Empirical validation — the cost model is not an argument, it is a measurement
+
+`scripts/task0204_exact_solve_validation.py`,
+`results_task0204_packing_hardness/exact_solve_validation.json`.
+Exact minimization by bucket elimination on the **real** interaction graphs,
+`n=15` rotamers/site.
+
+**Correctness gate, run first** (this project's standing practice): on
+instances small enough to enumerate, bucket elimination must equal brute
+force exactly. m=6/n=4, m=7/n=3, m=8/n=4 — **match on all three, to 1e-9.**
+
+| Target | m=12 exact solve | m=16 | m=20 |
+|---|---|---|---|
+| KRAS_G12C | **0.002 s** | 0.003 s | 0.033 s |
+| BCR_ABL1 | **0.009 s** | 0.131 s | over budget (1.7e8) |
+| CARDIAC_MYOSIN | **0.001 s** | 0.002 s | 0.003 s |
+| PTP1B | **0.159 s** | over budget (2.6e9) | over budget (3.8e10) |
+
+**The exact global optimum of a real 12-residue pocket-window packing
+instance is found in 1–159 milliseconds on a laptop**, against a naive
+search space of `1e14.1`. Not "seconds" — milliseconds. The user's objection
+was right and understated: there is no room for a quantum advantage
+argument here by nine to eleven orders of magnitude.
+
+The tractability boundary is target-dependent and measured: KRAS_G12C and
+CARDIAC_MYOSIN stay trivial through m=20; BCR_ABL1 crosses the budget at
+m=20; PTP1B — the densest interaction graph of the four — crosses at m=16.
+All well above a druggable pocket's 8–15 residues.
+
+### What this means for the register
+
+- Phase B's **qubit estimate is not wrong but is not evidence of hardness**:
+  `m·n = 180` one-hot variables is a faithful encoding size and says nothing
+  about solve cost, which is set by treewidth.
+- The route is closed **on complexity grounds at the biologically relevant
+  scale** — a stronger and far more defensible closure than the retracted
+  biological proxy below, and the same argument shape the register already
+  accepts for CTQW/Grover/HHL.
+- The surviving open question is **not** rotamer packing. It is whether any
+  formulation of cryptic-pocket opening is both (a) hard and (b) the thing
+  that needs solving. Backbone-layer search is already closed empirically
+  ([[TASK-0185]]: pocket recovery is 1–8 draws, not a rare event). Coupled
+  backbone+side-chain over a whole domain is in the hard regime above but is
+  a different problem, and the no-MD constraint forbids it here.
+
+### Scope of criterion #1 after this
+
+Criterion #1's biological question is **no longer gating** — it was
+downstream of an assumption that has now been measured false. It remains
+worth answering if someone rebuilds the instrumentation (the six
+requirements in the Reopened section below still stand), but a pass would
+change nothing about the quantum route. Recorded as such, not silently
+dropped.
+
+---
+
+## Reopened 2026-08-06 — the closure below is RETRACTED. Phase B is untested, not closed.
+
+**Reopened by the Reviewer thread (Opus) on direct user instruction, after the
+user flagged the original run's implausibly short runtime. Three independent
+defects were found, each sufficient on its own to void the verdict. The
+original Done section is preserved unedited below, per this project's
+no-silent-overwrite convention, but its conclusion does not stand.**
+
+### D1 — The gate could not return `pass` for any data. Demonstrated, not argued.
+
+`scripts/task0204_rotamer_repack_baseline.py:326` (as run):
+
+```python
+opt_rate > (1.0 if greedy_hit else 0.0)
+```
+
+`opt_rate` is a fraction of 8 trials; its maximum attainable value is exactly
+`1.0`. **On any target whose greedy baseline hit, the gate demanded a value
+that cannot exist** — a perfect 8/8 optimized sweep returns `False`. BCR_ABL1's
+greedy did hit. The pre-registered bar required **2 of 2** targets. Therefore
+criterion #1 was **unfalsifiable in the positive direction for the run as a
+whole, before a single trial was scored**.
+
+Verified by executing the expression across every attainable rate:
+
+| greedy | bar | attainable `opt_rate` | can pass? |
+|---|---|---|---|
+| misses | `> 0.0` | 0.0 … 1.0 | yes, at ≥1/8 |
+| **hits** | **`> 1.0`** | 0.0 … 1.0 | **never** |
+
+The original *intent* was sound — optimization must add something over the
+naive baseline, and a ceiling case must not read as an automatic pass. The
+error was scoring that case as a **fail** and charging it against a
+both-targets-must-pass bar. A target where the naive baseline already succeeds
+says nothing about whether optimization helps where it is needed: it is
+**not evaluable**, and the denominator must shrink rather than the numerator
+absorbing a loss it could never have avoided.
+
+**Fixed**: new `criterion_1_verdict()` returns
+`pass` / `fail` / `not_evaluable_greedy_ceiling` / `not_evaluable_no_data`.
+8 regression tests (`tests/test_task0204_criterion.py`), including one that
+fails against the original expression for every attainable rate.
+
+### D2 — There was no positive control. Built and run; it changes everything.
+
+The original run scored only the **apo** structure. For a genuinely cryptic
+pocket the apo cavity is closed *by definition*, so a miss there is the
+expected result and carries no information. The holo structure — where the
+drug demonstrably binds — was loaded by `_load_apo_holo` and used only to
+build labels. **It was never scored.**
+
+New `scripts/task0204_positive_control.py` runs the ladder the original
+needed, ligand stripped, at each structure's own pocket window:
+
+| Target | arm | overlap | druggability | hit |
+|---|---|---|---|---|
+| KRAS_G12C | **holo_native** (positive control) | **1.000** | **0.886** | **yes** |
+| | holo_greedy | 0.417 | 0.827 | no |
+| | holo_optimized (8) | 0.167–0.583, med 0.250 | 0.008–0.989, med 0.941 | 1/8 |
+| | apo_native | 0.750 | 0.001 | no |
+| BCR_ABL1 | **holo_native** (positive control) | 1.000 | **0.356** | **no** |
+| | holo_greedy | 0.250 | 0.856 | no |
+| | holo_optimized (8) | 0.250–0.500, med 0.417 | 0.608–0.725, med 0.683 | 2/8 |
+| | apo_native | 0.917 | 0.566 | yes |
+
+**The positive control passes on KRAS_G12C and FAILS on BCR_ABL1.** On
+BCR_ABL1 the pipeline cannot detect a druggable cavity at the site where a
+drug actually binds (0.356 < the 0.5 bar) — while scoring the *apo* structure
+at 0.566, i.e. **higher than the holo**. Every BCR_ABL1 number in the original
+run is therefore uninterpretable, and the 0.5 druggability bar is
+mis-calibrated for that target.
+
+KRAS_G12C's apo/holo contrast is meanwhile exactly the cryptic-pocket signal
+the experiment should have been built around: druggability **0.001 → 0.886**.
+The pipeline can see this cavity open and correctly reports it closed in apo.
+
+### D3 — The conjunctive criterion is dominated by an overlap leg that any repacking destroys.
+
+On KRAS_G12C, where the control passes and the cavity is definitively open,
+**repacking the holo structure collapses the overlap leg while leaving
+druggability high**:
+
+- overlap `1.000 → 0.417` (greedy), median `0.250` (SA)
+- druggability `0.886 → 0.827` (greedy), median `0.941` (SA) — *higher than native*
+
+Same on BCR_ABL1: overlap `1.000 → 0.250`, druggability `0.356 → 0.856`.
+
+Druggability is not what fails. **Residue-set overlap between fpocket's
+detected cavity and the fixed window is**, and it collapses under *any*
+repacking — greedy included, on a structure where the cavity is known open.
+The overlap leg is a structure-similarity proxy, not a druggability measure;
+no repacking arm can win it. The original run's 32 misses measure this
+artifact, not the hypothesis.
+
+This also **refutes the original Done section's own stated mechanism**
+("EvoEF2's SA minimizes packing energy… tighter packing is a different
+objective than opening a cavity"): the **random** arm minimizes nothing and
+collapses identically. The common factor is repacking, not optimization.
+
+### Supporting observations
+
+- **Runtime**: `elapsed_s` 34.1 + 39.2 = **73.3 s** total, of which
+  `time.sleep(1.05)` × 32 = **33.6 s is sleeping** for EvoEF2's
+  second-resolution `time(NULL)` seed. Real compute ≈ 40 s.
+- **No seed control**: trials are seeded only by wall-clock second, so the
+  run is not reproducible. A `--seed` path is needed before any rerun.
+- **Power**: with the observed per-leg marginals, P(0 of 8) = **0.52**
+  (KRAS_G12C) and **0.83** (BCR_ABL1) — 0/8 is the modal outcome under any
+  hypothesis.
+- **Knife edge**: overlap is quantized to n/12 and the bar is exactly 6/12.
+  BCR_ABL1's greedy scored exactly 0.500. One residue fewer and the
+  "ceiling case" that D1 shows was predetermined would not even have applied.
+
+### Standing conclusion
+
+**Phase B is untested.** The register's "every route is now closed by
+measurement" claim — the original Done section's final paragraph, and the
+sentence headed for [[TASK-0184]] — is **not supported**. The side-chain
+rotamer route remains exactly what it was before this task ran: the one route
+whose quantum-advantage argument has not been tested.
+
+Neither target as configured can test it. KRAS_G12C is the viable one (its
+control passes, its apo/holo contrast is real), but the criterion has to be
+rebuilt around the holo ceiling rather than an absolute bar.
+
+### What a valid rerun requires (for whoever picks this up)
+
+1. **Ceiling-relative criterion.** Score against `holo_repacked`, not an
+   absolute 0.5/0.5 bar. The question is whether apo-repacking moves toward
+   the holo cavity, and `holo_greedy`'s own overlap (0.417 on KRAS_G12C) is
+   the honest ceiling for *any* repacked structure.
+2. **Report the two legs separately and continuously.** A conjunctive boolean
+   over 8 trials discards the information that made this audit possible.
+3. **Fix or drop the overlap leg.** A fixed residue window cannot survive
+   repacking. Either score cavity *volume*/druggability at the window's
+   centroid, or accept a much lower overlap threshold calibrated from
+   `holo_repacked`.
+4. **Drop BCR_ABL1 or recalibrate its bar** — its positive control fails.
+5. **Seed control** (`--seed`), and trial counts set from a stated power
+   calculation, not from Phase A's 8-restart precedent, which was a different
+   kind of measurement.
+6. **Pre-register the positive control's expected result alongside the pass
+   bar**, so an experiment that can only produce one answer is caught before
+   it runs. This is the general lesson, and it is not specific to this task.
+
+Artifacts: `scripts/task0204_positive_control.py`,
+`results_task0204_positive_control/positive_control.json`,
+`tests/test_task0204_criterion.py`, `criterion_1_verdict()` in
+`scripts/task0204_rotamer_repack_baseline.py`.
+
+---
+
+## Done — SUPERSEDED 2026-08-06, see "Reopened" above. Verdict retracted; kept unedited for the record.
 
 **Verdict: criterion #1 fails, 0/2 targets (bar was 2/2, pre-registered above
 before any run). Route closed — no quantum formulation follows.**

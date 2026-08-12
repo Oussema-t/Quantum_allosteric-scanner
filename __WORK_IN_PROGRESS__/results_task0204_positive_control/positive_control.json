@@ -1,0 +1,362 @@
+{
+ "KRAS_G12C": {
+  "target": "KRAS_G12C",
+  "holo_window": [
+   [
+    "A",
+    58
+   ],
+   [
+    "A",
+    9
+   ],
+   [
+    "A",
+    60
+   ],
+   [
+    "A",
+    61
+   ],
+   [
+    "A",
+    63
+   ],
+   [
+    "A",
+    59
+   ],
+   [
+    "A",
+    96
+   ],
+   [
+    "A",
+    68
+   ],
+   [
+    "A",
+    99
+   ],
+   [
+    "A",
+    62
+   ],
+   [
+    "A",
+    10
+   ],
+   [
+    "A",
+    69
+   ]
+  ],
+  "holo_native": {
+   "overlap_frac": 1.0,
+   "druggability_score": 0.886,
+   "hit": true,
+   "n_pockets": 11
+  },
+  "holo_greedy": {
+   "overlap_frac": 0.4166666666666667,
+   "druggability_score": 0.827,
+   "hit": false,
+   "n_pockets": 8
+  },
+  "holo_optimized_trials": [
+   {
+    "overlap_frac": 0.5,
+    "druggability_score": 0.989,
+    "hit": true,
+    "n_pockets": 7
+   },
+   {
+    "overlap_frac": 0.25,
+    "druggability_score": 0.863,
+    "hit": false,
+    "n_pockets": 10
+   },
+   {
+    "overlap_frac": 0.16666666666666666,
+    "druggability_score": 0.941,
+    "hit": false,
+    "n_pockets": 7
+   },
+   {
+    "overlap_frac": 0.4166666666666667,
+    "druggability_score": 0.93,
+    "hit": false,
+    "n_pockets": 8
+   },
+   {
+    "overlap_frac": 0.25,
+    "druggability_score": 0.988,
+    "hit": false,
+    "n_pockets": 7
+   },
+   {
+    "overlap_frac": 0.25,
+    "druggability_score": 0.989,
+    "hit": false,
+    "n_pockets": 7
+   },
+   {
+    "overlap_frac": 0.25,
+    "druggability_score": 0.863,
+    "hit": false,
+    "n_pockets": 8
+   },
+   {
+    "overlap_frac": 0.5833333333333334,
+    "druggability_score": 0.008,
+    "hit": false,
+    "n_pockets": 9
+   }
+  ],
+  "apo_window": [
+   [
+    "A",
+    60
+   ],
+   [
+    "A",
+    68
+   ],
+   [
+    "A",
+    9
+   ],
+   [
+    "A",
+    61
+   ],
+   [
+    "A",
+    58
+   ],
+   [
+    "A",
+    59
+   ],
+   [
+    "A",
+    10
+   ],
+   [
+    "A",
+    96
+   ],
+   [
+    "A",
+    62
+   ],
+   [
+    "A",
+    72
+   ],
+   [
+    "A",
+    69
+   ],
+   [
+    "A",
+    100
+   ]
+  ],
+  "apo_native": {
+   "overlap_frac": 0.75,
+   "druggability_score": 0.001,
+   "hit": false,
+   "n_pockets": 10
+  },
+  "summary": {
+   "holo_native_hit": true,
+   "holo_greedy_hit": false,
+   "holo_optimized_hit_rate": 0.125,
+   "holo_optimized_n_valid": 8,
+   "apo_native_hit": false,
+   "positive_control_passes": true
+  },
+  "elapsed_s": 19.9
+ },
+ "BCR_ABL1": {
+  "target": "BCR_ABL1",
+  "holo_window": [
+   [
+    "A",
+    452
+   ],
+   [
+    "A",
+    451
+   ],
+   [
+    "A",
+    453
+   ],
+   [
+    "A",
+    483
+   ],
+   [
+    "A",
+    359
+   ],
+   [
+    "A",
+    454
+   ],
+   [
+    "A",
+    356
+   ],
+   [
+    "A",
+    448
+   ],
+   [
+    "A",
+    360
+   ],
+   [
+    "A",
+    482
+   ],
+   [
+    "A",
+    484
+   ],
+   [
+    "A",
+    481
+   ]
+  ],
+  "holo_native": {
+   "overlap_frac": 1.0,
+   "druggability_score": 0.356,
+   "hit": false,
+   "n_pockets": 31
+  },
+  "holo_greedy": {
+   "overlap_frac": 0.25,
+   "druggability_score": 0.856,
+   "hit": false,
+   "n_pockets": 33
+  },
+  "holo_optimized_trials": [
+   {
+    "overlap_frac": 0.4166666666666667,
+    "druggability_score": 0.668,
+    "hit": false,
+    "n_pockets": 36
+   },
+   {
+    "overlap_frac": 0.3333333333333333,
+    "druggability_score": 0.725,
+    "hit": false,
+    "n_pockets": 36
+   },
+   {
+    "overlap_frac": 0.5,
+    "druggability_score": 0.608,
+    "hit": true,
+    "n_pockets": 32
+   },
+   {
+    "overlap_frac": 0.25,
+    "druggability_score": 0.725,
+    "hit": false,
+    "n_pockets": 36
+   },
+   {
+    "overlap_frac": 0.5,
+    "druggability_score": 0.636,
+    "hit": true,
+    "n_pockets": 34
+   },
+   {
+    "overlap_frac": 0.4166666666666667,
+    "druggability_score": 0.683,
+    "hit": false,
+    "n_pockets": 32
+   },
+   {
+    "overlap_frac": 0.4166666666666667,
+    "druggability_score": 0.725,
+    "hit": false,
+    "n_pockets": 31
+   },
+   {
+    "overlap_frac": 0.4166666666666667,
+    "druggability_score": 0.673,
+    "hit": false,
+    "n_pockets": 33
+   }
+  ],
+  "apo_window": [
+   [
+    "A",
+    452
+   ],
+   [
+    "A",
+    451
+   ],
+   [
+    "A",
+    453
+   ],
+   [
+    "A",
+    483
+   ],
+   [
+    "A",
+    359
+   ],
+   [
+    "A",
+    454
+   ],
+   [
+    "A",
+    356
+   ],
+   [
+    "A",
+    448
+   ],
+   [
+    "A",
+    360
+   ],
+   [
+    "A",
+    482
+   ],
+   [
+    "A",
+    484
+   ],
+   [
+    "A",
+    481
+   ]
+  ],
+  "apo_native": {
+   "overlap_frac": 0.9166666666666666,
+   "druggability_score": 0.566,
+   "hit": true,
+   "n_pockets": 37
+  },
+  "summary": {
+   "holo_native_hit": false,
+   "holo_greedy_hit": false,
+   "holo_optimized_hit_rate": 0.25,
+   "holo_optimized_n_valid": 8,
+   "apo_native_hit": true,
+   "positive_control_passes": false
+  },
+  "elapsed_s": 24.3
+ }
+}

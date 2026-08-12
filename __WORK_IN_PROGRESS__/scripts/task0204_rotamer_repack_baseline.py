@@ -224,6 +224,38 @@ def _is_hit(overlap_frac: float, druggability) -> bool:
     return bool(overlap_frac >= POCKET_HIT_OVERLAP and druggability is not None and druggability >= DRUGGABILITY_BAR)
 
 
+def criterion_1_verdict(opt_rate, greedy_hit) -> str:
+    """Three-state criterion-#1 verdict for one target.
+
+    **Fixes a real, decisive defect in the 2026-08-06 run** (TASK-0204
+    reopened 2026-08-06 by the Reviewer thread). That run's gate was::
+
+        opt_rate > (1.0 if greedy_hit else 0.0)
+
+    `opt_rate` is a fraction of N trials, so its maximum attainable value
+    is exactly 1.0. On any target where greedy hits, the gate therefore
+    demanded a value that cannot exist -- **it could not return `pass` for
+    any data whatsoever**, including a perfect 8/8 optimized sweep. The
+    pre-registered bar required 2 of 2 targets, and BCR_ABL1's greedy did
+    hit, so criterion #1 was unfalsifiable-in-the-positive-direction for
+    the run as a whole before a single trial was scored.
+
+    The original *intent* was sound -- optimization must add something over
+    the naive baseline, and a ceiling case must not be read as an automatic
+    pass. The error was scoring that case as a **fail** and counting it
+    toward a "both targets must pass" bar. A target where the naive
+    baseline already succeeds says nothing about whether optimization helps
+    where it is actually needed, so it is `not_evaluable`, and the
+    denominator must shrink accordingly rather than the numerator being
+    charged a loss it could never have avoided.
+    """
+    if opt_rate is None or greedy_hit is None:
+        return "not_evaluable_no_data"
+    if greedy_hit:
+        return "not_evaluable_greedy_ceiling"
+    return "pass" if opt_rate > 0.0 else "fail"
+
+
 def score_structure(pdb_path: Path, target_set: set, work_dir: Path) -> dict:
     # fpocket writes its "<stem>_out/" output directory next to the INPUT
     # pdb file, not relative to cwd -- confirmed directly (ran it by hand
@@ -318,13 +350,17 @@ def run_target(name: str) -> dict:
     rand_rate, rand_n = _hit_rate(result["random_trials"])
     greedy_hit = result["greedy"].get("hit") if "error" not in result["greedy"] else None
 
+    verdict = criterion_1_verdict(opt_rate, greedy_hit)
     result["summary"] = {
         "optimized_hit_rate": opt_rate, "optimized_n_valid": opt_n,
         "greedy_hit": greedy_hit,
         "random_hit_rate": rand_rate, "random_n_valid": rand_n,
-        "criterion_1_passes_this_target": (
-            bool(opt_rate is not None and greedy_hit is not None and opt_rate > (1.0 if greedy_hit else 0.0))
-        ),
+        "criterion_1_verdict": verdict,
+        # Kept for continuity with the 2026-08-06 run's own stored artifact.
+        # NOTE: that run's value came from an unfalsifiable expression -- see
+        # `criterion_1_verdict`'s docstring. `True` still means pass; `False`
+        # now means "fail OR not evaluable", so read `criterion_1_verdict`.
+        "criterion_1_passes_this_target": verdict == "pass",
     }
     result["elapsed_s"] = round(time.monotonic() - t0, 1)
     _log(f"{name}: SUMMARY {result['summary']}")

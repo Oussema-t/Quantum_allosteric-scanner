@@ -1,0 +1,144 @@
+{
+ "correctness_gate": [
+  {
+   "m": 6,
+   "n": 4,
+   "brute": -24.763201757107367,
+   "bucket": -24.763201757107364,
+   "match": true
+  },
+  {
+   "m": 7,
+   "n": 3,
+   "brute": -31.941228286573544,
+   "bucket": -31.941228286573548,
+   "match": true
+  },
+  {
+   "m": 8,
+   "n": 4,
+   "brute": -42.22692350237276,
+   "bucket": -42.22692350237277,
+   "match": true
+  }
+ ],
+ "timing": [
+  {
+   "target": "KRAS_G12C",
+   "m": 12,
+   "n": 15,
+   "tw_upper": 3,
+   "wall_s": 0.0016,
+   "max_factor_entries": 50625,
+   "optimum": -101.87525755793395,
+   "naive_log10": 14.1
+  },
+  {
+   "target": "KRAS_G12C",
+   "m": 16,
+   "n": 15,
+   "tw_upper": 3,
+   "wall_s": 0.0028,
+   "max_factor_entries": 50625,
+   "optimum": -141.57183448073997,
+   "naive_log10": 18.8
+  },
+  {
+   "target": "KRAS_G12C",
+   "m": 20,
+   "n": 15,
+   "tw_upper": 4,
+   "wall_s": 0.0332,
+   "max_factor_entries": 759375,
+   "optimum": -187.1852295215557,
+   "naive_log10": 23.5
+  },
+  {
+   "target": "BCR_ABL1",
+   "m": 12,
+   "n": 15,
+   "tw_upper": 4,
+   "wall_s": 0.0087,
+   "max_factor_entries": 759375,
+   "optimum": -105.43495757339649,
+   "naive_log10": 14.1
+  },
+  {
+   "target": "BCR_ABL1",
+   "m": 16,
+   "n": 15,
+   "tw_upper": 5,
+   "wall_s": 0.131,
+   "max_factor_entries": 11390625,
+   "optimum": -176.27415784016563,
+   "naive_log10": 18.8
+  },
+  {
+   "target": "BCR_ABL1",
+   "m": 20,
+   "n": 15,
+   "tw_upper": 6,
+   "skipped_over_budget": true,
+   "projected_factor_entries": 170859375.0,
+   "naive_log10": 23.5
+  },
+  {
+   "target": "CARDIAC_MYOSIN",
+   "m": 12,
+   "n": 15,
+   "tw_upper": 2,
+   "wall_s": 0.0007,
+   "max_factor_entries": 3375,
+   "optimum": -97.80444825994832,
+   "naive_log10": 14.1
+  },
+  {
+   "target": "CARDIAC_MYOSIN",
+   "m": 16,
+   "n": 15,
+   "tw_upper": 3,
+   "wall_s": 0.0017,
+   "max_factor_entries": 50625,
+   "optimum": -141.70570403272228,
+   "naive_log10": 18.8
+  },
+  {
+   "target": "CARDIAC_MYOSIN",
+   "m": 20,
+   "n": 15,
+   "tw_upper": 3,
+   "wall_s": 0.0025,
+   "max_factor_entries": 50625,
+   "optimum": -181.40482090725004,
+   "naive_log10": 23.5
+  },
+  {
+   "target": "PTP1B",
+   "m": 12,
+   "n": 15,
+   "tw_upper": 5,
+   "wall_s": 0.1592,
+   "max_factor_entries": 11390625,
+   "optimum": -121.74009894414122,
+   "naive_log10": 14.1
+  },
+  {
+   "target": "PTP1B",
+   "m": 16,
+   "n": 15,
+   "tw_upper": 7,
+   "skipped_over_budget": true,
+   "projected_factor_entries": 2562890625.0,
+   "naive_log10": 18.8
+  },
+  {
+   "target": "PTP1B",
+   "m": 20,
+   "n": 15,
+   "tw_upper": 8,
+   "skipped_over_budget": true,
+   "projected_factor_entries": 38443359375.0,
+   "naive_log10": 23.5
+  }
+ ]
+}
