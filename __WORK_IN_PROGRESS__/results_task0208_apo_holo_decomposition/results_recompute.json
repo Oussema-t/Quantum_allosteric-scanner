@@ -1,0 +1,189 @@
+[
+ {
+  "target": "KRAS_G12C",
+  "pocket_window": [
+   "A60",
+   "A68",
+   "A9",
+   "A61",
+   "A58",
+   "A59",
+   "A10",
+   "A96",
+   "A62",
+   "A72",
+   "A69",
+   "A100"
+  ],
+  "side_chain_explained": 0.036273293834309994,
+  "dihedral_attribution_pocket": {
+   "mean_backbone_share": 0.3740638149892322,
+   "median_backbone_share": 0.4089921549835434,
+   "n_residues_scored": 9,
+   "n_backbone_only_residues": 3,
+   "n_chi_only_residues": 0
+  },
+  "dihedral_attribution_distal": {
+   "mean_backbone_share": 0.5607695488739549,
+   "median_backbone_share": 0.6293739435923442,
+   "n_residues_scored": 11,
+   "n_backbone_only_residues": 1,
+   "n_chi_only_residues": 0
+  },
+  "coupling_relaxed": {
+   "attempted": false,
+   "verdict": "not_evaluable_side_chain_component_negligible",
+   "side_chain_explained": 0.036273293834309994,
+   "guard": "side_chain_explained < 0.1",
+   "note": "V2: the original run keyed this guard off |sum_singles| < 1e-6, which is dominated by clash energy and stayed silent here."
+  },
+  "elapsed_s": 1.6
+ },
+ {
+  "target": "PTP1B",
+  "pocket_window": [
+   "A192",
+   "A277",
+   "A193",
+   "A280",
+   "A276",
+   "A196",
+   "A189",
+   "A188",
+   "A279",
+   "A281",
+   "A197",
+   "A187"
+  ],
+  "side_chain_explained": 0.07790705913928553,
+  "dihedral_attribution_pocket": {
+   "mean_backbone_share": 0.20504810560949935,
+   "median_backbone_share": 0.12525185574876838,
+   "n_residues_scored": 10,
+   "n_backbone_only_residues": 2,
+   "n_chi_only_residues": 0
+  },
+  "dihedral_attribution_distal": {
+   "mean_backbone_share": 0.5321797001330715,
+   "median_backbone_share": 0.5642168534145384,
+   "n_residues_scored": 12,
+   "n_backbone_only_residues": 0,
+   "n_chi_only_residues": 0
+  },
+  "coupling_relaxed": {
+   "attempted": false,
+   "verdict": "not_evaluable_side_chain_component_negligible",
+   "side_chain_explained": 0.07790705913928553,
+   "guard": "side_chain_explained < 0.1",
+   "note": "V2: the original run keyed this guard off |sum_singles| < 1e-6, which is dominated by clash energy and stayed silent here."
+  },
+  "elapsed_s": 0.4
+ },
+ {
+  "target": "CASPASE1",
+  "pocket_window": [
+   "A258",
+   "A282",
+   "A286",
+   "B331",
+   "B333",
+   "B390"
+  ],
+  "side_chain_explained": 0.04297641476350467,
+  "dihedral_attribution_pocket": {
+   "mean_backbone_share": 0.3557371329118961,
+   "median_backbone_share": 0.2902898549660027,
+   "n_residues_scored": 6,
+   "n_backbone_only_residues": 0,
+   "n_chi_only_residues": 0
+  },
+  "dihedral_attribution_distal": {
+   "mean_backbone_share": 0.24743932359695994,
+   "median_backbone_share": 0.1377349583642552,
+   "n_residues_scored": 5,
+   "n_backbone_only_residues": 1,
+   "n_chi_only_residues": 0
+  },
+  "coupling_relaxed": {
+   "attempted": false,
+   "verdict": "not_evaluable_side_chain_component_negligible",
+   "side_chain_explained": 0.04297641476350467,
+   "guard": "side_chain_explained < 0.1",
+   "note": "V2: the original run keyed this guard off |sum_singles| < 1e-6, which is dominated by clash energy and stayed silent here."
+  },
+  "elapsed_s": 0.3
+ },
+ {
+  "target": "GLUCOKINASE",
+  "pocket_window": [
+   "A211",
+   "A65",
+   "A214",
+   "A64",
+   "A210",
+   "A215",
+   "A221",
+   "A218",
+   "A63",
+   "A62",
+   "A220",
+   "A235"
+  ],
+  "side_chain_explained": 0.46323618169128244,
+  "dihedral_attribution_pocket": {
+   "mean_backbone_share": 0.35667991553558226,
+   "median_backbone_share": 0.32402075473985004,
+   "n_residues_scored": 12,
+   "n_backbone_only_residues": 0,
+   "n_chi_only_residues": 0
+  },
+  "dihedral_attribution_distal": {
+   "mean_backbone_share": 0.37082688702480404,
+   "median_backbone_share": 0.3720482184640741,
+   "n_residues_scored": 10,
+   "n_backbone_only_residues": 2,
+   "n_chi_only_residues": 0
+  },
+  "coupling_relaxed": {
+   "attempted": true,
+   "relaxed": true,
+   "sum_singles": 4.149999999998727,
+   "joint": 3.769999999999982,
+   "gap": 0.3799999999987449,
+   "gap_pct": 9.156626505996663,
+   "frustrated": false,
+   "any_individually_unfavorable_single": true,
+   "joint_favorable": false,
+   "strong_frustration_signature": false,
+   "singles_relaxed": {
+    "A211": 0.05999999999994543,
+    "A65": 0.4600000000000364,
+    "A214": 1.1900000000000546,
+    "A64": 2.3299999999999272,
+    "A210": -0.2300000000000182,
+    "A215": 0.9800000000000182,
+    "A221": -0.38000000000010914,
+    "A218": -0.11000000000012733,
+    "A63": 0.3799999999996544,
+    "A62": -0.18000000000029104,
+    "A220": -0.0500000000001819,
+    "A235": -0.3000000000001819
+   },
+   "singles_raw_unrelaxed": {
+    "A211": 5.9500000000000455,
+    "A65": -1.8199999999999363,
+    "A214": 4.5499999999999545,
+    "A64": 2.75,
+    "A210": -0.14999999999986358,
+    "A215": 89.68000000000006,
+    "A221": 16.029999999999973,
+    "A218": -0.22000000000002728,
+    "A63": -0.009999999999990905,
+    "A62": -0.15999999999985448,
+    "A220": -0.2599999999999909,
+    "A235": -0.21000000000003638
+   }
+  },
+  "elapsed_s": 13.2
+ }
+]
