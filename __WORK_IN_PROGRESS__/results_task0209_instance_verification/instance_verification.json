@@ -1,0 +1,1427 @@
+{
+ "_excluded": {
+  "ATCase": "no drug_ligand set",
+  "HEMOGLOBIN": "no drug_ligand set",
+  "TAR_RECEPTOR": "no drug_ligand set",
+  "GLYCOGEN_PHOSPHORYLASE": "no drug_ligand set",
+  "PFK": "no drug_ligand set",
+  "GROEL_SUBUNIT": "drug_ligand is GroES, a protein -- config's own comment: drug-contact pocket definition does not apply cleanly",
+  "MYC_MAX": "no holo_pdb set -- no apo/holo pair to contrast at all"
+ },
+ "KRAS_G12C": {
+  "target": "KRAS_G12C",
+  "hetatm_audit": {
+   "pocket_contact_cutoff": 4.5,
+   "all_hetatm_groups": [
+    {
+     "resname": "MG",
+     "resnum": 202,
+     "chain": "A",
+     "min_dist_to_pocket_window": 3.35,
+     "near_pocket": true,
+     "expected": false,
+     "cofactor_of_known_ligand": "GDP"
+    },
+    {
+     "resname": "GDP",
+     "resnum": 201,
+     "chain": "A",
+     "min_dist_to_pocket_window": 3.81,
+     "near_pocket": true,
+     "expected": true,
+     "cofactor_of_known_ligand": null
+    }
+   ],
+   "unexpected_near_pocket": []
+  },
+  "ladder": {
+   "target": "KRAS_G12C",
+   "holo_window": [
+    [
+     "A",
+     58
+    ],
+    [
+     "A",
+     9
+    ],
+    [
+     "A",
+     60
+    ],
+    [
+     "A",
+     61
+    ],
+    [
+     "A",
+     63
+    ],
+    [
+     "A",
+     59
+    ],
+    [
+     "A",
+     96
+    ],
+    [
+     "A",
+     68
+    ],
+    [
+     "A",
+     99
+    ],
+    [
+     "A",
+     62
+    ],
+    [
+     "A",
+     10
+    ],
+    [
+     "A",
+     69
+    ]
+   ],
+   "holo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.886,
+    "hit": true,
+    "n_pockets": 11
+   },
+   "holo_greedy": {
+    "overlap_frac": 0.4166666666666667,
+    "druggability_score": 0.827,
+    "hit": false,
+    "n_pockets": 8
+   },
+   "holo_optimized_trials": [
+    {
+     "overlap_frac": 0.16666666666666666,
+     "druggability_score": 0.93,
+     "hit": false,
+     "n_pockets": 7
+    },
+    {
+     "overlap_frac": 0.25,
+     "druggability_score": 0.968,
+     "hit": false,
+     "n_pockets": 7
+    },
+    {
+     "overlap_frac": 0.25,
+     "druggability_score": 0.608,
+     "hit": false,
+     "n_pockets": 7
+    },
+    {
+     "overlap_frac": 0.3333333333333333,
+     "druggability_score": 0.949,
+     "hit": false,
+     "n_pockets": 8
+    },
+    {
+     "overlap_frac": 0.16666666666666666,
+     "druggability_score": 0.925,
+     "hit": false,
+     "n_pockets": 7
+    },
+    {
+     "overlap_frac": 0.3333333333333333,
+     "druggability_score": 0.924,
+     "hit": false,
+     "n_pockets": 9
+    },
+    {
+     "overlap_frac": 0.3333333333333333,
+     "druggability_score": 0.93,
+     "hit": false,
+     "n_pockets": 7
+    },
+    {
+     "overlap_frac": 0.25,
+     "druggability_score": 0.9,
+     "hit": false,
+     "n_pockets": 7
+    }
+   ],
+   "apo_window": [
+    [
+     "A",
+     60
+    ],
+    [
+     "A",
+     68
+    ],
+    [
+     "A",
+     9
+    ],
+    [
+     "A",
+     61
+    ],
+    [
+     "A",
+     58
+    ],
+    [
+     "A",
+     59
+    ],
+    [
+     "A",
+     10
+    ],
+    [
+     "A",
+     96
+    ],
+    [
+     "A",
+     62
+    ],
+    [
+     "A",
+     72
+    ],
+    [
+     "A",
+     69
+    ],
+    [
+     "A",
+     100
+    ]
+   ],
+   "apo_native": {
+    "overlap_frac": 0.75,
+    "druggability_score": 0.001,
+    "hit": false,
+    "n_pockets": 10
+   },
+   "summary": {
+    "holo_native_hit": true,
+    "holo_greedy_hit": false,
+    "holo_optimized_hit_rate": 0.0,
+    "holo_optimized_n_valid": 8,
+    "apo_native_hit": false,
+    "positive_control_passes": true
+   },
+   "elapsed_s": 19.4
+  },
+  "verdict": "VALID"
+ },
+ "BCR_ABL1": {
+  "target": "BCR_ABL1",
+  "hetatm_audit": {
+   "pocket_contact_cutoff": 4.5,
+   "all_hetatm_groups": [
+    {
+     "resname": "MYR",
+     "resnum": 538,
+     "chain": "A",
+     "min_dist_to_pocket_window": 3.47,
+     "near_pocket": true,
+     "expected": false,
+     "cofactor_of_known_ligand": null
+    },
+    {
+     "resname": "P16",
+     "resnum": 539,
+     "chain": "A",
+     "min_dist_to_pocket_window": 16.37,
+     "near_pocket": false,
+     "expected": false,
+     "cofactor_of_known_ligand": null
+    }
+   ],
+   "unexpected_near_pocket": [
+    {
+     "resname": "MYR",
+     "resnum": 538,
+     "chain": "A",
+     "min_dist_to_pocket_window": 3.47,
+     "near_pocket": true,
+     "expected": false,
+     "cofactor_of_known_ligand": null
+    }
+   ]
+  },
+  "ladder": {
+   "target": "BCR_ABL1",
+   "holo_window": [
+    [
+     "A",
+     452
+    ],
+    [
+     "A",
+     451
+    ],
+    [
+     "A",
+     453
+    ],
+    [
+     "A",
+     483
+    ],
+    [
+     "A",
+     359
+    ],
+    [
+     "A",
+     454
+    ],
+    [
+     "A",
+     356
+    ],
+    [
+     "A",
+     448
+    ],
+    [
+     "A",
+     360
+    ],
+    [
+     "A",
+     482
+    ],
+    [
+     "A",
+     484
+    ],
+    [
+     "A",
+     481
+    ]
+   ],
+   "holo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.356,
+    "hit": false,
+    "n_pockets": 31
+   },
+   "holo_greedy": {
+    "overlap_frac": 0.25,
+    "druggability_score": 0.856,
+    "hit": false,
+    "n_pockets": 33
+   },
+   "holo_optimized_trials": [
+    {
+     "overlap_frac": 0.4166666666666667,
+     "druggability_score": 0.673,
+     "hit": false,
+     "n_pockets": 33
+    },
+    {
+     "overlap_frac": 0.3333333333333333,
+     "druggability_score": 0.705,
+     "hit": false,
+     "n_pockets": 35
+    },
+    {
+     "overlap_frac": 0.4166666666666667,
+     "druggability_score": 0.673,
+     "hit": false,
+     "n_pockets": 35
+    },
+    {
+     "overlap_frac": 0.4166666666666667,
+     "druggability_score": 0.701,
+     "hit": false,
+     "n_pockets": 33
+    },
+    {
+     "overlap_frac": 0.5,
+     "druggability_score": 0.673,
+     "hit": true,
+     "n_pockets": 35
+    },
+    {
+     "overlap_frac": 0.5,
+     "druggability_score": 0.705,
+     "hit": true,
+     "n_pockets": 31
+    },
+    {
+     "overlap_frac": 0.3333333333333333,
+     "druggability_score": 0.725,
+     "hit": false,
+     "n_pockets": 33
+    },
+    {
+     "overlap_frac": 0.4166666666666667,
+     "druggability_score": 0.384,
+     "hit": false,
+     "n_pockets": 33
+    }
+   ],
+   "apo_window": [
+    [
+     "A",
+     452
+    ],
+    [
+     "A",
+     451
+    ],
+    [
+     "A",
+     453
+    ],
+    [
+     "A",
+     483
+    ],
+    [
+     "A",
+     359
+    ],
+    [
+     "A",
+     454
+    ],
+    [
+     "A",
+     356
+    ],
+    [
+     "A",
+     448
+    ],
+    [
+     "A",
+     360
+    ],
+    [
+     "A",
+     482
+    ],
+    [
+     "A",
+     484
+    ],
+    [
+     "A",
+     481
+    ]
+   ],
+   "apo_native": {
+    "overlap_frac": 0.9166666666666666,
+    "druggability_score": 0.566,
+    "hit": true,
+    "n_pockets": 37
+   },
+   "summary": {
+    "holo_native_hit": false,
+    "holo_greedy_hit": false,
+    "holo_optimized_hit_rate": 0.25,
+    "holo_optimized_n_valid": 8,
+    "apo_native_hit": true,
+    "positive_control_passes": false
+   },
+   "elapsed_s": 24.1
+  },
+  "verdict": "INVALID"
+ },
+ "CARDIAC_MYOSIN": {
+  "target": "CARDIAC_MYOSIN",
+  "hetatm_audit": {
+   "pocket_contact_cutoff": 4.5,
+   "all_hetatm_groups": [
+    {
+     "resname": "ADP",
+     "resnum": 901,
+     "chain": "A",
+     "min_dist_to_pocket_window": 18.83,
+     "near_pocket": false,
+     "expected": true,
+     "cofactor_of_known_ligand": null
+    },
+    {
+     "resname": "MG",
+     "resnum": 903,
+     "chain": "A",
+     "min_dist_to_pocket_window": 20.7,
+     "near_pocket": false,
+     "expected": false,
+     "cofactor_of_known_ligand": "ADP"
+    },
+    {
+     "resname": "VO4",
+     "resnum": 902,
+     "chain": "A",
+     "min_dist_to_pocket_window": 21.37,
+     "near_pocket": false,
+     "expected": false,
+     "cofactor_of_known_ligand": "ADP"
+    },
+    {
+     "resname": "M3L",
+     "resnum": 129,
+     "chain": "A",
+     "min_dist_to_pocket_window": 23.95,
+     "near_pocket": false,
+     "expected": false,
+     "cofactor_of_known_ligand": null
+    },
+    {
+     "resname": "M3L",
+     "resnum": 549,
+     "chain": "A",
+     "min_dist_to_pocket_window": 40.34,
+     "near_pocket": false,
+     "expected": false,
+     "cofactor_of_known_ligand": null
+    }
+   ],
+   "unexpected_near_pocket": []
+  },
+  "ladder": {
+   "target": "CARDIAC_MYOSIN",
+   "holo_window": [
+    [
+     "B",
+     164
+    ],
+    [
+     "B",
+     168
+    ],
+    [
+     "B",
+     713
+    ],
+    [
+     "B",
+     167
+    ],
+    [
+     "B",
+     712
+    ],
+    [
+     "B",
+     711
+    ],
+    [
+     "B",
+     163
+    ],
+    [
+     "B",
+     666
+    ],
+    [
+     "B",
+     170
+    ],
+    [
+     "B",
+     710
+    ],
+    [
+     "B",
+     721
+    ],
+    [
+     "B",
+     120
+    ]
+   ],
+   "holo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.166,
+    "hit": false,
+    "n_pockets": 51
+   },
+   "holo_greedy": {
+    "overlap_frac": 0.4166666666666667,
+    "druggability_score": 0.001,
+    "hit": false,
+    "n_pockets": 54
+   },
+   "holo_optimized_trials": [
+    {
+     "overlap_frac": 0.5,
+     "druggability_score": 0.008,
+     "hit": false,
+     "n_pockets": 52
+    },
+    {
+     "overlap_frac": 0.4166666666666667,
+     "druggability_score": 0.002,
+     "hit": false,
+     "n_pockets": 51
+    },
+    {
+     "overlap_frac": 0.4166666666666667,
+     "druggability_score": 0.038,
+     "hit": false,
+     "n_pockets": 53
+    },
+    {
+     "overlap_frac": 0.25,
+     "druggability_score": 0.201,
+     "hit": false,
+     "n_pockets": 49
+    },
+    {
+     "overlap_frac": 0.4166666666666667,
+     "druggability_score": 0.008,
+     "hit": false,
+     "n_pockets": 54
+    },
+    {
+     "overlap_frac": 0.4166666666666667,
+     "druggability_score": 0.015,
+     "hit": false,
+     "n_pockets": 49
+    },
+    {
+     "overlap_frac": 0.5,
+     "druggability_score": 0.033,
+     "hit": false,
+     "n_pockets": 49
+    },
+    {
+     "overlap_frac": 0.5,
+     "druggability_score": 0.216,
+     "hit": false,
+     "n_pockets": 50
+    }
+   ],
+   "apo_window": [
+    [
+     "A",
+     164
+    ],
+    [
+     "A",
+     168
+    ],
+    [
+     "A",
+     713
+    ],
+    [
+     "A",
+     712
+    ],
+    [
+     "A",
+     167
+    ],
+    [
+     "A",
+     711
+    ],
+    [
+     "A",
+     163
+    ],
+    [
+     "A",
+     710
+    ],
+    [
+     "A",
+     666
+    ],
+    [
+     "A",
+     170
+    ],
+    [
+     "A",
+     120
+    ],
+    [
+     "A",
+     721
+    ]
+   ],
+   "apo_native": {
+    "overlap_frac": 0.9166666666666666,
+    "druggability_score": 0.001,
+    "hit": false,
+    "n_pockets": 55
+   },
+   "summary": {
+    "holo_native_hit": false,
+    "holo_greedy_hit": false,
+    "holo_optimized_hit_rate": 0.0,
+    "holo_optimized_n_valid": 8,
+    "apo_native_hit": false,
+    "positive_control_passes": false
+   },
+   "elapsed_s": 38.1
+  },
+  "verdict": "INVALID"
+ },
+ "PTP1B": {
+  "target": "PTP1B",
+  "hetatm_audit": {
+   "pocket_contact_cutoff": 4.5,
+   "all_hetatm_groups": [
+    {
+     "resname": "GOL",
+     "resnum": 401,
+     "chain": "A",
+     "min_dist_to_pocket_window": 6.77,
+     "near_pocket": false,
+     "expected": false,
+     "cofactor_of_known_ligand": null
+    },
+    {
+     "resname": "GOL",
+     "resnum": 403,
+     "chain": "A",
+     "min_dist_to_pocket_window": 19.72,
+     "near_pocket": false,
+     "expected": false,
+     "cofactor_of_known_ligand": null
+    },
+    {
+     "resname": "GOL",
+     "resnum": 402,
+     "chain": "A",
+     "min_dist_to_pocket_window": 23.82,
+     "near_pocket": false,
+     "expected": false,
+     "cofactor_of_known_ligand": null
+    },
+    {
+     "resname": "GOL",
+     "resnum": 400,
+     "chain": "A",
+     "min_dist_to_pocket_window": 25.67,
+     "near_pocket": false,
+     "expected": false,
+     "cofactor_of_known_ligand": null
+    },
+    {
+     "resname": "TRS",
+     "resnum": 322,
+     "chain": "A",
+     "min_dist_to_pocket_window": 27.16,
+     "near_pocket": false,
+     "expected": false,
+     "cofactor_of_known_ligand": null
+    }
+   ],
+   "unexpected_near_pocket": []
+  },
+  "ladder": {
+   "target": "PTP1B",
+   "holo_window": [
+    [
+     "A",
+     187
+    ],
+    [
+     "A",
+     188
+    ],
+    [
+     "A",
+     189
+    ],
+    [
+     "A",
+     192
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     196
+    ],
+    [
+     "A",
+     197
+    ],
+    [
+     "A",
+     200
+    ]
+   ],
+   "holo_native": {
+    "overlap_frac": 0.75,
+    "druggability_score": 0.757,
+    "hit": true,
+    "n_pockets": 17
+   },
+   "holo_greedy": {
+    "overlap_frac": 0.375,
+    "druggability_score": 0.731,
+    "hit": false,
+    "n_pockets": 17
+   },
+   "holo_optimized_trials": [
+    {
+     "overlap_frac": 0.25,
+     "druggability_score": 0.002,
+     "hit": false,
+     "n_pockets": 16
+    },
+    {
+     "overlap_frac": 0.25,
+     "druggability_score": 0.413,
+     "hit": false,
+     "n_pockets": 15
+    },
+    {
+     "overlap_frac": 0.5,
+     "druggability_score": 0.475,
+     "hit": false,
+     "n_pockets": 16
+    },
+    {
+     "overlap_frac": 0.25,
+     "druggability_score": 0.413,
+     "hit": false,
+     "n_pockets": 16
+    },
+    {
+     "overlap_frac": 0.5,
+     "druggability_score": 0.569,
+     "hit": true,
+     "n_pockets": 16
+    },
+    {
+     "overlap_frac": 0.375,
+     "druggability_score": 0.428,
+     "hit": false,
+     "n_pockets": 15
+    },
+    {
+     "overlap_frac": 0.25,
+     "druggability_score": 0.004,
+     "hit": false,
+     "n_pockets": 16
+    },
+    {
+     "overlap_frac": 0.25,
+     "druggability_score": 0.002,
+     "hit": false,
+     "n_pockets": 16
+    }
+   ],
+   "apo_window": [
+    [
+     "A",
+     192
+    ],
+    [
+     "A",
+     277
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     280
+    ],
+    [
+     "A",
+     276
+    ],
+    [
+     "A",
+     196
+    ],
+    [
+     "A",
+     189
+    ],
+    [
+     "A",
+     188
+    ],
+    [
+     "A",
+     279
+    ],
+    [
+     "A",
+     281
+    ],
+    [
+     "A",
+     197
+    ],
+    [
+     "A",
+     187
+    ]
+   ],
+   "apo_native": {
+    "overlap_frac": 0.4166666666666667,
+    "druggability_score": 0.046,
+    "hit": false,
+    "n_pockets": 19
+   },
+   "summary": {
+    "holo_native_hit": true,
+    "holo_greedy_hit": false,
+    "holo_optimized_hit_rate": 0.125,
+    "holo_optimized_n_valid": 8,
+    "apo_native_hit": false,
+    "positive_control_passes": true
+   },
+   "elapsed_s": 17.0
+  },
+  "verdict": "VALID"
+ },
+ "GLUCOKINASE": {
+  "target": "GLUCOKINASE",
+  "hetatm_audit": {
+   "pocket_contact_cutoff": 4.5,
+   "all_hetatm_groups": [
+    {
+     "resname": "MRK",
+     "resnum": 501,
+     "chain": "A",
+     "min_dist_to_pocket_window": 2.45,
+     "near_pocket": true,
+     "expected": false,
+     "cofactor_of_known_ligand": null
+    },
+    {
+     "resname": "NA",
+     "resnum": 600,
+     "chain": "A",
+     "min_dist_to_pocket_window": 7.61,
+     "near_pocket": false,
+     "expected": false,
+     "cofactor_of_known_ligand": null
+    },
+    {
+     "resname": "GLC",
+     "resnum": 500,
+     "chain": "A",
+     "min_dist_to_pocket_window": 10.64,
+     "near_pocket": false,
+     "expected": false,
+     "cofactor_of_known_ligand": null
+    }
+   ],
+   "unexpected_near_pocket": [
+    {
+     "resname": "MRK",
+     "resnum": 501,
+     "chain": "A",
+     "min_dist_to_pocket_window": 2.45,
+     "near_pocket": true,
+     "expected": false,
+     "cofactor_of_known_ligand": null
+    }
+   ]
+  },
+  "ladder": {
+   "target": "GLUCOKINASE",
+   "holo_window": [
+    [
+     "X",
+     211
+    ],
+    [
+     "X",
+     214
+    ],
+    [
+     "X",
+     64
+    ],
+    [
+     "X",
+     65
+    ],
+    [
+     "X",
+     221
+    ],
+    [
+     "X",
+     210
+    ],
+    [
+     "X",
+     63
+    ],
+    [
+     "X",
+     218
+    ],
+    [
+     "X",
+     220
+    ],
+    [
+     "X",
+     215
+    ],
+    [
+     "X",
+     62
+    ],
+    [
+     "X",
+     235
+    ]
+   ],
+   "holo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.229,
+    "hit": false,
+    "n_pockets": 21
+   },
+   "holo_greedy": {
+    "overlap_frac": 0.4166666666666667,
+    "druggability_score": 0.716,
+    "hit": false,
+    "n_pockets": 22
+   },
+   "holo_optimized_trials": [
+    {
+     "overlap_frac": 0.3333333333333333,
+     "druggability_score": 0.388,
+     "hit": false,
+     "n_pockets": 24
+    },
+    {
+     "overlap_frac": 0.4166666666666667,
+     "druggability_score": 0.804,
+     "hit": false,
+     "n_pockets": 23
+    },
+    {
+     "overlap_frac": 0.5,
+     "druggability_score": 0.617,
+     "hit": true,
+     "n_pockets": 22
+    },
+    {
+     "overlap_frac": 0.3333333333333333,
+     "druggability_score": 0.713,
+     "hit": false,
+     "n_pockets": 23
+    },
+    {
+     "overlap_frac": 0.3333333333333333,
+     "druggability_score": 0.226,
+     "hit": false,
+     "n_pockets": 21
+    },
+    {
+     "overlap_frac": 0.4166666666666667,
+     "druggability_score": 0.718,
+     "hit": false,
+     "n_pockets": 24
+    },
+    {
+     "overlap_frac": 0.3333333333333333,
+     "druggability_score": 0.369,
+     "hit": false,
+     "n_pockets": 22
+    },
+    {
+     "overlap_frac": 0.4166666666666667,
+     "druggability_score": 0.488,
+     "hit": false,
+     "n_pockets": 23
+    }
+   ],
+   "apo_window": [
+    [
+     "A",
+     211
+    ],
+    [
+     "A",
+     65
+    ],
+    [
+     "A",
+     214
+    ],
+    [
+     "A",
+     64
+    ],
+    [
+     "A",
+     210
+    ],
+    [
+     "A",
+     215
+    ],
+    [
+     "A",
+     221
+    ],
+    [
+     "A",
+     218
+    ],
+    [
+     "A",
+     63
+    ],
+    [
+     "A",
+     62
+    ],
+    [
+     "A",
+     220
+    ],
+    [
+     "A",
+     235
+    ]
+   ],
+   "apo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.759,
+    "hit": true,
+    "n_pockets": 26
+   },
+   "summary": {
+    "holo_native_hit": false,
+    "holo_greedy_hit": false,
+    "holo_optimized_hit_rate": 0.125,
+    "holo_optimized_n_valid": 8,
+    "apo_native_hit": true,
+    "positive_control_passes": false
+   },
+   "elapsed_s": 26.5
+  },
+  "verdict": "INVALID"
+ },
+ "CASPASE1": {
+  "target": "CASPASE1",
+  "hetatm_audit": {
+   "pocket_contact_cutoff": 4.5,
+   "all_hetatm_groups": [],
+   "unexpected_near_pocket": []
+  },
+  "ladder": {
+   "target": "CASPASE1",
+   "holo_window": [
+    [
+     "A",
+     258
+    ],
+    [
+     "A",
+     282
+    ],
+    [
+     "A",
+     286
+    ],
+    [
+     "B",
+     331
+    ],
+    [
+     "B",
+     333
+    ],
+    [
+     "B",
+     390
+    ]
+   ],
+   "holo_native": {
+    "overlap_frac": 0.6666666666666666,
+    "druggability_score": 0.03,
+    "hit": false,
+    "n_pockets": 21
+   },
+   "holo_greedy": {
+    "overlap_frac": 0.6666666666666666,
+    "druggability_score": 0.017,
+    "hit": false,
+    "n_pockets": 18
+   },
+   "holo_optimized_trials": [
+    {
+     "overlap_frac": 1.0,
+     "druggability_score": 0.004,
+     "hit": false,
+     "n_pockets": 20
+    },
+    {
+     "overlap_frac": 1.0,
+     "druggability_score": 0.003,
+     "hit": false,
+     "n_pockets": 20
+    },
+    {
+     "overlap_frac": 0.8333333333333334,
+     "druggability_score": 0.022,
+     "hit": false,
+     "n_pockets": 18
+    },
+    {
+     "overlap_frac": 0.5,
+     "druggability_score": 0.008,
+     "hit": false,
+     "n_pockets": 17
+    },
+    {
+     "overlap_frac": 0.3333333333333333,
+     "druggability_score": 0.0,
+     "hit": false,
+     "n_pockets": 20
+    },
+    {
+     "overlap_frac": 0.8333333333333334,
+     "druggability_score": 0.051,
+     "hit": false,
+     "n_pockets": 19
+    },
+    {
+     "overlap_frac": 0.8333333333333334,
+     "druggability_score": 0.016,
+     "hit": false,
+     "n_pockets": 17
+    },
+    {
+     "overlap_frac": 0.6666666666666666,
+     "druggability_score": 0.057,
+     "hit": false,
+     "n_pockets": 21
+    }
+   ],
+   "apo_window": [
+    [
+     "A",
+     258
+    ],
+    [
+     "A",
+     282
+    ],
+    [
+     "A",
+     286
+    ],
+    [
+     "B",
+     331
+    ],
+    [
+     "B",
+     333
+    ],
+    [
+     "B",
+     390
+    ]
+   ],
+   "apo_native": {
+    "overlap_frac": 0.6666666666666666,
+    "druggability_score": 0.679,
+    "hit": true,
+    "n_pockets": 16
+   },
+   "summary": {
+    "holo_native_hit": false,
+    "holo_greedy_hit": false,
+    "holo_optimized_hit_rate": 0.0,
+    "holo_optimized_n_valid": 8,
+    "apo_native_hit": true,
+    "positive_control_passes": false
+   },
+   "elapsed_s": 17.7
+  },
+  "verdict": "INVALID"
+ },
+ "CASPASE7": {
+  "target": "CASPASE7",
+  "hetatm_audit": {
+   "pocket_contact_cutoff": 4.5,
+   "all_hetatm_groups": [
+    {
+     "resname": "SO4",
+     "resnum": 1202,
+     "chain": "B",
+     "min_dist_to_pocket_window": 15.6,
+     "near_pocket": false,
+     "expected": false,
+     "cofactor_of_known_ligand": null
+    },
+    {
+     "resname": "SO4",
+     "resnum": 1201,
+     "chain": "A",
+     "min_dist_to_pocket_window": 24.24,
+     "near_pocket": false,
+     "expected": false,
+     "cofactor_of_known_ligand": null
+    }
+   ],
+   "unexpected_near_pocket": []
+  },
+  "ladder": {
+   "target": "CASPASE7",
+   "holo_window": [
+    [
+     "B",
+     159
+    ],
+    [
+     "B",
+     183
+    ],
+    [
+     "B",
+     213
+    ],
+    [
+     "B",
+     214
+    ],
+    [
+     "B",
+     215
+    ],
+    [
+     "B",
+     221
+    ],
+    [
+     "B",
+     223
+    ]
+   ],
+   "holo_native": {
+    "overlap_frac": 0.8571428571428571,
+    "druggability_score": 0.01,
+    "hit": false,
+    "n_pockets": 33
+   },
+   "holo_greedy": {
+    "overlap_frac": 0.2857142857142857,
+    "druggability_score": 0.803,
+    "hit": false,
+    "n_pockets": 34
+   },
+   "holo_optimized_trials": [
+    {
+     "overlap_frac": 0.42857142857142855,
+     "druggability_score": 0.519,
+     "hit": false,
+     "n_pockets": 32
+    },
+    {
+     "overlap_frac": 0.14285714285714285,
+     "druggability_score": 0.066,
+     "hit": false,
+     "n_pockets": 33
+    },
+    {
+     "overlap_frac": 0.5714285714285714,
+     "druggability_score": 0.745,
+     "hit": true,
+     "n_pockets": 31
+    },
+    {
+     "overlap_frac": 0.42857142857142855,
+     "druggability_score": 0.71,
+     "hit": false,
+     "n_pockets": 32
+    },
+    {
+     "overlap_frac": 0.42857142857142855,
+     "druggability_score": 0.678,
+     "hit": false,
+     "n_pockets": 31
+    },
+    {
+     "overlap_frac": 0.42857142857142855,
+     "druggability_score": 0.732,
+     "hit": false,
+     "n_pockets": 30
+    },
+    {
+     "overlap_frac": 0.14285714285714285,
+     "druggability_score": 0.0,
+     "hit": false,
+     "n_pockets": 32
+    },
+    {
+     "overlap_frac": 0.2857142857142857,
+     "druggability_score": 0.727,
+     "hit": false,
+     "n_pockets": 33
+    }
+   ],
+   "apo_window": [
+    [
+     "B",
+     459
+    ],
+    [
+     "B",
+     483
+    ],
+    [
+     "B",
+     513
+    ],
+    [
+     "B",
+     514
+    ],
+    [
+     "B",
+     515
+    ],
+    [
+     "B",
+     521
+    ],
+    [
+     "B",
+     523
+    ]
+   ],
+   "apo_native": {
+    "overlap_frac": 0.42857142857142855,
+    "druggability_score": 0.582,
+    "hit": false,
+    "n_pockets": 24
+   },
+   "summary": {
+    "holo_native_hit": false,
+    "holo_greedy_hit": false,
+    "holo_optimized_hit_rate": 0.125,
+    "holo_optimized_n_valid": 8,
+    "apo_native_hit": false,
+    "positive_control_passes": false
+   },
+   "elapsed_s": 20.7
+  },
+  "verdict": "INVALID"
+ }
+}
