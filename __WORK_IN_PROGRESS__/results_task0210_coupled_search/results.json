@@ -1,0 +1,1006 @@
+[
+  {
+    "target": "KRAS_G12C",
+    "window": [
+      [
+        "A",
+        60
+      ],
+      [
+        "A",
+        68
+      ],
+      [
+        "A",
+        9
+      ],
+      [
+        "A",
+        61
+      ],
+      [
+        "A",
+        58
+      ],
+      [
+        "A",
+        59
+      ],
+      [
+        "A",
+        10
+      ],
+      [
+        "A",
+        96
+      ],
+      [
+        "A",
+        62
+      ],
+      [
+        "A",
+        72
+      ],
+      [
+        "A",
+        69
+      ],
+      [
+        "A",
+        100
+      ]
+    ],
+    "known_answer_check": {
+      "apo_score": {
+        "overlap_frac": 0.75,
+        "druggability_score": 0.001,
+        "hit": false,
+        "n_pockets": 10
+      },
+      "holo_score": {
+        "overlap_frac": 1.0,
+        "druggability_score": 0.886,
+        "hit": true,
+        "n_pockets": 11
+      },
+      "apo_druggability": 0.001,
+      "holo_druggability": 0.886,
+      "objective_prefers_holo": true
+    },
+    "restarts": [
+      {
+        "restart": 0,
+        "best_score": 0.349,
+        "best_path": "/Users/bartoszchmura/DELETE/QAS/Quantum_allosteric-scanner/__WORK_IN_PROGRESS__/tools/evoef2/kras_g12c_t210_r0_it3_beststruct.pdb",
+        "rmsd_to_holo": 2.9075621418729525,
+        "rmsd_native": 3.214791926768833,
+        "rmsd_reduction": 0.09556754897187869,
+        "fpocket_hit": false,
+        "success": false,
+        "trace": [
+          {
+            "it": 0,
+            "mode": 15,
+            "amplitude": -0.1440460310064843,
+            "score": 0.347,
+            "accepted": true,
+            "T": 0.2
+          },
+          {
+            "it": 1,
+            "mode": 1,
+            "amplitude": -0.7283343649813757,
+            "score": 0.047,
+            "accepted": false,
+            "T": 0.1433742328873773
+          },
+          {
+            "it": 2,
+            "mode": 7,
+            "amplitude": 0.3957386121761794,
+            "score": 0.027,
+            "accepted": false,
+            "T": 0.1027808532802195
+          },
+          {
+            "it": 3,
+            "mode": 3,
+            "amplitude": -0.05209185349563527,
+            "score": 0.349,
+            "accepted": true,
+            "T": 0.07368062997280773
+          },
+          {
+            "it": 4,
+            "mode": 8,
+            "amplitude": 0.10791191109202984,
+            "score": 0.28,
+            "accepted": false,
+            "T": 0.05281951900505004
+          },
+          {
+            "it": 5,
+            "mode": 6,
+            "amplitude": -0.4958373423393384,
+            "score": 0.07,
+            "accepted": false,
+            "T": 0.03786479009414648
+          },
+          {
+            "it": 6,
+            "mode": 15,
+            "amplitude": -0.5740143778962027,
+            "score": 0.231,
+            "accepted": false,
+            "T": 0.02714417616594907
+          },
+          {
+            "it": 7,
+            "mode": 14,
+            "amplitude": 0.2366972696737753,
+            "score": 0.009,
+            "accepted": false,
+            "T": 0.01945887717576389
+          },
+          {
+            "it": 8,
+            "mode": 16,
+            "amplitude": -0.4114571243657364,
+            "score": 0.064,
+            "accepted": false,
+            "T": 0.013949507939624212
+          },
+          {
+            "it": 9,
+            "mode": 10,
+            "amplitude": -0.08282495578445247,
+            "score": 0.231,
+            "accepted": false,
+            "T": 0.010000000000000002
+          }
+        ]
+      },
+      {
+        "restart": 1,
+        "best_score": 0.466,
+        "best_path": "/Users/bartoszchmura/DELETE/QAS/Quantum_allosteric-scanner/__WORK_IN_PROGRESS__/tools/evoef2/kras_g12c_t210_r1_it2_beststruct.pdb",
+        "rmsd_to_holo": 2.960954890417264,
+        "rmsd_native": 3.214791926768833,
+        "rmsd_reduction": 0.07895908728584466,
+        "fpocket_hit": false,
+        "success": false,
+        "trace": [
+          {
+            "it": 0,
+            "mode": 6,
+            "amplitude": 0.9165945971495838,
+            "score": 0.231,
+            "accepted": true,
+            "T": 0.2
+          },
+          {
+            "it": 1,
+            "mode": 7,
+            "amplitude": -0.5453597986658747,
+            "score": 0.328,
+            "accepted": true,
+            "T": 0.1433742328873773
+          },
+          {
+            "it": 2,
+            "mode": 10,
+            "amplitude": -0.9020712455543696,
+            "score": 0.466,
+            "accepted": true,
+            "T": 0.1027808532802195
+          },
+          {
+            "it": 3,
+            "mode": 10,
+            "amplitude": -0.18566304686520413,
+            "score": 0.116,
+            "accepted": false,
+            "T": 0.07368062997280773
+          },
+          {
+            "it": 4,
+            "mode": 15,
+            "amplitude": -0.5333752972653147,
+            "score": 0.434,
+            "accepted": true,
+            "T": 0.05281951900505004
+          },
+          {
+            "it": 5,
+            "mode": 1,
+            "amplitude": -0.2542437484858168,
+            "score": 0.02,
+            "accepted": false,
+            "T": 0.03786479009414648
+          },
+          {
+            "it": 6,
+            "mode": 13,
+            "amplitude": 0.3440912149371157,
+            "score": 0.151,
+            "accepted": false,
+            "T": 0.02714417616594907
+          },
+          {
+            "it": 7,
+            "mode": 2,
+            "amplitude": -0.02040416764579124,
+            "score": 0.002,
+            "accepted": false,
+            "T": 0.01945887717576389
+          },
+          {
+            "it": 8,
+            "mode": 8,
+            "amplitude": -0.18763348574529487,
+            "score": 0.026,
+            "accepted": false,
+            "T": 0.013949507939624212
+          },
+          {
+            "it": 9,
+            "mode": 4,
+            "amplitude": 0.17993326160158588,
+            "score": 0.332,
+            "accepted": false,
+            "T": 0.010000000000000002
+          }
+        ]
+      }
+    ],
+    "any_restart_success": false
+  },
+  {
+    "target": "PTP1B",
+    "window": [
+      [
+        "A",
+        192
+      ],
+      [
+        "A",
+        277
+      ],
+      [
+        "A",
+        193
+      ],
+      [
+        "A",
+        280
+      ],
+      [
+        "A",
+        276
+      ],
+      [
+        "A",
+        196
+      ],
+      [
+        "A",
+        189
+      ],
+      [
+        "A",
+        188
+      ],
+      [
+        "A",
+        279
+      ],
+      [
+        "A",
+        281
+      ],
+      [
+        "A",
+        197
+      ],
+      [
+        "A",
+        187
+      ]
+    ],
+    "known_answer_check": {
+      "apo_score": {
+        "overlap_frac": 0.4166666666666667,
+        "druggability_score": 0.046,
+        "hit": false,
+        "n_pockets": 19
+      },
+      "holo_score": {
+        "overlap_frac": 0.9166666666666666,
+        "druggability_score": 0.757,
+        "hit": true,
+        "n_pockets": 17
+      },
+      "apo_druggability": 0.046,
+      "holo_druggability": 0.757,
+      "objective_prefers_holo": true
+    },
+    "restarts": [
+      {
+        "restart": 0,
+        "best_score": 0.071,
+        "best_path": "/Users/bartoszchmura/DELETE/QAS/Quantum_allosteric-scanner/__WORK_IN_PROGRESS__/tools/evoef2/ptp1b_t210_r0_it6_beststruct.pdb",
+        "rmsd_to_holo": 1.8897402231223903,
+        "rmsd_native": 2.3957084696947972,
+        "rmsd_reduction": 0.21119775338810942,
+        "fpocket_hit": false,
+        "success": false,
+        "trace": [
+          {
+            "it": 0,
+            "mode": 15,
+            "amplitude": -1.2728983688465711,
+            "score": 0.022,
+            "accepted": true,
+            "T": 0.2
+          },
+          {
+            "it": 1,
+            "mode": 15,
+            "amplitude": 2.2593707427535845,
+            "score": 0.056,
+            "accepted": true,
+            "T": 0.1433742328873773
+          },
+          {
+            "it": 2,
+            "mode": 3,
+            "amplitude": 0.13527440786664482,
+            "score": 0.033,
+            "accepted": false,
+            "T": 0.1027808532802195
+          },
+          {
+            "it": 3,
+            "mode": 18,
+            "amplitude": -0.7368868587663755,
+            "score": 0.022,
+            "accepted": true,
+            "T": 0.07368062997280773
+          },
+          {
+            "it": 4,
+            "mode": 4,
+            "amplitude": -0.37571260077813046,
+            "score": 0.022,
+            "accepted": true,
+            "T": 0.05281951900505004
+          },
+          {
+            "it": 5,
+            "mode": 17,
+            "amplitude": 0.3265918107328957,
+            "score": 0.033,
+            "accepted": true,
+            "T": 0.03786479009414648
+          },
+          {
+            "it": 6,
+            "mode": 0,
+            "amplitude": -0.15973438788771774,
+            "score": 0.071,
+            "accepted": true,
+            "T": 0.02714417616594907
+          },
+          {
+            "it": 7,
+            "mode": 11,
+            "amplitude": 0.24070875594807684,
+            "score": 0.033,
+            "accepted": false,
+            "T": 0.01945887717576389
+          },
+          {
+            "it": 8,
+            "mode": 2,
+            "amplitude": -0.36461576693184605,
+            "score": 0.033,
+            "accepted": false,
+            "T": 0.013949507939624212
+          },
+          {
+            "it": 9,
+            "mode": 11,
+            "amplitude": -0.269612643178209,
+            "score": 0.033,
+            "accepted": false,
+            "T": 0.010000000000000002
+          }
+        ]
+      },
+      {
+        "restart": 1,
+        "best_score": 0.293,
+        "best_path": "/Users/bartoszchmura/DELETE/QAS/Quantum_allosteric-scanner/__WORK_IN_PROGRESS__/tools/evoef2/ptp1b_t210_r1_it3_beststruct.pdb",
+        "rmsd_to_holo": 2.0267372742460816,
+        "rmsd_native": 2.3957084696947972,
+        "rmsd_reduction": 0.1540133952507673,
+        "fpocket_hit": false,
+        "success": false,
+        "trace": [
+          {
+            "it": 0,
+            "mode": 7,
+            "amplitude": -0.04277681109119719,
+            "score": 0.022,
+            "accepted": true,
+            "T": 0.2
+          },
+          {
+            "it": 1,
+            "mode": 3,
+            "amplitude": 0.5096294546148633,
+            "score": 0.022,
+            "accepted": true,
+            "T": 0.1433742328873773
+          },
+          {
+            "it": 2,
+            "mode": 12,
+            "amplitude": -1.0169902924620635,
+            "score": 0.033,
+            "accepted": true,
+            "T": 0.1027808532802195
+          },
+          {
+            "it": 3,
+            "mode": 7,
+            "amplitude": -0.20129943795844465,
+            "score": 0.293,
+            "accepted": true,
+            "T": 0.07368062997280773
+          },
+          {
+            "it": 4,
+            "mode": 11,
+            "amplitude": 0.593853658897927,
+            "score": 0.022,
+            "accepted": false,
+            "T": 0.05281951900505004
+          },
+          {
+            "it": 5,
+            "mode": 10,
+            "amplitude": 0.4008016121691042,
+            "score": 0.022,
+            "accepted": false,
+            "T": 0.03786479009414648
+          },
+          {
+            "it": 6,
+            "mode": 1,
+            "amplitude": 0.17588813483867283,
+            "score": 0.033,
+            "accepted": false,
+            "T": 0.02714417616594907
+          },
+          {
+            "it": 7,
+            "mode": 18,
+            "amplitude": 0.3341285341537758,
+            "score": 0.022,
+            "accepted": false,
+            "T": 0.01945887717576389
+          },
+          {
+            "it": 8,
+            "mode": 16,
+            "amplitude": 0.0700860462200712,
+            "score": 0.022,
+            "accepted": false,
+            "T": 0.013949507939624212
+          },
+          {
+            "it": 9,
+            "mode": 5,
+            "amplitude": 0.06636984500879987,
+            "score": 0.033,
+            "accepted": false,
+            "T": 0.010000000000000002
+          }
+        ]
+      }
+    ],
+    "any_restart_success": false
+  },
+  {
+    "target": "CASPASE1",
+    "window": [
+      [
+        "A",
+        258
+      ],
+      [
+        "A",
+        282
+      ],
+      [
+        "A",
+        286
+      ],
+      [
+        "B",
+        331
+      ],
+      [
+        "B",
+        333
+      ],
+      [
+        "B",
+        390
+      ]
+    ],
+    "known_answer_check": {
+      "apo_score": {
+        "overlap_frac": 0.6666666666666666,
+        "druggability_score": 0.679,
+        "hit": true,
+        "n_pockets": 16
+      },
+      "holo_score": {
+        "overlap_frac": 0.6666666666666666,
+        "druggability_score": 0.03,
+        "hit": false,
+        "n_pockets": 21
+      },
+      "apo_druggability": 0.679,
+      "holo_druggability": 0.03,
+      "objective_prefers_holo": false
+    },
+    "restarts": [
+      {
+        "restart": 0,
+        "best_score": 0.592,
+        "best_path": "/Users/bartoszchmura/DELETE/QAS/Quantum_allosteric-scanner/__WORK_IN_PROGRESS__/tools/evoef2/caspase1_t210_r0_it0_beststruct.pdb",
+        "rmsd_to_holo": 2.029227162002111,
+        "rmsd_native": 2.4639042921501444,
+        "rmsd_reduction": 0.17641802546182073,
+        "fpocket_hit": false,
+        "success": false,
+        "trace": [
+          {
+            "it": 0,
+            "mode": 18,
+            "amplitude": -0.8781605941011872,
+            "score": 0.592,
+            "accepted": true,
+            "T": 0.2
+          },
+          {
+            "it": 1,
+            "mode": 11,
+            "amplitude": 0.12297502186657437,
+            "score": 0.014,
+            "accepted": false,
+            "T": 0.1433742328873773
+          },
+          {
+            "it": 2,
+            "mode": 5,
+            "amplitude": 0.4289054912555445,
+            "score": 0.016,
+            "accepted": false,
+            "T": 0.1027808532802195
+          },
+          {
+            "it": 3,
+            "mode": 11,
+            "amplitude": -0.11807144221393293,
+            "score": 0.002,
+            "accepted": false,
+            "T": 0.07368062997280773
+          },
+          {
+            "it": 4,
+            "mode": 15,
+            "amplitude": 0.14248541398106238,
+            "score": 0.223,
+            "accepted": false,
+            "T": 0.05281951900505004
+          },
+          {
+            "it": 5,
+            "mode": 11,
+            "amplitude": -0.37979139750678664,
+            "score": 0.213,
+            "accepted": false,
+            "T": 0.03786479009414648
+          },
+          {
+            "it": 6,
+            "mode": 4,
+            "amplitude": 0.43576458997715783,
+            "score": 0.02,
+            "accepted": false,
+            "T": 0.02714417616594907
+          },
+          {
+            "it": 7,
+            "mode": 3,
+            "amplitude": -0.3868016653482299,
+            "score": 0.003,
+            "accepted": false,
+            "T": 0.01945887717576389
+          },
+          {
+            "it": 8,
+            "mode": 4,
+            "amplitude": 0.07546884566894821,
+            "score": 0.003,
+            "accepted": false,
+            "T": 0.013949507939624212
+          },
+          {
+            "it": 9,
+            "mode": 18,
+            "amplitude": -0.2502718318801326,
+            "score": 0.027,
+            "accepted": false,
+            "T": 0.010000000000000002
+          }
+        ]
+      },
+      {
+        "restart": 1,
+        "best_score": 0.592,
+        "best_path": "/Users/bartoszchmura/DELETE/QAS/Quantum_allosteric-scanner/__WORK_IN_PROGRESS__/tools/evoef2/caspase1_t210_r1_it3_beststruct.pdb",
+        "rmsd_to_holo": 2.0070908568756995,
+        "rmsd_native": 2.4639042921501444,
+        "rmsd_reduction": 0.1854022644994069,
+        "fpocket_hit": false,
+        "success": false,
+        "trace": [
+          {
+            "it": 0,
+            "mode": 16,
+            "amplitude": -1.842199604473366,
+            "score": 0.014,
+            "accepted": true,
+            "T": 0.2
+          },
+          {
+            "it": 1,
+            "mode": 14,
+            "amplitude": 0.7195413800074877,
+            "score": 0.006,
+            "accepted": true,
+            "T": 0.1433742328873773
+          },
+          {
+            "it": 2,
+            "mode": 2,
+            "amplitude": -0.43229468035087626,
+            "score": 0.01,
+            "accepted": true,
+            "T": 0.1027808532802195
+          },
+          {
+            "it": 3,
+            "mode": 11,
+            "amplitude": -0.7113570506267346,
+            "score": 0.592,
+            "accepted": true,
+            "T": 0.07368062997280773
+          },
+          {
+            "it": 4,
+            "mode": 19,
+            "amplitude": -0.18041686996942588,
+            "score": 0.592,
+            "accepted": true,
+            "T": 0.05281951900505004
+          },
+          {
+            "it": 5,
+            "mode": 3,
+            "amplitude": -0.05134163420293246,
+            "score": 0.592,
+            "accepted": true,
+            "T": 0.03786479009414648
+          },
+          {
+            "it": 6,
+            "mode": 12,
+            "amplitude": 0.13868872152590453,
+            "score": 0.003,
+            "accepted": false,
+            "T": 0.02714417616594907
+          },
+          {
+            "it": 7,
+            "mode": 15,
+            "amplitude": -0.2402954450061177,
+            "score": 0.031,
+            "accepted": false,
+            "T": 0.01945887717576389
+          },
+          {
+            "it": 8,
+            "mode": 1,
+            "amplitude": 0.18728104447603008,
+            "score": 0.008,
+            "accepted": false,
+            "T": 0.013949507939624212
+          },
+          {
+            "it": 9,
+            "mode": 15,
+            "amplitude": -0.06082178236411237,
+            "score": 0.035,
+            "accepted": false,
+            "T": 0.010000000000000002
+          }
+        ]
+      }
+    ],
+    "any_restart_success": false
+  },
+  {
+    "target": "GLUCOKINASE",
+    "window": [
+      [
+        "A",
+        211
+      ],
+      [
+        "A",
+        65
+      ],
+      [
+        "A",
+        214
+      ],
+      [
+        "A",
+        64
+      ],
+      [
+        "A",
+        210
+      ],
+      [
+        "A",
+        215
+      ],
+      [
+        "A",
+        221
+      ],
+      [
+        "A",
+        218
+      ],
+      [
+        "A",
+        63
+      ],
+      [
+        "A",
+        62
+      ],
+      [
+        "A",
+        220
+      ],
+      [
+        "A",
+        235
+      ]
+    ],
+    "known_answer_check": {
+      "apo_score": {
+        "overlap_frac": 1.0,
+        "druggability_score": 0.759,
+        "hit": true,
+        "n_pockets": 26
+      },
+      "holo_score": {
+        "overlap_frac": 1.0,
+        "druggability_score": 0.229,
+        "hit": false,
+        "n_pockets": 21
+      },
+      "apo_druggability": 0.759,
+      "holo_druggability": 0.229,
+      "objective_prefers_holo": false
+    },
+    "restarts": [
+      {
+        "restart": 0,
+        "best_score": 0.879,
+        "best_path": "/Users/bartoszchmura/DELETE/QAS/Quantum_allosteric-scanner/__WORK_IN_PROGRESS__/tools/evoef2/glucokinase_t210_r0_it5_beststruct.pdb",
+        "rmsd_to_holo": 2.275926514494245,
+        "rmsd_native": 2.1605320733577567,
+        "rmsd_reduction": -0.05341019583067341,
+        "fpocket_hit": false,
+        "success": false,
+        "trace": [
+          {
+            "it": 0,
+            "mode": 10,
+            "amplitude": 2.4450296604439603,
+            "score": 0.054,
+            "accepted": true,
+            "T": 0.2
+          },
+          {
+            "it": 1,
+            "mode": 2,
+            "amplitude": -1.1217390491299224,
+            "score": 0.033,
+            "accepted": true,
+            "T": 0.1433742328873773
+          },
+          {
+            "it": 2,
+            "mode": 16,
+            "amplitude": 1.4889094713188085,
+            "score": 0.743,
+            "accepted": true,
+            "T": 0.1027808532802195
+          },
+          {
+            "it": 3,
+            "mode": 10,
+            "amplitude": -0.7720367171402308,
+            "score": 0.0,
+            "accepted": false,
+            "T": 0.07368062997280773
+          },
+          {
+            "it": 4,
+            "mode": 13,
+            "amplitude": -0.3551942764228466,
+            "score": 0.722,
+            "accepted": false,
+            "T": 0.05281951900505004
+          },
+          {
+            "it": 5,
+            "mode": 10,
+            "amplitude": -0.32250075600352784,
+            "score": 0.879,
+            "accepted": true,
+            "T": 0.03786479009414648
+          },
+          {
+            "it": 6,
+            "mode": 13,
+            "amplitude": -0.436297721645098,
+            "score": 0.08,
+            "accepted": false,
+            "T": 0.02714417616594907
+          },
+          {
+            "it": 7,
+            "mode": 19,
+            "amplitude": 0.060584135599854406,
+            "score": 0.745,
+            "accepted": false,
+            "T": 0.01945887717576389
+          },
+          {
+            "it": 8,
+            "mode": 1,
+            "amplitude": -0.0294920510506816,
+            "score": 0.722,
+            "accepted": false,
+            "T": 0.013949507939624212
+          },
+          {
+            "it": 9,
+            "mode": 14,
+            "amplitude": -0.05143941190230877,
+            "score": 0.849,
+            "accepted": false,
+            "T": 0.010000000000000002
+          }
+        ]
+      },
+      {
+        "restart": 1,
+        "best_score": 0.933,
+        "best_path": "/Users/bartoszchmura/DELETE/QAS/Quantum_allosteric-scanner/__WORK_IN_PROGRESS__/tools/evoef2/glucokinase_t210_r1_it4_beststruct.pdb",
+        "rmsd_to_holo": 2.2408624831151216,
+        "rmsd_native": 2.1605320733577567,
+        "rmsd_reduction": -0.03718084574996405,
+        "fpocket_hit": false,
+        "success": false,
+        "trace": [
+          {
+            "it": 0,
+            "mode": 16,
+            "amplitude": 2.989561581991747,
+            "score": 0.873,
+            "accepted": true,
+            "T": 0.2
+          },
+          {
+            "it": 1,
+            "mode": 6,
+            "amplitude": 0.36493131741995694,
+            "score": 0.858,
+            "accepted": true,
+            "T": 0.1433742328873773
+          },
+          {
+            "it": 2,
+            "mode": 13,
+            "amplitude": 0.919085968136973,
+            "score": 0.002,
+            "accepted": false,
+            "T": 0.1027808532802195
+          },
+          {
+            "it": 3,
+            "mode": 14,
+            "amplitude": -0.555125217704676,
+            "score": 0.743,
+            "accepted": false,
+            "T": 0.07368062997280773
+          },
+          {
+            "it": 4,
+            "mode": 18,
+            "amplitude": -0.7448809782423009,
+            "score": 0.933,
+            "accepted": true,
+            "T": 0.05281951900505004
+          },
+          {
+            "it": 5,
+            "mode": 16,
+            "amplitude": -0.6051213942781108,
+            "score": 0.054,
+            "accepted": false,
+            "T": 0.03786479009414648
+          },
+          {
+            "it": 6,
+            "mode": 4,
+            "amplitude": 0.25776457944269937,
+            "score": 0.017,
+            "accepted": false,
+            "T": 0.02714417616594907
+          },
+          {
+            "it": 7,
+            "mode": 5,
+            "amplitude": 0.11513488166815723,
+            "score": 0.697,
+            "accepted": false,
+            "T": 0.01945887717576389
+          },
+          {
+            "it": 8,
+            "mode": 6,
+            "amplitude": 0.03460867045458527,
+            "score": 0.893,
+            "accepted": false,
+            "T": 0.013949507939624212
+          },
+          {
+            "it": 9,
+            "mode": 2,
+            "amplitude": -0.10481225178447034,
+            "score": 0.065,
+            "accepted": false,
+            "T": 0.010000000000000002
+          }
+        ]
+      }
+    ],
+    "any_restart_success": false
+  }
+]
