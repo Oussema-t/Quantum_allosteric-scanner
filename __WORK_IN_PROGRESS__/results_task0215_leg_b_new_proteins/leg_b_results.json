@@ -1,0 +1,12063 @@
+{
+ "_seed_count": 188,
+ "_query_terms": [
+  "allosteric inhibitor",
+  "allosteric activator",
+  "allosteric modulator"
+ ],
+ "candidates": {
+  "4XHB": {
+   "holo_pdb": "4XHB",
+   "window": [
+    [
+     "A",
+     245
+    ],
+    [
+     "A",
+     270
+    ],
+    [
+     "A",
+     326
+    ],
+    [
+     "A",
+     327
+    ],
+    [
+     "A",
+     344
+    ],
+    [
+     "A",
+     352
+    ],
+    [
+     "A",
+     489
+    ],
+    [
+     "A",
+     509
+    ],
+    [
+     "A",
+     539
+    ],
+    [
+     "A",
+     541
+    ],
+    [
+     "A",
+     557
+    ],
+    [
+     "A",
+     619
+    ],
+    [
+     "A",
+     653
+    ],
+    [
+     "A",
+     673
+    ],
+    [
+     "A",
+     674
+    ]
+   ],
+   "drug_ligand": "NHE",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "Q54727",
+   "holo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.029,
+    "hit": false,
+    "n_pockets": 33
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.7
+  },
+  "4XIL": {
+   "holo_pdb": "4XIL",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "4XIK": {
+   "holo_pdb": "4XIK",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "4XE9": {
+   "holo_pdb": "4XE9",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "4XHX": {
+   "holo_pdb": "4XHX",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "4XMI": {
+   "holo_pdb": "4XMI",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "4XJ9": {
+   "holo_pdb": "4XJ9",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "4XJW": {
+   "holo_pdb": "4XJW",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "4XJZ": {
+   "holo_pdb": "4XJZ",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "4XMA": {
+   "holo_pdb": "4XMA",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "5V5D": {
+   "holo_pdb": "5V5D",
+   "window": [
+    [
+     "A",
+     44
+    ],
+    [
+     "A",
+     76
+    ],
+    [
+     "A",
+     79
+    ],
+    [
+     "A",
+     80
+    ],
+    [
+     "A",
+     83
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     109
+    ],
+    [
+     "A",
+     110
+    ],
+    [
+     "A",
+     139
+    ],
+    [
+     "A",
+     189
+    ],
+    [
+     "A",
+     192
+    ]
+   ],
+   "drug_ligand": "8OY",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "O40922",
+   "holo_native": {
+    "overlap_frac": 0.6153846153846154,
+    "druggability_score": 0.536,
+    "hit": true,
+    "n_pockets": 15
+   },
+   "n_apo_candidates": 6,
+   "apo_candidates": [
+    {
+     "pdb_id": "5UR3",
+     "resolution": 1.8,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8OY",
+        "min_dist_to_window": 2.24,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UTN",
+     "resolution": 1.8,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8MA",
+        "min_dist_to_window": 2.84,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UVP",
+     "resolution": 1.94,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8N7",
+        "min_dist_to_window": 2.57,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "8N7",
+        "min_dist_to_window": 2.08,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UV3",
+     "resolution": 1.95,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8N4",
+        "min_dist_to_window": 3.02,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "8N4",
+        "min_dist_to_window": 3.15,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UTE",
+     "resolution": 2.05,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8M4",
+        "min_dist_to_window": 2.71,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "8M4",
+        "min_dist_to_window": 3.31,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5V5E",
+     "resolution": 2.299,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8N4",
+        "min_dist_to_window": 2.21,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    }
+   ],
+   "recovered": false,
+   "best_recovery": null,
+   "verdict": "holo_ok_no_closed_apo",
+   "elapsed_s": 12.6
+  },
+  "5UTE": {
+   "holo_pdb": "5UTE",
+   "window": [
+    [
+     "A",
+     44
+    ],
+    [
+     "A",
+     76
+    ],
+    [
+     "A",
+     79
+    ],
+    [
+     "A",
+     80
+    ],
+    [
+     "A",
+     83
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     109
+    ],
+    [
+     "A",
+     110
+    ],
+    [
+     "A",
+     139
+    ],
+    [
+     "A",
+     189
+    ],
+    [
+     "A",
+     192
+    ]
+   ],
+   "drug_ligand": "8M4",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "O40922",
+   "holo_native": {
+    "overlap_frac": 0.5384615384615384,
+    "druggability_score": 0.515,
+    "hit": true,
+    "n_pockets": 15
+   },
+   "n_apo_candidates": 6,
+   "apo_candidates": [
+    {
+     "pdb_id": "5UR3",
+     "resolution": 1.8,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8OY",
+        "min_dist_to_window": 2.24,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UTN",
+     "resolution": 1.8,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8MA",
+        "min_dist_to_window": 2.84,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UVP",
+     "resolution": 1.94,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8N7",
+        "min_dist_to_window": 2.57,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "8N7",
+        "min_dist_to_window": 2.08,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UV3",
+     "resolution": 1.95,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8N4",
+        "min_dist_to_window": 3.02,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "8N4",
+        "min_dist_to_window": 3.15,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5V5D",
+     "resolution": 2.104,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8OY",
+        "min_dist_to_window": 2.22,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5V5E",
+     "resolution": 2.299,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8N4",
+        "min_dist_to_window": 2.21,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    }
+   ],
+   "recovered": false,
+   "best_recovery": null,
+   "verdict": "holo_ok_no_closed_apo",
+   "elapsed_s": 3.4,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "5UVP": {
+   "holo_pdb": "5UVP",
+   "error": "window size 3 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     89
+    ],
+    [
+     "A",
+     109
+    ],
+    [
+     "A",
+     192
+    ]
+   ],
+   "drug_ligand": "8N7"
+  },
+  "5UV3": {
+   "holo_pdb": "5UV3",
+   "window": [
+    [
+     "A",
+     44
+    ],
+    [
+     "A",
+     50
+    ],
+    [
+     "A",
+     76
+    ],
+    [
+     "A",
+     79
+    ],
+    [
+     "A",
+     80
+    ],
+    [
+     "A",
+     83
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     109
+    ],
+    [
+     "A",
+     110
+    ],
+    [
+     "A",
+     139
+    ],
+    [
+     "A",
+     189
+    ],
+    [
+     "A",
+     192
+    ]
+   ],
+   "drug_ligand": "8N4",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "O40922",
+   "holo_native": {
+    "overlap_frac": 0.6153846153846154,
+    "druggability_score": 0.66,
+    "hit": true,
+    "n_pockets": 11
+   },
+   "n_apo_candidates": 6,
+   "apo_candidates": [
+    {
+     "pdb_id": "5UR3",
+     "resolution": 1.8,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8OY",
+        "min_dist_to_window": 2.24,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UTN",
+     "resolution": 1.8,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8MA",
+        "min_dist_to_window": 2.84,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UVP",
+     "resolution": 1.94,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8N7",
+        "min_dist_to_window": 2.57,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "8N7",
+        "min_dist_to_window": 2.08,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UTE",
+     "resolution": 2.05,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8M4",
+        "min_dist_to_window": 2.71,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "8M4",
+        "min_dist_to_window": 3.31,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5V5D",
+     "resolution": 2.104,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8OY",
+        "min_dist_to_window": 2.22,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5V5E",
+     "resolution": 2.299,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8N4",
+        "min_dist_to_window": 2.21,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    }
+   ],
+   "recovered": false,
+   "best_recovery": null,
+   "verdict": "holo_ok_no_closed_apo",
+   "elapsed_s": 2.8,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "4XJU": {
+   "holo_pdb": "4XJU",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "4XOG": {
+   "holo_pdb": "4XOG",
+   "window": [
+    [
+     "A",
+     245
+    ],
+    [
+     "A",
+     246
+    ],
+    [
+     "A",
+     264
+    ],
+    [
+     "A",
+     270
+    ],
+    [
+     "A",
+     326
+    ],
+    [
+     "A",
+     327
+    ],
+    [
+     "A",
+     344
+    ],
+    [
+     "A",
+     346
+    ],
+    [
+     "A",
+     352
+    ],
+    [
+     "A",
+     489
+    ],
+    [
+     "A",
+     509
+    ],
+    [
+     "A",
+     539
+    ],
+    [
+     "A",
+     541
+    ],
+    [
+     "A",
+     557
+    ],
+    [
+     "A",
+     619
+    ],
+    [
+     "A",
+     653
+    ],
+    [
+     "A",
+     673
+    ],
+    [
+     "A",
+     674
+    ]
+   ],
+   "drug_ligand": "DAN",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "Q54727",
+   "holo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.001,
+    "hit": false,
+    "n_pockets": 40
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.8,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "5V5E": {
+   "holo_pdb": "5V5E",
+   "window": [
+    [
+     "A",
+     44
+    ],
+    [
+     "A",
+     47
+    ],
+    [
+     "A",
+     50
+    ],
+    [
+     "A",
+     76
+    ],
+    [
+     "A",
+     79
+    ],
+    [
+     "A",
+     80
+    ],
+    [
+     "A",
+     83
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     109
+    ],
+    [
+     "A",
+     110
+    ],
+    [
+     "A",
+     139
+    ],
+    [
+     "A",
+     189
+    ],
+    [
+     "A",
+     191
+    ],
+    [
+     "A",
+     192
+    ],
+    [
+     "A",
+     193
+    ]
+   ],
+   "drug_ligand": "8N4",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "O40922",
+   "holo_native": {
+    "overlap_frac": 0.5294117647058824,
+    "druggability_score": 0.69,
+    "hit": true,
+    "n_pockets": 11
+   },
+   "n_apo_candidates": 6,
+   "apo_candidates": [
+    {
+     "pdb_id": "5UR3",
+     "resolution": 1.8,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8OY",
+        "min_dist_to_window": 2.24,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UTN",
+     "resolution": 1.8,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8MA",
+        "min_dist_to_window": 2.84,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UVP",
+     "resolution": 1.94,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8N7",
+        "min_dist_to_window": 2.57,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "8N7",
+        "min_dist_to_window": 2.08,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UV3",
+     "resolution": 1.95,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8N4",
+        "min_dist_to_window": 3.02,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "8N4",
+        "min_dist_to_window": 3.15,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UTE",
+     "resolution": 2.05,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8M4",
+        "min_dist_to_window": 2.71,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "8M4",
+        "min_dist_to_window": 3.22,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5V5D",
+     "resolution": 2.104,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8OY",
+        "min_dist_to_window": 2.22,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    }
+   ],
+   "recovered": false,
+   "best_recovery": null,
+   "verdict": "holo_ok_no_closed_apo",
+   "elapsed_s": 3.3,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "4XJA": {
+   "holo_pdb": "4XJA",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "5UTN": {
+   "holo_pdb": "5UTN",
+   "window": [
+    [
+     "A",
+     44
+    ],
+    [
+     "A",
+     76
+    ],
+    [
+     "A",
+     79
+    ],
+    [
+     "A",
+     80
+    ],
+    [
+     "A",
+     83
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     109
+    ],
+    [
+     "A",
+     110
+    ],
+    [
+     "A",
+     139
+    ],
+    [
+     "A",
+     189
+    ],
+    [
+     "A",
+     192
+    ]
+   ],
+   "drug_ligand": "8MA",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "O40922",
+   "holo_native": {
+    "overlap_frac": 0.6923076923076923,
+    "druggability_score": 0.634,
+    "hit": true,
+    "n_pockets": 10
+   },
+   "n_apo_candidates": 6,
+   "apo_candidates": [
+    {
+     "pdb_id": "5UR3",
+     "resolution": 1.8,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8OY",
+        "min_dist_to_window": 2.24,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UVP",
+     "resolution": 1.94,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8N7",
+        "min_dist_to_window": 2.57,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "8N7",
+        "min_dist_to_window": 2.08,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UV3",
+     "resolution": 1.95,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8N4",
+        "min_dist_to_window": 3.02,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "8N4",
+        "min_dist_to_window": 3.15,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UTE",
+     "resolution": 2.05,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8M4",
+        "min_dist_to_window": 2.71,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "8M4",
+        "min_dist_to_window": 3.31,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5V5D",
+     "resolution": 2.104,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8OY",
+        "min_dist_to_window": 2.22,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5V5E",
+     "resolution": 2.299,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8N4",
+        "min_dist_to_window": 2.21,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    }
+   ],
+   "recovered": false,
+   "best_recovery": null,
+   "verdict": "holo_ok_no_closed_apo",
+   "elapsed_s": 2.9,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "5UR3": {
+   "holo_pdb": "5UR3",
+   "window": [
+    [
+     "A",
+     44
+    ],
+    [
+     "A",
+     76
+    ],
+    [
+     "A",
+     79
+    ],
+    [
+     "A",
+     80
+    ],
+    [
+     "A",
+     83
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     109
+    ],
+    [
+     "A",
+     110
+    ],
+    [
+     "A",
+     139
+    ],
+    [
+     "A",
+     189
+    ],
+    [
+     "A",
+     192
+    ]
+   ],
+   "drug_ligand": "8OY",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "O40922",
+   "holo_native": {
+    "overlap_frac": 0.6923076923076923,
+    "druggability_score": 0.656,
+    "hit": true,
+    "n_pockets": 13
+   },
+   "n_apo_candidates": 6,
+   "apo_candidates": [
+    {
+     "pdb_id": "5UTN",
+     "resolution": 1.8,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8MA",
+        "min_dist_to_window": 2.84,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UVP",
+     "resolution": 1.94,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8N7",
+        "min_dist_to_window": 2.57,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "8N7",
+        "min_dist_to_window": 2.08,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UV3",
+     "resolution": 1.95,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8N4",
+        "min_dist_to_window": 3.02,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "8N4",
+        "min_dist_to_window": 3.15,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5UTE",
+     "resolution": 2.05,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8M4",
+        "min_dist_to_window": 2.71,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "8M4",
+        "min_dist_to_window": 3.31,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5V5D",
+     "resolution": 2.104,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8OY",
+        "min_dist_to_window": 2.22,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5V5E",
+     "resolution": 2.299,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "8N4",
+        "min_dist_to_window": 2.21,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    }
+   ],
+   "recovered": false,
+   "best_recovery": null,
+   "verdict": "holo_ok_no_closed_apo",
+   "elapsed_s": 4.3,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "4XYX": {
+   "holo_pdb": "4XYX",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "1PZO": {
+   "holo_pdb": "1PZO",
+   "window": [
+    [
+     "A",
+     216
+    ],
+    [
+     "A",
+     217
+    ],
+    [
+     "A",
+     220
+    ],
+    [
+     "A",
+     235
+    ],
+    [
+     "A",
+     236
+    ],
+    [
+     "A",
+     237
+    ],
+    [
+     "A",
+     244
+    ],
+    [
+     "A",
+     245
+    ],
+    [
+     "A",
+     246
+    ],
+    [
+     "A",
+     263
+    ],
+    [
+     "A",
+     276
+    ],
+    [
+     "A",
+     279
+    ]
+   ],
+   "drug_ligand": "CBT",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P62593",
+   "holo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.988,
+    "hit": true,
+    "n_pockets": 10
+   },
+   "n_apo_candidates": 38,
+   "apo_candidates": [
+    {
+     "pdb_id": "1M40",
+     "resolution": 0.85,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "CB4",
+        "min_dist_to_window": 2.03,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "1NYM",
+     "resolution": 1.2,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "CXB",
+        "min_dist_to_window": 2.76,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "1YT4",
+     "resolution": 1.4,
+     "audit": {
+      "survives": true,
+      "reason": null,
+      "near_pocket_hetatm": []
+     },
+     "score": {
+      "overlap_frac": 0.4166666666666667,
+      "druggability_score": 0.003,
+      "hit": false,
+      "n_pockets": 9
+     },
+     "verdict": "apo_closed"
+    },
+    {
+     "pdb_id": "1PZP",
+     "resolution": 1.45,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "FTA",
+        "min_dist_to_window": 3.66,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "1LI9",
+     "resolution": 1.52,
+     "audit": {
+      "survives": true,
+      "reason": null,
+      "near_pocket_hetatm": []
+     },
+     "score": {
+      "overlap_frac": 0.4166666666666667,
+      "druggability_score": 0.002,
+      "hit": false,
+      "n_pockets": 13
+     },
+     "verdict": "apo_closed"
+    },
+    {
+     "pdb_id": "1ZG4",
+     "resolution": 1.55,
+     "audit": {
+      "survives": true,
+      "reason": null,
+      "near_pocket_hetatm": []
+     },
+     "score": {
+      "overlap_frac": 0.4166666666666667,
+      "druggability_score": 0.019,
+      "hit": false,
+      "n_pockets": 8
+     },
+     "verdict": "apo_closed"
+    }
+   ],
+   "recovered": true,
+   "best_recovery": "1YT4",
+   "verdict": "VALID_NEW_TARGET",
+   "elapsed_s": 31.0
+  },
+  "1PZP": {
+   "holo_pdb": "1PZP",
+   "window": [
+    [
+     "A",
+     221
+    ],
+    [
+     "A",
+     224
+    ],
+    [
+     "A",
+     225
+    ],
+    [
+     "A",
+     231
+    ],
+    [
+     "A",
+     246
+    ],
+    [
+     "A",
+     248
+    ],
+    [
+     "A",
+     250
+    ],
+    [
+     "A",
+     261
+    ],
+    [
+     "A",
+     263
+    ],
+    [
+     "A",
+     279
+    ],
+    [
+     "A",
+     280
+    ],
+    [
+     "A",
+     281
+    ],
+    [
+     "A",
+     283
+    ],
+    [
+     "A",
+     284
+    ],
+    [
+     "A",
+     286
+    ],
+    [
+     "A",
+     287
+    ]
+   ],
+   "drug_ligand": "FTA",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P62593",
+   "holo_native": {
+    "overlap_frac": 0.9375,
+    "druggability_score": 0.999,
+    "hit": true,
+    "n_pockets": 10
+   },
+   "n_apo_candidates": 38,
+   "apo_candidates": [
+    {
+     "pdb_id": "1M40",
+     "resolution": 0.85,
+     "audit": {
+      "survives": true,
+      "reason": null,
+      "near_pocket_hetatm": []
+     },
+     "score": {
+      "overlap_frac": 0.125,
+      "druggability_score": 0.004,
+      "hit": false,
+      "n_pockets": 14
+     },
+     "verdict": "apo_closed"
+    },
+    {
+     "pdb_id": "1NYM",
+     "resolution": 1.2,
+     "audit": {
+      "survives": true,
+      "reason": null,
+      "near_pocket_hetatm": []
+     },
+     "score": {
+      "overlap_frac": 0.0625,
+      "druggability_score": 0.002,
+      "hit": false,
+      "n_pockets": 12
+     },
+     "verdict": "apo_closed"
+    },
+    {
+     "pdb_id": "1YT4",
+     "resolution": 1.4,
+     "audit": {
+      "survives": true,
+      "reason": null,
+      "near_pocket_hetatm": []
+     },
+     "score": {
+      "overlap_frac": 0.0,
+      "druggability_score": 0.045,
+      "hit": false,
+      "n_pockets": 9
+     },
+     "verdict": "apo_closed"
+    }
+   ],
+   "recovered": true,
+   "best_recovery": "1M40",
+   "verdict": "VALID_NEW_TARGET",
+   "elapsed_s": 9.3,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "5F1U": {
+   "holo_pdb": "5F1U",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "3F6G": {
+   "holo_pdb": "3F6G",
+   "window": [
+    [
+     "A",
+     428
+    ],
+    [
+     "A",
+     429
+    ],
+    [
+     "A",
+     430
+    ],
+    [
+     "A",
+     431
+    ],
+    [
+     "A",
+     454
+    ],
+    [
+     "B",
+     458
+    ],
+    [
+     "B",
+     463
+    ],
+    [
+     "B",
+     464
+    ],
+    [
+     "B",
+     465
+    ],
+    [
+     "B",
+     466
+    ],
+    [
+     "B",
+     468
+    ],
+    [
+     "B",
+     493
+    ],
+    [
+     "B",
+     494
+    ],
+    [
+     "B",
+     495
+    ]
+   ],
+   "drug_ligand": "ILE",
+   "holo_chains": [
+    "A",
+    "B"
+   ],
+   "uniprot": "Q8F3Q1",
+   "holo_native": {
+    "overlap_frac": 0.2857142857142857,
+    "druggability_score": 0.0,
+    "hit": false,
+    "n_pockets": 14
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.4
+  },
+  "1Z62": {
+   "holo_pdb": "1Z62",
+   "window": [
+    [
+     "A",
+     67
+    ],
+    [
+     "A",
+     68
+    ],
+    [
+     "A",
+     71
+    ],
+    [
+     "A",
+     72
+    ],
+    [
+     "A",
+     75
+    ],
+    [
+     "A",
+     155
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     240
+    ],
+    [
+     "A",
+     309
+    ],
+    [
+     "A",
+     310
+    ]
+   ],
+   "drug_ligand": "IAA",
+   "holo_chains": [
+    "A"
+   ],
+   "error": "UniProt P00489 already in targets.yaml"
+  },
+  "4Q9M": {
+   "holo_pdb": "4Q9M",
+   "window": [
+    [
+     "A",
+     27
+    ],
+    [
+     "A",
+     28
+    ],
+    [
+     "A",
+     29
+    ],
+    [
+     "A",
+     30
+    ],
+    [
+     "A",
+     31
+    ],
+    [
+     "A",
+     32
+    ],
+    [
+     "A",
+     41
+    ],
+    [
+     "A",
+     45
+    ],
+    [
+     "A",
+     48
+    ],
+    [
+     "A",
+     49
+    ],
+    [
+     "A",
+     52
+    ],
+    [
+     "A",
+     71
+    ],
+    [
+     "A",
+     76
+    ],
+    [
+     "A",
+     79
+    ],
+    [
+     "A",
+     87
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     143
+    ]
+   ],
+   "drug_ligand": "FPP",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "Q8DRB3",
+   "holo_native": {
+    "overlap_frac": 0.7647058823529411,
+    "druggability_score": 0.948,
+    "hit": true,
+    "n_pockets": 17
+   },
+   "n_apo_candidates": 1,
+   "apo_candidates": [
+    {
+     "pdb_id": "4Q9O",
+     "resolution": 2.2,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "2ZW",
+        "min_dist_to_window": 2.58,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "SO4",
+        "min_dist_to_window": 3.0,
+        "treated_as_buffer": true
+       }
+      ]
+     }
+    }
+   ],
+   "recovered": false,
+   "best_recovery": null,
+   "verdict": "holo_ok_no_closed_apo",
+   "elapsed_s": 6.6
+  },
+  "5F1V": {
+   "holo_pdb": "5F1V",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "1GPY": {
+   "holo_pdb": "1GPY",
+   "window": [
+    [
+     "A",
+     67
+    ],
+    [
+     "A",
+     68
+    ],
+    [
+     "A",
+     71
+    ],
+    [
+     "A",
+     155
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     196
+    ],
+    [
+     "A",
+     227
+    ],
+    [
+     "A",
+     240
+    ],
+    [
+     "A",
+     242
+    ],
+    [
+     "A",
+     306
+    ],
+    [
+     "A",
+     309
+    ],
+    [
+     "A",
+     310
+    ]
+   ],
+   "drug_ligand": "G6P",
+   "holo_chains": [
+    "A"
+   ],
+   "error": "UniProt P00489 already in targets.yaml"
+  },
+  "9NSB": {
+   "holo_pdb": "9NSB",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "2VD4": {
+   "holo_pdb": "2VD4",
+   "window": [
+    [
+     "A",
+     131
+    ],
+    [
+     "A",
+     133
+    ],
+    [
+     "A",
+     139
+    ],
+    [
+     "A",
+     168
+    ],
+    [
+     "A",
+     169
+    ],
+    [
+     "A",
+     170
+    ],
+    [
+     "A",
+     220
+    ],
+    [
+     "A",
+     221
+    ],
+    [
+     "A",
+     223
+    ],
+    [
+     "A",
+     224
+    ],
+    [
+     "A",
+     225
+    ],
+    [
+     "A",
+     231
+    ],
+    [
+     "A",
+     234
+    ],
+    [
+     "A",
+     235
+    ]
+   ],
+   "drug_ligand": "P21",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P43889",
+   "holo_native": {
+    "overlap_frac": 0.6428571428571429,
+    "druggability_score": 0.012,
+    "hit": false,
+    "n_pockets": 22
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.8
+  },
+  "6HYI": {
+   "holo_pdb": "6HYI",
+   "window": [
+    [
+     "B",
+     272
+    ],
+    [
+     "B",
+     292
+    ],
+    [
+     "B",
+     294
+    ],
+    [
+     "B",
+     300
+    ],
+    [
+     "B",
+     302
+    ],
+    [
+     "B",
+     307
+    ],
+    [
+     "B",
+     308
+    ],
+    [
+     "B",
+     309
+    ],
+    [
+     "B",
+     310
+    ],
+    [
+     "B",
+     311
+    ],
+    [
+     "B",
+     312
+    ],
+    [
+     "B",
+     319
+    ],
+    [
+     "B",
+     320
+    ],
+    [
+     "B",
+     321
+    ],
+    [
+     "B",
+     322
+    ],
+    [
+     "B",
+     323
+    ],
+    [
+     "B",
+     369
+    ],
+    [
+     "B",
+     371
+    ]
+   ],
+   "drug_ligand": "NOS",
+   "holo_chains": [
+    "B"
+   ],
+   "uniprot": "Q86RB0",
+   "holo_native": {
+    "overlap_frac": 0.8333333333333334,
+    "druggability_score": 0.706,
+    "hit": true,
+    "n_pockets": 24
+   },
+   "n_apo_candidates": 1,
+   "apo_candidates": [
+    {
+     "pdb_id": "6HYQ",
+     "resolution": 2.08,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "GMP",
+        "min_dist_to_window": 1.74,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    }
+   ],
+   "recovered": false,
+   "best_recovery": null,
+   "verdict": "holo_ok_no_closed_apo",
+   "elapsed_s": 7.0
+  },
+  "5FUH": {
+   "holo_pdb": "5FUH",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "1C50": {
+   "holo_pdb": "1C50",
+   "window": [
+    [
+     "A",
+     60
+    ],
+    [
+     "A",
+     63
+    ],
+    [
+     "A",
+     64
+    ],
+    [
+     "A",
+     67
+    ],
+    [
+     "A",
+     188
+    ],
+    [
+     "A",
+     189
+    ],
+    [
+     "A",
+     190
+    ],
+    [
+     "A",
+     191
+    ],
+    [
+     "A",
+     192
+    ],
+    [
+     "A",
+     229
+    ]
+   ],
+   "drug_ligand": "CHI",
+   "holo_chains": [
+    "A"
+   ],
+   "error": "UniProt P00489 already in targets.yaml"
+  },
+  "7KR8": {
+   "holo_pdb": "7KR8",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "6EB1": {
+   "holo_pdb": "6EB1",
+   "window": [
+    [
+     "A",
+     95
+    ],
+    [
+     "A",
+     98
+    ],
+    [
+     "A",
+     99
+    ],
+    [
+     "A",
+     102
+    ],
+    [
+     "A",
+     124
+    ],
+    [
+     "A",
+     125
+    ],
+    [
+     "A",
+     128
+    ],
+    [
+     "A",
+     129
+    ],
+    [
+     "A",
+     132
+    ]
+   ],
+   "drug_ligand": "J3M",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "F2WR52",
+   "holo_native": {
+    "overlap_frac": 0.6666666666666666,
+    "druggability_score": 0.452,
+    "hit": false,
+    "n_pockets": 13
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.1
+  },
+  "6EB2": {
+   "holo_pdb": "6EB2",
+   "window": [
+    [
+     "A",
+     95
+    ],
+    [
+     "A",
+     98
+    ],
+    [
+     "A",
+     99
+    ],
+    [
+     "A",
+     102
+    ],
+    [
+     "A",
+     124
+    ],
+    [
+     "A",
+     125
+    ],
+    [
+     "A",
+     128
+    ],
+    [
+     "A",
+     129
+    ],
+    [
+     "A",
+     132
+    ]
+   ],
+   "drug_ligand": "J3P",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "F2WR52",
+   "holo_native": {
+    "overlap_frac": 0.4444444444444444,
+    "druggability_score": 0.139,
+    "hit": false,
+    "n_pockets": 11
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 2.7,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "6NUJ": {
+   "holo_pdb": "6NUJ",
+   "window": [
+    [
+     "A",
+     168
+    ],
+    [
+     "A",
+     169
+    ],
+    [
+     "A",
+     170
+    ],
+    [
+     "A",
+     171
+    ],
+    [
+     "A",
+     173
+    ],
+    [
+     "A",
+     174
+    ],
+    [
+     "A",
+     178
+    ]
+   ],
+   "drug_ligand": "L3D",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "F2WR52",
+   "holo_native": {
+    "overlap_frac": 0.42857142857142855,
+    "druggability_score": 0.0,
+    "hit": false,
+    "n_pockets": 10
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.0,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "9P0Q": {
+   "holo_pdb": "9P0Q",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "7KTO": {
+   "holo_pdb": "7KTO",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "13LV": {
+   "holo_pdb": "13LV",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "3ZM9": {
+   "holo_pdb": "3ZM9",
+   "error": "window size 24 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     117
+    ],
+    [
+     "A",
+     124
+    ],
+    [
+     "A",
+     144
+    ],
+    [
+     "A",
+     146
+    ],
+    [
+     "A",
+     194
+    ],
+    [
+     "A",
+     206
+    ],
+    [
+     "A",
+     207
+    ],
+    [
+     "A",
+     208
+    ],
+    [
+     "A",
+     209
+    ],
+    [
+     "A",
+     211
+    ],
+    [
+     "A",
+     213
+    ],
+    [
+     "A",
+     306
+    ],
+    [
+     "A",
+     308
+    ],
+    [
+     "A",
+     310
+    ],
+    [
+     "A",
+     313
+    ],
+    [
+     "A",
+     329
+    ],
+    [
+     "A",
+     330
+    ],
+    [
+     "A",
+     333
+    ],
+    [
+     "A",
+     349
+    ],
+    [
+     "A",
+     354
+    ],
+    [
+     "A",
+     420
+    ],
+    [
+     "A",
+     423
+    ],
+    [
+     "A",
+     435
+    ],
+    [
+     "A",
+     440
+    ]
+   ],
+   "drug_ligand": "QMQ"
+  },
+  "4Q9O": {
+   "holo_pdb": "4Q9O",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "9MFP": {
+   "holo_pdb": "9MFP",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "5F91": {
+   "holo_pdb": "5F91",
+   "window": [
+    [
+     "A",
+     303
+    ],
+    [
+     "A",
+     304
+    ],
+    [
+     "A",
+     305
+    ],
+    [
+     "A",
+     429
+    ],
+    [
+     "A",
+     430
+    ],
+    [
+     "A",
+     432
+    ],
+    [
+     "C",
+     302
+    ],
+    [
+     "C",
+     303
+    ],
+    [
+     "C",
+     305
+    ],
+    [
+     "C",
+     306
+    ],
+    [
+     "C",
+     307
+    ],
+    [
+     "C",
+     394
+    ],
+    [
+     "C",
+     397
+    ],
+    [
+     "C",
+     400
+    ],
+    [
+     "C",
+     401
+    ],
+    [
+     "C",
+     432
+    ]
+   ],
+   "drug_ligand": "5WJ",
+   "holo_chains": [
+    "A",
+    "C"
+   ],
+   "uniprot": "P9WN93",
+   "holo_native": {
+    "overlap_frac": 0.8125,
+    "druggability_score": 0.0,
+    "hit": false,
+    "n_pockets": 44
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 7.2
+  },
+  "4TSX": {
+   "holo_pdb": "4TSX",
+   "window": [
+    [
+     "A",
+     95
+    ],
+    [
+     "A",
+     98
+    ],
+    [
+     "A",
+     99
+    ],
+    [
+     "A",
+     102
+    ],
+    [
+     "A",
+     124
+    ],
+    [
+     "A",
+     125
+    ],
+    [
+     "A",
+     128
+    ],
+    [
+     "A",
+     129
+    ],
+    [
+     "A",
+     132
+    ]
+   ],
+   "drug_ligand": "LF0",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "F2WR39",
+   "holo_native": {
+    "overlap_frac": 0.6666666666666666,
+    "druggability_score": 0.005,
+    "hit": false,
+    "n_pockets": 14
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.2
+  },
+  "9Q46": {
+   "holo_pdb": "9Q46",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "9P0S": {
+   "holo_pdb": "9P0S",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "9P0U": {
+   "holo_pdb": "9P0U",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "1JMJ": {
+   "holo_pdb": "1JMJ",
+   "error": "window size 3 outside [6,20] sanity range",
+   "window": [
+    [
+     "B",
+     312
+    ],
+    [
+     "B",
+     314
+    ],
+    [
+     "B",
+     368
+    ]
+   ],
+   "drug_ligand": "NAG"
+  },
+  "2XN3": {
+   "holo_pdb": "2XN3",
+   "window": [
+    [
+     "A",
+     27
+    ],
+    [
+     "A",
+     238
+    ],
+    [
+     "A",
+     246
+    ],
+    [
+     "A",
+     248
+    ],
+    [
+     "A",
+     266
+    ],
+    [
+     "A",
+     269
+    ],
+    [
+     "A",
+     270
+    ],
+    [
+     "A",
+     273
+    ],
+    [
+     "A",
+     276
+    ],
+    [
+     "B",
+     376
+    ],
+    [
+     "B",
+     378
+    ],
+    [
+     "B",
+     381
+    ]
+   ],
+   "drug_ligand": "ID8",
+   "holo_chains": [
+    "A",
+    "B"
+   ],
+   "uniprot": "P05543",
+   "holo_native": {
+    "overlap_frac": 0.75,
+    "druggability_score": 0.266,
+    "hit": false,
+    "n_pockets": 29
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.3
+  },
+  "7LVL": {
+   "holo_pdb": "7LVL",
+   "window": [
+    [
+     "A",
+     48
+    ],
+    [
+     "A",
+     49
+    ],
+    [
+     "A",
+     51
+    ],
+    [
+     "A",
+     52
+    ],
+    [
+     "A",
+     53
+    ],
+    [
+     "A",
+     56
+    ],
+    [
+     "A",
+     80
+    ],
+    [
+     "A",
+     84
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "B",
+     80
+    ],
+    [
+     "B",
+     81
+    ],
+    [
+     "B",
+     84
+    ]
+   ],
+   "drug_ligand": "LYS",
+   "holo_chains": [
+    "A",
+    "B"
+   ],
+   "uniprot": "A0A0F4VK59",
+   "holo_native": {
+    "overlap_frac": 0.5,
+    "druggability_score": 0.307,
+    "hit": false,
+    "n_pockets": 34
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.4
+  },
+  "7P2U": {
+   "holo_pdb": "7P2U",
+   "window": [
+    [
+     "A",
+     144
+    ],
+    [
+     "A",
+     189
+    ],
+    [
+     "A",
+     194
+    ],
+    [
+     "A",
+     195
+    ],
+    [
+     "A",
+     198
+    ],
+    [
+     "A",
+     199
+    ],
+    [
+     "A",
+     219
+    ],
+    [
+     "A",
+     220
+    ],
+    [
+     "A",
+     221
+    ],
+    [
+     "A",
+     234
+    ],
+    [
+     "A",
+     246
+    ]
+   ],
+   "drug_ligand": "4WB",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "A5H660",
+   "holo_native": {
+    "overlap_frac": 0.8181818181818182,
+    "druggability_score": 0.242,
+    "hit": false,
+    "n_pockets": 25
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.2
+  },
+  "5KDF": {
+   "holo_pdb": "5KDF",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "9MFS": {
+   "holo_pdb": "9MFS",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "9MFR": {
+   "holo_pdb": "9MFR",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "4BQH": {
+   "holo_pdb": "4BQH",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "6PGR": {
+   "holo_pdb": "6PGR",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "5KBF": {
+   "holo_pdb": "5KBF",
+   "window": [
+    [
+     "A",
+     217
+    ],
+    [
+     "A",
+     236
+    ],
+    [
+     "A",
+     248
+    ],
+    [
+     "A",
+     249
+    ],
+    [
+     "A",
+     257
+    ],
+    [
+     "A",
+     258
+    ],
+    [
+     "A",
+     259
+    ],
+    [
+     "A",
+     260
+    ],
+    [
+     "A",
+     261
+    ],
+    [
+     "A",
+     267
+    ],
+    [
+     "A",
+     268
+    ],
+    [
+     "A",
+     269
+    ],
+    [
+     "A",
+     270
+    ],
+    [
+     "A",
+     317
+    ],
+    [
+     "A",
+     319
+    ]
+   ],
+   "drug_ligand": "CMP",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "Q7KQK0",
+   "holo_native": {
+    "overlap_frac": 0.9333333333333333,
+    "druggability_score": 0.073,
+    "hit": false,
+    "n_pockets": 15
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.7
+  },
+  "5K8S": {
+   "holo_pdb": "5K8S",
+   "window": [
+    [
+     "A",
+     340
+    ],
+    [
+     "A",
+     359
+    ],
+    [
+     "A",
+     366
+    ],
+    [
+     "A",
+     367
+    ],
+    [
+     "A",
+     369
+    ],
+    [
+     "A",
+     375
+    ],
+    [
+     "A",
+     376
+    ],
+    [
+     "A",
+     377
+    ],
+    [
+     "A",
+     378
+    ],
+    [
+     "A",
+     379
+    ],
+    [
+     "A",
+     385
+    ],
+    [
+     "A",
+     386
+    ],
+    [
+     "A",
+     387
+    ],
+    [
+     "A",
+     388
+    ],
+    [
+     "A",
+     390
+    ],
+    [
+     "A",
+     424
+    ],
+    [
+     "A",
+     427
+    ],
+    [
+     "A",
+     428
+    ],
+    [
+     "A",
+     437
+    ],
+    [
+     "A",
+     438
+    ]
+   ],
+   "drug_ligand": "CMP",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "Q7KQK0",
+   "holo_native": {
+    "overlap_frac": 0.95,
+    "druggability_score": 0.767,
+    "hit": true,
+    "n_pockets": 10
+   },
+   "n_apo_candidates": 2,
+   "apo_candidates": [
+    {
+     "pdb_id": "5KBF",
+     "resolution": 2.0,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "CMP",
+        "min_dist_to_window": 2.78,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5T3N",
+     "resolution": 2.4,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "75G",
+        "min_dist_to_window": 2.7,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    }
+   ],
+   "recovered": false,
+   "best_recovery": null,
+   "verdict": "holo_ok_no_closed_apo",
+   "elapsed_s": 5.4,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "5T3N": {
+   "holo_pdb": "5T3N",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "4ID1": {
+   "holo_pdb": "4ID1",
+   "window": [
+    [
+     "A",
+     95
+    ],
+    [
+     "A",
+     98
+    ],
+    [
+     "A",
+     99
+    ],
+    [
+     "A",
+     102
+    ],
+    [
+     "A",
+     124
+    ],
+    [
+     "A",
+     125
+    ],
+    [
+     "A",
+     128
+    ],
+    [
+     "A",
+     129
+    ],
+    [
+     "A",
+     132
+    ]
+   ],
+   "drug_ligand": "LF0",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P12497",
+   "holo_native": {
+    "overlap_frac": 0.6666666666666666,
+    "druggability_score": 0.032,
+    "hit": false,
+    "n_pockets": 13
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 2.6
+  },
+  "2GPA": {
+   "holo_pdb": "2GPA",
+   "window": [
+    [
+     "A",
+     11
+    ],
+    [
+     "A",
+     12
+    ],
+    [
+     "A",
+     13
+    ],
+    [
+     "A",
+     15
+    ],
+    [
+     "A",
+     16
+    ],
+    [
+     "A",
+     69
+    ]
+   ],
+   "drug_ligand": "SEP",
+   "holo_chains": [
+    "A"
+   ],
+   "error": "UniProt P00489 already in targets.yaml"
+  },
+  "3AMV": {
+   "holo_pdb": "3AMV",
+   "window": [
+    [
+     "A",
+     67
+    ],
+    [
+     "A",
+     68
+    ],
+    [
+     "A",
+     71
+    ],
+    [
+     "A",
+     72
+    ],
+    [
+     "A",
+     75
+    ],
+    [
+     "A",
+     81
+    ],
+    [
+     "A",
+     155
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     195
+    ],
+    [
+     "A",
+     196
+    ],
+    [
+     "A",
+     227
+    ],
+    [
+     "A",
+     242
+    ],
+    [
+     "A",
+     309
+    ],
+    [
+     "A",
+     310
+    ]
+   ],
+   "drug_ligand": "BIN",
+   "holo_chains": [
+    "A"
+   ],
+   "error": "UniProt P00489 already in targets.yaml"
+  },
+  "5FTS": {
+   "holo_pdb": "5FTS",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "5FTV": {
+   "holo_pdb": "5FTV",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "5FU8": {
+   "holo_pdb": "5FU8",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "5FU0": {
+   "holo_pdb": "5FU0",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "3CEM": {
+   "holo_pdb": "3CEM",
+   "window": [
+    [
+     "A",
+     67
+    ],
+    [
+     "A",
+     68
+    ],
+    [
+     "A",
+     71
+    ],
+    [
+     "A",
+     72
+    ],
+    [
+     "A",
+     75
+    ],
+    [
+     "A",
+     191
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     196
+    ],
+    [
+     "A",
+     227
+    ],
+    [
+     "A",
+     242
+    ],
+    [
+     "A",
+     309
+    ],
+    [
+     "A",
+     310
+    ],
+    [
+     "B",
+     39
+    ],
+    [
+     "B",
+     40
+    ],
+    [
+     "B",
+     41
+    ],
+    [
+     "B",
+     42
+    ],
+    [
+     "B",
+     45
+    ]
+   ],
+   "drug_ligand": "AVD",
+   "holo_chains": [
+    "A",
+    "B"
+   ],
+   "uniprot": "P06737",
+   "holo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.186,
+    "hit": false,
+    "n_pockets": 104
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 7.4
+  },
+  "7KR7": {
+   "holo_pdb": "7KR7",
+   "window": [
+    [
+     "A",
+     51
+    ],
+    [
+     "A",
+     52
+    ],
+    [
+     "A",
+     54
+    ],
+    [
+     "A",
+     55
+    ],
+    [
+     "A",
+     56
+    ],
+    [
+     "A",
+     59
+    ],
+    [
+     "A",
+     84
+    ],
+    [
+     "A",
+     88
+    ],
+    [
+     "A",
+     110
+    ],
+    [
+     "E",
+     83
+    ],
+    [
+     "E",
+     84
+    ],
+    [
+     "E",
+     85
+    ],
+    [
+     "E",
+     88
+    ]
+   ],
+   "drug_ligand": "LYS",
+   "holo_chains": [
+    "A",
+    "E"
+   ],
+   "uniprot": "Q9PPB4",
+   "holo_native": {
+    "overlap_frac": 0.15384615384615385,
+    "druggability_score": 0.005,
+    "hit": false,
+    "n_pockets": 42
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.9
+  },
+  "2RIW": {
+   "holo_pdb": "2RIW",
+   "window": [
+    [
+     "A",
+     23
+    ],
+    [
+     "A",
+     24
+    ],
+    [
+     "A",
+     27
+    ],
+    [
+     "A",
+     238
+    ],
+    [
+     "A",
+     246
+    ],
+    [
+     "A",
+     248
+    ],
+    [
+     "A",
+     266
+    ],
+    [
+     "A",
+     269
+    ],
+    [
+     "A",
+     270
+    ],
+    [
+     "A",
+     272
+    ],
+    [
+     "A",
+     273
+    ],
+    [
+     "A",
+     276
+    ],
+    [
+     "B",
+     376
+    ],
+    [
+     "B",
+     377
+    ],
+    [
+     "B",
+     378
+    ],
+    [
+     "B",
+     381
+    ]
+   ],
+   "drug_ligand": "T44",
+   "holo_chains": [
+    "A",
+    "B"
+   ],
+   "uniprot": "P05543",
+   "holo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.17,
+    "hit": false,
+    "n_pockets": 31
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.6,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "2RIV": {
+   "holo_pdb": "2RIV",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "6VBI": {
+   "holo_pdb": "6VBI",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "1Z6Q": {
+   "holo_pdb": "1Z6Q",
+   "window": [
+    [
+     "A",
+     67
+    ],
+    [
+     "A",
+     68
+    ],
+    [
+     "A",
+     71
+    ],
+    [
+     "A",
+     72
+    ],
+    [
+     "A",
+     75
+    ],
+    [
+     "A",
+     76
+    ],
+    [
+     "A",
+     81
+    ],
+    [
+     "A",
+     155
+    ],
+    [
+     "A",
+     191
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     309
+    ],
+    [
+     "A",
+     310
+    ],
+    [
+     "A",
+     313
+    ]
+   ],
+   "drug_ligand": "195",
+   "holo_chains": [
+    "A"
+   ],
+   "error": "UniProt P00489 already in targets.yaml"
+  },
+  "1Z6P": {
+   "holo_pdb": "1Z6P",
+   "window": [
+    [
+     "A",
+     67
+    ],
+    [
+     "A",
+     68
+    ],
+    [
+     "A",
+     71
+    ],
+    [
+     "A",
+     72
+    ],
+    [
+     "A",
+     75
+    ],
+    [
+     "A",
+     81
+    ],
+    [
+     "A",
+     155
+    ],
+    [
+     "A",
+     191
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     196
+    ],
+    [
+     "A",
+     309
+    ],
+    [
+     "A",
+     310
+    ]
+   ],
+   "drug_ligand": "194",
+   "holo_chains": [
+    "A"
+   ],
+   "error": "UniProt P00489 already in targets.yaml"
+  },
+  "4JLH": {
+   "holo_pdb": "4JLH",
+   "window": [
+    [
+     "A",
+     63
+    ],
+    [
+     "A",
+     64
+    ],
+    [
+     "A",
+     66
+    ],
+    [
+     "A",
+     72
+    ],
+    [
+     "A",
+     73
+    ],
+    [
+     "A",
+     74
+    ],
+    [
+     "A",
+     89
+    ],
+    [
+     "A",
+     92
+    ],
+    [
+     "A",
+     97
+    ],
+    [
+     "A",
+     120
+    ]
+   ],
+   "drug_ligand": "CAF",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P12497",
+   "holo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.002,
+    "hit": false,
+    "n_pockets": 15
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.1,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "4GVM": {
+   "holo_pdb": "4GVM",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "5O1S": {
+   "holo_pdb": "5O1S",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "8BUV": {
+   "holo_pdb": "8BUV",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "9P0R": {
+   "holo_pdb": "9P0R",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "6WKZ": {
+   "holo_pdb": "6WKZ",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "6WL6": {
+   "holo_pdb": "6WL6",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "3VP4": {
+   "holo_pdb": "3VP4",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "7O83": {
+   "holo_pdb": "7O83",
+   "error": "window size 22 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     9
+    ],
+    [
+     "A",
+     10
+    ],
+    [
+     "A",
+     11
+    ],
+    [
+     "A",
+     12
+    ],
+    [
+     "A",
+     16
+    ],
+    [
+     "A",
+     34
+    ],
+    [
+     "A",
+     58
+    ],
+    [
+     "A",
+     59
+    ],
+    [
+     "A",
+     60
+    ],
+    [
+     "A",
+     61
+    ],
+    [
+     "A",
+     62
+    ],
+    [
+     "A",
+     63
+    ],
+    [
+     "A",
+     64
+    ],
+    [
+     "A",
+     65
+    ],
+    [
+     "A",
+     68
+    ],
+    [
+     "A",
+     69
+    ],
+    [
+     "A",
+     72
+    ],
+    [
+     "A",
+     96
+    ],
+    [
+     "A",
+     99
+    ],
+    [
+     "A",
+     100
+    ],
+    [
+     "A",
+     102
+    ],
+    [
+     "A",
+     103
+    ]
+   ],
+   "drug_ligand": "V52"
+  },
+  "7P2S": {
+   "holo_pdb": "7P2S",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "2XN5": {
+   "holo_pdb": "2XN5",
+   "window": [
+    [
+     "A",
+     23
+    ],
+    [
+     "A",
+     24
+    ],
+    [
+     "A",
+     27
+    ],
+    [
+     "A",
+     238
+    ],
+    [
+     "A",
+     246
+    ],
+    [
+     "A",
+     248
+    ],
+    [
+     "A",
+     266
+    ],
+    [
+     "A",
+     269
+    ],
+    [
+     "A",
+     270
+    ],
+    [
+     "A",
+     272
+    ],
+    [
+     "A",
+     273
+    ],
+    [
+     "A",
+     276
+    ],
+    [
+     "B",
+     376
+    ],
+    [
+     "B",
+     378
+    ],
+    [
+     "B",
+     381
+    ],
+    [
+     "B",
+     383
+    ]
+   ],
+   "drug_ligand": "FUN",
+   "holo_chains": [
+    "A",
+    "B"
+   ],
+   "uniprot": "P05543",
+   "holo_native": {
+    "overlap_frac": 0.6875,
+    "druggability_score": 0.374,
+    "hit": false,
+    "n_pockets": 28
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 5.0,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "2XN6": {
+   "holo_pdb": "2XN6",
+   "window": [
+    [
+     "A",
+     23
+    ],
+    [
+     "A",
+     24
+    ],
+    [
+     "A",
+     27
+    ],
+    [
+     "A",
+     238
+    ],
+    [
+     "A",
+     246
+    ],
+    [
+     "A",
+     248
+    ],
+    [
+     "A",
+     266
+    ],
+    [
+     "A",
+     269
+    ],
+    [
+     "A",
+     270
+    ],
+    [
+     "A",
+     272
+    ],
+    [
+     "A",
+     273
+    ],
+    [
+     "A",
+     276
+    ],
+    [
+     "B",
+     376
+    ],
+    [
+     "B",
+     377
+    ],
+    [
+     "B",
+     378
+    ],
+    [
+     "B",
+     381
+    ]
+   ],
+   "drug_ligand": "T44",
+   "holo_chains": [
+    "A",
+    "B"
+   ],
+   "uniprot": "P05543",
+   "holo_native": {
+    "overlap_frac": 0.75,
+    "druggability_score": 0.116,
+    "hit": false,
+    "n_pockets": 29
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 5.4,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "2XN7": {
+   "holo_pdb": "2XN7",
+   "window": [
+    [
+     "A",
+     23
+    ],
+    [
+     "A",
+     24
+    ],
+    [
+     "A",
+     27
+    ],
+    [
+     "A",
+     238
+    ],
+    [
+     "A",
+     246
+    ],
+    [
+     "A",
+     248
+    ],
+    [
+     "A",
+     266
+    ],
+    [
+     "A",
+     269
+    ],
+    [
+     "A",
+     270
+    ],
+    [
+     "A",
+     272
+    ],
+    [
+     "A",
+     273
+    ],
+    [
+     "A",
+     276
+    ],
+    [
+     "B",
+     376
+    ],
+    [
+     "B",
+     377
+    ],
+    [
+     "B",
+     378
+    ],
+    [
+     "B",
+     381
+    ]
+   ],
+   "drug_ligand": "T44",
+   "holo_chains": [
+    "A",
+    "B"
+   ],
+   "uniprot": "P05543",
+   "holo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.212,
+    "hit": false,
+    "n_pockets": 28
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 5.4,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "5J94": {
+   "holo_pdb": "5J94",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "5FYE": {
+   "holo_pdb": "5FYE",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "2BKK": {
+   "holo_pdb": "2BKK",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "2OFF": {
+   "holo_pdb": "2OFF",
+   "window": [
+    [
+     "A",
+     68
+    ],
+    [
+     "A",
+     71
+    ],
+    [
+     "A",
+     72
+    ],
+    [
+     "A",
+     75
+    ],
+    [
+     "A",
+     155
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     196
+    ],
+    [
+     "A",
+     227
+    ],
+    [
+     "A",
+     240
+    ],
+    [
+     "A",
+     242
+    ],
+    [
+     "A",
+     309
+    ],
+    [
+     "A",
+     310
+    ]
+   ],
+   "drug_ligand": "OFF",
+   "holo_chains": [
+    "A"
+   ],
+   "error": "UniProt P00489 already in targets.yaml"
+  },
+  "6OAG": {
+   "holo_pdb": "6OAG",
+   "window": [
+    [
+     "F",
+     10
+    ],
+    [
+     "F",
+     57
+    ],
+    [
+     "F",
+     59
+    ],
+    [
+     "F",
+     60
+    ],
+    [
+     "F",
+     63
+    ],
+    [
+     "F",
+     205
+    ],
+    [
+     "F",
+     206
+    ],
+    [
+     "F",
+     239
+    ],
+    [
+     "F",
+     243
+    ],
+    [
+     "F",
+     246
+    ],
+    [
+     "F",
+     255
+    ],
+    [
+     "F",
+     344
+    ],
+    [
+     "F",
+     347
+    ],
+    [
+     "F",
+     348
+    ]
+   ],
+   "drug_ligand": "M2Y",
+   "holo_chains": [
+    "F"
+   ],
+   "uniprot": "P14324",
+   "holo_native": {
+    "overlap_frac": 0.7857142857142857,
+    "druggability_score": 0.809,
+    "hit": true,
+    "n_pockets": 27
+   },
+   "n_apo_candidates": 34,
+   "apo_candidates": [
+    {
+     "pdb_id": "2QIS",
+     "resolution": 1.8,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "4DEM",
+     "resolution": 1.85,
+     "audit": {
+      "survives": true,
+      "reason": null,
+      "near_pocket_hetatm": []
+     },
+     "score": {
+      "overlap_frac": 0.21428571428571427,
+      "druggability_score": 0.53,
+      "hit": false,
+      "n_pockets": 18
+     },
+     "verdict": "apo_closed"
+    },
+    {
+     "pdb_id": "3N45",
+     "resolution": 1.88,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "3N3",
+        "min_dist_to_window": 2.82,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "ZOL",
+        "min_dist_to_window": 2.7,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "MG",
+        "min_dist_to_window": 2.19,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "PO4",
+        "min_dist_to_window": 3.09,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "PO4",
+        "min_dist_to_window": 3.19,
+        "treated_as_buffer": true
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "2F94",
+     "resolution": 1.94,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "ZN",
+        "min_dist_to_window": 2.15,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "PO4",
+        "min_dist_to_window": 2.78,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "BFQ",
+        "min_dist_to_window": 2.93,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "3B7L",
+     "resolution": 1.95,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "3CP6",
+     "resolution": 1.95,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "3S4J",
+     "resolution": 1.95,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "4KPJ",
+     "resolution": 1.95,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "4KPD",
+     "resolution": 1.96,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "4KQS",
+     "resolution": 1.97,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "4KFA",
+     "resolution": 1.98,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "1YV5",
+     "resolution": 2.0,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "2RAH",
+     "resolution": 2.0,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "4H5C",
+     "resolution": 2.02,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "YS4",
+        "min_dist_to_window": 3.09,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "PO4",
+        "min_dist_to_window": 2.77,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "MG",
+        "min_dist_to_window": 2.21,
+        "treated_as_buffer": true
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "4H5D",
+     "resolution": 2.02,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "YS4",
+        "min_dist_to_window": 3.02,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "POP",
+        "min_dist_to_window": 2.68,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "MG",
+        "min_dist_to_window": 2.11,
+        "treated_as_buffer": true
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "4H5E",
+     "resolution": 2.04,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "YS4",
+        "min_dist_to_window": 2.98,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "IPR",
+        "min_dist_to_window": 2.66,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "MG",
+        "min_dist_to_window": 2.08,
+        "treated_as_buffer": true
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "2F9K",
+     "resolution": 2.06,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "ZN",
+        "min_dist_to_window": 2.16,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "PO4",
+        "min_dist_to_window": 2.84,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "ZOL",
+        "min_dist_to_window": 2.7,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "4KQU",
+     "resolution": 2.07,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "2VF6",
+     "resolution": 2.1,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "3RYE",
+     "resolution": 2.1,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "2F92",
+     "resolution": 2.15,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "ZN",
+        "min_dist_to_window": 2.17,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "PO4",
+        "min_dist_to_window": 2.83,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "AHD",
+        "min_dist_to_window": 3.01,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "3N1V",
+     "resolution": 2.18,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "3N1",
+        "min_dist_to_window": 2.81,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "PO4",
+        "min_dist_to_window": 2.88,
+        "treated_as_buffer": true
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "1YQ7",
+     "resolution": 2.2,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "2F8C",
+     "resolution": 2.2,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "PO4",
+        "min_dist_to_window": 2.73,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "MG",
+        "min_dist_to_window": 2.24,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "ZOL",
+        "min_dist_to_window": 2.74,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "3N5H",
+     "resolution": 2.2,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "GO0",
+        "min_dist_to_window": 2.77,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "PO4",
+        "min_dist_to_window": 2.68,
+        "treated_as_buffer": true
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "3N6K",
+     "resolution": 2.25,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "BFH",
+        "min_dist_to_window": 2.64,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "PO4",
+        "min_dist_to_window": 2.69,
+        "treated_as_buffer": true
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "1ZW5",
+     "resolution": 2.3,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "2F7M",
+     "resolution": 2.3,
+     "audit": {
+      "survives": true,
+      "reason": null,
+      "near_pocket_hetatm": [
+       {
+        "resname": "PO4",
+        "min_dist_to_window": 2.63,
+        "treated_as_buffer": true
+       }
+      ]
+     },
+     "score": {
+      "overlap_frac": 0.8571428571428571,
+      "druggability_score": 0.514,
+      "hit": true,
+      "n_pockets": 26
+     },
+     "verdict": "apo_still_open"
+    },
+    {
+     "pdb_id": "3N46",
+     "resolution": 2.35,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "3N5",
+        "min_dist_to_window": 2.73,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "ZOL",
+        "min_dist_to_window": 2.93,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "MG",
+        "min_dist_to_window": 2.09,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "PO4",
+        "min_dist_to_window": 2.88,
+        "treated_as_buffer": true
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "3N5J",
+     "resolution": 2.35,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "GO1",
+        "min_dist_to_window": 2.94,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "PO4",
+        "min_dist_to_window": 2.66,
+        "treated_as_buffer": true
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "4GA3",
+     "resolution": 2.39,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "2OPM",
+     "resolution": 2.4,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "4KQ5",
+     "resolution": 2.4,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "3N49",
+     "resolution": 2.5,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "3N4",
+        "min_dist_to_window": 2.83,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "PO4",
+        "min_dist_to_window": 2.61,
+        "treated_as_buffer": true
+       }
+      ]
+     }
+    }
+   ],
+   "recovered": true,
+   "best_recovery": "4DEM",
+   "verdict": "VALID_NEW_TARGET",
+   "elapsed_s": 57.3
+  },
+  "5MS4": {
+   "holo_pdb": "5MS4",
+   "window": [
+    [
+     "A",
+     79
+    ],
+    [
+     "A",
+     113
+    ],
+    [
+     "A",
+     114
+    ],
+    [
+     "A",
+     115
+    ],
+    [
+     "A",
+     116
+    ],
+    [
+     "A",
+     117
+    ],
+    [
+     "A",
+     118
+    ]
+   ],
+   "drug_ligand": "TBU",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "O60259",
+   "holo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.006,
+    "hit": false,
+    "n_pockets": 11
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 5.0
+  },
+  "13LX": {
+   "holo_pdb": "13LX",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "7KE0": {
+   "holo_pdb": "7KE0",
+   "window": [
+    [
+     "A",
+     95
+    ],
+    [
+     "A",
+     98
+    ],
+    [
+     "A",
+     99
+    ],
+    [
+     "A",
+     102
+    ],
+    [
+     "A",
+     124
+    ],
+    [
+     "A",
+     125
+    ],
+    [
+     "A",
+     128
+    ],
+    [
+     "A",
+     129
+    ],
+    [
+     "A",
+     132
+    ]
+   ],
+   "drug_ligand": "WBV",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P12497",
+   "holo_native": {
+    "overlap_frac": 0.1111111111111111,
+    "druggability_score": 0.236,
+    "hit": false,
+    "n_pockets": 9
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.8,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "13LW": {
+   "holo_pdb": "13LW",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "5Q0C": {
+   "holo_pdb": "5Q0C",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "1WV0": {
+   "holo_pdb": "1WV0",
+   "window": [
+    [
+     "A",
+     67
+    ],
+    [
+     "A",
+     68
+    ],
+    [
+     "A",
+     71
+    ],
+    [
+     "A",
+     72
+    ],
+    [
+     "A",
+     75
+    ],
+    [
+     "A",
+     191
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     227
+    ]
+   ],
+   "drug_ligand": "BN4",
+   "holo_chains": [
+    "A"
+   ],
+   "error": "UniProt P00489 already in targets.yaml"
+  },
+  "4NAK": {
+   "holo_pdb": "4NAK",
+   "error": "window size 3 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     195
+    ],
+    [
+     "A",
+     196
+    ],
+    [
+     "A",
+     199
+    ]
+   ],
+   "drug_ligand": "DTT"
+  },
+  "8I71": {
+   "holo_pdb": "8I71",
+   "window": [
+    [
+     "A",
+     23
+    ],
+    [
+     "A",
+     25
+    ],
+    [
+     "A",
+     29
+    ],
+    [
+     "A",
+     30
+    ],
+    [
+     "A",
+     33
+    ],
+    [
+     "A",
+     37
+    ],
+    [
+     "A",
+     102
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     109
+    ],
+    [
+     "A",
+     110
+    ],
+    [
+     "A",
+     118
+    ],
+    [
+     "A",
+     139
+    ],
+    [
+     "A",
+     140
+    ]
+   ],
+   "drug_ligand": "OTI",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P03147",
+   "holo_native": {
+    "overlap_frac": 0.21428571428571427,
+    "druggability_score": 0.0,
+    "hit": false,
+    "n_pockets": 12
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.9
+  },
+  "6H8R": {
+   "holo_pdb": "6H8R",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "8QEZ": {
+   "holo_pdb": "8QEZ",
+   "window": [
+    [
+     "A",
+     61
+    ],
+    [
+     "A",
+     89
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     91
+    ],
+    [
+     "A",
+     96
+    ],
+    [
+     "A",
+     138
+    ],
+    [
+     "A",
+     141
+    ],
+    [
+     "A",
+     142
+    ],
+    [
+     "A",
+     143
+    ],
+    [
+     "A",
+     144
+    ],
+    [
+     "A",
+     174
+    ],
+    [
+     "A",
+     192
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     196
+    ],
+    [
+     "A",
+     220
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.26666666666666666,
+    "druggability_score": 0.5,
+    "hit": false,
+    "n_pockets": 21
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.9
+  },
+  "6S7S": {
+   "holo_pdb": "6S7S",
+   "window": [
+    [
+     "A",
+     303
+    ],
+    [
+     "A",
+     304
+    ],
+    [
+     "A",
+     305
+    ],
+    [
+     "A",
+     429
+    ],
+    [
+     "A",
+     430
+    ],
+    [
+     "A",
+     432
+    ],
+    [
+     "C",
+     302
+    ],
+    [
+     "C",
+     303
+    ],
+    [
+     "C",
+     305
+    ],
+    [
+     "C",
+     306
+    ],
+    [
+     "C",
+     307
+    ],
+    [
+     "C",
+     394
+    ],
+    [
+     "C",
+     397
+    ],
+    [
+     "C",
+     400
+    ],
+    [
+     "C",
+     401
+    ],
+    [
+     "C",
+     432
+    ]
+   ],
+   "drug_ligand": "KZ8",
+   "holo_chains": [
+    "A",
+    "C"
+   ],
+   "uniprot": "P9WN93",
+   "holo_native": {
+    "overlap_frac": 0.875,
+    "druggability_score": 0.002,
+    "hit": false,
+    "n_pockets": 57
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.6,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "6S7U": {
+   "holo_pdb": "6S7U",
+   "window": [
+    [
+     "A",
+     303
+    ],
+    [
+     "A",
+     304
+    ],
+    [
+     "A",
+     305
+    ],
+    [
+     "A",
+     429
+    ],
+    [
+     "A",
+     432
+    ],
+    [
+     "C",
+     302
+    ],
+    [
+     "C",
+     303
+    ],
+    [
+     "C",
+     305
+    ],
+    [
+     "C",
+     306
+    ],
+    [
+     "C",
+     307
+    ],
+    [
+     "C",
+     394
+    ],
+    [
+     "C",
+     397
+    ],
+    [
+     "C",
+     400
+    ],
+    [
+     "C",
+     401
+    ],
+    [
+     "C",
+     432
+    ]
+   ],
+   "drug_ligand": "KZK",
+   "holo_chains": [
+    "A",
+    "C"
+   ],
+   "uniprot": "P9WN93",
+   "holo_native": {
+    "overlap_frac": 0.8666666666666667,
+    "druggability_score": 0.006,
+    "hit": false,
+    "n_pockets": 51
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.6,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "6S7K": {
+   "holo_pdb": "6S7K",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "6S7W": {
+   "holo_pdb": "6S7W",
+   "window": [
+    [
+     "A",
+     302
+    ],
+    [
+     "A",
+     303
+    ],
+    [
+     "A",
+     305
+    ],
+    [
+     "A",
+     306
+    ],
+    [
+     "A",
+     307
+    ],
+    [
+     "A",
+     394
+    ],
+    [
+     "A",
+     397
+    ],
+    [
+     "A",
+     400
+    ],
+    [
+     "A",
+     401
+    ],
+    [
+     "A",
+     432
+    ],
+    [
+     "C",
+     303
+    ],
+    [
+     "C",
+     304
+    ],
+    [
+     "C",
+     305
+    ],
+    [
+     "C",
+     429
+    ],
+    [
+     "C",
+     432
+    ]
+   ],
+   "drug_ligand": "KZT",
+   "holo_chains": [
+    "A",
+    "C"
+   ],
+   "uniprot": "P9WN93",
+   "holo_native": {
+    "overlap_frac": 0.8666666666666667,
+    "druggability_score": 0.001,
+    "hit": false,
+    "n_pockets": 49
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.6,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "6S43": {
+   "holo_pdb": "6S43",
+   "window": [
+    [
+     "A",
+     303
+    ],
+    [
+     "A",
+     304
+    ],
+    [
+     "A",
+     305
+    ],
+    [
+     "A",
+     429
+    ],
+    [
+     "A",
+     430
+    ],
+    [
+     "A",
+     432
+    ],
+    [
+     "C",
+     302
+    ],
+    [
+     "C",
+     303
+    ],
+    [
+     "C",
+     305
+    ],
+    [
+     "C",
+     306
+    ],
+    [
+     "C",
+     307
+    ],
+    [
+     "C",
+     394
+    ],
+    [
+     "C",
+     397
+    ],
+    [
+     "C",
+     400
+    ],
+    [
+     "C",
+     401
+    ],
+    [
+     "C",
+     432
+    ]
+   ],
+   "drug_ligand": "KUE",
+   "holo_chains": [
+    "A",
+    "C"
+   ],
+   "uniprot": "P9WN93",
+   "holo_native": {
+    "overlap_frac": 0.8125,
+    "druggability_score": 0.001,
+    "hit": false,
+    "n_pockets": 42
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.7,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "6S7Z": {
+   "holo_pdb": "6S7Z",
+   "window": [
+    [
+     "A",
+     303
+    ],
+    [
+     "A",
+     304
+    ],
+    [
+     "A",
+     305
+    ],
+    [
+     "A",
+     429
+    ],
+    [
+     "A",
+     430
+    ],
+    [
+     "A",
+     432
+    ],
+    [
+     "C",
+     302
+    ],
+    [
+     "C",
+     303
+    ],
+    [
+     "C",
+     305
+    ],
+    [
+     "C",
+     306
+    ],
+    [
+     "C",
+     307
+    ],
+    [
+     "C",
+     394
+    ],
+    [
+     "C",
+     397
+    ],
+    [
+     "C",
+     400
+    ],
+    [
+     "C",
+     401
+    ],
+    [
+     "C",
+     432
+    ]
+   ],
+   "drug_ligand": "KZN",
+   "holo_chains": [
+    "A",
+    "C"
+   ],
+   "uniprot": "P9WN93",
+   "holo_native": {
+    "overlap_frac": 0.875,
+    "druggability_score": 0.001,
+    "hit": false,
+    "n_pockets": 53
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.8,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "6S88": {
+   "holo_pdb": "6S88",
+   "window": [
+    [
+     "A",
+     303
+    ],
+    [
+     "A",
+     304
+    ],
+    [
+     "A",
+     305
+    ],
+    [
+     "A",
+     429
+    ],
+    [
+     "A",
+     430
+    ],
+    [
+     "A",
+     432
+    ],
+    [
+     "C",
+     302
+    ],
+    [
+     "C",
+     303
+    ],
+    [
+     "C",
+     305
+    ],
+    [
+     "C",
+     306
+    ],
+    [
+     "C",
+     307
+    ],
+    [
+     "C",
+     394
+    ],
+    [
+     "C",
+     397
+    ],
+    [
+     "C",
+     400
+    ],
+    [
+     "C",
+     401
+    ],
+    [
+     "C",
+     432
+    ]
+   ],
+   "drug_ligand": "L0K",
+   "holo_chains": [
+    "A",
+    "C"
+   ],
+   "uniprot": "P9WN93",
+   "holo_native": {
+    "overlap_frac": 0.875,
+    "druggability_score": 0.004,
+    "hit": false,
+    "n_pockets": 45
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.8,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "9CUX": {
+   "holo_pdb": "9CUX",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "9CUW": {
+   "holo_pdb": "9CUW",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "3IL1": {
+   "holo_pdb": "3IL1",
+   "window": [
+    [
+     "B",
+     61
+    ],
+    [
+     "B",
+     89
+    ],
+    [
+     "B",
+     90
+    ],
+    [
+     "B",
+     91
+    ],
+    [
+     "B",
+     96
+    ],
+    [
+     "B",
+     138
+    ],
+    [
+     "B",
+     141
+    ],
+    [
+     "B",
+     142
+    ],
+    [
+     "B",
+     143
+    ],
+    [
+     "B",
+     192
+    ],
+    [
+     "B",
+     193
+    ],
+    [
+     "B",
+     220
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "B"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.25,
+    "druggability_score": 0.065,
+    "hit": false,
+    "n_pockets": 14
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.9,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "3IJO": {
+   "holo_pdb": "3IJO",
+   "window": [
+    [
+     "B",
+     61
+    ],
+    [
+     "B",
+     89
+    ],
+    [
+     "B",
+     90
+    ],
+    [
+     "B",
+     91
+    ],
+    [
+     "B",
+     96
+    ],
+    [
+     "B",
+     138
+    ],
+    [
+     "B",
+     141
+    ],
+    [
+     "B",
+     142
+    ],
+    [
+     "B",
+     143
+    ],
+    [
+     "B",
+     192
+    ],
+    [
+     "B",
+     193
+    ],
+    [
+     "B",
+     220
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "B"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.25,
+    "druggability_score": 0.495,
+    "hit": false,
+    "n_pockets": 13
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.2,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "3ILT": {
+   "holo_pdb": "3ILT",
+   "window": [
+    [
+     "B",
+     104
+    ],
+    [
+     "B",
+     105
+    ],
+    [
+     "B",
+     106
+    ],
+    [
+     "B",
+     107
+    ],
+    [
+     "B",
+     108
+    ],
+    [
+     "B",
+     239
+    ],
+    [
+     "B",
+     242
+    ],
+    [
+     "B",
+     247
+    ],
+    [
+     "B",
+     248
+    ],
+    [
+     "B",
+     251
+    ],
+    [
+     "E",
+     92
+    ],
+    [
+     "E",
+     217
+    ],
+    [
+     "E",
+     218
+    ],
+    [
+     "E",
+     219
+    ]
+   ],
+   "drug_ligand": "TRU",
+   "holo_chains": [
+    "B",
+    "E"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.938,
+    "hit": true,
+    "n_pockets": 21
+   },
+   "n_apo_candidates": 40,
+   "apo_candidates": [
+    {
+     "pdb_id": "1MQI",
+     "resolution": 1.35,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "1M5E",
+     "resolution": 1.46,
+     "audit": {
+      "survives": true,
+      "reason": null,
+      "near_pocket_hetatm": []
+     },
+     "score": {
+      "overlap_frac": 0.5714285714285714,
+      "druggability_score": 0.0,
+      "hit": false,
+      "n_pockets": 17
+     },
+     "verdict": "apo_closed"
+    },
+    {
+     "pdb_id": "1MQD",
+     "resolution": 1.46,
+     "audit": {
+      "survives": true,
+      "reason": null,
+      "near_pocket_hetatm": []
+     },
+     "score": {
+      "overlap_frac": 0.2857142857142857,
+      "druggability_score": 0.0,
+      "hit": false,
+      "n_pockets": 15
+     },
+     "verdict": "apo_closed"
+    },
+    {
+     "pdb_id": "1FTK",
+     "resolution": 1.6,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "1P1N",
+     "resolution": 1.6,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "1P1O",
+     "resolution": 1.6,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "1M5C",
+     "resolution": 1.65,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "1MM7",
+     "resolution": 1.65,
+     "audit": {
+      "survives": true,
+      "reason": null,
+      "near_pocket_hetatm": []
+     },
+     "score": {
+      "overlap_frac": 0.5714285714285714,
+      "druggability_score": 0.0,
+      "hit": false,
+      "n_pockets": 15
+     },
+     "verdict": "apo_closed"
+    }
+   ],
+   "recovered": true,
+   "best_recovery": "1M5E",
+   "verdict": "VALID_NEW_TARGET",
+   "elapsed_s": 31.6,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "3ILU": {
+   "holo_pdb": "3ILU",
+   "window": [
+    [
+     "B",
+     104
+    ],
+    [
+     "B",
+     105
+    ],
+    [
+     "B",
+     106
+    ],
+    [
+     "B",
+     107
+    ],
+    [
+     "B",
+     108
+    ],
+    [
+     "B",
+     218
+    ],
+    [
+     "B",
+     239
+    ],
+    [
+     "B",
+     242
+    ],
+    [
+     "E",
+     92
+    ],
+    [
+     "E",
+     105
+    ],
+    [
+     "E",
+     108
+    ],
+    [
+     "E",
+     217
+    ],
+    [
+     "E",
+     218
+    ],
+    [
+     "E",
+     219
+    ]
+   ],
+   "drug_ligand": "HFZ",
+   "holo_chains": [
+    "B",
+    "E"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.437,
+    "hit": false,
+    "n_pockets": 24
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.4,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "8R32": {
+   "holo_pdb": "8R32",
+   "window": [
+    [
+     "A",
+     531
+    ],
+    [
+     "A",
+     532
+    ],
+    [
+     "A",
+     533
+    ],
+    [
+     "A",
+     534
+    ],
+    [
+     "A",
+     535
+    ],
+    [
+     "A",
+     782
+    ],
+    [
+     "A",
+     783
+    ],
+    [
+     "A",
+     786
+    ],
+    [
+     "A",
+     791
+    ]
+   ],
+   "drug_ligand": "2J9",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P42260",
+   "holo_native": {
+    "overlap_frac": 0.6666666666666666,
+    "druggability_score": 0.01,
+    "hit": false,
+    "n_pockets": 17
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.6
+  },
+  "8R36": {
+   "holo_pdb": "8R36",
+   "error": "window size 22 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     531
+    ],
+    [
+     "A",
+     532
+    ],
+    [
+     "A",
+     533
+    ],
+    [
+     "A",
+     534
+    ],
+    [
+     "A",
+     535
+    ],
+    [
+     "A",
+     761
+    ],
+    [
+     "A",
+     762
+    ],
+    [
+     "A",
+     763
+    ],
+    [
+     "A",
+     782
+    ],
+    [
+     "A",
+     783
+    ],
+    [
+     "A",
+     786
+    ],
+    [
+     "A",
+     791
+    ],
+    [
+     "B",
+     519
+    ],
+    [
+     "B",
+     532
+    ],
+    [
+     "B",
+     533
+    ],
+    [
+     "B",
+     534
+    ],
+    [
+     "B",
+     535
+    ],
+    [
+     "B",
+     761
+    ],
+    [
+     "B",
+     762
+    ],
+    [
+     "B",
+     763
+    ],
+    [
+     "B",
+     786
+    ],
+    [
+     "B",
+     791
+    ]
+   ],
+   "drug_ligand": "9TE"
+  },
+  "3MD0": {
+   "holo_pdb": "3MD0",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "3IK6": {
+   "holo_pdb": "3IK6",
+   "window": [
+    [
+     "B",
+     104
+    ],
+    [
+     "B",
+     105
+    ],
+    [
+     "B",
+     106
+    ],
+    [
+     "B",
+     107
+    ],
+    [
+     "B",
+     108
+    ],
+    [
+     "B",
+     238
+    ],
+    [
+     "B",
+     239
+    ],
+    [
+     "B",
+     242
+    ],
+    [
+     "E",
+     92
+    ],
+    [
+     "E",
+     105
+    ],
+    [
+     "E",
+     108
+    ],
+    [
+     "E",
+     217
+    ],
+    [
+     "E",
+     218
+    ],
+    [
+     "E",
+     219
+    ]
+   ],
+   "drug_ligand": "HCZ",
+   "holo_chains": [
+    "B",
+    "E"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.9285714285714286,
+    "druggability_score": 0.009,
+    "hit": false,
+    "n_pockets": 22
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.6,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "3M3F": {
+   "holo_pdb": "3M3F",
+   "window": [
+    [
+     "A",
+     61
+    ],
+    [
+     "A",
+     89
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     91
+    ],
+    [
+     "A",
+     96
+    ],
+    [
+     "A",
+     138
+    ],
+    [
+     "A",
+     141
+    ],
+    [
+     "A",
+     142
+    ],
+    [
+     "A",
+     143
+    ],
+    [
+     "A",
+     192
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     196
+    ],
+    [
+     "A",
+     220
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19492",
+   "holo_native": {
+    "overlap_frac": 0.23076923076923078,
+    "druggability_score": 0.218,
+    "hit": false,
+    "n_pockets": 16
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.2
+  },
+  "6H8S": {
+   "holo_pdb": "6H8S",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "3M3K": {
+   "holo_pdb": "3M3K",
+   "window": [
+    [
+     "A",
+     61
+    ],
+    [
+     "A",
+     89
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     91
+    ],
+    [
+     "A",
+     96
+    ],
+    [
+     "A",
+     138
+    ],
+    [
+     "A",
+     140
+    ],
+    [
+     "A",
+     141
+    ],
+    [
+     "A",
+     142
+    ],
+    [
+     "A",
+     143
+    ],
+    [
+     "A",
+     192
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     196
+    ],
+    [
+     "A",
+     220
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19492",
+   "holo_native": {
+    "overlap_frac": 0.2857142857142857,
+    "druggability_score": 0.088,
+    "hit": false,
+    "n_pockets": 14
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.7,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "7FRV": {
+   "holo_pdb": "7FRV",
+   "window": [
+    [
+     "A",
+     443
+    ],
+    [
+     "A",
+     444
+    ],
+    [
+     "A",
+     445
+    ],
+    [
+     "A",
+     446
+    ],
+    [
+     "A",
+     447
+    ],
+    [
+     "A",
+     448
+    ],
+    [
+     "A",
+     449
+    ],
+    [
+     "A",
+     467
+    ],
+    [
+     "A",
+     494
+    ],
+    [
+     "A",
+     501
+    ],
+    [
+     "A",
+     525
+    ],
+    [
+     "A",
+     526
+    ],
+    [
+     "A",
+     527
+    ],
+    [
+     "A",
+     528
+    ],
+    [
+     "A",
+     529
+    ],
+    [
+     "A",
+     530
+    ],
+    [
+     "A",
+     531
+    ],
+    [
+     "A",
+     532
+    ],
+    [
+     "A",
+     533
+    ],
+    [
+     "A",
+     534
+    ]
+   ],
+   "drug_ligand": "FBP",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P30613",
+   "holo_native": {
+    "overlap_frac": 0.85,
+    "druggability_score": 0.005,
+    "hit": false,
+    "n_pockets": 24
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 5.4
+  },
+  "7FRX": {
+   "holo_pdb": "7FRX",
+   "window": [
+    [
+     "A",
+     38
+    ],
+    [
+     "A",
+     39
+    ],
+    [
+     "A",
+     42
+    ],
+    [
+     "A",
+     330
+    ],
+    [
+     "A",
+     365
+    ],
+    [
+     "A",
+     366
+    ],
+    [
+     "A",
+     402
+    ],
+    [
+     "A",
+     405
+    ],
+    [
+     "A",
+     406
+    ],
+    [
+     "A",
+     409
+    ],
+    [
+     "C",
+     38
+    ],
+    [
+     "C",
+     39
+    ],
+    [
+     "C",
+     42
+    ],
+    [
+     "C",
+     330
+    ],
+    [
+     "C",
+     365
+    ],
+    [
+     "C",
+     366
+    ],
+    [
+     "C",
+     402
+    ],
+    [
+     "C",
+     405
+    ],
+    [
+     "C",
+     406
+    ],
+    [
+     "C",
+     409
+    ]
+   ],
+   "drug_ligand": "O88",
+   "holo_chains": [
+    "A",
+    "C"
+   ],
+   "uniprot": "P30613",
+   "holo_native": {
+    "overlap_frac": 0.8,
+    "druggability_score": 0.875,
+    "hit": true,
+    "n_pockets": 55
+   },
+   "n_apo_candidates": 34,
+   "apo_candidates": [
+    {
+     "pdb_id": "7FS3",
+     "resolution": 1.655,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "O9I",
+        "min_dist_to_window": 1.72,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5SC9",
+     "resolution": 1.685,
+     "audit": {
+      "survives": true,
+      "reason": null,
+      "near_pocket_hetatm": []
+     },
+     "score": {
+      "overlap_frac": 1.0,
+      "druggability_score": 0.916,
+      "hit": true,
+      "n_pockets": 54
+     },
+     "verdict": "apo_still_open"
+    },
+    {
+     "pdb_id": "5SCK",
+     "resolution": 1.717,
+     "audit": {
+      "survives": true,
+      "reason": null,
+      "near_pocket_hetatm": []
+     },
+     "score": {
+      "overlap_frac": 1.0,
+      "druggability_score": 0.938,
+      "hit": true,
+      "n_pockets": 53
+     },
+     "verdict": "apo_still_open"
+    },
+    {
+     "pdb_id": "7FS9",
+     "resolution": 1.721,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "OB0",
+        "min_dist_to_window": 1.77,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "7FRW",
+     "resolution": 1.737,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "OA0",
+        "min_dist_to_window": 2.45,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "OA0",
+        "min_dist_to_window": 1.91,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5SC8",
+     "resolution": 1.77,
+     "audit": {
+      "survives": true,
+      "reason": null,
+      "near_pocket_hetatm": []
+     },
+     "score": {
+      "overlap_frac": 1.0,
+      "druggability_score": 0.931,
+      "hit": true,
+      "n_pockets": 55
+     },
+     "verdict": "apo_still_open"
+    }
+   ],
+   "recovered": false,
+   "best_recovery": null,
+   "verdict": "holo_ok_no_closed_apo",
+   "elapsed_s": 39.4,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "7FRY": {
+   "holo_pdb": "7FRY",
+   "error": "window size 22 outside [6,20] sanity range",
+   "window": [
+    [
+     "B",
+     38
+    ],
+    [
+     "B",
+     39
+    ],
+    [
+     "B",
+     42
+    ],
+    [
+     "B",
+     330
+    ],
+    [
+     "B",
+     365
+    ],
+    [
+     "B",
+     366
+    ],
+    [
+     "B",
+     401
+    ],
+    [
+     "B",
+     402
+    ],
+    [
+     "B",
+     405
+    ],
+    [
+     "B",
+     406
+    ],
+    [
+     "B",
+     409
+    ],
+    [
+     "D",
+     38
+    ],
+    [
+     "D",
+     39
+    ],
+    [
+     "D",
+     42
+    ],
+    [
+     "D",
+     330
+    ],
+    [
+     "D",
+     365
+    ],
+    [
+     "D",
+     366
+    ],
+    [
+     "D",
+     401
+    ],
+    [
+     "D",
+     402
+    ],
+    [
+     "D",
+     405
+    ],
+    [
+     "D",
+     406
+    ],
+    [
+     "D",
+     409
+    ]
+   ],
+   "drug_ligand": "Y0T"
+  },
+  "7FS1": {
+   "holo_pdb": "7FS1",
+   "error": "window size 24 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     38
+    ],
+    [
+     "A",
+     39
+    ],
+    [
+     "A",
+     42
+    ],
+    [
+     "A",
+     327
+    ],
+    [
+     "A",
+     330
+    ],
+    [
+     "A",
+     365
+    ],
+    [
+     "A",
+     366
+    ],
+    [
+     "A",
+     400
+    ],
+    [
+     "A",
+     401
+    ],
+    [
+     "A",
+     402
+    ],
+    [
+     "A",
+     405
+    ],
+    [
+     "A",
+     406
+    ],
+    [
+     "A",
+     409
+    ],
+    [
+     "A",
+     410
+    ],
+    [
+     "C",
+     38
+    ],
+    [
+     "C",
+     39
+    ],
+    [
+     "C",
+     42
+    ],
+    [
+     "C",
+     330
+    ],
+    [
+     "C",
+     365
+    ],
+    [
+     "C",
+     366
+    ],
+    [
+     "C",
+     402
+    ],
+    [
+     "C",
+     405
+    ],
+    [
+     "C",
+     406
+    ],
+    [
+     "C",
+     409
+    ]
+   ],
+   "drug_ligand": "O8F"
+  },
+  "7FS2": {
+   "holo_pdb": "7FS2",
+   "error": "window size 23 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     38
+    ],
+    [
+     "A",
+     39
+    ],
+    [
+     "A",
+     41
+    ],
+    [
+     "A",
+     42
+    ],
+    [
+     "A",
+     330
+    ],
+    [
+     "A",
+     365
+    ],
+    [
+     "A",
+     366
+    ],
+    [
+     "A",
+     400
+    ],
+    [
+     "A",
+     401
+    ],
+    [
+     "A",
+     402
+    ],
+    [
+     "A",
+     405
+    ],
+    [
+     "A",
+     406
+    ],
+    [
+     "A",
+     409
+    ],
+    [
+     "C",
+     38
+    ],
+    [
+     "C",
+     39
+    ],
+    [
+     "C",
+     42
+    ],
+    [
+     "C",
+     330
+    ],
+    [
+     "C",
+     365
+    ],
+    [
+     "C",
+     366
+    ],
+    [
+     "C",
+     402
+    ],
+    [
+     "C",
+     405
+    ],
+    [
+     "C",
+     406
+    ],
+    [
+     "C",
+     409
+    ]
+   ],
+   "drug_ligand": "O7X"
+  },
+  "7FS3": {
+   "holo_pdb": "7FS3",
+   "error": "window size 21 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     38
+    ],
+    [
+     "A",
+     39
+    ],
+    [
+     "A",
+     42
+    ],
+    [
+     "A",
+     330
+    ],
+    [
+     "A",
+     365
+    ],
+    [
+     "A",
+     366
+    ],
+    [
+     "A",
+     402
+    ],
+    [
+     "A",
+     405
+    ],
+    [
+     "A",
+     406
+    ],
+    [
+     "A",
+     409
+    ],
+    [
+     "C",
+     38
+    ],
+    [
+     "C",
+     39
+    ],
+    [
+     "C",
+     42
+    ],
+    [
+     "C",
+     323
+    ],
+    [
+     "C",
+     330
+    ],
+    [
+     "C",
+     365
+    ],
+    [
+     "C",
+     366
+    ],
+    [
+     "C",
+     402
+    ],
+    [
+     "C",
+     405
+    ],
+    [
+     "C",
+     406
+    ],
+    [
+     "C",
+     409
+    ]
+   ],
+   "drug_ligand": "O9I"
+  },
+  "7FS4": {
+   "holo_pdb": "7FS4",
+   "error": "window size 23 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     38
+    ],
+    [
+     "A",
+     39
+    ],
+    [
+     "A",
+     41
+    ],
+    [
+     "A",
+     42
+    ],
+    [
+     "A",
+     330
+    ],
+    [
+     "A",
+     365
+    ],
+    [
+     "A",
+     366
+    ],
+    [
+     "A",
+     367
+    ],
+    [
+     "A",
+     400
+    ],
+    [
+     "A",
+     401
+    ],
+    [
+     "A",
+     402
+    ],
+    [
+     "A",
+     405
+    ],
+    [
+     "A",
+     406
+    ],
+    [
+     "A",
+     409
+    ],
+    [
+     "C",
+     38
+    ],
+    [
+     "C",
+     39
+    ],
+    [
+     "C",
+     42
+    ],
+    [
+     "C",
+     365
+    ],
+    [
+     "C",
+     366
+    ],
+    [
+     "C",
+     402
+    ],
+    [
+     "C",
+     405
+    ],
+    [
+     "C",
+     406
+    ],
+    [
+     "C",
+     409
+    ]
+   ],
+   "drug_ligand": "O9R"
+  },
+  "7FRW": {
+   "holo_pdb": "7FRW",
+   "window": [
+    [
+     "A",
+     443
+    ],
+    [
+     "A",
+     444
+    ],
+    [
+     "A",
+     445
+    ],
+    [
+     "A",
+     446
+    ],
+    [
+     "A",
+     447
+    ],
+    [
+     "A",
+     448
+    ],
+    [
+     "A",
+     449
+    ],
+    [
+     "A",
+     467
+    ],
+    [
+     "A",
+     494
+    ],
+    [
+     "A",
+     501
+    ],
+    [
+     "A",
+     525
+    ],
+    [
+     "A",
+     526
+    ],
+    [
+     "A",
+     527
+    ],
+    [
+     "A",
+     528
+    ],
+    [
+     "A",
+     529
+    ],
+    [
+     "A",
+     530
+    ],
+    [
+     "A",
+     531
+    ],
+    [
+     "A",
+     532
+    ],
+    [
+     "A",
+     533
+    ],
+    [
+     "A",
+     534
+    ]
+   ],
+   "drug_ligand": "FBP",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P30613",
+   "holo_native": {
+    "overlap_frac": 0.9,
+    "druggability_score": 0.007,
+    "hit": false,
+    "n_pockets": 27
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.7,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "7FRZ": {
+   "holo_pdb": "7FRZ",
+   "window": [
+    [
+     "A",
+     443
+    ],
+    [
+     "A",
+     444
+    ],
+    [
+     "A",
+     445
+    ],
+    [
+     "A",
+     446
+    ],
+    [
+     "A",
+     447
+    ],
+    [
+     "A",
+     448
+    ],
+    [
+     "A",
+     449
+    ],
+    [
+     "A",
+     494
+    ],
+    [
+     "A",
+     501
+    ],
+    [
+     "A",
+     525
+    ],
+    [
+     "A",
+     526
+    ],
+    [
+     "A",
+     527
+    ],
+    [
+     "A",
+     528
+    ],
+    [
+     "A",
+     529
+    ],
+    [
+     "A",
+     530
+    ],
+    [
+     "A",
+     531
+    ],
+    [
+     "A",
+     532
+    ],
+    [
+     "A",
+     533
+    ],
+    [
+     "A",
+     534
+    ]
+   ],
+   "drug_ligand": "FBP",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P30613",
+   "holo_native": {
+    "overlap_frac": 0.8421052631578947,
+    "druggability_score": 0.006,
+    "hit": false,
+    "n_pockets": 25
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.2,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "7FS6": {
+   "holo_pdb": "7FS6",
+   "error": "window size 23 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     38
+    ],
+    [
+     "A",
+     39
+    ],
+    [
+     "A",
+     42
+    ],
+    [
+     "A",
+     323
+    ],
+    [
+     "A",
+     362
+    ],
+    [
+     "A",
+     365
+    ],
+    [
+     "A",
+     366
+    ],
+    [
+     "A",
+     402
+    ],
+    [
+     "A",
+     405
+    ],
+    [
+     "A",
+     406
+    ],
+    [
+     "A",
+     409
+    ],
+    [
+     "C",
+     38
+    ],
+    [
+     "C",
+     39
+    ],
+    [
+     "C",
+     42
+    ],
+    [
+     "C",
+     323
+    ],
+    [
+     "C",
+     330
+    ],
+    [
+     "C",
+     365
+    ],
+    [
+     "C",
+     366
+    ],
+    [
+     "C",
+     401
+    ],
+    [
+     "C",
+     402
+    ],
+    [
+     "C",
+     405
+    ],
+    [
+     "C",
+     406
+    ],
+    [
+     "C",
+     409
+    ]
+   ],
+   "drug_ligand": "Y3Z"
+  },
+  "7FS9": {
+   "holo_pdb": "7FS9",
+   "window": [
+    [
+     "A",
+     443
+    ],
+    [
+     "A",
+     444
+    ],
+    [
+     "A",
+     445
+    ],
+    [
+     "A",
+     446
+    ],
+    [
+     "A",
+     447
+    ],
+    [
+     "A",
+     448
+    ],
+    [
+     "A",
+     449
+    ],
+    [
+     "A",
+     467
+    ],
+    [
+     "A",
+     494
+    ],
+    [
+     "A",
+     501
+    ],
+    [
+     "A",
+     525
+    ],
+    [
+     "A",
+     526
+    ],
+    [
+     "A",
+     527
+    ],
+    [
+     "A",
+     528
+    ],
+    [
+     "A",
+     529
+    ],
+    [
+     "A",
+     530
+    ],
+    [
+     "A",
+     531
+    ],
+    [
+     "A",
+     532
+    ],
+    [
+     "A",
+     533
+    ],
+    [
+     "A",
+     534
+    ]
+   ],
+   "drug_ligand": "FBP",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P30613",
+   "holo_native": {
+    "overlap_frac": 0.9,
+    "druggability_score": 0.003,
+    "hit": false,
+    "n_pockets": 24
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 2.7,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "7FSA": {
+   "holo_pdb": "7FSA",
+   "error": "window size 25 outside [6,20] sanity range",
+   "window": [
+    [
+     "B",
+     38
+    ],
+    [
+     "B",
+     39
+    ],
+    [
+     "B",
+     41
+    ],
+    [
+     "B",
+     42
+    ],
+    [
+     "B",
+     330
+    ],
+    [
+     "B",
+     365
+    ],
+    [
+     "B",
+     366
+    ],
+    [
+     "B",
+     400
+    ],
+    [
+     "B",
+     401
+    ],
+    [
+     "B",
+     402
+    ],
+    [
+     "B",
+     405
+    ],
+    [
+     "B",
+     406
+    ],
+    [
+     "B",
+     409
+    ],
+    [
+     "D",
+     38
+    ],
+    [
+     "D",
+     39
+    ],
+    [
+     "D",
+     42
+    ],
+    [
+     "D",
+     323
+    ],
+    [
+     "D",
+     330
+    ],
+    [
+     "D",
+     365
+    ],
+    [
+     "D",
+     366
+    ],
+    [
+     "D",
+     367
+    ],
+    [
+     "D",
+     402
+    ],
+    [
+     "D",
+     405
+    ],
+    [
+     "D",
+     406
+    ],
+    [
+     "D",
+     409
+    ]
+   ],
+   "drug_ligand": "OCU"
+  },
+  "7FSC": {
+   "holo_pdb": "7FSC",
+   "window": [
+    [
+     "A",
+     443
+    ],
+    [
+     "A",
+     444
+    ],
+    [
+     "A",
+     445
+    ],
+    [
+     "A",
+     446
+    ],
+    [
+     "A",
+     447
+    ],
+    [
+     "A",
+     448
+    ],
+    [
+     "A",
+     449
+    ],
+    [
+     "A",
+     467
+    ],
+    [
+     "A",
+     494
+    ],
+    [
+     "A",
+     501
+    ],
+    [
+     "A",
+     525
+    ],
+    [
+     "A",
+     526
+    ],
+    [
+     "A",
+     527
+    ],
+    [
+     "A",
+     528
+    ],
+    [
+     "A",
+     529
+    ],
+    [
+     "A",
+     530
+    ],
+    [
+     "A",
+     531
+    ],
+    [
+     "A",
+     532
+    ],
+    [
+     "A",
+     533
+    ],
+    [
+     "A",
+     534
+    ]
+   ],
+   "drug_ligand": "FBP",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P30613",
+   "holo_native": {
+    "overlap_frac": 0.9,
+    "druggability_score": 0.002,
+    "hit": false,
+    "n_pockets": 24
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.6,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "7FS0": {
+   "holo_pdb": "7FS0",
+   "error": "window size 24 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     38
+    ],
+    [
+     "A",
+     39
+    ],
+    [
+     "A",
+     42
+    ],
+    [
+     "A",
+     330
+    ],
+    [
+     "A",
+     365
+    ],
+    [
+     "A",
+     366
+    ],
+    [
+     "A",
+     367
+    ],
+    [
+     "A",
+     401
+    ],
+    [
+     "A",
+     402
+    ],
+    [
+     "A",
+     405
+    ],
+    [
+     "A",
+     406
+    ],
+    [
+     "A",
+     409
+    ],
+    [
+     "C",
+     38
+    ],
+    [
+     "C",
+     39
+    ],
+    [
+     "C",
+     42
+    ],
+    [
+     "C",
+     330
+    ],
+    [
+     "C",
+     365
+    ],
+    [
+     "C",
+     366
+    ],
+    [
+     "C",
+     367
+    ],
+    [
+     "C",
+     401
+    ],
+    [
+     "C",
+     402
+    ],
+    [
+     "C",
+     405
+    ],
+    [
+     "C",
+     406
+    ],
+    [
+     "C",
+     409
+    ]
+   ],
+   "drug_ligand": "O8X"
+  },
+  "7FS5": {
+   "holo_pdb": "7FS5",
+   "error": "window size 23 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     38
+    ],
+    [
+     "A",
+     39
+    ],
+    [
+     "A",
+     42
+    ],
+    [
+     "A",
+     323
+    ],
+    [
+     "A",
+     330
+    ],
+    [
+     "A",
+     362
+    ],
+    [
+     "A",
+     365
+    ],
+    [
+     "A",
+     366
+    ],
+    [
+     "A",
+     401
+    ],
+    [
+     "A",
+     402
+    ],
+    [
+     "A",
+     405
+    ],
+    [
+     "A",
+     406
+    ],
+    [
+     "A",
+     409
+    ],
+    [
+     "C",
+     38
+    ],
+    [
+     "C",
+     39
+    ],
+    [
+     "C",
+     42
+    ],
+    [
+     "C",
+     323
+    ],
+    [
+     "C",
+     365
+    ],
+    [
+     "C",
+     366
+    ],
+    [
+     "C",
+     402
+    ],
+    [
+     "C",
+     405
+    ],
+    [
+     "C",
+     406
+    ],
+    [
+     "C",
+     409
+    ]
+   ],
+   "drug_ligand": "O8O"
+  },
+  "7FS8": {
+   "holo_pdb": "7FS8",
+   "window": [
+    [
+     "A",
+     443
+    ],
+    [
+     "A",
+     444
+    ],
+    [
+     "A",
+     445
+    ],
+    [
+     "A",
+     446
+    ],
+    [
+     "A",
+     447
+    ],
+    [
+     "A",
+     448
+    ],
+    [
+     "A",
+     449
+    ],
+    [
+     "A",
+     467
+    ],
+    [
+     "A",
+     494
+    ],
+    [
+     "A",
+     501
+    ],
+    [
+     "A",
+     525
+    ],
+    [
+     "A",
+     526
+    ],
+    [
+     "A",
+     527
+    ],
+    [
+     "A",
+     528
+    ],
+    [
+     "A",
+     529
+    ],
+    [
+     "A",
+     530
+    ],
+    [
+     "A",
+     531
+    ],
+    [
+     "A",
+     532
+    ],
+    [
+     "A",
+     533
+    ],
+    [
+     "A",
+     534
+    ]
+   ],
+   "drug_ligand": "FBP",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P30613",
+   "holo_native": {
+    "overlap_frac": 0.85,
+    "druggability_score": 0.005,
+    "hit": false,
+    "n_pockets": 23
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.1,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "7FSB": {
+   "holo_pdb": "7FSB",
+   "window": [
+    [
+     "A",
+     443
+    ],
+    [
+     "A",
+     444
+    ],
+    [
+     "A",
+     445
+    ],
+    [
+     "A",
+     446
+    ],
+    [
+     "A",
+     447
+    ],
+    [
+     "A",
+     448
+    ],
+    [
+     "A",
+     449
+    ],
+    [
+     "A",
+     467
+    ],
+    [
+     "A",
+     494
+    ],
+    [
+     "A",
+     501
+    ],
+    [
+     "A",
+     525
+    ],
+    [
+     "A",
+     526
+    ],
+    [
+     "A",
+     527
+    ],
+    [
+     "A",
+     528
+    ],
+    [
+     "A",
+     529
+    ],
+    [
+     "A",
+     530
+    ],
+    [
+     "A",
+     531
+    ],
+    [
+     "A",
+     532
+    ],
+    [
+     "A",
+     533
+    ],
+    [
+     "A",
+     534
+    ]
+   ],
+   "drug_ligand": "FBP",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P30613",
+   "holo_native": {
+    "overlap_frac": 0.8,
+    "druggability_score": 0.005,
+    "hit": false,
+    "n_pockets": 25
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 5.0,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "7FSD": {
+   "holo_pdb": "7FSD",
+   "error": "window size 23 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     38
+    ],
+    [
+     "A",
+     39
+    ],
+    [
+     "A",
+     42
+    ],
+    [
+     "A",
+     323
+    ],
+    [
+     "A",
+     330
+    ],
+    [
+     "A",
+     365
+    ],
+    [
+     "A",
+     366
+    ],
+    [
+     "A",
+     402
+    ],
+    [
+     "A",
+     405
+    ],
+    [
+     "A",
+     406
+    ],
+    [
+     "A",
+     409
+    ],
+    [
+     "C",
+     38
+    ],
+    [
+     "C",
+     39
+    ],
+    [
+     "C",
+     42
+    ],
+    [
+     "C",
+     330
+    ],
+    [
+     "C",
+     362
+    ],
+    [
+     "C",
+     365
+    ],
+    [
+     "C",
+     366
+    ],
+    [
+     "C",
+     367
+    ],
+    [
+     "C",
+     402
+    ],
+    [
+     "C",
+     405
+    ],
+    [
+     "C",
+     406
+    ],
+    [
+     "C",
+     409
+    ]
+   ],
+   "drug_ligand": "OD9"
+  },
+  "5V03": {
+   "holo_pdb": "5V03",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "3M3L": {
+   "holo_pdb": "3M3L",
+   "window": [
+    [
+     "A",
+     61
+    ],
+    [
+     "A",
+     89
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     91
+    ],
+    [
+     "A",
+     96
+    ],
+    [
+     "A",
+     138
+    ],
+    [
+     "A",
+     141
+    ],
+    [
+     "A",
+     142
+    ],
+    [
+     "A",
+     143
+    ],
+    [
+     "A",
+     192
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     196
+    ],
+    [
+     "A",
+     220
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.23076923076923078,
+    "druggability_score": 0.091,
+    "hit": false,
+    "n_pockets": 15
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.5,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "4FAT": {
+   "holo_pdb": "4FAT",
+   "window": [
+    [
+     "A",
+     92
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     107
+    ],
+    [
+     "A",
+     108
+    ],
+    [
+     "A",
+     217
+    ],
+    [
+     "A",
+     218
+    ],
+    [
+     "A",
+     219
+    ],
+    [
+     "A",
+     239
+    ],
+    [
+     "A",
+     242
+    ]
+   ],
+   "drug_ligand": "496",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.5,
+    "druggability_score": 0.001,
+    "hit": false,
+    "n_pockets": 13
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.9,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "3LSW": {
+   "holo_pdb": "3LSW",
+   "window": [
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     107
+    ],
+    [
+     "A",
+     108
+    ],
+    [
+     "A",
+     217
+    ],
+    [
+     "A",
+     218
+    ],
+    [
+     "A",
+     219
+    ]
+   ],
+   "drug_ligand": "4MP",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19492",
+   "holo_native": {
+    "overlap_frac": 0.5714285714285714,
+    "druggability_score": 0.0,
+    "hit": false,
+    "n_pockets": 9
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.3,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "3LSX": {
+   "holo_pdb": "3LSX",
+   "window": [
+    [
+     "A",
+     61
+    ],
+    [
+     "A",
+     89
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     91
+    ],
+    [
+     "A",
+     96
+    ],
+    [
+     "A",
+     138
+    ],
+    [
+     "A",
+     141
+    ],
+    [
+     "A",
+     142
+    ],
+    [
+     "A",
+     143
+    ],
+    [
+     "A",
+     192
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     196
+    ],
+    [
+     "A",
+     220
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19492",
+   "holo_native": {
+    "overlap_frac": 0.23076923076923078,
+    "druggability_score": 0.141,
+    "hit": false,
+    "n_pockets": 11
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.5,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "5OEW": {
+   "holo_pdb": "5OEW",
+   "error": "window size 21 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     104
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     107
+    ],
+    [
+     "A",
+     108
+    ],
+    [
+     "A",
+     217
+    ],
+    [
+     "A",
+     218
+    ],
+    [
+     "A",
+     219
+    ],
+    [
+     "A",
+     239
+    ],
+    [
+     "A",
+     242
+    ],
+    [
+     "A",
+     247
+    ],
+    [
+     "B",
+     92
+    ],
+    [
+     "B",
+     105
+    ],
+    [
+     "B",
+     106
+    ],
+    [
+     "B",
+     107
+    ],
+    [
+     "B",
+     108
+    ],
+    [
+     "B",
+     217
+    ],
+    [
+     "B",
+     218
+    ],
+    [
+     "B",
+     219
+    ],
+    [
+     "B",
+     242
+    ],
+    [
+     "B",
+     247
+    ]
+   ],
+   "drug_ligand": "9TE"
+  },
+  "5MCP": {
+   "holo_pdb": "5MCP",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "5V02": {
+   "holo_pdb": "5V02",
+   "window": [
+    [
+     "B",
+     477
+    ],
+    [
+     "B",
+     480
+    ],
+    [
+     "B",
+     481
+    ],
+    [
+     "R",
+     19
+    ],
+    [
+     "R",
+     27
+    ],
+    [
+     "R",
+     32
+    ],
+    [
+     "R",
+     51
+    ],
+    [
+     "R",
+     54
+    ],
+    [
+     "R",
+     55
+    ],
+    [
+     "R",
+     63
+    ],
+    [
+     "R",
+     68
+    ],
+    [
+     "R",
+     71
+    ],
+    [
+     "R",
+     72
+    ],
+    [
+     "R",
+     75
+    ]
+   ],
+   "drug_ligand": "657",
+   "holo_chains": [
+    "B",
+    "R"
+   ],
+   "uniprot": "Q9H2S1",
+   "holo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.893,
+    "hit": true,
+    "n_pockets": 17
+   },
+   "n_apo_candidates": 4,
+   "apo_candidates": [
+    {
+     "pdb_id": "5V03",
+     "resolution": 1.58,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "658",
+        "min_dist_to_window": 2.4,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "CA",
+        "min_dist_to_window": 4.22,
+        "treated_as_buffer": true
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5WBX",
+     "resolution": 1.9,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "CA",
+        "min_dist_to_window": 4.38,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "CA",
+        "min_dist_to_window": 4.36,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "AJY",
+        "min_dist_to_window": 2.89,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "5WC5",
+     "resolution": 2.3,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "CA",
+        "min_dist_to_window": 4.39,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "AJV",
+        "min_dist_to_window": 3.14,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "6ALE",
+     "resolution": 2.5,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "1KP",
+        "min_dist_to_window": 2.95,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "CA",
+        "min_dist_to_window": 4.47,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "CA",
+        "min_dist_to_window": 4.22,
+        "treated_as_buffer": true
+       }
+      ]
+     }
+    }
+   ],
+   "recovered": false,
+   "best_recovery": null,
+   "verdict": "holo_ok_no_closed_apo",
+   "elapsed_s": 16.2
+  },
+  "6HCA": {
+   "holo_pdb": "6HCA",
+   "error": "window size 27 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     92
+    ],
+    [
+     "A",
+     104
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     107
+    ],
+    [
+     "A",
+     108
+    ],
+    [
+     "A",
+     217
+    ],
+    [
+     "A",
+     218
+    ],
+    [
+     "A",
+     219
+    ],
+    [
+     "A",
+     238
+    ],
+    [
+     "A",
+     239
+    ],
+    [
+     "A",
+     242
+    ],
+    [
+     "A",
+     247
+    ],
+    [
+     "B",
+     92
+    ],
+    [
+     "B",
+     104
+    ],
+    [
+     "B",
+     105
+    ],
+    [
+     "B",
+     106
+    ],
+    [
+     "B",
+     107
+    ],
+    [
+     "B",
+     108
+    ],
+    [
+     "B",
+     109
+    ],
+    [
+     "B",
+     217
+    ],
+    [
+     "B",
+     218
+    ],
+    [
+     "B",
+     219
+    ],
+    [
+     "B",
+     238
+    ],
+    [
+     "B",
+     239
+    ],
+    [
+     "B",
+     242
+    ],
+    [
+     "B",
+     247
+    ]
+   ],
+   "drug_ligand": "FXW"
+  },
+  "5TC3": {
+   "holo_pdb": "5TC3",
+   "error": "window size 28 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     74
+    ],
+    [
+     "A",
+     75
+    ],
+    [
+     "A",
+     76
+    ],
+    [
+     "A",
+     279
+    ],
+    [
+     "A",
+     306
+    ],
+    [
+     "A",
+     325
+    ],
+    [
+     "A",
+     328
+    ],
+    [
+     "A",
+     329
+    ],
+    [
+     "A",
+     330
+    ],
+    [
+     "A",
+     331
+    ],
+    [
+     "A",
+     332
+    ],
+    [
+     "A",
+     334
+    ],
+    [
+     "A",
+     335
+    ],
+    [
+     "A",
+     336
+    ],
+    [
+     "A",
+     367
+    ],
+    [
+     "A",
+     368
+    ],
+    [
+     "A",
+     369
+    ],
+    [
+     "A",
+     370
+    ],
+    [
+     "A",
+     371
+    ],
+    [
+     "A",
+     388
+    ],
+    [
+     "A",
+     389
+    ],
+    [
+     "A",
+     390
+    ],
+    [
+     "A",
+     391
+    ],
+    [
+     "A",
+     414
+    ],
+    [
+     "A",
+     418
+    ],
+    [
+     "A",
+     419
+    ],
+    [
+     "A",
+     448
+    ],
+    [
+     "A",
+     449
+    ]
+   ],
+   "drug_ligand": "5GP"
+  },
+  "5ACK": {
+   "holo_pdb": "5ACK",
+   "window": [
+    [
+     "A",
+     129
+    ],
+    [
+     "A",
+     204
+    ],
+    [
+     "A",
+     228
+    ],
+    [
+     "A",
+     239
+    ],
+    [
+     "A",
+     240
+    ],
+    [
+     "A",
+     242
+    ],
+    [
+     "A",
+     243
+    ],
+    [
+     "A",
+     253
+    ]
+   ],
+   "drug_ligand": "SEP",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "O15530",
+   "holo_native": {
+    "overlap_frac": 0.375,
+    "druggability_score": 0.001,
+    "hit": false,
+    "n_pockets": 25
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.1
+  },
+  "6FAZ": {
+   "holo_pdb": "6FAZ",
+   "error": "window size 22 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     92
+    ],
+    [
+     "A",
+     104
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     107
+    ],
+    [
+     "A",
+     108
+    ],
+    [
+     "A",
+     217
+    ],
+    [
+     "A",
+     218
+    ],
+    [
+     "A",
+     219
+    ],
+    [
+     "A",
+     239
+    ],
+    [
+     "A",
+     242
+    ],
+    [
+     "B",
+     92
+    ],
+    [
+     "B",
+     104
+    ],
+    [
+     "B",
+     105
+    ],
+    [
+     "B",
+     106
+    ],
+    [
+     "B",
+     107
+    ],
+    [
+     "B",
+     108
+    ],
+    [
+     "B",
+     217
+    ],
+    [
+     "B",
+     218
+    ],
+    [
+     "B",
+     219
+    ],
+    [
+     "B",
+     239
+    ],
+    [
+     "B",
+     242
+    ]
+   ],
+   "drug_ligand": "D45"
+  },
+  "5MFQ": {
+   "holo_pdb": "5MFQ",
+   "window": [
+    [
+     "A",
+     519
+    ],
+    [
+     "A",
+     532
+    ],
+    [
+     "A",
+     534
+    ],
+    [
+     "A",
+     535
+    ],
+    [
+     "A",
+     761
+    ],
+    [
+     "A",
+     762
+    ],
+    [
+     "A",
+     763
+    ],
+    [
+     "B",
+     531
+    ],
+    [
+     "B",
+     532
+    ],
+    [
+     "B",
+     533
+    ],
+    [
+     "B",
+     534
+    ],
+    [
+     "B",
+     535
+    ],
+    [
+     "B",
+     782
+    ],
+    [
+     "B",
+     783
+    ],
+    [
+     "B",
+     786
+    ],
+    [
+     "B",
+     791
+    ]
+   ],
+   "drug_ligand": "2J9",
+   "holo_chains": [
+    "A",
+    "B"
+   ],
+   "uniprot": "P22756",
+   "holo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.98,
+    "hit": true,
+    "n_pockets": 25
+   },
+   "n_apo_candidates": 32,
+   "apo_candidates": [
+    {
+     "pdb_id": "3GBA",
+     "resolution": 1.35,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "3C31",
+     "resolution": 1.49,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "2QS4",
+     "resolution": 1.58,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "3C36",
+     "resolution": 1.68,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "3C32",
+     "resolution": 1.72,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "3C33",
+     "resolution": 1.72,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "2F34",
+     "resolution": 1.74,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "2QS3",
+     "resolution": 1.76,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "2QS1",
+     "resolution": 1.8,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "2QS2",
+     "resolution": 1.8,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "3C34",
+     "resolution": 1.82,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "1VSO",
+     "resolution": 1.85,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "6FZ4",
+     "resolution": 1.85,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "2F35",
+     "resolution": 1.87,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "8R36",
+     "resolution": 1.9,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "CL",
+        "min_dist_to_window": 3.4,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "GOL",
+        "min_dist_to_window": 2.99,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "9TE",
+        "min_dist_to_window": 2.76,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "4YMB",
+     "resolution": 1.93,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "1YCJ",
+     "resolution": 1.95,
+     "audit": {
+      "survives": true,
+      "reason": null,
+      "near_pocket_hetatm": [
+       {
+        "resname": "SO4",
+        "min_dist_to_window": 3.25,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "SO4",
+        "min_dist_to_window": 4.17,
+        "treated_as_buffer": true
+       }
+      ]
+     },
+     "score": {
+      "overlap_frac": 0.625,
+      "druggability_score": 0.437,
+      "hit": false,
+      "n_pockets": 35
+     },
+     "verdict": "apo_closed"
+    },
+    {
+     "pdb_id": "2OJT",
+     "resolution": 1.95,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "3C35",
+     "resolution": 1.97,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "4DLD",
+     "resolution": 2.0,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "4E0X",
+     "resolution": 2.0,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "5NEB",
+     "resolution": 2.05,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "1TXF",
+     "resolution": 2.1,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "3GBB",
+     "resolution": 2.1,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "5MFW",
+     "resolution": 2.1,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "7M6",
+        "min_dist_to_window": 2.97,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "CL",
+        "min_dist_to_window": 3.38,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "7M6",
+        "min_dist_to_window": 3.04,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "2F36",
+     "resolution": 2.11,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "5MFV",
+     "resolution": 2.181,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "5PX",
+        "min_dist_to_window": 2.86,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "5PX",
+        "min_dist_to_window": 2.53,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "CL",
+        "min_dist_to_window": 3.18,
+        "treated_as_buffer": true
+       },
+       {
+        "resname": "SO4",
+        "min_dist_to_window": 2.75,
+        "treated_as_buffer": true
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "2WKY",
+     "resolution": 2.2,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "4QF9",
+     "resolution": 2.28,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "6SBT",
+     "resolution": 2.3,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "2PBW",
+     "resolution": 2.5,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    },
+    {
+     "pdb_id": "3S2V",
+     "resolution": 2.5,
+     "audit": {
+      "survives": false,
+      "reason": "window_not_found"
+     }
+    }
+   ],
+   "recovered": true,
+   "best_recovery": "1YCJ",
+   "verdict": "VALID_NEW_TARGET",
+   "elapsed_s": 50.9
+  },
+  "5MFW": {
+   "holo_pdb": "5MFW",
+   "window": [
+    [
+     "A",
+     441
+    ],
+    [
+     "A",
+     489
+    ],
+    [
+     "A",
+     516
+    ],
+    [
+     "A",
+     517
+    ],
+    [
+     "A",
+     518
+    ],
+    [
+     "A",
+     523
+    ],
+    [
+     "A",
+     685
+    ],
+    [
+     "A",
+     688
+    ],
+    [
+     "A",
+     689
+    ],
+    [
+     "A",
+     690
+    ],
+    [
+     "A",
+     721
+    ],
+    [
+     "A",
+     736
+    ],
+    [
+     "A",
+     737
+    ],
+    [
+     "A",
+     738
+    ],
+    [
+     "A",
+     764
+    ]
+   ],
+   "drug_ligand": "KAI",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P22756",
+   "holo_native": {
+    "overlap_frac": 0.9333333333333333,
+    "druggability_score": 0.026,
+    "hit": false,
+    "n_pockets": 18
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 2.0,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "5MFV": {
+   "holo_pdb": "5MFV",
+   "window": [
+    [
+     "A",
+     441
+    ],
+    [
+     "A",
+     489
+    ],
+    [
+     "A",
+     516
+    ],
+    [
+     "A",
+     517
+    ],
+    [
+     "A",
+     518
+    ],
+    [
+     "A",
+     523
+    ],
+    [
+     "A",
+     685
+    ],
+    [
+     "A",
+     688
+    ],
+    [
+     "A",
+     689
+    ],
+    [
+     "A",
+     690
+    ],
+    [
+     "A",
+     721
+    ],
+    [
+     "A",
+     738
+    ],
+    [
+     "A",
+     764
+    ]
+   ],
+   "drug_ligand": "KAI",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P22756",
+   "holo_native": {
+    "overlap_frac": 0.9230769230769231,
+    "druggability_score": 0.077,
+    "hit": false,
+    "n_pockets": 15
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 2.0,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "5ELV": {
+   "holo_pdb": "5ELV",
+   "window": [
+    [
+     "A",
+     61
+    ],
+    [
+     "A",
+     89
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     91
+    ],
+    [
+     "A",
+     96
+    ],
+    [
+     "A",
+     138
+    ],
+    [
+     "A",
+     141
+    ],
+    [
+     "A",
+     142
+    ],
+    [
+     "A",
+     143
+    ],
+    [
+     "A",
+     192
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     196
+    ],
+    [
+     "A",
+     220
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.23076923076923078,
+    "druggability_score": 0.027,
+    "hit": false,
+    "n_pockets": 13
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.5,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "5LVX": {
+   "holo_pdb": "5LVX",
+   "window": [
+    [
+     "A",
+     235
+    ],
+    [
+     "A",
+     237
+    ],
+    [
+     "A",
+     238
+    ],
+    [
+     "A",
+     244
+    ],
+    [
+     "A",
+     283
+    ],
+    [
+     "A",
+     284
+    ],
+    [
+     "A",
+     313
+    ],
+    [
+     "A",
+     314
+    ],
+    [
+     "A",
+     316
+    ],
+    [
+     "A",
+     340
+    ],
+    [
+     "A",
+     342
+    ],
+    [
+     "A",
+     345
+    ],
+    [
+     "A",
+     346
+    ],
+    [
+     "A",
+     347
+    ],
+    [
+     "A",
+     348
+    ],
+    [
+     "A",
+     396
+    ],
+    [
+     "B",
+     241
+    ]
+   ],
+   "drug_ligand": "79B",
+   "holo_chains": [
+    "A",
+    "B"
+   ],
+   "uniprot": "P04062",
+   "holo_native": {
+    "overlap_frac": 0.6470588235294118,
+    "druggability_score": 0.061,
+    "hit": false,
+    "n_pockets": 49
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 5.9
+  },
+  "9SFM": {
+   "holo_pdb": "9SFM",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "3LSL": {
+   "holo_pdb": "3LSL",
+   "window": [
+    [
+     "A",
+     61
+    ],
+    [
+     "A",
+     89
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     91
+    ],
+    [
+     "A",
+     96
+    ],
+    [
+     "A",
+     138
+    ],
+    [
+     "A",
+     141
+    ],
+    [
+     "A",
+     142
+    ],
+    [
+     "A",
+     143
+    ],
+    [
+     "A",
+     192
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     196
+    ],
+    [
+     "A",
+     220
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.23076923076923078,
+    "druggability_score": 0.015,
+    "hit": false,
+    "n_pockets": 15
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.6,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "6HCB": {
+   "holo_pdb": "6HCB",
+   "error": "window size 28 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     92
+    ],
+    [
+     "A",
+     104
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     107
+    ],
+    [
+     "A",
+     108
+    ],
+    [
+     "A",
+     109
+    ],
+    [
+     "A",
+     217
+    ],
+    [
+     "A",
+     218
+    ],
+    [
+     "A",
+     219
+    ],
+    [
+     "A",
+     238
+    ],
+    [
+     "A",
+     239
+    ],
+    [
+     "A",
+     242
+    ],
+    [
+     "A",
+     247
+    ],
+    [
+     "B",
+     92
+    ],
+    [
+     "B",
+     104
+    ],
+    [
+     "B",
+     105
+    ],
+    [
+     "B",
+     106
+    ],
+    [
+     "B",
+     107
+    ],
+    [
+     "B",
+     108
+    ],
+    [
+     "B",
+     109
+    ],
+    [
+     "B",
+     217
+    ],
+    [
+     "B",
+     218
+    ],
+    [
+     "B",
+     219
+    ],
+    [
+     "B",
+     238
+    ],
+    [
+     "B",
+     239
+    ],
+    [
+     "B",
+     242
+    ],
+    [
+     "B",
+     247
+    ]
+   ],
+   "drug_ligand": "D45"
+  },
+  "3LSF": {
+   "holo_pdb": "3LSF",
+   "window": [
+    [
+     "B",
+     61
+    ],
+    [
+     "B",
+     89
+    ],
+    [
+     "B",
+     90
+    ],
+    [
+     "B",
+     91
+    ],
+    [
+     "B",
+     96
+    ],
+    [
+     "B",
+     138
+    ],
+    [
+     "B",
+     141
+    ],
+    [
+     "B",
+     142
+    ],
+    [
+     "B",
+     143
+    ],
+    [
+     "B",
+     192
+    ],
+    [
+     "B",
+     193
+    ],
+    [
+     "B",
+     220
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "B"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.25,
+    "druggability_score": 0.083,
+    "hit": false,
+    "n_pockets": 14
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.4,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "5BUU": {
+   "holo_pdb": "5BUU",
+   "window": [
+    [
+     "A",
+     450
+    ],
+    [
+     "A",
+     478
+    ],
+    [
+     "A",
+     479
+    ],
+    [
+     "A",
+     480
+    ],
+    [
+     "A",
+     485
+    ],
+    [
+     "A",
+     650
+    ],
+    [
+     "A",
+     653
+    ],
+    [
+     "A",
+     654
+    ],
+    [
+     "A",
+     655
+    ],
+    [
+     "A",
+     704
+    ],
+    [
+     "A",
+     705
+    ],
+    [
+     "A",
+     708
+    ],
+    [
+     "A",
+     732
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.23076923076923078,
+    "druggability_score": 0.039,
+    "hit": false,
+    "n_pockets": 13
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.1,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "6HC9": {
+   "holo_pdb": "6HC9",
+   "error": "window size 27 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     92
+    ],
+    [
+     "A",
+     104
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     107
+    ],
+    [
+     "A",
+     108
+    ],
+    [
+     "A",
+     217
+    ],
+    [
+     "A",
+     218
+    ],
+    [
+     "A",
+     219
+    ],
+    [
+     "A",
+     238
+    ],
+    [
+     "A",
+     239
+    ],
+    [
+     "A",
+     242
+    ],
+    [
+     "A",
+     247
+    ],
+    [
+     "B",
+     92
+    ],
+    [
+     "B",
+     104
+    ],
+    [
+     "B",
+     105
+    ],
+    [
+     "B",
+     106
+    ],
+    [
+     "B",
+     107
+    ],
+    [
+     "B",
+     108
+    ],
+    [
+     "B",
+     109
+    ],
+    [
+     "B",
+     217
+    ],
+    [
+     "B",
+     218
+    ],
+    [
+     "B",
+     219
+    ],
+    [
+     "B",
+     238
+    ],
+    [
+     "B",
+     239
+    ],
+    [
+     "B",
+     242
+    ],
+    [
+     "B",
+     247
+    ]
+   ],
+   "drug_ligand": "FXW"
+  },
+  "6HCC": {
+   "holo_pdb": "6HCC",
+   "error": "window size 28 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     92
+    ],
+    [
+     "A",
+     104
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     107
+    ],
+    [
+     "A",
+     108
+    ],
+    [
+     "A",
+     109
+    ],
+    [
+     "A",
+     217
+    ],
+    [
+     "A",
+     218
+    ],
+    [
+     "A",
+     219
+    ],
+    [
+     "A",
+     238
+    ],
+    [
+     "A",
+     239
+    ],
+    [
+     "A",
+     242
+    ],
+    [
+     "A",
+     247
+    ],
+    [
+     "B",
+     92
+    ],
+    [
+     "B",
+     104
+    ],
+    [
+     "B",
+     105
+    ],
+    [
+     "B",
+     106
+    ],
+    [
+     "B",
+     107
+    ],
+    [
+     "B",
+     108
+    ],
+    [
+     "B",
+     109
+    ],
+    [
+     "B",
+     217
+    ],
+    [
+     "B",
+     218
+    ],
+    [
+     "B",
+     219
+    ],
+    [
+     "B",
+     238
+    ],
+    [
+     "B",
+     239
+    ],
+    [
+     "B",
+     242
+    ],
+    [
+     "B",
+     247
+    ]
+   ],
+   "drug_ligand": "FXW"
+  },
+  "6HCH": {
+   "holo_pdb": "6HCH",
+   "error": "window size 28 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     92
+    ],
+    [
+     "A",
+     104
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     107
+    ],
+    [
+     "A",
+     108
+    ],
+    [
+     "A",
+     109
+    ],
+    [
+     "A",
+     217
+    ],
+    [
+     "A",
+     218
+    ],
+    [
+     "A",
+     219
+    ],
+    [
+     "A",
+     238
+    ],
+    [
+     "A",
+     239
+    ],
+    [
+     "A",
+     242
+    ],
+    [
+     "A",
+     247
+    ],
+    [
+     "B",
+     92
+    ],
+    [
+     "B",
+     104
+    ],
+    [
+     "B",
+     105
+    ],
+    [
+     "B",
+     106
+    ],
+    [
+     "B",
+     107
+    ],
+    [
+     "B",
+     108
+    ],
+    [
+     "B",
+     109
+    ],
+    [
+     "B",
+     217
+    ],
+    [
+     "B",
+     218
+    ],
+    [
+     "B",
+     219
+    ],
+    [
+     "B",
+     238
+    ],
+    [
+     "B",
+     239
+    ],
+    [
+     "B",
+     242
+    ],
+    [
+     "B",
+     247
+    ]
+   ],
+   "drug_ligand": "D45"
+  },
+  "6ZYU": {
+   "holo_pdb": "6ZYU",
+   "window": [
+    [
+     "A",
+     61
+    ],
+    [
+     "A",
+     89
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     91
+    ],
+    [
+     "A",
+     96
+    ],
+    [
+     "A",
+     138
+    ],
+    [
+     "A",
+     141
+    ],
+    [
+     "A",
+     142
+    ],
+    [
+     "A",
+     143
+    ],
+    [
+     "A",
+     192
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     220
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.25,
+    "druggability_score": 0.591,
+    "hit": false,
+    "n_pockets": 14
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.3,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "4RUT": {
+   "holo_pdb": "4RUT",
+   "error": "window size 22 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     148
+    ],
+    [
+     "A",
+     199
+    ],
+    [
+     "A",
+     200
+    ],
+    [
+     "A",
+     202
+    ],
+    [
+     "A",
+     203
+    ],
+    [
+     "A",
+     207
+    ],
+    [
+     "A",
+     210
+    ],
+    [
+     "A",
+     211
+    ],
+    [
+     "A",
+     212
+    ],
+    [
+     "A",
+     214
+    ],
+    [
+     "A",
+     295
+    ],
+    [
+     "A",
+     382
+    ],
+    [
+     "A",
+     385
+    ],
+    [
+     "A",
+     386
+    ],
+    [
+     "A",
+     387
+    ],
+    [
+     "A",
+     388
+    ],
+    [
+     "A",
+     390
+    ],
+    [
+     "A",
+     391
+    ],
+    [
+     "A",
+     395
+    ],
+    [
+     "A",
+     408
+    ],
+    [
+     "A",
+     444
+    ],
+    [
+     "A",
+     447
+    ]
+   ],
+   "drug_ligand": "COH"
+  },
+  "6QZH": {
+   "holo_pdb": "6QZH",
+   "error": "window size 21 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     79
+    ],
+    [
+     "A",
+     82
+    ],
+    [
+     "A",
+     83
+    ],
+    [
+     "A",
+     86
+    ],
+    [
+     "A",
+     89
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     91
+    ],
+    [
+     "A",
+     93
+    ],
+    [
+     "A",
+     94
+    ],
+    [
+     "A",
+     97
+    ],
+    [
+     "A",
+     153
+    ],
+    [
+     "A",
+     154
+    ],
+    [
+     "A",
+     262
+    ],
+    [
+     "A",
+     264
+    ],
+    [
+     "A",
+     265
+    ],
+    [
+     "A",
+     326
+    ],
+    [
+     "A",
+     330
+    ],
+    [
+     "A",
+     331
+    ],
+    [
+     "A",
+     332
+    ],
+    [
+     "A",
+     333
+    ],
+    [
+     "A",
+     336
+    ]
+   ],
+   "drug_ligand": "JLW"
+  },
+  "5O9A": {
+   "holo_pdb": "5O9A",
+   "window": [
+    [
+     "A",
+     61
+    ],
+    [
+     "A",
+     89
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     91
+    ],
+    [
+     "A",
+     96
+    ],
+    [
+     "A",
+     138
+    ],
+    [
+     "A",
+     141
+    ],
+    [
+     "A",
+     142
+    ],
+    [
+     "A",
+     143
+    ],
+    [
+     "A",
+     192
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     220
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.25,
+    "druggability_score": 0.307,
+    "hit": false,
+    "n_pockets": 11
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.1,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "2AL5": {
+   "holo_pdb": "2AL5",
+   "window": [
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     107
+    ],
+    [
+     "A",
+     108
+    ],
+    [
+     "A",
+     217
+    ],
+    [
+     "A",
+     218
+    ],
+    [
+     "A",
+     219
+    ],
+    [
+     "A",
+     242
+    ],
+    [
+     "B",
+     105
+    ],
+    [
+     "B",
+     107
+    ],
+    [
+     "B",
+     108
+    ],
+    [
+     "B",
+     217
+    ],
+    [
+     "B",
+     218
+    ],
+    [
+     "B",
+     219
+    ]
+   ],
+   "drug_ligand": "4MP",
+   "holo_chains": [
+    "A",
+    "B"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.727,
+    "hit": true,
+    "n_pockets": 31
+   },
+   "n_apo_candidates": 40,
+   "apo_candidates": [
+    {
+     "pdb_id": "1MQI",
+     "resolution": 1.35,
+     "audit": {
+      "survives": true,
+      "reason": null,
+      "near_pocket_hetatm": []
+     },
+     "score": {
+      "overlap_frac": 0.35714285714285715,
+      "druggability_score": 0.0,
+      "hit": false,
+      "n_pockets": 16
+     },
+     "verdict": "apo_closed"
+    },
+    {
+     "pdb_id": "1M5E",
+     "resolution": 1.46,
+     "audit": {
+      "survives": true,
+      "reason": null,
+      "near_pocket_hetatm": []
+     },
+     "score": {
+      "overlap_frac": 0.35714285714285715,
+      "druggability_score": 0.001,
+      "hit": false,
+      "n_pockets": 35
+     },
+     "verdict": "apo_closed"
+    },
+    {
+     "pdb_id": "1MQD",
+     "resolution": 1.46,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "SHI",
+        "min_dist_to_window": 3.69,
+        "treated_as_buffer": false
+       },
+       {
+        "resname": "SHI",
+        "min_dist_to_window": 3.67,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "1FTK",
+     "resolution": 1.6,
+     "audit": {
+      "survives": false,
+      "reason": "unsafe_hetatm_near_window",
+      "near_pocket_hetatm": [
+       {
+        "resname": "KAI",
+        "min_dist_to_window": 2.87,
+        "treated_as_buffer": false
+       }
+      ]
+     }
+    },
+    {
+     "pdb_id": "1P1N",
+     "resolution": 1.6,
+     "audit": {
+      "survives": true,
+      "reason": null,
+      "near_pocket_hetatm": []
+     },
+     "score": {
+      "overlap_frac": 0.35714285714285715,
+      "druggability_score": 0.0,
+      "hit": false,
+      "n_pockets": 12
+     },
+     "verdict": "apo_closed"
+    }
+   ],
+   "recovered": true,
+   "best_recovery": "1MQI",
+   "verdict": "VALID_NEW_TARGET",
+   "elapsed_s": 6.7,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "2AL4": {
+   "holo_pdb": "2AL4",
+   "window": [
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     107
+    ],
+    [
+     "A",
+     108
+    ],
+    [
+     "A",
+     217
+    ],
+    [
+     "A",
+     218
+    ],
+    [
+     "A",
+     219
+    ],
+    [
+     "A",
+     242
+    ],
+    [
+     "C",
+     105
+    ],
+    [
+     "C",
+     106
+    ],
+    [
+     "C",
+     107
+    ],
+    [
+     "C",
+     108
+    ],
+    [
+     "C",
+     217
+    ],
+    [
+     "C",
+     218
+    ],
+    [
+     "C",
+     219
+    ],
+    [
+     "C",
+     242
+    ]
+   ],
+   "drug_ligand": "CX6",
+   "holo_chains": [
+    "A",
+    "C"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 1.0,
+    "druggability_score": 0.039,
+    "hit": false,
+    "n_pockets": 30
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.7,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "4LZ5": {
+   "holo_pdb": "4LZ5",
+   "window": [
+    [
+     "A",
+     450
+    ],
+    [
+     "A",
+     478
+    ],
+    [
+     "A",
+     479
+    ],
+    [
+     "A",
+     480
+    ],
+    [
+     "A",
+     485
+    ],
+    [
+     "A",
+     650
+    ],
+    [
+     "A",
+     653
+    ],
+    [
+     "A",
+     654
+    ],
+    [
+     "A",
+     655
+    ],
+    [
+     "A",
+     704
+    ],
+    [
+     "A",
+     705
+    ],
+    [
+     "A",
+     708
+    ],
+    [
+     "A",
+     732
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.23076923076923078,
+    "druggability_score": 0.129,
+    "hit": false,
+    "n_pockets": 13
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.0,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "4LZ7": {
+   "holo_pdb": "4LZ7",
+   "window": [
+    [
+     "A",
+     450
+    ],
+    [
+     "A",
+     478
+    ],
+    [
+     "A",
+     479
+    ],
+    [
+     "A",
+     480
+    ],
+    [
+     "A",
+     485
+    ],
+    [
+     "A",
+     650
+    ],
+    [
+     "A",
+     653
+    ],
+    [
+     "A",
+     654
+    ],
+    [
+     "A",
+     655
+    ],
+    [
+     "A",
+     704
+    ],
+    [
+     "A",
+     705
+    ],
+    [
+     "A",
+     708
+    ],
+    [
+     "A",
+     732
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.23076923076923078,
+    "druggability_score": 0.721,
+    "hit": false,
+    "n_pockets": 15
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.2,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "4LZ8": {
+   "holo_pdb": "4LZ8",
+   "window": [
+    [
+     "A",
+     450
+    ],
+    [
+     "A",
+     478
+    ],
+    [
+     "A",
+     479
+    ],
+    [
+     "A",
+     480
+    ],
+    [
+     "A",
+     485
+    ],
+    [
+     "A",
+     650
+    ],
+    [
+     "A",
+     653
+    ],
+    [
+     "A",
+     654
+    ],
+    [
+     "A",
+     655
+    ],
+    [
+     "A",
+     704
+    ],
+    [
+     "A",
+     705
+    ],
+    [
+     "A",
+     732
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.25,
+    "druggability_score": 0.192,
+    "hit": false,
+    "n_pockets": 14
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.2,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "7PRX": {
+   "holo_pdb": "7PRX",
+   "error": "window size 28 outside [6,20] sanity range",
+   "window": [
+    [
+     "A",
+     540
+    ],
+    [
+     "A",
+     541
+    ],
+    [
+     "A",
+     560
+    ],
+    [
+     "A",
+     563
+    ],
+    [
+     "A",
+     564
+    ],
+    [
+     "A",
+     566
+    ],
+    [
+     "A",
+     567
+    ],
+    [
+     "A",
+     570
+    ],
+    [
+     "A",
+     573
+    ],
+    [
+     "A",
+     574
+    ],
+    [
+     "A",
+     600
+    ],
+    [
+     "A",
+     601
+    ],
+    [
+     "A",
+     603
+    ],
+    [
+     "A",
+     604
+    ],
+    [
+     "A",
+     607
+    ],
+    [
+     "A",
+     608
+    ],
+    [
+     "A",
+     623
+    ],
+    [
+     "A",
+     639
+    ],
+    [
+     "A",
+     642
+    ],
+    [
+     "A",
+     643
+    ],
+    [
+     "A",
+     646
+    ],
+    [
+     "A",
+     667
+    ],
+    [
+     "A",
+     735
+    ],
+    [
+     "A",
+     736
+    ],
+    [
+     "A",
+     739
+    ],
+    [
+     "A",
+     747
+    ],
+    [
+     "A",
+     749
+    ],
+    [
+     "A",
+     753
+    ]
+   ],
+   "drug_ligand": "82H"
+  },
+  "9MUM": {
+   "holo_pdb": "9MUM",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "9MUL": {
+   "holo_pdb": "9MUL",
+   "error": "no drug-classified ligand with a resolvable binding site"
+  },
+  "3O29": {
+   "holo_pdb": "3O29",
+   "window": [
+    [
+     "A",
+     92
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     107
+    ],
+    [
+     "A",
+     108
+    ],
+    [
+     "A",
+     217
+    ],
+    [
+     "A",
+     218
+    ],
+    [
+     "A",
+     219
+    ],
+    [
+     "A",
+     239
+    ],
+    [
+     "A",
+     242
+    ],
+    [
+     "A",
+     247
+    ],
+    [
+     "A",
+     248
+    ],
+    [
+     "A",
+     251
+    ]
+   ],
+   "drug_ligand": "O29",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.46153846153846156,
+    "druggability_score": 0.0,
+    "hit": false,
+    "n_pockets": 14
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.9,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "3O2A": {
+   "holo_pdb": "3O2A",
+   "window": [
+    [
+     "A",
+     92
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     107
+    ],
+    [
+     "A",
+     108
+    ],
+    [
+     "A",
+     217
+    ],
+    [
+     "A",
+     218
+    ],
+    [
+     "A",
+     219
+    ],
+    [
+     "A",
+     239
+    ],
+    [
+     "A",
+     242
+    ],
+    [
+     "A",
+     247
+    ],
+    [
+     "A",
+     248
+    ]
+   ],
+   "drug_ligand": "O30",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.5833333333333334,
+    "druggability_score": 0.0,
+    "hit": false,
+    "n_pockets": 16
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.5,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "3O6H": {
+   "holo_pdb": "3O6H",
+   "window": [
+    [
+     "A",
+     92
+    ],
+    [
+     "A",
+     104
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     107
+    ],
+    [
+     "A",
+     108
+    ],
+    [
+     "A",
+     217
+    ],
+    [
+     "A",
+     218
+    ],
+    [
+     "A",
+     219
+    ],
+    [
+     "A",
+     239
+    ],
+    [
+     "A",
+     242
+    ],
+    [
+     "A",
+     247
+    ]
+   ],
+   "drug_ligand": "O25",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.3333333333333333,
+    "druggability_score": 0.0,
+    "hit": false,
+    "n_pockets": 14
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.7,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "4X48": {
+   "holo_pdb": "4X48",
+   "window": [
+    [
+     "B",
+     493
+    ],
+    [
+     "B",
+     494
+    ],
+    [
+     "B",
+     495
+    ],
+    [
+     "B",
+     496
+    ],
+    [
+     "B",
+     497
+    ],
+    [
+     "B",
+     729
+    ],
+    [
+     "B",
+     730
+    ],
+    [
+     "B",
+     731
+    ],
+    [
+     "B",
+     750
+    ],
+    [
+     "B",
+     751
+    ],
+    [
+     "B",
+     754
+    ],
+    [
+     "B",
+     759
+    ]
+   ],
+   "drug_ligand": "XPF",
+   "holo_chains": [
+    "B"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.5833333333333334,
+    "druggability_score": 0.0,
+    "hit": false,
+    "n_pockets": 13
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.1,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "3PMV": {
+   "holo_pdb": "3PMV",
+   "window": [
+    [
+     "A",
+     61
+    ],
+    [
+     "A",
+     89
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     91
+    ],
+    [
+     "A",
+     96
+    ],
+    [
+     "A",
+     138
+    ],
+    [
+     "A",
+     141
+    ],
+    [
+     "A",
+     142
+    ],
+    [
+     "A",
+     143
+    ],
+    [
+     "A",
+     192
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     196
+    ],
+    [
+     "A",
+     220
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.23076923076923078,
+    "druggability_score": 0.242,
+    "hit": false,
+    "n_pockets": 18
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.6,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "3O6G": {
+   "holo_pdb": "3O6G",
+   "window": [
+    [
+     "A",
+     92
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     107
+    ],
+    [
+     "A",
+     108
+    ],
+    [
+     "A",
+     217
+    ],
+    [
+     "A",
+     218
+    ],
+    [
+     "A",
+     219
+    ],
+    [
+     "A",
+     239
+    ],
+    [
+     "A",
+     242
+    ],
+    [
+     "A",
+     247
+    ],
+    [
+     "A",
+     248
+    ]
+   ],
+   "drug_ligand": "O27",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.5833333333333334,
+    "druggability_score": 0.0,
+    "hit": false,
+    "n_pockets": 15
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.5,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "3O6I": {
+   "holo_pdb": "3O6I",
+   "window": [
+    [
+     "A",
+     61
+    ],
+    [
+     "A",
+     89
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     91
+    ],
+    [
+     "A",
+     96
+    ],
+    [
+     "A",
+     138
+    ],
+    [
+     "A",
+     141
+    ],
+    [
+     "A",
+     142
+    ],
+    [
+     "A",
+     143
+    ],
+    [
+     "A",
+     192
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     220
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.25,
+    "druggability_score": 0.037,
+    "hit": false,
+    "n_pockets": 16
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.6,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "3O28": {
+   "holo_pdb": "3O28",
+   "window": [
+    [
+     "A",
+     61
+    ],
+    [
+     "A",
+     89
+    ],
+    [
+     "A",
+     90
+    ],
+    [
+     "A",
+     91
+    ],
+    [
+     "A",
+     96
+    ],
+    [
+     "A",
+     138
+    ],
+    [
+     "A",
+     141
+    ],
+    [
+     "A",
+     142
+    ],
+    [
+     "A",
+     143
+    ],
+    [
+     "A",
+     193
+    ],
+    [
+     "A",
+     196
+    ],
+    [
+     "A",
+     220
+    ]
+   ],
+   "drug_ligand": "GLU",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.25,
+    "druggability_score": 0.164,
+    "hit": false,
+    "n_pockets": 14
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.5,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "3PMW": {
+   "holo_pdb": "3PMW",
+   "window": [
+    [
+     "A",
+     93
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     106
+    ],
+    [
+     "A",
+     108
+    ],
+    [
+     "A",
+     109
+    ],
+    [
+     "A",
+     218
+    ],
+    [
+     "A",
+     219
+    ],
+    [
+     "A",
+     220
+    ],
+    [
+     "A",
+     239
+    ],
+    [
+     "A",
+     240
+    ],
+    [
+     "A",
+     243
+    ]
+   ],
+   "drug_ligand": "G69",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.45454545454545453,
+    "druggability_score": 0.048,
+    "hit": false,
+    "n_pockets": 14
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 3.5,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  },
+  "3PMX": {
+   "holo_pdb": "3PMX",
+   "window": [
+    [
+     "A",
+     92
+    ],
+    [
+     "A",
+     104
+    ],
+    [
+     "A",
+     105
+    ],
+    [
+     "A",
+     108
+    ],
+    [
+     "A",
+     217
+    ],
+    [
+     "A",
+     218
+    ],
+    [
+     "A",
+     219
+    ],
+    [
+     "A",
+     239
+    ]
+   ],
+   "drug_ligand": "808",
+   "holo_chains": [
+    "A"
+   ],
+   "uniprot": "P19491",
+   "holo_native": {
+    "overlap_frac": 0.375,
+    "druggability_score": 0.0,
+    "hit": false,
+    "n_pockets": 16
+   },
+   "verdict": "holo_does_not_hit_own_window",
+   "elapsed_s": 4.6,
+   "note": "duplicate UniProt within this run, scored anyway for completeness"
+  }
+ }
+}
