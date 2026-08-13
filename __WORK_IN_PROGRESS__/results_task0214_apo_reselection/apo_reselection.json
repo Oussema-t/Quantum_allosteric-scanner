@@ -1,0 +1,1420 @@
+{
+ "_known_answer_check": {
+  "target": "KRAS_G12C",
+  "apo_pdb": "4OBE",
+  "score": {
+   "overlap_frac": 0.75,
+   "druggability_score": 0.001,
+   "hit": false,
+   "n_pockets": 10
+  },
+  "passes": true
+ },
+ "BCR_ABL1": {
+  "target": "BCR_ABL1",
+  "window": [
+   [
+    "A",
+    452
+   ],
+   [
+    "A",
+    451
+   ],
+   [
+    "A",
+    453
+   ],
+   [
+    "A",
+    483
+   ],
+   [
+    "A",
+    359
+   ],
+   [
+    "A",
+    454
+   ],
+   [
+    "A",
+    356
+   ],
+   [
+    "A",
+    448
+   ],
+   [
+    "A",
+    360
+   ],
+   [
+    "A",
+    482
+   ],
+   [
+    "A",
+    484
+   ],
+   [
+    "A",
+    481
+   ]
+  ],
+  "incumbent_apo": "1OPL",
+  "n_candidates_found": 32,
+  "candidates": [
+   {
+    "pdb_id": "4J9C",
+    "resolution": 1.051,
+    "method": "X-ray",
+    "title": "Crystal structure of the Abl-SH3 domain H59Q-N96T mutant complexed with the designed high-affinity peptide ligand P17",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "3EG3",
+    "resolution": 1.4,
+    "method": "X-ray",
+    "title": "Crystal structure of the N114A mutant of ABL-SH3 domain",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "4J9E",
+    "resolution": 1.4,
+    "method": "X-ray",
+    "title": "Crystal structure of the N114A mutant of the Abl-SH3 domain complexed with the high affinity peptide P17",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "4J9D",
+    "resolution": 1.5,
+    "method": "X-ray",
+    "title": "Crystal structure of the N114A mutant of the Abl-SH3 domain complexed with the high affinity peptide P0",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "1BBZ",
+    "resolution": 1.65,
+    "method": "X-ray",
+    "title": "CRYSTAL STRUCTURE OF THE ABL-SH3 DOMAIN COMPLEXED WITH A DESIGNED HIGH-AFFINITY PEPTIDE LIGAND: IMPLICATIONS FOR SH3-LIGAND INTERACTIONS",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "2HZI",
+    "resolution": 1.7,
+    "method": "X-ray",
+    "title": "Abl kinase domain in complex with PD180970",
+    "audit": {
+     "survives": true,
+     "reason": null,
+     "near_pocket_hetatm": []
+    },
+    "score": {
+     "overlap_frac": 0.16666666666666666,
+     "druggability_score": 0.021,
+     "hit": false,
+     "n_pockets": 19
+    },
+    "verdict": "apo_closed"
+   },
+   {
+    "pdb_id": "4J9B",
+    "resolution": 1.702,
+    "method": "X-ray",
+    "title": "Crystal structure of the Abl-SH3 domain H59Q-N96T mutant",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "2O88",
+    "resolution": 1.75,
+    "method": "X-ray",
+    "title": "Crystal structure of the N114A mutant of ABL-SH3 domain complexed with a designed high-affinity peptide ligand: implications for SH3-ligand interactions",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "3K2M",
+    "resolution": 1.75,
+    "method": "X-ray",
+    "title": "Crystal Structure of Monobody HA4/Abl1 SH2 Domain Complex",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "2G1T",
+    "resolution": 1.8,
+    "method": "X-ray",
+    "title": "A Src-like Inactive Conformation in the Abl Tyrosine Kinase Domain",
+    "audit": {
+     "survives": true,
+     "reason": null,
+     "near_pocket_hetatm": []
+    },
+    "score": {
+     "overlap_frac": 0.16666666666666666,
+     "druggability_score": 0.002,
+     "hit": false,
+     "n_pockets": 20
+    },
+    "verdict": "apo_closed"
+   },
+   {
+    "pdb_id": "3EG2",
+    "resolution": 1.8,
+    "method": "X-ray",
+    "title": "Crystal structure of the N114Q mutant of ABL-SH3 domain",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "3QRJ",
+    "resolution": 1.82,
+    "method": "X-ray",
+    "title": "The crystal structure of human abl1 kinase domain T315I mutant in complex with DCC-2036",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "919",
+       "resnum": 2,
+       "chain": "A",
+       "min_dist_to_window": 3.76,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "3UYO",
+    "resolution": 1.83,
+    "method": "X-ray",
+    "title": "Crystal structure of monobody SH13/ABL1 SH2 domain complex",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "3EG1",
+    "resolution": 1.85,
+    "method": "X-ray",
+    "title": "Crystal structure of the N114Q mutant of ABL-SH3 domain complexed with a designed high-affinity peptide ligand: implications for SH3-ligand interactions",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "3PYY",
+    "resolution": 1.85,
+    "method": "X-ray",
+    "title": "Discovery and Characterization of a Cell-Permeable, Small-molecule c-Abl Kinase Activator that Binds to the Myristoyl Binding Site",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "SO4",
+       "resnum": 4,
+       "chain": "A",
+       "min_dist_to_window": 2.71,
+       "treated_as_buffer": true
+      },
+      {
+       "resname": "3YY",
+       "resnum": 538,
+       "chain": "A",
+       "min_dist_to_window": 2.89,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "2F4J",
+    "resolution": 1.91,
+    "method": "X-ray",
+    "title": "Structure of the Kinase Domain of an Imatinib-Resistant Abl Mutant in Complex with the Aurora Kinase Inhibitor VX-680",
+    "audit": {
+     "survives": true,
+     "reason": null,
+     "near_pocket_hetatm": []
+    },
+    "score": {
+     "overlap_frac": 0.08333333333333333,
+     "druggability_score": 0.002,
+     "hit": false,
+     "n_pockets": 19
+    },
+    "verdict": "apo_closed"
+   },
+   {
+    "pdb_id": "2G2H",
+    "resolution": 2.0,
+    "method": "X-ray",
+    "title": "A Src-like Inactive Conformation in the Abl Tyrosine Kinase Domain",
+    "audit": {
+     "survives": true,
+     "reason": null,
+     "near_pocket_hetatm": []
+    },
+    "score": {
+     "overlap_frac": 0.75,
+     "druggability_score": 0.711,
+     "hit": true,
+     "n_pockets": 24
+    },
+    "verdict": "apo_still_open"
+   },
+   {
+    "pdb_id": "2HZ0",
+    "resolution": 2.1,
+    "method": "X-ray",
+    "title": "Abl kinase domain in complex with NVP-AEG082",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "GIN",
+       "resnum": 600,
+       "chain": "A",
+       "min_dist_to_window": 3.78,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "3QRI",
+    "resolution": 2.1,
+    "method": "X-ray",
+    "title": "The crystal structure of human abl1 kinase domain in complex with DCC-2036",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "919",
+       "resnum": 500,
+       "chain": "A",
+       "min_dist_to_window": 3.5,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "3T04",
+    "resolution": 2.1,
+    "method": "X-ray",
+    "title": "Crystal structure of monobody 7c12/abl1 sh2 domain complex",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "2E2B",
+    "resolution": 2.2,
+    "method": "X-ray",
+    "title": "Crystal structure of the c-Abl kinase domain in complex with INNO-406",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "406",
+       "resnum": 1001,
+       "chain": "A",
+       "min_dist_to_window": 2.77,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "2HIW",
+    "resolution": 2.2,
+    "method": "X-ray",
+    "title": "Crystal Structure of Inactive Conformation Abl Kinase Catalytic Domain Complexed with Type II Inhibitor",
+    "audit": {
+     "survives": true,
+     "reason": null,
+     "near_pocket_hetatm": []
+    },
+    "score": {
+     "overlap_frac": 0.5,
+     "druggability_score": 0.236,
+     "hit": false,
+     "n_pockets": 20
+    },
+    "verdict": "apo_closed"
+   }
+  ],
+  "recovered": false,
+  "best_recovery": null,
+  "elapsed_s": 41.1,
+  "holo_native_hit": false,
+  "apo_closed_candidates": [
+   "2HZI",
+   "2G1T",
+   "2F4J",
+   "2HIW"
+  ],
+  "blocked_by": "holo_native_hit=False (unchanged by Leg A)"
+ },
+ "CARDIAC_MYOSIN": {
+  "target": "CARDIAC_MYOSIN",
+  "window": [
+   [
+    "A",
+    164
+   ],
+   [
+    "A",
+    168
+   ],
+   [
+    "A",
+    713
+   ],
+   [
+    "A",
+    712
+   ],
+   [
+    "A",
+    167
+   ],
+   [
+    "A",
+    711
+   ],
+   [
+    "A",
+    163
+   ],
+   [
+    "A",
+    710
+   ],
+   [
+    "A",
+    666
+   ],
+   [
+    "A",
+    170
+   ],
+   [
+    "A",
+    120
+   ],
+   [
+    "A",
+    721
+   ]
+  ],
+  "incumbent_apo": "8QYP",
+  "n_candidates_found": 4,
+  "candidates": [
+   {
+    "pdb_id": "8QYU",
+    "resolution": 1.96,
+    "method": "X-ray",
+    "title": "Beta-cardiac myosin S1 fragment in the pre-powerstroke state complexed to Omecamtiv mecarbil",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "DMS",
+       "resnum": 907,
+       "chain": "A",
+       "min_dist_to_window": 3.13,
+       "treated_as_buffer": true
+      },
+      {
+       "resname": "2OW",
+       "resnum": 908,
+       "chain": "A",
+       "min_dist_to_window": 2.84,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "6FSA",
+    "resolution": 2.33,
+    "method": "X-ray",
+    "title": "Beta-Cardiac myosin post-rigor",
+    "audit": {
+     "survives": true,
+     "reason": null,
+     "near_pocket_hetatm": []
+    },
+    "score": {
+     "overlap_frac": 0.3333333333333333,
+     "druggability_score": 0.0,
+     "hit": false,
+     "n_pockets": 49
+    },
+    "verdict": "apo_closed"
+   },
+   {
+    "pdb_id": "9F6C",
+    "resolution": 2.33,
+    "method": "X-ray",
+    "title": "Cardiac myosin motor domain in the pre-powerstroke state co-crystallized with the inhibitor aficamten",
+    "audit": {
+     "survives": true,
+     "reason": null,
+     "near_pocket_hetatm": []
+    },
+    "score": {
+     "overlap_frac": 0.6666666666666666,
+     "druggability_score": 0.004,
+     "hit": false,
+     "n_pockets": 49
+    },
+    "verdict": "apo_closed"
+   },
+   {
+    "pdb_id": "5N69",
+    "resolution": 2.45,
+    "method": "X-ray",
+    "title": "Cardiac muscle myosin S1 fragment in the pre-powerstroke state co-crystallized with the activator Omecamtiv Mecarbil",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "2OW",
+       "resnum": 904,
+       "chain": "A",
+       "min_dist_to_window": 2.88,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   }
+  ],
+  "recovered": false,
+  "best_recovery": null,
+  "elapsed_s": 15.0,
+  "holo_native_hit": false,
+  "apo_closed_candidates": [
+   "6FSA",
+   "9F6C"
+  ],
+  "blocked_by": "holo_native_hit=False (unchanged by Leg A)"
+ },
+ "GLUCOKINASE": {
+  "target": "GLUCOKINASE",
+  "window": [
+   [
+    "A",
+    211
+   ],
+   [
+    "A",
+    65
+   ],
+   [
+    "A",
+    214
+   ],
+   [
+    "A",
+    64
+   ],
+   [
+    "A",
+    210
+   ],
+   [
+    "A",
+    215
+   ],
+   [
+    "A",
+    221
+   ],
+   [
+    "A",
+    218
+   ],
+   [
+    "A",
+    63
+   ],
+   [
+    "A",
+    62
+   ],
+   [
+    "A",
+    220
+   ],
+   [
+    "A",
+    235
+   ]
+  ],
+  "incumbent_apo": "1V4S",
+  "n_candidates_found": 24,
+  "candidates": [
+   {
+    "pdb_id": "3F9M",
+    "resolution": 1.5,
+    "method": "X-ray",
+    "title": "Human pancreatic glucokinase in complex with glucose and activator showing a mobile flap",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "MRK",
+       "resnum": 501,
+       "chain": "A",
+       "min_dist_to_window": 2.87,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "4NO7",
+    "resolution": 1.7,
+    "method": "X-ray",
+    "title": "Human Glucokinase in complex with a nanomolar activator.",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "2N8",
+       "resnum": 502,
+       "chain": "A",
+       "min_dist_to_window": 2.89,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "4ISE",
+    "resolution": 1.78,
+    "method": "X-ray",
+    "title": "Human glucokinase in complex with novel activator (2S)-3-cyclohexyl-2-(6-fluoro-4-oxoquinazolin-3(4H)-yl)-N-(1,3-thiazol-2-yl)propanamide",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "1FW",
+       "resnum": 501,
+       "chain": "A",
+       "min_dist_to_window": 2.8,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "4DCH",
+    "resolution": 1.79,
+    "method": "X-ray",
+    "title": "Insights into Glucokinase Activation Mechanism: Observation of Multiple Distinct Protein Conformations",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "4DC",
+       "resnum": 502,
+       "chain": "A",
+       "min_dist_to_window": 2.91,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "3VEV",
+    "resolution": 1.8,
+    "method": "X-ray",
+    "title": "Glucokinase in complex with an activator and glucose",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "0H4",
+       "resnum": 502,
+       "chain": "A",
+       "min_dist_to_window": 1.85,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "3VF6",
+    "resolution": 1.86,
+    "method": "X-ray",
+    "title": "Glucokinase in complex with glucose and activator",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "0H6",
+       "resnum": 502,
+       "chain": "A",
+       "min_dist_to_window": 1.79,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "6E0I",
+    "resolution": 1.9,
+    "method": "X-ray",
+    "title": "Crystal structure of Glucokinase in complex with compound 72",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "HKG",
+       "resnum": 503,
+       "chain": "A",
+       "min_dist_to_window": 3.0,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "3IMX",
+    "resolution": 2.0,
+    "method": "X-ray",
+    "title": "Crystal Structure of human glucokinase in complex with a synthetic activator",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "B84",
+       "resnum": 466,
+       "chain": "A",
+       "min_dist_to_window": 2.73,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "4IXC",
+    "resolution": 2.0,
+    "method": "X-ray",
+    "title": "Crystal structure of Human Glucokinase in complex with a small molecule activator.",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "1JD",
+       "resnum": 503,
+       "chain": "A",
+       "min_dist_to_window": 2.79,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "5V4X",
+    "resolution": 2.08,
+    "method": "X-ray",
+    "title": "Human glucokinase in complex with novel pyrazole activator.",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "8WJ",
+       "resnum": 501,
+       "chain": "A",
+       "min_dist_to_window": 2.74,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "4ISF",
+    "resolution": 2.09,
+    "method": "X-ray",
+    "title": "Human glucokinase in complex with novel activator (2S)-3-cyclohexyl-2-(6-fluoro-2,4-dioxo-1,4-dihydroquinazolin-3(2H)-yl)-N-(1,3-thiazol-2-yl)propanamide",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "1FX",
+       "resnum": 501,
+       "chain": "A",
+       "min_dist_to_window": 2.74,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "4IWV",
+    "resolution": 2.1,
+    "method": "X-ray",
+    "title": "Crystals structure of Human Glucokinase in complex with small molecule activator",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "1J9",
+       "resnum": 503,
+       "chain": "A",
+       "min_dist_to_window": 2.71,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "3IDH",
+    "resolution": 2.14,
+    "method": "X-ray",
+    "title": "Human pancreatic glucokinase in complex with glucose",
+    "audit": {
+     "survives": true,
+     "reason": null,
+     "near_pocket_hetatm": []
+    },
+    "score": {
+     "overlap_frac": 0.9166666666666666,
+     "druggability_score": 0.732,
+     "hit": true,
+     "n_pockets": 33
+    },
+    "verdict": "apo_still_open"
+   },
+   {
+    "pdb_id": "3FGU",
+    "resolution": 2.15,
+    "method": "X-ray",
+    "title": "Catalytic complex of Human Glucokinase",
+    "audit": {
+     "survives": true,
+     "reason": null,
+     "near_pocket_hetatm": []
+    },
+    "score": {
+     "overlap_frac": 0.75,
+     "druggability_score": 0.066,
+     "hit": false,
+     "n_pockets": 32
+    },
+    "verdict": "apo_closed"
+   },
+   {
+    "pdb_id": "3S41",
+    "resolution": 2.18,
+    "method": "X-ray",
+    "title": "Glucokinase in complex with activator and glucose",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "S41",
+       "resnum": 4000,
+       "chain": "A",
+       "min_dist_to_window": 3.02,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "3A0I",
+    "resolution": 2.2,
+    "method": "X-ray",
+    "title": "Human glucokinase in complex with a synthetic activator",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "3QIC",
+    "resolution": 2.2,
+    "method": "X-ray",
+    "title": "The structure of human glucokinase E339K mutation",
+    "audit": {
+     "survives": true,
+     "reason": null,
+     "near_pocket_hetatm": [
+      {
+       "resname": "GOL",
+       "resnum": 601,
+       "chain": "A",
+       "min_dist_to_window": 2.54,
+       "treated_as_buffer": true
+      }
+     ]
+    },
+    "score": {
+     "overlap_frac": 1.0,
+     "druggability_score": 0.89,
+     "hit": true,
+     "n_pockets": 24
+    },
+    "verdict": "apo_still_open"
+   },
+   {
+    "pdb_id": "3VEY",
+    "resolution": 2.25,
+    "method": "X-ray",
+    "title": "glucokinase in complex with glucose and ATPgS",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "0H5",
+       "resnum": 504,
+       "chain": "A",
+       "min_dist_to_window": 2.63,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "4RCH",
+    "resolution": 2.3,
+    "method": "X-ray",
+    "title": "Discovery of 2-Pyridyl Ureas as Glucokinase Activators",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "3LZ",
+       "resnum": 502,
+       "chain": "A",
+       "min_dist_to_window": 2.72,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "4DHY",
+    "resolution": 2.38,
+    "method": "X-ray",
+    "title": "Crystal structure of human glucokinase in complex with glucose and activator",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "S41",
+       "resnum": 502,
+       "chain": "A",
+       "min_dist_to_window": 3.04,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "5V4W",
+    "resolution": 2.39,
+    "method": "X-ray",
+    "title": "Human glucokinase in complex with novel indazole activator.",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "8WM",
+       "resnum": 501,
+       "chain": "A",
+       "min_dist_to_window": 2.88,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "3ID8",
+    "resolution": 2.4,
+    "method": "X-ray",
+    "title": "Ternary complex of human pancreatic glucokinase crystallized with activator, glucose and AMP-PNP",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "MRK",
+       "resnum": 501,
+       "chain": "A",
+       "min_dist_to_window": 2.98,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "7T78",
+    "resolution": 2.4,
+    "method": "X-ray",
+    "title": "CRYSTAL STRUCTURE OF GLUCOKINASE (HEXOKINASE 4) COMPLEXED WITH LIGAND DIETHYL ({2-[3-(4-METHANESULFONYLPHENO XY)-5-{[(2S)-1-METHOXYPROPAN-2-YL]OXY}BENZAMIDO]-1,3-THIAZ OL-4-YL}METHYL)PHOSPHONATE",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "G2T",
+       "resnum": 503,
+       "chain": "A",
+       "min_dist_to_window": 2.95,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   },
+   {
+    "pdb_id": "7T79",
+    "resolution": 2.4,
+    "method": "X-ray",
+    "title": "CRYSTAL STRUCTURE OF GLUCOKINASE (HEXOKINASE 4) COMPLEXED WITH LIGAND AKA DIETHYL {[3-(3-{[5-(AZETIDINE-1-CARBON YL)PYRAZIN-2-YL]OXY}-5-(PROPAN-2-YLOXY)BENZAMIDO)-1H- PYRAZOL-1-YL]METHYL}PHOSPHONATE",
+    "audit": {
+     "survives": false,
+     "reason": "unsafe_hetatm_near_window",
+     "near_pocket_hetatm": [
+      {
+       "resname": "G1S",
+       "resnum": 501,
+       "chain": "A",
+       "min_dist_to_window": 1.99,
+       "treated_as_buffer": false
+      }
+     ]
+    }
+   }
+  ],
+  "recovered": false,
+  "best_recovery": null,
+  "elapsed_s": 47.1,
+  "holo_native_hit": false,
+  "apo_closed_candidates": [
+   "3FGU"
+  ],
+  "blocked_by": "holo_native_hit=False (unchanged by Leg A)"
+ },
+ "CASPASE1": {
+  "target": "CASPASE1",
+  "window": [
+   [
+    "A",
+    258
+   ],
+   [
+    "A",
+    282
+   ],
+   [
+    "A",
+    286
+   ],
+   [
+    "B",
+    331
+   ],
+   [
+    "B",
+    333
+   ],
+   [
+    "B",
+    390
+   ]
+  ],
+  "incumbent_apo": "1ICE",
+  "n_candidates_found": 27,
+  "candidates": [
+   {
+    "pdb_id": "8WRA",
+    "resolution": 1.45,
+    "method": "X-ray",
+    "title": "The Crystal Structure of CASP1 from Biortus",
+    "audit": {
+     "survives": true,
+     "reason": null,
+     "near_pocket_hetatm": [
+      {
+       "resname": "EDO",
+       "resnum": 502,
+       "chain": "A",
+       "min_dist_to_window": 3.7,
+       "treated_as_buffer": true
+      },
+      {
+       "resname": "EDO",
+       "resnum": 503,
+       "chain": "A",
+       "min_dist_to_window": 3.47,
+       "treated_as_buffer": true
+      }
+     ]
+    },
+    "score": {
+     "overlap_frac": 0.5,
+     "druggability_score": 0.024,
+     "hit": false,
+     "n_pockets": 17
+    },
+    "verdict": "apo_closed"
+   },
+   {
+    "pdb_id": "6BZ9",
+    "resolution": 1.796,
+    "method": "X-ray",
+    "title": "Crystal structure of human caspase-1 in complex with Ac-FLTD-CMK",
+    "audit": {
+     "survives": true,
+     "reason": null,
+     "near_pocket_hetatm": []
+    },
+    "score": {
+     "overlap_frac": 0.6666666666666666,
+     "druggability_score": 0.042,
+     "hit": false,
+     "n_pockets": 18
+    },
+    "verdict": "apo_closed"
+   },
+   {
+    "pdb_id": "1SC3",
+    "resolution": 1.8,
+    "method": "X-ray",
+    "title": "Crystal structure of the human caspase-1 C285A mutant in complex with malonate",
+    "audit": {
+     "survives": true,
+     "reason": null,
+     "near_pocket_hetatm": []
+    },
+    "score": {
+     "overlap_frac": 0.6666666666666666,
+     "druggability_score": 0.413,
+     "hit": false,
+     "n_pockets": 20
+    },
+    "verdict": "apo_closed"
+   },
+   {
+    "pdb_id": "2H54",
+    "resolution": 1.8,
+    "method": "X-ray",
+    "title": "Crystal structure of human caspase-1 (Thr388->Ala) in complex with 3-[2-(2-benzyloxycarbonylamino-3-methyl-butyrylamino)-propionylamino]-4-oxo-pentanoic acid (z-VAD-FMK)",
+    "audit": {
+     "survives": true,
+     "reason": null,
+     "near_pocket_hetatm": []
+    },
+    "score": {
+     "overlap_frac": 0.6666666666666666,
+     "druggability_score": 0.235,
+     "hit": false,
+     "n_pockets": 21
+    },
+    "verdict": "apo_closed"
+   },
+   {
+    "pdb_id": "2HBQ",
+    "resolution": 1.8,
+    "method": "X-ray",
+    "title": "Crystal structure of wildtype human caspase-1 in complex with 3-[2-(2-benzyloxycarbonylamino-3-methyl-butyrylamino)-propionylamino]-4-oxo-pentanoic acid (z-VAD-FMK)",
+    "audit": {
+     "survives": true,
+     "reason": null,
+     "near_pocket_hetatm": []
+    },
+    "score": {
+     "overlap_frac": 0.6666666666666666,
+     "druggability_score": 0.311,
+     "hit": false,
+     "n_pockets": 19
+    },
+    "verdict": "apo_closed"
+   }
+  ],
+  "recovered": false,
+  "best_recovery": null,
+  "elapsed_s": 27.5,
+  "holo_native_hit": false,
+  "apo_closed_candidates": [
+   "8WRA",
+   "6BZ9",
+   "1SC3",
+   "2H54",
+   "2HBQ"
+  ],
+  "blocked_by": "holo_native_hit=False (unchanged by Leg A)"
+ },
+ "CASPASE7": {
+  "target": "CASPASE7",
+  "window": [
+   [
+    "B",
+    459
+   ],
+   [
+    "B",
+    483
+   ],
+   [
+    "B",
+    513
+   ],
+   [
+    "B",
+    514
+   ],
+   [
+    "B",
+    515
+   ],
+   [
+    "B",
+    521
+   ],
+   [
+    "B",
+    523
+   ]
+  ],
+  "incumbent_apo": "1F1J",
+  "n_candidates_found": 17,
+  "candidates": [
+   {
+    "pdb_id": "4JR2",
+    "resolution": 1.65,
+    "method": "X-ray",
+    "title": "Human procaspase-7/caspase-7 heterodimer bound to Ac-DEVD-CMK",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "4JB8",
+    "resolution": 1.7,
+    "method": "X-ray",
+    "title": "Caspase-7 in Complex with DARPin C7_16",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "2QL9",
+    "resolution": 2.14,
+    "method": "X-ray",
+    "title": "Crystal Structure of Caspase-7 with inhibitor AC-DQMD-CHO",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "4JR1",
+    "resolution": 2.149,
+    "method": "X-ray",
+    "title": "Human procaspase-7 bound to Ac-DEVD-CMK",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "5K20",
+    "resolution": 2.2,
+    "method": "X-ray",
+    "title": "Caspase-7 S239E Phosphomimetic",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "2QLB",
+    "resolution": 2.25,
+    "method": "X-ray",
+    "title": "Crystal Structure of caspase-7 with inhibitor AC-ESMD-CHO",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "4LSZ",
+    "resolution": 2.26,
+    "method": "X-ray",
+    "title": "Caspase-7 in Complex with DARPin D7.18",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "4ZVR",
+    "resolution": 2.3,
+    "method": "X-ray",
+    "title": "Caspase-7 Variant 4 (V4) with reprogrammed substrate specificity due to Y230V/W232Y/S234V/Q276D substitutions bound to DEVD inhibitor.",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "2QL5",
+    "resolution": 2.34,
+    "method": "X-ray",
+    "title": "Crystal Structure of caspase-7 with inhibitor AC-DMQD-CHO",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "1I4O",
+    "resolution": 2.4,
+    "method": "X-ray",
+    "title": "CRYSTAL STRUCTURE OF THE XIAP/CASPASE-7 COMPLEX",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "2QL7",
+    "resolution": 2.4,
+    "method": "X-ray",
+    "title": "Crystal Structure of Caspase-7 with inhibitor AC-IEPD-CHO",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "1I51",
+    "resolution": 2.45,
+    "method": "X-ray",
+    "title": "CRYSTAL STRUCTURE OF CASPASE-7 COMPLEXED WITH XIAP",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "3EDR",
+    "resolution": 2.45,
+    "method": "X-ray",
+    "title": "The crystal structure of caspase-7 in complex with Acetyl-LDESD-CHO",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "3IBF",
+    "resolution": 2.5,
+    "method": "X-ray",
+    "title": "Crystal structure of unliganded caspase-7",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "4ZVP",
+    "resolution": 2.5,
+    "method": "X-ray",
+    "title": "Caspase-7 Variant 2 (V2) with reprogrammed substrate specificity due to Y230V/W232M/Q276C substitutions bound to DEVD inhibitor.",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "4ZVQ",
+    "resolution": 2.5,
+    "method": "X-ray",
+    "title": "Caspase-7 Variant 2 (V2) with reprogrammed substrate specificity due to Y230V/W232M/Q276C substitutions bound to VEID inhibitor.",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   },
+   {
+    "pdb_id": "4ZVS",
+    "resolution": 2.5,
+    "method": "X-ray",
+    "title": "Caspase-7 Variant 1 (V1) with reprogrammed substrate specificity due to Y230A/W232M/S234N substitutions, bound to DEVD inhibitor.",
+    "audit": {
+     "survives": false,
+     "reason": "window_not_found"
+    }
+   }
+  ],
+  "recovered": false,
+  "best_recovery": null,
+  "elapsed_s": 34.8,
+  "holo_native_hit": false,
+  "apo_closed_candidates": [],
+  "blocked_by": "holo_native_hit=False (unchanged by Leg A)"
+ }
+}
