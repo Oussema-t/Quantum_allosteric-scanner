@@ -1,0 +1,22 @@
+{
+ "KRAS_G12C": {
+  "n_restarts": 65,
+  "n_success": 13,
+  "best_score_min": 0.333,
+  "best_score_median": 0.555,
+  "best_score_max": 0.882,
+  "frac_restarts_still_improving_in_final_20pct": 0.24615384615384617,
+  "median_iteration_of_best": 15.0,
+  "iterations": 25
+ },
+ "PTP1B": {
+  "n_restarts": 65,
+  "n_success": 0,
+  "best_score_min": 0.033,
+  "best_score_median": 0.293,
+  "best_score_max": 0.397,
+  "frac_restarts_still_improving_in_final_20pct": 0.12307692307692308,
+  "median_iteration_of_best": 9.0,
+  "iterations": 25
+ }
+}

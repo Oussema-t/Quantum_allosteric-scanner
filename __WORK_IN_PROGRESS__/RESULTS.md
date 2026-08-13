@@ -6084,7 +6084,8 @@ section), `tools/fpocket/PROVENANCE.json`, `tools/fpocket/README.md`,
 
 | 69 | [[TASK-0209]] found only 2/7 targets pass its apo-closed/holo-open contrast. Can re-selecting the *apo* deposition alone (Leg A of a two-leg protocol) raise that count, for the 5 INVALID targets? | **resolved 2026-08-13: no — Leg A recovers 0/5; the count stays 2/7. Leg B (new proteins) is now confirmed necessary ([[TASK-0214]]).** Known-answer check passed first (KRAS_G12C incumbent apo re-scored through this task's own pipeline, exact match to [[TASK-0209]]'s number). UniProt-seeded candidate search (`backend.discovery.same_protein_entries`) found 4-32 alternative X-ray depositions (≤2.5 Å) per target; a chem_comp-driven exclusion filter (built and tested against the two known culprits *before* running anything: `classify_ligand("MYR")` returns `("solvent/ion", False)` — the register's own classifier would NOT have caught BCR_ABL1's own myristate, so the filter calls `_is_aliphatic_additive` directly instead of trusting that top-level category) found real, clean candidates whose own native structure is closed for 4/5 targets (BCR_ABL1, CARDIAC_MYOSIN, GLUCOKINASE, CASPASE1); CASPASE7 failed at the window-numbering-match step for every candidate. **A real bug was caught before reporting a result**: the first pass scored candidates as "recovered" from the new apo's own hit status alone and reported 6/7 — wrong, because the pre-registered VALID rule needs `holo_native_hit=True` as well, and checking [[TASK-0209]]'s own stored data directly shows **`holo_native_hit=False` on all 5 INVALID targets, without exception** (including BCR_ABL1/GLUCOKINASE/CASPASE1, which this task's own pre-registration table had implicitly assumed had a working holo side). Leg A only touches the apo side, so it cannot cross a bar the holo side is independently failing. Not a wasted leg: it isolates the real blocker as the holo-side/window/druggability-bar problem ([[TASK-0204]] reopened's own D2 finding, for BCR_ABL1 specifically) rather than "no clean apo exists" — which does exist, for 4 of 5 targets. | [[TASK-0209]], [[TASK-0204]], [[TASK-0169]] |
 | 69 | Every cryptic-pocket experiment in this register assumes the apo pocket is closed and the holo pocket open. Does that contrast actually hold, per target? | **resolved 2026-08-12: no — only 2 of 7 targets are VALID (KRAS_G12C, PTP1B), and 2 of the 3 mandatory targets are INVALID.** Blind pre-registered rule, known-answer checks passed. Three distinct failure modes: an unexplained bound HETATM holding the "apo" pocket open (BCR_ABL1 `MYR`; **GLUCOKINASE `MRK`, new**), an inverted contrast with nothing nearby to explain it (CASPASE1 — intrinsically open, not occupied), and no contrast at all because the holo positive control itself misses (CARDIAC_MYOSIN, CASPASE7). The construction leg was blocked for all 5 by its own precondition — `holo_native_hit=False` everywhere, so there is no verified-open reference to build from. For druggability-contrast-dependent claims the mandatory-3 gate has been running at **1/3 validated coverage**. | [[TASK-0209]], [[TASK-0169]], [[TASK-0204]] |
-| 70 | Is trajectory-free **coupled** backbone+rotamer apo→holo search hard — the gap between [[TASK-0204]]'s fixed-graph closure, [[TASK-0185]]'s backbone-only closure, and single-particle CTQW? | **tentatively OPEN, weakly supported, 2026-08-12 — deliberately not handed to [[TASK-0183]].** The firewall check (objective must prefer the true holo) passes on only 2/4 targets, independently reproducing [[TASK-0209]]'s verdict from a different direction; CASPASE1/GLUCOKINASE invert and are uninterpretable. On the 2 evaluable targets, 0 of 2 restarts reached the holo basin (best scores 0.47/0.29 vs true holo 0.89/0.76). Reads OPEN by the pre-registered threshold, but n=2 restarts on n=2 targets, and the CLOSED condition ("≥3 of 4 targets") assumed 4 evaluable ones. The budget was honored as pre-registered despite the sizing calibration proving ~10× pessimistic — no outcome-contingent inflation. | [[TASK-0210]], [[TASK-0208]], [[TASK-0209]], [[TASK-0204]], [[TASK-0185]] |
+| 70 | Is trajectory-free **coupled** backbone+rotamer apo→holo search hard — the gap between [[TASK-0204]]'s fixed-graph closure, [[TASK-0185]]'s backbone-only closure, and single-particle CTQW? | **tentatively OPEN, weakly supported, 2026-08-12 — deliberately not handed to [[TASK-0183]].** The firewall check (objective must prefer the true holo) passes on only 2/4 targets, independently reproducing [[TASK-0209]]'s verdict from a different direction; CASPASE1/GLUCOKINASE invert and are uninterpretable. On the 2 evaluable targets, 0 of 2 restarts reached the holo basin (best scores 0.47/0.29 vs true holo 0.89/0.76). Reads OPEN by the pre-registered threshold, but n=2 restarts on n=2 targets, and the CLOSED condition ("≥3 of 4 targets") assumed 4 evaluable ones. The budget was honored as pre-registered despite the sizing calibration proving ~10× pessimistic — no outcome-contingent inflation. **SUPERSEDED 2026-08-13 ([[TASK-0213]]): CLOSED at adequate n — 13/65 restarts succeed on KRAS_G12C, 0/65 on PTP1B.** | [[TASK-0210]], [[TASK-0208]], [[TASK-0209]], [[TASK-0204]], [[TASK-0185]] |
+| 71 | Is [[TASK-0210]]'s "tentatively OPEN" verdict on coupled backbone+rotamer search real, or an artifact of n=2 restarts? | **resolved 2026-08-13: an artifact — the route is CLOSED.** Re-run at a pre-registered 65 restarts x 25 iterations/target (budget fixed by a cost calibration on this task's own candidate files, not revised after any score; success bar and firewall inherited verbatim from [[TASK-0210]]). **KRAS_G12C succeeds on 13 of 65 restarts (20%)**; at that rate 0/2 occurs ~64% of the time, so TASK-0210's negative was fully consistent with an easy instance. **PTP1B: 0 of 65**, and its entire best-score distribution is capped at 0.397 — below the 0.5 bar and far below its own true holo 0.757, so not a near-miss. Trajectory diagnostics (pre-registered "regardless of verdict") show the anneal was **not** the binding constraint: only 12-25% of restarts were still improving in the final 20% of iterations, median best reached by iteration 9-15 of 25 — restart count was the right dimension to raise. **This closes the last OPEN quantum-advantage route in the register.** Whether PTP1B is genuinely harder or its objective/window is mis-specified is **not decidable at n=2 valid targets** ([[TASK-0209]]) and is stated as unresolved. | [[TASK-0213]], [[TASK-0210]], [[TASK-0209]], [[TASK-0204]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
@@ -6266,7 +6267,7 @@ Success bar: ≥50% window-RMSD reduction, or overlap ≥0.5 **and** druggabilit
 scores (0.47, 0.29) sit well below the true holo values (0.89, 0.76).
 
 **Verdict: tentatively OPEN, weakly supported — deliberately not handed to
-[[TASK-0183]] as a Phase-2 candidate.** n=2 restarts on n=2 evaluable targets,
+[[TASK-0183]] as a Phase-2 candidate.** **[SUPERSEDED 2026-08-13 by [[TASK-0213]]: CLOSED. At 65 restarts x 25 iterations KRAS_G12C succeeds on 13/65 (20%); 0/2 was fully consistent with that rate (~64% chance). Search is not the bottleneck. See this document's own TASK-0213 section.]** n=2 restarts on n=2 evaluable targets,
 and the pre-registered CLOSED condition ("≥3 of 4 targets clear the bar")
 assumed 4 evaluable targets and cannot be evaluated as written.
 
@@ -6277,3 +6278,70 @@ the full run took ~6 minutes, not the ~30 it was sized for. **The
 pre-registered budget was honored as committed anyway**, with no post-hoc
 extension after seeing a negative result. The cheap true cost is reported for
 the follow-up rather than used to inflate this run retroactively.
+
+---
+
+## Coupled search re-run at adequate n — the last OPEN route closes (TASK-0213, 2026-08-13)
+
+**Question**: [[TASK-0210]] reported "tentatively OPEN, weakly supported" from
+**0 successes in 2 restarts** on each of the 2 evaluable targets. Zero out of
+two is consistent with almost any difficulty. Is the route genuinely hard, or
+was it under-searched?
+
+**Filed as a separate task rather than an extension of [[TASK-0210]]**, which
+honored its own pre-registered budget after seeing a negative result
+specifically to avoid outcome-contingent inflation. Extending that run inside
+the same task would have been exactly the inflation it refused.
+
+**Method**: [[TASK-0210]]'s solver, objective, firewall and success bars reused
+**verbatim** — only `RESTARTS`/`ITERATIONS` overridden. Budget set by a cost
+calibration on this task's own candidate files (TASK-0210's 16.3 s/call sizing
+came from a stray file left by an earlier task and proved ~7x pessimistic;
+real cost 2.15-2.26 s/iteration), then fixed by a pre-registered formula and
+**not revised after any score was seen**: **65 restarts x 25 iterations per
+target**, ~42 min/target. Firewall reproduced on both targets first.
+
+**Result: CLOSED.**
+
+| Target | successes / 65 | rate | best-score min / median / max | true holo |
+|---|---|---|---|---|
+| **KRAS_G12C** | **13** | **20%** | 0.333 / 0.555 / **0.882** | 0.886 |
+| PTP1B | 0 | 0% | 0.033 / 0.293 / **0.397** | 0.757 |
+
+**KRAS_G12C reaches the holo basin on 13 of 65 restarts.** At a 20% per-restart
+rate, observing 0/2 has probability ~0.64 — [[TASK-0210]]'s negative was
+entirely consistent with an easy instance, which is precisely the ambiguity
+this task existed to remove. Per the pre-registered rule (CLOSED if either
+target clears the bar on >=2 restarts), **coupled backbone+rotamer search is
+not hard on the one target where the objective is valid and the search
+succeeds.**
+
+**Trajectory diagnostics** (pre-registered "regardless of verdict"): only
+12-25% of restarts were still improving in the final 20% of iterations, and
+the median restart reached its own best by iteration 9-15 of 25. **The anneal
+length was not the binding constraint** — the search converges inside budget,
+so restart count was the correct dimension to raise and raising `ITERATIONS`
+further would buy little.
+
+**PTP1B's 0/65 is not a near-miss.** Its entire best-score distribution is
+capped at 0.397 — below the 0.5 druggability bar and far below its own true
+holo value of 0.757 — so the search never approaches the answer, in either the
+restart or the iteration dimension. KRAS_G12C's distribution (0.333-0.882)
+straddles the bar exactly as a 20% rate implies.
+
+**The two valid targets disagree, and at n=2 that cannot be adjudicated.**
+Whether PTP1B is genuinely harder, or its objective/window is mis-specified
+there, is undecidable with [[TASK-0209]]'s 2 valid instances — reported as
+unresolved rather than resolved in either direction. This is the n=2 ceiling
+[[TASK-0209]] created, arriving in practice.
+
+**Register-level consequence: there is no OPEN quantum-advantage route left.**
+Nine identified routes are now closed by measurement — single-particle CTQW,
+coherence/interference, non-locality, interacting multi-particle,
+backbone-only ENM search, residue-selection QUBO, optimal control,
+fixed-backbone rotamer packing ([[TASK-0204]], complexity grounds), and
+coupled backbone+rotamer search (this task).
+
+Full detail: `.ai/tasks/DONE/TASK-0213-strengthen-coupled-search-at-adequate-n.md`,
+`results_task0213_coupled_search_adequate_n/{budget,results,verdict,trajectory_diagnostics}.json`,
+`scripts/task0213_coupled_search_adequate_n.py`.

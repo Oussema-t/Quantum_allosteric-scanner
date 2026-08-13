@@ -1,0 +1,22 @@
+{
+ "calibration": {
+  "KRAS_G12C": {
+   "wall_s": 6.4,
+   "s_per_iteration": 2.15,
+   "firewall_ok": true
+  },
+  "PTP1B": {
+   "wall_s": 6.8,
+   "s_per_iteration": 2.26,
+   "firewall_ok": true
+  }
+ },
+ "budget": {
+  "mean_s_per_iteration": 2.21,
+  "per_target_wall_budget_s": 3600.0,
+  "iterations": 25,
+  "restarts": 65,
+  "projected_wall_s_per_target": 3583.1,
+  "rule": "ITERATIONS=25 preferred, fall back to 15 before dropping RESTARTS below 10"
+ }
+}
