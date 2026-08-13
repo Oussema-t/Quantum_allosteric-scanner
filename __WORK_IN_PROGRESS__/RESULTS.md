@@ -6080,9 +6080,198 @@ section), `tools/fpocket/PROVENANCE.json`, `tools/fpocket/README.md`,
 | 66 | Every cryptic-pocket experiment in this register has assumed the apo structure's pocket is genuinely *closed* and the holo's genuinely *open* — never checked, until [[TASK-0169]] found BCR_ABL1's apo isn't cryptic at all. Does the assumption hold register-wide? | **resolved 2026-08-07: no — only 2 of 7 real-drug-ligand targets are validated ([[TASK-0209]]).** Scope: of `targets.yaml`'s 14 entries, 7 have a genuine small-molecule `drug_ligand` (the other 6 have none, or (GROEL_SUBUNIT) a protein ligand its own config flags as not applicable — excluded, not scored). Reused [[TASK-0204]] (reopened)'s own positive-control ladder (`holo_native`/`holo_greedy`/`holo_optimized`/`apo_native`, ligand-stripped, `fpocket`-scored) on all 7, pre-registering the VALID rule blind, before running 11 of the 13 targets: `NOT apo_native_hit AND holo_native_hit`, reusing [[TASK-0204]]'s own hit criterion, not a new one. **VALID (2/7)**: KRAS_G12C (apo drug=0.001, holo=0.886), PTP1B (0.046→0.757). **INVALID (5/7)**, in three distinct failure modes: (a) apo scores *more* druggable than holo, an inverted contrast — BCR_ABL1 (explained: `MYR` 3.47 Å from the pocket, [[TASK-0169]]'s own finding, reused as a known-answer check here), GLUCOKINASE (a **new** finding: unexplained `MRK` 2.45 Å from the pocket, same shape as MYR), CASPASE1 (apo hit=0.679, **no** HETATM found nearby — an intrinsically open pocket, not an occupancy artifact); (b) no contrast either direction and the holo positive control itself misses — CARDIAC_MYOSIN, CASPASE7 (window/bar limitation, not chased further). **The construction leg (build a synthetic closed instance from a verified-open holo) could not proceed for any of the 5 INVALID targets**: all 5 have `holo_native_hit=False`, so none has the verified-open reference the method requires to round-trip against — reported as a finding (the construction leg's own precondition fails register-wide, not just for BCR_ABL1), not forced through. **Register-wide exposure**: 2 of the register's 3 *mandatory* targets (BCR_ABL1, CARDIAC_MYOSIN) are INVALID — only KRAS_G12C is a validated cryptic-pocket contrast among the mandatory set. Does not retroactively invalidate individual measured numbers (most observables, e.g. GNM/CTQW-family, don't depend on fpocket-druggability contrast) but means "passes on 2/3 (or 3/3) mandatory targets" cannot be read as "2 (or 3) genuine cryptic-pocket benchmarks" without checking which. Real tooling bug found and fixed en route (in this task's own script, not edited into [[TASK-0204]]'s file, which is under another thread's active claim): `_write_full_atom_with_window_chain`'s hardcoded window-chain-letter 'B' collides with any target whose own chain is already 'B' (CARDIAC_MYOSIN's holo), silently relabeling the entire structure as "window." | [[TASK-0169]], [[TASK-0204]], [[TASK-0210]], [[TASK-0208]] |
 
 | 67 | [[TASK-0199]]'s ~3-axis effective rank was measured over 28 observables that are all functions of a **single static graph**. Is an observable computed across an **ensemble** of realized contact graphs independent of that span, or does it land inside it? | **resolved 2026-08-12: inside the existing span, 5/5 targets — not a new axis.** `ensemble_contact_covariance` (new, `scripts/task0211_ensemble_graph_observable.py`): per-residue \|Pearson\| correlation, across a legal closed-form ANM-equipartition ensemble (`shortcuts.equipartition_ensemble`/`msf_cross_check`, [[TASK-0187]]'s own validated sampler, no trajectory), between the seed's and residue *j*'s per-sample contact-graph **degree** — genuinely rebuilt discrete graphs per sample, not a continuous-displacement reduction, unlike `dcc_low`'s single-Kirchhoff-eigendecomposition construction. MSF gate passed on all 5 targets; split-half reproducibility passed everywhere (rho 0.718-0.786) at 2000 samples (3/5 targets) or 4000 (the 2 largest, N=704/461). Baseline 28-observable rank reproduced [[TASK-0199]]'s own published numbers exactly (wiring check) before adding anything. Pre-registered "new axis" rule: real observable's rank-delta must exceed a matched-variance noise column's own delta, on every target. **It did not, on any of the 5** — delta_real (0.115-0.221) was smaller than delta_noise (0.180-0.273) every time; duplicate/random controls on the 29-column matrix still behaved correctly. Explanation, not just a negative: Spearman rho vs. `dcc_low` alone is 0.257-0.339 on every target, flat across targets (PTP1B not distinguished from the other 4) — real, modest, positive overlap with the register's one closed-form "communication through collective structure" observable, consistent with sharing underlying signal rather than being an independent view. **[[TASK-0199]]'s "~3 axes" headline (refined by [[TASK-0207]] to "~2 stable axes plus noise") is unweakened** — rank does not move from ~3 toward ~4 on any target. Consumes zero multiplicity budget (observable-vs-observable only, no label read), per this task's own Constraint. Closes contact co-variance as a candidate; edge persistence and ensemble-averaged propagation (named alternatives) remain untested, not owed by this task's own scope. [[TASK-0187]]'s hop-distance shortcut is the only other ensemble-graph observable tested to date, also negative — 2 of the class's named candidates are now dead. | [[TASK-0199]], [[TASK-0207]], [[TASK-0187]], [[TASK-0201]], [[TASK-0184]] |
+| 68 | [[TASK-0204]] closed fixed-backbone rotamer packing on complexity grounds, but only while the interaction graph is fixed — does the real apo→holo change move the backbone (closure does not transfer) or only side chains (it does)? | **INCONCLUSIVE, 2026-08-07/12 — the original `CLOSED` verdict is retracted.** The compound AND-gate had one leg that could not fire (the frustration signature requires `joint < 0`; every `joint` was large and positive because rigid holo rotamers on an apo backbone always clash) and another that was confounded (the RMSD attribution credits backbone for displacement it merely *carries*). Recompute with post-transplant relaxation removes **~97%** of the measured energy and leaves **3 of 4 targets not evaluable** — including PTP1B's +16.2%, the number [[TASK-0212]] was filed to chase and which is now closed as invalidated. Dihedral-space attribution reverses the verdict on all 4 (pocket backbone-share 0.205–0.374, and *higher* distally on 3/4 — side-chain change is pocket-concentrated). The two metrics together exclude **both** simple closures: the backbone moves little but is load-bearing. | [[TASK-0208]], [[TASK-0204]], [[TASK-0210]], [[TASK-0212]] |
+| 69 | Every cryptic-pocket experiment in this register assumes the apo pocket is closed and the holo pocket open. Does that contrast actually hold, per target? | **resolved 2026-08-12: no — only 2 of 7 targets are VALID (KRAS_G12C, PTP1B), and 2 of the 3 mandatory targets are INVALID.** Blind pre-registered rule, known-answer checks passed. Three distinct failure modes: an unexplained bound HETATM holding the "apo" pocket open (BCR_ABL1 `MYR`; **GLUCOKINASE `MRK`, new**), an inverted contrast with nothing nearby to explain it (CASPASE1 — intrinsically open, not occupied), and no contrast at all because the holo positive control itself misses (CARDIAC_MYOSIN, CASPASE7). The construction leg was blocked for all 5 by its own precondition — `holo_native_hit=False` everywhere, so there is no verified-open reference to build from. For druggability-contrast-dependent claims the mandatory-3 gate has been running at **1/3 validated coverage**. | [[TASK-0209]], [[TASK-0169]], [[TASK-0204]] |
+| 70 | Is trajectory-free **coupled** backbone+rotamer apo→holo search hard — the gap between [[TASK-0204]]'s fixed-graph closure, [[TASK-0185]]'s backbone-only closure, and single-particle CTQW? | **tentatively OPEN, weakly supported, 2026-08-12 — deliberately not handed to [[TASK-0183]].** The firewall check (objective must prefer the true holo) passes on only 2/4 targets, independently reproducing [[TASK-0209]]'s verdict from a different direction; CASPASE1/GLUCOKINASE invert and are uninterpretable. On the 2 evaluable targets, 0 of 2 restarts reached the holo basin (best scores 0.47/0.29 vs true holo 0.89/0.76). Reads OPEN by the pre-registered threshold, but n=2 restarts on n=2 targets, and the CLOSED condition ("≥3 of 4 targets") assumed 4 evaluable ones. The budget was honored as pre-registered despite the sizing calibration proving ~10× pessimistic — no outcome-contingent inflation. | [[TASK-0210]], [[TASK-0208]], [[TASK-0209]], [[TASK-0204]], [[TASK-0185]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
 (or `.ai/tasks/TODO/` if not yet closed — check `.ai/COMMON.md`'s registry
 for current status). This document is the one to read for the science;
 that one is the one to read for what was done and by whom.
+
+---
+
+## apo→holo change decomposition — the gate that closed, then didn't (TASK-0208, 2026-08-07/12)
+
+**Question**: [[TASK-0204]] closed fixed-backbone rotamer packing on complexity
+grounds — but that closure holds only while the interaction graph is *fixed*.
+Does the real apo→holo change move the backbone (closure does not transfer) or
+only side chains (it does)? Filed as the cheap gate for [[TASK-0210]].
+
+**The original run reported `CLOSED` on all 4 evaluated targets. That verdict
+is retracted.** A Reviewer-thread audit found the compound AND-gate
+(`substantially backbone` **AND** `frustrated`) had **one leg that could not
+fire and another that was confounded**, so it could not have returned `OPEN`
+on any data:
+
+1. **The frustration statistic's positive outcome was structurally
+   unreachable.** Every `joint` energy was large and positive (+25.4, +29.0,
+   +23.5, +114.8); the pre-registered "textbook frustration signature"
+   requires `joint < 0`. Transplanting rigid holo rotamers onto an apo
+   backbone always clashes (9/12, 10/12, 5/6, 5/12 individual swaps
+   destabilizing). The statistic measured *"do rigid holo side chains fit on
+   an apo backbone"* — never — not *"are these changes coupled."*
+2. **The `not_evaluable` guard keyed off the wrong variable** (`|sum_singles|
+   < 1e-6`, dominated by clash energy) so it stayed silent on the very cells
+   it was written for.
+3. **The attribution metric was structurally biased toward "backbone"**:
+   `holo_backbone + apo_chi` moves N/CA/C *and drags every side chain along*,
+   while `apo_backbone + holo_chi` moves only atoms beyond Cβ.
+
+**Recompute** (`scripts/task0208_recompute.py`,
+`results_task0208_apo_holo_decomposition/results_recompute.json`; original
+`results.json` untouched):
+
+| Target | `side_chain_explained` | original coupling verdict | corrected |
+|---|---|---|---|
+| KRAS_G12C | 0.036 | decomposable (+0.04%) | **not evaluable** |
+| PTP1B | 0.078 | decomposable (+16.2%) | **not evaluable** |
+| CASPASE1 | 0.043 | anti-frustrated (−10.0%) | **not evaluable** |
+| GLUCOKINASE | 0.463 | decomposable (+1.2%) | evaluable, not frustrated (9.2%) |
+
+Adding EvoEF2 `RepairStructure` before `ComputeStability` removes **~97%** of
+the measured energy (GLUCOKINASE: sum 116.13→**4.15**, joint 114.75→**3.77**)
+— confirming the original numbers were clash energy almost in their entirety.
+**Three of four "decomposable" readings were vacuous**, including PTP1B's
++16.2%, the value [[TASK-0212]] was filed to chase (that task is now closed as
+invalidated-as-filed).
+
+**Dihedral-space attribution reverses the backbone verdict on every target**
+(scale-free per residue, so backbone cannot win by carriage):
+
+| Target | RMSD `backbone_explained` | dihedral bb-share, pocket | distal |
+|---|---|---|---|
+| KRAS_G12C | 0.733 → "substantially backbone" | **0.374** | 0.561 |
+| PTP1B | 0.539 → "substantially backbone" | **0.205** | 0.532 |
+| CASPASE1 | 0.524 → "substantially backbone" | **0.356** | 0.247 |
+| GLUCOKINASE | 0.204 → "ambiguous" | 0.357 | 0.371 |
+
+Backbone share at the pocket is **below 0.5 on all four**, and the distal
+control is *higher* than the pocket on 3/4 — side-chain torsion change is
+concentrated **at** the pocket while backbone change is concentrated **away**
+from it. The original metric inverted a real, pocket-specific signal.
+
+**The tension is the finding.** `side_chain_explained` ≈ 0.04–0.08 says
+rotating side chains on the apo backbone gets you almost nowhere — the
+backbone must move. Dihedral bb-share ≈ 0.20–0.37 says most of the *torsional*
+change is in χ. Both hold: **the backbone moves little but is load-bearing** —
+a small shift repositions the side-chain frames, without which no amount of χ
+rotation reaches the holo pocket. That is a description of a **coupled**
+regime, and it excludes *both* simple closures.
+
+**Operative verdict: INCONCLUSIVE on all 4.** The coupling question is
+unanswered, not answered negatively. [[TASK-0210]] is neither closed nor
+opened by it. Full record: [[TASK-0208]]'s own REVIEWER VERDICT and Recompute
+sections.
+
+---
+
+## Known-answer cryptic-instance verification — only 2 of 7 targets are valid (TASK-0209, 2026-08-12)
+
+**Question**: every cryptic-pocket experiment in this register assumes the apo
+pocket is closed and the holo pocket open. That contrast has never been
+checked. Does it hold?
+
+**Verdict: 2/7 VALID (KRAS_G12C, PTP1B). 5/7 INVALID — including 2 of the 3
+mandatory targets.** Blind pre-registered rule reusing [[TASK-0204]]'s own hit
+criterion (`overlap_frac >= 0.5 AND druggability_score >= 0.5`), ligand
+stripped, at each target's own 12-residue window:
+
+| Target | apo drug | apo hit | holo drug | holo hit | Δdrug | Verdict |
+|---|---|---|---|---|---|---|
+| KRAS_G12C | 0.001 | miss | 0.886 | **hit** | +0.885 | **VALID** |
+| PTP1B | 0.046 | miss | 0.757 | **hit** | +0.711 | **VALID** |
+| BCR_ABL1 | 0.566 | **hit** | 0.356 | miss | −0.210 | INVALID |
+| GLUCOKINASE | 0.759 | **hit** | 0.229 | miss | −0.530 | INVALID |
+| CASPASE1 | 0.679 | **hit** | 0.030 | miss | −0.649 | INVALID |
+| CARDIAC_MYOSIN | 0.001 | miss | 0.166 | miss | +0.165 | INVALID |
+| CASPASE7 | 0.582 | miss | 0.010 | miss | −0.572 | INVALID |
+
+Known-answer checks (KRAS_G12C→VALID, BCR_ABL1→INVALID) both matched; the rule
+was adopted blind, not fitted.
+
+**Three mechanistically distinct failure modes:**
+
+1. **Inverted contrast with an unexplained bound HETATM in the "apo"** —
+   BCR_ABL1 (`MYR`, myristic acid, 3.47 Å from the window, [[TASK-0169]]'s
+   finding reused as the known-answer check) and **GLUCOKINASE (`MRK`,
+   2.45 Å — a new finding of the same shape).** An endogenous or
+   co-crystallized small molecule holds the "apo" pocket open.
+2. **Inverted contrast with nothing nearby to explain it** — CASPASE1: apo
+   scores 0.679 druggable with no flagged HETATM. Not an occupied pocket, an
+   *intrinsically open* one.
+3. **No contrast at all — the holo positive control itself misses** —
+   CARDIAC_MYOSIN (0.166), CASPASE7 (0.010). The pipeline cannot see either
+   state as druggable at this window/bar.
+
+**The construction leg could not run for any INVALID target**, and the reason
+is structural rather than incidental: `holo_native_hit=False` on **all 5**, so
+there is no verified-open reference to construct a closed instance from or to
+round-trip back to. Reported as a blocked precondition rather than forced
+through — forcing it would have produced an artifact, not an instrument.
+
+**Register-wide exposure, stated not re-run**: the standing mandatory set is
+KRAS_G12C / BCR_ABL1 / CARDIAC_MYOSIN, and **2 of those 3 are INVALID**. For
+druggability-contrast-dependent claims specifically, the mandatory-3 gate has
+been running at **1/3 validated coverage**. This does not retroactively
+invalidate individual measured numbers — most GNM/CTQW-family observables do
+not depend on fpocket druggability contrast at all — but "passes on 2/3
+mandatory targets" cannot be read as "on 2 genuine cryptic-pocket contrasts"
+without naming which.
+
+A real chain-letter-collision bug in the reused positive-control ladder was
+found and fixed locally (not in `task0204_positive_control.py`, which was
+under another thread's active claim): the window is relabeled to chain 'B',
+which is a no-op collision on any target whose own chain is already 'B'
+(CARDIAC_MYOSIN's holo). Flagged for that file's owner.
+
+---
+
+## Coupled backbone+rotamer search — classical solver, tentatively OPEN (TASK-0210, 2026-08-12)
+
+**Question**: is trajectory-free coupled backbone+side-chain apo→holo search
+actually hard? The route sits precisely in the gap between three existing
+closures — [[TASK-0204]] (fixed-backbone packing: exact in ms, but the graph is
+fixed), [[TASK-0185]] (backbone-only ENM: recovery in 1–8 draws, but side
+chains unmodelled), and single-particle CTQW (an `eigh` call) — and unlike all
+of them it has a **known answer**.
+
+**Firewall/known-answer check passes on only 2 of 4 targets**, independently
+reproducing [[TASK-0209]]'s verdict from a different direction:
+
+| Target | apo drug | holo drug | objective prefers holo? |
+|---|---|---|---|
+| KRAS_G12C | 0.001 | 0.886 | **yes** |
+| PTP1B | 0.046 | 0.757 | **yes** |
+| CASPASE1 | 0.679 | 0.030 | no — inverted |
+| GLUCOKINASE | 0.759 | 0.229 | no — inverted |
+
+Per the task's own Planned Validation, CASPASE1/GLUCOKINASE results are **not
+interpretable** — the search ran, but no outcome there would be informative.
+
+**Classical solver** (apo-only ANM-mode backbone perturbation + EvoEF2
+`SideChainRepack` + fpocket-druggability objective; holo used *only* to score,
+never as an input): 2 restarts × 10 iterations per target.
+
+| Target | restart 1 (score / RMSD reduction) | restart 2 | reached the holo basin? |
+|---|---|---|---|
+| KRAS_G12C | 0.349 / 9.6% | 0.466 / 7.9% | **no** |
+| PTP1B | 0.071 / 21.1% | 0.293 / 15.4% | **no** |
+
+Success bar: ≥50% window-RMSD reduction, or overlap ≥0.5 **and** druggability
+≥0.5. Neither evaluable target reached either bar on either restart; best
+scores (0.47, 0.29) sit well below the true holo values (0.89, 0.76).
+
+**Verdict: tentatively OPEN, weakly supported — deliberately not handed to
+[[TASK-0183]] as a Phase-2 candidate.** n=2 restarts on n=2 evaluable targets,
+and the pre-registered CLOSED condition ("≥3 of 4 targets clear the bar")
+assumed 4 evaluable targets and cannot be evaluated as written.
+
+**A disclosed budget note, and the discipline is the point**: the per-call cost
+calibration that sized the 2×10 budget (16.3 s/call, measured on a stray file
+from an earlier task) was unrepresentative — real cost is ~1.6–10 s/call and
+the full run took ~6 minutes, not the ~30 it was sized for. **The
+pre-registered budget was honored as committed anyway**, with no post-hoc
+extension after seeing a negative result. The cheap true cost is reported for
+the follow-up rather than used to inflate this run retroactively.
