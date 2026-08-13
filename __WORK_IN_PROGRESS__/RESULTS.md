@@ -4692,7 +4692,7 @@ conclusion holds, now measured against a null that genuinely reaches this
 target's real pocket Rg rather than one that could not.
 
 **PTP1B's `dcc_low` (k=10) survives its pre-registered bar under this
-null: p=0.0027 < 0.003125.** Read exactly, honestly, without overclaiming:
+null: p=0.0027 < 0.003125.** **[SEED-PROVENANCE ADVISORY, [[TASK-0216]], 2026-08-13: PTP1B's active site — this observable's own `source` argument — is NOT a real active site. `targets.yaml` declared `func_ligand: ['pTyr / active-site Cys215 (descriptive marker, not a ligand code)']`; no ligand matched, and `functional_indices` silently returned the 5 highest-degree residues. The p-value stands (the null shuffles pocket labels, not the seed) but the mechanistic reading — coupling from the catalytic site — is not what was measured. Under the real UniProt catalytic site (Cys215 + P-loop, seed overlap 1 residue of 9) the whole-graph `dcc_low` AUC moves −0.133. TASK-0201's own stratified statistic has NOT yet been recomputed under the corrected seed; that is the outstanding measurement.]** Read exactly, honestly, without overclaiming:
 the point estimate clears the bar by TASK-0190's own stated criterion
 (`p < bar`, the same comparison that task used throughout), but the 95%
 Monte Carlo CI ([0.0020, 0.0035]) slightly straddles it — the upper CI
@@ -6347,3 +6347,103 @@ coupled backbone+rotamer search (this task).
 Full detail: `.ai/tasks/DONE/TASK-0213-strengthen-coupled-search-at-adequate-n.md`,
 `results_task0213_coupled_search_adequate_n/{budget,results,verdict,trajectory_diagnostics}.json`,
 `scripts/task0213_coupled_search_adequate_n.py`.
+
+---
+
+## Seed provenance — 9 of 13 targets were seeded at graph hubs, not active sites (TASK-0216, 2026-08-13)
+
+**A silent fallback in the core label pipeline, found while scoring
+[[TASK-0215]]'s new pairs.** `labels.functional_indices` resolves the active
+site by matching `func_ligand` codes against the holo entry's ligand groups.
+When nothing matches it returns `np.argsort(-degree)[:5]` — the five
+highest-degree residues — tagged `top-degree fallback`, **without warning**.
+
+**Audit of all 13 register targets with a holo structure:**
+
+| Seed resolves | Targets |
+|---|---|
+| REAL | KRAS_G12C (`GDP`), BCR_ABL1 (`NIL`), CARDIAC_MYOSIN (`ADP`), PFK (`F6P`/`ATP`) |
+| **FALLBACK** | **PTP1B**, GLUCOKINASE, ATCase, CASPASE1, CASPASE7, HEMOGLOBIN, TAR_RECEPTOR, GLYCOGEN_PHOSPHORYLASE, GROEL_SUBUNIT |
+
+Cause, visible in `targets.yaml` itself: `func_ligand` held **human-readable
+descriptions rather than PDB chem-comp codes** — `'Glucose'` (code `GLC`),
+`'substrate'`, `'O2', 'heme'`, `'Pi', 'G1P'`, `'Asp'`. PTP1B's entry is
+self-describing: `'pTyr / active-site Cys215 (descriptive marker, not a
+ligand code)'`.
+
+**Why it matters twice over.** A degree-derived seed makes any seeded
+observable a function of graph degree, so its mechanistic reading is not what
+was measured; and `baselines.degree_centrality` is one of the three
+proximity-floor baselines, so observable and floor then share a construction
+and the comparison is no longer independent.
+
+**Fixes landed:**
+1. `targets.yaml` — 6 codes corrected against each holo entry's *actual*
+   ligand set (`GLC`, `PAL`, `HEM`+`OXY`, `ASP`, `LLP`, `ADP`), never from
+   memory; originals preserved in a new `func_ligand_original` field with a
+   `func_ligand_note` explaining each. GLYCOGEN_PHOSPHORYLASE's is flagged a
+   judgment call (`LLP` cofactor vs `GLS` inhibitor).
+2. **3 targets genuinely have no functional ligand at all** — PTP1B (holo
+   1T49 holds only drug 892 + MG), CASPASE1, CASPASE7. Set to `[]` with a
+   note; their active sites must come from UniProt.
+3. `labels.functional_indices` now emits a `RuntimeWarning` on fallback,
+   naming the declared value and both hazards. It can no longer pass silently.
+
+### PTP1B under a real seed — the register's only surviving positive
+
+UniProt gives PTP1B's catalytic site as **[181, 215, 216, 217, 218, 219, 220,
+221, 262]** — Cys215 plus the P-loop, identical on apo 1SUG and holo 1T49.
+
+| | seed | pocket | max floor | `dcc_low` k=10 (whole-graph AUC) |
+|---|---|---|---|---|
+| fallback (what the register used) | [51, 87, 210, 214, 221] | 4 | 0.700 | 0.522 — below floor |
+| **real (UniProt catalytic site)** | [181, 215–221, 262] | 4 | 0.701 | **0.389** — below floor |
+
+**Seed overlap: 1 residue of 9.** Δ(whole-graph AUC) = **−0.133**.
+
+**Stated precisely, because the temptation to overclaim is real:** this is
+*not* a refutation of [[TASK-0201]]. That result used a **stratified**
+well-powered-max AUC with a graph-walk permutation null; this is whole-graph
+AUC, a different statistic, and the two are not comparable. What is
+established is that the seed correction **materially changes the score
+field** (overlap 1/9, Δ −0.133). Recomputing TASK-0201's own statistic under
+the corrected seed is the outstanding measurement and has not been done.
+
+### Independent corroboration from the new instances
+
+Scoring [[TASK-0215]]'s pairs (`task0216_score_new_pairs.py`, leg A) — only
+2 of 6 have a derivable real seed, the rest hitting the same fallback or an
+apo/holo length mismatch:
+
+| Target | floor | CTQW | `dcc_low` k=10 |
+|---|---|---|---|
+| GLUR2_ANIRACETAM | 0.811 | 0.735 (below) | **0.295** |
+| GLUK1_BPAM | 0.761 | 0.796 (clears, +0.035) | **0.323** |
+
+**`dcc_low` scores 0.295 and 0.323 on the first two instances where its seed
+is real** — far below floor and below chance. Reached by a different route
+from the PTP1B finding, pointing the same way.
+
+### Coupled search on the new instances (leg B) — TASK-0213's verdict weakens
+
+Re-running [[TASK-0213]]'s solver at 20×25 on the new pairs; only the 2 TEM-1
+pairs pass the firewall and are interpretable (GLUR2_ANIRACETAM and
+FPPS_YF0282 invert; GLUR2_TRU and GLUK1_BPAM error on an apo/holo length
+mismatch and a degenerate ANM spectrum respectively):
+
+| Target | successes / 20 | firewall |
+|---|---|---|
+| TEM1_BLA_CBT | **0/20** | ok |
+| TEM1_BLA_FTA | **0/20** | ok |
+
+Combined with [[TASK-0213]] the interpretable tally is now **KRAS_G12C 13/65
+(20%), PTP1B 0/65, TEM1_CBT 0/20, TEM1_FTA 0/20 — 1 of 4 easy, 3 of 4 not.**
+[[TASK-0213]]'s CLOSED verdict was correctly applied to its own pre-registered
+2-target rule, but **KRAS_G12C now looks like the outlier rather than PTP1B**,
+and the generalization of "search is not the bottleneck" is materially weaker
+than that verdict reads on its own.
+
+Full detail: `scripts/task0216_score_new_pairs.py`,
+`scripts/task0216_ptp1b_real_seed.py`,
+`results_task0216_new_pair_scoring/{results,ptp1b_real_seed}.json`,
+`config/candidate_targets_task0216.yaml`.

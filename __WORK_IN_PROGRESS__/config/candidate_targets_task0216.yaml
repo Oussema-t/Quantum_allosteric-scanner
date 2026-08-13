@@ -1,0 +1,128 @@
+# TASK-0216 -- candidate targets from TASK-0215's Leg B sourcing.
+#
+# DELIBERATELY SEPARATE FROM config/targets.yaml. These 6 pairs passed
+# TASK-0209's VALID rule but have NOT been promoted into the register:
+# no curated pocket label (TASK-0177-style consensus), no mechanism
+# validation (TASK-0170-style), no disease-relevance decision. Keeping
+# them in their own file means a reader can never mistake their
+# provenance for the incumbent 7's.
+#
+# `func_ligand` is derived data-driven from each holo entry's own
+# non-drug ligand set (checked via rcsb.ligands_and_sites), never
+# hardcoded from memory:
+#   3ILT -> GLU (glutamate, the AMPA agonist)
+#   2AL5 -> FWD (fluoro-willardiine, agonist)
+#   5MFQ -> KAI (kainate, agonist)
+#   6OAG -> PO4
+#   1PZO/1PZP -> NONE. TEM-1's holo entries contain only the allosteric
+#     drug, so no functional ligand exists to derive an active site from.
+#     Left empty rather than invented: these two targets therefore cannot
+#     carry any active-site-seeded observable, and that is reported as a
+#     coverage gap, not worked around.
+#
+# Contrast quality (TASK-0215 data, apo druggability -> holo):
+#   1PZO 0.003->0.988  1PZP 0.004->0.999  3ILT 0.000->0.938  2AL5 0.000->0.727
+#   5MFQ 0.437->0.980 (MARGINAL, apo just under bar)
+#   6OAG 0.530->0.809 (MARGINAL, apo ABOVE the druggability bar; passes only
+#                      on the overlap leg)
+
+targets:
+
+  TEM1_BLA_CBT:
+    apo_pdb: 1YT4
+    holo_pdb: 1PZO
+    apo_chains: ["A"]
+    holo_chains: ["A"]
+    chains: ["A"]
+    drug_ligand: CBT
+    func_ligand: []          # none present -- see header
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0215 Leg B
+
+  TEM1_BLA_FTA:
+    apo_pdb: 1M40
+    holo_pdb: 1PZP
+    apo_chains: ["A"]
+    holo_chains: ["A"]
+    chains: ["A"]
+    drug_ligand: FTA
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0215 Leg B
+
+  GLUR2_TRU:
+    apo_pdb: 1M5E
+    holo_pdb: 3ILT
+    apo_chains: ["A"]
+    holo_chains: ["B"]
+    chains: ["A"]
+    # holo drug TRU sits on chain B while the apo is chain A; the per-role
+    # override drives chain_map_from_config (TASK-0144) so functional/pocket
+    # indices land on apo numbering instead of overrunning the apo array.
+    drug_ligand: TRU
+    func_ligand: ["GLU"]
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0215 Leg B
+
+  GLUR2_ANIRACETAM:
+    apo_pdb: 1MQI
+    holo_pdb: 2AL5
+    apo_chains: ["A"]
+    holo_chains: ["A"]
+    chains: ["A"]
+    drug_ligand: 4MP
+    func_ligand: ["FWD"]
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0215 Leg B
+
+  GLUK1_BPAM:
+    apo_pdb: 1YCJ
+    holo_pdb: 5MFQ
+    apo_chains: ["A"]
+    holo_chains: ["A"]
+    chains: ["A"]
+    drug_ligand: 2J9
+    func_ligand: ["KAI"]
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: marginal        # apo druggability 0.437, just under the bar
+    source: TASK-0215 Leg B
+
+  FPPS_YF0282:
+    apo_pdb: 4DEM
+    holo_pdb: 6OAG
+    apo_chains: ["F"]
+    holo_chains: ["F"]
+    chains: ["F"]
+    drug_ligand: M2Y
+    func_ligand: ["PO4"]
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: marginal        # apo druggability 0.530 -- ABOVE the bar; passes on overlap only
+    source: TASK-0215 Leg B

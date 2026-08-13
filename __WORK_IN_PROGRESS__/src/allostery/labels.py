@@ -26,6 +26,7 @@ this module importable and testable without adding a new dependency
 """
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass
 
 import numpy as np
@@ -385,6 +386,34 @@ def functional_indices(
 
     from .hamiltonians import contact_matrix
 
+    # TASK-0216: this fallback is a LAST RESORT and must never pass silently.
+    # It returns the 5 highest-degree residues as a stand-in "active site" --
+    # a topological proxy, not a functional site -- and that is actively
+    # dangerous for two compounding reasons:
+    #   1. Any active-site-seeded observable becomes a function of graph
+    #      degree, so its mechanistic reading ("coupling from the catalytic
+    #      site") is not what was measured.
+    #   2. `baselines.degree_centrality` is one of the three proximity-floor
+    #      baselines, so observable and floor then share a construction and
+    #      the comparison is no longer independent.
+    # Found firing silently on 9 of 13 register targets -- including PTP1B,
+    # which carries the register's only surviving positive. Cause in every
+    # case: `func_ligand` held a human-readable description ('Glucose',
+    # 'substrate', 'O2', 'Asp') rather than a PDB chem-comp code, so no
+    # ligand ever matched.
+    declared = target_config.get("func_ligand") or []
+    warnings.warn(
+        "functional_indices: no func_ligand match"
+        + (f" for declared {declared!r}" if declared else " (func_ligand empty)")
+        + " -- falling back to the top-5 highest-degree residues. This is a "
+        "TOPOLOGICAL PROXY, not a functional site: active-site-seeded "
+        "observables computed on it do not measure active-site coupling, and "
+        "are correlated with degree_centrality, itself a proximity-floor "
+        "baseline. Supply real chem-comp codes in `func_ligand`, or a "
+        "UniProt-derived active site (see backend/active_site.py).",
+        RuntimeWarning,
+        stacklevel=2,
+    )
     A = contact_matrix(coords, cutoff=9.0, weight="binary")
     degree = A.sum(axis=1)
     return np.argsort(-degree)[:5], "top-degree fallback"

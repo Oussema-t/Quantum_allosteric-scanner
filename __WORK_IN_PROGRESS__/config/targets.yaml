@@ -311,7 +311,10 @@ targets:
     enm_cutoff: 8.0
     pocket_contact_cutoff: 4.5
     drug_ligand: "892"
-    func_ligand: ["pTyr / active-site Cys215 (descriptive marker, not a ligand code)"]
+    func_ligand: []
+    func_ligand_original: ["pTyr / active-site Cys215 (descriptive marker, not a ligand code)"]
+    func_ligand_note: >-
+      TASK-0216: holo 1T49 contains ONLY the allosteric drug (892) + MG -- no functional/substrate ligand exists to derive an active site from. Left empty deliberately. The catalytic site (Cys215 + P-loop) is UniProt-annotated and must be supplied that way; see backend/active_site.py. Any active-site-seeded observable computed for this target WITHOUT such a seed is running on the top-degree fallback.
     pocket_label:
       method: consensus  # TASK-0177: >=3-of-{n_available} vote across C1(contact 3.5-6.0A)/C2(dSASA)/C3(fpocket cavity)/C4(depositor SITE); core=all-agree. Frozen under frozen_context by scripts/task0177_consensus_labels.py -- do not hand-edit, regenerate.
       criteria_available: ["C1_contact", "C2_dsasa", "C3_fpocket_holo", "C4_depositor_site"]
@@ -356,7 +359,10 @@ targets:
     enm_cutoff: 8.0
     pocket_contact_cutoff: 4.5
     drug_ligand: TK1
-    func_ligand: ["Glucose"]
+    func_ligand: ['GLC']
+    func_ligand_original: "['Glucose']"
+    func_ligand_note: >-
+      TASK-0216: was 'Glucose', a description not a chem-comp code -> silent top-degree fallback. GLC verified present in holo 3H1V.
     pocket_label:
       method: consensus  # TASK-0177: >=3-of-{n_available} vote across C1(contact 3.5-6.0A)/C2(dSASA)/C3(fpocket cavity)/C4(depositor SITE); core=all-agree. Frozen under frozen_context by scripts/task0177_consensus_labels.py -- do not hand-edit, regenerate.
       criteria_available: ["C1_contact", "C2_dsasa", "C3_fpocket_holo"]  # C4 unavailable: 3H1V has no legacy SITE records -- core==consensus here is degenerate (unanimity of only 3 criteria), NOT strong agreement; see RESULTS.md negative-control caveat.
@@ -400,7 +406,10 @@ targets:
     enm_cutoff: 8.0
     pocket_contact_cutoff: 4.5
     drug_ligand: null   # v2: "CTP?" — unconfirmed
-    func_ligand: ["Asp", "carbamoyl-P"]
+    func_ligand: ['PAL']
+    func_ligand_original: "['Asp', 'carbamoyl-P']"
+    func_ligand_note: >-
+      TASK-0216: was descriptive. PAL (N-phosphonacetyl-L-aspartate) is the bisubstrate analogue occupying the Asp + carbamoyl-P site; verified present in holo 4KH1.
     status: draft
     verified: false
     confidence: 0.55
@@ -431,7 +440,10 @@ targets:
     enm_cutoff: 8.0
     pocket_contact_cutoff: 4.5
     drug_ligand: F1G
-    func_ligand: ["substrate"]
+    func_ligand: []
+    func_ligand_original: ["substrate"]
+    func_ligand_note: >-
+      TASK-0216: holo 2FQQ contains only the drug (F1G). No substrate ligand -- see PTP1B note.
     pocket_label:
       method: consensus  # TASK-0177: >=3-of-{n_available} vote across C1(contact 3.5-6.0A)/C2(dSASA)/C3(fpocket cavity)/C4(depositor SITE); core=all-agree. Frozen under frozen_context by scripts/task0177_consensus_labels.py -- do not hand-edit, regenerate.
       criteria_available: ["C1_contact", "C2_dsasa", "C3_fpocket_holo", "C4_depositor_site"]
@@ -477,7 +489,10 @@ targets:
     enm_cutoff: 8.0
     pocket_contact_cutoff: 4.5
     drug_ligand: FXN
-    func_ligand: ["substrate"]
+    func_ligand: []
+    func_ligand_original: ["substrate"]
+    func_ligand_note: >-
+      TASK-0216: holo 1SHL contains only the drug (FXN). No substrate ligand -- see PTP1B note.
     pocket_label:
       method: consensus  # TASK-0177: >=3-of-{n_available} vote across C1(contact 3.5-6.0A)/C2(dSASA)/C3(fpocket cavity)/C4(depositor SITE); core=all-agree. Frozen under frozen_context by scripts/task0177_consensus_labels.py -- do not hand-edit, regenerate.
       criteria_available: ["C1_contact", "C2_dsasa", "C3_fpocket_holo", "C4_depositor_site"]
@@ -517,7 +532,10 @@ targets:
     enm_cutoff: 8.0
     pocket_contact_cutoff: 4.5
     drug_ligand: null   # v2: "BPG?" — unconfirmed
-    func_ligand: ["O2", "heme"]
+    func_ligand: ['HEM', 'OXY']
+    func_ligand_original: "['O2', 'heme']"
+    func_ligand_note: >-
+      TASK-0216: was descriptive. HEM + OXY verified present in holo 1HHO.
     status: draft
     verified: false
     confidence: 0.55
@@ -549,7 +567,10 @@ targets:
     enm_cutoff: 8.0
     pocket_contact_cutoff: 4.5
     drug_ligand: null   # v2: "Asp?" — unconfirmed
-    func_ligand: ["Asp"]
+    func_ligand: ['ASP']
+    func_ligand_original: "['Asp']"
+    func_ligand_note: >-
+      TASK-0216: was 'Asp' (description); ASP is the chem-comp code, verified present in holo 1VLT.
     status: draft
     verified: false
     confidence: 0.45
@@ -578,7 +599,10 @@ targets:
     enm_cutoff: 8.0
     pocket_contact_cutoff: 4.5
     drug_ligand: null   # v2: "AMP?" — unconfirmed
-    func_ligand: ["Pi", "G1P"]
+    func_ligand: ['LLP']
+    func_ligand_original: "['Pi', 'G1P']"
+    func_ligand_note: >-
+      TASK-0216: was descriptive. JUDGMENT CALL, flagged: holo 1A8I contains LLP (pyridoxal-5'-phosphate-lysine, the covalent catalytic cofactor) and GLS (a glucose-analogue inhibitor). LLP chosen as the catalytic-site marker; GLS is an inhibitor, not the functional substrate. Revisit if this target is ever scored.
     status: draft
     verified: false
     confidence: 0.60
@@ -644,7 +668,10 @@ targets:
     enm_cutoff: 8.0
     pocket_contact_cutoff: 4.5
     drug_ligand: "GroES (protein, not a small molecule — drug-contact pocket definition does not apply cleanly)"
-    func_ligand: ["ATP"]
+    func_ligand: ['ADP']
+    func_ligand_original: "['ATP']"
+    func_ligand_note: >-
+      TASK-0216: was 'ATP'; holo 1AON contains ADP (hydrolysed state), not ATP. Verified.
     status: draft
     verified: false
     confidence: 0.45

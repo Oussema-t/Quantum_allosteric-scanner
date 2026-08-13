@@ -1,0 +1,62 @@
+{
+ "target": "PTP1B",
+ "apo": "1SUG",
+ "holo": "1T49",
+ "k_modes": 10,
+ "uniprot_active_site_source": "uniprot",
+ "uniprot_active_site_resnums": [
+  181,
+  215,
+  216,
+  217,
+  218,
+  219,
+  220,
+  221,
+  262
+ ],
+ "fallback": {
+  "tag": "top-degree fallback (what the register used)",
+  "n_seed": 5,
+  "seed_resnums": [
+   51,
+   87,
+   210,
+   214,
+   221
+  ],
+  "n_pocket": 4,
+  "floor_aucs": {
+   "degree": 0.6998269896193772,
+   "euclid_from_seed": 0.23269896193771622,
+   "hop_from_seed": 0.17041522491349476
+  },
+  "max_floor": 0.6998269896193772,
+  "dcc_low_auc": 0.5216262975778547
+ },
+ "real": {
+  "tag": "UniProt catalytic site (Cys215 + P-loop)",
+  "n_seed": 9,
+  "seed_resnums": [
+   181,
+   215,
+   216,
+   217,
+   218,
+   219,
+   220,
+   221,
+   262
+  ],
+  "n_pocket": 4,
+  "floor_aucs": {
+   "degree": 0.7008771929824562,
+   "euclid_from_seed": 0.37631578947368416,
+   "hop_from_seed": 0.2850877192982456
+  },
+  "max_floor": 0.7008771929824562,
+  "dcc_low_auc": 0.38859649122807016
+ },
+ "delta_dcc_low_auc": -0.13302980634978456,
+ "seed_overlap": 1
+}
