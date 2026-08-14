@@ -40,6 +40,7 @@ if str(_SCRIPTS) not in sys.path:
 
 from allostery.baselines import degree_centrality, euclid_from_seed_centroid, hop_from_seed  # noqa: E402
 from allostery.clean import load_target_config  # noqa: E402
+from allostery.diagnostics import assert_gate_reachable  # noqa: E402
 from allostery.hamiltonians import H2_combinatorial_laplacian, build_H_new, laplacian  # noqa: E402
 from allostery.labels import build_labels  # noqa: E402
 from allostery.lowmode_predictor import dcc_low  # noqa: E402
@@ -362,6 +363,20 @@ def run_positive_control(target_name: str = "KRAS_G12C") -> dict:
 
 
 def main() -> int:
+    # TASK-0217.002 -- FAMILY_SIZE already auto-scales with len(TARGETS)
+    # (TASK-0189's own defect class, family drift, guarded above), but
+    # nothing previously checked the OTHER half of that same lesson: as
+    # TARGETS grows, ALPHA=0.05/FAMILY_SIZE shrinks, and a Bonferroni-
+    # corrected permutation gate below `1/N_PERM_REPS` can only ever fire
+    # at p==0 exactly (`allostery.diagnostics.assert_gate_reachable`'s own
+    # docstring). Currently reachable (ALPHA=0.05/30=1.67e-3 vs.
+    # 1/N_PERM_REPS=1e-3, confirmed by this call) but with only ~67%
+    # headroom -- a single further TARGETS extension (this register has
+    # done exactly that twice already, TASK-0203 then this audit) would
+    # cross into the same unreachable-gate defect TASK-0189 found and
+    # fixed elsewhere, silently. Fail-fast here rather than re-discover it
+    # after a future run.
+    assert_gate_reachable(ALPHA, family_size=1, n_reps=N_PERM_REPS)
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     results = {"targets": {}}
     for target in TARGETS:
