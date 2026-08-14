@@ -682,6 +682,18 @@ established signal — TASK-0082 (competence map), TASK-0068 (NISQ sim),
 TASK-0015 (holo-direction), TASK-0046 (ceiling search), TASK-0081
 (generalization set) — until a method clears this floor for real.
 
+**[[TASK-0217.004]], 2026-08-14 — suspicion, not a confirmed defect:**
+across the 3 targets with a published 3-leg breakdown (this table; the
+BCR_ABL1 and CARDIAC_MYOSIN breakdowns further down this document),
+**`degree_centrality` never wins** — `euclid_from_seed_centroid` wins on
+KRAS_G12C, `hop_from_seed` wins on BCR_ABL1 and CARDIAC_MYOSIN. Does not
+invalidate the floor's own name (all three candidates are genuinely
+proximity-flavoured), and no reported verdict changes — flagged because
+an empirically-dominated third candidate is exactly the shape this
+task's own audit class looks for, and a register-wide check (not done
+here, out of that task's own scope) would settle whether this holds
+generally or is a 3-target coincidence.
+
 **[CORRECTED 2026-07-15]** CARDIAC_MYOSIN's "moot, N=950 flag fires
 first" row above is superseded — see the CARDIAC_MYOSIN section's own
 `[CORRECTED 2026-07-15]` block (`LARGE_N_THRESHOLD` had no derivation,
