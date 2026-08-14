@@ -10,7 +10,19 @@ Key guarantees
 - Insertion codes are stripped; residues are flagged in the quality report.
 - Waters, common ions, and crystallographic cofactors are removed.
 - Nucleic acid is retained only when keep_nucleic=True (MYC_MAX).
-- The resulting Cα graph must be connected; disconnected graphs are an error.
+- The resulting Cα graph's connectivity is checked and reported via
+  `warnings`/`CleanResult.warnings`; `clean()` itself never raises on a
+  disconnected graph, deliberately (TASK-0038, see `_assert_connected`'s
+  own docstring) — a caller gets a `CleanResult` back either way, so a
+  single bad chain break doesn't abort a run before quality metadata can
+  be inspected. Disconnection *is* enforced as a hard error downstream,
+  independently of this module: `superpose.py`'s ANM rigid-body-nullspace
+  check raises when the contact graph it operates on is disconnected
+  (TASK-0005's original regression) — that is the real gate, not this
+  one. (Corrected 2026-08-14, TASK-0038 — this line previously claimed
+  "disconnected graphs are an error," contradicting `_assert_connected`'s
+  actual warn-only behavior; the earlier `PLAN.md` Phase 0 gate language
+  this also referenced no longer exists in the repo.)
 - Quality metadata (resolution, B-factor stats, gap list) is returned alongside
   the clean coordinates.
 """
@@ -254,7 +266,13 @@ def _assert_connected(
     cutoff: float = 10.0,
 ) -> None:
     """Check that the Cα contact graph (at cutoff Å) has exactly one component.
-    Warns rather than raises so callers can decide how to handle it.
+    Warns rather than raises so callers can decide how to handle it --
+    deliberate (TASK-0038, confirmed against this module's own docstring
+    2026-08-14): a single bad chain break should not abort a clean() run
+    before quality metadata can be inspected. The real hard gate on a
+    disconnected structure lives downstream, independently of this
+    function -- `superpose.py`'s ANM rigid-body-nullspace check raises on
+    it (TASK-0005).
     """
     import networkx as nx
 
