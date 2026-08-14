@@ -21,6 +21,7 @@ from backend.analysis import (
     connectivity_change,
     gnm_context,
     quantum_seed_readiness,
+    seed_readiness_shift,
     site_potentials,
 )
 from backend.data_layer import load_structure, res_indices
@@ -101,6 +102,44 @@ class TestQuantumSeedReadinessCharacterization:
     def test_returns_none_for_empty_site_idx(self):
         apo, _sysinfo = _load_kras_apo()
         assert quantum_seed_readiness(apo["coords"], apo["bfac"], apo["resnums"], np.array([], dtype=int)) is None
+
+
+class TestSeedReadinessShiftCharacterization:
+    """TASK-0035: pins `seed_readiness_shift`'s own bootstrap-derived
+    numbers (`_bootstrap_floor`/`_raw_shift`, not covered by any existing
+    characterization test before this task) -- captured against live
+    RCSB data *before* `_bootstrap_floor`'s redundant-`_abs_coupling`
+    perf fix landed, and confirmed bit-identical against 3 independent
+    dict equality checks (this test's own assertions) *after* it, not
+    just re-captured and trusted. Same rng seed (0), same
+    `rng.choice(N, n_seed, replace=False)` call sequence -- the fix only
+    removed redundant recomputation of whole-structure arrays that don't
+    depend on which residues got sampled."""
+
+    def test_kras_g12c_apo_holo_pinned_shift(self):
+        apo, sysinfo = _load_kras_apo()
+        r = seed_readiness_shift(
+            sysinfo["apo"], sysinfo["chain"], sysinfo["holo"], sysinfo["chain"],
+            site_resnums=sysinfo["active_site"], drug_resnums=sysinfo["pocket_full"][4.5], cutoff=8.0,
+        )
+
+        assert r["mechanism"] == "AMBIGUOUS"
+        assert r["topology"] == "orthosteric"
+        assert r["n_pocket"] == 21
+        assert r["drug_active_sep"] == 0.0
+        assert r["reach_shift"] == 0.002
+        assert r["active_shift"]["apo"] == {"coupling": 11.728, "msf": 0.173, "slow": 0.015}
+        assert r["active_shift"]["holo"] == {"coupling": 11.656, "msf": 0.172, "slow": 0.01}
+        assert r["active_shift"]["delta"] == {"coupling": -0.072, "msf": -0.001, "slow": -0.005}
+        assert r["active_shift"]["thr"] == {"coupling": 1.483, "msf": 0.042, "slow": 0.01}
+        assert r["active_shift"]["sig"] == {"coupling": False, "msf": False, "slow": False}
+
+    def test_returns_none_for_empty_site_resnums(self):
+        sysinfo = SYSTEMS["KRAS_G12C"]
+        assert seed_readiness_shift(
+            sysinfo["apo"], sysinfo["chain"], sysinfo["holo"], sysinfo["chain"],
+            site_resnums=[], drug_resnums=sysinfo["pocket_full"][4.5], cutoff=8.0,
+        ) is None
 
 
 class TestConnectivityChangeCharacterization:

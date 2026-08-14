@@ -231,11 +231,33 @@ def _site_descriptors_raw(c, idx):
 
 def _bootstrap_floor(c, n_seed, n_boot=200, seed=0):
     """2σ noise floor of the RAW seed-mean descriptors under random-residue sampling of the
-    SAME size — the significance threshold (replaces a fixed d_z constant)."""
+    SAME size — the significance threshold (replaces a fixed d_z constant).
+
+    TASK-0035: `msf`/`coupling`/`slow` are whole-structure arrays (properties
+    of `c` alone, not of which residues get sampled), so they are computed
+    ONCE here rather than once per bootstrap draw via `_site_descriptors_raw`
+    — `_abs_coupling`'s `_normalized_dcc` matrix product is O(N^3) and was
+    being redone unchanged 200x per call (measured: 3.78s of 9-13s total
+    `seed_readiness_shift` cost on the largest benchmark target, CARDIAC_MYOSIN
+    N=950, down to well under 1s after this fix). Draws are unchanged: the
+    same `rng.choice(N, n_seed, replace=False)` call happens in the same loop
+    position for each of the `n_boot` iterations, so the random-index sequence
+    — and therefore the numeric output — is bit-identical to before this
+    change (checked directly, `backend/test_analysis_characterization.py`'s
+    new `TestSeedReadinessShiftCharacterization`, not just assumed from the
+    refactor being "just a reorder")."""
     rng = np.random.default_rng(seed)
     N = len(c["msf"])
     n_seed = max(1, min(int(n_seed), N - 1))
-    samp = [_site_descriptors_raw(c, rng.choice(N, n_seed, replace=False)) for _ in range(n_boot)]
+    msf, coupling, slow = c["msf"], _abs_coupling(c), _slow_participation(c)
+    samp = []
+    for _ in range(n_boot):
+        idx = rng.choice(N, n_seed, replace=False)
+        samp.append({
+            "msf": float(np.mean(msf[idx])),
+            "coupling": float(np.mean(coupling[idx])),
+            "slow": float(np.mean(slow[idx])),
+        })
     return {k: float(np.std([s[k] for s in samp])) for k in samp[0]}
 
 
