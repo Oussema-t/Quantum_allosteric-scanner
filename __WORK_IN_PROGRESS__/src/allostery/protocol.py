@@ -27,6 +27,47 @@ report are gated here. Everything else in the package is unaffected by
 default (no active context = unguarded) -- this is an opt-in firewall for
 Phase-3 pipeline code (select.py, TASK-0007; analysis.py, TASK-0008), not a
 retroactive lock on labels.py/superpose.py's own direct callers/tests.
+
+TASK-0087 -- cooperative gate, not a hard data-seal, decided explicitly.
+`test_leakage_gate.py`'s reference spec (`_SealedLabels`) wraps the *data
+itself* so no caller can read a sealed array by any means, however
+written. This module's gate is weaker: `assert_readable` only fires when
+code goes through `get_pocket_mask`/`get_labels`/`get_functional_indices`/
+`get_superpose_report` -- a direct `labels.build_labels`/
+`labels.holo_pocket_mask` call on a blocked target succeeds unblocked,
+demonstrated (not just asserted) by `test_protocol.py::
+TestCooperativeGateAcceptedGap`. Kept cooperative, checked rather than
+assumed sufficient:
+
+  1. A hard seal applied at *this module's own* return-value boundary
+     (wrapping what `get_pocket_mask` etc. hand back) would not close the
+     actual gap named above -- it only protects a call that already went
+     through the gate, and the named bypass is precisely *not* going
+     through the gate. The only design that closes it is `labels.py`/
+     `superpose.py` checking `current_context()` internally, which would
+     invert this module's current one-way dependency on them into a
+     two-way coupling (a "pure" data module needing to know this
+     bookkeeping layer's state).
+  2. This is a single-repo, reviewed-code trust boundary (FROZEN-path
+     callers are `select.py`/`analysis.py`, not third-party input), not
+     an adversarial one.
+  3. Checked directly, not assumed: the real production candidate builder
+     (`run_challenge.py::_make_candidates_builder`, the only thing this
+     module's `frozen_context` actually polices in the shipped pipeline)
+     is leak-safe *by construction* -- it reads only `apo.coords`/
+     `apo.bfactors`, never labels, so the cooperative gate's weakness has
+     not been live-exploited by any code this project ships.
+  4. `diagnostics.detect_permutation_leak` (GATE-B4) is a structurally
+     different, entry-point-agnostic backstop designed for exactly an
+     "unforeseen leak vector" this cooperative gate can't catch -- but
+     checked directly, not assumed: as of this decision it is exercised
+     only by its own test (`test_diagnostics.py`), not wired into
+     `run_challenge.py`'s real run. Cited here as a real, available
+     mechanism, not as an operational safety net already in place --
+     wiring it in is a real follow-up (filed separately, out of this
+     module's own scope), not done as part of this decision.
+
+Full evidence and the decision record: `.ai/tasks/DONE/TASK-0087-*.md`.
 """
 from __future__ import annotations
 

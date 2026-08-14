@@ -739,3 +739,60 @@ class TestLearnabilityWiring:
             learnability=gate,
         )
         assert result["_learnability_verdict"] == "LEARNABLE"
+
+
+class TestCooperativeGateAcceptedGap:
+    """TASK-0087: `protocol.py`'s firewall is a cooperative gate, not a
+    hard data-seal like `test_leakage_gate.py::_SealedLabels` -- decided
+    and documented explicitly (this module's own docstring, and the Done
+    section of `.ai/tasks/DONE/TASK-0087-*.md`), not left as an
+    unexamined gap. This class is the empirical half of that record: it
+    demonstrates, rather than merely asserts in prose, that the accepted
+    gap is real and exactly as scoped -- a direct `labels.py`/
+    `superpose.py` call bypasses the gate entirely, while the gated
+    `protocol.get_*` accessors correctly raise for the same read
+    (`TestGatedAccessors` above already covers the positive/enforced
+    side; this class covers the negative/bypass side that positive
+    coverage cannot exercise by itself)."""
+
+    def test_direct_build_labels_call_bypasses_frozen_context(self):
+        """The actual named gap, demonstrated: `labels.build_labels`
+        called directly (not via `protocol.get_labels`) on a target held
+        out under an active `frozen_context` does NOT raise -- it returns
+        the true label, same as if no context were active at all. This is
+        the accepted behavior, not a bug this test guards against
+        regressing further; if this test ever starts raising
+        `LeakageError`, `protocol.py` has been hardened and this test
+        (plus the module docstring's accepted-gap paragraph) needs
+        updating to match, not silently left describing a stale decision."""
+        from allostery.labels import build_labels
+
+        apo, holo = _apo_holo_with_ligand()
+        with frozen_context("T1"):
+            # No LeakageError here -- direct call, gate never consulted.
+            mask = build_labels(apo, holo, _TARGET_CONFIG).pocket
+        assert mask is not None and mask.any()
+
+    def test_direct_holo_pocket_mask_call_bypasses_frozen_context(self):
+        """Same gap, at `labels.py`'s lower-level raw-mask function
+        (`get_pocket_mask`'s own gate wraps `build_labels`, not this one
+        directly, but this is the function TASK-0070/SEAM-0003 found
+        `get_pocket_mask` had been silently returning before that fix --
+        worth covering at this layer too, not just the assembled one)."""
+        from allostery.labels import holo_pocket_mask
+
+        apo, holo = _apo_holo_with_ligand()
+        with frozen_context("T1"):
+            mask = holo_pocket_mask(apo, holo, _TARGET_CONFIG["drug_ligand"])
+        assert mask is not None and mask.any()
+
+    def test_gated_accessor_still_raises_for_the_same_read(self):
+        """Contrast case, in the same test class rather than left implicit
+        by cross-referencing `TestGatedAccessors`: the gated path for the
+        *identical* read (`get_pocket_mask`, same apo/holo/target_config)
+        does raise. The gap is specifically "bypass via direct import",
+        not "the gate doesn't work at all"."""
+        apo, holo = _apo_holo_with_ligand()
+        with frozen_context("T1"):
+            with pytest.raises(LeakageError):
+                get_pocket_mask(apo, holo, "T1", _TARGET_CONFIG)
