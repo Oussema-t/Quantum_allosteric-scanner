@@ -6089,7 +6089,125 @@ section), `tools/fpocket/PROVENANCE.json`, `tools/fpocket/README.md`,
 
 | 72 | [[TASK-0214]] confirmed re-selecting the *apo* deposition alone (Leg A) cannot raise TASK-0209's 2/7 valid-instance count — the holo side blocks all 5 INVALID targets regardless. Can sourcing genuinely *new* proteins (Leg B) do better? | **resolved 2026-08-13: yes — 6 new VALID pairs across 4 distinct proteins, revised count 8/13 ([[TASK-0215]]).** RCSB full-text search ("allosteric inhibitor"/"activator"/"modulator", X-ray, ≤2.5 Å) pooled to 188 unique entries across 28 UniProts, this register's existing 14 targets excluded before scoring. Pocket window derived from each holo candidate's own drug-ligand binding site (`rcsb.ligands_and_sites`), not a curated label — sanity-bounded to 6-20 residues. Most candidates were eliminated at the holo-native-hit step itself (a ligand-derived window is not automatically `fpocket`-druggable, e.g. one candidate scored 0.029 despite a geometrically correct window) — real selectivity, not a rubber stamp. **6 pairs survived the full pipeline** (apo closed, holo open, [[TASK-0209]]'s VALID rule verbatim, TASK-0214's own exclusion filter reused unchanged): TEM-1 β-lactamase (2 ligands), farnesyl diphosphate synthase, AMPA receptor GluR2 (2 ligands, one being **aniracetam** — a well-known published AMPA positive allosteric modulator), kainate receptor GluK1. Every recovery's entry title was cross-checked *after* scoring (never used to select candidates) and independently confirms "allosteric" in every case — a precision check on the full-text seed, not a guarantee of recall (systems using different phrasing were not searched). **Honest count**: 2 proteins each contributed 2 pairs (different ligand/apo depositions of the same protein) — reported as 4 new proteins / 6 new pairs, not inflated to "6 new proteins." Candidate additions only: none promoted into `targets.yaml`, no register cell re-run against them — that decision is left open. | [[TASK-0214]], [[TASK-0209]], [[TASK-0169]] |
 
+## Spectrum-preserving Hamiltonian reduction — Schur beats the existing Louvain baseline, Krylov breaks sharply at the active-site size (TASK-0172, 2026-08-14)
+
+**Question**: `coarse.coarse_grain`'s existing Louvain/spectral community
+merging is lossy and uncontrolled — it drops every diagonal potential
+term before coarse-graining and has no fidelity metric at all. The
+challenge statement requires proof that coarse-graining "retains the
+essential topological signal." Does a controlled, spectrum-preserving
+reduction (Krylov subspace projection; Löwdin/Feshbach-Schur
+partitioning) actually do better, and where does the ranking break?
+
+**Citations verified before building** (this task's own explicit
+Constraint): Löwdin 1962, *J. Math. Phys.* 3(5), 969-982 — confirmed.
+Feshbach 1962, *Ann. Phys.* 19(2), 287-313 — confirmed. Novo, Chakraborty,
+Mohseni, Neven & Omar 2015, *Sci. Rep.* 5, 13304 — confirmed, and its own
+"invariant Krylov subspace generated from a seed node" construction is
+exactly what this task builds.
+
+**New `allostery.reduce`**: `krylov_basis` (direct matrix powers + QR,
+not the textbook three-term Lanczos recurrence — the same invariant
+subspace, a deliberate simplification justified by scale and verified
+empirically, not just asserted equivalent) and `schur_complement`
+(Löwdin/Feshbach effective operator at a fixed reference energy E=0.0,
+matching `transport.transmission_from_source`'s own DC-limit convention,
+with the same `eta_reg`-style regularization). Both diagonal-retaining
+(unlike `coarse._graph_weights`). `lift_krylov_eigvecs`/
+`lift_schur_eigvecs` embed the reduced operator's own eigenvectors back
+into full residue space so `propagators.time_averaged_ctqw_converged`
+(already accepting precomputed `(w, v)`, reused unmodified) can score
+them exactly like the full system. 17 new tests (`tests/test_reduce.py`):
+orthonormality, exactness when the subspace is provably the whole space,
+exactness of the Schur lift at a planted eigenvalue, honest degradation
+away from the reference energy (a real, nonzero residual, not just an
+exactness claim), and the dumbbell synthetic gate (TASK-0103's own
+fixture) confirming both methods preserve a planted long-range coupling
+signal a naive Louvain merge is not guaranteed to.
+
+**A structural finding surfaced while testing, not assumed going in: a
+block-Krylov seed of `n_seed` residues consumes `n_seed` Ritz dimensions
+per round-robin power step.** At this project's real active-site sizes
+(18-26 residues) and the ~12-16 node NISQ budget `coarse.py`/
+`ALGORITHM_REGISTER.md` §H both target, **the seed block alone is at or
+above the entire compression budget on all 3 mandatory targets** —
+before any distal, potentially pocket-relevant structure can be reached
+at all.
+
+**Real-target retention report** (KRAS_G12C N=169/n_active=18, BCR_ABL1
+N=451/n_active=26, CARDIAC_MYOSIN N=704/n_active=18; compression targets
+m ∈ {10,14,18,24,32,50}, explicitly bracketing each target's own
+active-site size; three axes — spectral Ritz error, Bhattacharyya
+occupation fidelity, Spearman rho + AUC/P@5 delta against the real
+pocket label — all three methods scored identically, Louvain via a
+corrected per-member-normalized broadcast, a real bug caught directly:
+an early version produced Bhattacharyya coefficients above 1, impossible
+for two genuine probability distributions, from copying rather than
+dividing a cluster's mass across its members):
+
+| Target | Krylov (block-seed, m≤n_active) | Krylov (m>n_active) | Schur | Louvain (existing baseline) |
+|---|---|---|---|---|
+| KRAS_G12C (full AUC 0.619) | rho=NaN, ΔAUC=-0.119 (constant, uninformative) | rho 0.36→0.72, ΔAUC mostly negative | ΔAUC **+0.038 to +0.148** (every m) | ΔAUC **-0.307** (constant, worst) |
+| BCR_ABL1 (full AUC 0.575) | rho=NaN, ΔAUC=-0.075 | rho 0.30→0.58, ΔAUC still negative | ΔAUC **-0.080 to -0.194** (Schur's one losing target) | ΔAUC -0.415 to **+0.202** (erratic, rho negative at m=10) |
+| CARDIAC_MYOSIN (full AUC 0.563) | rho=NaN, ΔAUC=-0.063 | rho 0.23→0.47, ΔAUC still negative | ΔAUC **+0.022 to +0.103** (mostly positive) | ΔAUC -0 to +0.297 (rho negative at m=10,14) |
+
+**Block-seed Krylov breaks sharply, not gradually, at m<=n_active on all
+3 targets** — this is the direct, decisive answer to this task's own
+"report the compression ratio at which the ranking breaks" ask. Below
+that threshold the reduced occupation is exactly constant on every
+non-seed residue (Spearman rho undefined, AUC exactly 0.5) because the
+seed block's own power-0 vectors already exhaust the requested budget —
+not a smooth degradation curve, a hard floor. **Confirmed to be a
+block-seed artifact, not a limitation of Krylov subspace projection
+itself**: a supplementary check seeding from a single representative
+active-site residue (matching Novo et al.'s own single-seed framing)
+reaches rho=0.56, AUC=0.612 at the identical m=10 KRAS_G12C's block-seed
+version failed completely on — closely tracking that single seed's own
+full-system reference (0.662). The project's own established
+multi-residue incoherent-mixture seeding convention (TASK-0118) is what
+creates the failure at realistic active-site sizes, not the method.
+
+**Schur-complement reduction beats the existing Louvain baseline on
+2 of 3 targets, decisively on KRAS_G12C** (positive ΔAUC at every tested
+m, vs. Louvain's constant -0.307 — Louvain actively destroys ranking
+information there) **and is not universally better** — it loses to the
+full system on BCR_ABL1 specifically (ΔAUC consistently negative),
+reported as a real, unforced cross-target inconsistency, not smoothed
+into a single clean verdict. Schur's spectral error is exact (~0.01) at
+low m but grows large (up to 5.05) for Ritz values far from the E=0
+reference energy — the same "energy-independent effective Hamiltonian"
+approximation limit this task's own module docstring states explicitly,
+now measured on real data, not just asserted. Schur's own ranking rho is
+**non-monotonic** in compression size on every target (e.g. KRAS_G12C:
+0.74 at m=18 falling to 0.38 at m=32) even as ΔAUC generally improves —
+overall correlation with the full system's occupation shape and
+specific discriminative power for the pocket label are shown to be
+different properties, not interchangeable.
+
+**Louvain (the existing baseline) is the least reliable of the three**:
+its own natural resolution on these graphs (~10-15 communities) means
+most tested `n_target` values above that produce *zero* forced merging
+— the same partition is returned regardless of the requested budget
+(reported plainly, not hidden), and even at its natural resolution its
+ranking is sometimes anti-correlated with the true occupation (rho -0.03
+to -0.11 on CARDIAC_MYOSIN/BCR_ABL1 at the smallest cluster counts) and
+its AUC swings are the largest and least consistent of the three methods
+(-0.415 to +0.297 across the full grid).
+
+**No submission-operator change** (Tier-2-gated, [[TASK-0100]], out of
+this task's own scope) — this reports a retention *measurement*, not a
+recommendation to swap `run_challenge.py`'s own coarse-graining step.
+
+Full detail: `.ai/tasks/DONE/TASK-0172-spectrum-preserving-reduction.md`
+(Done section), `src/allostery/reduce.py`, `tests/test_reduce.py`,
+`scripts/spectrum_preserving_reduction.py`,
+`results_task0172_spectrum_preserving_reduction/results.json`.
+
+---
+
 | 73 | [[TASK-0217]]'s own diagnosis: six corrections in one week all belonged to one class (construct validity, not statistics) — criterion outcome-reachability + positive-control presence, specifically ([[TASK-0217.002]]). Does a systematic sweep find only the four already-known instances, or more? | **resolved 2026-08-14: retrospective test passes (rediscovers all 4 known instances independently); 1 new latent finding, now fixed; 13/13 criteria audited, 8 clean, 4 pre-existing/already-fixed, 1 new.** Every task file with a literal "Pre-Registered" section header enumerated (13, spanning 2026-08-02 to 2026-08-13). **New finding**: `scripts/fpocket_conditional_analysis.py`'s `ALPHA = 0.05/FAMILY_SIZE` auto-scales with `len(TARGETS)` (guards [[TASK-0189]]'s family-drift defect, per its own comment) but nothing checked the other half of that lesson — as `TARGETS` grows, `ALPHA` shrinks toward `1/N_PERM_REPS`. Currently reachable (`0.05/30=1.667e-3` vs. `1e-3`, confirmed) but at only ~60% of the floor — one more target (this register has grown `TARGETS` once already, and [[TASK-0215]] just found 6 more valid instances to draw from) would silently cross into [[TASK-0189]]'s exact defect. **No past verdict was ever affected** — fixed proactively: `assert_gate_reachable` wired in, matching the existing pattern in `zero_plant_specificity_analysis.py`, verified reachable without re-running the analysis. **Convention amendment landed** in `INTENT_CONTRACT_TEMPLATE.md`'s "Planned Validation" section (state the positive control's expected result alongside the pass bar; demonstrate each outcome is reachable) — checked against all 4 known instances, each would have been caught. 8 criteria clean on first audit, including this thread's own recent work ([[TASK-0209]]/[[TASK-0214]]/[[TASK-0215]]). Not covered: criteria embedded in code without a task-file "Pre-Registered" section, and no general-purpose static check was built for the two non-permutation-floor reachability classes (bar-outside-attainable-range; construction-cannot-produce-required-sign) — flagged as needing case-by-case reasoning, not mechanized, to avoid a false sense of coverage. | [[TASK-0217]], [[TASK-0204]], [[TASK-0208]], [[TASK-0189]] |
+
+| 74 | Does a controlled, spectrum-preserving reduction (Krylov subspace projection; Löwdin/Feshbach-Schur partitioning) beat `coarse.coarse_grain`'s existing lossy, diagonal-dropping Louvain merge, and where does the ranking break under compression — the challenge's own "prove coarse-graining retains the signal" requirement? | **resolved 2026-08-14: Schur beats Louvain on 2/3 targets (decisively on KRAS_G12C, loses on BCR_ABL1); block-Krylov breaks sharply, not gradually, at m<=n_active on all 3 targets.** New `allostery.reduce` (citations verified first: Löwdin 1962, Feshbach 1962, Novo et al. 2015, all confirmed). Real, load-bearing structural finding: a block-Krylov seed of `n_seed` residues consumes `n_seed` Ritz dimensions per power step, so at this project's real active-site sizes (18-26) the seed alone meets or exceeds the ~12-16 node NISQ budget before reaching any distal structure — confirmed a block-seed artifact, not a Krylov limitation, via a single-seed supplementary check reaching rho=0.56 at the identical m where the block-seed version was completely uninformative (rho undefined, constant occupation). Schur's own ranking correlation is non-monotonic in compression size even as its AUC-delta generally improves. Louvain (existing baseline) is the least reliable of the three — sometimes anti-correlated with the true ranking, largest/least consistent AUC swings. No submission-operator change (Tier-2-gated). | [[TASK-0172]], [[TASK-0100]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
@@ -6449,3 +6567,97 @@ Full detail: `scripts/task0216_score_new_pairs.py`,
 `scripts/task0216_ptp1b_real_seed.py`,
 `results_task0216_new_pair_scoring/{results,ptp1b_real_seed}.json`,
 `config/candidate_targets_task0216.yaml`.
+
+---
+
+## Seed provenance closed out — the register's one positive does not survive its own seed correction (TASK-0217.003, 2026-08-14)
+
+**Additive advisory on the section above, per this task's own Constraint —
+nothing above is rewritten.** Three things the previous section left open
+are now closed.
+
+**1. The fallback count above (9 of 13) is the *pre-fix* number.** After the
+6 `targets.yaml` corrections already landed (`GLC`/`PAL`/`HEM`+`OXY`/`ASP`/
+`LLP`/`ADP`), **3 of 13 remain** — `PTP1B`, `CASPASE1`, `CASPASE7`, the ones
+with no functional/substrate ligand in holo at all. Independently reconfirmed
+by direct measurement, not re-cited: [[TASK-0217.001]]'s own construct-
+validity sweep found this same 3/13 count from a different angle (its own
+array-correspondence audit) before this task cross-referenced it against
+`TASK-0216`'s original 9/13 — the two numbers describe different points in
+time, not a disagreement.
+
+**2. TASK-0201's own statistic, recomputed under the corrected seed — the
+"outstanding measurement" the section above named as not yet done, is now
+done, twice.** `scripts/task0216_task0201_rerun_real_seed.py` already
+existed with a complete result when this task picked up; **independently
+re-derived here from fresh code** (own construction of `source`/`shells`/
+`pocket`, feeding the same already-validated `graph_walk_null` — the
+statistical machinery itself is out of this task's scope per the parent's
+own "leave the statistics, they are clean" boundary, but the *inputs* to it
+are exactly what changed and are what this task re-derived independently):
+
+| Seed | k=10 well-powered-max AUC | k=10 p-value | survives 0.05/16 bar |
+|---|---|---|---|
+| top-degree fallback (published, [[TASK-0201]]) | 1.000 | 0.00275 | yes |
+| UniProt catalytic site (corrected) | **0.598** | **0.567** | **no** |
+
+Independent re-derivation: AUC=0.5980392156862745, p=0.56725 — matches the
+existing script's own recorded values exactly. **No k in {5, 10, 15, 20}
+survives under the corrected seed** (full grid in
+`results_task0216_new_pair_scoring/task0201_rerun_real_seed.json`). The
+wiring itself is trustworthy: the fallback-seed configuration, run through
+the identical harness, reproduces the published p=0.0027 to within re-run
+RNG noise (p=0.00275).
+
+**A real discrepancy found and resolved while independently verifying
+this**: `task0216_ptp1b_real_seed.py`'s own "real seed" pocket (4 residues)
+and `task0216_task0201_rerun_real_seed.py`'s own "real seed" pocket (14
+residues) disagree, because the first script only attaches heavy-atom
+contact geometry when `len(apo.resnums) == len(holo.resnums)` (PTP1B's
+don't: 298 vs 282) and silently falls back to the weaker Cα-only
+approximation, while the second (via `run_challenge._load_apo_holo`)
+attaches it unconditionally, matching [[TASK-0201]]'s own original
+methodology and `labels.py`'s own documented heavy-atom-preferred
+convention. The 14-residue/0.598-AUC number is the one comparable to
+[[TASK-0201]]'s published result; the 4-residue/0.389 number in the section
+above is a different, non-comparable measurement (as that section's own
+text already correctly cautioned) and should not be read as a second
+confirmation of anything.
+
+**Plain statement, not softened**: **PTP1B `dcc_low` (k=10) was the
+register's one surviving positive across ~226+ scored cells. Under the
+seed it should have had all along, it does not survive at any tested k.**
+The permutation-null machinery was never at fault (it shuffles pocket
+labels, not seeds); what changed is what was being scored. Open-Questions
+row 33 above ("the strongest cross-target evidence any observable in this
+project has") and `documentation/PHASE1_SUBMISSION_DRAFT.md`'s own §2.4
+("one surviving positive, reported with its provenance") both rest on the
+uncorrected seed and should be read with this advisory attached, not as
+still-standing claims — neither is rewritten here, per this task's own
+additive-only Constraint; the submission draft is updated separately
+(same task, see its own Done section).
+
+**3. The fallback class itself is now closed, not just documented.**
+`labels.functional_indices` gained a new tier (TASK-0217.003): a static,
+curated `active_site_uniprot` field in `targets.yaml` (populated for
+`PTP1B`/`CASPASE1`/`CASPASE7` from `backend/active_site.py::
+detect_active_site`'s own UniProt lookup, ported as data rather than
+imported as code per [[TASK-0018]]'s backend/allostery independence
+boundary), consulted after `func_ligand` contact and before the top-degree
+fallback. Confirmed: all 3 targets now resolve `provenance="active_site_
+uniprot"` with zero warnings — every future run of `build_labels` on these
+3 targets uses the real catalytic site automatically, not a one-off patch.
+`CASPASE1`/`CASPASE7`'s own UniProt sites are their Cys/His catalytic
+dyads (2 residues each) — real, biologically correct, and far more precise
+than a 5-residue topological proxy.
+
+**Not attempted, stated per this task's own scope boundary**: re-scoring
+`CASPASE1`/`CASPASE7`'s own other seeded observables under their new,
+correct seed (the parent task's own "not a re-run of ~190 tasks" applies;
+this section only enumerates PTP1B's headline cell, the one a register-
+level conclusion actually rested on). `GLUCOKINASE`/`ATCase`/`HEMOGLOBIN`/
+`TAR_RECEPTOR`/`GLYCOGEN_PHOSPHORYLASE`/`GROEL_SUBUNIT` were already fixed
+by `TASK-0216`'s own `func_ligand` corrections and are unaffected by this
+task's own work beyond the count reconciliation in point 1.
+
+Full detail: `.ai/tasks/DONE/TASK-0217.003-seed-anchor-provenance.md`.
