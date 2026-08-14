@@ -358,6 +358,18 @@ def classify_failure(
 # re-running the scorer on shuffled labels rather than trusting that every
 # leak path was anticipated -- the two are complementary, not redundant
 # (EXECUTION_PLAN.md Phase 1.4).
+#
+# TASK-0218 -- operational, not just self-tested, as of this task.
+# TASK-0087 found (while deciding whether protocol.py's cooperative gate
+# needed hardening into a hard data-seal) that this detector, despite the
+# "complementary backstop" framing above, was wired into nothing but its
+# own unit test -- cited as available, not as an operational guarantee.
+# `protocol.run_frozen_verdict`'s own `leak_check_n_perm` parameter (and
+# `scripts/run_challenge.py`'s real pipeline, which opts in with an
+# N-tiered `n_perm`, a positive detection there being a hard per-target
+# failure) is what closes that gap. See `run_frozen_verdict`'s own
+# docstring for the measured real per-call cost and why a fixed `n_perm`
+# does not work across this project's real range of target sizes.
 # ---------------------------------------------------------------------------
 
 PERM_LEAK_THRESHOLD = 0.60  # ported verbatim from GATE-B4

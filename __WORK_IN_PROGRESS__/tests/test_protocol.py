@@ -796,3 +796,90 @@ class TestCooperativeGateAcceptedGap:
         with frozen_context("T1"):
             with pytest.raises(LeakageError):
                 get_pocket_mask(apo, holo, "T1", _TARGET_CONFIG)
+
+
+class TestRunFrozenVerdictLeakCheck:
+    """TASK-0218: `leak_check_n_perm` wiring -- GATE-B4
+    (`diagnostics.detect_permutation_leak`), operational in
+    `run_frozen_verdict` for the first time, not just its own isolated
+    unit test (`test_diagnostics.py::TestPermutationNullLeakDetector`,
+    still the source of truth for the detector's own statistical
+    behavior; this class only covers the wiring)."""
+
+    def test_default_none_omits_leak_check_key(self):
+        """Byte-identical to pre-TASK-0218 behavior when not opted in --
+        every existing caller/test (all the classes above) never passes
+        this parameter."""
+        result = run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50,
+        )
+        assert "_leak_check" not in result
+
+    def test_opted_in_populates_leak_check_with_expected_shape(self):
+        result = run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50,
+            leak_check_n_perm=10, leak_check_seed=1,
+        )
+        check = result["_leak_check"]
+        assert set(check.keys()) >= {"auc_true", "perm_mean", "perm_ci", "n_perm", "threshold", "leak_detected"}
+        assert check["n_perm"] == 10
+
+    def test_honest_real_pipeline_is_not_flagged(self):
+        """The real, unmodified scoring step -- occupancy never reads
+        labels (checked directly, this function's own docstring) -- must
+        not be flagged as a leak. If this ever starts failing, either a
+        real regression was just caught (investigate before touching this
+        test) or PERM_LEAK_THRESHOLD/the wiring itself needs revisiting --
+        never silence it by widening the assertion."""
+        result = run_frozen_verdict(
+            "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
+            _VERDICT_LABELS, t_max=5.0, n_steps=50,
+            leak_check_n_perm=20, leak_check_seed=1,
+        )
+        assert result["_leak_check"]["leak_detected"] is False
+
+    def test_end_to_end_synthetic_leak_is_caught_through_the_real_wiring(self):
+        """Planned Validation's own requirement: a deliberately-leaky
+        scorer wired through the *same real call path this task adds*,
+        not `detect_permutation_leak` called standalone
+        (`test_diagnostics.py` already covers that in isolation).
+        Monkeypatches `analysis.quantum_vs_classical` itself -- the exact
+        function `run_frozen_verdict`'s own local `_leak_scorer` closure
+        calls -- with a version that reads `labels` directly, matching
+        `test_diagnostics.py::_leaky_scorer`'s own construction, then
+        runs the real, unmodified `run_frozen_verdict` end to end."""
+        import allostery.analysis as analysis_module
+
+        real_quantum_vs_classical = analysis_module.quantum_vs_classical
+
+        def leaky_quantum_vs_classical(H, source, labels=None, *args, **kwargs):
+            if labels is None:
+                return real_quantum_vs_classical(H, source, labels, *args, **kwargs)
+            rng = np.random.default_rng(0)
+            leaky_occ = np.asarray(labels).astype(float) + rng.normal(0.0, 0.01, size=len(labels))
+            # Still needs the real "heat"/metric-pack shape so the rest of
+            # run_frozen_verdict (classify_failure, assemble_verdict_results)
+            # keeps working -- only the "ctqw" occupancy is swapped for a
+            # leaky one, "heat" stays real.
+            real_out = real_quantum_vs_classical(H, source, labels, *args, **kwargs)
+            from allostery.analysis import _metric_pack
+
+            real_out["ctqw"] = _metric_pack(leaky_occ, labels)
+            return real_out
+
+        analysis_module.quantum_vs_classical = leaky_quantum_vs_classical
+        try:
+            result = run_frozen_verdict(
+                "T1", _verdict_candidates, COORDS, _VERDICT_BFACTORS, 0,
+                _VERDICT_LABELS, t_max=5.0, n_steps=50,
+                leak_check_n_perm=50, leak_check_seed=1,
+            )
+        finally:
+            analysis_module.quantum_vs_classical = real_quantum_vs_classical
+
+        assert result["_leak_check"]["leak_detected"] is True, (
+            "wiring failed to catch a deliberately-injected leak in the "
+            "exact scoring step it is supposed to police"
+        )

@@ -381,6 +381,8 @@ def run_frozen_verdict(
     coherent: bool = True,
     use_converged_limit: bool = False,
     learnability=None,
+    leak_check_n_perm: int | None = None,
+    leak_check_seed: int = 1,
 ) -> dict:
     """Select an operator/parameter config for `target_name` blind to its
     labels, then score and stamp the result -- the safety-critical core of
@@ -428,6 +430,47 @@ def run_frozen_verdict(
     `results["_winner_index"]`/`results["_winner_score"]` (the winning
     candidate's position and `unsupervised_score` value, for audit).
 
+    `leak_check_n_perm` (TASK-0218, closes the gap TASK-0087 found:
+    `diagnostics.detect_permutation_leak`/GATE-B4 existed only in its own
+    unit test, never wired into a real run): `None` (default) skips the
+    check entirely, byte-identical to this function's pre-TASK-0218
+    behavior, every existing caller/test untouched. A positive int runs
+    GATE-B4 against the winning candidate's own real scoring step --
+    `scorer(coords, labels)` re-invokes the actual `quantum_vs_classical(
+    winner["H"], ...)` call for real, once per permutation, not a cached
+    shortcut: `occ_ctqw` is provably label-independent *today* (`labels`
+    only ever reaches `analysis._metric_pack`, downstream of occupancy;
+    checked by reading `quantum_vs_classical`'s own source, not assumed),
+    so a scorer that ignored its own `labels` argument and returned a
+    cached array could never detect a future regression that changes
+    that -- the whole reason to wire an *empirical* check in at all
+    rather than trust a static read of the current source once. Result
+    surfaces as `results["_leak_check"]`
+    (`diagnostics.permutation_null`'s own return shape plus
+    `leak_detected`/`threshold`) -- a first-class field a caller reads
+    explicitly, not a raise from inside this function (a false positive
+    at a real run's necessarily-reduced `n_perm`, see below, should not
+    unilaterally abort a shared library call; `run_challenge.py`'s own
+    real pipeline treats a positive detection as fatal at the call site,
+    per this task's own "hard failure, not a buried warning" Constraint).
+
+    **Real, measured cost, stated before choosing a default (this task's
+    own Constraint), not silently absorbed**: one `quantum_vs_classical`
+    call measured at 0.37s on KRAS_G12C (N=169); the dominant cost is
+    `time_averaged_ctqw`'s own eigendecomposition, `O(N^3)`, so a target
+    N=950 (CARDIAC_MYOSIN-scale) costs roughly 178x that per call --
+    `n_perm=200` (GATE-B4's own test-suite default) would cost minutes
+    on the smallest mandatory target and hours on the largest. This
+    function does not pick one default for every target -- the caller
+    decides `leak_check_n_perm` per target, per this real cost profile,
+    or leaves it `None`. `PERM_LEAK_THRESHOLD` compares `perm_mean` (a
+    sample mean of `n_perm` AUC draws), not a p-value against `alpha` --
+    unlike TASK-0189's own defect class, there is no `1/n_perm`
+    attainable-range floor here, only reduced precision (a wider
+    confidence interval on the mean estimate) at low `n_perm` -- a
+    genuinely different, milder tradeoff, stated as such rather than
+    assumed equivalent to that other class.
+
     `coherent` (TASK-0118): passed straight through to `benchmark`'s and
     every `quantum_vs_classical` call's own `coherent` parameter (apo and
     holo alike) -- does *not* reach `select_frozen_config`/
@@ -472,7 +515,7 @@ def run_frozen_verdict(
         benchmark,
         quantum_vs_classical,
     )
-    from .diagnostics import classify_failure
+    from .diagnostics import classify_failure, detect_permutation_leak
 
     with frozen_context({target_name}):
         winner = select_frozen_config(candidates_builder, target_name)
@@ -518,6 +561,26 @@ def run_frozen_verdict(
                     apo_idx, holo_idx, k=consistency_k,
                 )
 
+        # TASK-0218 (closes the gap TASK-0087 found): opt-in, real
+        # re-invocation of the winning candidate's own scoring step under
+        # label permutation -- GATE-B4, wired into an actual run for the
+        # first time, not just its own unit test. See this function's own
+        # docstring for the measured per-call cost and why a cached
+        # occupancy shortcut would silently test nothing.
+        leak_check = None
+        if leak_check_n_perm is not None:
+            def _leak_scorer(_coords, _labels):
+                return quantum_vs_classical(
+                    winner["H"], winner.get("source", source), _labels,
+                    t_max=winner.get("t", t_max), n_steps=n_steps, coherent=coherent,
+                    use_converged_limit=use_converged_limit,
+                )["ctqw"]["occ"]
+
+            leak_check = detect_permutation_leak(
+                _leak_scorer, coords, labels,
+                n_perm=leak_check_n_perm, seed=leak_check_seed,
+            )
+
         assembled = assemble_verdict_results(
             benchmark_out=bench,
             ablation_out=abl,
@@ -532,6 +595,8 @@ def run_frozen_verdict(
         assembled["_diagnosis_ci_overlap"] = classification.ci_overlap
         assembled["_winner_index"] = winner["index"]
         assembled["_winner_score"] = winner["score"]
+        if leak_check is not None:
+            assembled["_leak_check"] = leak_check
         if learnability is not None:
             assembled["_learnability_verdict"] = learnability.get("verdict")
             assembled["_learnability"] = learnability

@@ -117,6 +117,23 @@ DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results"
 DEFAULT_CUTOFF = 10.0  # analysis.py's own default, used only if a target's config omits enm_cutoff
 DEFAULT_POCKET_CUTOFF = 4.5
 
+
+def _leak_check_n_perm_for(n_residues: int) -> int:
+    """TASK-0218: GATE-B4 (`diagnostics.detect_permutation_leak`), wired
+    into this real run via `run_frozen_verdict`'s own `leak_check_n_perm`.
+    Real per-call cost is dominated by `time_averaged_ctqw`'s
+    eigendecomposition, ~O(N^3) -- measured at 0.37s/call on KRAS_G12C
+    (N=169); scaling that to CARDIAC_MYOSIN-size (N~950) implies ~66s for
+    a SINGLE permutation. A fixed `n_perm` across every target size is
+    therefore either wasteful (small targets) or prohibitive (large
+    ones) -- tiered by N instead, a coarse, explicitly-stated choice, not
+    a validated cost model derived from more than one real measurement."""
+    if n_residues <= 250:
+        return 30
+    if n_residues <= 500:
+        return 10
+    return 3
+
 # TASK-0159: the headline CTQW occupation (candidates_builder's own winner,
 # run_frozen_verdict's benchmark()/quantum_vs_classical() ctqw side) now
 # uses time_averaged_ctqw_converged -- the exact infinite-time closed form
@@ -393,7 +410,8 @@ def run_target(target_name: str, output_dir: Path) -> dict:
             _log(f"{target_name}: learnability gate failed ({exc!r}), omitting from verdict")
             learnability = None
 
-        _log(f"{target_name}: running frozen verdict (candidate selection + scoring, the expensive eigendecomposition stage)...")
+        leak_n_perm = _leak_check_n_perm_for(len(apo.resnums))
+        _log(f"{target_name}: running frozen verdict (candidate selection + scoring, the expensive eigendecomposition stage; GATE-B4 leak check at n_perm={leak_n_perm})...")
         t0 = time.monotonic()
         result = run_frozen_verdict(
             target_name, candidates_builder,
@@ -401,8 +419,24 @@ def run_target(target_name: str, output_dir: Path) -> dict:
             cutoff=cutoff, t_max=SELECTION_GSR_ABLATION_T, n_steps=SELECTION_GSR_ABLATION_N_STEPS,
             floor_scores=floor_scores, coherent=False,
             learnability=learnability, use_converged_limit=True,
+            leak_check_n_perm=leak_n_perm,
         )
         _log(f"{target_name}: frozen verdict done in {time.monotonic() - t0:.1f}s -- diagnosis={result.get('_diagnosis')}")
+
+        # TASK-0218 (closes the gap TASK-0087 found): a hard failure, not
+        # a warning buried in logs -- raises so the existing per-target
+        # try/except in run_target writes error.txt and the target is
+        # never reported as a clean success, per this task's own
+        # Intent Contract ("a positive detection is a hard failure").
+        leak_check = result.get("_leak_check")
+        if leak_check is not None and leak_check.get("leak_detected"):
+            raise RuntimeError(
+                f"{target_name}: GATE-B4 leak check FIRED -- perm_mean="
+                f"{leak_check['perm_mean']:.3f} > threshold={leak_check['threshold']} "
+                f"at n_perm={leak_check['n_perm']}. The winning candidate's own "
+                "scoring step tracks shuffled labels -- this result is not trustworthy "
+                "and must be investigated before use, not silently reported."
+            )
 
         winner_H = candidates_builder()[result["_winner_index"]]["H"]
         # TASK-0160: one eigendecomposition, reused for both the winner's
