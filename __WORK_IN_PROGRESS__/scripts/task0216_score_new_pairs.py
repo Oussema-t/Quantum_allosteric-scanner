@@ -114,10 +114,13 @@ def leg_a(name: str) -> dict:
         holo.heavy_atom_coords, holo.heavy_atom_seq_index = hac, hasi
         holo._heavy_atom_attached = True
     from allostery.labels import functional_indices
+    _heavy_atom_coords = getattr(holo, "heavy_atom_coords", None)
     _, provenance = functional_indices(
         apo.coords, holo.ligand_groups, cfg, cutoff=cfg["pocket_contact_cutoff"],
-        heavy_atom_coords=getattr(holo, "heavy_atom_coords", None),
-        heavy_atom_seq_index=getattr(holo, "heavy_atom_seq_index", None))
+        heavy_atom_coords=_heavy_atom_coords,
+        heavy_atom_seq_index=getattr(holo, "heavy_atom_seq_index", None),
+        heavy_atom_resnames=(holo.resnames if _heavy_atom_coords is not None else None),
+        coords_resnames=(apo.resnames if _heavy_atom_coords is not None else None))
     seed_is_real = "fallback" not in str(provenance).lower()
     labels = build_labels(apo, holo, cfg, cutoff=cfg["pocket_contact_cutoff"])
     if labels.pocket is None or not labels.pocket.any():

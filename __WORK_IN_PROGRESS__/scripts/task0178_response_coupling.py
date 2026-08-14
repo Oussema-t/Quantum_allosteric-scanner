@@ -70,10 +70,13 @@ def run_target(name: str) -> dict:
     cutoff = float(cfg.get("enm_cutoff", 8.0))
 
     apo, holo, apo_raw, holo_raw, apo_chains, holo_chains = load_apo_holo_full(name, cfg)
+    _heavy_atom_coords = getattr(holo, "heavy_atom_coords", None)
     func_idx, _prov = functional_indices(
         apo.coords, holo.ligand_groups, cfg, cutoff=float(cfg.get("pocket_contact_cutoff", 4.5)),
-        heavy_atom_coords=getattr(holo, "heavy_atom_coords", None),
+        heavy_atom_coords=_heavy_atom_coords,
         heavy_atom_seq_index=getattr(holo, "heavy_atom_seq_index", None),
+        heavy_atom_resnames=(holo.resnames if _heavy_atom_coords is not None else None),
+        coords_resnames=(apo.resnames if _heavy_atom_coords is not None else None),
     )
     active_idx = np.sort(func_idx)
 

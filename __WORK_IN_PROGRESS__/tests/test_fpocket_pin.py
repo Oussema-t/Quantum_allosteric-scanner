@@ -94,6 +94,24 @@ class TestFpocketGoldenValue:
             "own Constraint: never silently replace a pinned number)."
         )
 
+    @pytest.mark.xfail(
+        reason=(
+            "TASK-0217.001, 2026-08-14: this pin's own `pocket` label is "
+            "computed via build_labels, whose active_site exclusion had a "
+            "confirmed array-correspondence bug (holo-space indices used "
+            "directly as apo-space indices, affecting 10/13 real targets "
+            "including KRAS_G12C). Fixed in labels.functional_indices -- "
+            "the pocket label legitimately changed as a direct, correct "
+            "consequence (18->17 residues here), so the AUC computed "
+            "against it legitimately changed too (0.7910 -> 0.8210). Not a "
+            "binary-drift regression (TASK-0206's own concern); a stale "
+            "golden value. Re-pinning is deliberately NOT done in this "
+            "task (guards only, no re-scoring the register) -- see "
+            "TASK-0217.001's own Done section for the full finding and "
+            "why re-pinning belongs to a follow-up, not here."
+        ),
+        strict=True,
+    )
     def test_kras_g12c_fpocket_auc_pin(self):
         if not _FPOCKET_BIN.exists():
             pytest.skip(f"fpocket binary not present at {_FPOCKET_BIN} in this environment")

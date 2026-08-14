@@ -647,10 +647,14 @@ def build_consensus_label(target_name: str, target_config: dict) -> ConsensusLab
     holo_to_apo = _holo_to_apo_map(apo, holo)
 
     pocket_cutoff = float(target_config.get("pocket_contact_cutoff", 4.5))
+    _heavy_atom_coords = getattr(holo, "heavy_atom_coords", None)
     func_idx, _prov = functional_indices(
         apo.coords, holo.ligand_groups, target_config, cutoff=pocket_cutoff,
-        heavy_atom_coords=getattr(holo, "heavy_atom_coords", None),
+        heavy_atom_coords=_heavy_atom_coords,
         heavy_atom_seq_index=getattr(holo, "heavy_atom_seq_index", None),
+        heavy_atom_resnames=(holo.resnames if _heavy_atom_coords is not None else None),
+        coords_resnames=(apo.resnames if _heavy_atom_coords is not None else None),
+        coords_resnums=apo.resnums,
     )
     n = len(apo.resnums)
     active_site = np.zeros(n, dtype=bool)

@@ -313,6 +313,7 @@ targets:
     drug_ligand: "892"
     func_ligand: []
     func_ligand_original: ["pTyr / active-site Cys215 (descriptive marker, not a ligand code)"]
+    active_site_uniprot: [181, 215, 216, 217, 218, 219, 220, 221, 262]  # TASK-0217.003: backend/active_site.py::detect_active_site(1SUG, chain A), source='uniprot' (UniProt P18031, 1 active + 9 binding residues), curated statically here per TASK-0018's backend/allostery independence boundary (labels.py must not import backend/ at runtime). Cys215 + P-loop. Consumed by labels.functional_indices as the tier before the top-degree fallback.
     func_ligand_note: >-
       TASK-0216: holo 1T49 contains ONLY the allosteric drug (892) + MG -- no functional/substrate ligand exists to derive an active site from. Left empty deliberately. The catalytic site (Cys215 + P-loop) is UniProt-annotated and must be supplied that way; see backend/active_site.py. Any active-site-seeded observable computed for this target WITHOUT such a seed is running on the top-degree fallback.
     pocket_label:
@@ -444,6 +445,7 @@ targets:
     func_ligand_original: ["substrate"]
     func_ligand_note: >-
       TASK-0216: holo 2FQQ contains only the drug (F1G). No substrate ligand -- see PTP1B note.
+    active_site_uniprot: [237, 285]  # TASK-0217.003: backend/active_site.py::detect_active_site(1ICE, chain A), source='uniprot' (UniProt P29466, 2 active residues -- the Cys/His catalytic dyad). Curated statically per TASK-0018; see PTP1B's own note for the full rationale.
     pocket_label:
       method: consensus  # TASK-0177: >=3-of-{n_available} vote across C1(contact 3.5-6.0A)/C2(dSASA)/C3(fpocket cavity)/C4(depositor SITE); core=all-agree. Frozen under frozen_context by scripts/task0177_consensus_labels.py -- do not hand-edit, regenerate.
       criteria_available: ["C1_contact", "C2_dsasa", "C3_fpocket_holo", "C4_depositor_site"]
@@ -493,6 +495,7 @@ targets:
     func_ligand_original: ["substrate"]
     func_ligand_note: >-
       TASK-0216: holo 1SHL contains only the drug (FXN). No substrate ligand -- see PTP1B note.
+    active_site_uniprot: [144, 186]  # TASK-0217.003: backend/active_site.py::detect_active_site(1F1J, chain A), source='uniprot' (UniProt P55210, 2 active residues -- the Cys/His catalytic dyad). Curated statically per TASK-0018; see PTP1B's own note for the full rationale.
     pocket_label:
       method: consensus  # TASK-0177: >=3-of-{n_available} vote across C1(contact 3.5-6.0A)/C2(dSASA)/C3(fpocket cavity)/C4(depositor SITE); core=all-agree. Frozen under frozen_context by scripts/task0177_consensus_labels.py -- do not hand-edit, regenerate.
       criteria_available: ["C1_contact", "C2_dsasa", "C3_fpocket_holo", "C4_depositor_site"]

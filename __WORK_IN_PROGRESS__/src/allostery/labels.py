@@ -342,9 +342,38 @@ def functional_indices(
     cutoff: float = 4.5,
     heavy_atom_coords: np.ndarray | None = None,
     heavy_atom_seq_index: np.ndarray | None = None,
+    heavy_atom_resnames: list[str] | None = None,
+    coords_resnames: list[str] | None = None,
+    coords_resnums: np.ndarray | None = None,
 ) -> tuple[np.ndarray, str]:
     """Active/catalytic-site indices to seed the CTQW from (and exclude from
     the pocket label).
+
+    **TASK-0217.001 (array-correspondence guard).** `heavy_atom_seq_index`
+    indexes into whichever structure's own residue array
+    `protein_heavy_atoms_by_residue` was built against -- not necessarily
+    `coords`'. Every real caller in this register passes *holo's* heavy-atom
+    data alongside *apo*'s `coords` (to get true heavy-atom contact geometry
+    against the ligand, which only exists in holo), and the returned indices
+    were then used directly as if they were `coords`-space (apo) indices --
+    silently wrong whenever apo/holo differ in numbering or length, which is
+    every real target pair in this register with a resolvable `func_ligand`
+    contact (confirmed on KRAS_G12C, BCR_ABL1 and 8 others: TASK-0217.001's
+    own Done section has the full table).
+
+    `heavy_atom_resnames`/`coords_resnames` (both optional, additive) name
+    which case a caller is in: **omit both** when `heavy_atom_coords`/
+    `heavy_atom_seq_index` genuinely belong to the *same* structure as
+    `coords` (e.g. a single structure's own full-atom geometry used for a
+    better-than-Calpha contact test on itself) -- indices are already in
+    `coords`' own space, unchanged, exactly today's behaviour. **Supply
+    both** when they belong to a *different* structure (the real, common
+    case: holo's heavy atoms against apo's `coords`) -- the returned indices
+    are then translated into `coords`' own space via the same
+    Needleman-Wunsch correspondence `holo_pocket_mask` already uses, before
+    being returned. Supplying `heavy_atom_coords` cross-structure without
+    the resname pair raises, rather than silently returning the wrong
+    space's indices -- the bug this guard exists to close.
 
     Tiered, ported from notebook Sec.1's `functional_indices` -- but tier 1
     there (`target_config["active_site"]` resnums) does not exist in the
@@ -364,12 +393,34 @@ def functional_indices(
        marker, not a ligand code)") or non-HETATM polymers (MYC_MAX's
        `"DNA"`) -- those never match a `ligand_groups` resname and fall
        through to tier 2, they are not treated as an error.
-    2. last resort -- top-5 contact-degree residues (least informative;
-       signals that no resolvable functional ligand was available for this
-       target).
+    2. **`target_config["active_site_uniprot"]`** (TASK-0217.003) -- static,
+       curated apo-numbering resnums from `backend/active_site.py::
+       detect_active_site`'s UniProt-annotation path, pre-computed and
+       written into `targets.yaml` (not looked up at runtime: `labels.py`
+       must not import `backend/`, a live FastAPI service -- TASK-0018's
+       independence boundary; "port, don't import" is this module's own
+       standing convention, e.g. `superpose.py`'s Kabsch code). Exists for
+       the 3 targets whose holo entry contains no functional/substrate
+       ligand at all (`PTP1B`, `CASPASE1`, `CASPASE7` -- confirmed via
+       `func_ligand: []` there) and whose catalytic site is nonetheless
+       real and annotatable: the genuine functional site, not a topological
+       proxy, and it removes the entire fallback-tier failure mode for
+       every target where it is populated.
+    3. last resort -- top-5 contact-degree residues (least informative;
+       signals that no resolvable functional ligand *or* curated UniProt
+       site was available for this target).
+
+    `coords_resnums` (required only to use tier 2): `coords`' own residue
+    numbers, used to map `active_site_uniprot`'s curated resnums onto
+    `coords`' row positions. Tier 2 is silently skipped (falls through to
+    tier 3) if `active_site_uniprot` is absent, `coords_resnums` isn't
+    supplied, or none of the curated resnums are present in `coords_resnums`
+    -- never an error, matching tier 1's own "not resolvable is not a
+    failure" convention.
 
     Returns (indices, provenance_string).
     """
+    uniprot_resnums = target_config.get("active_site_uniprot")
     for code in (target_config.get("func_ligand") or []):
         ligand = next((g for g in ligand_groups if g.resname == code), None)
         if ligand is None:
@@ -381,8 +432,48 @@ def functional_indices(
             heavy_atom_coords=heavy_atom_coords,
             heavy_atom_seq_index=heavy_atom_seq_index,
         )
+        if heavy_atom_coords is not None and len(heavy_atom_coords):
+            # `idx` lives in whichever structure's own array
+            # `heavy_atom_seq_index` was built against -- translate to
+            # `coords`' own space before returning, or raise rather than
+            # guess (TASK-0217.001).
+            if heavy_atom_resnames is not None or coords_resnames is not None:
+                if heavy_atom_resnames is None or coords_resnames is None:
+                    raise ValueError(
+                        "functional_indices: heavy_atom_resnames and "
+                        "coords_resnames must be supplied together (or not "
+                        "at all) -- got one without the other, which cannot "
+                        "be translated safely."
+                    )
+                other_to_src = _needleman_wunsch_map(
+                    _sequence(coords_resnames), _sequence(heavy_atom_resnames)
+                )
+                idx = np.array(
+                    sorted({other_to_src[i] for i in idx.tolist() if i in other_to_src}),
+                    dtype=int,
+                )
+            elif len(idx) and int(idx.max()) >= len(coords):
+                # No resname pair supplied, but the indices are already
+                # provably out of `coords`' own range -- cannot be a
+                # same-structure call (TASK-0217.001's partial safety net;
+                # does not catch the shorter/equal-length silent case, which
+                # is why the resname-pair path above is the real fix).
+                raise ValueError(
+                    "functional_indices: heavy_atom_seq_index produced "
+                    f"indices up to {int(idx.max())}, out of range for "
+                    f"`coords` (len {len(coords)}) -- these heavy atoms "
+                    "belong to a different structure than `coords`. Pass "
+                    "heavy_atom_resnames/coords_resnames to translate "
+                    "correctly, rather than silently misindexing."
+                )
         if len(idx):
             return idx, f"func_ligand-contact:{code}"
+
+    if uniprot_resnums and coords_resnums is not None:
+        coords_resnums_arr = np.asarray(coords_resnums)
+        idx = np.where(np.isin(coords_resnums_arr, list(uniprot_resnums)))[0]
+        if len(idx):
+            return idx, "active_site_uniprot"
 
     from .hamiltonians import contact_matrix
 
@@ -495,6 +586,9 @@ def build_labels(
         cutoff=cutoff,
         heavy_atom_coords=heavy_atom_coords,
         heavy_atom_seq_index=heavy_atom_seq_index,
+        heavy_atom_resnames=(holo.resnames if heavy_atom_coords is not None else None),
+        coords_resnames=(apo.resnames if heavy_atom_coords is not None else None),
+        coords_resnums=apo.resnums,
     )
     active_site = np.zeros(n, dtype=bool)
     active_site[func_idx] = True

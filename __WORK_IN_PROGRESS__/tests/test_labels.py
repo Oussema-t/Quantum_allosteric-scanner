@@ -235,6 +235,56 @@ class TestFunctionalIndices:
         )
         assert provenance == "top-degree fallback"
 
+    def test_cross_structure_heavy_atoms_translated_to_coords_space(self):
+        """TASK-0217.001's retrospective-test defect #2, reconstructed
+        synthetically: heavy_atom_coords/heavy_atom_seq_index belong to a
+        *different* structure (holo) than `coords` (apo), and apo/holo
+        differ by a 2-residue numbering offset (holo is missing apo's
+        first two residues) -- the exact shape confirmed on real
+        KRAS_G12C/BCR_ABL1 data. Without heavy_atom_resnames/
+        coords_resnames, the pre-fix code would return holo-space index 0
+        (out of range interpretation: apo residue 0, wrong) instead of the
+        true apo-space index 2. With them supplied, the translation must
+        land on the correct apo residue."""
+        apo_resnames = _SEQ3  # 12 residues, apo's own numbering 0..11
+        holo_resnames = _SEQ3[2:]  # holo is missing apo's first 2 residues
+        # One holo heavy atom, on holo's own residue 0 (== apo residue 2),
+        # sitting on top of the ligand.
+        ligand = LigandGroup("LIG", 900, "A", np.array([[0.0, 0.0, 0.0]]), 1)
+        heavy_atom_coords = np.array([[0.0, 0.0, 0.0]])
+        heavy_atom_seq_index = np.array([0])
+
+        idx, provenance = functional_indices(
+            COORDS, [ligand], {"func_ligand": ["LIG"]},
+            heavy_atom_coords=heavy_atom_coords,
+            heavy_atom_seq_index=heavy_atom_seq_index,
+            heavy_atom_resnames=holo_resnames,
+            coords_resnames=apo_resnames,
+        )
+        assert provenance == "func_ligand-contact:LIG"
+        assert list(idx) == [2], (
+            f"expected translated apo-space index [2] (holo residue 0 -> "
+            f"apo residue 2 under the 2-residue offset), got {list(idx)} "
+            "-- the cross-structure translation is not landing correctly."
+        )
+
+    def test_cross_structure_heavy_atoms_without_resnames_raises(self):
+        """The bug this guard exists to close: heavy_atom_coords/
+        heavy_atom_seq_index provably belong to a different, longer
+        structure than `coords` (indices exceed len(coords)) and no
+        resname pair was supplied to translate -- must raise, not
+        silently return the wrong-space indices (TASK-0217.001)."""
+        ligand = LigandGroup("LIG", 900, "A", np.array([[0.0, 0.0, 0.0]]), 1)
+        heavy_atom_coords = np.array([[0.0, 0.0, 0.0]])
+        heavy_atom_seq_index = np.array([len(COORDS) + 5])  # provably out of range
+
+        with pytest.raises(ValueError, match="different structure"):
+            functional_indices(
+                COORDS, [ligand], {"func_ligand": ["LIG"]},
+                heavy_atom_coords=heavy_atom_coords,
+                heavy_atom_seq_index=heavy_atom_seq_index,
+            )
+
     def test_falls_back_when_configured_ligand_not_present_in_structure(self):
         idx, provenance = functional_indices(
             COORDS, [], {"func_ligand": ["DNA"]}
