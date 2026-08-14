@@ -9,7 +9,7 @@ import pytest
 
 from allostery.potentials import (
     V_B, V_T, V_R, V_C, V_M,
-    _gnm_msf, _kirchhoff_eigh, _normalized_dcc,
+    _gnm_msf, _kirchhoff_eigh, _normalized_dcc, gnm_context,
 )
 
 
@@ -217,3 +217,97 @@ class TestGnmMsf:
         _A, _w, U, _nz, winv = _kirchhoff_eigh(COORDS, cutoff=10.0)
         Cov = (U * winv) @ U.T
         np.testing.assert_allclose(_gnm_msf(COORDS, cutoff=10.0), np.diag(Cov))
+
+
+class TestGnmContext:
+    """TASK-0040: `gnm_context` + the optional `context=` parameter on
+    `_gnm_msf`/`V_R`/`V_C`/`V_M`. The no-context code path (every existing
+    test above) must keep working unchanged; these tests cover the new
+    shared-context path and confirm it's numerically identical, not just
+    functionally similar."""
+
+    def test_returns_expected_keys_and_shapes(self):
+        ctx = gnm_context(COORDS, cutoff=10.0)
+        assert set(ctx) == {"A", "w", "U", "nz", "winv", "msf", "degree", "clust"}
+        assert ctx["A"].shape == (N, N)
+        assert ctx["U"].shape == (N, N)
+        for k in ("w", "nz", "winv", "msf", "degree", "clust"):
+            assert ctx[k].shape == (N,)
+
+    def test_gnm_msf_with_context_matches_without(self):
+        ctx = gnm_context(COORDS, cutoff=10.0)
+        np.testing.assert_array_equal(
+            _gnm_msf(COORDS, cutoff=10.0, context=ctx),
+            _gnm_msf(COORDS, cutoff=10.0),
+        )
+
+    def test_v_r_with_context_matches_without(self):
+        ctx = gnm_context(COORDS, cutoff=10.0)
+        np.testing.assert_array_equal(
+            V_R(COORDS, cutoff=10.0, context=ctx),
+            V_R(COORDS, cutoff=10.0),
+        )
+
+    def test_v_c_with_context_matches_without(self):
+        ctx = gnm_context(COORDS, cutoff=10.0)
+        np.testing.assert_array_equal(
+            V_C(COORDS, cutoff=10.0, context=ctx),
+            V_C(COORDS, cutoff=10.0),
+        )
+
+    def test_v_m_with_context_matches_without(self):
+        ctx = gnm_context(COORDS, cutoff=10.0)
+        np.testing.assert_array_equal(
+            V_M(COORDS, cutoff=10.0, n_modes=3, context=ctx),
+            V_M(COORDS, cutoff=10.0, n_modes=3),
+        )
+
+    def test_context_reduces_eigh_call_count(self, monkeypatch):
+        """The actual claim this task exists to fix: without a shared
+        context, computing V_R+V_C+V_M costs 3 independent `eigh` calls
+        (V_R's own MSF term routes through `_gnm_msf`); with one, exactly
+        1 -- counted directly via `np.linalg.eigh` call interception, not
+        inferred from timing alone."""
+        calls = []
+        real_eigh = np.linalg.eigh
+
+        def counting_eigh(*a, **kw):
+            calls.append(1)
+            return real_eigh(*a, **kw)
+
+        monkeypatch.setattr(np.linalg, "eigh", counting_eigh)
+
+        calls.clear()
+        V_R(COORDS, cutoff=10.0)
+        V_C(COORDS, cutoff=10.0)
+        V_M(COORDS, cutoff=10.0, n_modes=3)
+        assert len(calls) == 3
+
+        calls.clear()
+        ctx = gnm_context(COORDS, cutoff=10.0)
+        V_R(COORDS, cutoff=10.0, context=ctx)
+        V_C(COORDS, cutoff=10.0, context=ctx)
+        V_M(COORDS, cutoff=10.0, n_modes=3, context=ctx)
+        assert len(calls) == 1  # the one eigh() inside gnm_context() itself
+
+    def test_build_h_new_output_pinned(self):
+        """End-to-end golden values -- `build_H_new`'s actual output,
+        which is what matters, not just the individual V_* functions in
+        isolation. Independently cross-checked before this task's own
+        refactor landed via a `git stash` of `potentials.py`/
+        `hamiltonians.py` (pre-fix code), re-run, and compared
+        `np.array_equal` against the post-fix output on a real target
+        (CARDIAC_MYOSIN, N=704) -- bit-identical, not just close (see
+        this task's own Done section for that real-target check; these
+        are the same synthetic-fixture numbers pinned as a fast repeatable
+        regression test)."""
+        from allostery.hamiltonians import build_H_new
+
+        H = build_H_new(COORDS, BFACTORS, cutoff=10.0)
+        assert H.shape == (N, N)
+        assert np.allclose(H, H.T)
+        assert round(float(np.trace(H)), 6) == 10.0
+        assert round(float(H.sum()), 6) == 0.113735
+        np.testing.assert_allclose(
+            np.diag(H)[:5], [1.440167, 0.940186, 0.848154, 0.860844, 0.933287], atol=1e-6,
+        )

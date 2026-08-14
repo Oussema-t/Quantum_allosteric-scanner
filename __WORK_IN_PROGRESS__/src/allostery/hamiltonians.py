@@ -330,16 +330,23 @@ def build_H_new(
     terminal_fraction: fraction of N-/C-terminal residues penalised by V_T.
     n_low_modes  : number of low-frequency ANM modes used by V_M.
     """
-    from .potentials import V_B, V_T, V_R, V_C, V_M as _VM
+    from .potentials import V_B, V_T, V_R, V_C, V_M as _VM, gnm_context
+
+    # TASK-0040: V_R/V_C/V_M each independently rebuilt the same contact
+    # matrix + Kirchhoff eigendecomposition (3 full O(N^3) diagonalizations
+    # per call, confirmed by direct measurement: ~78% of build_H_new's own
+    # wall-clock on CARDIAC_MYOSIN, N=704). Computed once here instead and
+    # threaded through -- see potentials.gnm_context's own docstring.
+    ctx = gnm_context(coords, cutoff)
 
     L = normalised_laplacian_alpha(coords, cutoff=cutoff, alpha=alpha)
     H = (
         L
         + lam_B * V_B(bfactors)
         + lam_T * V_T(len(coords), terminal_fraction)
-        + lam_R * V_R(coords, cutoff=cutoff)
-        + lam_C * V_C(coords, cutoff=cutoff)
-        + lam_M * _VM(coords, cutoff=cutoff, n_modes=n_low_modes)
+        + lam_R * V_R(coords, cutoff=cutoff, context=ctx)
+        + lam_C * V_C(coords, cutoff=cutoff, context=ctx)
+        + lam_M * _VM(coords, cutoff=cutoff, n_modes=n_low_modes, context=ctx)
     )
     return H
 

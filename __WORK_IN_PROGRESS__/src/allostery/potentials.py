@@ -80,11 +80,47 @@ def _normalized_dcc(U: np.ndarray, winv: np.ndarray) -> np.ndarray:
     return Cov / np.outer(d, d)
 
 
-def _gnm_msf(coords: np.ndarray, cutoff: float) -> np.ndarray:
+def gnm_context(coords: np.ndarray, cutoff: float) -> dict:
+    """TASK-0040: the shared GNM context `_gnm_msf`/`V_R`/`V_C`/`V_M` can
+    each optionally reuse instead of independently re-deriving.
+
+    `_kirchhoff_eigh` was already shared *code* (TASK-0066 deduped three
+    independent re-derivations of the same math into one function) but
+    each of `_gnm_msf`/`V_C`/`V_M` still independently *called* it --
+    three full `contact_matrix` builds + `eigh` diagonalizations per
+    `build_H_new` invocation, not one. `V_R` additionally built its own
+    separate `contact_matrix` for degree/clustering, a fourth independent
+    rebuild. This function computes every quantity all four downstream
+    users need exactly once. Ported analogue of `backend/analysis.py::
+    gnm_context`'s already-proven dict-context pattern -- same shape
+    where the underlying quantity is the same (`A`/`U`/`winv`/`nz`/`msf`),
+    not shared code, per TASK-0018's backend<->allostery boundary.
+
+    Returns a dict: `A` (binary contact matrix), `w`/`U`/`nz`/`winv`
+    (Kirchhoff eigendecomposition), `msf` (per-residue GNM mean-square
+    fluctuation), `degree`, `clust` (local clustering coefficient) --
+    exactly what `_gnm_msf`/`V_R`/`V_C`/`V_M` read today.
+    """
+    A, w, U, nz, winv = _kirchhoff_eigh(coords, cutoff)
+    msf = np.diag((U * winv) @ U.T)
+    degree = A.sum(axis=1)
+    tri = np.diag(A @ (A @ A))
+    clust = tri / np.maximum(degree * (degree - 1), 1.0)
+    return dict(A=A, w=w, U=U, nz=nz, winv=winv, msf=msf, degree=degree, clust=clust)
+
+
+def _gnm_msf(coords: np.ndarray, cutoff: float, context: dict | None = None) -> np.ndarray:
     """GNM mean-square fluctuation = diagonal of the Kirchhoff pseudo-inverse.
+
+    `context`: an optional pre-computed `gnm_context(coords, cutoff)` --
+    when supplied, reuses its `msf` instead of re-deriving (TASK-0040).
+    Falls back to computing its own when omitted, unchanged from before
+    this task -- every existing caller/test keeps working as-is.
 
     Returns (N,) array of per-residue predicted MSF values.
     """
+    if context is not None:
+        return context["msf"]
     _A, _w, U, _nz, winv = _kirchhoff_eigh(coords, cutoff)
     return np.diag((U * winv) @ U.T)
 
@@ -128,6 +164,7 @@ def V_T(n_residues: int, terminal_fraction: float = 0.05) -> np.ndarray:
 def V_R(
     coords: np.ndarray,
     cutoff: float = 10.0,
+    context: dict | None = None,
 ) -> np.ndarray:
     """Rigidity reward: three-term z-score combining connectivity, local
     topology, and GNM mean-square fluctuation (matches QAS V_rigidity).
@@ -149,18 +186,24 @@ def V_R(
     four terms' std of 1 exactly, instead of assuming three z-scores summed
     is already commensurate.
 
+    `context`: an optional pre-computed `gnm_context(coords, cutoff)` --
+    reuses its `degree`/`clust`/`msf` instead of rebuilding a fresh
+    `contact_matrix` and re-deriving all three (TASK-0040). Falls back to
+    computing its own when omitted, unchanged from before this task.
+
     Returns (N, N) diagonal matrix, mean 0 / std 1.
     """
-    from .hamiltonians import contact_matrix
+    if context is not None:
+        degree, clust, msf = context["degree"], context["clust"], context["msf"]
+    else:
+        from .hamiltonians import contact_matrix
 
-    A = contact_matrix(coords, cutoff=cutoff, weight="binary")
-    degree = A.sum(axis=1)
-
-    # Local clustering coefficient: diag(A³) = 2 × triangles at each node
-    tri = np.diag(A @ (A @ A))
-    clust = tri / np.maximum(degree * (degree - 1), 1.0)
-
-    msf = _gnm_msf(coords, cutoff=cutoff)
+        A = contact_matrix(coords, cutoff=cutoff, weight="binary")
+        degree = A.sum(axis=1)
+        # Local clustering coefficient: diag(A³) = 2 × triangles at each node
+        tri = np.diag(A @ (A @ A))
+        clust = tri / np.maximum(degree * (degree - 1), 1.0)
+        msf = _gnm_msf(coords, cutoff=cutoff)
 
     score = -(_zscore(degree) + _zscore(clust) - _zscore(msf))
     return np.diag(_zscore(score))
@@ -169,6 +212,7 @@ def V_R(
 def V_C(
     coords: np.ndarray,
     cutoff: float = 10.0,
+    context: dict | None = None,
 ) -> np.ndarray:
     """Covariance-centrality reward via GNM dynamic cross-correlation (DCC).
 
@@ -182,10 +226,17 @@ def V_C(
     now z-scored like the other four terms so lam_C actually controls this
     term's share of the combined potential's variance.
 
+    `context`: an optional pre-computed `gnm_context(coords, cutoff)` --
+    reuses its `U`/`winv` instead of re-diagonalizing (TASK-0040). Falls
+    back to computing its own when omitted, unchanged from before this task.
+
     Returns (N, N) diagonal matrix, mean 0 / std 1 (negative = reward for
     high DCC coupling).
     """
-    _A, _w, U, _nz, winv = _kirchhoff_eigh(coords, cutoff)
+    if context is not None:
+        U, winv = context["U"], context["winv"]
+    else:
+        _A, _w, U, _nz, winv = _kirchhoff_eigh(coords, cutoff)
     nDCC = _normalized_dcc(U, winv)
     np.fill_diagonal(nDCC, 0.0)                       # exclude self-coupling
 
@@ -197,6 +248,7 @@ def V_M(
     coords: np.ndarray,
     cutoff: float = 10.0,
     n_modes: int = 10,
+    context: dict | None = None,
 ) -> np.ndarray:
     """Low-mode participation reward.
 
@@ -209,9 +261,16 @@ def V_M(
     now z-scored like the other four terms so lam_M actually controls this
     term's share of the combined potential's variance.
 
+    `context`: an optional pre-computed `gnm_context(coords, cutoff)` --
+    reuses its `w`/`U` instead of re-diagonalizing (TASK-0040). Falls back
+    to computing its own when omitted, unchanged from before this task.
+
     Returns (N, N) diagonal matrix, mean 0 / std 1 (negative = reward).
     """
-    _A, w, v, _nz, _winv = _kirchhoff_eigh(coords, cutoff)
+    if context is not None:
+        w, v = context["w"], context["U"]
+    else:
+        _A, w, v, _nz, _winv = _kirchhoff_eigh(coords, cutoff)
 
     # Skip the zero mode (rigid body); take next n_modes
     idx_start = max(1, np.searchsorted(w, 1e-8))
