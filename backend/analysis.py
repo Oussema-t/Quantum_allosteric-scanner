@@ -340,6 +340,26 @@ def quantum_seed_readiness(coords, bfac, resnums, site_idx, cutoff=8.0,
     n_good = sum(r["status"] == "good" for r in rows)
     frac = n_good / n_total if n_total else 0.0
     recommend = [r["resnum"] for r in rows if r["status"] == "good"]
+    # TASK-0033: these verdict cutoffs (0.34/0.60 on frac, 1.2/0.5 on
+    # distal_enrich) are deliberately fixed calibration constants, unlike
+    # deg_lo/cpl_lo/msf_hi above. Those three are raw, protein-size-
+    # dependent quantities (a residue's raw contact degree isn't
+    # comparable between an 88-mer and a 950-mer) and need the per-
+    # protein percentile derivation to mean the same thing across
+    # targets. `frac` and `distal_enrich` don't have that problem: `frac`
+    # is already a fraction in [0, 1] by construction, and
+    # `distal_enrich` is already a ratio to this protein's own uniform-
+    # spread baseline (see its own comment above) -- both are scale-
+    # invariant before any threshold is applied, so a fixed cutoff on
+    # them is the right design, not a hardcoding gap. Confirmed
+    # empirically, not just by construction: verdict/frac/distal_enrich
+    # were checked against all 5 `verified=True` systems.py targets
+    # (N=169-950, a 5.6x range) and neither shows an N-driven trend.
+    # (The §5h/§5i notebook citation these constants originally shipped
+    # under is not independently checkable -- commits fd6eeed/89215bc
+    # predate the notebook file's own addition to this repo by 2 days,
+    # and no "5h"/"5i"/seed-readiness content exists anywhere in the
+    # notebook now committed here.)
     if n_good == 0 or frac < 0.34 or distal_enrich < 0.5:
         verdict = "RISKY"
     elif frac >= 0.60 and distal_enrich >= 1.2:
