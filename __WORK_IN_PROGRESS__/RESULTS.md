@@ -6641,7 +6641,7 @@ register's one surviving positive across ~226+ scored cells. Under the
 seed it should have had all along, it does not survive at any tested k.**
 The permutation-null machinery was never at fault (it shuffles pocket
 labels, not seeds); what changed is what was being scored. Open-Questions
-row 33 above ("the strongest cross-target evidence any observable in this
+row 33 ([[TASK-0151]], above) ("the strongest cross-target evidence any observable in this
 project has") and `documentation/PHASE1_SUBMISSION_DRAFT.md`'s own §2.4
 ("one surviving positive, reported with its provenance") both rest on the
 uncorrected seed and should be read with this advisory attached, not as
