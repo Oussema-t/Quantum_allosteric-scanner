@@ -1,0 +1,84 @@
+{
+ "target": "PTP1B",
+ "bar": 0.003125,
+ "n_reps": 20000,
+ "fallback": {
+  "tag": "top-degree fallback",
+  "n_seed": 5,
+  "seed_resnums": null,
+  "n_pocket": 14,
+  "pocket_rg": 7.968659643265239,
+  "cells": {
+   "5": {
+    "p_value": 0.33735,
+    "real_well_powered_max_auc": 0.7037037037037037,
+    "real_shell": 5.0,
+    "survives_bar": false
+   },
+   "10": {
+    "p_value": 0.00275,
+    "real_well_powered_max_auc": 1.0,
+    "real_shell": 5.0,
+    "survives_bar": true
+   },
+   "15": {
+    "p_value": 0.02385,
+    "real_well_powered_max_auc": 0.9545454545454545,
+    "real_shell": 4.0,
+    "survives_bar": false
+   },
+   "20": {
+    "p_value": 0.02795,
+    "real_well_powered_max_auc": 0.9545454545454546,
+    "real_shell": 4.0,
+    "survives_bar": false
+   }
+  },
+  "any_survives": true
+ },
+ "real": {
+  "tag": "UniProt catalytic site",
+  "n_seed": 9,
+  "seed_resnums": [
+   181,
+   215,
+   216,
+   217,
+   218,
+   219,
+   220,
+   221,
+   262
+  ],
+  "n_pocket": 14,
+  "pocket_rg": 7.968659643265239,
+  "cells": {
+   "5": {
+    "p_value": 0.56825,
+    "real_well_powered_max_auc": 0.5686274509803921,
+    "real_shell": 5.0,
+    "survives_bar": false
+   },
+   "10": {
+    "p_value": 0.56725,
+    "real_well_powered_max_auc": 0.5980392156862745,
+    "real_shell": 5.0,
+    "survives_bar": false
+   },
+   "15": {
+    "p_value": 0.17605,
+    "real_well_powered_max_auc": 0.821917808219178,
+    "real_shell": 3.0,
+    "survives_bar": false
+   },
+   "20": {
+    "p_value": 0.2846,
+    "real_well_powered_max_auc": 0.7762557077625571,
+    "real_shell": 3.0,
+    "survives_bar": false
+   }
+  },
+  "any_survives": false
+ },
+ "seed_overlap": 1
+}
