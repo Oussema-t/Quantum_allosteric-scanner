@@ -284,3 +284,38 @@ passed. `.ai/tools/test_check_references.py`: 7 passed. Full
 `__WORK_IN_PROGRESS__` suite (unaffected by this task, run for
 regression coverage on the broader repo): 1196 passed, 1 skipped, 3
 xfailed.
+
+**Addendum, same session, an unplanned live demonstration:** while this
+task's own edits to `claim.py`/`COMMON.md`/`test_claim.py` sat
+uncommitted (correctly *not* staged, per the discipline this task itself
+documents — waiting for a concurrently-held `GIT-COMMIT` claim to
+release), the peer session holding it (`Implementer B`, [[TASK-0198]])
+committed first. Their `git add` on those same three shared files staged
+whatever was in the working tree at that moment — which, since this
+task's own edits live in the same physical files, included this task's
+own uncommitted `RESULTS.md`-protection changes too. Commit `a9295a6`
+("TASK-0198: guard claim.py chained transitions...") therefore also
+carries this task's `normalize_task_id` widening, `check-staleness`, the
+`content_sha256` snapshot, this task's `COMMON.md` rule, and this task's
+two new `test_claim.py` classes — correct in content (re-verified: both
+test files still pass in full against the post-commit state, 22/22), but
+misattributed to a commit message that doesn't mention them. Not
+rewritten here (no history rewrite without explicit instruction) — noted
+plainly instead, because it is directly relevant evidence for this task's
+own subject matter: a real, un-staged-for-effect example of a shared-file
+edit landing in the wrong place through nobody's individual fault, one
+`git add`, no malice, no missed check. Two honest implications: (1) had
+this task's own new `check-staleness`/claim discipline actually been used
+on `claim.py`/`COMMON.md` themselves while editing them (dogfooding,
+not just building), this specific mix-up would not have prevented it
+either — a bare `git add <path>` still stages the whole file regardless
+of who holds which claim, since nothing currently *enforces* the claim
+before `git add`, it is convention only; (2) `commit-guard --expect
+<path>` verifies the staged *path list* matches what you declared, not
+that the staged *diff* is scoped to only your own intended change — a
+real, previously undocumented gap, since a legitimately-expected path can
+still carry someone else's mixed-in content. Recommended, not built
+here (would expand this task's own scope past its Constraint): a
+`commit-guard` mode that also diffs each expected path's staged content
+against a caller-supplied "this is what I intended to change" set, for
+paths known to be claim-protected.
