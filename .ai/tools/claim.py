@@ -136,35 +136,61 @@ TASK_ID_ONLY_RE = re.compile(r"^TASK-\d{4}(?:\.\d+)?$")
 TABLE_ROW_RE = re.compile(r"^\|\s*TASK-\d{4}(?:\.\d+)?\s*\|")
 
 # TASK-0028: fixed non-task resource ids usable with claim/release/status.
-# Kept as a small explicit set (not general arbitrary-resource support --
-# that's TASK-0024.001) so this doesn't collide with or duplicate that
-# broader mechanism if/when it lands; same lock-file format either way.
+# Kept as a small explicit set, not folded into the general RESOURCE-*
+# mechanism below (TASK-0024.001), because GIT-COMMIT carries an extra
+# protection ordinary resources don't (--hitl-override gate on a forced
+# override, cmd_claim above) -- SPECIAL_RESOURCE_IDS marks "this id needs
+# the extra gate", not "this id is the only non-task id that exists."
 SPECIAL_RESOURCE_IDS = frozenset(["GIT-COMMIT"])
+
+# TASK-0024.001: general whole-file/arbitrary resource ids -- e.g.
+# `claim.py claim RESULTS.md "..."` or `claim.py claim COMMON.md "..."`
+# before a risky working-tree-level operation on a shared coordination
+# file (the incident this task was filed from: a multi-step git-checkout/
+# restore sequence on COMMON.md with no way to signal "hands off" to a
+# concurrent thread). Namespaced with a `RESOURCE-` prefix (this task's
+# own recommended Open Question resolution) so a resource id can never
+# collide with, or be misread as, a real `TASK-XXXX` id -- `is_task_id`
+# below stays false for every one of these, exactly like GIT-COMMIT.
+RESOURCE_ID_PREFIX = "RESOURCE-"
+_RESOURCE_SANITIZE_RE = re.compile(r"[^A-Za-z0-9_.\-]")
 
 
 def normalize_task_id(raw):
     # type: (str) -> str
-    """Accepts TASK-0024, 24, TASK-0026.001, 26.1, GIT-COMMIT, etc.
+    """Accepts TASK-0024, 24, TASK-0026.001, 26.1, GIT-COMMIT, RESULTS.md,
+    COMMON.md, or any other non-numeric string, etc.
 
     Dotted suffixes are the .ai/tasks/README.md subtask convention
     (TASK-XXXX.NNN) for independently claimable slices of a parent task.
     GIT-COMMIT (TASK-0028) is a fixed non-numeric resource id, checked
-    before the numeric parsing below.
+    before the numeric parsing below. Any other input with no digit in it
+    (TASK-0024.001) is treated as a literal whole-file/arbitrary resource
+    id instead of an error -- sanitized and namespaced under
+    `RESOURCE-` so it can never collide with a real TASK-XXXX id. A
+    string that DOES contain a digit (e.g. "26" or embedded in a longer
+    non-task string) still resolves as a TASK id via the numeric path
+    below, unchanged from before this task -- only genuinely digit-free
+    input takes the new resource-id path.
     """
     upper = raw.strip().upper()
     if upper in SPECIAL_RESOURCE_IDS:
         return upper
     match = TASK_ID_RE.search(raw)
-    if not match:
-        raise SystemExit("error: could not find a task number in %r" % raw)
-    main = "TASK-%04d" % int(match.group(1))
-    sub = match.group(2)
-    return main if sub is None else "%s.%03d" % (main, int(sub))
+    if match:
+        main = "TASK-%04d" % int(match.group(1))
+        sub = match.group(2)
+        return main if sub is None else "%s.%03d" % (main, int(sub))
+    sanitized = _RESOURCE_SANITIZE_RE.sub("_", raw.strip())
+    if not sanitized:
+        raise SystemExit("error: could not find a task number or a usable resource id in %r" % raw)
+    return RESOURCE_ID_PREFIX + sanitized.upper()
 
 
 def is_task_id(resource_id):
     # type: (str) -> bool
-    """True for TASK-XXXX[.NNN] ids, False for special resources like GIT-COMMIT."""
+    """True for TASK-XXXX[.NNN] ids, False for special/general resources
+    like GIT-COMMIT or RESOURCE-COMMON.MD."""
     return bool(TASK_ID_ONLY_RE.match(resource_id))
 
 
@@ -261,6 +287,24 @@ def find_task_file(task_id):
 
 # ---------------------------------------------------------------- claim ----
 
+def _content_sha256_if_file(raw_arg):
+    # type: (str) -> Optional[str]
+    """TASK-0195: snapshot the claimed file's content at claim time, so
+    `check-staleness` can later detect drift. Only applies when the raw
+    claim argument (before resource-id sanitizing) is itself a real,
+    readable path -- e.g. `claim __WORK_IN_PROGRESS__/RESULTS.md "..."`,
+    not the bare symbolic id `RESULTS.md`. Silent no-op (returns None)
+    for TASK-XXXX ids, GIT-COMMIT, and any resource id that isn't also a
+    literal path -- those simply get no staleness snapshot.
+    """
+    candidate = raw_arg if os.path.isabs(raw_arg) else os.path.join(REPO_ROOT, raw_arg)
+    if not os.path.isfile(candidate):
+        return None
+    import hashlib
+    with open(candidate, "rb") as f:
+        return hashlib.sha256(f.read()).hexdigest()
+
+
 def cmd_claim(args):
     task_id = normalize_task_id(args.task_id)
     os.makedirs(LOCKS_DIR, exist_ok=True)
@@ -272,6 +316,9 @@ def cmd_claim(args):
         "note": args.note,
         "session_id": session_id(),
     }
+    content_sha256 = _content_sha256_if_file(args.task_id)
+    if content_sha256 is not None:
+        data["content_sha256"] = content_sha256
 
     try:
         fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
@@ -466,6 +513,59 @@ def cmd_release(args):
     os.remove(path)
     print("released %s (was claimed by %r)" % (task_id, existing["claimant"]))
     return 0
+
+
+# ------------------------------------------------------- check-staleness ---
+
+def cmd_check_staleness(args):
+    # type: (...) -> int
+    """TASK-0195. Detects drift on a *claimed* file since the snapshot
+    `cmd_claim` recorded -- run it right after claiming (before you start
+    editing) to confirm your starting point is clean, the same place in
+    the workflow `commit-guard --expect-empty` occupies for GIT-COMMIT.
+
+    Deliberately content-hash-based, not git-ancestry-based: TASK-0195's
+    own investigation (replaying the incident that motivated this task,
+    RESULTS.md rows 47-53, recovered in 61b8096) found the actual loss was
+    a *working-tree* collision between concurrently-active, uncommitted
+    edits from separate threads sharing one checkout -- every commit
+    involved was, by construction, correctly based on its true immediate
+    git parent (a linear rebase-only history can't be "behind" its own
+    parent), so a check that compares committed-git ancestry would have
+    reported "clean" the whole time and caught nothing. Only a snapshot of
+    actual file *content* at claim time, compared against actual content
+    right now, would have shown the drift.
+    """
+    task_id = normalize_task_id(args.path)
+    lock = read_lock(task_id)
+    if lock is None:
+        print("error: %s is not currently claimed -- claim it first, "
+              "check-staleness compares against the snapshot taken at "
+              "claim time" % task_id, file=sys.stderr)
+        return 1
+    snapshot = lock.get("content_sha256")
+    if snapshot is None:
+        print("%s: claimed, but no content snapshot was recorded (the "
+              "claim argument wasn't a real path at claim time) -- "
+              "nothing to compare" % task_id)
+        return 0
+    current = _content_sha256_if_file(args.path)
+    if current is None:
+        print("error: %s no longer resolves to a readable file" % args.path, file=sys.stderr)
+        return 1
+    if current == snapshot:
+        print("%s: no drift since claim (%s) -- safe to proceed"
+              % (task_id, lock.get("claimed_at", "?")))
+        return 0
+    print(
+        "STALE: %s has changed on disk since it was claimed at %s -- "
+        "if you haven't made your own edit yet, someone/something else "
+        "touched this file; diff it and reconcile before editing. If "
+        "this is your own in-progress edit, this warning is expected and "
+        "not a problem." % (task_id, lock.get("claimed_at", "?")),
+        file=sys.stderr,
+    )
+    return 1
 
 
 # --------------------------------------------------------------- status ----
@@ -765,6 +865,69 @@ def _claim_gate(task_id, claimant, force, reason, verb):
     return True
 
 
+def _assert_single_tracked_path(task_id):
+    # type: (str) -> Optional[List[str]]
+    """TASK-0198: after a `move`/`resolve` transition, verify the
+    *currently staged index* would produce exactly one tracked path for
+    `task_id` if committed right now -- catches the "duplicate tracked
+    file" defect at the point it would be introduced, rather than relying
+    on someone noticing a stray `git ls-tree -r HEAD` line later (how both
+    known instances, TASK-0189 and TASK-0073, were actually found).
+
+    Reproduction attempted directly before adding this (per this task's
+    own "do not fix blind" Constraint): five real variations of a chained
+    TODO->IN_PROGRESS->DONE transition (immediate, with a manual content
+    edit between hops, with an intervening `git add`, via `move` then
+    `resolve`, and a back-and-forth TODO->IN_PROGRESS->TODO->IN_PROGRESS
+    ->DONE chain) were each run through this module's own real `move`/
+    `resolve` commands and checked with this exact `write-tree`+`ls-tree`
+    technique after a real commit -- every one produced a single, clean
+    tracked path, no duplicate. This is itself a real finding, not a
+    failure to reproduce something simple: it points away from a
+    deterministic bug in `_perform_transition`'s own sequential logic and
+    toward concurrent-thread index interference (this scaffold's actual
+    operating mode -- multiple sessions issuing git commands against the
+    same shared repo without a true cross-process index lock beyond
+    git's own, which serializes individual commands, not multi-command
+    sequences). A single-process script cannot reliably force that race,
+    so per this task's own Intent Contract option (b), this check closes
+    the gap regardless of the exact trigger, rather than chasing a root
+    cause with no guaranteed reproduction.
+
+    `git write-tree` is read-only plumbing -- it writes a tree *object*
+    from the current index into the object database and returns its
+    hash, touching neither HEAD nor any ref, so this is safe to run
+    speculatively without side effects on the repo's actual history.
+
+    Returns `None` if exactly one (or zero, e.g. a `--no-stage`-style
+    caller) match is found -- the healthy case. Returns the list of
+    matched paths (length >= 2) if the defect is present -- printing is
+    the caller's job, so `move`/`resolve` can each phrase the warning in
+    their own voice."""
+    tree = subprocess.run(
+        ["git", "write-tree"], cwd=REPO_ROOT, capture_output=True, text=True,
+    )
+    if tree.returncode != 0:
+        # An unmerged/conflicted index can't produce a tree -- not this
+        # check's failure mode to diagnose; skip rather than crash the
+        # move/resolve call that already succeeded on disk.
+        return None
+    out = subprocess.run(
+        ["git", "ls-tree", "-r", "--name-only", tree.stdout.strip()],
+        cwd=REPO_ROOT, capture_output=True, text=True,
+    )
+    if out.returncode != 0:
+        return None
+    tasks_prefix = os.path.relpath(TASKS_DIR, REPO_ROOT).replace(os.sep, "/") + "/"
+    matches = [
+        line for line in out.stdout.splitlines()
+        if line.startswith(tasks_prefix)
+        and os.path.basename(line).startswith(task_id + "-")
+        and line.endswith(".md")
+    ]
+    return matches if len(matches) > 1 else None
+
+
 def _perform_transition(task_id, target_state, keep_claim, content_transform):
     # type: (str, str, bool, object) -> object
     """Shared relocate + registry-sync + claim-release logic used by both
@@ -862,6 +1025,11 @@ def _perform_transition(task_id, target_state, keep_claim, content_transform):
         os.remove(lock_path(task_id))
         released = True
 
+    # TASK-0198: only meaningful when a physical relocation happened --
+    # a same-state call (need_file_move False) never touches the file's
+    # tracked path at all, nothing to check.
+    duplicate_paths = _assert_single_tracked_path(task_id) if need_file_move else None
+
     return {
         "error": False,
         "src_rel": src_rel,
@@ -873,7 +1041,31 @@ def _perform_transition(task_id, target_state, keep_claim, content_transform):
         "registry_path_cell": registry_path_cell,
         "released": released,
         "target_status_text": target_status_text,
+        "duplicate_paths": duplicate_paths,
     }
+
+
+def _warn_if_duplicate_tracked(task_id, duplicate_paths):
+    # type: (str, Optional[List[str]]) -> None
+    """TASK-0198: print `_assert_single_tracked_path`'s finding loudly --
+    a no-op if `duplicate_paths` is `None` (the healthy case). Shared by
+    `cmd_move`/`cmd_resolve` so the message and the remediation guidance
+    stay in one place rather than drifting between the two callers."""
+    if not duplicate_paths:
+        return
+    print(
+        "warning: %s would be tracked at MORE THAN ONE path if committed "
+        "right now -- %s. This is TASK-0198's own duplicate-tracking "
+        "defect (chained TODO->IN_PROGRESS->DONE-style transitions with "
+        "no commit in between); the file move itself succeeded and the "
+        "working tree is correct, only the staged index has the extra "
+        "entry. Before committing: inspect `git diff --cached "
+        "--name-status`, then stage the stale path's deletion explicitly "
+        "(`git rm --cached <stale path>` or `.ai/tools/claim.py stage "
+        "--expect <stale path> ...` alongside the real change set) -- do "
+        "not `git commit` as-is." % (task_id, ", ".join(duplicate_paths)),
+        file=sys.stderr,
+    )
 
 
 def cmd_move(args):
@@ -913,6 +1105,8 @@ def cmd_move(args):
     result = _perform_transition(task_id, target_state, args.keep_claim, _status_only)
     if result is None or result["error"]:
         return 1
+
+    _warn_if_duplicate_tracked(task_id, result["duplicate_paths"])
 
     if not result["need_file_move"] and not result["content_changed"] and not result["registry_changed"]:
         print(
@@ -1049,6 +1243,10 @@ def cmd_resolve(args):
                 task_id, result["target_status_text"], result["registry_path_cell"]
             )
         stage_note = ", staged"
+        # TASK-0198: the --no-stage branch above already reset both sides
+        # of any rename, so a duplicate this check would have caught is
+        # moot there -- only meaningful once something is actually staged.
+        _warn_if_duplicate_tracked(task_id, result["duplicate_paths"])
 
     print(
         "resolved %s -> DONE (Resolution: %s)%s%s%s"
@@ -1432,6 +1630,13 @@ def build_parser():
     p_status = sub.add_parser("status", help="show current claim(s)")
     p_status.add_argument("task_id", nargs="?")
     p_status.set_defaults(func=cmd_status)
+
+    p_check_staleness = sub.add_parser(
+        "check-staleness",
+        help="TASK-0195: has a claimed file changed on disk since its claim-time content snapshot?",
+    )
+    p_check_staleness.add_argument("path", help="the same path/id you passed to `claim`")
+    p_check_staleness.set_defaults(func=cmd_check_staleness)
 
     p_sync = sub.add_parser("sync", help="regenerate Claimed By/At cells in .ai/COMMON.md from lock files")
     p_sync.add_argument("--dry-run", action="store_true", help="print what would change without writing")
