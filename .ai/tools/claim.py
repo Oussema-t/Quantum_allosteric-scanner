@@ -1410,17 +1410,23 @@ def cmd_stage(args):
         )
         return 1
 
-    # A path already staged exactly as intended (e.g. a deletion staged by
-    # an earlier `stage` call in the same commit-prep sequence -- `stage`
-    # requires the *full* intended set on every call, per its own
-    # self-verification below, so a legitimately-repeated path is normal,
-    # not a caller mistake) has nothing left for `git add` to do -- and a
-    # bare `git add` on such a path errors ("pathspec ... did not match
-    # any files"), found in real use, same session as TASK-0197 itself.
-    # Only add what isn't already staged; the self-verification afterward
-    # still checks the complete `expect` set regardless.
-    already_staged = _staged_paths()
-    to_add = [p for p in expect if p not in already_staged]
+    # TASK-0197: a path already fully staged as a DELETION (absent from
+    # both the index and the working tree -- e.g. staged by an earlier
+    # `stage` call in the same commit-prep sequence) has nothing left for
+    # `git add` to do, and a bare `git add` on it errors ("pathspec ...
+    # did not match any files", real incident). Skip only that exact
+    # case. TASK-0223: a path that IS present on disk must always be
+    # re-added, even if some earlier call (this one or `move`'s own
+    # internal `git mv`) already staged an *older* version of it --
+    # `git add` on a present, tracked file is always safe/idempotent, and
+    # skipping it here silently left a later edit un-staged: `stage`'s own
+    # self-verification below (and a separate `commit-guard --expect`
+    # right before commit) both check only the *path set*, not staged
+    # *content*, so neither ever caught the drop. Only exclude a path
+    # when it is BOTH missing on disk AND already reflected in the index
+    # (the TASK-0197 case) -- everything else always gets re-added.
+    still_missing = set(missing_on_disk) & _staged_paths()
+    to_add = [p for p in expect if p not in still_missing]
     if to_add:
         subprocess.run(["git", "add", "--"] + to_add, cwd=REPO_ROOT, check=True)
 

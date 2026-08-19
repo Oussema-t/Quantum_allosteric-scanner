@@ -319,5 +319,60 @@ class TestCheckStaleness:
         assert "no content snapshot was recorded" in result.stdout
 
 
+class TestStageRestagesEditedContent:
+    """TASK-0223: `stage --expect <path>` must pick up an edit made to
+    `<path>` *after* an earlier call already staged it (e.g. `move`'s own
+    internal `git mv`) -- `_staged_paths()`'s "already staged, skip
+    `git add`" optimization (TASK-0197) only checks whether the path
+    differs from HEAD, not whether the staged blob still matches the
+    current working tree, so a post-move edit was silently dropped from
+    the next `stage` call. Reproduced twice this session ([[TASK-0195]],
+    [[TASK-0220]]) via the exact sequence here: `move` (auto-stages),
+    edit the file again, `stage --expect` the same path a second time."""
+
+    def test_stage_picks_up_an_edit_made_after_an_earlier_stage(self, tmp_path):
+        repo = _make_scratch_repo(tmp_path)
+        assert _claim(repo, "claim", "TASK-9001", "test").returncode == 0
+        assert _claim(repo, "claim", "GIT-COMMIT", "test").returncode == 0
+
+        moved = _claim(repo, "move", "TASK-9001", "IN_PROGRESS", "--as", "test")
+        assert moved.returncode == 0
+        target = repo / ".ai" / "tasks" / "IN_PROGRESS" / "TASK-9001-scratch.md"
+        rel = ".ai/tasks/IN_PROGRESS/TASK-9001-scratch.md"
+
+        # `move` already staged `target` via its own internal `git mv` --
+        # the defect is a *second* edit, made after that, being dropped by
+        # a *second* `stage --expect` call for the same path.
+        target.write_text(target.read_text() + "\nedited after move, before stage\n")
+
+        result = _claim(repo, "stage", "--expect", rel)
+        assert result.returncode == 0, result.stderr
+
+        staged_blob = subprocess.run(
+            ["git", "show", f":{rel}"], cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout
+        assert "edited after move, before stage" in staged_blob, (
+            "stage --expect reported success but the staged content is stale "
+            "relative to the working tree -- TASK-0223's own regression"
+        )
+
+    def test_task0197_deletion_case_still_works(self, tmp_path):
+        """Regression guard on the case TASK-0223's fix must not break:
+        a path already fully staged as a deletion (gone from both index
+        and working tree) must not be re-passed to `git add` (which
+        errors: 'pathspec ... did not match any files', TASK-0197's own
+        real incident)."""
+        repo = _make_scratch_repo(tmp_path)
+        assert _claim(repo, "claim", "GIT-COMMIT", "test").returncode == 0
+        rel = ".ai/tasks/TODO/TASK-9001-scratch.md"
+
+        (repo / rel).unlink()
+        first_delete = _claim(repo, "stage", "--expect", rel)
+        assert first_delete.returncode == 0, first_delete.stderr
+
+        second_delete = _claim(repo, "stage", "--expect", rel)
+        assert second_delete.returncode == 0, second_delete.stderr
+
+
 if __name__ == "__main__":
     raise SystemExit(pytest.main([__file__, "-v"]))
