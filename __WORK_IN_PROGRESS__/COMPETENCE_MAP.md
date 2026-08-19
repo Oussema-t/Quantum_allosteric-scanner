@@ -147,6 +147,37 @@ gated tasks below), that gap is stated explicitly, not filled with an estimate.
 > three mechanistically distinguishable ones. Full detail:
 > `.ai/tasks/DONE/TASK-0207-label-the-principal-components.md`.
 
+> **Status update, 2026-08-14 ([[TASK-0217]] family): the register's honest
+> positive count is now zero — the one previously-surviving cell did not
+> survive its own construct-validity correction.** [[TASK-0217.001]] found
+> and fixed a live array-correspondence bug (`labels.functional_indices`):
+> holo-space heavy-atom indices were used directly as apo-space indices
+> whenever apo/holo numbering or length differ, exposed on **10 of 13**
+> real targets including 2 of 3 mandatory (KRAS_G12C, BCR_ABL1) — confirmed
+> wrong with a real number first (KRAS_G12C's reported active-site residue
+> was 12, should have been 11). This also shifted the ground-truth `pocket`
+> label itself on the same 10 targets (SEAM-0003's exclusion is gated by
+> `active_site`). [[TASK-0217.003]] then re-scored PTP1B's `dcc_low` (k=10)
+> — the one cell that survived [[TASK-0201]]'s corrected null, cited above —
+> under the corrected seed: **AUC 1.000→0.598, p 0.00275→0.567 against the
+> 0.05/16 bar. No k survives.** Independently re-derived twice (fresh code,
+> not a re-run of the original script) before being accepted. Separately,
+> [[TASK-0209]] found only **2 of 7** real-drug-ligand targets (KRAS_G12C,
+> PTP1B) actually express a genuine apo-closed/holo-open contrast at all —
+> 2 of the 3 mandatory targets (BCR_ABL1, CARDIAC_MYOSIN) are not valid
+> cryptic-pocket instances by this test, independent of any scoring
+> question. Neither finding changes any number already in this document's
+> tables (the mandatory-target floor/ceiling/actual table below already
+> shows `NO_SIGNAL_IN_APO`/`BEATS_CHANCE_NOT_FLOOR` for BCR_ABL1/
+> CARDIAC_MYOSIN, and KRAS_G12C's own row was already flagged above as a
+> lucky, non-generalizing draw) — what changes is that the *document's own
+> framing*, in places elsewhere in this file that still describe PTP1B's
+> `dcc_low` as a surviving positive, is now stale. Read every such mention
+> against this update. Full detail: `.ai/tasks/DONE/TASK-0217-construct-
+> validity-sweep.md` and its `.001`/`.003` subtasks; [[TASK-0224]]'s
+> `documentation/WORKFLOW.md` documents where in the pipeline each of these
+> checks does (Step 4/5) and does not (Steps 2-3) currently gate a run.
+
 > **SUPERSEDED 2026-07-16 by [[TASK-0118]] — the table below is a full recompute, not an
 > edit of the old one. `REVIEW-panel-2026-07-16-v2` (§2.1) found that the numbers this
 > document previously reported were gauge-contaminated: `run_challenge.py`'s floor/actual
