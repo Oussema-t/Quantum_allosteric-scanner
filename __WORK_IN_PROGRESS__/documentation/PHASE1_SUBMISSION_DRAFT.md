@@ -208,7 +208,16 @@ isolates exactly the quantity cryptic-pocket prediction depends on. To our
 knowledge that delta has not been reported.
 
 Detailed scope, milestones, resources and pre-registered success criteria:
-**[[TASK-0183]]** `[TBD — not yet written]`.
+**[[TASK-0183]]**, `documentation/POC_SPRINT_PLAN.md` — month-by-month
+milestones each with a falsifiable exit criterion, resource requirements
+traced to measured numbers (not estimated), a risk register built from
+this program's own observed failure modes, and an explicit exclusion
+list. **Holding assumption stated there, repeated here**: sized against
+Feasibility = 20% and "Phase 1 scored as ideation," neither of which
+appears in `documentation/Cleveland-Clinic-Challenge-Statement-vF-1.md`
+— the only challenge document in this repo. The two-phase document that
+would confirm them is requested via [[TASK-0221]]; cheap to re-check once
+it lands, not silently assumed correct.
 
 ---
 
@@ -254,7 +263,18 @@ then reads this document would find them in contradiction. `[TBD: fix]`
 
 ## 6. Team and roles
 
-`[TBD — from TASK-0183]`
+Not aspirational — the split that already produced this register's own
+~200 tasks, including the construct-validity sweep ([[TASK-0217]]) that
+found and fixed the seed-provenance and array-correspondence defects
+Section 2.4 reports: an Architect/Planner role (coordination, scope
+decisions, cross-task synthesis), an Implementer role (bounded execution,
+local validation, retrospective tests before trusting a new check), and a
+Reviewer role (adversarial audit — the thread that found the criteria
+[[TASK-0204]] D1/D2/D3 and set the construct-validity sweep in motion).
+Physics/science judgment calls sit with whoever holds Implementer or
+Architect/Planner on that task; final scope and narrative decisions —
+like this document's own (A′) framing — sit with Bartosz. Full detail:
+`documentation/POC_SPRINT_PLAN.md` ([[TASK-0183]]).
 
 ---
 
