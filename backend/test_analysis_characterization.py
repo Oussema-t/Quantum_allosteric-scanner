@@ -104,6 +104,63 @@ class TestQuantumSeedReadinessCharacterization:
         assert quantum_seed_readiness(apo["coords"], apo["bfac"], apo["resnums"], np.array([], dtype=int)) is None
 
 
+def _build_dumbbell_seed_case(n_lobe=4, n_distal_lobe=4, lobe_jitter=1.96,
+                               distal_jitter=2.2, gap=14.6, bridge_spacing=3.16,
+                               seed=7149):
+    """TASK-0220: synthetic positive control -- two tight residue clusters
+    ("lobes") joined by a short percolating chain of relay points, the
+    same dumbbell shape `__WORK_IN_PROGRESS__/tests/test_dumbbell_negative_
+    control.py` (TASK-0103) uses to force genuine seed<->distal coupling in
+    a CTQW-style operator, adapted here to real 3D coordinates so it drives
+    the actual `_ctqw_build_H`/`_average_mixing_matrix` code path rather
+    than a hand-substituted Hamiltonian. The seed lobe (`site_idx`) sits at
+    the origin; the second lobe sits `gap` Å away (comfortably past
+    `distal_ang=12`); relay points every `bridge_spacing` Å connect them
+    (each hop within `R_c=8`) since a single direct edge cannot span both
+    "distal" and "in range" simultaneously with the shipped 8/12 pair.
+    Deterministic (fixed seed) -- found by a ~2500-trial random search over
+    lobe size/jitter/gap/bridge spacing for the combination that clears
+    the SAFE bar with the widest margin on both axes jointly, not
+    hand-tuned to a specific target."""
+    rng = np.random.default_rng(seed)
+    seed_lobe = rng.normal(0, lobe_jitter, size=(n_lobe, 3))
+    distal_lobe = rng.normal(0, distal_jitter, size=(n_distal_lobe, 3)) + np.array([gap, 0, 0])
+    n_bridge = max(1, int(round(gap / bridge_spacing)) - 1)
+    bridge = np.array([[x, 0, 0] for x in np.linspace(bridge_spacing, gap - bridge_spacing, n_bridge)])
+    coords = np.vstack([seed_lobe, bridge, distal_lobe])
+    site_idx = np.arange(n_lobe)
+    return coords, site_idx
+
+
+class TestQuantumSeedReadinessSafeReachability:
+    """TASK-0220: is `quantum_seed_readiness`'s SAFE verdict reachable at
+    all, or dead code? All 6 currently-loadable `systems.py` targets land
+    PARTIAL/RISKY (see this task's own Done section for the full table) --
+    `distal_enrich` never even reaches the 1.0 uniform-baseline mark on
+    real data, let alone the 1.2 SAFE bar. This synthetic dumbbell case is
+    the "hand-built ... seed known to genuinely concentrate distally" this
+    task's own Planned Validation calls for: it reaches SAFE, proving the
+    verdict is reachable in principle under the shipped thresholds and
+    formula -- not a dead branch -- even though no real benchmark target
+    tested so far comes close. A future accidental change to the SAFE
+    thresholds or the `distal_enrich`/`frac` formulas that makes this case
+    stop landing SAFE is exactly the silent regression this test exists to
+    catch."""
+
+    def test_dumbbell_positive_control_reaches_safe(self):
+        coords, site_idx = _build_dumbbell_seed_case()
+        N = len(coords)
+        qsr = quantum_seed_readiness(coords, np.zeros(N), np.arange(N), site_idx,
+                                      cutoff=8.0, R_c=8.0, r0=7.0, distal_ang=12.0)
+
+        assert qsr["verdict"] == "SAFE"
+        assert qsr["n_total"] == 4
+        assert qsr["n_good"] == 3
+        assert qsr["frac_good"] == 0.75
+        assert round(qsr["distal_reach"], 3) == 0.313
+        assert round(qsr["distal_enrich"], 3) == 1.25
+
+
 class TestSeedReadinessShiftCharacterization:
     """TASK-0035: pins `seed_readiness_shift`'s own bootstrap-derived
     numbers (`_bootstrap_floor`/`_raw_shift`, not covered by any existing

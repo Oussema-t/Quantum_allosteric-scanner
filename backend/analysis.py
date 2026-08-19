@@ -360,6 +360,32 @@ def quantum_seed_readiness(coords, bfac, resnums, site_idx, cutoff=8.0,
     # predate the notebook file's own addition to this repo by 2 days,
     # and no "5h"/"5i"/seed-readiness content exists anywhere in the
     # notebook now committed here.)
+    #
+    # TASK-0220: SAFE never fires on any of the 6 currently-loadable
+    # systems.py targets (KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN/MYC_MAX/PTP1B/
+    # GLUCOKINASE, N=88-950) -- distal_enrich sits in 0.775-0.948 on every
+    # one, never even clearing the 1.0 uniform-spread mark, let alone the
+    # 1.2 SAFE bar. This is NOT dead/unreachable code: a synthetic
+    # positive-control case (two tight residue clusters joined by a short
+    # percolating bridge -- see backend/test_analysis_characterization.py
+    # ::TestQuantumSeedReadinessSafeReachability) reaches SAFE cleanly
+    # (frac_good 0.75, distal_enrich 1.25) under these exact thresholds and
+    # formula, so the bar is reachable in principle. It is just never hit
+    # by a typical real active site under this operator (a short-range,
+    # R_c=8/r0=7 Gaussian-decay Laplacian): reaching a residue >12 Å away
+    # necessarily takes >=2 hops (a single edge cannot span both "in range"
+    # and "distal" at once with these fixed radii), and each hop dilutes
+    # amplitude into the surrounding local structure rather than
+    # channeling it onward the way the synthetic case's two-cluster
+    # topology does by construction. Not recalibrated: this benchmark set
+    # has no independently labeled "genuinely SAFE" active site to derive
+    # a data-driven bar from (unlike frac/distal_enrich's own scale-
+    # invariance argument above, which stands on formula alone) -- picking
+    # a lower cutoff from only 6 real data points would fit noise, not
+    # calibrate to anything. PARTIAL/RISKY is the correct, expected
+    # ceiling for a typical real active site here; SAFE is a legitimate,
+    # reachable, deliberately rare verdict for an unusually distal-favoring
+    # topology, not a bug.
     if n_good == 0 or frac < 0.34 or distal_enrich < 0.5:
         verdict = "RISKY"
     elif frac >= 0.60 and distal_enrich >= 1.2:
