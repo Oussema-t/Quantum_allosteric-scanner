@@ -252,6 +252,122 @@ targets:
       RCSB by TASK-0003 on 2026-07-06. Apo-construct quality concern
       resolved 2026-07-20 by TASK-0124 (5TBY -> 8QYP replacement).
 
+  # TASK-0222: Table 1's literal, mandated Cardiac Myosin pair (5TBY -> 6C1H),
+  # run and reported SEPARATELY from the incumbent CARDIAC_MYOSIN entry above
+  # — additive, not a substitution of it (every historical CARDIAC_MYOSIN
+  # number stays conditioned on 8QYP/8QYR, unchanged). See CARDIAC_MYOSIN's
+  # own `objective`/`warnings` above for why this pair was originally
+  # replaced; this entry exists so both pairs can be run, compared, and
+  # disclosed side by side per TASK-0222's own compliance rationale.
+  CARDIAC_MYOSIN_TABLE1:
+    apo_pdb: 5TBY               # Table 1's mandated apo. RCSB-verified live
+                                 # (REST API, 2026-08-19, this task): "HUMAN
+                                 # BETA CARDIAC HEAVY MEROMYOSIN INTERACTING-
+                                 # HEADS MOTIF OBTAINED BY HOMOLOGY MODELING
+                                 # (SWISS-MODEL)... RIGIDLY FITTED TO... 3D-
+                                 # RECONSTRUCTION (EMD-2240)" — a docked
+                                 # homology model, not an experimental
+                                 # structure; nominal resolution 20.0 A; EM
+                                 # method; zero nonpolymer components (no
+                                 # ligands at all). Polymer entity 1 =
+                                 # Myosin-7 (Homo sapiens, the correct
+                                 # beta-cardiac heavy chain gene), chains A/B
+                                 # (the IHM's two interacting heads); entity 2
+                                 # = Myosin light chain 3 (C/D); entity 3 =
+                                 # Myosin regulatory light chain 2,
+                                 # ventricular/cardiac isoform (E/F).
+    holo_pdb: 6C1H               # Table 1's mandated holo. RCSB-verified live
+                                 # (REST API, 2026-08-19, this task) —
+                                 # independently re-confirms the 2026-07-06
+                                 # finding already on record above, not a new
+                                 # discovery: title "High-Resolution Cryo-EM
+                                 # Structures of Actin-bound Myosin States
+                                 # Reveal the Mechanism of Myosin Force
+                                 # Sensing", 3.9 A cryo-EM. Polymer entity 1 =
+                                 # Actin, alpha skeletal muscle (Oryctolagus
+                                 # cuniculus, chains A-E); entity 2 =
+                                 # **Unconventional myosin-Ib** (Rattus
+                                 # norvegicus, chain P) — a structurally and
+                                 # functionally distinct myosin class from
+                                 # beta-cardiac myosin/MYH7, not merely a
+                                 # different species of the same gene; entity
+                                 # 3 = Calmodulin. Nonpolymer components:
+                                 # ADP, MG only — confirmed no mavacamten
+                                 # (XB2) or any related compound. This
+                                 # structure is not a beta-cardiac myosin
+                                 # motor-domain complex at all; it is an
+                                 # actin-bound myosin-force-sensing study
+                                 # using a different myosin isoform entirely.
+    chains: null
+    apo_chains: ["B"]           # TASK-0124's own historical precedent for
+                                 # 5TBY (its pre-replacement `chains: ["B"]`)
+                                 # — reused unchanged for comparability, not
+                                 # re-derived; either head (A or B) of the
+                                 # IHM dimer is an equally valid single-motor-
+                                 # domain choice, this just matches what the
+                                 # register already used before 8QYP replaced
+                                 # it.
+    holo_chains: ["P"]          # the only chain of 6C1H's myosin-Ib entity.
+    keep_nucleic: false
+    quarantine: false
+    enm_cutoff: 8.0              # unchanged from the incumbent entry — same
+                                 # operator convention, no new constant.
+    pocket_contact_cutoff: 4.5   # unchanged from the incumbent entry.
+    drug_ligand: XB2             # mavacamten — kept as the real target drug,
+                                 # not swapped to something 6C1H happens to
+                                 # contain. Expected, and confirmed (this
+                                 # task's own run), to fail to resolve any
+                                 # pocket label: 6C1H has no XB2. That failure
+                                 # is the reportable result this task's own
+                                 # Constraint calls for, not an error to route
+                                 # around.
+    func_ligand: ["ADP", "ATP"]  # 6C1H does contain ADP (confirmed above) —
+                                 # the active-site SEED can resolve even
+                                 # though the POCKET label cannot; the two
+                                 # failures are independent and this config
+                                 # deliberately does not conflate them.
+    status: verified
+    verified: true
+    confidence: 0.0              # deliberately 0.0, not inherited from the
+                                 # incumbent's 0.90 — this pair's own
+                                 # structural quality (20 A docked homology
+                                 # model apo; holo is the wrong myosin
+                                 # isoform with no target ligand) does not
+                                 # support any confidence score, and this
+                                 # entry must never be silently read as
+                                 # equivalent to the incumbent's.
+    disease: Cardiology
+    target_class: Motor Protein
+    site_name: Mavacamten site (Table 1 mandated pair — not resolvable, see warnings)
+    objective: >
+      Table 1's literal mandated Cardiac Myosin pair, run and disclosed
+      alongside the incumbent CARDIAC_MYOSIN entry (8QYP/8QYR) per
+      TASK-0222. Not expected to resolve a pocket label — 6C1H does not
+      contain mavacamten (XB2) or any compound acting at the same site;
+      see `warnings` below for the live-verified reasoning.
+    warnings:
+      - "TASK-0222, 2026-08-19: live RCSB verification (REST Data API,
+         entry + polymer_entity endpoints for both 5TBY and 6C1H,
+         independent of the CARDIAC_MYOSIN entry's own 2026-07-06 checks)
+         confirms 6C1H contains no mavacamten and is not even a beta-
+         cardiac-myosin (MYH7) structure — its myosin polymer entity is
+         'Unconventional myosin-Ib' (Rattus norvegicus), a different
+         myosin class used in a force-sensing mechanism study, unrelated
+         to the mavacamten/hypertrophic-cardiomyopathy biology this
+         target and Table 1's §6 blind-prediction ask are about. 5TBY
+         remains the 20.0 A docked homology-model apo already documented
+         on the incumbent CARDIAC_MYOSIN entry above (TASK-0124). Running
+         this pair through `run_challenge.py` is expected to fail pocket-
+         label resolution cleanly (`build_labels` returns `pocket=None`
+         when `drug_ligand` isn't found in holo, per `labels.py::
+         holo_pocket_mask`'s own documented contract) — this is the
+         disclosed, reportable finding, not a bug in this config."
+    source: >
+      Table 1, Cleveland Clinic Challenge Statement. Both structures
+      independently RCSB-verified live by TASK-0222 (2026-08-19), not
+      relayed from the incumbent CARDIAC_MYOSIN entry's own earlier
+      (2026-07-06) checks, though the conclusions agree.
+
   MYC_MAX:
     apo_pdb: 1NKP
     holo_pdb: null
