@@ -24,6 +24,15 @@
 > the corrected (UniProt) seed, it does not survive at any tested k. The
 > honest surviving-positive count is now zero, reported as a second
 > instance of the same self-auditing pattern Finding 4 already established.
+>
+> **2026-08-19 update ([[TASK-0183]])**: the real Assessment Criteria
+> document landed (`documentation/2026-04-06-Assessment-Criteria-VF.md`,
+> requested via [[TASK-0221]]) — the 25/25/20/15/5/10 weighting and
+> "Phase 1 = Ideation" premise this whole document is sized against are
+> both **confirmed exactly**, not just assumed. §3's `[TBD]` filled with
+> `documentation/POC_SPRINT_PLAN.md`; §6 filled with the team/role split.
+> Phase 2's own criteria are now known too (previously unavailable) and
+> folded into the sprint plan's own new "Phase 2, now known" section.
 
 ---
 
@@ -212,12 +221,12 @@ Detailed scope, milestones, resources and pre-registered success criteria:
 milestones each with a falsifiable exit criterion, resource requirements
 traced to measured numbers (not estimated), a risk register built from
 this program's own observed failure modes, and an explicit exclusion
-list. **Holding assumption stated there, repeated here**: sized against
-Feasibility = 20% and "Phase 1 scored as ideation," neither of which
-appears in `documentation/Cleveland-Clinic-Challenge-Statement-vF-1.md`
-— the only challenge document in this repo. The two-phase document that
-would confirm them is requested via [[TASK-0221]]; cheap to re-check once
-it lands, not silently assumed correct.
+list. **Sizing confirmed 2026-08-19**: `documentation/2026-04-06-
+Assessment-Criteria-VF.md` (the two-phase document [[TASK-0221]]
+requested) landed and matches this proposal's own weighting exactly —
+Feasibility 20% within the full 25/25/20/15/5/10 spread, Phase 1 titled
+"(Ideation)" in its own heading. Previously flagged as an unverified
+holding assumption; no correction was needed.
 
 ---
 

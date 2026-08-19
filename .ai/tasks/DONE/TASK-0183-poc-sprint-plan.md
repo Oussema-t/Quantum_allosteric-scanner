@@ -21,18 +21,32 @@
   currently no artifact addressing it. Cheap (~1 day) and entirely
   writing/planning; no computation.**
 
-## Holding assumption, stated explicitly ([[Q-0002]], 2026-08-16)
+## Holding assumption, stated explicitly ([[Q-0002]], 2026-08-16) — CONFIRMED 2026-08-19
 
 This task sizes itself against Feasibility = 20% of the Phase-1 score and
 the "Phase 1 is scored as ideation" premise, both inherited from
-[[TASK-0184]]'s own 25/25/20/15/5/10 weighting. **Neither appears in
-`documentation/Cleveland-Clinic-Challenge-Statement-vF-1.md`** — the only
-challenge document present in this repo; the two-phase document that
-would actually contain them is not in the repository and is requested
-from Bartosz in [[TASK-0221]]. Re-check cheaply once it arrives: if Phase
-1 is scored as implementation rather than ideation, this task's own
-"planning only, no computation" scope (see Out Of Scope, below) needs
-revisiting, not just its numbers.
+[[TASK-0184]]'s own 25/25/20/15/5/10 weighting. Neither appeared in
+`documentation/Cleveland-Clinic-Challenge-Statement-vF-1.md` — the only
+challenge document present in this repo at the time — so both were flagged
+as an unverified holding assumption, not silently inherited.
+
+**Now confirmed.** `documentation/2026-04-06-Assessment-Criteria-VF.md`
+(the two-phase document [[TASK-0221]] requested) landed and matches
+exactly: Feasibility 20%, the full 25/25/20/15/5/10 spread, and Phase 1
+titled "(Ideation)" in the document's own section heading. Nothing in this
+task's own scope or [[TASK-0184]]'s narrative needed revision. **New
+information, not previously available at all**: the same document also
+publishes Phase 2's own scoring criteria (PoC Quality & Results 30%,
+Enterprise Relevance 25%, Technical Rigour 20%, Scalability & Path Forward
+15%, Presentation & Communication 10%, self-flagged provisional). Folded
+into `documentation/POC_SPRINT_PLAN.md`'s own new "Phase 2, now known"
+section — three of five criteria already map onto this plan's existing
+shape (PoC Quality's "credible path to advantage" ↔ Month 3's screening
+criterion; Technical Rigour ↔ this plan's own default mode throughout;
+Scalability & Path Forward ↔ Month 1's benchmark-scaling work), stated
+explicitly rather than left as an implicit hope. Enterprise Relevance and
+Presentation & Communication are named as **not** owned by this plan,
+rather than silently assumed covered.
 
 ## Why this matters — this is the criterion the register is best-placed to win
 

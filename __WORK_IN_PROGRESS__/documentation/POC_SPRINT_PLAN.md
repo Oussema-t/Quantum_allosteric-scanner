@@ -8,16 +8,18 @@
 > measured number in the register or a cited external spec — no invented
 > estimates, per this task's own Constraint.
 >
-> **Holding assumption, stated so it is cheap to re-check, not silently
-> inherited** ([[Q-0002]]): this plan is sized against Feasibility = 20% of
-> the Phase-1 score, per [[TASK-0184]]'s own 25/25/20/15/5/10 weighting.
-> Those weights, and the "Phase 1 is scored as ideation" premise this whole
-> plan's own shape depends on (a plan that *describes* rather than
-> *demonstrates*), do not appear in `documentation/Cleveland-Clinic-
-> Challenge-Statement-vF-1.md` — the only challenge document in this repo.
-> The source document is requested in [[TASK-0221]]. If Phase 1 turns out
-> to be scored as implementation rather than ideation, this plan's own
-> shape, not just its numbers, needs revisiting.
+> **Holding assumption from [[Q-0002]], confirmed 2026-08-19** — no longer
+> holding. `documentation/2026-04-06-Assessment-Criteria-VF.md` (the
+> two-phase document [[TASK-0221]] requested) landed and confirms both
+> load-bearing numbers exactly: Feasibility is 20% of Phase 1
+> (25/25/20/15/5/10 across Problem Relevance & Impact / Technical Approach
+> & Innovation / Feasibility / Validation Plan / Hybrid-Cross-Domain / Team
+> Capability), and Phase 1 is titled "(Ideation)" in the document's own
+> heading — a plan that *describes* rather than *demonstrates* is scored
+> against the criterion it was written for. This plan's own shape is
+> unchanged by the confirmation; see "Phase 2, now known" below for what
+> *did* change — the Phase 2 criteria themselves were not previously
+> available at all.
 
 ## What this sprint builds, and what it does not
 
@@ -44,6 +46,47 @@ reported. **If (b) finds a real, apo-detectable hard regime with more than
 today's n=1, that becomes the quantum-candidate route for a later phase.
 Finding the route is this sprint's job, not building a solver for one that
 does not yet exist.**
+
+## Phase 2, now known — the criteria this sprint's own output is scored against
+
+Not available when this plan was first drafted; `documentation/2026-04-06-
+Assessment-Criteria-VF.md` confirms Phase 2 finalists are scored on: PoC
+Quality & Results (30% — "meaningful results... evidence of quantum
+advantage, parity, or a credible path to advantage"), Enterprise Relevance
+(25%), Technical Rigour (20% — sound methodology, appropriate benchmarks,
+reproducible workflow), Scalability & Path Forward (15% — "a credible
+roadmap from PoC to production," scalability constraints "honestly
+assessed"), Presentation & Communication (10%). The document itself flags
+this table as provisional ("subject to change prior to the launch of
+Phase 2") — read as directional, not a fixed target to over-fit against.
+
+Three of five map directly onto this plan's own existing shape and need
+no new milestone, only an explicit line making the mapping visible:
+
+- **PoC Quality & Results' "credible path to advantage"** — this is
+  exactly what Month 3's screening criterion either does or does not
+  produce. If it finds a real, apo-detectable hard regime, *that* is the
+  credible path; if it does not, the honest report of a null result under
+  a pre-registered bar is itself the rigor this criterion (and Technical
+  Rigour, separately) rewards — matching this register's own "an honest
+  NO is a publishable result" convention, not a gap to paper over.
+- **Technical Rigour** — already this plan's own default mode throughout
+  (pre-registered exit criteria, cited resource numbers, the risk
+  register). No new work; Month 3-4's packaging step is where it becomes
+  externally legible.
+- **Scalability & Path Forward** — Month 1's own benchmark-scaling work
+  *is* the scalability story (moving from 13-14 hand-curated targets to a
+  published-benchmark-sourced pool), and the honest constraint list
+  (quantum hardware `FAULT_TOLERANT_ONLY`, [[TASK-0182]]) is the "honestly
+  assessed" half this criterion explicitly asks for, not a weakness to
+  hide from it.
+
+**Enterprise Relevance and Presentation & Communication are not owned by
+this plan.** The first belongs to [[TASK-0184]]'s own problem-framing
+work (Section 1); the second is a delivery-quality property of whatever
+Month 3-4 actually produces, not a separate milestone — noted here so
+neither is silently assumed covered by a milestone that does not actually
+address it.
 
 ## Milestones — month boundaries, falsifiable exit criteria
 
