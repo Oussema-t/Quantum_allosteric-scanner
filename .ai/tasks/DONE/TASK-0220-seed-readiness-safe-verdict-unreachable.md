@@ -222,9 +222,15 @@ this task itself was filed.
 **Not done, and why**: no `MYC_MAX`-specific chain-override was needed
 (loaded cleanly with its existing `chain="A"` config, all 3 active-site
 residues resolved) — `verified=False` extension turned out to be free,
-not a separate effort. `GLUCOKINASE`'s underlying chain-config bug stays
-[[TASK-0219]]'s to fix, not duplicated here (same manual workaround
-TASK-0033 used, noted not silently repeated without reference).
+not a separate effort. The `GLUCOKINASE` table row above was run with a
+manual `chain="A"` override (matching TASK-0033's own earlier workaround)
+because [[TASK-0219]] was still `IN_PROGRESS` at the time this task's own
+validation script ran; [[TASK-0219]] landed properly (`Done`) later the
+same session, adding a real per-role `apo_chain`/`holo_chain` field
+(`systems.py`'s `apo_chain="A"` for `GLUCOKINASE`) — the number itself is
+unaffected (same chain, same structure) but a re-run today would use that
+field directly rather than the manual override; not re-run here since
+nothing about the actual measurement changes.
 
 **Validation**: `python -m pytest backend/` — 37 passed (was 36 before
 this task's one new test), no regressions. All 6 targets + the synthetic
