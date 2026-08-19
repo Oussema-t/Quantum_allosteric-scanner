@@ -87,7 +87,12 @@ Liveness. No auth. → `{"status":"ok","service":"quantum-allosteric-scanner"}`
 
 ### `GET /api/targets`
 Benchmark systems for the dropdown. →
-`{"targets":[{name, disease, target_class, site_name, apo, holo, holo_challenge, chain, active_site[], verified}]}`
+`{"targets":[{name, disease, target_class, site_name, apo, holo, holo_challenge, chain, apo_chain, holo_chain, active_site[], verified}]}`
+(TASK-0219, 2026-08-19: added `apo_chain`/`holo_chain` — `chain` alone is
+ambiguous for targets whose apo and holo structures use different chain
+letters for the same biological chain, e.g. GLUCOKINASE, apo 1V4S chain A
+vs. holo 3H1V chain X. `chain` is unchanged/still present for back-compat;
+frontend now prefills the apo-load chains field from `apo_chain`.)
 
 ### `POST /api/load`
 Load a structure for visualization (+ optional apo completion).

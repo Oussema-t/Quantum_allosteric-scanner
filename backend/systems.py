@@ -3,6 +3,13 @@ Validated benchmark metadata — ported verbatim from the research notebook (§1
 
 Schema
 ------
+chain          : shared chain letter(s), used for both apo and holo unless overridden.
+apo_chain / holo_chain : TASK-0219 -- optional per-role override for targets whose
+                 apo and holo structures use different chain letters for the same
+                 biological chain; falls back to `chain` when absent (every target
+                 that only sets `chain` is unaffected). Mirrors
+                 __WORK_IN_PROGRESS__/config/targets.yaml's `apo_chains`/
+                 `holo_chains` pattern (TASK-0127).
 active_site    : functional/catalytic residues we SEED signal from (no leakage).
 pocket_full    : full validated allosteric pocket, per contact cutoff (Angstrom).
 pocket_distal  : distal-only subset (blind distal-discovery test).
@@ -169,8 +176,14 @@ SYSTEMS = {
         verified=True,
         notes="BB allosteric site ~20 A from catalytic Cys215 -> CLEAN distal case."),
 
+    # TASK-0219: apo (1V4S) and holo (3H1V) disagree on which letter maps to
+    # the same biological chain -- verified directly (chain_summary: 1V4S
+    # has only chain A, 3H1V has only chain X). `chain="X"` below is
+    # holo-correct; `apo_chain` overrides it for the apo role only, mirroring
+    # __WORK_IN_PROGRESS__/config/targets.yaml's `apo_chains`/`holo_chains`
+    # pattern (TASK-0127, same underlying fact, other tree).
     "GLUCOKINASE": dict(
-        apo="1V4S", holo="3H1V", chain="X",
+        apo="1V4S", holo="3H1V", chain="X", apo_chain="A",
         disease="Metabolic/Diabetes", target_class="Kinase",
         site_name="GKA allosteric site",
         holo_ligand="TK1", holo_ligand_name="Glucokinase activator (GKA)",
@@ -227,9 +240,16 @@ def resolve_systems(pocket_mode="full", scoring_cutoff=8.0):
         top5 = c.get("top5_distal") if pocket_mode == "distal" else c.get("top5_full")
         c.setdefault("cutoff", scoring_cutoff)
         c["holo_challenge"] = c.get("holo")
+        # TASK-0219: per-role chain resolution -- `apo_chain`/`holo_chain`
+        # override the shared `chain` field when a target sets them (e.g.
+        # GLUCOKINASE), else both fall back to `chain` unchanged (every
+        # target that only sets `chain` resolves identically to before).
+        c["apo_chain"] = c.get("apo_chain", c.get("chain"))
+        c["holo_chain"] = c.get("holo_chain", c.get("chain"))
         if c.get("holo_validation"):
             c["holo"] = c["holo_validation"]
             if c.get("holo_validation_chain"):
+                c["holo_chain"] = c["holo_validation_chain"]
                 c["chain"] = c["holo_validation_chain"]
         c["catalytic"] = list(c.get("active_site", []))
         anchor = c.get("covalent_anchor")

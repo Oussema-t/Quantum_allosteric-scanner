@@ -139,7 +139,7 @@ def find_holo_candidates(apo_pdb, target_name=None, max_detail=12):
             out["benchmark_holo"] = {
                 "holo": cfg.get("holo"), "holo_challenge": cfg.get("holo_challenge"),
                 "ligand": cfg.get("holo_ligand"), "ligand_name": cfg.get("holo_ligand_name"),
-                "chain": cfg.get("chain")}
+                "chain": cfg.get("holo_chain")}
 
     unis = get_uniprot(apo_pdb)
     if not unis:

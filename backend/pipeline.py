@@ -82,7 +82,7 @@ def build_view(pdb_id, chains="A", source_residues=None, target_name=None,
     if complete:
         from .discovery import complete_apo
         use_holo = holo_pdb or (cfg.get("holo") if cfg else None)
-        use_holo_chain = holo_chain or (cfg.get("chain") if cfg else None) or chains
+        use_holo_chain = holo_chain or (cfg.get("holo_chain") if cfg else None) or chains
         if not use_holo:
             raise ValueError("completion requested but no holo structure available")
         st, completion = complete_apo(pdb_id, chains, use_holo, use_holo_chain)

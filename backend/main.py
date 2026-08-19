@@ -106,6 +106,8 @@ def targets():
             "holo": c.get("holo"),
             "holo_challenge": c.get("holo_challenge"),
             "chain": c.get("chain"),
+            "apo_chain": c.get("apo_chain"),
+            "holo_chain": c.get("holo_chain"),
             "active_site": c.get("catalytic"),
             "verified": c.get("verified", False),
         })

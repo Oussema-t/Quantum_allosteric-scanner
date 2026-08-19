@@ -163,6 +163,23 @@ roadmap linkage (or flagged as unclear): [`.ai/reviews/PRODUCT_INTENT_MAP.md`](.
 Newest first; one line per change, **dated + signed** so teammates can see what changed
 when: `- YYYY-MM-DD · <name> · <summary>`. See [COLLABORATION.md](COLLABORATION.md).
 
+- 2026-08-19 · Implementer B · `backend/systems.py`'s GLUCOKINASE had a
+  live bug (TASK-0219, found incidentally during TASK-0033): apo (1V4S,
+  chain A) and holo (3H1V, chain X) disagree on the chain letter, but the
+  single `chain="X"` field was used for both, so `data_layer.load_structure
+  ("1V4S", "X")` returned `None` — the live backend could not score this
+  target's apo structure at all. Fixed by porting
+  `__WORK_IN_PROGRESS__/config/targets.yaml`'s already-proven
+  `apo_chains`/`holo_chains`-with-shared-fallback pattern (TASK-0127) into
+  `systems.py`: new optional `apo_chain`/`holo_chain` override fields,
+  `resolve_systems()` computes both, falling back to `chain` unchanged for
+  every other target (audited live: GLUCOKINASE is the only mismatch among
+  all 6 `SYSTEMS` targets). `GET /api/targets` gains `apo_chain`/
+  `holo_chain` response fields (`chain` kept, back-compat); `backend/
+  pipeline.py`/`discovery.py` call sites updated to read the correct role;
+  frontend `app.js`'s target-select prefill now uses `apo_chain`. New
+  `backend/test_systems.py` (5 tests, real RCSB data). No response-shape
+  break — ADD-only.
 - 2026-08-14 · Implementer C · `backend/analysis.py::_bootstrap_floor` (feeding `seed_readiness_shift`, used by `GET /api/connectivity-change`) fixed a real perf bug found while measuring TASK-0035's own suspected-but-unmeasured risk: its 200-iteration bootstrap loop recomputed `_abs_coupling`'s O(N³) dynamic-cross-correlation matrix product on every iteration despite it not depending on which residues were sampled. Precomputed once per call instead; same `rng.choice` draw sequence, so output is unchanged (verified bit-for-bit, KRAS_G12C + CARDIAC_MYOSIN). Measured 13.7x speedup on the largest benchmark target (CARDIAC_MYOSIN, N=950: 13.4s → 0.98s), 10.6x on KRAS_G12C. `site_potentials` — the task's other original suspect — measured fine as-is (0.27s), no change. New `TestSeedReadinessShiftCharacterization` in `test_analysis_characterization.py` (this endpoint's own bootstrap-derived numbers had no prior regression coverage at all). No response-shape change.
 - 2026-08-03 · Implementer B · Flagged (not fixed) a genotype error propagating out of the research register into the live app: `backend/systems.py`'s `KRAS_G12C` entry ships `apo="4OBE"` with `covalent_anchor=12`/`top5_full_named=["CYS12",...]`, but 4OBE is wild-type KRAS (chain A residue 12 is GLY, re-verified directly), not G12C — found by `__WORK_IN_PROGRESS__`'s TASK-0155 and independently re-confirmed. Added a dated code comment recording the apo/label mismatch as a real, unresolved inconsistency (not a defensible modelling choice as shipped); no apo swap, no response-shape change — that is a register-wide re-run, explicitly out of scope here. `SOFTWARE.md`'s benchmark table and `__WORK_IN_PROGRESS__/config/targets.yaml`/`COMPETENCE_MAP.md` carry the same flag (TASK-0192).
 - **[Retroactive entry, backfilled 2026-08-03 by TASK-0194 — written five weeks after the fact, not at commit time; see that task for why.]** 2026-07-12 · Implementer · New `backend/analysis.py::coherence_sensitivity`-adjacent test coverage: `test_analysis_characterization.py` pins current live output of `gnm_context`/`site_potentials`/`quantum_seed_readiness`/`connectivity_change` before any future convergence work touches them (TASK-0074). No behavior change.

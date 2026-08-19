@@ -57,7 +57,11 @@ function onTargetChange(autoload = false) {
   const t = TARGETS.find((x) => x.name === $("target").value);
   if (!t) { setHoloAvailability(true); return; }
   $("pdb").value = t.apo || "";
-  $("chains").value = t.chain || "A";
+  // TASK-0219: prefer the apo-specific chain (falls back to the shared
+  // `chain` field for every target that doesn't override it) -- some
+  // targets (e.g. GLUCOKINASE) use a different chain letter for apo vs.
+  // holo, and `chain` alone is the holo-oriented value for those.
+  $("chains").value = t.apo_chain || t.chain || "A";
   $("source").value = "";  // let the backend resolve (benchmark/UniProt) + label it
   activeSiteUserEdited = false;
   activeSitePdb = null;
