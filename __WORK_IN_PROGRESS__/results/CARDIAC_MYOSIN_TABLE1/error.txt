@@ -1,0 +1,8 @@
+CARDIAC_MYOSIN_TABLE1: FAILED
+
+Traceback (most recent call last):
+  File "/Users/bartoszchmura/DELETE/QAS/Quantum_allosteric-scanner/__WORK_IN_PROGRESS__/scripts/run_challenge.py", line 353, in run_target
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: no resolvable drug_ligand for 'CARDIAC_MYOSIN_TABLE1' -- build_labels returned pocket=None, cannot score a pocket label

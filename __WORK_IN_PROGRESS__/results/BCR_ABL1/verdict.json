@@ -1,0 +1,79 @@
+{
+  "AUC_apo_Hnew_default": 0.5408045977011494,
+  "AUC_apo_H10_baseline": 0.5204022988505748,
+  "AUC_apo_Hnew_optimised": 0.5408045977011494,
+  "AUC_ctqw_mean": 0.5408045977011494,
+  "AUC_heat_mean": 0.6635057471264367,
+  "most_impactful_term": "V_B",
+  "least_impactful_term": "V_C",
+  "_diagnosis": "NO_SIGNAL_IN_APO",
+  "_diagnosis_score_ci": [
+    0.5408045977011494,
+    0.37514533737625716,
+    0.6885592807305562
+  ],
+  "_diagnosis_floor_ci": [
+    0.5030890804597701,
+    0.3500679332333412,
+    0.6377257445029282
+  ],
+  "_diagnosis_ci_overlap": true,
+  "_winner_index": 0,
+  "_winner_score": 2.9999998219608974,
+  "_leak_check": {
+    "auc_true": 0.5408045977011494,
+    "perm_mean": 0.5002873563218391,
+    "perm_ci": [
+      0.4170186781609196,
+      0.628139367816092
+    ],
+    "n_perm": 10,
+    "threshold": 0.6,
+    "leak_detected": false
+  },
+  "_learnability_verdict": "LEARNABLE",
+  "_learnability": {
+    "n_common_correspondence": 429,
+    "alignment_rmsd_overall": 0.9795285445893231,
+    "n_pocket_residues": 16,
+    "n_pocket_unmeasurable": 0,
+    "n_background_residues": 413,
+    "co_curve_at_n_modes": 20,
+    "co_curve": [
+      0.0033217768375139547,
+      0.06541710919563769,
+      0.09444296213074185,
+      0.09778350414882202,
+      0.10233236536313271,
+      0.10383888056952309,
+      0.1283837290290235,
+      0.12978821976099916,
+      0.1300370996993889,
+      0.1305961030514701,
+      0.13512174823135725,
+      0.13956796237898766,
+      0.14109701335052294,
+      0.14182684679399024,
+      0.16038374739294062,
+      0.16063968675167906,
+      0.16192223605402797,
+      0.17131507448874053,
+      0.17371504706119023,
+      0.17517856941430768
+    ],
+    "co_blocked_reason": null,
+    "verdict": "LEARNABLE",
+    "pocket_rmsd_mean": 0.36167890644792117,
+    "background_rmsd_mean": 0.7336566376282951,
+    "rmsd_ratio": 0.4929811684347694,
+    "rmsd_much_greater": false,
+    "co_final": 0.17517856941430768,
+    "co_low": true,
+    "rmsd_ratio_threshold": 1.5,
+    "co_threshold": 0.5,
+    "co_percentile": null,
+    "significance_alpha": 0.05,
+    "ambiguous": false
+  },
+  "_frozen_stamp": "e2c8b6743a025e73cc8fe2d69d630049"
+}

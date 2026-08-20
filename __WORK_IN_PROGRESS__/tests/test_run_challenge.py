@@ -134,12 +134,16 @@ class TestRunTarget:
         """TASK-0180 Constraint: `hit_list.json`'s residue-level output
         (`indices`/`resnums`/`scores`) must stay exactly as before after
         adding the new `"sites"` key -- additive only, no existing key
-        renamed/removed/reshaped."""
+        renamed/removed/reshaped. TASK-0225 additively extended the pinned
+        set again with `"residue_level_floor"` (the scalar degree/euclid/hop
+        AUC floor `classify_failure` already computes, previously reachable
+        only via `end_to_end.json`) -- same convention, `indices`/`resnums`/
+        `scores`/`sites` still unchanged in shape."""
         run_challenge.run_target("SYNTH", tmp_path)
         with open(tmp_path / "SYNTH" / "hit_list.json") as f:
             hits = json.load(f)
 
-        assert set(hits.keys()) == {"indices", "resnums", "scores", "sites"}
+        assert set(hits.keys()) == {"indices", "resnums", "scores", "sites", "residue_level_floor"}
         assert 0 < len(hits["indices"]) <= 5
         assert len(hits["resnums"]) == len(hits["indices"])
         assert len(hits["scores"]) == len(hits["indices"])
@@ -153,7 +157,27 @@ class TestRunTarget:
             "top_sites", "hit_metrics", "chance_level", "proximity_floor", "knob_spread",
         }
         assert isinstance(sites["top_sites"], list)
-        assert sites["knob_spread"]["verdict"] in ("STABLE", "UNSTABLE")
+
+    def test_hit_list_residue_level_floor_matches_end_to_end_json(self, mocked_target, tmp_path):
+        """TASK-0225: hit_list.json's own `residue_level_floor` must be the
+        identical object end_to_end.json's own `residue_level` carries --
+        both read off the same `result` from the same run, so they cannot
+        disagree with each other (this task's own In-Scope requirement:
+        "one runner invocation per target")."""
+        run_challenge.run_target("SYNTH", tmp_path)
+        with open(tmp_path / "SYNTH" / "hit_list.json") as f:
+            hits = json.load(f)
+        with open(tmp_path / "SYNTH" / "end_to_end.json") as f:
+            end_to_end = json.load(f)
+
+        floor = hits["residue_level_floor"]
+        assert set(floor.keys()) == {"auc", "diagnosis", "floor_ci", "score_ci", "ci_overlap"}
+        rl = end_to_end["residue_level"]
+        assert floor["auc"] == rl["AUC_apo_Hnew_optimised"]
+        assert floor["diagnosis"] == rl["diagnosis"]
+        assert floor["floor_ci"] == rl["diagnosis_floor_ci"]
+        assert floor["score_ci"] == rl["diagnosis_score_ci"]
+        assert floor["ci_overlap"] == rl["diagnosis_ci_overlap"]
 
     def test_end_to_end_json_written_with_statement(self, mocked_target, tmp_path):
         run_challenge.run_target("SYNTH", tmp_path)

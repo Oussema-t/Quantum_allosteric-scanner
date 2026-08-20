@@ -472,11 +472,28 @@ def run_target(target_name: str, output_dir: Path) -> dict:
             f"{len(site_result['top_sites'])} site(s), knob_spread={knob_spread['verdict']}"
         )
 
+        # TASK-0225: the residue-level proximity floor (degree/euclid/hop
+        # baseline, via classify_failure -- already computed above as part
+        # of `result`, not recomputed here) was reachable only via
+        # `end_to_end.json`'s own `residue_level` key, written further
+        # below. A top-5 hit list with no floor next to it is exactly the
+        # defect this register criticises in the `main` branch demo --
+        # attached here too, additive, same run, so the two files cannot
+        # disagree (both read the identical `result` object).
+        residue_level_floor = {
+            "auc": result.get("AUC_apo_Hnew_optimised"),
+            "diagnosis": result.get("_diagnosis"),
+            "floor_ci": result.get("_diagnosis_floor_ci"),
+            "score_ci": result.get("_diagnosis_score_ci"),
+            "ci_overlap": result.get("_diagnosis_ci_overlap"),
+        }
+
         target_dir.mkdir(parents=True, exist_ok=True)
         np.savez(target_dir / "connectivity_matrix.npz", matrix=matrix, resnums=apo.resnums)
         np.savez(target_dir / "quantum_connectivity_matrix.npz", matrix=q_matrix, resnums=apo.resnums)
         with open(target_dir / "hit_list.json", "w") as f:
             json.dump({
+                "residue_level_floor": residue_level_floor,
                 "indices": hits["indices"].tolist(),
                 "resnums": hits["resnums"].tolist() if hits["resnums"] is not None else None,
                 "scores": hits["scores"].tolist(),

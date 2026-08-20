@@ -1,0 +1,23 @@
+=== MYC_MAX -- NO GROUND TRUTH ===
+
+No AUC, no ceiling, and no proximity-floor check are computed or
+reported for this target: no holo/bound structure exists for this allosteric question. This is this target's own
+documented status (config/targets.yaml), not a scoring failure or
+an omission -- per this project's own convention, an honest NO is
+reported explicitly, not silently dropped.
+
+Consensus prediction across 4 independent operators (H_new_default, H10_disorder_suppressed, H2_combinatorial_laplacian, H14_anm_pinv_trace), top-5:
+  1. residue 943 -- 4/4 operators agree (top-5), mean occupancy=0.0698
+  2. residue 246 -- 3/4 operators agree (top-5), mean occupancy=0.0599
+  3. residue 925 -- 3/4 operators agree (top-5), mean occupancy=0.0494
+  4. residue 226 -- 2/4 operators agree (top-5), mean occupancy=0.0413
+  5. residue 243 -- 2/4 operators agree (top-5), mean occupancy=0.0405
+
+Confidence: high -- at least one residue appears in all 4 operators' own top-5, independent of any labeled pocket
+
+Theoretical docking viability (fpocket):
+  pocket 1: score=0.305, druggability_score=0.161
+  pocket 2: score=0.112, druggability_score=0.023
+  pocket 3: score=0.091, druggability_score=0.007
+  pocket 4: score=0.081, druggability_score=0.158
+  pocket 5: score=0.054, druggability_score=0.0

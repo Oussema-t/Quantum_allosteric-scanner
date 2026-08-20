@@ -1,0 +1,29 @@
+========================================================================
+HEADLINE VERDICT
+========================================================================
+[NOTE] AUC values below use the decoherent/time-averaged CTQW limit (a spectral overlap between source and residue eigenvector components), not a coherent quantum-walk snapshot -- all phase information is averaged out by construction. See TASK-0097 / REVIEW-2026-07-13 finding P2-B.
+
+  AUC_apo_Hnew_default           : 0.541
+  AUC_apo_H10_baseline           : 0.520
+  AUC_apo_Hnew_optimised         : 0.541
+  AUC_holo_Hnew_optimised        : N/A
+  AUC_ctqw_mean                  : 0.541
+  AUC_heat_mean                  : 0.664
+  most_impactful_term            : V_B
+  least_impactful_term           : V_C
+  mean_rho_apo_holo              : N/A
+  mean_jacc20                    : N/A
+  coherence_auc_range            : N/A
+  coherence_auc_at_gamma0        : N/A
+  coherence_classification       : N/A
+
+  _diagnosis                     : NO_SIGNAL_IN_APO
+  score 95% CI                   : 0.541  [0.375, 0.689] (95% block-bootstrap CI)
+  floor 95% CI                   : 0.503  [0.350, 0.638] (95% block-bootstrap CI)
+  CIs overlap?                   : YES -- statistically indistinguishable from the floor at this confidence level
+
+DECISION-SUPPORT RECOMMENDATION
+--------------------------------
+1) Operator gain over H10 baseline (apo): DAUC = +0.020  (marginal).
+2) CTQW vs ground-state relaxation on H_new (same operator, not a classical-diffusion comparison -- see TASK-0095): DAUC = -0.123  (within graph-kernel noise -- CTQW does NOT add biological information beyond the operator).
+3) Most/least impactful potential terms: most = V_B, least = V_C.
