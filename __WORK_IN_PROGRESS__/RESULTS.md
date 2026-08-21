@@ -6223,6 +6223,8 @@ Full detail: `.ai/tasks/DONE/TASK-0172-spectrum-preserving-reduction.md`
 
 | 75 | Table 1 mandates Cardiac Myosin's pair as 5TBY→6C1H; this register uses 8QYP→8QYR (TASK-0124's substitution, on data-quality grounds it established independently). Run and disclose **both**, apply TASK-0209's VALID rule to the mandated pair too, and verify the 6C1H mavacamten-absence claim live rather than citing the register. | **resolved 2026-08-19: the mandated pair cannot be scored at all — not merely INVALID under TASK-0209's rule, but structurally unable to reach a verdict, confirmed via two independent code paths.** New `config/targets.yaml` entry `CARDIAC_MYOSIN_TABLE1` (5TBY apo chain B / 6C1H holo chain P — additive, incumbent `CARDIAC_MYOSIN` entry untouched, every historical number stays conditioned on 8QYP/8QYR). **Wiring check**: re-ran the incumbent pair fresh — `NO_SIGNAL_IN_APO` reproduces exactly (TASK-0124's own diagnosis); point-estimate AUCs drift slightly (0.548 vs. 0.518 actual) from legitimate intervening pipeline changes (TASK-0177's consensus pocket labels landed after TASK-0124), not a wiring defect. **6C1H verified live** (RCSB REST Data API, entry + polymer_entity endpoints, independent of the existing 2026-07-06 record — corroborates, does not merely repeat it): confirmed no mavacamten (nonpolymer components ADP/MG only) **and a stronger fact than previously on record — 6C1H is not even a beta-cardiac-myosin (MYH7) structure.** Its myosin polymer entity is "Unconventional myosin-Ib" (*Rattus norvegicus*), from an actin-bound myosin-force-sensing mechanism paper, structurally and functionally unrelated to the mavacamten/hypertrophic-cardiomyopathy biology this target is about. 5TBY re-confirmed as the existing record already had it: 20.0 Å docked SWISS-MODEL homology model fitted to an EM reconstruction (EMD-2240), zero ligands. **Mandated pair run twice, through independent methodologies, both fail cleanly**: (1) `run_challenge.py` — `build_labels` returns `pocket=None` (`labels.py::holo_pocket_mask`'s documented "ligand not found" contract), `RuntimeError`, only `error.txt` written (no connectivity matrix, no hit list — nothing to compute); (2) `task0204_positive_control.run_target` (the machinery TASK-0209's VALID rule is built on) — independently returns `{"error": "no resolvable holo-frame pocket label"}` via its own separate `_holo_native_labels` code path. **New finding beyond the mavacamten-absence fact**: even the fallback active-site anchor (`func_ligand: ["ADP","ATP"]`) fails for an independent reason — 6C1H's only ADP/MG sit on the actin chains (A–E), not the myosin-Ib chain (P), so there is no nucleotide-pocket ligand on the myosin component at all in this deposition; both the pocket and the active-site fallback collapse to the same topological (top-5-highest-degree) proxy, which the pipeline's own `pocket & ~active_site` exclusion then correctly empties out (`pocket.sum()==0`) rather than silently reporting a spurious result. **Practical conclusion for [[TASK-0184]]**: report both pairs. Incumbent (8QYP/8QYR) — runs, `NO_SIGNAL_IN_APO`, INVALID under TASK-0209. Mandated (5TBY/6C1H) — cannot be scored under any methodology tried; two independent, unrelated structural defects (wrong drug, wrong myosin isoform) both block it. Neither pair supports Table 1 §6's blind apo→holo mavacamten-pocket prediction — a stronger and more decisive statement than "both invalid," since the mandated pair never reaches a defined contrast to be invalid *about*. | [[TASK-0222]], [[TASK-0124]], [[TASK-0209]], [[TASK-0192]] |
 
+| 76 | Ref [9] (Gunasekaran, Ma & Nussinov 2004, *Proteins* 57:433 — cited by the challenge's own bibliography) argues there is no clean class of "non-allosteric" surface sites, attacking the negative class every AUC in this program assumes. Does this change how the program's own "zero confirmed positives" finding (TASK-0161/TASK-0199) should be read, and do metrics that degrade more gracefully under a contaminated negative class (rank-of-known-site, enrichment-at-k) tell a different story on the headline cells? | **resolved 2026-08-21: citation verified directly (title/journal/volume/pages/PMID/DOI all match); the alternative metrics do not rescue the result — they make it more concrete — but the negative-class concern still forces a real, stated change in how the program's own zero-positives claim may be phrased.** New `metrics.rank_of_known_site` (rank of each labelled-positive residue in the full descending score ordering, average-rank tie handling; `enrichment_at_k` already existed). Recomputed on the 3 mandatory targets' headline cells (H_new, live pipeline, same `run_frozen_verdict` code path the submission's own headline numbers use — a wiring-check cross-validation, not a new scoring method): KRAS_G12C AUC 0.557 (best pocket residue ranks 7/169, median 82), BCR_ABL1 AUC 0.541 (rank 125/451, median 176), CARDIAC_MYOSIN AUC 0.549 (rank 107/704, median 279) — **enrichment@5 = 0.00 on all three: zero of the top-5 residues in this project's own reported hit list are real pocket residues, on every mandatory target.** AUC point estimates drift slightly from the submission draft's previously-cited 0.5901/0.5266/0.5176 (expected — [[TASK-0177]]'s consensus-label refinement landed between the two runs, not a new disagreement). **The consequence for the multiplicity budget is on interpretation, not arithmetic**: TASK-0161/TASK-0199's 226-cell count, ~2 expected false positives after the ~9× redundancy correction, and zero observed are all counting facts, independent of negative-class quality. What ref [9] puts in question is whether that zero may be read as "we have shown there is no signal" — it may not: a contaminated negative class is an equally consistent explanation for the same zero (reduced statistical power from noisy negatives), and this program's methodology cannot currently distinguish the two. Limitations text drafted accordingly: state the result as "no method tested here found a statistically robust signal," not as proof of absence. | [[TASK-0229.001]], [[TASK-0229]], [[TASK-0161]], [[TASK-0199]] |
+
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
 (or `.ai/tasks/TODO/` if not yet closed — check `.ai/COMMON.md`'s registry
@@ -6790,3 +6792,54 @@ budget" (that table's scope is real-label AUC/p-value comparisons; confound-stru
 correlations and synthetic-signal negative controls are both outside its own stated
 definition), logged here per the drop's own request. Full numbers, methodology, and
 bug-catches: `.ai/tasks/DONE/TASK-0226-observable-family-proximity-confound-pdb-retest.md`.
+
+## ANM reachability ceiling + scorer-brittleness control — ceiling fails on all 3 real targets, robustly ([[TASK-0230]], 2026-08-21)
+
+[[TASK-0227]]'s own §5.2 (oracle-supervised reachability ceiling) and §5.3
+(scorer-brittleness interpolation), deferred there for a tooling reason that turned
+out to be wrong (EvoEF2/fpocket are both vendored, `tools/evoef2/`, `tools/fpocket/`) —
+run here on the same 3 real target pairs, reusing `allostery.superpose`'s own
+Kabsch+ANM machinery and [[TASK-0204]]'s own EvoEF2/fpocket wiring, not re-derived.
+Per this task's own Intent Contract, the repacker is EvoEF2's `SideChainRepack`
+(real simulated annealing) — a heuristic ceiling, honestly downgraded from the
+source's own DEE/A*/Rosetta global-optimum spec, which is not installed here.
+
+**§5.2 — fails on all 3 targets, every trial, robust to EvoEF2's own stochastic
+seeding** (fpocket `druggability_score`, [[TASK-0204]]'s own ≥0.5 bar; the true
+apo→holo displacement projected onto only the top-50 static ANM modes, applied as a
+rigid per-residue Cα translation, pocket window then repacked):
+
+| target | native apo | true holo (same window) | projected + repacked (all independent trials) |
+|---|---|---|---|
+| KRAS_G12C | 0.001 | 0.886 | 0.0, 0.0, 0.01 |
+| BCR_ABL1 | 0.566 | 0.356 | 0.026, 0.335, 0.031, 0.165, 0.159, 0.0 (6 trials, range 0.0–0.335) |
+| CARDIAC_MYOSIN | 0.001 | 0.166 | 0.017, 0.095 |
+
+None cross 0.5, on any trial. **Unregistered but directly relevant**: `true_holo`
+itself only clears the bar for KRAS_G12C (0.886) — BCR_ABL1 (0.356) and
+CARDIAC_MYOSIN (0.166) don't, even at the real crystallized structure, and
+BCR_ABL1's untouched native apo (0.566) actually scores *higher* than its own holo.
+fpocket's druggability score is not reliably tracking these 2 targets' real pockets
+at this window at all, ceiling aside.
+
+**§5.3 — confirmed, richer than the source's own binary framing.** 20-step linear
+apo→holo interpolation (same rigid per-residue approximation, no repacking), scored
+per step. The pre-registered proxy (`<3 of 19 mid-steps land between apo/holo scores
+→ flat-then-cliff`) mislabeled KRAS_G12C's own raw curve — flat at ≈0.001 for 8
+steps, then a single-step jump to 0.777, then noisy-high — the textbook cliff shape,
+missed because the proxy only checks endpoint bracketing, not transition shape (own
+limitation, stated up front in the Intent Contract, confirmed by the data). BCR_ABL1
+shows a front-loaded drop (0.566→≈0.2 within 4 steps, noisy-low the rest of the way,
+proxy agreed). CARDIAC_MYOSIN never registers a pocket above 0.017 across all 20
+steps — apo/holo endpoints (0.001/0.005) are both noise-floor, a third mode
+(non-responsiveness) neither label describes; proxy's "pass" here is not meaningful.
+**fpocket's druggability score is not a safe optimization objective on any of the 3
+real targets, regardless of which shape a given target shows.**
+
+Both results point the same direction as the source document's own §6.1 diagnosis
+(local backbone rearrangement, spanned by neither collective ANM modes nor
+side-chain repacking, is what's missing) — a second, independent line of evidence,
+not a contradiction of [[TASK-0227]]'s own §5.1 (collective motion IS reachable).
+Full tables, per-step curves, and the chain-relabeling bug found and fixed en route
+(latent in [[TASK-0204]]'s own original function too, not fixed there):
+`.ai/tasks/DONE/TASK-0230-anm-ceiling-and-scorer-brittleness.md`.
