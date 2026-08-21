@@ -257,4 +257,4 @@ to `src/allostery/*`.
 
 Full detail: `RESULTS.md`'s own "Mechanism-validated allosteric ground
 truth: PTP1B, Phase 1" section; `scripts/mechanism_validated_ptp1b.py`;
-`results_task0170_mechanism_validated/ptp1b_mechanism_validated.json`.
+`results/tasks/0170_mechanism_validated/ptp1b_mechanism_validated.json`.

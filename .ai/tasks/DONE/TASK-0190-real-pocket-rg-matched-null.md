@@ -268,7 +268,7 @@ patched here.
 | `T(E=0)` on `L` | BCR_ABL1 | 0.01667 | 0.331 | **No** |
 
 Full scattered/compact/matched table (all `k_modes in {5,10,15,20}` for
-`dcc_low`): `results_task0190_rg_matched_null/rg_matched_null_rerun.json`.
+`dcc_low`): `results/tasks/0190_rg_matched_null/rg_matched_null_rerun.json`.
 
 **§5.3's falsification statement DOES fire**: `dcc_low` loses significance
 on both CARDIAC_MYOSIN and PTP1B under the matched null. Reasoning for why

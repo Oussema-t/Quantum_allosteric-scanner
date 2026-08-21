@@ -188,7 +188,7 @@ None
   `scripts/hardware_resource_accounting.py` (Steps 1-3),
   `scripts/hardware_feasibility_verdict.py` (Steps 4-5),
   `noise.time_sampled_converged_occupation` (new, tested, ADD-only),
-  `results_task0182_hardware_resource_accounting/{results.json,
+  `results/tasks/0182_hardware_resource_accounting/{results.json,
   feasibility_verdict.json}`.
 
   **Environment / scope decisions, made with the user before starting

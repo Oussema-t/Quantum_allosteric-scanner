@@ -121,7 +121,7 @@ distinction explicitly in `RESULTS.md`.
 - [x] Real run: all mandatory + ASD, AUC vs floor, block-bootstrap CIs.
 - [x] Distance-stratified AUC + permutation null ([[TASK-0123]]/[[TASK-0131]]).
 - [x] Bonferroni; emit PASS/FAIL/INSUFFICIENT per target, tagged.
-- [x] `results_task0140_chiral/` + `RESULTS.md` section; naive + corrected.
+- [x] `results/tasks/0140_chiral/` + `RESULTS.md` section; naive + corrected.
 
 ## Dependency
 

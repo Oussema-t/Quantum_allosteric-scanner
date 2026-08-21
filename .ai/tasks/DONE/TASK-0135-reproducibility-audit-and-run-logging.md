@@ -169,7 +169,7 @@ fresh RCSB fetch where applicable):
    3 fresh repeats: `gap=0.032949006294881435` exactly, every time
    (`scripts/reproducibility_audit.py --target BCR_ABL1 --repeats 3`,
    logged via the new `RunLogger` to
-   `results_task0135/BCR_ABL1/spectral_gap_audit.jsonl`).
+   `results/tasks/0135/BCR_ABL1/spectral_gap_audit.jsonl`).
    **Then tested the specific hypothesized mechanism directly**:
    `OMP_NUM_THREADS`/`OPENBLAS_NUM_THREADS`/`MKL_NUM_THREADS` varied
    `1/2/4/8` (one fresh process per setting) — real variation exists,
@@ -181,7 +181,7 @@ fresh RCSB fetch where applicable):
    random, `ceiling_search_batched.py`). 3 independent full 60-trial
    runs: one from [[TASK-0116]]'s own work the prior session
    (2026-07-18), two fresh today in separate checkpoint directories
-   (`results_task0135/repro_check_A`, `repro_check_B`) — deliberately
+   (`results/tasks/0135/repro_check_A`, `repro_check_B`) — deliberately
    *not* resumed from a shared checkpoint, each a genuinely independent
    60-trial computation. All three: identical best trial,
    `S=0.4735`, identical winning `params` dict down to the last
@@ -263,7 +263,7 @@ describable.
 **Adopted in a real script**: new `scripts/reproducibility_audit.py` —
 the actual tool that produced this task's spectral-gap numbers above —
 uses `RunLogger` for its own environment fingerprint and per-repeat
-timing (`results_task0135/<target>/spectral_gap_audit.jsonl`), not the
+timing (`results/tasks/0135/<target>/spectral_gap_audit.jsonl`), not the
 ad-hoc `_log` pattern. Confirmed the CPU-vs-wall-clock split is
 meaningful in practice, not just in theory: on this run,
 `cpu_elapsed_s` (4.6s cumulative) *exceeded* `wall_elapsed_s` (2.5s) —

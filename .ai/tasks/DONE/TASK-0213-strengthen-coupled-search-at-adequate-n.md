@@ -102,7 +102,7 @@ the restart count, is the binding constraint).
 ## Done
 
 **2026-08-13, Reviewer thread (Opus).** `scripts/task0213_coupled_search_adequate_n.py`,
-`results_task0213_coupled_search_adequate_n/{budget,results,verdict}.json`.
+`results/tasks/0213_coupled_search_adequate_n/{budget,results,verdict}.json`.
 
 **Verdict: CLOSED — search is not the bottleneck. [[TASK-0210]]'s tentative
 OPEN does not survive adequate n.**

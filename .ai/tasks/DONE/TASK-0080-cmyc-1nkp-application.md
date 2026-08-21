@@ -104,7 +104,7 @@ Constraint ("must not present a degraded or missing metric as if it
 were a normal score").
 
 **Real run** (`MYC_MAX`/1NKP, `python3 scripts/run_challenge.py --target
-MYC_MAX --output-dir results_task0080`, live RCSB fetch, 45.7s total,
+MYC_MAX --output-dir results/tasks/0080`, live RCSB fetch, 45.7s total,
 full per-stage timing logged): apo N=171 (Myc+Max heterodimer, chains
 A/B per `targets.yaml`'s own resolved chain-pairing choice). Seed: 5
 residues via `'top-degree fallback'`, as predicted. Consensus (35.2s,

@@ -98,7 +98,7 @@ resumed run fast-forwards the RNG past already-checkpointed trials (verified bit
 identical to a non-batched run of the same seed/trial count, by direct comparison of the
 first two trials' sampled parameters before trusting it on real targets). Real results:
 BCR_ABL1 ceiling = 0.6118 (60 trials, 15s); CARDIAC_MYOSIN ceiling = 0.8188 (60 trials,
-~5.5 min). Both checkpoint files live in `results_task0082/<target>/ceiling_trials.jsonl`.
+~5.5 min). Both checkpoint files live in `results/tasks/0082/<target>/ceiling_trials.jsonl`.
 
 **Headline finding**: none of the three mandatory targets has a clean, floor-clearing,
 resolution-clean, headroom-positive result. KRAS_G12C's ceiling (0.524) is *below* its

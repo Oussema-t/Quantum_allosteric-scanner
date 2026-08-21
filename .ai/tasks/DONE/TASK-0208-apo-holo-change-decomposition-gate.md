@@ -350,7 +350,7 @@ backbone, inverted distally, on the register's one surviving-positive target.
 ### Recompute (Reviewer thread, 2026-08-07) — DONE. All three fixes land; the original conclusion does not survive.
 
 `scripts/task0208_recompute.py`,
-`results_task0208_apo_holo_decomposition/results_recompute.json`. Written to a
+`results/tasks/0208_apo_holo_decomposition/results_recompute.json`. Written to a
 **separate artifact**; the original `results.json` is untouched as the record.
 
 **V1 — relaxation confirms the original statistic was measuring steric overlap, not coupling.**

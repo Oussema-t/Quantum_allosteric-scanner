@@ -162,7 +162,7 @@ constraint, not a preference.
       floor scores higher on each real target, same comparison the
       synthetic control already surfaced.
 - [x] Bonferroni; PASS/FAIL/INSUFFICIENT per target, tagged;
-      `results_task0142_topology/`.
+      `results/tasks/0142_topology/`.
 
 **L1 half — still gated, still unimplemented:**
 - [ ] Build apo simplicial complex (same 8 Å cutoff); ∂1, ∂2 (∂3 for H2,

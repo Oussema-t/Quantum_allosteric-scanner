@@ -216,7 +216,7 @@ hypothesis's own concern was real, not hypothetical — most of CARDIAC_MYOSIN's
 mechanism behind HYP-P8's proximity-like scoring, below) is confirmed to survive
 the fixed clock, not an artifact of `t_max=15` specifically. Full detail:
 `.ai/tasks/DONE/TASK-0119-fix-clock-per-operator-timescale.md`,
-`results_task0119/`. Alternative 1 (infinite-time average) remains this
+`results/tasks/0119/`. Alternative 1 (infinite-time average) remains this
 pipeline's separate, already-shipped headline convention (`time_averaged_ctqw`,
 TASK-0097); alternative 3 (mode-relaxation from apo→holo ANM projection) remains
 unexplored — not needed once alternative 2 answered the load-bearing question

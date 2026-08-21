@@ -116,9 +116,9 @@ before starting, and cross-link results, don't merge.
 - [x] Matched-spread random-closure null (>=500, +/-35% spread, fixed).
 - [x] Run all 3 mandatory + 4 ASD targets; record percentile + p each.
 - [x] Apply Bonferroni (7 targets); emit PASS/FAIL/INSUFFICIENT per target.
-- [x] Write to `results_task0143_openness_premise/` + `RESULTS.md` section
+- [x] Write to `results/tasks/0143_openness_premise/` + `RESULTS.md` section
       with the naive reading AND the corrected (Bonferroni) reading, tagged.
-      (Renamed from the stale `results_task0139_...` this file's own text
+      (Renamed from the stale `results/tasks/0139_...` this file's own text
       still carried after the [[TASK-0139]] ID collision/renumbering.)
 
 ## Dependency
@@ -281,4 +281,4 @@ parameters this task was explicitly told not to tune after seeing the outcome.
 Files touched: `__WORK_IN_PROGRESS__/src/allostery/closure.py` (new),
 `__WORK_IN_PROGRESS__/tests/test_closure.py` (new, 9 tests),
 `__WORK_IN_PROGRESS__/scripts/openness_premise_test.py` (new). Results:
-`__WORK_IN_PROGRESS__/results_task0143_openness_premise/openness_premise.json`.
+`__WORK_IN_PROGRESS__/results/tasks/0143_openness_premise/openness_premise.json`.

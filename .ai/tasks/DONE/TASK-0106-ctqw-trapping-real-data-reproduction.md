@@ -227,5 +227,5 @@ None
   a 2-node case with a known 1-hop answer).
 - Validation: `.venv/bin/python3 -m pytest -q __WORK_IN_PROGRESS__/tests/
   test_ctqw_trapping_reproduction.py` — 6 passed. Real run output saved
-  to `__WORK_IN_PROGRESS__/results_task0106/BCR_ABL1/reproduction.json`
+  to `__WORK_IN_PROGRESS__/results/tasks/0106/BCR_ABL1/reproduction.json`
   (the final, single-index-seed canonical run).

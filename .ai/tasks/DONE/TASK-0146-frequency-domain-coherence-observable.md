@@ -192,4 +192,4 @@ contradicted by, the stratified lens finding nothing significant.
 
 Full detail: `RESULTS.md`'s "Frequency-domain / spectral coherence
 observable" section, open-questions row 36,
-`results_task0146_spectral_coherence/spectral_coherence_real_run.json`.
+`results/tasks/0146_spectral_coherence/spectral_coherence_real_run.json`.

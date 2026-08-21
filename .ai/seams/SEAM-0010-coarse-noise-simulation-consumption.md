@@ -34,7 +34,7 @@
   correspond to this circuit's real depth without that scheduling being
   added, which is out of TASK-0068's time budget this session. Both
   `trotter_steps` and `circuit_depth` are reported side by side in every
-  real run's output (`results_task0068/<target>/noise_sweep.json`) so a
+  real run's output (`results/tasks/0068/<target>/noise_sweep.json`) so a
   reader sees the real gap, not a silently-mislabeled axis. Flagged as a
   natural follow-up (parallel-layer gate scheduling in the circuit
   builder), not filed as its own task here.

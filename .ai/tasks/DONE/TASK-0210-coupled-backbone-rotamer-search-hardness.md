@@ -275,7 +275,7 @@ validation first, then the SA solver on KRAS_G12C.
 Ran the pre-registered classical solver (ANM-mode backbone perturbation +
 EvoEF2 `SideChainRepack` + fpocket-druggability objective, 2 restarts x 10
 iterations/target) on all 4 targets [[TASK-0208]] evaluated.
-Results: `results_task0210_coupled_search/results.json`.
+Results: `results/tasks/0210_coupled_search/results.json`.
 
 ### Known-answer/firewall check — passes on 2/4 targets, not 4/4
 

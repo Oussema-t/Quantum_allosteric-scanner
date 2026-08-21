@@ -292,7 +292,7 @@ than an instrument. Two structurally different reasons sit under the same
     (BCR_ABL1 6/8, GLUCOKINASE 7/8, CASPASE1 8/8) — repacking closes these
     windows further, consistent with [[TASK-0204]]'s own finding that
     energy-minimizing repack trends toward tighter packing, not more open.
-    This data exists and is reported in `results_task0209_instance_
+    This data exists and is reported in `results/tasks/0209_instance_
     verification/instance_verification.json`'s own `ladder.holo_optimized_
     trials`, but is not labelled a "constructed closed instance" here
     because there is no verified-open state for it to round-trip against.
@@ -326,7 +326,7 @@ INVALID. Overall: **2/7 (29%) of this register's real-drug-ligand targets
 are validated known-answer cryptic-pocket instances** under this project's
 own existing hit criterion, reused rather than invented.
 
-Full trial-level data: `results_task0209_instance_verification/
+Full trial-level data: `results/tasks/0209_instance_verification/
 instance_verification.json`. Script:
 `scripts/task0209_instance_verification.py` (imports and reuses
 `task0204_positive_control.run_target` directly; does not reimplement the

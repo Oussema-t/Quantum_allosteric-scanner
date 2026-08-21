@@ -154,7 +154,7 @@ before re-running on real targets.
 **Real run, all 3 mandatory targets**
 (`scripts/learnability_gate_patch_control.py`, live fetch, 1000 random
 same-sized patches per target drawn from the common correspondence set,
-`seed=7`, `results_task0133/learnability_gate_patch_control.json`):
+`seed=7`, `results/tasks/0133/learnability_gate_patch_control.json`):
 
 | Target | Pocket size | Restricted pocket CO(20) | Whole-structure CO(20) (TASK-0120) | Random-patch CO(20) mean±std | Percentile | One-sided p |
 |---|---|---|---|---|---|---|

@@ -77,7 +77,7 @@ same convention TASK-0177 itself uses.
   fold only, no ENM), for all 7 pocket-scoreable `status: verified` targets
   (KRAS_G12C, BCR_ABL1, CARDIAC_MYOSIN, PTP1B, GLUCOKINASE, CASPASE1,
   CASPASE7 -- MYC_MAX excluded, no folded-state pocket). Written to
-  `results_task0186_hop_distance_audit/results.json` and a short
+  `results/tasks/0186_hop_distance_audit/results.json` and a short
   `RESULTS.md` entry.
 - Why required, not assumed: TASK-0169 checked one target with one metric;
   the generalization claim and both new metrics (spatial-hop, chain-hop)
@@ -205,7 +205,7 @@ same convention TASK-0177 itself uses.
 **2026-08-01, Architect.** Ran
 `scripts/hop_distance_generalization_audit.py` against all 7 pocket-
 scoreable `status: verified` targets, incumbent 4.5 A label. Full JSON:
-`results_task0186_hop_distance_audit/results.json`. `RESULTS.md` row 47.
+`results/tasks/0186_hop_distance_audit/results.json`. `RESULTS.md` row 47.
 
 | Target | n pocket | Euclid min/med (A) | Spatial-hop min/med | frac hop<=1 | Chain-hop min/med | Fold-compression mean |
 |---|---|---|---|---|---|---|

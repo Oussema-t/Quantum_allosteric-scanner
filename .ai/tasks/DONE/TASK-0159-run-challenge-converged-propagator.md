@@ -180,4 +180,4 @@ strictly sequentially for the second, successful attempt.
 
 Full detail: `RESULTS.md`'s "Re-pointing the shipped pipeline at the
 converged closed-form propagator" section, open-questions row 39;
-`RESULTS/results_task0159_finite_time_convergence/*.json`.
+`RESULTS/results/tasks/0159_finite_time_convergence/*.json`.

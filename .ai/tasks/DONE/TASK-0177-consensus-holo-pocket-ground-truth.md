@@ -228,8 +228,8 @@ None
 (C1-C6) + `scripts/task0177_consensus_labels.py`, run on all 7 pocket-scoreable
 `status: verified` targets. Full detail: `RESULTS.md`'s own "Consensus
 holo-pocket ground truth" section (row 50 of the open-questions index),
-`results_task0177_consensus_labels/results.json`,
-`results_task0177_consensus_labels/frozen_labels.json`.
+`results/tasks/0177_consensus_labels/results.json`,
+`results/tasks/0177_consensus_labels/frozen_labels.json`.
 
 **Headline: convergence is real but partial on every target (no empty
 `core`), and 4/7 targets flip floor-clearing verdict depending on which

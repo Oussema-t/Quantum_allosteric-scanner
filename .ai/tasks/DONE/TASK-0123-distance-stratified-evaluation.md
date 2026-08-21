@@ -126,7 +126,7 @@ whole-graph AUC would leave masked; degenerate-shell exclusion;
 empty-input handling; summary NaN-robustness.
 
 ### Real-target application (new `scripts/distance_stratified_evaluation.py`,
-`results_task0123_distance_stratified/`)
+`results/tasks/0123_distance_stratified/`)
 
 Applied to all 16 operators in `analysis._operator_registry()` x both
 propagators (`ctqw` via [[TASK-0130]]'s closed form -- the actual

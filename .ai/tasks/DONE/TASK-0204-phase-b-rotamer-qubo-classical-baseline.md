@@ -270,7 +270,7 @@ any window size, regardless of any biological result.
 ### Result — measured, 4 targets, window sizes 8–80, interaction cutoff swept
 
 `scripts/task0204_packing_hardness.py`,
-`results_task0204_packing_hardness/packing_hardness.json`. At the 8 Å
+`results/tasks/0204_packing_hardness/packing_hardness.json`. At the 8 Å
 side-chain interaction cutoff, `n=15` rotamers/site (the write-up's own
 figure):
 
@@ -298,7 +298,7 @@ scope (`m=8–15`) sits entirely inside the tractable regime.
 ### Empirical validation — the cost model is not an argument, it is a measurement
 
 `scripts/task0204_exact_solve_validation.py`,
-`results_task0204_packing_hardness/exact_solve_validation.json`.
+`results/tasks/0204_packing_hardness/exact_solve_validation.json`.
 Exact minimization by bucket elimination on the **real** interaction graphs,
 `n=15` rotamers/site.
 
@@ -497,7 +497,7 @@ rebuilt around the holo ceiling rather than an absolute bar.
    it runs. This is the general lesson, and it is not specific to this task.
 
 Artifacts: `scripts/task0204_positive_control.py`,
-`results_task0204_positive_control/positive_control.json`,
+`results/tasks/0204_positive_control/positive_control.json`,
 `tests/test_task0204_criterion.py`, `criterion_1_verdict()` in
 `scripts/task0204_rotamer_repack_baseline.py`.
 
@@ -582,7 +582,7 @@ root cause, not assumed:
    `work_dir` before scoring, matching the pattern the native-sanity call
    already (accidentally) satisfied.
 
-**Full results** (`results_task0204_rotamer_repack_baseline/results.json`,
+**Full results** (`results/tasks/0204_rotamer_repack_baseline/results.json`,
 34 real EvoEF2+fpocket trials, 0 errors after the fixes above):
 
 | Target | native sanity | greedy (1 trial) | optimized (8 trials) | random (8 trials) |
@@ -630,6 +630,6 @@ It no longer survives.
 
 Updated: `PHASE_B_ROTAMER_QUBO.md` Status section (full table + verdict),
 `RESULTS.md` (new §"row 65", cross-referenced). Full trial-level data:
-`results_task0204_rotamer_repack_baseline/results.json`. New files:
+`results/tasks/0204_rotamer_repack_baseline/results.json`. New files:
 `tools/evoef2/` (README, patch, gitignore — binary/library gitignored per
 convention), `scripts/task0204_rotamer_repack_baseline.py`.

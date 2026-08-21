@@ -259,7 +259,7 @@ sole reported/pre-registered value). BCR_ABL1's own grid: AUC 0.698
 swing. `gamma_lead` is a much weaker KNOB by comparison (BCR_ABL1:
 0.680-0.705 across a {0.05,0.1,0.2}*bandwidth grid) -- consistent with
 being deep in the intended weak-coupling regime. Full grids:
-`results_task0145_transport/transport_observable_real_run.json`.
+`results/tasks/0145_transport/transport_observable_real_run.json`.
 
 **Not done / explicitly out of scope** per this task's own Intent
 Contract: no submission-operator reselection (Tier-2 gated,

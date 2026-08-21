@@ -90,7 +90,7 @@ None
 directly against `H_new` (both propagators), on the same 2 targets.
 **Result: agrees with TASK-0067 in aggregate, disagrees on a real,
 headline-relevant per-target case** (`scripts/h_new_cutoff_sweep.py`,
-`results_task0113_h_new_cutoff_sweep/`).
+`results/tasks/0113_h_new_cutoff_sweep/`).
 
 ### A real, structural finding checked before running anything
 

@@ -284,7 +284,7 @@ defaults — same discipline as TASK-0129's own scripts)
   for "actual"; added `metrics.block_bootstrap_ci` directly for
   "ceiling" (recomputes the winning trial's occupation once more, since
   `ceiling_search` doesn't retain raw occupation vectors) and "floor".
-  Real results (`results_task0130_competence/closed_form_competence.json`):
+  Real results (`results/tasks/0130_competence/closed_form_competence.json`):
 
   | Target | Floor [95% CI] | Ceiling [95% CI] | Actual [95% CI] | Diagnosis | Headroom | CI overlaps floor? |
   |---|---|---|---|---|---|---|
@@ -307,7 +307,7 @@ defaults — same discipline as TASK-0129's own scripts)
   reproduction, both under the closed form. Cross-validated against the
   competence-map script independently: KRAS_G12C `H_new`/`ctqw` AUC
   agrees to 3 decimals (0.590) via two separate code paths. Full
-  results/report: `results_task0130_competence/closed_form_sweep.json`/
+  results/report: `results/tasks/0130_competence/closed_form_sweep.json`/
   `sweep_report.md`, `trapping_reproduction_closed_form.json`.
 
   **Secondary finding, real, not chased further (flagged for whoever

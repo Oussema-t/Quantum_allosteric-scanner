@@ -165,6 +165,6 @@ TASK-0129's own numbers — but the 95% CI still overlaps the floor's own CI
 question's own Answer #1 ("the framing correctly surfaces what it finds; it does not
 manufacture significance"). BCR_ABL1 and CARDIAC_MYOSIN remain unresolved from chance/floor
 under this convention too (both `ci_overlap=True`). Full numbers: `COMPETENCE_MAP.md`'s
-newest SUPERSEDED layer, `results_task0130_competence/closed_form_competence.json`. This
+newest SUPERSEDED layer, `results/tasks/0130_competence/closed_form_competence.json`. This
 question requires no further reopening — the framing has now been exercised under three
 successive gauge corrections (seed, clock, and clock-removal) and held up each time.

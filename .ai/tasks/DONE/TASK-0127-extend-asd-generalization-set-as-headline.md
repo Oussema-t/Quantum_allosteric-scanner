@@ -156,7 +156,7 @@ verdicts predated all 3 gauge fixes — confirmed by inspecting the old
 then" — re-running was not optional.
 
 **Real runs, all 4 targets** (`run_challenge.py --target <name>`, live
-RCSB fetch, `results_task0127/<target>/`):
+RCSB fetch, `results/tasks/0127/<target>/`):
 
 | Target | N | Pocket size | Actual AUC | Max floor (95% CI) | CI overlap | Diagnosis | most_impactful_term |
 |---|---|---|---|---|---|---|---|

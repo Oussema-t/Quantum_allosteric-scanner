@@ -13,7 +13,7 @@
   task file — only a claim lock (`Reviewer-thread (Opus)`, session
   `634bc05e`, 2026-08-13 17:06) existed, and two of its own artifacts
   (`scripts/task0216_task0201_rerun_real_seed.py` and
-  `results_task0216_new_pair_scoring/task0201_rerun_real_seed.json`) were
+  `results/tasks/0216_new_pair_scoring/task0201_rerun_real_seed.json`) were
   never committed at all, despite already being cited by path in
   [[TASK-0217.003]]'s own committed Done section. This file reconstructs
   the task from its own already-committed evidence (`RESULTS.md`'s section,
@@ -157,7 +157,7 @@ correction materially changes the score field at all.
 
 ### TASK-0215's new pairs — leg A (static scoring)
 
-`scripts/task0216_score_new_pairs.py`, `results_task0216_new_pair_scoring
+`scripts/task0216_score_new_pairs.py`, `results/tasks/0216_new_pair_scoring
 /results.json`. Only 2 of 6 candidate pairs have a derivable real seed
 (TEM-1's two pairs have no functional ligand at all — a coverage gap,
 stated not worked around, per `config/candidate_targets_task0216.yaml`'s
@@ -194,7 +194,7 @@ that verdict reads on its own.
 ### TASK-0201's own statistic, recomputed under the corrected seed — the previously-orphaned step
 
 `scripts/task0216_task0201_rerun_real_seed.py`,
-`results_task0216_new_pair_scoring/task0201_rerun_real_seed.json` — run
+`results/tasks/0216_new_pair_scoring/task0201_rerun_real_seed.json` — run
 2026-08-13, **committed here for the first time** (this filing). Reuses
 [[TASK-0201]]'s own harness byte-for-byte (`graph_walk_matched_null_rerun
 .py`'s `graph_walk_null`, `K_MODES_GRID`, `FINAL_N_REPS=20_000`,

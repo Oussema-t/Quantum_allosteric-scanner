@@ -82,7 +82,7 @@
   Optuna cross-check + a properly-sampled "practical" ceiling restricted
   to the reachable range) in
   `.ai/tasks/DONE/TASK-0110-optuna-apo-holo-parameter-scan.md` and
-  `results_task0110/`. Still does not flip this seam to VERIFIED — no
+  `results/tasks/0110/`. Still does not flip this seam to VERIFIED — no
   production call site's default changed — but the evidence base for
   whoever eventually does (TASK-0117, or a follow-up addressing the
   O(n_steps) algorithmic cost itself, e.g. exploiting that the true

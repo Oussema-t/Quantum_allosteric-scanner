@@ -141,7 +141,7 @@ too, flagged (`n_steps_capped: true`) in the output whenever hit, not
 silently under-sampled without a record of it. Re-ran after the fix: H9
 now scores normally (n_steps 3.1B→5000, capped).
 
-**(2) 96-cell sweep re-run** (all 3 mandatory targets, `results_task0119/
+**(2) 96-cell sweep re-run** (all 3 mandatory targets, `results/tasks/0119/
 clock_fix_sweep.json`/`report.md`) — **two separate, explicit findings,
 per this task's own "must NOT conclude" constraint**:
 
@@ -174,7 +174,7 @@ per this task's own "must NOT conclude" constraint**:
   before any AUC is even scored.
 
 **(3) TASK-0106's BCR_ABL1 trapping reproduction, re-run**
-(`results_task0119/trapping_reproduction_fixed_clock.json`) — same seed
+(`results/tasks/0119/trapping_reproduction_fixed_clock.json`) — same seed
 convention as TASK-0106's own canonical run (single sorted-first
 active-site index; see the TASK-0118 caveat below for why this wasn't
 switched), same floor (0.5652, confirmed identical — floor doesn't

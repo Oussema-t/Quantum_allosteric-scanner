@@ -90,7 +90,7 @@ re-scoring the same, once-computed `H_new`/`time_averaged_ctqw_
 converged` occupation (TASK-0130's closed form) against each cutoff's
 regenerated label — no operator recomputation, per this task's own In
 Scope (`scripts/pocket_label_cutoff_sensitivity.py`,
-`results_task0114_pocket_cutoff_sensitivity/`).
+`results/tasks/0114_pocket_cutoff_sensitivity/`).
 
 ### Results
 

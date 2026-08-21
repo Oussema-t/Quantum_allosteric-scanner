@@ -116,7 +116,7 @@ efficiency.** **Do NOT tune γ against known pockets.**
 - [x] Score discrimination AUC vs floor + block-bootstrap CIs; stratified.
 - [x] Localization length / participation ratio vs γ (mechanism covariate).
 - [x] Bonferroni; emit POSITIVE/NEGATIVE per target, tagged.
-- [x] `results_task0141_dephasing/` + `RESULTS.md` section; note the
+- [x] `results/tasks/0141_dephasing/` + `RESULTS.md` section; note the
       transport-vs-discrimination distinction explicitly for referees.
 
 ## Dependency

@@ -250,7 +250,7 @@ cells):
     expectation** (more bandwidth should need *more* steps, not fewer).
     Reported plainly, not explained -- a real follow-up question, not
     resolved by this task.
-  Full table + fits: `results_task0109/report.md`/`convergence_battery.json`.
+  Full table + fits: `results/tasks/0109/report.md`/`convergence_battery.json`.
 
 **(5) Literature grounding + reproduction** -- since the battery's own
 ring topology cannot practically exercise the `time_averaged_ctqw`/AAKV

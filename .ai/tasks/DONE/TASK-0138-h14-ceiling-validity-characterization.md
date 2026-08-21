@@ -241,4 +241,4 @@ such, not softened. Consistent with, not contradicted by, TASK-0126's own number
 
 Files touched: `__WORK_IN_PROGRESS__/scripts/h14_ceiling_permutation_null.py` (new),
 `__WORK_IN_PROGRESS__/scripts/h14_trial_density_check.py` (new). Results:
-`__WORK_IN_PROGRESS__/results_task0138_h14_permutation_null/permutation_null.json`.
+`__WORK_IN_PROGRESS__/results/tasks/0138_h14_permutation_null/permutation_null.json`.

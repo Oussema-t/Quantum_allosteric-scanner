@@ -168,7 +168,7 @@ New `scripts/compact_null_rerun.py` reuses each family's own already-established
 scoring machinery unmodified (`prs_low`/`dcc_low`, `void_score`,
 `restricted_cumulative_overlap`) — only the null-draw step changes, computed both
 ways per cell so the delta is visible, not just the corrected number in isolation.
-Full detail: `results_task0158_compact_null/compact_null_rerun.json`.
+Full detail: `results/tasks/0158_compact_null/compact_null_rerun.json`.
 
 **Lowmode (TASK-0149 + TASK-0151's own generalization-set targets, 5 targets × 2
 observables × 4 k_modes = 40 cells):**

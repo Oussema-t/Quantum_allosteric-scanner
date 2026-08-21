@@ -178,7 +178,7 @@ internal RNG seeded separately via `numpy.random.SeedSequence`).
 
 All 200/200 replicates scored successfully per target (no NaN/error
 trials); all `ceiling_null` values sane (0-1 range, no anomalies).
-Full null distributions: `results_task0131_permutation_null/
+Full null distributions: `results/tasks/0131_permutation_null/
 permutation_null.json`.
 
 **Headline, real and target-specific, not uniform**:

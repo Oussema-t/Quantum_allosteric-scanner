@@ -207,7 +207,7 @@ amplitude must reject, vanishing amplitude must never reject), new
 `scripts/holo_direction_step2_gate.py`. Full suite: 994 passed, 2
 xfailed, 0 failed (986 pre-existing + 8 new). Full detail: `RESULTS.md`'s
 own "Holo-direction module Step 2 go/no-go gate" section,
-`RESULTS/results_task0015_step2_gate/step2_gate.json`.
+`RESULTS/results/tasks/0015_step2_gate/step2_gate.json`.
 
 ---
 

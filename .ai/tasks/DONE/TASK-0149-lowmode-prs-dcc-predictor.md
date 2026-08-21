@@ -214,7 +214,7 @@ never triggered.
 **Full test suite**: 901 passed, 2 xfailed, 0 failed.
 
 Full detail: `RESULTS.md`'s "Low-mode PRS/DCC real-target run" section, open-questions
-row 30, `results_task0149_lowmode_predictor/lowmode_predictor_real_run.json`.
+row 30, `results/tasks/0149_lowmode_predictor/lowmode_predictor_real_run.json`.
 
 **Generalization-set check, 2026-07-24 ([[TASK-0151]], per [[TASK-0115]]'s Rule #6):**
 **`dcc_low` replicates cleanly on PTP1B** — 3/4 `k_modes` (10, 15, 20) clear TASK-0151's

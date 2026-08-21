@@ -72,7 +72,7 @@ the certification bar is reachable given `N_PERM_REPS`.
   for their stated purpose**, while reading as decisive. That is the more
   dangerous failure.
 - In Scope:
-  - Recompute Part A from `results_task0167003_specificity/zero_plant_specificity_full.json`'s
+  - Recompute Part A from `results/tasks/0167003_specificity/zero_plant_specificity_full.json`'s
     stored raw `p_value` fields at `α/3` (matching `.002`'s corrected
     convention), in a **separate analysis script**, not by editing the
     collection script's already-run output — the exact shape `.002` used.
@@ -159,7 +159,7 @@ the certification bar is reachable given `N_PERM_REPS`.
 **2026-08-03, Implementer A.**
 
 **Corrected Part A table** (`scripts/zero_plant_specificity_analysis.py`,
-output `results_task0167003_specificity/part_a_corrected.json`), recomputed
+output `results/tasks/0167003_specificity/part_a_corrected.json`), recomputed
 at `REAL_BONFERRONI_ALPHA = 0.05/3 = 0.01667` (TASK-0145's own "correct
 across targets, not a measurement device's internal replicate grid"
 convention, matching [[TASK-0167.002]]'s own `detection_curve_analysis.py`

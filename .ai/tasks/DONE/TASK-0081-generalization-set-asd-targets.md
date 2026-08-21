@@ -98,7 +98,7 @@ every other `drug_ligand` value in the file — `892` was the only bare
 numeric code, so no other entry was silently broken the same way.
 
 **Real runs** (`run_challenge.py --target PTP1B CASPASE7`, live RCSB
-fetch, `results_task0081/<target>/`):
+fetch, `results/tasks/0081/<target>/`):
 
 | Target | N | Pocket size | Actual AUC | Max floor | Diagnosis |
 |---|---|---|---|---|---|

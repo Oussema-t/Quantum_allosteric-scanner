@@ -179,5 +179,5 @@ machine/thread as of TASK-0185's own filing) — flagged for
 
 ## Full numbers
 
-`results_task0185_conformational_search/results.json`,
-`results_task0185_conformational_search/run.jsonl` (RunLogger).
+`results/tasks/0185_conformational_search/results.json`,
+`results/tasks/0185_conformational_search/run.jsonl` (RunLogger).

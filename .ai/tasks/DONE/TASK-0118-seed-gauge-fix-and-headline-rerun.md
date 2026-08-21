@@ -208,8 +208,8 @@ conventions within one "completed" trial set (checkpoint records don't
 carry which convention produced them).
 
 **6. Real re-run, all 3 mandatory targets, fresh checkpoint directories
-(`results_task0118/`, `results_task0118_ceiling/` — deliberately not
-resuming `results_task0082/`'s old `coherent=True`-only ceiling
+(`results/tasks/0118/`, `results/tasks/0118_ceiling/` — deliberately not
+resuming `results/tasks/0082/`'s old `coherent=True`-only ceiling
 checkpoints):**
 
 | Target | Floor | Ceiling | Actual | Diagnosis | Headroom |

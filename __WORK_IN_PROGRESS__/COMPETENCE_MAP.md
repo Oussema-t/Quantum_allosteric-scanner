@@ -305,14 +305,14 @@ its own floor as a point estimate (real headroom exists in `H_new`'s physical-sc
 for all three targets), but every ceiling-vs-floor CI overlaps too — none of the three is
 a statistically decided ceiling-over-floor margin either, a caveat TASK-0129's own table
 did not carry (pre-TASK-0112-wiring for this specific script). Sources:
-- **This recompute (all columns + CI)**: `results_task0130_competence/
+- **This recompute (all columns + CI)**: `results/tasks/0130_competence/
   closed_form_competence.json` (`scripts/closed_form_competence_map_rerun.py`) —
   standalone script calling `protocol.run_frozen_verdict`/`ceiling.ceiling_search` with
   the new `use_converged_limit=True` option (TASK-0130, ADD-only on both functions and on
   `analysis.benchmark`/`analysis.quantum_vs_classical`/`analysis.operator_sweep`/
   `ceiling.consistency_score`), same "standalone, does not touch live pipeline defaults"
   discipline as TASK-0129's own script.
-- **96-cell operator-level cross-check**: `results_task0130_competence/
+- **96-cell operator-level cross-check**: `results/tasks/0130_competence/
   closed_form_sweep.json`/`sweep_report.md` (`scripts/closed_form_operator_sweep.py`)
   independently reproduces KRAS_G12C's `H_new`/`ctqw` AUC to 3 decimals (0.590 both
   places) via a separate code path (`analysis.operator_sweep`, not `run_frozen_verdict`).
@@ -368,7 +368,7 @@ do not carry the same evidentiary weight**:
 *actual* vs. floor/chance, a different comparison than ceiling-vs-floor) — it changes how
 confidently the *ceiling* numbers specifically should be read as "real headroom exists in
 this operator family" vs. "an artifact of taking a maximum over 60 tries." Full null
-distributions: `results_task0131_permutation_null/permutation_null.json`
+distributions: `results/tasks/0131_permutation_null/permutation_null.json`
 (`scripts/ceiling_permutation_null.py`).
 
 **Correction to `REVIEW-2026-07-15b-ceiling-search-methodology.md`'s own text** (per this
@@ -400,7 +400,7 @@ shipped actual results reach it.** All three columns are CTQW-propagated, `H_new
 numbers throughout (floor, ceiling, and actual all use `time_averaged_ctqw`, never a mix
 with `ground_state_relaxation`/"heat"), and share one seed convention *and* one clock
 convention within each row. Sources:
-- **This recompute (all three columns + `t*`)**: `results_task0129_competence/
+- **This recompute (all three columns + `t*`)**: `results/tasks/0129_competence/
   combined_competence.json` (`scripts/combined_competence_map_rerun.py`) — a standalone
   script calling `protocol.run_frozen_verdict`/`ceiling.ceiling_search` directly with the
   combined-fix parameters, deliberately *not* an edit to `run_challenge.py`'s or
@@ -408,7 +408,7 @@ convention within each row. Sources:
   treated promoting a research clock into the live pipeline as "a separate, follow-up
   decision," and TASK-0129's own Out Of Scope forbids "building any new fix" — this
   script applies two already-built ones together without touching either live script).
-- **96-cell operator-level cross-check**: `results_task0129/combined_sweep.json`/
+- **96-cell operator-level cross-check**: `results/tasks/0129/combined_sweep.json`/
   `report.md` (`scripts/fix_clock_operator_sweep.py`) independently reproduces
   CARDIAC_MYOSIN's `H_new`/`ctqw` combined AUC to 4 decimals (0.7912 both places) via a
   completely separate code path (`analysis.operator_sweep`, not `run_frozen_verdict`) —
@@ -427,12 +427,12 @@ TASK-0118's own sources for the table directly above:
   `euclid_from_seed_centroid`/`hop_from_seed` stack ([[TASK-0094]]), max of the three,
   under the new full-array source (`scripts/seed_convention_sweep.py`'s own floor
   computation, cross-checked against a direct re-derivation — both agree to 6 decimals).
-- **Ceiling**: `results_task0118_ceiling/<target>/ceiling_trials.jsonl` (fresh checkpoint
-  directory — deliberately *not* resuming `results_task0082/`'s old, `coherent=True`-only
+- **Ceiling**: `results/tasks/0118_ceiling/<target>/ceiling_trials.jsonl` (fresh checkpoint
+  directory — deliberately *not* resuming `results/tasks/0082/`'s old, `coherent=True`-only
   checkpoints, which would have silently mixed conventions within one "completed" trial
   set), 60 real trials each, `ceiling.ceiling_search`/`ceiling_search_batched.py --seed 7`,
   `coherent=False` (this script's own new default), `protocol.ceiling_context()`.
-- **Actual**: `results_task0118/<target>/verdict.json`'s `AUC_apo_Hnew_optimised`, a fresh
+- **Actual**: `results/tasks/0118/<target>/verdict.json`'s `AUC_apo_Hnew_optimised`, a fresh
   `run_challenge.py` run (full active-site array, `coherent=False`, single-index
   workaround removed).
 - **Diagnosis**: `verdict.json`'s own `_diagnosis` field, this time genuinely
@@ -636,7 +636,7 @@ with TASK-0118's seed fix — floor unchanged at 0.7921, since floor doesn't dep
 clock): **actual AUC drops to 0.7912, landing 0.0009 *below* its own floor**
 (`BEATS_CHANCE_NOT_FLOOR`, not `NO_FAILURE_DETECTED`) — headroom flips from +75.1% to
 −1.4%. Independently cross-checked via a completely separate code path
-(`analysis.operator_sweep`'s own `H_new`/`ctqw` cell, `results_task0129/
+(`analysis.operator_sweep`'s own `H_new`/`ctqw` cell, `results/tasks/0129/
 combined_sweep.json`): **0.7912, matching to 4 decimals** — not a fluke of one script.
 The ceiling (0.8558) still clears the floor by a real margin (+0.064), so headroom
 exists in the operator family, same story as KRAS_G12C/BCR_ABL1 now — this target no
@@ -749,7 +749,7 @@ explicitly rather than an empty row.
 | Confidence | moderate — best cross-operator agreement is 3/4, not unanimous |
 | Theoretical docking viability | unavailable — `fpocket` binary not installed in this environment |
 
-Full narrative: `results_task0080/MYC_MAX/report.txt` (real run, 2026-07-15,
+Full narrative: `results/tasks/0080/MYC_MAX/report.txt` (real run, 2026-07-15,
 `run_challenge.py --target MYC_MAX`).
 
 ---

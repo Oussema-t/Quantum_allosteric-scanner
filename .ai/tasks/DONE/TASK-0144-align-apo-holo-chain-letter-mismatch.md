@@ -201,4 +201,4 @@ for both targets), but the restricted number itself remains unmeasured.
 `chiral.py`/`test_chiral.py`, no dependency on `superpose.py` — checked
 directly, not touched, not this task's scope).
 
-Full detail: `results_task0144_learnability_rerun/learnability_gate_rerun.json`.
+Full detail: `results/tasks/0144_learnability_rerun/learnability_gate_rerun.json`.

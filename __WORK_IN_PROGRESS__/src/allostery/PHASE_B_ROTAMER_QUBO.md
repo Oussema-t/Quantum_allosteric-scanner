@@ -221,6 +221,6 @@ Per criterion #1's own stated consequence and Phase A's binding precedent:
 measurement (the amplitude-amplification precondition) was gated on
 criterion #1 passing and is therefore not applicable — a closed result, not
 an open question. Full trial-level numbers:
-`results_task0204_rotamer_repack_baseline/results.json`; task file:
+`results/tasks/0204_rotamer_repack_baseline/results.json`; task file:
 `.ai/tasks/DONE/TASK-0204-*.md`; `RESULTS.md` §"Phase B rotamer-QUBO
 classical baseline — criterion #1 closes the route".

@@ -256,7 +256,7 @@ None
 `coupling_profile`, `active_site_rigidification`, `coupling_specificity`)
 + `scripts/task0178_response_coupling.py` + `scripts/task0178_lod_probe.py`.
 Full detail: `RESULTS.md`'s own "Binding-response coupling free energy"
-section (open-questions row 52), `results_task0178_response_coupling/`.
+section (open-questions row 52), `results/tasks/0178_response_coupling/`.
 
 **Independent validation before trusting anything**: `coupling_free_energy`
 reproduces the external reference prototype's own real number

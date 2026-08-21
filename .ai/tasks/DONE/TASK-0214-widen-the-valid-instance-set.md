@@ -125,7 +125,7 @@ because the blocking half of the contrast is the holo side in every case,
 not just the two the task's own table flagged.
 
 **What Leg A actually found, corrected for the bug above** (full detail:
-`results_task0214_apo_reselection/apo_reselection.json`):
+`results/tasks/0214_apo_reselection/apo_reselection.json`):
 
 | Target | candidates found | apo-closed candidates (own native, no explaining HETATM) | holo_native_hit | Recovered? |
 |---|---|---|---|---|
@@ -185,5 +185,5 @@ task's own text, and a large enough effort (fresh UniProt search, fresh
 window derivation, fresh known-answer checks) to warrant its own task
 file rather than being folded in under time pressure.
 
-Full trial-level data: `results_task0214_apo_reselection/
+Full trial-level data: `results/tasks/0214_apo_reselection/
 apo_reselection.json`. Script: `scripts/task0214_apo_reselection.py`.

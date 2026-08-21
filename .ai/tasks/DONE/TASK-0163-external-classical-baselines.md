@@ -161,5 +161,5 @@ project's own.
 
 Full detail: `RESULTS.md`'s own section,
 `__WORK_IN_PROGRESS__/scripts/task0163_external_baseline_scoring.py`,
-`__WORK_IN_PROGRESS__/results_task0163_external_baselines/results.json`,
+`__WORK_IN_PROGRESS__/results/tasks/0163_external_baselines/results.json`,
 `/home/bchmura/PROJECTS/PocketMiner/` (separate repo).

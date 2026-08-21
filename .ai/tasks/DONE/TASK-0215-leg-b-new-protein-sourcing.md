@@ -239,6 +239,6 @@ allosteric systems in RCSB were *missed* because they don't use these
 exact three phrases (a recall question this task does not answer, only a
 precision check on what it did find).
 
-Full trial-level data: `results_task0215_leg_b_new_proteins/
+Full trial-level data: `results/tasks/0215_leg_b_new_proteins/
 leg_b_results.json` (188 candidates, every elimination reason recorded,
 not just the 6 survivors). Script: `scripts/task0215_leg_b_new_proteins.py`.

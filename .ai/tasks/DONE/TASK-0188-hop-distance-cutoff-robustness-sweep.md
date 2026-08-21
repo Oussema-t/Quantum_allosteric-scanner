@@ -129,7 +129,7 @@ None
       `DEFAULT_POCKET_CUTOFF`, `_load_apo_holo` from
       `hop_distance_generalization_audit.py` verbatim, no re-derivation.
 - [x] Run across all 7 targets x 7 cutoffs.
-      `results_task0188_hop_cutoff_sweep/results.json`.
+      `results/tasks/0188_hop_cutoff_sweep/results.json`.
 - [x] 8.0 A row cross-check against TASK-0186 (must match exactly).
       Confirmed bit-for-bit on all 7 targets (min/mean/median/max/
       frac_le_1/frac_le_2/frac_le_3).
@@ -166,13 +166,13 @@ None
 
 - 2026-08-01 (Implementer D): built `scripts/hop_distance_cutoff_sweep.py`,
   ran all 7 pocket-scoreable targets x {6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0} A,
-  results in `results_task0188_hop_cutoff_sweep/results.json`, written up as
+  results in `results/tasks/0188_hop_cutoff_sweep/results.json`, written up as
   `RESULTS.md` row 48.
   - **Connectivity**: single connected component, zero isolated nodes, on
     all 7 targets at every tested cutoff, including CARDIAC_MYOSIN (N=704).
     No exclusions needed.
   - **8.0 A regression check**: bit-for-bit match against TASK-0186's
-    published `results_task0186_hop_distance_audit/results.json` on all 7
+    published `results/tasks/0186_hop_distance_audit/results.json` on all 7
     targets, all statistics.
   - **Headline-claim survival, per the pre-existing Intent Contract
     question**:

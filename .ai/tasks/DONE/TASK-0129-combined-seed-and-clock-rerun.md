@@ -41,8 +41,8 @@
      `fix_clock_operator_sweep.py` still uses the pre-TASK-0118 seed,
      per TASK-0119's own explicit caveat).
   2. The floor/ceiling/actual competence-map numbers TASK-0118 already
-     recomputed under its own seed fix alone (`results_task0118/`,
-     `results_task0118_ceiling/`) — re-run those same three quantities,
+     recomputed under its own seed fix alone (`results/tasks/0118/`,
+     `results/tasks/0118_ceiling/`) — re-run those same three quantities,
      same three targets, now also under TASK-0119's per-operator `t*`
      rather than the shared `t_max=15` TASK-0118's own re-run still
      used.
@@ -126,7 +126,7 @@ active-site array) rather than mutating `sweep_operators.py`'s shared `_prepare_
 (that function is also TASK-0101's own original-sweep record of truth; changing it in
 place would silently redefine what "old" means for future reads). Threaded
 `coherent=False` into every `operator_sweep(...)` call. The pre-existing clock-only
-comparison columns (`results_task0119/`) are unchanged on disk, loaded as a second
+comparison columns (`results/tasks/0119/`) are unchanged on disk, loaded as a second
 comparison column (`clock_only`) alongside `old` (TASK-0101) and the new `combined`
 column — a 3-way per-cell comparison, not just old-vs-new.
 
@@ -139,12 +139,12 @@ spy-based — AUC-level comparison hit the same rank-invariance-on-small-fixture
 TASK-0118's own tests already worked around).
 
 **3. Real combined runs, all real network fetches, no synthetic substitutes**:
-- **96-cell operator sweep** (`results_task0129/combined_sweep.json`/`report.md`) —
+- **96-cell operator sweep** (`results/tasks/0129/combined_sweep.json`/`report.md`) —
   all 3 targets, ~28 min total wall time (CARDIAC_MYOSIN's `ctqw` column dominates,
   per-cell costs pre-estimated from a single worst-case timing probe before committing
   to the full run, per this project's own "check feasibility before a long run"
   precedent).
-- **Competence-map re-run** (`results_task0129_competence/combined_competence.json`,
+- **Competence-map re-run** (`results/tasks/0129_competence/combined_competence.json`,
   new standalone script `scripts/combined_competence_map_rerun.py`) — calls
   `protocol.run_frozen_verdict`/`ceiling.ceiling_search` directly with the combined-fix
   parameters, deliberately *not* an edit to `run_challenge.py`'s/
@@ -158,7 +158,7 @@ TASK-0118's own tests already worked around).
   the 96-cell sweep, extended here one step further and stated explicitly, not hidden.
   `H10`'s own, potentially different, `t*` is not separately computed (flagged in
   `COMPETENCE_MAP.md`'s Open Items).
-- **BCR_ABL1 trapping reproduction, combined** (`results_task0129/
+- **BCR_ABL1 trapping reproduction, combined** (`results/tasks/0129/
   trapping_reproduction_combined.json`) — same 4 operators as TASK-0106/TASK-0119's own
   reproductions, now full-array + per-operator `t*` together.
 

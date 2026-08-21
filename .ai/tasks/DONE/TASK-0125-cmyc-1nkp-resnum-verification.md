@@ -78,7 +78,7 @@ None
 ## Done
 
 **2026-07-18, Implementer B.** Verified — no bug. All 5 hits in
-`results_task0080/MYC_MAX/hit_list.json` are real protein residues with
+`results/tasks/0080/MYC_MAX/hit_list.json` are real protein residues with
 correct 1NKP-native numbering. No DNA nucleotide leakage. No fix needed;
 this is a real negative result.
 

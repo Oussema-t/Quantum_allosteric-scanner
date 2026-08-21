@@ -153,7 +153,7 @@ target"): `scripts/task0083_write_reference_artifact.py` runs
 `run_challenge.py`'s own real, already-existing `run_target('KRAS_G12C',
 ...)` — no recomputation, this task's own Out Of Scope — and repackages
 its real output (`verdict.json`, `hit_list.json`, `connectivity_matrix
-.npz`) into `results_task0083_reference_artifact/KRAS_G12C/artifact_v1
+.npz`) into `results/tasks/0083_reference_artifact/KRAS_G12C/artifact_v1
 .json` + `connectivity_v1.npz`. Floor/ceiling (`0.4818`/`0.6288`) read
 directly from `COMPETENCE_MAP.md`'s own current headline table (not part
 of `run_challenge.py`'s output, a separate TASK-0046 process); `actual`
@@ -182,4 +182,4 @@ real number.
 Full schema + design reasoning: `RESULT_ARTIFACT_CONTRACT.md`. Code:
 `src/allostery/artifact.py`, `backend/artifact_reader.py`,
 `scripts/task0083_write_reference_artifact.py`. Reference artifact:
-`results_task0083_reference_artifact/KRAS_G12C/`.
+`results/tasks/0083_reference_artifact/KRAS_G12C/`.

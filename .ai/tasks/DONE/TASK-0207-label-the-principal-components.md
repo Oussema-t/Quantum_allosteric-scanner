@@ -112,7 +112,7 @@ before [[TASK-0184]] commits to the framing.
 fixed before computing or looking at any PC loadings, per this task's own
 Constraint.**
 
-**Data check first**: `results_task0199_observable_rank/observable_
+**Data check first**: `results/tasks/0199_observable_rank/observable_
 effective_rank.json` stores the 28x28 real-observable correlation matrix
 and its eigen*values* per target, plus PC1's loadings on the 30-column
 extended (28 real + `neg_hop` + `neg_euclid`) matrix — but not PC1's
@@ -208,7 +208,7 @@ recomputed differently). Real run, all 5 targets, wiring-checked against
 [[TASK-0199]]'s own stored numbers before interpreting anything (exact
 match, both the participation-ratio rank and the extended-matrix PC1
 loadings, to 1e-6, on every target). Full output:
-`results_task0207_pc_labels/pc_labels.json`.
+`results/tasks/0207_pc_labels/pc_labels.json`.
 
 ### Headline: the pre-hypothesis was half right — refined, not confirmed as-is
 

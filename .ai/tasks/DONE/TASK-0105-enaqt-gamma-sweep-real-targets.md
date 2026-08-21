@@ -169,7 +169,7 @@ null result on `H_new` isn't mistaken for "no ENAQT effect here."
   unknown-operator error handling.
 - Validation: `.venv/bin/python3 -m pytest -q __WORK_IN_PROGRESS__/tests/
   test_enaqt_gamma_sweep.py` — 8 passed. Real run outputs saved to
-  `__WORK_IN_PROGRESS__/results_task0105/<target>/sweep.json` (full
+  `__WORK_IN_PROGRESS__/results/tasks/0105/<target>/sweep.json` (full
   per-γ curves, not just the summary table in `RESULTS.md`).
 - Not run through the whitelisted `pytest_local.py` preset yet — the new
   test file isn't in its `wip-all`/`all` target list; `wip-all` globs the

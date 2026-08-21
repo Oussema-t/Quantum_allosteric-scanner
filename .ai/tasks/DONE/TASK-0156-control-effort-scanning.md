@@ -323,7 +323,7 @@ classical analogue — as the comparator baseline):
   itself mostly doesn't clear this bar either (except CARDIAC_MYOSIN,
   where `prs_low` is strong — a genuinely different, non-circular result
   for that baseline, unrelated to this task's own finding).
-- Full numbers: `results_task0156_control_effort/scoring_results.json`
+- Full numbers: `results/tasks/0156_control_effort/scoring_results.json`
   (includes per-shell AUC/n_pos/n_neg, whole-graph AUC+CI, and the full
   permutation-null distribution per target).
 
@@ -357,5 +357,5 @@ Artifacts: `src/allostery/control_effort.py`, `tests/test_control_effort.
 py`, `scripts/control_effort_kill_switch.py`,
 `scripts/control_effort_scoring.py`,
 `scripts/control_effort_tf_sensitivity.py`,
-`results_task0156_control_effort/{kill_switch,scoring_results,
+`results/tasks/0156_control_effort/{kill_switch,scoring_results,
 tf_sensitivity}.json`, `RESULTS.md` row 61.

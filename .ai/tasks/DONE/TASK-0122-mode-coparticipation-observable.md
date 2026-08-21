@@ -195,7 +195,7 @@ seed-cardinality-normalized convention.
   (no cues) near chance, loose bound, same convention as GSR/CTQW.
 
 ### Real-target validation (new `scripts/mode_coparticipation_validation.py`,
-`results_task0122_mode_coparticipation/mode_coparticipation_validation.json`)
+`results/tasks/0122_mode_coparticipation/mode_coparticipation_validation.json`)
 
 **Check 1 — the panel's own 0.18/0.50 validation gate, reproduced or
 refuted per target, not assumed**:

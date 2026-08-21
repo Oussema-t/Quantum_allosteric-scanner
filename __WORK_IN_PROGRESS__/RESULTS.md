@@ -59,7 +59,7 @@ layer over those files, not a replacement for them.
 > and every `results_task*/`/`results_*/` sibling directory referenced
 > throughout this document and in `.ai/tasks/DONE/`'s own historical Done
 > sections are now consolidated under `__WORK_IN_PROGRESS__/RESULTS/`
-> (e.g. `results_task0094/` → `RESULTS/results_task0094/`) — a repo
+> (e.g. `results/tasks/0094/` → `RESULTS/results/tasks/0094/`) — a repo
 > reorganization, not a change to any script's own default output
 > location naming. Historical path references elsewhere in this document
 > and in already-Done task files are left as originally written (the
@@ -195,7 +195,7 @@ different, more defensible reason: not because 0.779 is decisively below
 0.798, but because neither number is pinned down precisely enough, on
 this target's ~20-30 real pocket positives, to say which is larger.
 Full re-run: `scripts/bootstrap_ci_headline_rerun.py`,
-`results_task0112/headline_ci_rerun.json`.
+`results/tasks/0112/headline_ci_rerun.json`.
 
 ### BCR_ABL1
 
@@ -336,7 +336,7 @@ rests on a controlled negative-control construction, not on this margin's
 statistical significance) — it removes a support this section's own
 point-estimate language leaned on ("decisively") that the data does not
 actually carry. Full re-run: `scripts/bootstrap_ci_headline_rerun.py`,
-`results_task0112/headline_ci_rerun.json`. (BCR_ABL1's CTQW-vs-floor
+`results/tasks/0112/headline_ci_rerun.json`. (BCR_ABL1's CTQW-vs-floor
 comparison, 0.525 vs 0.565, was already `NO_SIGNAL_IN_APO` pre-CI and
 remains overlapping post-CI — no reversal, consistent.)
 
@@ -463,7 +463,7 @@ been treated as a meaningful knob. This is itself worth flagging per
 implicitly a GAUGE choice throughout this pipeline and this task is the
 first place it visibly changed a sign.
 Script + full JSON: `scripts/ctqw_trapping_reproduction.py`,
-`results_task0106/BCR_ABL1/reproduction.json`.
+`results/tasks/0106/BCR_ABL1/reproduction.json`.
 
 **[OBSERVED 2026-07-14, TASK-0105 — ENAQT γ-sweep on real targets, per
 `REVIEW-2026-07-13b`'s §7 T-C, "the single highest-value experiment
@@ -528,7 +528,7 @@ is far too few for a real correlation): KRAS_G12C (`bfactor_std`=5.35,
 a 6× difference in B-factor spread; no pattern worth naming with this
 little data.
 Script + full JSON: `scripts/enaqt_gamma_sweep.py`,
-`results_task0105/<target>/sweep.json`.
+`results/tasks/0105/<target>/sweep.json`.
 
 ### CARDIAC_MYOSIN
 
@@ -838,7 +838,7 @@ real data, matching this project's precedent of not re-deriving a full
 3-target sweep inside a single subtask when the tooling itself is the
 point.
 Script + full JSON: `scripts/nisq_noise_simulation.py`,
-`results_task0068/KRAS_G12C/noise_sweep.json`.
+`results/tasks/0068/KRAS_G12C/noise_sweep.json`.
 
 ---
 
@@ -1070,7 +1070,7 @@ number below, not silently included):
 
 Full detail, trial histories, and the `optuna`-dependency/search-design
 notes: `.ai/tasks/DONE/TASK-0110-optuna-apo-holo-parameter-scan.md`,
-`results_task0110/<target>/scan.json`, `src/allostery/optuna_scan.py`.
+`results/tasks/0110/<target>/scan.json`, `src/allostery/optuna_scan.py`.
 
 ---
 
@@ -1094,7 +1094,7 @@ displacement onto the apo ANM's lowest 20 modes
 criterion, made precise (`superpose.learnability_verdict`): pocket RMSD
 ≥1.5× background RMSD **and** cumulative overlap <0.5 → `UNLEARNABLE_
 FROM_APO`; otherwise `LEARNABLE`. Real fetch, all 3 mandatory targets
-(`scripts/learnability_gate.py`, `results_task0120/learnability_gate.json`).
+(`scripts/learnability_gate.py`, `results/tasks/0120/learnability_gate.json`).
 
 **[UPDATED 2026-07-18]** Cumulative overlap for BCR_ABL1/CARDIAC_MYOSIN
 was blocked at first run (below); [[TASK-0128]]'s fix to the shared
@@ -1191,7 +1191,7 @@ direct consequence, not a separate re-run. Both extra CO values (0.794,
 RMSD-only numbers already pointed to.
 
 Full detail: `.ai/tasks/DONE/TASK-0120-learnability-gate-hyp-p8.md`,
-`results_task0120/learnability_gate.json` (includes the full CO(m) curve
+`results/tasks/0120/learnability_gate.json` (includes the full CO(m) curve
 for KRAS_G12C, not just the final value).
 
 **[UPDATED 2026-07-19, [[TASK-0133]]] The `CO(20)` values in the tables
@@ -1266,7 +1266,7 @@ just not in the pocket-favoring direction, and not in a way that
 changes anything currently reported.
 
 Full detail: `.ai/tasks/DONE/TASK-0133-learnability-gate-random-patch-control.md`,
-`results_task0133/learnability_gate_patch_control.json`.
+`results/tasks/0133/learnability_gate_patch_control.json`.
 
 **[RESOLVED 2026-07-20, [[TASK-0139]]] KRAS_G12C's classification decided: `AMBIGUOUS`,
 not `LEARNABLE`.** TASK-0133 left the contradiction above "reported, not decided." This
@@ -1323,7 +1323,7 @@ retreat from TASK-0120's own real, correctly-computed RMSD measurement, which st
 unchanged.
 
 Full detail: `.ai/tasks/DONE/TASK-0139-kras-learnability-reclassification-decision.md`,
-`results_task0139_learnability_resolution/resolution.json`,
+`results/tasks/0139_learnability_resolution/resolution.json`,
 `scripts/resolve_kras_learnability.py`.
 
 **[UPDATED 2026-07-22, [[TASK-0144]]] TASK-0120's and TASK-0133's CARDIAC_MYOSIN rows
@@ -1394,7 +1394,7 @@ checked KRAS_G12C's — out of scope for [[TASK-0150]] itself (a wiring task, no
 new statistical analysis), a natural next step for whoever revisits this gate.
 
 Full detail: `.ai/tasks/DONE/TASK-0150-wire-learnability-into-run-challenge.md`,
-`results_task0120/learnability_gate.json` (regenerated). **Correction, same day**:
+`results/tasks/0120/learnability_gate.json` (regenerated). **Correction, same day**:
 this task's own Done section originally claimed the prior whole-structure-CO output
 was snapshotted to a `.bak` file before regenerating — checked directly and found
 false. The intended `cp` ran against an empty/nonexistent directory (no prior JSON
@@ -1439,8 +1439,8 @@ resolved, not re-litigated — [[TASK-0127]]'s `apo_chains`/`holo_chains` fix al
 made it runnable, independently reconfirmed here by a clean, real 1000-replicate run.
 
 Full detail: `.ai/tasks/DONE/TASK-0152-cardiac-myosin-glucokinase-learnability-null.md`,
-`RESULTS/results_task0152/learnability_gate_patch_control_task0152.json`,
-`results_task0152_learnability_resolution/resolution.json`.
+`RESULTS/results/tasks/0152/learnability_gate_patch_control_task0152.json`,
+`results/tasks/0152_learnability_resolution/resolution.json`.
 
 **[EXECUTED, fixes a real bug]** `REVIEW-panel-2026-07-16-v2.md` §2.4 found
 that `potentials.py`'s five diagonal terms (V_B/V_T/V_R/V_C/V_M) were not
@@ -1548,7 +1548,7 @@ TASK-0081) and run through the **current, fully gauge-fixed pipeline**
 All four deliverables (connectivity matrix, top-5 hit list, report,
 verdict) verified present and well-formed for all 4 targets — same
 acceptance bar as the mandatory set, no lighter-touch standard for this
-"headline" set (`results_task0127/<target>/`).
+"headline" set (`results/tasks/0127/<target>/`).
 
 **Headline finding: 4/4 generalization targets land in the same
 `BEATS_CHANCE_NOT_FLOOR` category the mandatory set's KRAS_G12C already
@@ -1734,7 +1734,7 @@ the ceiling search specifically) remains open, though TASK-0130's
 up next.
 
 Full detail: `.ai/tasks/DONE/TASK-0116-ceiling-search-coverage-upgrade.md`,
-`results_task0116/KRAS_G12C/`.
+`results/tasks/0116/KRAS_G12C/`.
 
 ---
 
@@ -1804,7 +1804,7 @@ not the ad-hoc pattern.
 
 Full detail: `.ai/tasks/DONE/TASK-0135-reproducibility-audit-and-run-logging.md`,
 `.ai/invariants/INV-0008-run-to-run-environmental-reproducibility.md`,
-`results_task0135/BCR_ABL1/spectral_gap_audit.jsonl`.
+`results/tasks/0135/BCR_ABL1/spectral_gap_audit.jsonl`.
 
 ---
 
@@ -1881,7 +1881,7 @@ raised, and the answer is mostly no, not yes. Tier-2 gating (TASK-0100) still ap
 unchanged; this task's own scope was measurement, not operator selection.
 
 Full detail: `.ai/tasks/DONE/TASK-0122-mode-coparticipation-observable.md`,
-`results_task0122_mode_coparticipation/mode_coparticipation_validation.json`,
+`results/tasks/0122_mode_coparticipation/mode_coparticipation_validation.json`,
 `scripts/mode_coparticipation_validation.py`.
 
 ---
@@ -1934,7 +1934,7 @@ information source than a weakly-coupled one, joined by a single bridge
 edge) before trusting this on real targets.
 
 **Real run** (`scripts/transfer_entropy_baseline.py`, live fetch,
-`results_task0132/transfer_entropy_baseline.json`), compared directly
+`results/tasks/0132/transfer_entropy_baseline.json`), compared directly
 against `H_new`/CTQW's own current numbers (`COMPETENCE_MAP.md`'s
 TASK-0130 closed-form table):
 
@@ -1966,7 +1966,7 @@ based on this result (Tier-2-gated per [[TASK-0100]], unchanged); this
 task's own scope was measurement, not selection.
 
 Full detail: `.ai/tasks/DONE/TASK-0132-gnm-transfer-entropy-baseline.md`,
-`results_task0132/transfer_entropy_baseline.json`,
+`results/tasks/0132/transfer_entropy_baseline.json`,
 `src/allostery/transfer_entropy.py`.
 
 ---
@@ -2092,7 +2092,7 @@ already established.
 
 Full detail: `.ai/tasks/DONE/TASK-0163-external-classical-baselines.md`,
 `__WORK_IN_PROGRESS__/scripts/task0163_external_baseline_scoring.py`,
-`__WORK_IN_PROGRESS__/results_task0163_external_baselines/results.json`,
+`__WORK_IN_PROGRESS__/results/tasks/0163_external_baselines/results.json`,
 `/home/bchmura/PROJECTS/PocketMiner/` (separate repo, PocketMiner's own
 predictions + `Instructions.md`).
 
@@ -2170,8 +2170,8 @@ itself why the naive per-cell count of "40 passes" overstates independent eviden
 before the permutation-null correction above).
 
 Full detail: `.ai/tasks/DONE/TASK-0123-distance-stratified-evaluation.md`,
-`results_task0123_distance_stratified/distance_stratified_evaluation.json`,
-`results_task0123_distance_stratified/summary.md`,
+`results/tasks/0123_distance_stratified/distance_stratified_evaluation.json`,
+`results/tasks/0123_distance_stratified/summary.md`,
 `scripts/distance_stratified_evaluation.py`.
 
 ---
@@ -2261,7 +2261,7 @@ fail bar, as specified, is not met at this `t_max`, and is flagged rather than s
 worked around.
 
 Full detail: `.ai/tasks/DONE/TASK-0141-engineered-dephasing-sweep.md`,
-`results_task0141_dephasing/dephasing_discrimination_sweep.json`,
+`results/tasks/0141_dephasing/dephasing_discrimination_sweep.json`,
 `scripts/dephasing_discrimination_sweep.py`, new `propagators.haken_strobl_time_averaged` /
 `haken_strobl(..., coherent=)`, `tests/test_haken_strobl_extensions.py`.
 
@@ -2281,7 +2281,7 @@ Method: sweep `build_labels`' `cutoff` across {4.0, 4.5, 5.0, 5.5} Å on all 3 m
 targets, re-scoring the *same*, once-computed `H_new`/`time_averaged_ctqw_converged`
 occupation (TASK-0130's closed form) against each cutoff's regenerated label — only the
 label changes, the operator is never recomputed (`scripts/pocket_label_cutoff_
-sensitivity.py`, `results_task0114_pocket_cutoff_sensitivity/`).
+sensitivity.py`, `results/tasks/0114_pocket_cutoff_sensitivity/`).
 
 | Target | Cutoff (Å) | n pocket | AUC | Floor | Floor cleared? | `classify_failure` |
 |---|---|---|---|---|---|---|
@@ -2341,7 +2341,7 @@ not changed here — this is a characterization, the same posture TASK-0067 took
 GNM cutoff.
 
 Full detail: `.ai/tasks/DONE/TASK-0114-pocket-label-cutoff-sensitivity.md`,
-`results_task0114_pocket_cutoff_sensitivity/pocket_label_cutoff_sensitivity.json`,
+`results/tasks/0114_pocket_cutoff_sensitivity/pocket_label_cutoff_sensitivity.json`,
 `scripts/pocket_label_cutoff_sensitivity.py`.
 
 ---
@@ -2442,7 +2442,7 @@ methodological gap for whoever next revisits this premise.
 that task's own resolution, not a bug in this task's own loading path.
 
 Full detail: `.ai/tasks/DONE/TASK-0143-openness-premise-real-targets.md`,
-`results_task0143_openness_premise/openness_premise.json`, new
+`results/tasks/0143_openness_premise/openness_premise.json`, new
 `src/allostery/closure.py`, `scripts/openness_premise_test.py`,
 `tests/test_closure.py`.
 
@@ -2474,7 +2474,7 @@ excluded for the same data-quality reason, inherited not re-litigated), scored v
 `time_averaged_ctqw_converged` (TASK-0130's closed form) and `ground_state_relaxation`
 (`t_max=15`). TASK-0094's floor baselines recomputed per cutoff too (they read the same
 GNM contact graph) for a fair, consistent comparison
-(`scripts/h_new_cutoff_sweep.py`, `results_task0113_h_new_cutoff_sweep/`).
+(`scripts/h_new_cutoff_sweep.py`, `results/tasks/0113_h_new_cutoff_sweep/`).
 **Cross-validated**: the cutoff=8.0 Å row (the shipped default) reproduces
 [[TASK-0130]]'s own independently-computed closed-form numbers for BCR_ABL1 exactly
 (ctqw 0.5266, ground_state 0.6766) — confirms this script measures the same quantity the
@@ -2540,7 +2540,7 @@ functionally inert for `time_averaged_ctqw` but real and headline-relevant for
 `ground_state_relaxation` on BCR_ABL1.
 
 Full detail: `.ai/tasks/DONE/TASK-0113-cutoff-sweep-headline-operator.md`,
-`results_task0113_h_new_cutoff_sweep/h_new_cutoff_sweep.json`,
+`results/tasks/0113_h_new_cutoff_sweep/h_new_cutoff_sweep.json`,
 `scripts/h_new_cutoff_sweep.py`.
 
 ---
@@ -2714,7 +2714,7 @@ mostly-negative result for part (c) specifically, distinct from parts (a)/(b)'s 
 decisive diagnostic finding.
 
 Full detail: `.ai/tasks/DONE/TASK-0136-percolation-connectivity-robustness.md`,
-`results_task0136_percolation/percolation_connectivity.json`, new
+`results/tasks/0136_percolation/percolation_connectivity.json`, new
 `src/allostery/percolation.py`, `baselines.connectivity_robustness`.
 
 ---
@@ -2783,7 +2783,7 @@ whole-structure CO 0.943 both agree with `LEARNABLE` well clear of either thresh
 the restricted-CO number is unmeasured for both and should not be assumed to agree.
 
 Full detail: `.ai/tasks/DONE/TASK-0144-align-apo-holo-chain-letter-mismatch.md`,
-`results_task0144_learnability_rerun/learnability_gate_rerun.json`,
+`results/tasks/0144_learnability_rerun/learnability_gate_rerun.json`,
 `tests/test_superpose.py::TestCommonResiduesByResnum`/`TestAlignApoHolo`'s new
 chain-letter-remap cases.
 
@@ -2842,7 +2842,7 @@ Flagged (not re-run), sharing the same unverified-CPU-time shape: [[TASK-0105]]'
 ENAQT per-gamma wall-clock timings, [[TASK-0068]]'s NISQ Trotter-step timing.
 
 Full detail: `.ai/tasks/DONE/TASK-0134-cpu-time-verification-and-long-job-convention.md`,
-`results_task0134_cpu_time/cpu_time_reverification.jsonl`,
+`results/tasks/0134_cpu_time/cpu_time_reverification.jsonl`,
 `.ai/reference/LONG_JOB_CONVENTION.md`.
 
 ---
@@ -2911,7 +2911,7 @@ sensitivity is real and target-dependent (PTP1B's AUC spans 0.429–0.818 across
 [[TASK-0142]]'s own hard gate ("run only if TASK-0143 or TASK-0140 shows life") remains
 unmet — this result does not open it. Full detail:
 `.ai/tasks/DONE/TASK-0140-chiral-circulation-observable.md`,
-`results_task0140_chiral/chiral_circulation_real_run.json`.
+`results/tasks/0140_chiral/chiral_circulation_real_run.json`.
 
 ---
 
@@ -2999,7 +2999,7 @@ AUC 0.85–0.98, which a pure distance-direction bias cannot produce on its own.
 **`k_modes` sensitivity: no sign or verdict flips across `{5, 10, 15, 20}` on any
 target.** CARDIAC_MYOSIN's significance holds at every `k` (`prs_low` p=0.003–0.006;
 `dcc_low` p<0.001–0.007); KRAS_G12C/BCR_ABL1 stay non-significant at every `k`
-(p=0.67–0.99 throughout). Full per-`k` table: `results_task0149_lowmode_predictor/
+(p=0.67–0.99 throughout). Full per-`k` table: `results/tasks/0149_lowmode_predictor/
 lowmode_predictor_real_run.json`.
 
 **Multiple-comparisons honesty, both scopes reported, neither cherry-picked:**
@@ -3027,7 +3027,7 @@ not intractable, so the Out Of Scope note against rewriting it for performance w
 never triggered.
 
 Full detail: `.ai/tasks/DONE/TASK-0149-lowmode-prs-dcc-predictor.md`,
-`results_task0149_lowmode_predictor/lowmode_predictor_real_run.json`.
+`results/tasks/0149_lowmode_predictor/lowmode_predictor_real_run.json`.
 
 ---
 
@@ -3088,7 +3088,7 @@ life" is open, so the L1 half (a cycle/loop-flow quantity, the same family TASK-
 bears on) is not attempted.
 
 Full detail: `.ai/tasks/DONE/TASK-0142-hodge-l1-persistent-h2.md`,
-`results_task0142_topology/persistent_voids_real_run.json`.
+`results/tasks/0142_topology/persistent_voids_real_run.json`.
 
 ---
 
@@ -3177,7 +3177,7 @@ much weaker KNOB by comparison (BCR_ABL1: 0.680-0.705 across its own grid),
 consistent with the intended weak-coupling regime.
 
 Full detail: `.ai/tasks/DONE/TASK-0145-quantum-transport-effective-conductance.md`,
-`results_task0145_transport/transport_observable_real_run.json`,
+`results/tasks/0145_transport/transport_observable_real_run.json`,
 `src/allostery/transport.py`, `tests/test_transport.py`.
 
 ---
@@ -3237,7 +3237,7 @@ BCR_ABL1-specific result and `prs_low` remain single-target findings, real but n
 strengthened by the generalization set.
 
 Full detail: `.ai/tasks/DONE/TASK-0151-generalization-check-transport-lowmode-findings.md`,
-`results_task0151_generalization_check/generalization_check.json`.
+`results/tasks/0151_generalization_check/generalization_check.json`.
 
 ---
 
@@ -3286,7 +3286,7 @@ Constraint, restated: none of these holo numbers were ever submission prediction
 purely diagnostic.
 
 Full detail: `.ai/tasks/DONE/TASK-0153-holo-diagnostic-transport-lowmode.md`,
-`results_task0153_holo_diagnostic/holo_diagnostic_transport_lowmode.json`.
+`results/tasks/0153_holo_diagnostic/holo_diagnostic_transport_lowmode.json`.
 
 ---
 
@@ -3379,7 +3379,7 @@ P2 prior** ("lower plausibility than TASK-0145... nothing structural argues
 for proximity-orthogonality here").
 
 Full detail: `.ai/tasks/DONE/TASK-0146-frequency-domain-coherence-observable.md`,
-`results_task0146_spectral_coherence/spectral_coherence_real_run.json`,
+`results/tasks/0146_spectral_coherence/spectral_coherence_real_run.json`,
 `src/allostery/spectral_coherence.py`, `tests/test_spectral_coherence.py`,
 `tests/test_dumbbell_negative_control.py::TestSpectralCoherenceDumbbellGate`.
 
@@ -3454,7 +3454,7 @@ different questions, and this task's own real result answers the second
 directly (no), not by inference from the first.
 
 Full detail: `.ai/tasks/DONE/TASK-0148-single-particle-entanglement-entropy.md`,
-`results_task0148_entanglement/entanglement_entropy_real_run.json`,
+`results/tasks/0148_entanglement/entanglement_entropy_real_run.json`,
 `src/allostery/entanglement.py`, `tests/test_entanglement.py`.
 
 ---
@@ -3523,7 +3523,7 @@ flagged as exposed to this defect and NOT yet re-run under a corrected null —
 a live, real, and urgent open item for a follow-up task.
 
 Full detail: `.ai/tasks/DONE/TASK-0158-compact-null-fix-and-rerun.md`,
-`results_task0158_compact_null/compact_null_rerun.json`,
+`results/tasks/0158_compact_null/compact_null_rerun.json`,
 `src/allostery/nulls.py`, `tests/test_nulls.py`.
 
 ---
@@ -3627,7 +3627,7 @@ finding requiring a follow-up correction to the ASD generalization set's
 own PTP1B row, not silently absorbed.
 
 Full detail: `.ai/tasks/DONE/TASK-0159-run-challenge-converged-propagator.md`,
-`RESULTS/results_task0159_finite_time_convergence/*.json`,
+`RESULTS/results/tasks/0159_finite_time_convergence/*.json`,
 `scripts/task0159_finite_time_convergence_check.py`.
 
 ---
@@ -3966,7 +3966,7 @@ and every spatial-block score CI re-checked here still overlaps its own
 floor's CI — no verdict flips either direction.
 
 Full detail: `.ai/tasks/DONE/TASK-0165-spatial-block-bootstrap.md`,
-`results_task0165_spatial_ci/spatial_ci_rerun.json`,
+`results/tasks/0165_spatial_ci/spatial_ci_rerun.json`,
 `src/allostery/metrics.py::spatial_block_bootstrap_ci`, `tests/test_metrics.py`.
 
 ---
@@ -4051,7 +4051,7 @@ entropy proxy only, stated as such, not silently expanded.
 9 new unit tests (`tests/test_conformational_entropy.py`), full suite:
 971 passed, 2 xfailed, 0 failed. Full detail:
 `.ai/tasks/DONE/TASK-0166-ensemble-entropy-observable.md`,
-`RESULTS/results_task0166_ensemble_entropy/ensemble_entropy_real_run.json`,
+`RESULTS/results/tasks/0166_ensemble_entropy/ensemble_entropy_real_run.json`,
 `src/allostery/conformational_entropy.py`,
 `scripts/ensemble_entropy_real_run.py`.
 
@@ -4144,7 +4144,7 @@ whoever next wants a Bonferroni-corrected verdict on the reverse direction
 specifically, not done here.
 
 Full detail: `.ai/tasks/DONE/TASK-0162-reverse-direction-coupling-test.md`,
-`RESULTS/results_task0162_reverse_direction/reverse_direction_coupling_test.json`,
+`RESULTS/results/tasks/0162_reverse_direction/reverse_direction_coupling_test.json`,
 `scripts/reverse_direction_coupling_test.py`.
 
 ---
@@ -4309,7 +4309,7 @@ this program's negative claims rest on: `T(E=0)` on a weighted
 20 planting seeds × 3 null specifications, through the **unmodified** verdict
 pipeline (floor → CI non-overlap → stratified-AUC permutation null →
 Bonferroni), certification requiring all four gates. Checkpointed per cell
-(`scripts/positive_control_detection_curve.py`, `results_task0167002_
+(`scripts/positive_control_detection_curve.py`, `results/tasks/0167002_
 detection_curve/detection_curve.json`, 480 cells, ~87 CPU-minutes). Both
 `block_bootstrap_ci` (sequence) and `spatial_block_bootstrap_ci` (spatial) are
 computed and gated on for every cell, per this task's own Constraint —
@@ -4345,7 +4345,7 @@ re-run needed (only the Bonferroni denominator was wrong, not the p-values).
 on CARDIAC_MYOSIN (0.544→1.052); the grid's own top (strength 32) reaches
 **4.69×** (KRAS_G12C) and **3.97×** (CARDIAC_MYOSIN) background conductance
 without the corrected null ever reaching 80% power on any target. Full table:
-`results_task0167002_detection_curve/dose_axis_conductance.json`.
+`results/tasks/0167002_detection_curve/dose_axis_conductance.json`.
 
 **This is a direct, quantitative, and considerably more severe confirmation
 of the external review's own §2.1 "2–2.5× power cost" estimate** — measured
@@ -4431,9 +4431,9 @@ actually saturates, if it does before physically implausible coupling
 magnitudes.
 
 Full detail: `.ai/tasks/DONE/TASK-0167.002-detection-curve-and-limit-of-detection.md`,
-`results_task0167002_detection_curve/detection_curve.json`,
-`results_task0167002_detection_curve/analysis_summary.md`,
-`results_task0167002_detection_curve/dose_axis_conductance.json`,
+`results/tasks/0167002_detection_curve/detection_curve.json`,
+`results/tasks/0167002_detection_curve/analysis_summary.md`,
+`results/tasks/0167002_detection_curve/dose_axis_conductance.json`,
 `scripts/positive_control_detection_curve.py`, `scripts/detection_curve_analysis.py`.
 
 ---
@@ -4580,8 +4580,8 @@ just proposed.
 
 Full detail: `.ai/tasks/DONE/TASK-0167.003-zero-plant-specificity-and-null-calibration.md`,
 `.ai/tasks/DONE/TASK-0189-zero-plant-bonferroni-family-and-unreachable-gate.md`,
-`results_task0167003_specificity/zero_plant_specificity_full.json`,
-`results_task0167003_specificity/part_a_corrected.json`,
+`results/tasks/0167003_specificity/zero_plant_specificity_full.json`,
+`results/tasks/0167003_specificity/part_a_corrected.json`,
 `scripts/zero_plant_specificity.py`, `scripts/zero_plant_specificity_analysis.py`.
 
 ---
@@ -4774,7 +4774,7 @@ no regressions.
 
 Full detail: `.ai/tasks/DONE/TASK-0190-real-pocket-rg-matched-null.md`,
 `.ai/tasks/IN_PROGRESS/TASK-0201-rg-reaching-compact-null-construction.md`,
-`results_task0201_graph_walk_matched_null/results.json`,
+`results/tasks/0201_graph_walk_matched_null/results.json`,
 `scripts/graph_walk_matched_null_rerun.py`.
 
 ---
@@ -4834,7 +4834,7 @@ contact graph's own active-site<->pocket hop is also 2 (Step 4) — the
 real deposited holo structure does not show this particular pocket
 having collapsed to hop 1 either, consistent with the dynamic-shortcut
 hypothesis not finding purchase here. Full run: 16.2s wall-clock (fast —
-no long-job handling needed), `results_task0187_shortcut_hypothesis/results.json`.
+no long-job handling needed), `results/tasks/0187_shortcut_hypothesis/results.json`.
 
 **Reading**: for PTP1B specifically, Cα-level undirected ENM wobbling does
 not produce a pocket-specific contact-graph shortcut — whatever residual
@@ -4990,7 +4990,7 @@ pairs — generated programmatically by
 `scripts/task0177_consensus_labels.py`, never hand-transcribed, per this
 project's hard rule). Full detail: `allostery/consensus_labels.py`,
 `scripts/task0177_consensus_labels.py`,
-`results_task0177_consensus_labels/results.json`.
+`results/tasks/0177_consensus_labels/results.json`.
 
 ---
 
@@ -5063,7 +5063,7 @@ TASK-0015 is claimed elsewhere; flagged for [[TASK-0184]]'s narrative.
 Full detail: `.ai/tasks/DONE/TASK-0185-conformational-search-reformulation.md`
 (Done section), `documentation/CONFORMATIONAL_SEARCH.md`,
 `scripts/conformational_search_measurement.py`,
-`results_task0185_conformational_search/results.json`.
+`results/tasks/0185_conformational_search/results.json`.
 
 ---
 
@@ -5149,7 +5149,7 @@ clears its floor at the point estimate (specificity AUC 0.699 vs. floor
 permutation null (matched patch size, not scattered): **p=0.132, not
 significant even uncorrected**, let alone against the ~21-cell family this
 task itself adds to [[TASK-0161]]'s multiplicity budget. No other cell
-comes as close. Full table: `results_task0178_response_coupling/results.json`.
+comes as close. Full table: `results/tasks/0178_response_coupling/results.json`.
 
 **Kappa KNOB, characterised**: swept 0.1-10.0 on KRAS_G12C — `rho`
 (+0.040 to +0.023) and AUC (0.396 to 0.363) both drift slightly but
@@ -5191,8 +5191,8 @@ null).**
 
 Full detail: `allostery/response.py`, `tests/test_response.py`,
 `scripts/task0178_response_coupling.py`, `scripts/task0178_lod_probe.py`,
-`results_task0178_response_coupling/results.json`,
-`results_task0178_response_coupling/lod_probe_kras_g12c.json`.
+`results/tasks/0178_response_coupling/results.json`,
+`results/tasks/0178_response_coupling/lod_probe_kras_g12c.json`.
 
 ---
 
@@ -5413,7 +5413,7 @@ checks in both directions). Full suite: 994 passed, 2 xfailed, 0 failed
 
 Full detail: `.ai/tasks/DONE/TASK-0015-holo-direction-module.md`,
 `__WORK_IN_PROGRESS__/scripts/holo_direction_step2_gate.py`,
-`__WORK_IN_PROGRESS__/RESULTS/results_task0015_step2_gate/step2_gate.json`.
+`__WORK_IN_PROGRESS__/RESULTS/results/tasks/0015_step2_gate/step2_gate.json`.
 
 **Correction, same day, user-flagged, two rounds:** the "right edges
 created?" test above required a *direct* active-site↔pocket contact-graph
@@ -5528,7 +5528,7 @@ discipline this late in the schedule.
 
 Full detail: `.ai/tasks/DONE/TASK-0170-mechanism-validated-ground-truth.md`,
 `__WORK_IN_PROGRESS__/scripts/mechanism_validated_ptp1b.py`,
-`__WORK_IN_PROGRESS__/results_task0170_mechanism_validated/ptp1b_mechanism_validated.json`.
+`__WORK_IN_PROGRESS__/results/tasks/0170_mechanism_validated/ptp1b_mechanism_validated.json`.
 
 ---
 
@@ -5623,7 +5623,7 @@ mixed and not the register's "marginal surviving" case this task was
 filed to stress-test.
 
 Full detail: `.ai/tasks/DONE/TASK-0155-apo-structure-sensitivity-sweep.md`,
-`RESULTS/results_task0155_apo_sensitivity/apo_sensitivity_sweep.json`,
+`RESULTS/results/tasks/0155_apo_sensitivity/apo_sensitivity_sweep.json`,
 `scripts/apo_structure_sensitivity_sweep.py`.
 
 ---
@@ -5814,7 +5814,7 @@ sensitive to exactly the structural details (apo vs. holo topology) a
 robust allosteric signal should arguably be less sensitive to.
 
 Full detail: `.ai/tasks/DONE/TASK-0171-reverse-direction-coupling-test-holo.md`,
-`RESULTS/results_task0171_reverse_direction_holo/reverse_direction_coupling_test_holo.json`,
+`RESULTS/results/tasks/0171_reverse_direction_holo/reverse_direction_coupling_test_holo.json`,
 `scripts/reverse_direction_coupling_test_holo.py`.
 
 ---
@@ -5986,7 +5986,7 @@ narrower, planted-context corroboration, not a competing measurement.
 Full detail: `.ai/tasks/DONE/TASK-0168-mechanism-discriminating-plant.md`
 (Done section), `src/allostery/plant.py::plant_mode`,
 `scripts/mechanism_discriminating_plant.py`,
-`results_task0168_mechanism_discriminating_plant/grid.json`.
+`results/tasks/0168_mechanism_discriminating_plant/grid.json`.
 
 ---
 
@@ -6213,7 +6213,7 @@ recommendation to swap `run_challenge.py`'s own coarse-graining step.
 Full detail: `.ai/tasks/DONE/TASK-0172-spectrum-preserving-reduction.md`
 (Done section), `src/allostery/reduce.py`, `tests/test_reduce.py`,
 `scripts/spectrum_preserving_reduction.py`,
-`results_task0172_spectrum_preserving_reduction/results.json`.
+`results/tasks/0172_spectrum_preserving_reduction/results.json`.
 
 ---
 
@@ -6259,7 +6259,7 @@ on any data:
    while `apo_backbone + holo_chi` moves only atoms beyond Cβ.
 
 **Recompute** (`scripts/task0208_recompute.py`,
-`results_task0208_apo_holo_decomposition/results_recompute.json`; original
+`results/tasks/0208_apo_holo_decomposition/results_recompute.json`; original
 `results.json` untouched):
 
 | Target | `side_chain_explained` | original coupling verdict | corrected |
@@ -6479,7 +6479,7 @@ fixed-backbone rotamer packing ([[TASK-0204]], complexity grounds), and
 coupled backbone+rotamer search (this task).
 
 Full detail: `.ai/tasks/DONE/TASK-0213-strengthen-coupled-search-at-adequate-n.md`,
-`results_task0213_coupled_search_adequate_n/{budget,results,verdict,trajectory_diagnostics}.json`,
+`results/tasks/0213_coupled_search_adequate_n/{budget,results,verdict,trajectory_diagnostics}.json`,
 `scripts/task0213_coupled_search_adequate_n.py`.
 
 ---
@@ -6579,7 +6579,7 @@ than that verdict reads on its own.
 
 Full detail: `scripts/task0216_score_new_pairs.py`,
 `scripts/task0216_ptp1b_real_seed.py`,
-`results_task0216_new_pair_scoring/{results,ptp1b_real_seed}.json`,
+`results/tasks/0216_new_pair_scoring/{results,ptp1b_real_seed}.json`,
 `config/candidate_targets_task0216.yaml`.
 
 ---
@@ -6618,7 +6618,7 @@ are exactly what changed and are what this task re-derived independently):
 Independent re-derivation: AUC=0.5980392156862745, p=0.56725 — matches the
 existing script's own recorded values exactly. **No k in {5, 10, 15, 20}
 survives under the corrected seed** (full grid in
-`results_task0216_new_pair_scoring/task0201_rerun_real_seed.json`). The
+`results/tasks/0216_new_pair_scoring/task0201_rerun_real_seed.json`). The
 wiring itself is trustworthy: the fallback-seed configuration, run through
 the identical harness, reproduces the published p=0.0027 to within re-run
 RNG noise (p=0.00275).

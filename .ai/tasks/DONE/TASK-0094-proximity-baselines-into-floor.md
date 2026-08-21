@@ -117,7 +117,7 @@ re-evaluated once it exists.
 - `scripts/run_challenge.py`: floor computation now passes all three
   baselines (`degree_centrality`, `euclid_from_seed_centroid`,
   `hop_from_seed`) as a list to `run_frozen_verdict`'s `floor_scores`.
-- **Real three-target re-run** (`results_task0094/`, identical apo data,
+- **Real three-target re-run** (`results/tasks/0094/`, identical apo data,
   identical AUCs — only the floor changed):
 
   | Target | AUC | Floor-cleared? | `_diagnosis` |

@@ -200,7 +200,7 @@ to assert the new state instead of being routed around.
 
 **(6) Real re-run, current (TASK-0130 closed-form) convention**
 (`scripts/closed_form_competence_map_rerun.py --target CARDIAC_MYOSIN`,
-live fetch, `results_task0124_reanchor/closed_form_competence_8QYP.json`):
+live fetch, `results/tasks/0124_reanchor/closed_form_competence_8QYP.json`):
 
 | | N | Floor (95% CI) | Ceiling (95% CI) | Actual (95% CI) | Diagnosis |
 |---|---|---|---|---|---|

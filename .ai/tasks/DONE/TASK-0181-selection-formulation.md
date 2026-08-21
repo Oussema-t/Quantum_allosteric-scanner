@@ -252,7 +252,7 @@ hard-excluded from the candidate pool for both greedy and QUBO (matches
 apples-to-apples comparison, not a strawman greedy baseline that would
 trivially pick the seed's own high-occupation residues).
 
-Result (`results_task0181_selection/gate.json`):
+Result (`results/tasks/0181_selection/gate.json`):
 
 | Target | greedy hit@1 | QUBO hit@1 (best of 8 restarts) |
 |---|---|---|

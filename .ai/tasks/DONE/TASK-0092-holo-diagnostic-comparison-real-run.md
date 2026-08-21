@@ -151,7 +151,7 @@ re-selects the same winner as pass 1 (selection is blind/deterministic,
 no RNG in `select.py`'s scoring path) as a live self-check. Real network
 + real compute, both mandatory targets with holo ground truth.
 
-Output: `__WORK_IN_PROGRESS__/results_task0092/{KRAS_G12C,BCR_ABL1}/{verdict.json,report.txt}`
+Output: `__WORK_IN_PROGRESS__/results/tasks/0092/{KRAS_G12C,BCR_ABL1}/{verdict.json,report.txt}`
 (gitignored `results_*/`, TASK-0094's own precedent).
 
 ### KRAS_G12C

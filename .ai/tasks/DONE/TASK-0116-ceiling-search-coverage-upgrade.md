@@ -168,13 +168,13 @@ not returned as a rankable value.
 
 **Found and worked around, before running anything real**: a stale
 60-trial checkpoint for KRAS_G12C already existed at
-`results_task0082/KRAS_G12C/ceiling_trials.jsonl` (from TASK-0046's
+`results/tasks/0082/KRAS_G12C/ceiling_trials.jsonl` (from TASK-0046's
 original 2026-07-15 run, same `seed=7`). `ceiling_search_batched.py`'s
 own resume logic reads "N trials already checkpointed" by count, not by
 which parameter range produced them — re-running with the same target/
 seed/checkpoint-dir would have silently reported the stale-range best as
 "already complete," never running a single new trial. Used a fresh
-`--checkpoint-dir results_task0116/...` instead of touching or deleting
+`--checkpoint-dir results/tasks/0116/...` instead of touching or deleting
 the original (preserves TASK-0046's own evidence, matches this
 project's "don't overwrite a prior run's numbers" convention).
 

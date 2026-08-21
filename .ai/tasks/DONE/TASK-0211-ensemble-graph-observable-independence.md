@@ -224,7 +224,7 @@ Implementing `scripts/task0211_ensemble_graph_observable.py`.
 
 **2026-08-12, Architect.** `scripts/task0211_ensemble_graph_observable.py`
 (new). Ran on all 5 of [[TASK-0199]]'s own targets. Results:
-`results_task0211_ensemble_graph_observable/results.json`.
+`results/tasks/0211_ensemble_graph_observable/results.json`.
 
 ### Per-target results
 

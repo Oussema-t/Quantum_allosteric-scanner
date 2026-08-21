@@ -168,4 +168,4 @@ no new unit tests were added; the full suite confirms nothing broke).
 
 Full detail: `RESULTS.md`'s "Reverse-direction coupling test" section,
 open-questions row 45,
-`RESULTS/results_task0162_reverse_direction/reverse_direction_coupling_test.json`.
+`RESULTS/results/tasks/0162_reverse_direction/reverse_direction_coupling_test.json`.

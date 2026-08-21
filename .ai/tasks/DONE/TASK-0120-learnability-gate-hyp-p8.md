@@ -109,7 +109,7 @@ structure"; CO alone can't distinguish "genuinely anharmonic" from
 "noise on a small displacement").
 
 **(2) Real run, all 3 mandatory targets** (`scripts/learnability_gate.py`,
-live fetch, `results_task0120/learnability_gate.json`):
+live fetch, `results/tasks/0120/learnability_gate.json`):
 
 | Target | N (common) | Pocket RMSD | Background RMSD | Ratio | CO(20) | Verdict |
 |---|---|---|---|---|---|---|

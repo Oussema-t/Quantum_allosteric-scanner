@@ -278,4 +278,4 @@ Files touched: `src/allostery/percolation.py` (new), `src/allostery/baselines.py
 `tests/test_percolation.py` (new, 12 tests), `tests/test_baselines.py` (+3 tests),
 `tests/test_dumbbell_negative_control.py` (+2 tests, new gate class),
 `scripts/percolation_connectivity_analysis.py` (new). Results:
-`results_task0136_percolation/percolation_connectivity.json`.
+`results/tasks/0136_percolation/percolation_connectivity.json`.

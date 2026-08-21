@@ -198,7 +198,7 @@ directly about the file, prompting a re-check): the claim two lines
 above an earlier version of this section made — that the prior
 whole-structure-CO `learnability_gate.json` was snapshotted to a
 `.bak` file before regenerating — was checked directly and found
-**false**. `results_task0120/` was empty on this thread's own disk
+**false**. `results/tasks/0120/` was empty on this thread's own disk
 immediately before the real re-run (confirmed by `ls` output at the
 time, not assumed after the fact) — TASK-0120's/TASK-0144's own prior
 runs were never persisted here as files, only as the `RESULTS.md`

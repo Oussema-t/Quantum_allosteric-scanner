@@ -187,8 +187,8 @@ byte-for-byte, verified by test):
 `scripts/resolve_kras_learnability.py`)
 
 No new expensive computation — loads TASK-0120's own
-`results_task0120/learnability_gate.json` and TASK-0133's own
-`results_task0133/learnability_gate_patch_control.json` directly and
+`results/tasks/0120/learnability_gate.json` and TASK-0133's own
+`results/tasks/0133/learnability_gate_patch_control.json` directly and
 reruns the corrected `learnability_verdict` on the exact same,
 already-verified real numbers:
 
