@@ -65,6 +65,10 @@ actual outcome, not the full multi-week program the drop sketches.)*
     first, per [[TASK-0195]]'s protocol) once that section's held claim
     frees up — not a new section, an addendum to the existing one, since
     both halves answer the same original §5.1/§2 question.
+  - Added mid-pickup, on direct user instruction: §6.2's `p` measurement,
+    collective-move-layer only (see In Scope amendment / In Progress
+    below) — the document's own named next-cheapest step, scoped to what
+    existing tooling can actually measure.
 - Out Of Scope (this pickup; real, substantial remaining document
   content, not silently dropped):
   - §3's branching-factor/depth reframing itself — this task's own
@@ -75,10 +79,12 @@ actual outcome, not the full multi-week program the drop sketches.)*
   - §4's move-set/blocked-move-detector/search algorithm — not built.
   - §5's supervised-path ceiling — not run (needs the conformer-graph
     search infrastructure §4 would provide).
-  - §6.1-6.4 (path depth, progress probability `p`, heuristic
-    informativeness, classical baseline) — not run; §6.2 in particular is
-    named by the drop itself as "the single cheapest decisive measurement
-    in the proposal," a real, well-scoped candidate for a follow-up task.
+  - §6.1/§6.3/§6.4 (path depth, heuristic informativeness, classical
+    baseline) — not run. §6.2 (progress probability `p`) — a
+    **collective-only partial** version *was* built and run this pickup
+    (added after the section below was first written; see In Progress) —
+    the full joint version the document specifies remains blocked on a
+    missing rotamer packer, filed as [[Q-0004]].
   - §7's Cleveland Clinic constraint-3 question — not filed into a
     question list here (that list's location/owner not confirmed this
     pickup); flagged, not resolved.
@@ -335,8 +341,9 @@ proposal into the submission.
 - [x] Regression tests for the new function.
 - [ ] RESULTS.md addendum to [[TASK-0227]]'s section (blocked on that
       section's held claim at write time — see Done).
-- [ ] §6.2 (progress probability `p`) — the document's own next-cheapest
-      item. Not started; candidate for a follow-up task.
+- [x] §6.2 (progress probability `p`) — collective-only partial version
+      built and run; full joint version blocked on missing tooling, see
+      [[Q-0004]].
 - [ ] §3 branching/depth measurement itself, §4 search infrastructure, §5
       ceiling. Not started.
 
@@ -354,11 +361,16 @@ proposal into the submission.
 
 ## Open Questions
 
-- §6.2 (progress probability `p`) is named by the document itself as "the
-  single cheapest decisive measurement in the proposal" — worth its own
-  task rather than folding in here, given this task's own scope is
-  already the §2 PDB-retest specifically. Not filed as a new task this
-  pickup; recorded so it isn't lost.
+- ~~§6.2 (progress probability `p`) is named by the document itself as
+  "the single cheapest decisive measurement in the proposal"~~ — built a
+  collective-only partial version this pickup (see In Progress below).
+  **Filed as [[Q-0004]] to Architect/Planner**: is the collective-only
+  result (p=0.24–0.49, squarely "not rare") sufficient to retire the
+  amplitude-amplification argument, or does the full joint
+  (backbone⊗local⊗rotamer) version need real build effort (a rotamer
+  packer, confirmed absent) before that call can be made? A scope/
+  priority decision with direct submission-narrative implications, not
+  one this thread should make unilaterally.
 - §7's Cleveland Clinic constraint-3 question ("does 'no classical MD'
   exclude minimisation/Monte-Carlo sampling?") — unresolved location: no
   single confirmed owner/list for cross-team questions was found this
@@ -426,6 +438,62 @@ disqualified by this result, but its expected benefit on real pocket-
 opening is much smaller than the source document's own headline 9.4×
 implied, and BCR_ABL1 shows it can actively hurt at equal dimension —
 material context for anyone scoping §3-§9's remaining work.
+
+---
+
+**§6.2 — progress probability `p`, collective-only partial version
+(added same pickup, after the RESULTS.md claim was found still held).**
+The document's own text: "the single cheapest decisive measurement in
+the proposal. Do it early." Built it, honestly scoped as partial.
+
+New `__WORK_IN_PROGRESS__/scripts/task0228_progress_probability_p.py`
+reuses `holo_direction.build_deformation_family` (TASK-0015, already
+validated, steric-clash-gated) for the admissible **collective**
+(single-mode ANM) move set at the apo starting node — no local relief
+move, no rotamer repacking (§4.1's other two move types; the second
+needs a global-optimum repacker, EvoEF2, confirmed absent by
+[[TASK-0227]]'s own Done section). Objective = real pocket residues' mean
+Cα displacement from their true holo positions (`cryptic_openness_gate`'s
+own quantity — cross-checked byte-for-byte against a direct call,
+confirmed matching). `p` = fraction of admissible moves that reduce it.
+
+**Real methodological finding, not assumed**: `HOLO_DIRECTION_MODULE.md`'s
+own frozen `PERTURBATION_PROTOCOL` (amplitude_scales 0.5/1.0/2.0, pre-
+registered for TASK-0015's own *different* purpose — a small curated
+family for shortcut-detection) rejects 53–59 of 60 candidates on these
+real targets via its own integrity gate — n_admissible=1–7, statistically
+unusable for a probability estimate. Checked 4 candidate amplitude grids
+directly (not guessed) and used a separate, smaller grid (0.1/0.2/0.3 —
+not a mutation of the frozen protocol, a different one for a different
+measurement with different statistical requirements) to reach 47–59
+admissible moves per target.
+
+**Result, all 3 mandatory targets, real structures**:
+
+| target | admissible moves | moves that reduce pocket-RMSD-to-holo | p |
+|---|---|---|---|
+| KRAS_G12C | 59 | 29 | 0.492 |
+| BCR_ABL1 | 59 | 14 | 0.237 |
+| CARDIAC_MYOSIN | 47 | 20 | 0.426 |
+
+**All 3 land inside the document's own cited 0.24–0.69 "not rare" band**
+— the same conclusion every other progress-probability-shaped
+measurement in this project has reached (TASK-0181/0183's own citation;
+TASK-0185's real ensemble-recovery rates 0.200–0.983). Per the document's
+own decision rule ("if p stays in the 0.1–0.7 band... retire the arm"),
+this is real, decisive evidence for retiring amplitude amplification —
+**at the collective move layer specifically.**
+
+**What this does not settle**: the full joint (backbone⊗local⊗rotamer)
+`p` the document actually asks for — a rotamer packer would be needed to
+test whether adding local/side-chain moves changes the picture, and none
+is available. Whether the collective-only result is close enough to
+retire the whole quantum-section argument, or whether closing that gap
+is worth real build effort, is **filed as [[Q-0004]] to Architect/
+Planner** rather than decided here — it has direct submission-narrative
+implications past this task's own scope.
+
+---
 
 **Not done, and why** (real, substantial remaining scope, not silently
 dropped — see this task's own Intent Contract Out Of Scope): §3's
