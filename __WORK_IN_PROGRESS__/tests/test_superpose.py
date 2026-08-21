@@ -20,6 +20,7 @@ from allostery.hamiltonians import H13_3N_anm_hessian  # noqa: E402
 from allostery.labels import LigandGroup, holo_pocket_mask  # noqa: E402
 from allostery.superpose import (  # noqa: E402
     Alignment,
+    adaptive_anm_modes,
     align_apo_holo,
     anm_modes,
     background_rmsd,
@@ -596,6 +597,66 @@ class TestAnmModes:
         coords = np.vstack([main, sub])
         kappa = calibrate_kappa(coords, b_mean=20.0, cutoff=10.0)  # must not raise
         assert kappa > 0
+
+
+class TestAdaptiveAnmModes:
+    """TASK-0228 §2: the per-step-recomputed ("adaptive") subspace union,
+    re-deriving the external session drop's ADK finding on
+    `H13_3N_anm_hessian` rather than that drop's own independently-
+    reimplemented Hessian."""
+
+    def test_returns_an_orthonormal_basis(self):
+        basis = adaptive_anm_modes(COORDS, cutoff=10.0, n_modes=3, n_modes_stepped=2, amp=2.0)
+        gram = basis.T @ basis
+        assert np.allclose(gram, np.eye(basis.shape[1]), atol=1e-8)
+
+    def test_dimension_matches_the_union_upper_bound(self):
+        n_modes, n_modes_stepped = 3, 2
+        basis = adaptive_anm_modes(COORDS, cutoff=10.0, n_modes=n_modes,
+                                    n_modes_stepped=n_modes_stepped, amp=2.0)
+        # <= because QR only shrinks on near-linear-dependence, never grows
+        assert basis.shape[1] <= n_modes * (1 + 2 * n_modes_stepped)
+        assert basis.shape[1] > 0
+        assert basis.shape[0] == 3 * N
+
+    def test_deterministic(self):
+        b1 = adaptive_anm_modes(COORDS, cutoff=10.0, n_modes=3, n_modes_stepped=2, amp=2.0)
+        b2 = adaptive_anm_modes(COORDS, cutoff=10.0, n_modes=3, n_modes_stepped=2, amp=2.0)
+        assert np.array_equal(b1, b2)
+
+    def test_zero_stepped_modes_reduces_to_the_static_apo_basis(self):
+        """n_modes_stepped=0 takes no steps at all -- the union is just
+        apo's own top-n_modes, QR-orthonormalized (same subspace as
+        anm_modes, though not necessarily the identical eigenbasis
+        ordering/signs, so compared by subspace projection, not equality)."""
+        basis = adaptive_anm_modes(COORDS, cutoff=10.0, n_modes=4, n_modes_stepped=0, amp=2.0)
+        _, static = anm_modes(COORDS, cutoff=10.0, n_modes=4)
+        assert basis.shape[1] == static.shape[1]
+        # same subspace: projecting one basis onto the other should recover it fully
+        projected = basis @ (basis.T @ static)
+        assert np.allclose(np.linalg.norm(projected, axis=0), 1.0, atol=1e-6)
+
+    def test_compatible_with_restricted_cumulative_overlap(self):
+        """The whole point of building this on H13_3N_anm_hessian instead
+        of re-deriving the drop's own Hessian: it must drop straight into
+        the existing, validated CO machinery with no adapter code."""
+        apo_coords = COORDS
+        holo_coords = COORDS + 0.3 * np.random.default_rng(0).standard_normal(COORDS.shape)
+
+        class _FakeApo:
+            coords = apo_coords
+            resnums = np.arange(N)
+
+        alignment = Alignment(
+            R=np.eye(3), mobile_centroid=np.zeros(3), ref_centroid=np.zeros(3),
+            apo_idx=np.arange(N), holo_idx=np.arange(N),
+            aligned_holo_coords=holo_coords, rmsd_overall=0.0, rmsd_per_chain={},
+        )
+        basis = adaptive_anm_modes(apo_coords, cutoff=10.0, n_modes=3, n_modes_stepped=1, amp=2.0)
+        co = restricted_cumulative_overlap(_FakeApo(), alignment, basis, np.arange(N))
+        assert co.shape == (basis.shape[1],)
+        assert np.all(co >= -1e-9) and np.all(co <= 1.0 + 1e-6)  # Bessel's inequality
+        assert np.all(np.diff(co) >= -1e-9)  # cumulative -- non-decreasing
 
 
 # ---------------------------------------------------------------------------

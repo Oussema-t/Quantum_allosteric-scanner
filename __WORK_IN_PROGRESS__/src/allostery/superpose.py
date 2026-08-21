@@ -529,6 +529,65 @@ def anm_modes(coords: np.ndarray, cutoff: float = 10.0, n_modes: int = 20):
     return w[n_zero:end], v[:, n_zero:end]
 
 
+def adaptive_anm_modes(
+    coords: np.ndarray, cutoff: float = 10.0, n_modes: int = 10,
+    n_modes_stepped: int = 5, amp: float = 6.0,
+):
+    """TASK-0228 §2 PDB-retest: union of ANM subspaces at apo *and* at
+    structures displaced along apo's own low modes, Hessian rebuilt at
+    each -- a per-step-recomputed ("adaptive"/"rotating") basis, as
+    opposed to `anm_modes`' single fixed apo-only ("static") basis.
+
+    External finding this ports and re-derives on real targets (session
+    drop `.ai/reviews/2026-08-21/TASK-0212_conformer_graph_search.md` §2,
+    itself a correction to that drop's own TASK-0211 §3): on ADK (a
+    non-target structure), an adaptive union captured a local pocket-
+    opening displacement ~9.4x better than a static basis of the *same
+    dimension* -- because the Hessian is configuration-dependent, so mode
+    composition is not additive along a nonlinear path; the reachable set
+    grows with iteration in a way no fixed-basis span measures. Re-derived
+    here on `H13_3N_anm_hessian` (this module's own validated ANM
+    Hessian, TASK-0005) rather than the drop's independently-reimplemented
+    one, and returns a basis compatible with `restricted_cumulative_
+    overlap` so it drops into `compute_learnability`'s existing pocket-CO
+    machinery unchanged -- no new alignment/labeling/fetch code needed.
+
+    Steps ±`amp` Å (mass-normalized displacement, matching the drop's own
+    convention) along each of apo's own first `n_modes_stepped` modes,
+    both signs; rebuilds the Hessian and takes its lowest `n_modes` modes
+    at each stepped structure; unions with apo's own top-`n_modes` and
+    QR-orthonormalizes. Column count is `<= n_modes * (1 + 2*n_modes_
+    stepped)` (QR can only shrink it, via near-linear-dependence, never
+    grow it) and is *not* fixed in advance -- callers doing an equal-
+    dimension static/adaptive comparison must read `.shape[1]` off the
+    return value and truncate the static basis to match (`anm_modes(...,
+    n_modes=dim)[1][:, :dim]`), exactly as the external drop's own
+    `adaptive_union`/`STATIC = Vfull[:, :dim]` does -- an unequal-dimension
+    comparison is a dimension artefact, not a reachability finding.
+    """
+    from .hamiltonians import H13_3N_anm_hessian
+
+    N = len(coords)
+
+    def _modes_at(co):
+        H = H13_3N_anm_hessian(co, cutoff=cutoff)
+        w, v = np.linalg.eigh(H)
+        nz = np.flatnonzero(w > 1e-8)
+        return v[:, nz[:n_modes]]
+
+    M0 = _modes_at(coords)
+    cols = [M0]
+    for m in range(min(n_modes_stepped, M0.shape[1])):
+        mode = M0[:, m].reshape(N, 3)
+        mode = mode / np.linalg.norm(mode)
+        for sign in (+1, -1):
+            displaced = coords + sign * mode * np.sqrt(N) * amp
+            cols.append(_modes_at(displaced))
+    union = np.column_stack(cols)
+    basis, _ = np.linalg.qr(union)
+    return basis[:, : union.shape[1]]
+
+
 def _projection_coefficients(delta_r: np.ndarray, eigvecs: np.ndarray, common_idx: np.ndarray):
     """c_k = (unit-renormalized, common-subset-restricted eigvec_k) . delta_r.
 
