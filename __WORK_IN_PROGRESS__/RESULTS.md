@@ -6734,10 +6734,15 @@ framing. It does **not** re-test whether the *local, pocket-specific* residual
 (§3's original narrower concern) is small — TASK-0227's own text already treats that
 as the reduced, secondary question once the collective bar clears. §5.2 (oracle-
 supervised reachability ceiling, needs a global-optimum side-chain repacker) and §5.3
-(scorer-brittleness interpolation, needs a druggability scorer) were not attempted —
-neither EvoEF2 nor fpocket is installed in this environment; both need dedicated
-tooling work, out of "hours" scope. Full detail:
-`.ai/tasks/DONE/TASK-0227-anm-rotamer-reachability-ceiling.md`.
+(scorer-brittleness interpolation, needs a druggability scorer) were not attempted
+under this task's own claim, out of "hours" scope — **not** because the tooling is
+missing: `EvoEF2` (`__WORK_IN_PROGRESS__/tools/evoef2/bin/EvoEF2`) and `fpocket`
+(`__WORK_IN_PROGRESS__/tools/fpocket/bin/fpocket`) are both already vendored in-repo
+and working (a same-day re-check found an initial "both absent" claim here was
+simply an inadequate search — bare `which` plus a depth-limited `find` that never
+reached the repo's own `tools/` directory — corrected in the task's own Done
+section). Both experiments are a real, tooling-unblocked option for a follow-up
+task. Full detail: `.ai/tasks/DONE/TASK-0227-anm-rotamer-reachability-ceiling.md`.
 
 ## Observable-family proximity confound — PDB-retest replicates the external drop's finding, real seeds/burial ([[TASK-0226]], 2026-08-21)
 

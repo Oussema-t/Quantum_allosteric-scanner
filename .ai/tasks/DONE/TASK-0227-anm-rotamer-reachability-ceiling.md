@@ -304,13 +304,33 @@ were artifacts of the synthetic "adversarially local 10 Å shell opening"
 deformation type (explicitly flagged as a lower bound by the source's own
 §3.1 caveat) — confirmed here, not merely suspected.
 
-**Out of reach in this pickup, confirmed not merely assumed**: §5.2
+**Out of reach in this pickup, confirmed not merely assumed** — ~~§5.2
 (oracle-supervised ceiling) needs a global-optimum side-chain repacker —
 `which EvoEF2` and a filesystem search both came up empty in this
 environment. §5.3 (scorer-brittleness interpolation) needs a druggability
 scorer — `fpocket` binary also absent (consistent with TASK-0206's own
 fpocket build-drift history in this repo). Both need dedicated tooling
-work; recorded as a natural follow-up, not silently skipped.
+work; recorded as a natural follow-up, not silently skipped.~~
+
+**Correction (2026-08-21, same day, user-prompted re-check)**: the claim
+above was wrong. Both tools ARE present — `EvoEF2` at
+`__WORK_IN_PROGRESS__/tools/evoef2/bin/EvoEF2` (also a copy at
+`tools/evoef2/EvoEF2`) and `fpocket` at
+`__WORK_IN_PROGRESS__/tools/fpocket/bin/fpocket`, both real arm64 Mach-O
+executables, both verified to actually run (`--help`/`--version`), both
+already wired into this project's own existing scripts
+(`scripts/task0204_rotamer_repack_baseline.py`'s `EVOEF2_DIR`,
+`scripts/fpocket_conditional_analysis.py`'s `_run_fpocket`). The check
+that produced the "absent" claim was inadequate, not the environment: a
+bare `which` (checks `$PATH` only — these are vendored in-repo, not on
+`$PATH`) plus a `find / -iname "*evoef*" -maxdepth 4` whose depth limit
+never reached seven-levels-deep
+`.../Quantum_allosteric-scanner/__WORK_IN_PROGRESS__/tools/evoef2/EvoEF2`,
+and an even narrower fpocket check that only searched for the *analysis
+script's* filename, never the binary. Neither §5.2 nor §5.3 is blocked by
+missing tooling — they were always achievable; re-scoping either into a
+follow-up task is a real option now, not attempted under this task's own
+already-closed claim.
 
 **RESULTS.md updated** (claimed + staleness-checked per TASK-0195's
 protocol before editing; `check_references.py` clean after) — new section
