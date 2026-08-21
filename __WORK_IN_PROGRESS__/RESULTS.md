@@ -6738,3 +6738,50 @@ supervised reachability ceiling, needs a global-optimum side-chain repacker) and
 neither EvoEF2 nor fpocket is installed in this environment; both need dedicated
 tooling work, out of "hours" scope. Full detail:
 `.ai/tasks/DONE/TASK-0227-anm-rotamer-reachability-ceiling.md`.
+
+## Observable-family proximity confound — PDB-retest replicates the external drop's finding, real seeds/burial ([[TASK-0226]], 2026-08-21)
+
+External drop (`.ai/reviews/2026-08-21/TASK-0210_observable_family_confound.md`, no repo
+access, bundled non-target structures) claimed the proximity confound is a property of
+seed-referencing scoring on a static contact graph, not of quantumness — CTQW the
+*least* confounded of the seed-referencing family, only seed-blind observables escape.
+Re-run on all 5 real targets (KRAS_G12C, BCR_ABL1, CARDIAC_MYOSIN, PTP1B, MYC_MAX) with
+real annotated active-site seeds (`labels.functional_indices`, not radial-percentile
+draws) and real per-residue SASA burial (freesasa, not centroid distance).
+
+**Replicated, on real data**: partial Spearman rho(dist | SASA-burial), 76 real-seed
+replicates pooled across 5 targets — `CTQW_adj_T25` **0.677** sits below every
+seed-referencing classical observable tested (`GNM_corr_seed` 0.888, `GNM_corr_low10`
+0.865, `heat_T5` 0.806, `dMSF_at_seed` 0.795, the challenge's own cited `MRW_commute`
+ref[8] 0.755). Only seed-blind observables meaningfully escape: `dS_vib_global` **0.082**
+(clean), `slow1_minima` (this task's own ref[16] proxy) 0.496 ± 0.193 (partial, wide
+spread — real and less clean than the drop's own non-target-structure number, 0.292).
+
+**Resolves (partially) the drop's own flagged discrepancy**: `prs_low` (0.232) escapes
+the confound substantially better than either DCC-style observable tested — this
+repo's own canonical `dcc_low` (k=20, 0.384) or a direct port of the drop's own 10-mode
+`GNM_corr_low10` (0.865). A real PRS-vs-DCC family asymmetry, though mode-count/seed-
+cardinality differ between the two DCC variants and are not cleanly isolated.
+
+**New, not in the drop**: `transmission_E0` (ref[7], Landauer T(E=0) on the GNM
+Laplacian) does *not* strengthen the negative result as hoped — one of the most
+confounded observables tested (0.795), consistent with this project's own prior
+transport/`1/R_eff` correlation finding ([[TASK-0145]]). `chiral_circ` (this project's
+own candidate proximity-orthogonal quantity, [[TASK-0140]]) shows a real partial escape
+(0.540) — worse than the seed-blind pair, meaningfully better than every other
+seed-referencing observable.
+
+**Negative control** (drop's own explicit requirement, corrected Rg-matched null per
+`nulls.graph_walk_patch_matched`, not the anti-conservative scattered null): a real
+stiff channel planted from KRAS_G12C's P-loop seed to a floor-blind, far-hop distal
+patch. `slow1_minima` shows nominal enrichment (p=0.028, does not survive even a
+2-comparison Bonferroni bar); `dS_vib_global` shows none at this single tested
+strength (p=0.33). **Mixed, not a clean confirmation** — a single-condition check, not
+a formal LOD sweep.
+
+65 confound-structure comparison cells (13 observables x 5 targets) + 2 negative-
+control cells — not added to this document's own "Program-level multiple-comparison
+budget" (that table's scope is real-label AUC/p-value comparisons; confound-structure
+correlations and synthetic-signal negative controls are both outside its own stated
+definition), logged here per the drop's own request. Full numbers, methodology, and
+bug-catches: `.ai/tasks/DONE/TASK-0226-observable-family-proximity-confound-pdb-retest.md`.

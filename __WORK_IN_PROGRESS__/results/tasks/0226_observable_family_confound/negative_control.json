@@ -1,0 +1,58 @@
+{
+ "target": "KRAS_G12C",
+ "seed_idx": [
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  27,
+  29,
+  31,
+  115,
+  116,
+  118,
+  119,
+  144,
+  145,
+  146
+ ],
+ "target_patch": [
+  73,
+  74,
+  72,
+  70,
+  71,
+  69,
+  75,
+  4,
+  68,
+  103
+ ],
+ "target_rg": 5.282158268170313,
+ "strength": 5.0,
+ "n_paths_applied": 10,
+ "n_paths_failed": 0,
+ "n_null": 500,
+ "dS_vib_global_unplanted_mean_in_patch": -4.387385411024513,
+ "slow1_minima_unplanted_mean_in_patch": -0.063174530363649,
+ "result": {
+  "dS_vib_global": {
+   "true_mean": -4.299061966575022,
+   "null_mean": -4.596843317139676,
+   "null_std": 0.5469476841973495,
+   "p_value_one_sided": 0.3333333333333333,
+   "n_null": 500
+  },
+  "slow1_minima": {
+   "true_mean": -0.017059608203139277,
+   "null_mean": -0.08888196121473205,
+   "null_std": 0.063776716014133,
+   "p_value_one_sided": 0.027944111776447105,
+   "n_null": 500
+  }
+ }
+}
