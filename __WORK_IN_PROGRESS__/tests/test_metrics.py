@@ -20,7 +20,9 @@ from allostery.metrics import (  # noqa: E402
     auc,
     block_bootstrap_ci,
     eff_rank,
+    enrichment_at_k,
     participation_ratio_rank,
+    rank_of_known_site,
     spatial_block_bootstrap_ci,
     stratified_auc,
     stratified_auc_summary,
@@ -306,3 +308,68 @@ class TestVarianceExplainedCount:
         k90 = variance_explained_count(eigenvalues, threshold=0.90)
         k95 = variance_explained_count(eigenvalues, threshold=0.95)
         assert k90 <= k95
+
+
+class TestRankOfKnownSite:
+    """TASK-0229.001 -- ref [9]'s own Planned Validation: a perfect
+    predictor must rank the known site at 1."""
+
+    def test_perfect_predictor_ranks_the_single_positive_first(self):
+        scores = np.array([0.1, 0.2, 0.9, 0.3])
+        labels = np.array([0, 0, 1, 0])
+        r = rank_of_known_site(scores, labels)
+        assert r["min"] == pytest.approx(1.0)
+        assert r["median"] == pytest.approx(1.0)
+        assert r["n_positive"] == 1
+        assert r["n_total"] == 4
+
+    def test_worst_predictor_ranks_the_positive_last(self):
+        scores = np.array([0.9, 0.8, 0.1, 0.7])
+        labels = np.array([0, 0, 1, 0])
+        r = rank_of_known_site(scores, labels)
+        assert r["min"] == pytest.approx(4.0)
+
+    def test_multiple_positives_reports_min_and_median_separately(self):
+        # ranks (descending score 5,4,3,2,1 -> positions 1..5): positives
+        # at score-rank 1 and 3 -> ranks [1, 3], min=1, median=2.
+        scores = np.array([5.0, 4.0, 3.0, 2.0, 1.0])
+        labels = np.array([1, 0, 1, 0, 0])
+        r = rank_of_known_site(scores, labels)
+        assert sorted(r["ranks"]) == pytest.approx([1.0, 3.0])
+        assert r["min"] == pytest.approx(1.0)
+        assert r["median"] == pytest.approx(2.0)
+
+    def test_tied_scores_split_the_average_rank(self):
+        # Two residues tied at the top score occupy ranks 1 and 2 ->
+        # average rank 1.5 for both.
+        scores = np.array([1.0, 1.0, 0.5])
+        labels = np.array([1, 0, 0])
+        r = rank_of_known_site(scores, labels)
+        assert r["min"] == pytest.approx(1.5)
+
+    def test_no_positives_returns_none_not_a_crash(self):
+        scores = np.array([0.1, 0.2, 0.3])
+        labels = np.array([0, 0, 0])
+        r = rank_of_known_site(scores, labels)
+        assert r["ranks"] is None
+        assert r["min"] is None
+        assert r["median"] is None
+        assert r["n_positive"] == 0
+
+    def test_rank_and_enrichment_agree_on_a_perfect_top_k_predictor(self):
+        """Cross-check against the already-existing `enrichment_at_k`:
+        a predictor that puts every positive in the top-k must show
+        rank_of_known_site's max rank <= k AND full enrichment at k."""
+        rng = np.random.default_rng(3)
+        n, k, n_pos = 30, 5, 3
+        labels = np.zeros(n, dtype=int)
+        labels[:n_pos] = 1
+        scores = np.zeros(n)
+        scores[:n_pos] = 10.0 + rng.random(n_pos)  # positives score highest
+        scores[n_pos:] = rng.random(n - n_pos)
+        r = rank_of_known_site(scores, labels)
+        assert max(r["ranks"]) <= k
+        # enrichment = (hits_in_top_k / k) / (total_hits / N); all n_pos
+        # hits land in the top k here, so hits_in_top_k == n_pos.
+        expected_enrichment = (n_pos / k) / (n_pos / n)
+        assert enrichment_at_k(scores, labels, k) == pytest.approx(expected_enrichment)

@@ -34,6 +34,59 @@ def top_k_indices(scores: np.ndarray, k: int) -> np.ndarray:
 
 
 # ---------------------------------------------------------------------------
+# TASK-0229.001 -- rank-of-known-site. Ref [9] (Gunasekaran, Ma & Nussinov
+# 2004, Proteins 57:433 -- verified directly against the live article
+# before this was written, not assumed from the citing task file) argues
+# there is no clean class of "non-allosteric" surface sites, which attacks
+# every AUC in this register: ROC-AUC is a statement about the FULL
+# negative class (does the score separate positives from every negative,
+# on average), so a contaminated negative class (a "negative" surface
+# residue that is secretly a latent allosteric site for a different
+# effector) directly corrupts the number. Rank-of-known-site and
+# enrichment-at-k (above) both degrade more gracefully: they only ask
+# where the KNOWN positives land relative to the rest of the ranking, not
+# whether every single labelled negative is a genuine negative -- a
+# contaminated negative class can still shift these somewhat (a secretly-
+# allosteric "negative" that outscores the known site would still hurt
+# rank-of-known-site), but nowhere near as badly as AUC, which is a sum
+# over every positive/negative pair.
+# ---------------------------------------------------------------------------
+
+def rank_of_known_site(scores: np.ndarray, labels: np.ndarray) -> dict:
+    """Rank (1 = best/highest score) of every labelled-positive residue in
+    the full descending score ordering, plus summary stats.
+
+    Ties are handled by average rank (`scipy`-style "fractional ranking"
+    convention: tied scores share the mean of the ranks they would occupy)
+    so a run of identical scores doesn't arbitrarily favor whichever index
+    happens to sort first.
+
+    A perfect predictor ranks every positive at 1..n_pos (min rank == 1,
+    matching this task's own Planned Validation sanity check). Returns
+    `{"ranks": [...], "min": ..., "median": ..., "n_positive": ...,
+    "n_total": ...}`; `min`/`median`/`ranks` are `None` if there are no
+    positives (mirrors `auc`'s own degenerate-label convention).
+    """
+    from scipy.stats import rankdata
+
+    scores = np.asarray(scores, dtype=float)
+    labels = np.asarray(labels).astype(bool)
+    n = len(scores)
+    if not labels.any():
+        return {"ranks": None, "min": None, "median": None, "n_positive": 0, "n_total": n}
+
+    ranks = rankdata(-scores, method="average")  # rank 1 = highest score
+    pos_ranks = ranks[labels]
+    return {
+        "ranks": [float(r) for r in pos_ranks],
+        "min": float(pos_ranks.min()),
+        "median": float(np.median(pos_ranks)),
+        "n_positive": int(labels.sum()),
+        "n_total": n,
+    }
+
+
+# ---------------------------------------------------------------------------
 # TASK-0123 -- distance-stratified AUC (REVIEW-panel-2026-07-16-v2.md Sec.2.3,
 # Sec.6): whole-graph AUC is mechanically dominated by "occupation of a walk
 # seeded at a point is a monotonically-decreasing function of distance from

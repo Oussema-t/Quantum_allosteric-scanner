@@ -33,6 +33,15 @@
 > `documentation/POC_SPRINT_PLAN.md`; §6 filled with the team/role split.
 > Phase 2's own criteria are now known too (previously unavailable) and
 > folded into the sprint plan's own new "Phase 2, now known" section.
+>
+> **2026-08-21 update ([[TASK-0229.001]])**: new §2.5 — a bibliography
+> audit surfaced a reference (Gunasekaran, Ma & Nussinov 2004) that
+> attacks the negative class every AUC in this document assumes.
+> Rank-of-known-site and enrichment-at-k, recomputed on the 3 mandatory
+> targets' headline cells, do not rescue the result (enrichment@5 = 0.00
+> on all three) but do change how "zero confirmed positives" must be
+> phrased: evidence of no *robust* signal found, not proof no signal
+> exists. §4's multiplicity-budget bullet cross-referenced accordingly.
 
 ---
 
@@ -188,6 +197,62 @@ produced the original p=0.0027; TASK-0168/TASK-0203 for the separate,
 already-known mechanism caveat, which is now moot — there is no surviving
 score to explain a mechanism for.)*
 
+### 2.5 Does the negative class itself hold up?
+
+A late-stage audit of the challenge's own bibliography found a reference
+that attacks a premise every AUC above assumes. [9] (Gunasekaran, Ma &
+Nussinov 2004, *Proteins* 57:433 — verified directly against the live
+article, not relayed) argues allostery may be an intrinsic capability of
+nearly every dynamic protein: there is no clean class of genuinely
+non-allosteric surface sites. This corrupts the negative class every
+ROC-AUC above presupposes, and it cuts both ways — it can inflate
+apparent false positives, but it can equally mean a chance-level AUC is
+**not** evidence of no signal: a contaminated negative class adds noise
+that can mask a real, weaker effect.
+
+[9] is a claim about protein biology in general, not a measurable
+per-target quantity, so we cannot test it directly. What we can do is
+check whether it changes how "zero confirmed positives" (§2.3-2.4) should
+be read, using two metrics that degrade more gracefully than AUC under a
+contaminated negative class: **rank-of-known-site** (where the true
+pocket lands in the full ranking) and **enrichment-at-k** (how much
+better than chance the reported top-k list is). Recomputed on the same
+3 mandatory targets' headline cells, live pipeline, same H_new operator
+*(TASK-0229.001)*:
+
+| Target | AUC | Best pocket-residue rank (of N) | Median pocket rank | Enrichment@5 |
+|---|---|---|---|---|
+| KRAS_G12C | 0.557 | 7 / 169 | 82 | **0.00** |
+| BCR_ABL1 | 0.541 | 125 / 451 | 176 | **0.00** |
+| CARDIAC_MYOSIN | 0.549 | 107 / 704 | 279 | **0.00** |
+
+*(AUC point estimates here differ slightly from §2.2's cited 0.5901/
+0.5266/0.5176 — expected drift from intervening pocket-label refinements
+[[TASK-0177]], not a new measurement disagreeing with an old one; both are
+real numbers from the same live pipeline at different points in time.)*
+
+They do not tell a different story — they tell the same one more
+concretely. **Zero of the top-5 residues in our own headline hit list are
+real pocket residues, on every mandatory target.** The alternative
+metrics do not rescue the result, and per this task's own constraint we
+report that as plainly as we would report a rescue.
+
+**What changes is the interpretation, not the count.** §2.3/[[TASK-0161]]/
+[[TASK-0199]] found 226 real-target scored cells across the program,
+~2 expected false positives at α=0.05 after the measured ~9× observable-
+redundancy correction, zero confirmed. That arithmetic — how many cells
+clear a significance bar, against how many chance alone predicts — does
+not depend on negative-class quality; it is a count. What [9] puts in
+question is whether "zero confirmed positives" may be read as "we have
+shown there is no signal." It may not, without qualification: a
+contaminated negative class is an equally consistent explanation for the
+same zero — reduced statistical power from noisy negatives, not an
+absence of real coupling, and our methodology as built cannot distinguish
+the two. We therefore state the result as **no method tested here found
+a statistically robust signal**, not as proof of absence — the
+distinction [9] specifically forces, and one a referee who knows this
+reference would otherwise draw for us.
+
 ---
 
 ## 3. Proposed Phase-2 work — build the certifying instrument
@@ -242,7 +307,10 @@ Already built and in use, not proposed:
   coupling; under the corrected null, no target reaches 80% power up to ~4×
   background conductance *(TASK-0167.002)*.
 - **Program-level multiplicity budget**, stated with its redundancy correction
-  *(TASK-0161, TASK-0199)*.
+  *(TASK-0161, TASK-0199)* — and its own limit: a contaminated negative
+  class (§2.5) means the resulting zero-confirmed-positives count is
+  evidence of "no robust signal found," not proof of "no signal exists"
+  *(TASK-0229.001)*.
 - **Firewall / frozen-context provenance** — an unforgeable stamp preventing a
   claimed-frozen result from rendering unbannered *(TASK-0088)*.
 
