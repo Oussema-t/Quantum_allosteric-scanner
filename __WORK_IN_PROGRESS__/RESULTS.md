@@ -6313,7 +6313,9 @@ pocket is closed and the holo pocket open. That contrast has never been
 checked. Does it hold?
 
 **Verdict: 2/7 VALID (KRAS_G12C, PTP1B). 5/7 INVALID — including 2 of the 3
-mandatory targets.** Blind pre-registered rule reusing [[TASK-0204]]'s own hit
+mandatory targets.**
+
+**Framing correction (2026-08-19)**: the raw 2/7 ratio invites *"why pick five bad targets?"* The honest decomposition is **1 of the 3 challenge-mandated scoreable targets** (only KRAS_G12C, itself validated against a wild-type structure, [[TASK-0155]]) **plus 1 of 4 ASD-extension targets** (only PTP1B). The extension followed the Challenge Statement §6's own instruction to test additional targets and its own named source, the Allosteric Database — `targets.yaml` marks the block "ASD expansion". We did not select the failing targets; the challenge did, and extending into its recommended database recovered only one more. The failure is systemic across two independent sources. Blind pre-registered rule reusing [[TASK-0204]]'s own hit
 criterion (`overlap_frac >= 0.5 AND druggability_score >= 0.5`), ligand
 stripped, at each target's own 12-residue window:
 
@@ -6675,3 +6677,64 @@ by `TASK-0216`'s own `func_ligand` corrections and are unaffected by this
 task's own work beyond the count reconciliation in point 1.
 
 Full detail: `.ai/tasks/DONE/TASK-0217.003-seed-anchor-provenance.md`.
+
+## ANM subspace reachability of real apo→holo motion — PDB-retest reverses the synthetic-toy result ([[TASK-0227]], 2026-08-21)
+
+An external review session (no repo access, no rcsb.org egress) filed [[TASK-0227]]:
+static low-mode ANM subspaces looked "essentially orthogonal" (~0.000 overlap) to a
+**synthetic** local 10 Å pocket-shell-opening deformation on non-target structures
+(ADK, 1R19, 3HSY, 3ENL) — diagnosed as a real actuator/target scale gap. A same-day
+follow-up ([[TASK-0228]]) corrected that number ~9× upward (0.024→0.229) using an
+**adaptive** (per-step Hessian-rebuilt) subspace on the same synthetic deformation,
+but flagged both numbers as untested on real targets and explicitly named the
+PDB-retest as the cheapest, most decisive next step.
+
+**Re-run on the real thing** (`__WORK_IN_PROGRESS__/results/tasks/0227_anm_rotamer_reachability/pdb_retest.py`,
+harness functions imported unmodified from the drop's own scripts): true Kabsch-
+superposed apo→holo Cα displacement, on the residue set resolved in both structures,
+against the **static** apo ANM subspace (cutoff 15 Å), for all 3 pairs the task named:
+
+| target | apo/holo | N common | RMSD (Å) | static overlap k=5/10/20/50 | adaptive/static ratio (dim=110) |
+|---|---|---|---|---|---|
+| KRAS_G12C | 4OBE→6OIM | 166 | 1.36 | 0.254 / 0.404 / 0.467 / **0.667** | 1.03× |
+| BCR_ABL1 | 1OPL→5MO4 | 429 | 0.98 | 0.295 / 0.342 / 0.417 / **0.577** | 0.88× |
+| CARDIAC_MYOSIN | 8QYP→8QYR (fully corrected**) | 698 | 1.18 | 0.595 / 0.766 / 0.826 / **0.901** | 1.01× |
+| CARDIAC_MYOSIN | 5TBY→8QYR (holo-only corrected*) | 709 | 3.75 | 0.275 / 0.298 / 0.368 / 0.511 | 0.77× |
+| CARDIAC_MYOSIN | 5TBY→6C1H (task's literal spec) | 366 | 26.80 | 0.043 / 0.087 / 0.192 / 0.386 | 1.46× |
+
+\*`backend/systems.py` already flags 6C1H as an invalid comparison for this target
+(Unconventional MYOSIN-Ib, actin-bound cryo-EM, no mavacamten — a different protein/
+state, not a real apo/holo pair); its 26.8 Å "displacement" is the mismatch, not a
+real conformational change. `holo_validation=8QYR` (real Beta-cardiac myosin,
+mavacamten-bound) is this repo's own established correction — used above.
+\*\*`__WORK_IN_PROGRESS__/config/targets.yaml` (TASK-0124) goes further: 5TBY itself
+is a docked SWISS-MODEL homology model (20.0 Å nominal resolution, EM-fitted, zero
+ligands, RCSB-verified 2026-08-19 per TASK-0222), not an experimental apo — `apo_pdb:
+8QYP` is the real X-ray apo. The crude homology-model apo was suppressing the
+apparent overlap by roughly half (0.51→0.90 at k=50), not changing its direction.
+
+**Reverses the synthetic result, doesn't just correct its magnitude.** All 3 real,
+valid target pairs clear TASK-0227's own pre-registered ≳0.5 "collective part
+reachable" bar at k=50 (top 50 of several hundred non-rigid modes) — CARDIAC_MYOSIN
+clears it by k=5 on the fully-corrected pair — nowhere near the ≲0.05 "model-class
+failure" bar either synthetic number implied. **Plain static ANM already captures
+more of the real transition (0.58–0.90) than the synthetic toy's own *adaptive*
+correction claimed for its synthetic deformation (0.229), on every target.** The
+adaptive/static ratio on real targets is 0.77×–1.46× (adaptive sometimes *worse* at
+equal dimension) — on the highest-fidelity pair it's a bare 1.01×, essentially no
+gain — nothing like the toy's reported 9.4×. Both the original ~0.000 and the
+corrected ~9× findings were artifacts of the synthetic "adversarially local"
+deformation type (flagged as a lower bound by its own §3.1 caveat), not of the ANM
+model class against real collective backbone motion.
+
+**Scope, precisely**: this measures the *whole* apo→holo Cα displacement's overlap
+with the collective subspace — exactly TASK-0227 §5.1's own question, and (per that
+task's own decision rule) sufficient to retire the "collective part unreachable"
+framing. It does **not** re-test whether the *local, pocket-specific* residual
+(§3's original narrower concern) is small — TASK-0227's own text already treats that
+as the reduced, secondary question once the collective bar clears. §5.2 (oracle-
+supervised reachability ceiling, needs a global-optimum side-chain repacker) and §5.3
+(scorer-brittleness interpolation, needs a druggability scorer) were not attempted —
+neither EvoEF2 nor fpocket is installed in this environment; both need dedicated
+tooling work, out of "hours" scope. Full detail:
+`.ai/tasks/DONE/TASK-0227-anm-rotamer-reachability-ceiling.md`.
