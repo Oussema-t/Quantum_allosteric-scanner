@@ -18,7 +18,7 @@ existing best.
 
 Run: python3 scripts/ceiling_search_batched.py --target BCR_ABL1 \
        --n-trials 60 --batch-size 5 --seed 7
-Checkpoint: __WORK_IN_PROGRESS__/results_task0082/<target>/ceiling_trials.jsonl
+Checkpoint: __WORK_IN_PROGRESS__/results/tasks/0082/<target>/ceiling_trials.jsonl
 """
 from __future__ import annotations
 
@@ -43,7 +43,7 @@ from allostery.clean import clean_from_config, load_target_config  # noqa: E402
 from allostery.labels import build_labels, ligand_groups_from_atomgroup, protein_heavy_atoms_by_residue  # noqa: E402
 from allostery.protocol import ceiling_context  # noqa: E402
 
-DEFAULT_CHECKPOINT_DIR = Path(__file__).resolve().parent.parent / "results_task0082"
+DEFAULT_CHECKPOINT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0082"
 T_MAX = 15.0
 N_STEPS = 500
 

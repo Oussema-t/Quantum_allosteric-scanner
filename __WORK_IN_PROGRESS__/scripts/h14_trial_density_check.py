@@ -84,7 +84,7 @@ def main(argv=None) -> int:
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--target", nargs="+", default=["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"])
-    parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parent.parent / "results_task0138_h14_permutation_null" / "trial_density_check.json")
+    parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parent.parent / "results/tasks/0138_h14_permutation_null" / "trial_density_check.json")
     args = parser.parse_args(argv)
 
     all_results = {}

@@ -94,7 +94,7 @@ def main() -> int:
             print(f"rank corr {tags[i]} vs {tags[j]}: rho={rho:.3f} p={p:.2e}", file=sys.stderr)
 
     out = {"target": name, "combos": summary_rows, "rank_correlations": rank_corr}
-    out_dir = Path(__file__).resolve().parent.parent / "results_task0156_control_effort"
+    out_dir = Path(__file__).resolve().parent.parent / "results/tasks/0156_control_effort"
     out_path = out_dir / "tf_sensitivity.json"
     out_path.write_text(json.dumps(out, indent=2))
     print(f"\nWrote {out_path}")

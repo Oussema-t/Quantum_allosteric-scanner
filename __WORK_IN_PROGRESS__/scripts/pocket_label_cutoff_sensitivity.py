@@ -58,7 +58,7 @@ from allostery.propagators import time_averaged_ctqw_converged  # noqa: E402
 
 import run_challenge  # noqa: E402 -- reuse _load_apo_holo/DEFAULT_CUTOFF
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0114_pocket_cutoff_sensitivity"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0114_pocket_cutoff_sensitivity"
 TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 CUTOFF_GRID = [4.0, 4.5, 5.0, 5.5]
 

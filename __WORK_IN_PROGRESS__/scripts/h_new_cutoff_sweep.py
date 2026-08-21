@@ -59,7 +59,7 @@ from allostery.propagators import ground_state_relaxation, time_averaged_ctqw_co
 
 import run_challenge  # noqa: E402 -- reuse _load_apo_holo/DEFAULT_CUTOFF
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0113_h_new_cutoff_sweep"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0113_h_new_cutoff_sweep"
 TARGETS = ["KRAS_G12C", "BCR_ABL1"]  # TASK-0067's own 2 targets; CARDIAC_MYOSIN
 # excluded for the same data-quality reason TASK-0067 excluded it -- inherit,
 # don't re-litigate, per this task's own Out Of Scope.

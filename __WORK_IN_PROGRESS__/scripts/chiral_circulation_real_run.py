@@ -59,7 +59,7 @@ from allostery.propagators import time_averaged_ctqw_converged  # noqa: E402
 
 import run_challenge  # noqa: E402 -- reuse _load_apo_holo/DEFAULT_CUTOFF
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0140_chiral"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0140_chiral"
 MANDATORY_TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 ASD_TARGETS = ["PTP1B", "GLUCOKINASE", "CASPASE1", "CASPASE7"]
 TARGETS = MANDATORY_TARGETS + ASD_TARGETS

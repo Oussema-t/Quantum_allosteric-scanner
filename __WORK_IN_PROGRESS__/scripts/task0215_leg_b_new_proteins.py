@@ -55,7 +55,7 @@ from task0214_apo_reselection import (  # noqa: E402
 
 import urllib.request  # noqa: E402
 
-OUT_DIR = _ROOT / "results_task0215_leg_b_new_proteins"
+OUT_DIR = _ROOT / "results/tasks/0215_leg_b_new_proteins"
 
 QUERY_TERMS = ["allosteric inhibitor", "allosteric activator", "allosteric modulator"]
 ROWS_PER_QUERY = 100

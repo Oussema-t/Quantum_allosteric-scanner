@@ -193,7 +193,7 @@ def main() -> int:
             traceback.print_exc()
             out[name] = {"target": name, "error": f"{type(exc).__name__}: {exc}"}
 
-    out_dir = Path(__file__).resolve().parent.parent / "results_task0201_graph_walk_matched_null"
+    out_dir = Path(__file__).resolve().parent.parent / "results/tasks/0201_graph_walk_matched_null"
     out_dir.mkdir(exist_ok=True)
     out_path = out_dir / "results.json"
     out_path.write_text(json.dumps(out, indent=2, default=float))

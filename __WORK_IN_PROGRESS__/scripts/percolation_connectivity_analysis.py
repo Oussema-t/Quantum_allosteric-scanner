@@ -59,7 +59,7 @@ import run_challenge  # noqa: E402
 
 TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 PATH_TOL = 0.10  # this task's own Open Question -- Implementer's call, stated here
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0136_percolation"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0136_percolation"
 
 
 def _log(msg: str) -> None:

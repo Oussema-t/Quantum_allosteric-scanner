@@ -55,7 +55,7 @@ from allostery.spectral_coherence import DEFAULT_T_MAX, spectral_coherence_score
 
 import run_challenge  # noqa: E402 -- reuse _load_apo_holo, not re-derived
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0146_spectral_coherence"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0146_spectral_coherence"
 TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 
 N_PERM = 1000

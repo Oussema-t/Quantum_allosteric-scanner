@@ -6,7 +6,7 @@ proximity floor -- the same discipline every other observable in this
 project's register goes through.
 
 Run: python3 scripts/transfer_entropy_baseline.py
-Output: __WORK_IN_PROGRESS__/results_task0132/transfer_entropy_baseline.json
+Output: __WORK_IN_PROGRESS__/results/tasks/0132/transfer_entropy_baseline.json
 """
 from __future__ import annotations
 
@@ -41,7 +41,7 @@ import run_challenge  # noqa: E402 -- reuse _load_apo_holo, not re-derived
 DEFAULT_TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 DEFAULT_CUTOFF = 10.0
 DEFAULT_POCKET_CUTOFF = 4.5
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0132"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0132"
 
 
 def _log(msg: str) -> None:

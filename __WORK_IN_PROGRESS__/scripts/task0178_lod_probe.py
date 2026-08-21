@@ -73,7 +73,7 @@ def main() -> int:
         out[strength] = {"aucs": aucs, "mean_auc": float(np.mean(aucs))}
         print(f"strength={strength:6.1f}  mean_auc={out[strength]['mean_auc']:.3f}  aucs={[round(x, 3) for x in aucs]}")
 
-    out_dir = Path(__file__).resolve().parent.parent / "results_task0178_response_coupling"
+    out_dir = Path(__file__).resolve().parent.parent / "results/tasks/0178_response_coupling"
     out_dir.mkdir(exist_ok=True)
     (out_dir / "lod_probe_kras_g12c.json").write_text(json.dumps(out, indent=2))
     print(f"\nWrote {out_dir / 'lod_probe_kras_g12c.json'}")

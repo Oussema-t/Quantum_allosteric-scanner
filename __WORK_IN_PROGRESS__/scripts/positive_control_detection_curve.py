@@ -72,7 +72,7 @@ from allostery.transport import transmission_from_source  # noqa: E402
 
 import run_challenge  # noqa: E402
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0167002_detection_curve"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0167002_detection_curve"
 TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 STRENGTHS = [0.0, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0]
 N_SEEDS = 20

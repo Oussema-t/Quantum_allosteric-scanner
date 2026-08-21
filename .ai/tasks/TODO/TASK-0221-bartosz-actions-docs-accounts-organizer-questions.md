@@ -139,6 +139,23 @@ the 3 in Table 1. This is a finding *about their benchmark*. Raising it
 before submission is both courteous and strategically better than a judge
 meeting it cold in the document.
 
+**(d) Which reference governs scoring when the bibliography contradicts itself?**
+(raised by the 2026-08-21 external review). §5's Assumption mandates the
+elastic-network hypothesis, citing refs [8][15][16]. But §2 cites ref [4]
+(Motlagh/Hilser, ensemble allostery) and ref [9] (Gunasekaran, "is allostery
+an intrinsic property of all dynamic proteins?") — which hold, respectively,
+that coupling does not decompose onto graph edges, and that clean
+non-allosteric negative controls may not exist. Those positions are not
+compatible. **Which governs for scoring?** This is not pedantry: ref [9]
+attacks the negative class of every AUC in our register.
+
+**(e) Does Constraint 3 exclude minimisation-based or Monte-Carlo
+conformational sampling?** It forbids *"classical MD trajectories as inputs."*
+Our conformational sampling uses closed-form ENM draws and rotamer
+optimisation — no integrator, no time evolution — but a broad reading of the
+constraint could be taken to exclude it, and the forward proposal depends on
+the answer.
+
 **(c) Deliverable format.** §5 specifies a connectivity matrix, a top-5 hit
 list, and a methodological report, without stating file formats, whether the
 matrix must be dense, or whether c-Myc requires all three given it has no

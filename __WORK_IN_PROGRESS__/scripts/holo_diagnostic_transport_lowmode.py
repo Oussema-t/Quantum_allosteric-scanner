@@ -69,7 +69,7 @@ import transport_observable_real_run as transport_run  # noqa: E402
 import lowmode_predictor_real_run as lowmode_run  # noqa: E402
 from test_gnm_cutoff_weight_benchmark import _holo_native_labels  # noqa: E402
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0153_holo_diagnostic"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0153_holo_diagnostic"
 TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 
 

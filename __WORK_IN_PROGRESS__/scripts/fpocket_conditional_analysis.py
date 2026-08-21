@@ -55,7 +55,7 @@ from task0163_external_baseline_scoring import (  # noqa: E402
     _fpocket_per_residue_scores, _run_fpocket, _write_full_atom_apo_pdb,
 )
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0200_fpocket_conditional"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0200_fpocket_conditional"
 # TASK-0203: PTP1B added (the target carrying TASK-0201's own surviving
 # positive, never covered by this script before); CASPASE7 attempted per
 # this task's own "if cheap" hedge. KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN

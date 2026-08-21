@@ -2,12 +2,12 @@
 """TASK-0165 -- recompute CIs for the program's currently-surviving/
 near-surviving positives under `metrics.spatial_block_bootstrap_ci`,
 side by side with the original sequence-block CI (additive; the
-original numbers already in `results_task0145_transport/` are not
+original numbers already in `results/tasks/0145_transport/` are not
 overwritten).
 
 Scope, per this task's own Out Of Scope ("focus on the currently-
 reported positives/near-positives, not the full negative catalogue"):
-`grep -rl '"ci_overlap": false' results_task*/*.json` found NO cell
+`grep -rl '"ci_overlap": false' results/tasks/*/*.json` found NO cell
 anywhere in the project with a non-overlapping CI already -- every
 observable's own bootstrap CI has always overlapped its floor's CI.
 The "surviving/near-surviving" set is therefore read as: cells whose
@@ -40,7 +40,7 @@ if str(_SCRIPTS) not in sys.path:
 from allostery.metrics import auc as _auc
 from allostery.metrics import block_bootstrap_ci, spatial_block_bootstrap_ci
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0165_spatial_ci"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0165_spatial_ci"
 
 CELLS = [
     ("BCR_ABL1", "effective_resistance"),

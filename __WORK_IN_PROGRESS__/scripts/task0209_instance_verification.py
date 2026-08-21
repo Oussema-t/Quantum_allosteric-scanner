@@ -50,7 +50,7 @@ from allostery.labels import build_labels, ligand_groups_from_atomgroup  # noqa:
 from task0204_positive_control import run_target as run_positive_control_ladder  # noqa: E402
 from task0204_rotamer_repack_baseline import _load_apo_holo  # noqa: E402
 
-OUT_DIR = _ROOT / "results_task0209_instance_verification"
+OUT_DIR = _ROOT / "results/tasks/0209_instance_verification"
 
 # "Usable apo/holo pair" narrowed to targets.yaml entries with a genuine
 # small-molecule `drug_ligand` code -- checked directly against every one of

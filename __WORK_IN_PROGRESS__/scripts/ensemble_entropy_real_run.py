@@ -77,7 +77,7 @@ from allostery.nulls import compact_patch  # noqa: E402
 
 import run_challenge  # noqa: E402 -- reuse _load_apo_holo, not re-derived
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "RESULTS" / "results_task0166_ensemble_entropy"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "RESULTS" / "results/tasks/0166_ensemble_entropy"
 
 MANDATORY_TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 GENERALIZATION_TARGETS = ["PTP1B", "GLUCOKINASE", "CASPASE1", "CASPASE7"]  # MYC_MAX excluded, see module docstring

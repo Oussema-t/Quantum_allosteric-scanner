@@ -296,3 +296,29 @@ checkable by a referee.
 | KRAS_G12C is a validated known-answer instance (apo drug 0.001 → holo 0.886) | measured 2026-08-06 | [[TASK-0209]] |
 | Phase B closed on complexity grounds at pocket scale; hard regime exists only at m≈50–80 | measured + exact-solve validated | [[TASK-0204]] |
 | PC1/PC2 stable across targets, **PC3 is not** | weakens the clean "three axes" framing | [[TASK-0207]] |
+
+---
+
+## External reference-hypothesis register (2026-08-21 drop)
+
+`.ai/reviews/2026-08-21/REFERENCE_HYPOTHESIS_REGISTER.md` extracts hypotheses
+from the challenge's own references [1]–[25], tiered by threat and value, with
+tested-status per item. It is the first systematic pass over the organisers'
+bibliography and it names several untested items that bear directly on the
+submission:
+
+- **[1] Zheng** — NMA-guided conformational sampling, MD-free. Reference
+  *number one* in the challenge's own list, the canonical method for this
+  program's own reframing, and **never implemented as a baseline.**
+- **[1]+[2] stitched** — NMA sampling → persistent homology → pocket ranking.
+  Zero MD, both halves from the organisers' bibliography. Would revive the H₂
+  arm, which [[TASK-0143]]'s 0/7 did not kill (bad proxy, per the drop).
+- **[9] Gunasekaran** — attacks the negative class of every AUC in the
+  register. Mandatory in limitations whether or not it is tested.
+- **[15] two-state ANM** — the principled instrument to *quantify*
+  [[TASK-0209]]'s 2/7 rather than assert it.
+- **[11] Oh SVD dilation** — the missing hardware story for ENAQT.
+- **[10] circuit cutting** — discharges the coarse-graining half of objective
+  §4.2 on paper.
+
+Owned by [[TASK-0226]] / [[TASK-0227]] / [[TASK-0228]] where testable.

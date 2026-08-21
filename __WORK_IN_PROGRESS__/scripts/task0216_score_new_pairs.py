@@ -46,7 +46,7 @@ for _p in (_ROOT / "src", _ROOT / "scripts"):
         sys.path.insert(0, str(_p))
 
 CANDIDATE_YAML = _ROOT / "config" / "candidate_targets_task0216.yaml"
-OUT_DIR = _ROOT / "results_task0216_new_pair_scoring"
+OUT_DIR = _ROOT / "results/tasks/0216_new_pair_scoring"
 
 # ---- monkeypatch config lookup so candidates resolve without promotion ----
 from allostery import clean as _clean  # noqa: E402

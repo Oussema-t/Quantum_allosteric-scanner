@@ -55,7 +55,7 @@ from transport_observable_real_run import (  # noqa: E402
     ALPHA, N_PERM, N_TARGETS_FOR_BONFERRONI, _prepare_target as _transport_prepare_target,
 )
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0190_rg_matched_null"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0190_rg_matched_null"
 NULL_TYPES = ("scattered", "compact", "matched")
 TOL = 0.35  # unchanged default, per this task's own Constraint
 

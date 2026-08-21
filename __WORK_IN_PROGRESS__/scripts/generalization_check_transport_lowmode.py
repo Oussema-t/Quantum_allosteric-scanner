@@ -54,7 +54,7 @@ if str(_SCRIPTS) not in sys.path:
 import transport_observable_real_run as transport_run  # noqa: E402
 import lowmode_predictor_real_run as lowmode_run  # noqa: E402
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0151_generalization_check"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0151_generalization_check"
 GEN_TARGETS = ["PTP1B", "CASPASE7"]
 
 ALPHA = 0.05

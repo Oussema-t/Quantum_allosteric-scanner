@@ -36,7 +36,7 @@ module -- entirely holo-numbered, no apo involved, mirroring
 label built the same way the apo run's was.
 
 Run: python3 scripts/holo_diagnostic_comparison.py --target KRAS_G12C BCR_ABL1
-Output: __WORK_IN_PROGRESS__/results_task0092/<target>/{verdict.json,report.txt}
+Output: __WORK_IN_PROGRESS__/results/tasks/0092/<target>/{verdict.json,report.txt}
 (results_*/ is gitignored, same convention as TASK-0094's scratch runs.)
 """
 from __future__ import annotations
@@ -69,7 +69,7 @@ from test_gnm_cutoff_weight_benchmark import _holo_native_labels  # noqa: E402
 
 T_MAX = 15.0
 N_STEPS = 500
-DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0092"
+DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0092"
 
 # Maps a winning candidate's own "name" (candidates_builder's dict key,
 # run_challenge.py's _make_candidates_builder) to the builder that

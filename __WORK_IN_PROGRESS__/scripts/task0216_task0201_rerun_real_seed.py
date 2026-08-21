@@ -59,7 +59,7 @@ import run_challenge  # noqa: E402
 
 TARGET = "PTP1B"
 BAR = GW.SURVIVAL_BARS[TARGET]           # 0.05/16, unchanged
-OUT = _ROOT / "results_task0216_new_pair_scoring" / "task0201_rerun_real_seed.json"
+OUT = _ROOT / "results/tasks/0216_new_pair_scoring" / "task0201_rerun_real_seed.json"
 
 
 def _log(m): print(f"[{time.strftime('%H:%M:%S')}] {m}", flush=True)

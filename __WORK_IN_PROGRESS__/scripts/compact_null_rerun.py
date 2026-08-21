@@ -59,7 +59,7 @@ from allostery.superpose import (  # noqa: E402
 
 import run_challenge  # noqa: E402
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0158_compact_null"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0158_compact_null"
 
 LOWMODE_TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN", "PTP1B", "CASPASE7"]
 K_MODES_GRID = [5, 10, 15, 20]

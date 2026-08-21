@@ -196,7 +196,7 @@ def _score_target(name: str, log: RunLogger) -> dict:
 
 
 def main() -> int:
-    out_dir = Path(__file__).resolve().parent.parent / "results_task0156_control_effort"
+    out_dir = Path(__file__).resolve().parent.parent / "results/tasks/0156_control_effort"
     out_dir.mkdir(exist_ok=True)
     log = RunLogger(out_dir / "run.jsonl", run_name="control_effort_scoring")
 

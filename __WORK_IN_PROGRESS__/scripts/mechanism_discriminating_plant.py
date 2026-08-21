@@ -90,7 +90,7 @@ from positive_control_detection_curve import (  # noqa: E402
     _well_powered_max,
 )
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0168_mechanism_discriminating_plant"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0168_mechanism_discriminating_plant"
 TARGETS = ["KRAS_G12C", "BCR_ABL1"]  # CARDIAC_MYOSIN dropped -- N=704 eigh cost, explicit scope call
 N_SEEDS = 10  # this task's own explicit Constraint floor
 N_PATHS = 10  # plant_channel convention, matches TASK-0167.002

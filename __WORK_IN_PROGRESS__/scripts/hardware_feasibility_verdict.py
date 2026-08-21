@@ -4,7 +4,7 @@ resource numbers to a signal-retention metric, and turn both into an
 explicit per-target/per-resolution feasibility verdict.
 
 Classical-only (no qiskit simulation) -- fast, run as a separate pass over
-`results_task0182_hardware_resource_accounting/results.json`.
+`results/tasks/0182_hardware_resource_accounting/results.json`.
 
 Step 4 -- retention metric: TASK-0172 (the register's own planned
 retention metric) has not landed, so this uses the documented naive
@@ -60,7 +60,7 @@ from hardware_resource_accounting import (  # noqa: E402
 )
 
 FIDELITY_THRESHOLD = 0.5  # disclosed judgment call, see module docstring
-RESULTS_PATH = Path(__file__).resolve().parent.parent / "results_task0182_hardware_resource_accounting" / "results.json"
+RESULTS_PATH = Path(__file__).resolve().parent.parent / "results/tasks/0182_hardware_resource_accounting" / "results.json"
 
 
 def _real_ibm_median_2q_error() -> float:

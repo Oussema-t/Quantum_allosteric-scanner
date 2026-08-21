@@ -61,7 +61,7 @@ _SCRIPTS = Path(__file__).resolve().parent
 if str(_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS))
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0138_h14_permutation_null"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0138_h14_permutation_null"
 CEILING_N_TRIALS = 60
 N_REPLICATES_DEFAULT = 200
 

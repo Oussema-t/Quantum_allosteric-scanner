@@ -75,7 +75,7 @@ from allostery.transport import effective_resistance_from_source, transmission_f
 
 import run_challenge  # noqa: E402 -- reuse _load_apo_holo, not re-derived
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "RESULTS" / "results_task0162_reverse_direction"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "RESULTS" / "results/tasks/0162_reverse_direction"
 TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 K_MODES = 20
 

@@ -93,7 +93,7 @@ from allostery.protocol import run_frozen_verdict  # noqa: E402
 import run_challenge  # noqa: E402 -- reuse _make_candidates_builder + selection constants, not re-derived
 
 TARGET_NAME = "KRAS_G12C"
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "RESULTS" / "results_task0155_apo_sensitivity"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "RESULTS" / "results/tasks/0155_apo_sensitivity"
 
 # Verified G12C, GDP+Mg-only, X-ray, chain-A candidates (this task's own
 # assembled + RCSB-verified pool, see module docstring). Spans the full

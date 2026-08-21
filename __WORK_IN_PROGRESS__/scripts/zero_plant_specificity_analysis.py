@@ -40,7 +40,7 @@ if str(_SRC) not in sys.path:
 
 from allostery.diagnostics import assert_gate_reachable  # noqa: E402
 
-RESULTS_PATH = Path(__file__).resolve().parent.parent / "results_task0167003_specificity" / "zero_plant_specificity_full.json"
+RESULTS_PATH = Path(__file__).resolve().parent.parent / "results/tasks/0167003_specificity" / "zero_plant_specificity_full.json"
 NULL_SPECS = ["scattered", "compact", "matched"]
 
 # Matches detection_curve_analysis.py's own REAL_DEPLOYMENT_BONFERRONI_FAMILY/
@@ -118,7 +118,7 @@ def main() -> int:
             cols.append(f"{r['p']:.3f} [{r['lo']:.3f}, {r['hi']:.3f}]")
         print(f"{target:<16}{cols[0]:<28}{cols[1]:<28}{cols[2]}")
 
-    out_path = Path(__file__).resolve().parent.parent / "results_task0167003_specificity" / "part_a_corrected.json"
+    out_path = Path(__file__).resolve().parent.parent / "results/tasks/0167003_specificity" / "part_a_corrected.json"
     with open(out_path, "w") as f:
         json.dump({
             "real_bonferroni_alpha": REAL_BONFERRONI_ALPHA,

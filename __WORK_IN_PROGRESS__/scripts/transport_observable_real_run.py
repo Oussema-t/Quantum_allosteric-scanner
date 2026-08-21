@@ -59,7 +59,7 @@ from allostery.transport import effective_resistance_from_source, transmission_f
 
 import run_challenge  # noqa: E402 -- reuse _load_apo_holo, not re-derived
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0145_transport"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0145_transport"
 TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 
 E_GRID = np.array([0.0, 0.05, 0.1])       # KNOB characterization only, x H_new's bandwidth for the H_new run

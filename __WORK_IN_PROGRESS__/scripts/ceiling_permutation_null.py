@@ -20,7 +20,7 @@ filed (`REVIEW-panel-2026-07-17.md`, before TASK-0130 landed). TASK-0130
 (2026-07-18) replaced that finite-time approximation with `time_averaged_
 ctqw`'s exact closed form for every headline "ctqw" number, including the
 ceiling -- the real margins this task nulls (+73.7%/-64.5%/-173.0%,
-`results_task0130_competence/closed_form_competence.json`) were produced
+`results/tasks/0130_competence/closed_form_competence.json`) were produced
 by `ceiling.ceiling_search(use_converged_limit=True)`, not the old finite-
 time script. Per this task's own Dependency note ("the null should
 ultimately be reported against whichever headline numbers are current at
@@ -76,7 +76,7 @@ _SCRIPTS = Path(__file__).resolve().parent
 if str(_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS))
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0131_permutation_null"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0131_permutation_null"
 CEILING_N_TRIALS = 60
 N_REPLICATES_DEFAULT = 200
 

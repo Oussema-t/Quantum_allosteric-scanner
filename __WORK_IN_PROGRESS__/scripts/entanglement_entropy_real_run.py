@@ -59,7 +59,7 @@ from allostery.propagators import time_averaged_ctqw_converged  # noqa: E402
 
 import run_challenge  # noqa: E402 -- reuse _load_apo_holo, not re-derived
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0148_entanglement"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0148_entanglement"
 TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 
 T_MULTIPLIERS = np.array([0.5, 1.0, 2.0])  # KNOB characterization only, x natural_coherent_time

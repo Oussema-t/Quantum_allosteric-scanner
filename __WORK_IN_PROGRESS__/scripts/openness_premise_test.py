@@ -59,7 +59,7 @@ ALPHA = 0.05
 # not "tuning to move a target across the bar" -- it is giving unbiased
 # rejection sampling enough tries to find its 500 acceptances.
 MAX_ATTEMPTS = 20_000_000
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0143_openness_premise"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0143_openness_premise"
 
 
 def _log(msg: str) -> None:

@@ -50,7 +50,7 @@ T_MAX = 15.0  # unchanged from RESULTS.md's own recorded numbers -- this
 # correction -- conflating the two here would make it impossible to tell
 # which change moved which number).
 N_STEPS = 500
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0112"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0112"
 
 
 def _ci_dict(ci):

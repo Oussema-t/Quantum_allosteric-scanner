@@ -24,7 +24,7 @@ check_convergence`'s criteria are pure functions of H's own eigenvalue
 spectrum, never a propagation source.
 
 Run: python3 scripts/optuna_parameter_scan.py --target KRAS_G12C BCR_ABL1 CARDIAC_MYOSIN
-Output: __WORK_IN_PROGRESS__/results_task0110/<target>/scan.json
+Output: __WORK_IN_PROGRESS__/results/tasks/0110/<target>/scan.json
 """
 from __future__ import annotations
 
@@ -53,7 +53,7 @@ from allostery.optuna_scan import apo_floor_scan, closed_form_prescription, holo
 
 import run_challenge  # noqa: E402
 
-DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0110"
+DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0110"
 
 
 def _log(msg: str) -> None:

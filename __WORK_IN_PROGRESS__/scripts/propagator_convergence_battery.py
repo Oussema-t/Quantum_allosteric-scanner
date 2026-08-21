@@ -33,7 +33,7 @@ an approximation, at a small fraction of the cost.
 Usage
 -----
   python scripts/propagator_convergence_battery.py
-  python scripts/propagator_convergence_battery.py --output-dir results_task0109
+  python scripts/propagator_convergence_battery.py --output-dir results/tasks/0109
 """
 from __future__ import annotations
 
@@ -68,7 +68,7 @@ TOL = 1e-2  # total-variation-distance convergence tolerance, this battery's
 # so the analytic-vs-empirical comparison below is apples to apples.
 N_GRID = [20, 50, 100, 200, 500]
 WELL_DEPTH_GRID = [0.0, 2.0, 10.0, 50.0]
-DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0109"
+DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0109"
 
 T_MAX_SCAN_CAP = 3000.0  # practical ceiling on how far this battery will
 # actually *scan* t_max candidates for the time_averaged_ctqw criterion,

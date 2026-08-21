@@ -53,7 +53,7 @@ from allostery.transport import effective_resistance_from_source, transmission_f
 
 import run_challenge  # noqa: E402
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0199_observable_rank"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0199_observable_rank"
 TARGETS_PRIMARY = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 TARGETS_EXTRA = ["PTP1B", "CASPASE7"]
 K_MODES = 20  # dcc_low/prs_low headline k, matches TASK-0149's own primary

@@ -74,7 +74,7 @@ from test_gnm_cutoff_weight_benchmark import _holo_native_labels  # noqa: E402
 
 N_TRIALS = 8
 TARGETS = ["KRAS_G12C", "BCR_ABL1"]
-OUT_DIR = _ROOT / "results_task0204_positive_control"
+OUT_DIR = _ROOT / "results/tasks/0204_positive_control"
 
 
 def _log(msg: str) -> None:

@@ -557,7 +557,7 @@ def main():
             _log(f"{t} FAILED: {exc!r}")
             r = {"target": t, "error": repr(exc)}
         results.append(r)
-        out_dir = Path(__file__).resolve().parent.parent / "results_task0208_apo_holo_decomposition"
+        out_dir = Path(__file__).resolve().parent.parent / "results/tasks/0208_apo_holo_decomposition"
         out_dir.mkdir(exist_ok=True)
         (out_dir / "results.json").write_text(json.dumps(results, indent=2, default=str))
     _log("done")

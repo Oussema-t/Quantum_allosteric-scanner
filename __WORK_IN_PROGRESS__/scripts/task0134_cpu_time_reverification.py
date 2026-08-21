@@ -68,7 +68,7 @@ from allostery.runlog import RunLogger  # noqa: E402
 
 import run_challenge  # noqa: E402
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0134_cpu_time"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0134_cpu_time"
 TARGET_NAME = "KRAS_G12C"
 # Bounded window, not the full ~878K-step prescription (would take
 # ~50min at the calibrated rate below) -- this task's own Part 1 is

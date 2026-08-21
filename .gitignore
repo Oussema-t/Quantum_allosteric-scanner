@@ -17,12 +17,15 @@ outputs/
 # into the git-tracked __WORK_IN_PROGRESS__/RESULTS.md narrative. Revisit once
 # TASK-0083 (the real result-artifact contract) decides the permanent
 # storage/versioning strategy -- this is the interim decision, not that one.
-__WORK_IN_PROGRESS__/RESULTS/
-# Same script, run with a custom --output-dir (e.g. TASK-0094's
-# results_task0094/ re-run of KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN with the
-# new proximity floor applied) -- same regeneratable/already-transcribed
-# rationale as results/ above, just not the default directory name.
-__WORK_IN_PROGRESS__/RESULTS/results_*/
+# (Fixed 2026-08-21: this pattern was `__WORK_IN_PROGRESS__/RESULTS/` --
+# wrong case, wrong path -- and never matched the real, lowercase
+# __WORK_IN_PROGRESS__/results/ directory this comment describes; nothing
+# under it was ever actually ignored. Files already tracked before this fix
+# stay tracked -- gitignore does not retroactively untrack anything. This
+# pattern also now covers results/tasks/<task>/ -- the ~50 `results_task*/`
+# directories that used to sit loose at the WIP root, consolidated into one
+# per-task-per-folder location under here, same regeneratable rationale.)
+__WORK_IN_PROGRESS__/results/
 
 # OS / editor
 .DS_Store

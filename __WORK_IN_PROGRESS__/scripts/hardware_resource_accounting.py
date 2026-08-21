@@ -390,7 +390,7 @@ def main() -> int:
     print("\nSTATUS: Step 3 -- resource table (analytic + real transpilation)...", file=sys.stderr)
     out["step3_resource_table"] = build_resource_table(target_h_full)
 
-    out_dir = Path(__file__).resolve().parent.parent / "results_task0182_hardware_resource_accounting"
+    out_dir = Path(__file__).resolve().parent.parent / "results/tasks/0182_hardware_resource_accounting"
     out_dir.mkdir(exist_ok=True)
     out_path = out_dir / "results.json"
     out_path.write_text(json.dumps(out, indent=2))

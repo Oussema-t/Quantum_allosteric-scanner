@@ -34,7 +34,7 @@ N_ROTAMERS = 15
 # expensive and gets reported as a projection rather than run -- the cost
 # model doing its job, not a failure to measure.
 MAX_FACTOR_ENTRIES = 1e8
-OUT_DIR = _ROOT / "results_task0204_packing_hardness"
+OUT_DIR = _ROOT / "results/tasks/0204_packing_hardness"
 
 
 def build_instance(g: nx.Graph, n: int, rng: np.random.Generator):

@@ -11,7 +11,7 @@ natural per-trial resume point the way independent random draws have.
 
 Run: python3 scripts/ceiling_search_optuna_run.py --target KRAS_G12C \
        --n-trials 60 --seed 7
-Output: __WORK_IN_PROGRESS__/results_task0116/<target>/optuna_ceiling.json
+Output: __WORK_IN_PROGRESS__/results/tasks/0116/<target>/optuna_ceiling.json
 """
 from __future__ import annotations
 
@@ -35,7 +35,7 @@ from allostery.ceiling import ceiling_search_optuna  # noqa: E402
 from allostery.clean import clean_from_config, load_target_config  # noqa: E402
 from allostery.labels import build_labels, ligand_groups_from_atomgroup, protein_heavy_atoms_by_residue  # noqa: E402
 
-DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0116"
+DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0116"
 
 
 def _log(msg: str) -> None:

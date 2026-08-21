@@ -113,7 +113,7 @@ def main() -> int:
         "total_elapsed_s": round(time.monotonic() - t0, 1),
     }
 
-    out_dir = Path(__file__).resolve().parent.parent / "results_task0156_control_effort"
+    out_dir = Path(__file__).resolve().parent.parent / "results/tasks/0156_control_effort"
     out_dir.mkdir(exist_ok=True)
     out_path = out_dir / "kill_switch.json"
     out_path.write_text(json.dumps(out, indent=2))

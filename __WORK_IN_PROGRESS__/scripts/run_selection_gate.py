@@ -262,7 +262,7 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--gate-only", action="store_true")
     parser.add_argument("--target", nargs="+", default=None, help="targets for the full grid (default: config/targets.yaml's full 12)")
-    parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parent.parent / "results_task0181_selection")
+    parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parent.parent / "results/tasks/0181_selection")
     args = parser.parse_args(argv)
 
     args.output.mkdir(parents=True, exist_ok=True)

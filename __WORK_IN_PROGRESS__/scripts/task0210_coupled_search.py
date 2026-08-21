@@ -349,7 +349,7 @@ def main():
     if len(sys.argv) > 1:
         targets = sys.argv[1:]
 
-    t208_results_path = Path(__file__).resolve().parent.parent / "results_task0208_apo_holo_decomposition" / "results.json"
+    t208_results_path = Path(__file__).resolve().parent.parent / "results/tasks/0208_apo_holo_decomposition" / "results.json"
     rmsd_lookup = {}
     if t208_results_path.exists():
         for r in json.loads(t208_results_path.read_text()):
@@ -357,7 +357,7 @@ def main():
                 rmsd_lookup[r["target"]] = r["rmsd_apo_to_holo"]
 
     results = []
-    out_dir = Path(__file__).resolve().parent.parent / "results_task0210_coupled_search"
+    out_dir = Path(__file__).resolve().parent.parent / "results/tasks/0210_coupled_search"
     out_dir.mkdir(exist_ok=True)
     for t in targets:
         try:

@@ -63,7 +63,7 @@ from allostery.metrics import auc as _auc  # noqa: E402
 
 import run_challenge  # noqa: E402 -- reuse _load_apo_holo/DEFAULT_CUTOFF
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0122_mode_coparticipation"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0122_mode_coparticipation"
 TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 
 # TASK-0106/TASK-0130's own record of build_H_new's pre-TASK-0121 defaults

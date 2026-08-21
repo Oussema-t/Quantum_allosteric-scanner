@@ -71,7 +71,7 @@ from allostery.persistent_voids import persistence_h2, void_score  # noqa: E402
 
 import run_challenge  # noqa: E402
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0142_topology"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0142_topology"
 TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 THRESH = 16.0  # see module docstring -- tested divergence from the literal "8A" TODO text
 NOISE_FLOOR = 2.5  # test_solid_ball_has_no_strong_void's own established threshold

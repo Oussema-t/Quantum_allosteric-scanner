@@ -66,7 +66,7 @@ from positive_control_detection_curve import (  # noqa: E402
     PATCH_SIZE, N_PATHS, N_SEEDS, STRENGTHS,
 )
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0167003_specificity"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0167003_specificity"
 MANDATORY_TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 POCKET_SCOREABLE_TARGETS = [
     "KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN", "PTP1B", "GLUCOKINASE", "CASPASE1", "CASPASE7",

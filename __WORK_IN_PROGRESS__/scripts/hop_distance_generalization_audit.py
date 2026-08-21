@@ -229,7 +229,7 @@ def main() -> int:
         print(f"{name}: {r}", file=sys.stderr)
         out.append(r)
 
-    out_dir = Path(__file__).resolve().parent.parent / "results_task0186_hop_distance_audit"
+    out_dir = Path(__file__).resolve().parent.parent / "results/tasks/0186_hop_distance_audit"
     out_dir.mkdir(exist_ok=True)
     out_path = out_dir / "results.json"
     out_path.write_text(json.dumps(out, indent=2))

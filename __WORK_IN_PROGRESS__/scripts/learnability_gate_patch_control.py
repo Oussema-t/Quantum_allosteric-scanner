@@ -58,7 +58,7 @@ DEFAULT_N_MODES = 20
 DEFAULT_POCKET_CUTOFF = 4.5
 N_REPLICATES = 1000
 SEED = 7
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0133"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0133"
 
 
 def _log(msg: str) -> None:

@@ -150,7 +150,7 @@ def run_target(name: str, log: RunLogger) -> dict:
 
 
 def main() -> int:
-    out_dir = Path(__file__).resolve().parent.parent / "results_task0187_shortcut_hypothesis"
+    out_dir = Path(__file__).resolve().parent.parent / "results/tasks/0187_shortcut_hypothesis"
     out_dir.mkdir(exist_ok=True)
     log = RunLogger(out_dir / "run.jsonl", run_name="task0187_shortcut_hypothesis")
 

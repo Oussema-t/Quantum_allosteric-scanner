@@ -64,7 +64,7 @@ from allostery.runlog import RunLogger  # noqa: E402
 
 import run_challenge  # noqa: E402
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "RESULTS" / "results_task0159_finite_time_convergence"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "RESULTS" / "results/tasks/0159_finite_time_convergence"
 SAMPLE_EVERY = 20000  # RunLogger.step() cadence, in loop iterations
 
 

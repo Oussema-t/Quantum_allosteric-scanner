@@ -57,7 +57,7 @@ from backend import active_site as backend_active_site  # noqa: E402
 
 TARGET = "PTP1B"
 K_MODES = 10          # TASK-0201's own surviving cell
-OUT = _ROOT / "results_task0216_new_pair_scoring" / "ptp1b_real_seed.json"
+OUT = _ROOT / "results/tasks/0216_new_pair_scoring" / "ptp1b_real_seed.json"
 
 
 def main() -> int:

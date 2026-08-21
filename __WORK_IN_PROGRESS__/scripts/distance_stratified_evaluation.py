@@ -61,7 +61,7 @@ from allostery.propagators import ground_state_relaxation, time_averaged_ctqw_co
 
 import run_challenge  # noqa: E402 -- reuse _load_apo_holo/DEFAULT_CUTOFF
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0123_distance_stratified"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0123_distance_stratified"
 TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 GSR_T_MAX = 15.0
 

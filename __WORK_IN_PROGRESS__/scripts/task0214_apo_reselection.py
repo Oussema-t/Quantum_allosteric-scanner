@@ -48,8 +48,8 @@ from task0204_rotamer_repack_baseline import (  # noqa: E402
     _load_apo_holo, _select_window, _best_druggability_at_window, _is_hit,
 )
 
-OUT_DIR = _ROOT / "results_task0214_apo_reselection"
-TASK0209_RESULTS = _ROOT / "results_task0209_instance_verification" / "instance_verification.json"
+OUT_DIR = _ROOT / "results/tasks/0214_apo_reselection"
+TASK0209_RESULTS = _ROOT / "results/tasks/0209_instance_verification" / "instance_verification.json"
 
 
 def _holo_native_hit(name: str) -> bool | None:

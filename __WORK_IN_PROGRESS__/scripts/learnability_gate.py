@@ -62,7 +62,7 @@ DEFAULT_TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 DEFAULT_ANM_CUTOFF = 10.0
 DEFAULT_N_MODES = 20
 DEFAULT_POCKET_CUTOFF = 4.5
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0120"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0120"
 
 
 def run_one(target_name: str) -> dict:

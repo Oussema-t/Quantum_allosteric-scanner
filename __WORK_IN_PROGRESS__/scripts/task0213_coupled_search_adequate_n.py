@@ -36,7 +36,7 @@ ITERATIONS_PREFERRED = 25
 ITERATIONS_FALLBACK = 15
 RESTARTS_FLOOR = 10
 CALIB_RESTARTS, CALIB_ITERS = 1, 3
-OUT_DIR = _ROOT / "results_task0213_coupled_search_adequate_n"
+OUT_DIR = _ROOT / "results/tasks/0213_coupled_search_adequate_n"
 
 
 def _log(msg: str) -> None:
@@ -44,7 +44,7 @@ def _log(msg: str) -> None:
 
 
 def _rmsd_lookup() -> dict:
-    p = _ROOT / "results_task0208_apo_holo_decomposition" / "results.json"
+    p = _ROOT / "results/tasks/0208_apo_holo_decomposition" / "results.json"
     out = {}
     if p.exists():
         for r in json.loads(p.read_text()):

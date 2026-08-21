@@ -184,7 +184,7 @@ def main() -> int:
             traceback.print_exc()
             out["negative_controls"][name] = {"target": name, "error": f"{type(exc).__name__}: {exc}"}
 
-    out_dir = Path(__file__).resolve().parent.parent / "results_task0177_consensus_labels"
+    out_dir = Path(__file__).resolve().parent.parent / "results/tasks/0177_consensus_labels"
     out_dir.mkdir(exist_ok=True)
     out_path = out_dir / "results.json"
     out_path.write_text(json.dumps(_to_jsonable(out), indent=2, default=str))

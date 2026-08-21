@@ -11,7 +11,7 @@ than the ad-hoc `print(f"[{time.strftime(...)}] ...")` pattern duplicated
 across ~10 other scripts in this directory.
 
 Run: python3 scripts/reproducibility_audit.py --target BCR_ABL1 --repeats 3
-Output: __WORK_IN_PROGRESS__/results_task0135/<target>/spectral_gap_audit.jsonl
+Output: __WORK_IN_PROGRESS__/results/tasks/0135/<target>/spectral_gap_audit.jsonl
 """
 from __future__ import annotations
 
@@ -39,7 +39,7 @@ from allostery.runlog import RunLogger  # noqa: E402
 
 import run_challenge  # noqa: E402 -- reuse _load_apo_holo, not re-derived
 
-DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0135"
+DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0135"
 
 
 def spectral_gap_once(target_name: str) -> dict:

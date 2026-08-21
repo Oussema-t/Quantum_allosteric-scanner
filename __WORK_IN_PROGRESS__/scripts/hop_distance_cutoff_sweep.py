@@ -130,7 +130,7 @@ def main() -> int:
         print(f"{name}: ok={r.get('ok')}", file=sys.stderr)
         out.append(r)
 
-    out_dir = Path(__file__).resolve().parent.parent / "results_task0188_hop_cutoff_sweep"
+    out_dir = Path(__file__).resolve().parent.parent / "results/tasks/0188_hop_cutoff_sweep"
     out_dir.mkdir(exist_ok=True)
     out_path = out_dir / "results.json"
     out_path.write_text(json.dumps(out, indent=2))

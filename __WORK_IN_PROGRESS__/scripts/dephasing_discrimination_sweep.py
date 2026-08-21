@@ -68,7 +68,7 @@ from allostery.propagators import haken_strobl_time_averaged, time_averaged_ctqw
 
 import run_challenge  # noqa: E402 -- reuse _load_apo_holo/DEFAULT_CUTOFF, not re-derived
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0141_dephasing"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0141_dephasing"
 TARGETS = ["KRAS_G12C", "BCR_ABL1", "PTP1B"]
 
 # Fixed up front, per this task's own Constraint ("gamma is never tuned

@@ -53,7 +53,7 @@ from allostery.hamiltonians import contact_matrix  # noqa: E402
 from allostery.lowmode_predictor import dcc_low  # noqa: E402
 from allostery.shortcuts import equipartition_ensemble, msf_cross_check  # noqa: E402
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0211_ensemble_graph_observable"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0211_ensemble_graph_observable"
 
 # Pre-registered (task file): starting sample count, raised until the
 # split-half bar passes or the ceiling is hit.

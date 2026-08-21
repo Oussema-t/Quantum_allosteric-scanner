@@ -70,7 +70,7 @@ DEFAULT_POCKET_CUTOFF = run_challenge.DEFAULT_POCKET_CUTOFF
 CEILING_N_TRIALS = 60
 CEILING_SEED = 7
 CI_N_BOOT = 1000
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0130_competence"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0130_competence"
 
 
 def _log(msg: str) -> None:

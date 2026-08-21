@@ -21,7 +21,7 @@ Reuses [[TASK-0162]]'s own five scoring functions and forward/reverse
 seed-swap logic completely unmodified (this task's own Out of Scope: no
 new observable) -- only the coordinate/label source changes from apo to
 holo. The apo-side numbers are cited from TASK-0162's own already-written
-`results_task0162_reverse_direction/reverse_direction_coupling_test.json`
+`results/tasks/0162_reverse_direction/reverse_direction_coupling_test.json`
 (that JSON covers all 5 targets, including the generalization pair, even
 though the committed script's own `TARGETS` constant lists only the 3
 mandatory ones -- confirmed by reading the JSON directly before trusting
@@ -70,7 +70,7 @@ import run_challenge  # noqa: E402 -- reuse _load_apo_holo, not re-derived
 from test_gnm_cutoff_weight_benchmark import _holo_native_labels  # noqa: E402
 import reverse_direction_coupling_test as apo_run  # noqa: E402 -- cite its numbers, not recompute
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "RESULTS" / "results_task0171_reverse_direction_holo"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "RESULTS" / "results/tasks/0171_reverse_direction_holo"
 TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN", "PTP1B", "CASPASE7"]
 K_MODES = 20
 

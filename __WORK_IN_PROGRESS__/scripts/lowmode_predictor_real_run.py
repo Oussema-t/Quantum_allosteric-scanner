@@ -53,7 +53,7 @@ from allostery.metrics import auc as _auc, stratified_auc  # noqa: E402
 
 import run_challenge  # noqa: E402 -- reuse _load_apo_holo/DEFAULT_CUTOFF
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0149_lowmode_predictor"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0149_lowmode_predictor"
 TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN"]
 K_MODES_GRID = [5, 10, 15, 20]
 MIN_POS_WELL_POWERED = 3  # matches TASK-0123's own `distance_stratified_evaluation.py`

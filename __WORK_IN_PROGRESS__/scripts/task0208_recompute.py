@@ -77,7 +77,7 @@ from allostery.superpose import align_apo_holo, chain_map_from_config, kabsch_ap
 TARGETS = ["KRAS_G12C", "PTP1B", "CASPASE1", "GLUCOKINASE"]
 FRUSTRATION_BAND = 0.30          # unchanged from the original pre-registration
 SIDE_CHAIN_MIN_FOR_COUPLING = 0.10  # V2: below this the coupling statistic is vacuous
-OUT_DIR = _ROOT / "results_task0208_apo_holo_decomposition"
+OUT_DIR = _ROOT / "results/tasks/0208_apo_holo_decomposition"
 
 _TOTAL_RE = re.compile(r"^Total\s*=\s*([-\d.]+)", re.MULTILINE)
 

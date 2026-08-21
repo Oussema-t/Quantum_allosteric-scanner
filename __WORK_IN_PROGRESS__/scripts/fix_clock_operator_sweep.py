@@ -13,7 +13,7 @@ authorizes extending this script in place rather than building a third
 one ("Implementer's call on which script is the better base to extend").
 Every number this script now produces is under **both** fixes at once;
 the pre-TASK-0129 clock-only numbers this script used to produce remain
-on disk unchanged at `results_task0119/` (loaded below as a second
+on disk unchanged at `results/tasks/0119/` (loaded below as a second
 comparison column, not overwritten) -- see `OUTPUT_DIR`.
 
 `REVIEW-panel-2026-07-16-v2.md` section 2.2: `t_max=15` is hardcoded and
@@ -34,7 +34,7 @@ criterion; see that task's Done section).
 
 Loads each cell's OLD result directly from TASK-0101's already-computed
 `results/<target>/sweep_cells/*.json` (unchanged, not recomputed), plus
-TASK-0119's own clock-only-fix result from `results_task0119/
+TASK-0119's own clock-only-fix result from `results/tasks/0119/
 clock_fix_sweep.json` (also unchanged, not recomputed) -- a three-way
 old / clock-fix-only / combined comparison per cell, not just old-vs-new.
 """
@@ -72,8 +72,8 @@ from run_challenge import DEFAULT_CUTOFF, DEFAULT_POCKET_CUTOFF  # noqa: E402
 
 TOL = 1e-2  # matches TASK-0109's own check_convergence/min_adequate_* default
 OLD_SWEEP_DIR = Path(__file__).resolve().parent.parent / "results"
-CLOCK_ONLY_DIR = Path(__file__).resolve().parent.parent / "results_task0119"  # TASK-0119, pre-TASK-0129
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0129"
+CLOCK_ONLY_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0119"  # TASK-0119, pre-TASK-0129
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0129"
 
 N_STEPS_PRACTICAL_CAP = 5000  # found necessary running this script's real
 # 96-cell sweep: CARDIAC_MYOSIN H9's tiny gap (0.00776) drives t*=593.15,
@@ -104,7 +104,7 @@ _CLOCK_ONLY_CACHE: dict = {}
 def _load_clock_only_cell(target: str, op_name: str, prop_name: str):
     """TASK-0119's own clock-fix-only result (per-operator t*, pre-
     TASK-0129 single-index seed) -- the second comparison column, loaded
-    once per process from `results_task0119/clock_fix_sweep.json`."""
+    once per process from `results/tasks/0119/clock_fix_sweep.json`."""
     if target not in _CLOCK_ONLY_CACHE:
         path = CLOCK_ONLY_DIR / "clock_fix_sweep.json"
         _CLOCK_ONLY_CACHE.update(json.loads(path.read_text()) if path.exists() else {})
@@ -336,7 +336,7 @@ def run_bcr_abl1_trapping_reproduction_combined() -> dict:
         _log(f"BCR_ABL1 trapping-repro (combined) {name}: t*={t_star:.3g} AUC={auc:.4f} PR(ipr)={diag['participation_ratio']:.4f} <hop>={diag['mean_hop_from_seed']:.3f}")
 
     old = None
-    old_path = Path(__file__).resolve().parent.parent / "results_task0106" / "BCR_ABL1" / "reproduction.json"
+    old_path = Path(__file__).resolve().parent.parent / "results/tasks/0106" / "BCR_ABL1" / "reproduction.json"
     if old_path.exists():
         with open(old_path) as f:
             old = json.load(f)

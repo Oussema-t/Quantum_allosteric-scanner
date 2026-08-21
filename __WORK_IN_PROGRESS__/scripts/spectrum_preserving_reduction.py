@@ -75,7 +75,7 @@ from allostery.runlog import RunLogger  # noqa: E402
 
 DEFAULT_CUTOFF = 10.0
 DEFAULT_POCKET_CUTOFF = 4.5
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0172_spectrum_preserving_reduction"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0172_spectrum_preserving_reduction"
 
 
 def _load_apo_holo(target_name: str, target_config: dict):

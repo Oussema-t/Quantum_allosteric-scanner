@@ -51,8 +51,8 @@ from fix_clock_operator_sweep import _load_old_cell  # noqa: E402
 import run_challenge  # noqa: E402 -- reuse _load_apo_holo/DEFAULT_CUTOFF
 from run_challenge import DEFAULT_CUTOFF, DEFAULT_POCKET_CUTOFF  # noqa: E402
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0130_competence"
-COMBINED_DIR = Path(__file__).resolve().parent.parent / "results_task0129"  # TASK-0129's own combined sweep
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0130_competence"
+COMBINED_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0129"  # TASK-0129's own combined sweep
 
 
 def _log(msg: str) -> None:
@@ -222,7 +222,7 @@ def run_bcr_abl1_trapping_reproduction_closed_form() -> dict:
             f"PR(ipr)={diag['participation_ratio']:.4f} <hop>={diag['mean_hop_from_seed']:.3f}"
         )
 
-    combined_path = Path(__file__).resolve().parent.parent / "results_task0129" / "trapping_reproduction_combined.json"
+    combined_path = Path(__file__).resolve().parent.parent / "results/tasks/0129" / "trapping_reproduction_combined.json"
     combined = json.loads(combined_path.read_text()) if combined_path.exists() else None
 
     return {"target": target_name, "floor": floor, "rows": rows, "combined_2026-07-18": combined}

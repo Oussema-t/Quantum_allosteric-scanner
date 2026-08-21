@@ -76,7 +76,7 @@ class RunLogger:
 
     Usage::
 
-        log = RunLogger("results_taskXXXX/run.jsonl", run_name="my_search")
+        log = RunLogger("results/tasks/XXXX/run.jsonl", run_name="my_search")
         for i, trial in enumerate(trials):
             ... do work ...
             log.step(f"trial_{i}", value=trial_value)

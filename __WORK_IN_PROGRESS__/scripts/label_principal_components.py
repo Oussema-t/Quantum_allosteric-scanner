@@ -50,8 +50,8 @@ from observable_effective_rank import (  # noqa: E402
 
 from allostery.baselines import euclid_from_seed_centroid, hop_from_seed  # noqa: E402
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0207_pc_labels"
-STORED_JSON = Path(__file__).resolve().parent.parent / "results_task0199_observable_rank" / "observable_effective_rank.json"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0207_pc_labels"
+STORED_JSON = Path(__file__).resolve().parent.parent / "results/tasks/0199_observable_rank" / "observable_effective_rank.json"
 
 # TASK-0207's own pre-registered family-assignment rule -- fixed before
 # any loading was computed or seen, see the task file's own record.

@@ -256,7 +256,7 @@ def run_target(name: str, log: RunLogger, run_sweep: bool) -> dict:
 
 
 def main() -> int:
-    out_dir = Path(__file__).resolve().parent.parent / "results_task0185_conformational_search"
+    out_dir = Path(__file__).resolve().parent.parent / "results/tasks/0185_conformational_search"
     out_dir.mkdir(exist_ok=True)
     log = RunLogger(out_dir / "run.jsonl", run_name="task0185_conformational_search")
 

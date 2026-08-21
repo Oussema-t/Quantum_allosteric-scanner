@@ -80,7 +80,7 @@ TARGETS = ["KRAS_G12C", "BCR_ABL1", "CARDIAC_MYOSIN", "PTP1B"]
 WINDOW_SIZES = [8, 12, 16, 20, 30, 50, 80]
 CB_CUTOFFS = [8.0, 10.0, 12.0]
 N_ROTAMERS = 15  # PHASE_B_ROTAMER_QUBO.md's own "n ~= 10-20, coarse buckets" midpoint
-OUT_DIR = _ROOT / "results_task0204_packing_hardness"
+OUT_DIR = _ROOT / "results/tasks/0204_packing_hardness"
 
 
 def _cbeta_coords(pdb_id: str, chains):

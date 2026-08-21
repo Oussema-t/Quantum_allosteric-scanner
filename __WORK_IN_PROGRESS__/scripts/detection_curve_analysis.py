@@ -14,7 +14,7 @@ from pathlib import Path
 import numpy as np
 from scipy.stats import binomtest
 
-RESULTS_PATH = Path(__file__).resolve().parent.parent / "results_task0167002_detection_curve" / "detection_curve.json"
+RESULTS_PATH = Path(__file__).resolve().parent.parent / "results/tasks/0167002_detection_curve" / "detection_curve.json"
 NULL_SPECS = ["scattered", "compact", "matched"]
 CI_METHODS = ["sequence_ci", "spatial_ci"]
 LOD_POWER = 0.80

@@ -265,7 +265,7 @@ def main():
             traceback.print_exc()
             results[t] = {"target": t, "error": repr(e)}
 
-    out_dir = Path(__file__).resolve().parent.parent / "results_task0163_external_baselines"
+    out_dir = Path(__file__).resolve().parent.parent / "results/tasks/0163_external_baselines"
     out_dir.mkdir(exist_ok=True)
     with open(out_dir / "results.json", "w") as f:
         json.dump(results, f, indent=2, default=float)

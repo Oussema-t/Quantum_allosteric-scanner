@@ -132,7 +132,7 @@ def main():
             traceback.print_exc()
             results[t] = {"target": t, "error": repr(e)}
 
-    out_dir = Path(__file__).resolve().parent.parent / "RESULTS" / "results_task0015_step2_gate"
+    out_dir = Path(__file__).resolve().parent.parent / "RESULTS" / "results/tasks/0015_step2_gate"
     out_dir.mkdir(parents=True, exist_ok=True)
     with open(out_dir / "step2_gate.json", "w") as f:
         json.dump(results, f, indent=2, default=lambda o: float(o) if isinstance(o, np.floating) else str(o))

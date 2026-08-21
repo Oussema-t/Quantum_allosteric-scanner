@@ -6,7 +6,7 @@ protein residues, not DNA nucleotide indices leaking through under
 `REVIEW-panel-2026-07-16-v2.md` Sec.5 P2-11: "keep_nucleic: true means
 the hit list may be reporting DNA nucleotides; a referee will spot
 'residue 943' instantly." Traces every index in TASK-0080's real,
-already-produced c-Myc hit list (`results_task0080/MYC_MAX/hit_list.json`)
+already-produced c-Myc hit list (`results/tasks/0080/MYC_MAX/hit_list.json`)
 back through the actual production pipeline (`clean.clean_from_config`)
 and directly against 1NKP's raw PDB atom records -- two independent
 checks, not just one, per this task's own verification-against-real-data
@@ -24,7 +24,7 @@ if str(_SRC) not in sys.path:
 
 from allostery.clean import clean_from_config  # noqa: E402
 
-HIT_LIST_PATH = Path(__file__).resolve().parent.parent / "results_task0080" / "MYC_MAX" / "hit_list.json"
+HIT_LIST_PATH = Path(__file__).resolve().parent.parent / "results/tasks/0080" / "MYC_MAX" / "hit_list.json"
 DNA_RESNAMES = {"DA", "DC", "DG", "DT"}
 PROTEIN_ATOM_NAMES_SAMPLE = {"CA", "N", "C", "O"}  # any real amino acid has these
 

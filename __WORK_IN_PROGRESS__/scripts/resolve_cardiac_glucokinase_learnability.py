@@ -27,9 +27,9 @@ if str(_SRC) not in sys.path:
 from allostery.superpose import learnability_verdict  # noqa: E402
 
 _RESULTS_DIR = Path(__file__).resolve().parent.parent / "RESULTS"
-GATE_PATH = _RESULTS_DIR / "results_task0120" / "learnability_gate.json"
-PATCH_CONTROL_PATH = _RESULTS_DIR / "results_task0152" / "learnability_gate_patch_control_task0152.json"
-OUTPUT_PATH = Path(__file__).resolve().parent.parent / "results_task0152_learnability_resolution" / "resolution.json"
+GATE_PATH = _RESULTS_DIR / "results/tasks/0120" / "learnability_gate.json"
+PATCH_CONTROL_PATH = _RESULTS_DIR / "results/tasks/0152" / "learnability_gate_patch_control_task0152.json"
+OUTPUT_PATH = Path(__file__).resolve().parent.parent / "results/tasks/0152_learnability_resolution" / "resolution.json"
 
 TARGETS = ["CARDIAC_MYOSIN", "GLUCOKINASE"]
 

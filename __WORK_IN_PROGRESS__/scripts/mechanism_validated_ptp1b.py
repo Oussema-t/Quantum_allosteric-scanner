@@ -59,7 +59,7 @@ from allostery.baselines import degree_centrality, euclid_from_seed_centroid, ho
 from allostery.propagators import time_averaged_ctqw_converged  # noqa: E402
 import run_challenge  # noqa: E402
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0170_mechanism_validated"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0170_mechanism_validated"
 
 # -- mechanism-validated network, literature-cited residue numbers ---------
 # (structural element: [resnums]) -- see module docstring for verification.

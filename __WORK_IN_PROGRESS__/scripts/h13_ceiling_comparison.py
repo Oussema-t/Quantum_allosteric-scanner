@@ -91,7 +91,7 @@ DEFAULT_POCKET_CUTOFF = run_challenge.DEFAULT_POCKET_CUTOFF
 N_TRIALS = 60
 SEED = 7
 CUTOFF_RANGE = (6.0, 14.0)  # matches ceiling.py's own _PARAM_RANGES["cutoff"] span
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results_task0126"
+OUTPUT_DIR = Path(__file__).resolve().parent.parent / "results/tasks/0126"
 
 
 def _log(msg: str) -> None:
