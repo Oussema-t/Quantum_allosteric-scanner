@@ -340,10 +340,11 @@ proposal into the submission.
       cumulative overlap, equal dimension, 3 mandatory targets.
 - [x] Regression tests for the new function.
 - [ ] RESULTS.md addendum to [[TASK-0227]]'s section (blocked on that
-      section's held claim at write time — see Done).
-- [x] §6.2 (progress probability `p`) — collective-only partial version
-      built and run; full joint version blocked on missing tooling, see
-      [[Q-0004]].
+      section's held claim for 7+ hours as of this checkbox — see In
+      Progress for the staleness-override plan).
+- [x] §6.2 (progress probability `p`) — both collective-only and full
+      joint (backbone+rotamer) versions built and run on real targets.
+      [[Q-0004]] retracted (premise invalidated, not answered).
 - [ ] §3 branching/depth measurement itself, §4 search infrastructure, §5
       ceiling. Not started.
 
@@ -484,14 +485,81 @@ own decision rule ("if p stays in the 0.1–0.7 band... retire the arm"),
 this is real, decisive evidence for retiring amplitude amplification —
 **at the collective move layer specifically.**
 
-**What this does not settle**: the full joint (backbone⊗local⊗rotamer)
-`p` the document actually asks for — a rotamer packer would be needed to
-test whether adding local/side-chain moves changes the picture, and none
-is available. Whether the collective-only result is close enough to
-retire the whole quantum-section argument, or whether closing that gap
-is worth real build effort, is **filed as [[Q-0004]] to Architect/
-Planner** rather than decided here — it has direct submission-narrative
-implications past this task's own scope.
+**[[Q-0004]] retracted the same day, not answered by Architect/Planner**:
+its entire cost framing rested on TASK-0227's own claim that EvoEF2/
+fpocket were absent — corrected same-day (commit `fa94316`) as an
+inadequate-search artifact, not a real environment gap. Both are real,
+vendored, working binaries. With no real build cost left to weigh, the
+full joint measurement was simply built next, on direct user instruction
+("proceed with building the measurement... super thrilled about the
+outcome" — recorded for the record, not part of this section's evidence).
+
+---
+
+**§6.2 — full joint (backbone + rotamer) `p`, same day.** New
+`__WORK_IN_PROGRESS__/scripts/task0228_full_joint_p_measurement.py`.
+Same admissible collective moves as the collective-only run above
+(P_MEASUREMENT_PROTOCOL, 47–59/target), but now extended to real,
+full-atom structures via `prody.extendVector` (an existing ProDy utility
+— rigidly broadcasts each residue's own Cα displacement to every atom in
+that residue; verified directly with a synthetic per-residue check
+before use, not assumed correct) and, for the "+repack" condition, side-
+chain-repacked at the pocket window with EvoEF2 `SideChainRepack`
+(TASK-0204's own already-validated invocation, reused unchanged: relative
+argv[0], `cwd=EVOEF2_DIR`, contiguous per-chain PDB blocks). Both
+conditions scored on the **same** objective — fpocket's own
+`druggability_score` at the window (TASK-0204's `score_structure`) — a
+fair ablation; the collective-only run's RMSD-to-holo objective is
+Cα-only by construction and blind to rotamer state, so it could not have
+been reused here. "Progress" = druggability *increases* over the
+unmodified apo baseline (druggability is higher-is-better; the
+document's generic "reduces the objective" phrasing assumes a
+minimization framing this objective doesn't literally fit).
+
+Real subsample for tractability (EvoEF2+fpocket per candidate is
+real wall-clock cost, ~2 s each, unlike the collective-only run's pure
+linear algebra): 20 of the 47–59 admissible moves per target, uniform
+random, seed 0.
+
+| target | baseline druggability | p (backbone only) | p (backbone + repack) |
+|---|---|---|---|
+| KRAS_G12C | 0.001 | 0.25 | **1.00** |
+| BCR_ABL1 | 0.566 | 0.20 | **0.05** |
+| CARDIAC_MYOSIN | 0.001 | 0.50 | 0.65 |
+
+**Real, decisive, and sharply target-dependent — the opposite of a
+single verdict.** The direction of the repack effect tracks the apo
+baseline's own druggability, not a fixed sign: on the two targets whose
+apo pocket is essentially undetectable to begin with (KRAS_G12C,
+CARDIAC_MYOSIN — baseline druggability ≈0.001, consistent with both
+being genuinely cryptic in apo), adding rotamer moves makes progress
+*more* likely, dramatically so for KRAS_G12C (0.25→1.00 — every sampled
+repack found more cavity than an already-near-zero baseline, the
+"nowhere to go but up" direction). On BCR_ABL1, whose apo baseline is
+*already* druggable (0.566, above TASK-0204's own 0.5 druggability bar)
+— independently consistent with this project's own repeated finding that
+BCR_ABL1's pocket is an "apo-computable structural prior," pre-formed
+even without any deformation ([[TASK-0104]]/[[TASK-0091]]) — EvoEF2's
+purely energy-based repack (not druggability-aware) is *more* likely to
+degrade an already-good pocket than improve it: p drops to **0.05**, the
+one number in this whole session's worth of progress-probability
+measurements meaningfully below the 0.24–0.69 "not rare" band (though
+short of a literal order-of-magnitude drop — ~5–12× smaller, not
+~10–1000×). Amplitude amplification is **not** cleanly retired at the
+joint layer the way it was at the collective-only layer — it depends on
+which kind of target (genuinely cryptic vs. already-open in apo) the
+walk is being asked to search from, a real, physically grounded
+finding this project's own prior "apo-computable prior" work already
+anticipated but had not connected to a search-progress-probability
+number before.
+
+**Caveats, stated not buried**: n=20/target (not the full 47–59) —
+tractable given real EvoEF2+fpocket cost, real subsample, but noisier
+than the collective-only run's own n. The Cα→all-atom extension is a
+rigid per-residue broadcast, a real approximation (no local backbone/
+side-chain dihedral relaxation) — stated, not hidden. Single starting
+node (apo), one repack attempt per candidate (not TASK-0204's own
+8-seed SA average) — a point estimate, not a distribution.
 
 ---
 

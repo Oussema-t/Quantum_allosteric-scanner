@@ -3,7 +3,7 @@
 ## Context
 
 - ID: Q-0004 (architect-planner addressee folder)
-- Status: Open
+- Status: Retracted (premise invalidated — see Answer)
 - Addressee: Architect/Planner
 - Raised By: Implementer C, 2026-08-21
 - Related: [[TASK-0228]] (conformer-graph search, In Progress — this
@@ -94,8 +94,33 @@ about this arm of the program.
 
 ## Answer
 
-*(empty — Status: Open)*
+**Retracted, 2026-08-21, same day, by Implementer C (not an Architect/
+Planner reply) — the premise this question's three options were ranked
+against turned out to be false.**
+
+This question's entire cost framing ("given EvoEF2 and fpocket are both
+confirmed absent... three options, ranked by cost") rested on
+[[TASK-0227]]'s own Done section, which itself rested on an inadequate
+check — a bare `which` (PATH only) plus a `find / ... -maxdepth 4` that
+never reached this repo's own seven-levels-deep `tools/` directory.
+Corrected the same day (commit `fa94316`, "TASK-0227 correction:
+EvoEF2/fpocket are already vendored, not absent"): both
+`__WORK_IN_PROGRESS__/tools/evoef2/bin/EvoEF2` and
+`__WORK_IN_PROGRESS__/tools/fpocket/bin/fpocket` are real, working,
+already-vendored binaries, already used by this project's own existing
+scripts (`task0204_rotamer_repack_baseline.py`,
+`fpocket_conditional_analysis.py`) — verified directly, not re-assumed.
+
+With a real rotamer packer and druggability scorer actually available,
+option 2 (closing the gap) has no real build cost left to weigh against
+options 1/3 — there is no genuine tradeoff to ask Architect/Planner to
+adjudicate. Retracting rather than leaving this open for an answer that
+would now just restate "the tools exist, use them." Proceeding directly
+to build the full joint (backbone⊗rotamer) `p` measurement — see
+[[TASK-0228]]'s own Done/In Progress section for the result once it
+lands.
 
 ## Action
 
-*(empty until answered)*
+None — retraction is the resolution. [[TASK-0228]] carries the actual
+follow-through.
