@@ -6746,6 +6746,79 @@ reached the repo's own `tools/` directory — corrected in the task's own Done
 section). Both experiments are a real, tooling-unblocked option for a follow-up
 task. Full detail: `.ai/tasks/DONE/TASK-0227-anm-rotamer-reachability-ceiling.md`.
 
+**Addendum — the local residual this section flagged as untested, plus §6.2's `p`
+([[TASK-0228]], 2026-08-21).** Three follow-ups on the same real target pairs above.
+
+**(1) Pocket-restricted CO, the local residual.** Above measures the *whole-structure*
+displacement; the labeled pocket's own restricted CO (`restricted_cumulative_overlap`,
+[[TASK-0133]]'s Bessel-valid form — a genuinely different, harder-to-capture quantity
+than a whole-structure average) at equal static/adaptive dimension (110):
+
+| target | static CO | adaptive CO | ratio |
+|---|---|---|---|
+| KRAS_G12C | 0.640 | 0.840 | 1.31× |
+| BCR_ABL1 | 0.481 | 0.353 | **0.73× (adaptive worse)** |
+| CARDIAC_MYOSIN (8QYP→8QYR) | 0.430 | 0.612 | 1.42× |
+
+Real, target-dependent, not the drop's own reported 9.4× win — but static pocket-CO
+alone (0.43–0.64) already sits close to the drop's own *adaptive* number for its
+synthetic deformation (0.229), before any correction. Consistent with the
+whole-structure finding above: the synthetic deformation, not the ANM model class,
+drove both original numbers.
+
+**(2) §6.2 progress probability `p` — collective-only.** `holo_direction.build_
+deformation_family`'s own admissible single-mode ANM moves (own smaller amplitude
+grid, 0.1/0.2/0.3 — the module's frozen 0.5/1.0/2.0 protocol rejects 53–59/60
+candidates here, unusably few), objective = does the move reduce the real pocket's
+own mean Cα displacement from true holo:
+
+| target | admissible | p |
+|---|---|---|
+| KRAS_G12C | 59 | 0.492 |
+| BCR_ABL1 | 59 | 0.237 |
+| CARDIAC_MYOSIN | 47 | 0.426 |
+
+All 3 inside the register's own established 0.24–0.69 "not rare" band ([[TASK-0181]]/
+[[TASK-0185]]) — same conclusion as every other progress-probability measurement in
+this project.
+
+**(3) §6.2 `p` — full joint (backbone + rotamer), same 47–59 admissible moves, 20
+sampled per target, extended to real full-atom structures (`prody.extendVector`,
+rigid per-residue broadcast — a real approximation, stated not hidden) and EvoEF2
+`SideChainRepack`'d at the pocket window, scored on fpocket `druggability_score`
+(the objective a rotamer move can actually change — backbone RMSD-to-holo cannot):**
+
+| target | baseline druggability | p (backbone only) | p (backbone + repack) |
+|---|---|---|---|
+| KRAS_G12C | 0.001 | 0.25 | **1.00** |
+| BCR_ABL1 | 0.566 | 0.20 | **0.05** |
+| CARDIAC_MYOSIN | 0.001 | 0.50 | 0.65 |
+
+**Sharply target-dependent, not a single verdict — the repack effect's direction
+tracks the apo baseline's own druggability.** On the two genuinely cryptic targets
+(baseline ≈0.001), repacking makes progress *more* likely, dramatically for
+KRAS_G12C. On BCR_ABL1 (baseline 0.566, already above [[TASK-0204]]'s own 0.5
+druggability bar — independently consistent with this project's established
+"apo-computable structural prior" finding, [[TASK-0104]]/[[TASK-0091]]), EvoEF2's
+energy-only repack more often degrades an already-good pocket than improves it: `p`
+drops to 0.05, the one number in this project's progress-probability history
+meaningfully below the 0.24–0.69 band. Amplitude amplification is not cleanly
+retired at the joint layer the way it is at the collective-only layer.
+
+**Cross-checked against [[TASK-0230]] (same day, independent build): baseline
+druggability numbers match exactly** (KRAS_G12C 0.001, BCR_ABL1 0.566, CARDIAC_MYOSIN
+0.001 — the same three below) — two independently-written pipelines agreeing is a
+real consistency check, not assumed. TASK-0230's own §5.2 ceiling (true holo
+displacement, not just a small admissible step, repacked) still fails to clear 0.5 on
+any target, and its §5.3 finds fpocket's own score does not reliably track BCR_ABL1's
+or CARDIAC_MYOSIN's real pocket at this window *at all* — a real caveat on reading
+BCR_ABL1's `p=0.05` above as purely "repacking hurts": part of that number may be
+fpocket scoring noise on a window TASK-0230 independently found unreliable for this
+specific target, not only a genuine energy-vs-druggability mismatch. Both tasks'
+own scripts + full detail: `.ai/tasks/DONE/TASK-0230-anm-ceiling-and-scorer-
+brittleness.md`, `.ai/tasks/IN_PROGRESS/TASK-0228-conformer-graph-search-branching-
+vs-depth.md`.
+
 ## Observable-family proximity confound — PDB-retest replicates the external drop's finding, real seeds/burial ([[TASK-0226]], 2026-08-21)
 
 External drop (`.ai/reviews/2026-08-21/TASK-0210_observable_family_confound.md`, no repo
