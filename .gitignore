@@ -38,3 +38,13 @@ __WORK_IN_PROGRESS__/results/
 documentation/*.pdf
 documentation/*.md
 documentation/references/
+
+# Local cache for downloaded papers/notebook exports the scientific register
+# cites (see documentation/REFERENCES.md, the tracked index, and
+# .ai/reference/PAPER_CITATION_PROTOCOL.md). Re-fetchable, not project
+# output -- REFERENCES.md is the durable pointer, this is scratch. Written
+# as a full path, not a bare `documentation/references/` (which is
+# root-anchored -- gitignore patterns containing a non-trailing slash match
+# only relative to the .gitignore file's own directory, not at every depth;
+# confirmed directly, this is not the same rule as the root-level one above).
+__WORK_IN_PROGRESS__/documentation/references/

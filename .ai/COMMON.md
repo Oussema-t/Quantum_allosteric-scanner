@@ -31,6 +31,8 @@ Central coordination hub for the repo-local agent scaffold.
 - seam protocol (TASK-0050): `.ai/reference/SEAM_PROTOCOL.md`, registry at `.ai/seams/`
 - invariance protocol (TASK-0051): `.ai/reference/INVARIANCE_PROTOCOL.md`, registry at `.ai/invariants/`
 - merge conflict protocol (TASK-0202): `.ai/reference/MERGE_CONFLICT_PROTOCOL.md`
+- paper citation protocol: `.ai/reference/PAPER_CITATION_PROTOCOL.md` — check before citing any external source, or using a claim from one in scored work
+- scientific references index: `__WORK_IN_PROGRESS__/documentation/REFERENCES.md` — challenge bibliography [1]-[25] + method/tool papers, status-tagged; local copies (if any) go gitignored under `__WORK_IN_PROGRESS__/documentation/references/`
 
 ## Source Of Truth
 
