@@ -339,9 +339,9 @@ proposal into the submission.
 - [x] Real-target measurement: static vs. adaptive pocket-restricted
       cumulative overlap, equal dimension, 3 mandatory targets.
 - [x] Regression tests for the new function.
-- [ ] RESULTS.md addendum to [[TASK-0227]]'s section (blocked on that
-      section's held claim for 7+ hours as of this checkbox — see In
-      Progress for the staleness-override plan).
+- [x] RESULTS.md addendum to [[TASK-0227]]'s section — landed after
+      Implementer B's own TASK-0230 commit cleared (they were live, not
+      stale; caught via the SCQ queue before force-overriding).
 - [x] §6.2 (progress probability `p`) — both collective-only and full
       joint (backbone+rotamer) versions built and run on real targets.
       [[Q-0004]] retracted (premise invalidated, not answered).
@@ -565,15 +565,21 @@ node (apo), one repack attempt per candidate (not TASK-0204's own
 
 **Not done, and why** (real, substantial remaining scope, not silently
 dropped — see this task's own Intent Contract Out Of Scope): §3's
-branching/depth measurement, §4's search infrastructure, §5's ceiling,
-and all of §6 (including §6.2's "p", the document's own next-cheapest
-step) are unbuilt. The RESULTS.md addendum to [[TASK-0227]]'s section
-(cross-referencing this task's pocket-restricted number into the same
-place readers already look) is written but not yet landed — that
-section's `RESOURCE-*` claim (TASK-0195's mechanism) was held by a
-different live session at write time; adding it once free is this task's
-one remaining action, tracked in TODO above rather than forced through a
-stale-content collision.
+branching/depth measurement itself, §4's search infrastructure, and §5's
+ceiling (subsequently covered independently by [[TASK-0230]], same day)
+remain unbuilt under this task's own claim. §6.2's "p" — both the
+collective-only and full joint versions — **is** now built and run (see
+above); §6.1/§6.3/§6.4 are not.
+
+**RESULTS.md addendum: landed** (commit `a316268`), after Implementer
+B's own [[TASK-0230]] commit cleared that section's `RESOURCE-*` claim.
+Caught mid-flight, not assumed: the claim initially read as stale
+(7+ hours, no recent file activity) and was almost force-overridden on
+that basis alone — checking the SCQ queue first caught Implementer B
+entering it live, for the exact same tooling correction this task's own
+full-joint measurement also depended on. Released `GIT-COMMIT` for them
+instead of forcing through, waited for their commit, then added this
+task's own addendum once the file was verified clean again.
 
 **Validated**: new `TestAdaptiveAnmModes` (5 tests: orthonormal basis,
 dimension bound, determinism, reduces to the static basis at
