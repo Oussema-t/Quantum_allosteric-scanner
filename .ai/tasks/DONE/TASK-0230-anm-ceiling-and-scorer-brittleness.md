@@ -298,3 +298,68 @@ the "collective part is reachable" half of the question. This task's own
 data narrows, rather than closes, the *local* half: not "closed," but
 "not shown open by any method tried here, and the method itself is not
 yet trustworthy enough to fully believe that negative."
+
+## Addendum 2 — a real energy calculation, tested directly: does
+minimization itself explain the closed result? (2026-08-22)
+
+User's own follow-up: can a real energy calculation help interpret these
+structures, and would that help the actual challenge? Answer: yes to
+both, tested directly rather than argued abstractly — and it surfaces
+real, target-dependent signal, not a uniform effect.
+
+**Method**: EvoEF2 `RepairStructure` (a lighter-touch, whole-structure
+side-chain adjustment pass — flips/rotates residues to optimize hydrogen
+bonds, distinct from `SideChainRepack`'s full simulated-annealing energy
+minimization) run on the full-displacement pre-repack structure, scored
+both alone and followed by a window-focused `SideChainRepack`, using the
+same `_compute_stability`/`score_structure` machinery as Addendum 1.
+
+| target | full-displ. pre-repack (raw) | + RepairStructure alone | + RepairStructure → SideChainRepack |
+|---|---|---|---|
+| KRAS_G12C | 0.79 (`vdwrep` 1014.8) | **0.726** (`vdwrep` 297.0) | 0.004 (`vdwrep` 285.7) |
+| BCR_ABL1 | 0.487 (`vdwrep` 876.0) | 0.032 (`vdwrep` 523.2) | 0.325 (`vdwrep` 551.9) |
+| CARDIAC_MYOSIN | 0.005 (`vdwrep` 1014.3) | 0.001 (`vdwrep` 623.8) | 0.0 (`vdwrep` 757.2) |
+
+**Real, target-dependent signal, not a uniform pattern — reported as
+such, not oversold.** Only KRAS_G12C shows the effect cleanly: a
+lightly-relaxed state (`RepairStructure` alone, `vdwrep` down 3.4× from
+raw but still ~3.5× native apo) stays apparently open (0.726), and
+*only once side chains are genuinely energy-minimized* (`SideChainRepack`,
+real simulated annealing) does the pocket collapse (0.004) — at
+essentially the same clash level as the `RepairStructure`-alone state
+(285.7 vs 297.0 `vdwrep` — barely different), so the closure tracks
+**which rotamers get chosen**, not just how relaxed the structure is.
+BCR_ABL1 and CARDIAC_MYOSIN never show strong openness at any relaxation
+level, consistent with (not a new instance of) the earlier finding that
+fpocket doesn't strongly recognize even their *true holo* structures at
+this window — the scorer-sensitivity caveat from the main Done section,
+not a new confound.
+
+**Why this is directly relevant to the challenge, not just to this
+task's own methodology**: KRAS_G12C's own pattern — an unrelaxed or
+lightly-relaxed state reads as open, a genuinely energy-minimized one
+reads as closed, at comparable clash levels — is a real-target,
+directly-measured instance of the source document's own §6.1 diagnosis:
+**"QUBO returns a minimum; cryptic pockets are excited states... 
+minimising energy over backbone⊕rotamers returns the apo structure."**
+That was a theoretical objection in the source document; this is one
+real target where it's now an observed result, not just an argument.
+**Bearing on a QUBO/quantum-optimization formulation**: if the
+optimization objective is bare energy minimization over rotamers (or
+rotamers+backbone), it will systematically return the closed state —
+matching exactly what was measured here — regardless of whether the
+solver is classical or quantum, and regardless of solver quality. A
+quantum speedup on the *wrong* objective is not a path to a working
+approach. The source document's own proposed fix (§6.1: score = minimum
+energy cost to open a druggable pocket at site j, a constrained
+formulation with a pocket-volume term, not bare minimization) is the
+one this result actually argues for — and remains untested here, real
+scope, not attempted in this task.
+
+**What this does not resolve**: `RepairStructure` is still a side-chain-
+only adjustment (its own log output: "we optimize side chain of residue
+..." for every residue) — no backbone/torsion relaxation happens at any
+point in this addendum. The core confound from Addendum 1 (crude rigid-
+translation backbone placement, `vdwrep` still 3–7× native apo even
+after the best relaxation tried here) stands, unresolved, on all 3
+targets.

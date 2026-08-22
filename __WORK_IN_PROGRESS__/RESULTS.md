@@ -6943,3 +6943,23 @@ task's own data neither closes nor opens the *local* half — "not shown open by
 method tried here, and the method itself isn't yet trustworthy enough to fully
 believe that negative." Full tables:
 `.ai/tasks/DONE/TASK-0230-anm-ceiling-and-scorer-brittleness.md`'s own Addendum.
+
+**Addendum 2 — a real energy calculation (EvoEF2 `RepairStructure` vs. `SideChainRepack`)
+directly reproduces the source document's own §6.1 diagnosis on one real target
+(2026-08-22).** On KRAS_G12C only: a lightly-relaxed state (`RepairStructure`, clash
+energy down 3.4× from raw but still ~3.5× native apo) stays apparently open
+(druggability 0.726); once side chains are genuinely energy-*minimized*
+(`SideChainRepack`, real simulated annealing) at essentially the same clash level
+(285.7 vs. 297.0 `vdwrep`), the pocket collapses (0.004) — closure tracks which
+rotamers get chosen, not overall relaxation amount. Direct, real-target confirmation
+of "QUBO returns a minimum; cryptic pockets are excited states... minimising energy
+over backbone⊕rotamers returns the apo structure" — previously a theoretical
+objection in the source document, now one observed instance. Does not replicate on
+BCR_ABL1/CARDIAC_MYOSIN (both stay near-zero at every relaxation level tried,
+consistent with their own weak-holo-recognition caveat above, not a new confound).
+Bears directly on any QUBO/quantum-optimization formulation for this problem: bare
+energy minimization over rotamers will systematically return the closed state
+regardless of solver — classical or quantum — unless reformulated as the source's
+own proposal (minimum energy cost to *open* a pocket, a constrained objective, not
+bare minimization), which remains untested. Full tables:
+`.ai/tasks/DONE/TASK-0230-anm-ceiling-and-scorer-brittleness.md`'s Addendum 2.
