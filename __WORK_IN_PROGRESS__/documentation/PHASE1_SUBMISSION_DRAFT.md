@@ -42,6 +42,19 @@
 > on all three) but do change how "zero confirmed positives" must be
 > phrased: evidence of no *robust* signal found, not proof no signal
 > exists. §4's multiplicity-budget bullet cross-referenced accordingly.
+>
+> **2026-08-22 update ([[TASK-0229.002]])**: new §3(d) — surfaces
+> [[TASK-0182]]'s own hardware-resource verdict for the first time in
+> this document (`FAULT_TOLERANT_ONLY`, all mandatory targets, both
+> resolutions — established weeks ago, never previously cited here), then
+> checks the challenge's own two cited hardware routes against it.
+> Circuit cutting ([10]): a real per-target boundary-cut count computed
+> against each target's actual coupling graph, sampling overhead 10²²⁴-10⁴⁸⁷
+> — reinforces the existing verdict, does not change it. SVD/dilation
+> ([11], directly on-topic: FMO exciton transport): the one route in the
+> whole document that clears the qubit-count bar, *if* paired with an
+> amplitude-encoded register this project has not built or costed —
+> stated as a real, honestly-caveated option, not a built result.
 
 ---
 
@@ -280,6 +293,79 @@ but those benchmarks evaluate *ligand-removed holo conformations*, not apo.
 Measuring the same observable on apo and on stripped-holo for the same target
 isolates exactly the quantity cryptic-pocket prediction depends on. To our
 knowledge that delta has not been reported.
+
+**(d) Hardware realization — two routes from the challenge's own
+bibliography, costed honestly, against a resource picture this document
+had not yet stated.** [[TASK-0182]] already measured, months ago, that our
+full-resolution register (one qubit per residue, the convention every
+number in this document uses) needs 169-704 qubits and 3.3M-124.9M
+two-qubit gates, and that Louvain coarse-graining to a NISQ-plausible
+~10-15 qubits destroys most of the ranking signal (retention Jaccard
+0.00-0.18) without even reaching hardware-usable fidelity — every
+mandatory target verdicts `FAULT_TOLERANT_ONLY`, at both resolutions,
+against a real IBM device calibration snapshot. **That result was never
+surfaced in this document until now** — corrected here, not left for a
+referee to notice its absence.
+
+We checked whether either of the challenge's own two cited hardware
+routes changes that picture.
+
+*Circuit cutting ([10] Mitarai & Fujii 2021, Quantum 5:388 — verified
+directly).* Simulating *n* non-local two-qubit gates via local operations
+and classical post-processing costs a sampling overhead of O(9ⁿ)
+(O(4ⁿ) with classical communication between sub-circuits) — this is the
+established scaling this line of work derives, not a number we invented.
+We computed the real partition, not an assumed one: each mandatory
+target's actual `H_new` coupling graph, split into NISQ-sized islands via
+the same Louvain machinery [[TASK-0182]] already uses, counting genuine
+boundary-crossing coupling edges as the required cut count *n*:
+
+| Target | Islands | Max island (qubits) | Cut edges (*n*) | log₁₀ overhead, O(9ⁿ) | log₁₀ overhead, O(4ⁿ) |
+|---|---|---|---|---|---|
+| KRAS_G12C | 10 | 23 | 235 | 224 | 142 |
+| BCR_ABL1 | 14 | 56 | 344 | 328 | 207 |
+| CARDIAC_MYOSIN | 15 | 98 | 510 | 487 | 307 |
+
+For scale: the observable universe holds an estimated ~10⁸⁰ atoms. Every
+cell above exceeds that by 15-400 orders of magnitude, in the *cheaper*
+of the two overhead regimes. **Circuit cutting does not change the
+verdict** — it reinforces [[TASK-0182]]'s own `FAULT_TOLERANT_ONLY`
+finding from an independent direction, and the honest, cited answer to
+"how would you fit a 704-residue protein on near-term hardware" is: not
+by cutting it into pieces small enough to run and stitching the results
+back together classically, at this graph's real connectivity.
+
+*SVD/dilation for open-system dynamics ([11] Oh, Krogmeier, Schlimgen &
+Head-Marsden 2024, ACS Phys Chem Au 4:393 — verified directly, and
+directly on-topic: exciton transport through the FMO complex, the same
+physics as our own ENAQT measurements).* This route is more promising,
+and worth stating precisely rather than dismissed alongside the first.
+Their method needs only **one ancilla qubit, independent of system
+size**, to implement non-unitary (dephasing) dynamics as a unitary
+circuit — a real advantage over Stinespring dilation, whose ancilla count
+scales with the channel's Kraus rank. Gate count is O(4^d), *d* the
+*system* qubit count — their own worked example needs 8 qubits total for
+a 7-site excitonic system, because *d* there is an amplitude-encoded
+(log₂-scale) register over site basis states, not one qubit per site.
+
+That is the catch, stated plainly: [[TASK-0182]]'s entire resource table,
+including the numbers in this section, uses one qubit per residue —
+matching this document's own CTQW convention throughout, and how every
+existing observable in our register is actually built. Ref [11]'s small
+qubit counts come from a *different* base encoding (amplitude/log-scale
+over the single-excitation subspace) that this project has not built or
+costed anywhere. Projected honestly under that alternative encoding —
+d ≈ ⌈log₂ N⌉ system qubits (9-10 for N up to 704) plus 1 ancilla, giving
+O(4^d) ≈ 10⁵-10⁶ gates — the *qubit count* becomes genuinely NISQ-
+plausible for the first time in this register, at a gate count large but
+no longer astronomical. **We have not built this circuit or verified the
+projection against our own coupling structure — it is ref [11]'s own
+complexity formula applied to our own N, nothing more** — but it is the
+one route in this document, across both hardware-story references and
+[[TASK-0182]]'s own full resource sweep, that does not fail on qubit
+count alone. Reconciled with [[TASK-0182]]: that task never costed this
+encoding, so there is no contradiction to resolve, only an unbuilt option
+now on record rather than left unstated.
 
 Detailed scope, milestones, resources and pre-registered success criteria:
 **[[TASK-0183]]**, `documentation/POC_SPRINT_PLAN.md` — month-by-month
