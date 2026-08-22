@@ -68,6 +68,7 @@ POCKET_CUTOFF = 4.5
 WINDOW_MAX_SIZE = 12  # matches TASK-0204's own window size convention
 N_INTERP_STEPS = 20   # source's own §5.3 spec: "interpolate apo->holo in 20 steps"
 DRUGGABILITY_BAR = 0.5  # TASK-0204's own established fpocket druggable/non-druggable cutoff
+N_STRONGER_TRIALS = 4    # independent EvoEF2 seeds, matches the robustness check already done for BCR_ABL1
 
 
 def _log(msg: str) -> None:
@@ -209,6 +210,138 @@ def _common_set_and_projection(apo, holo, target_config, k=ANM_K):
         proj_by_res[key] = delta_projected[j]
 
     return alignment, full_by_res, proj_by_res, delta_r, k_used
+
+
+EVOEF2_DIR = Path(__file__).resolve().parent.parent / "tools" / "evoef2"
+EVOEF2_BIN = EVOEF2_DIR / "EvoEF2"
+
+
+def _compute_stability(pdb_path: Path) -> dict:
+    """Runs EvoEF2 `ComputeStability` and parses `Total` and
+    `interS_vdwrep` (steric repulsion -- the direct clash signal) from its
+    stdout. A geometry-sanity check on the rigid-per-residue-translation
+    approximation: real backbone motion is torsional, not a bulk shove of
+    every atom in a residue, so this checks whether that approximation is
+    producing badly clashing (physically implausible) structures rather
+    than genuinely closed pockets -- an alternative explanation for a
+    ceiling failure that TASK-0230's own first pass did not rule out."""
+    import re
+    import subprocess
+
+    local_pdb = EVOEF2_DIR / pdb_path.name
+    local_pdb.write_bytes(pdb_path.read_bytes())
+    result = subprocess.run(
+        [f"./{EVOEF2_BIN.name}", "--command=ComputeStability", f"--pdb={local_pdb.name}"],
+        cwd=EVOEF2_DIR, capture_output=True, text=True, timeout=60,
+    )
+    if result.returncode != 0:
+        return {"error": f"ComputeStability exited {result.returncode}: {result.stderr.strip()[:400]}"}
+    total_m = re.search(r"^Total\s*=\s*([-\d.]+)", result.stdout, flags=re.MULTILINE)
+    vdwrep_m = re.search(r"^interS_vdwrep\s*=\s*([-\d.]+)", result.stdout, flags=re.MULTILINE)
+    return {
+        "total": float(total_m.group(1)) if total_m else None,
+        "vdwrep": float(vdwrep_m.group(1)) if vdwrep_m else None,
+    }
+
+
+def run_5_2_stronger(name: str, n_trials: int = N_STRONGER_TRIALS) -> dict:
+    """The stronger ceiling variant, per the user's own follow-up request:
+    use the FULL true apo->holo displacement (not the k=50-mode-truncated
+    approximation §5.2 used), still applied as a rigid per-residue
+    translation, then EvoEF2 SideChainRepack (multiple independent
+    trials, same robustness check already applied to BCR_ABL1) + fpocket
+    druggability scoring. Also runs `_compute_stability` at each stage
+    (native apo, pre-repack rigid-translated, post-repack) to check
+    whether a ceiling failure is a real closed-pocket result or an
+    artifact of the rigid-translation approximation producing distorted,
+    clashing geometry that EvoEF2/fpocket can't recover from."""
+    _log(f"{name}: [5.2-strong] loading target + building pocket label...")
+    target_config = load_target_config(name)
+    apo, holo = _load_apo_holo(name, target_config)
+    labels_obj = build_labels(apo, holo, target_config, cutoff=POCKET_CUTOFF)
+    if labels_obj.pocket is None or not labels_obj.pocket.any():
+        return {"target": name, "error": "no resolvable pocket label"}
+
+    window = _select_window(apo, labels_obj.pocket, max_size=WINDOW_MAX_SIZE)
+    apo_chains = target_config.get("apo_chains") or target_config.get("chains")
+    alignment, full_disp, proj_disp, delta_r, k_used = _common_set_and_projection(apo, holo, target_config)
+    _log(f"{name}: [5.2-strong] window={len(window)} common={len(alignment.apo_idx)} "
+         f"|delta_r|={np.linalg.norm(delta_r):.3f} A (FULL displacement, no mode truncation)")
+
+    result = {"target": name, "window": window, "n_common_residues": int(len(alignment.apo_idx))}
+
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+
+        # --- native apo: fpocket score + stability, for reference ---
+        native_struct = _load_full_atom_apo(target_config, apo_chains)
+        native_pdb = tmp / f"{name.lower()}_native.pdb"
+        design_chain = _write_contiguous_window_chain(native_struct, window, native_pdb)
+        target_set = {(design_chain, r) for (_c, r) in window}
+        result["native_apo"] = score_structure(native_pdb, target_set, tmp)
+        result["native_apo_stability"] = _compute_stability(native_pdb)
+        _log(f"{name}: [5.2-strong] native apo: {result['native_apo']} "
+             f"stability={result['native_apo_stability']}")
+
+        # --- k=50-projected, pre-repack: stability only (druggability already known from run_5_2) ---
+        proj_struct = _load_full_atom_apo(target_config, apo_chains)
+        proj_struct = _apply_rigid_residue_displacement(proj_struct, proj_disp)
+        proj_pdb = tmp / f"{name.lower()}_proj_prerepack.pdb"
+        _write_contiguous_window_chain(proj_struct, window, proj_pdb)
+        result["k50_projected_prerepack_stability"] = _compute_stability(proj_pdb)
+        _log(f"{name}: [5.2-strong] k=50-projected pre-repack stability: "
+             f"{result['k50_projected_prerepack_stability']}")
+
+        # --- FULL displacement, pre-repack: fpocket score + stability ---
+        full_struct = _load_full_atom_apo(target_config, apo_chains)
+        full_struct = _apply_rigid_residue_displacement(full_struct, full_disp)
+        full_prerepack_pdb = tmp / f"{name.lower()}_full_prerepack.pdb"
+        full_design_chain = _write_contiguous_window_chain(full_struct, window, full_prerepack_pdb)
+        full_target_set = {(full_design_chain, r) for (_c, r) in window}
+        result["full_displacement_prerepack"] = score_structure(full_prerepack_pdb, full_target_set, tmp)
+        result["full_displacement_prerepack_stability"] = _compute_stability(full_prerepack_pdb)
+        _log(f"{name}: [5.2-strong] FULL displacement, pre-repack: "
+             f"{result['full_displacement_prerepack']} "
+             f"stability={result['full_displacement_prerepack_stability']}")
+
+        # --- FULL displacement + EvoEF2 SideChainRepack, N independent trials ---
+        trials = []
+        for i in range(n_trials):
+            time.sleep(1.05)  # EvoEF2 seeds via time(NULL) -- force distinct seeds, matches TASK-0204's own convention
+            trial_struct = _load_full_atom_apo(target_config, apo_chains)
+            trial_struct = _apply_rigid_residue_displacement(trial_struct, full_disp)
+            trial_pdb = tmp / f"{name.lower()}_full_trial{i}.pdb"
+            trial_design_chain = _write_contiguous_window_chain(trial_struct, window, trial_pdb)
+            repacked = _run_evoef2("SideChainRepack", trial_pdb, trial_design_chain)
+            if isinstance(repacked, dict):
+                trials.append({"error": repacked["error"]})
+                _log(f"{name}: [5.2-strong] trial {i}: ERROR {repacked['error']}")
+                continue
+            trial_target_set = {(trial_design_chain, r) for (_c, r) in window}
+            score = score_structure(repacked, trial_target_set, tmp)
+            stability = _compute_stability(repacked)
+            trials.append({**score, "stability": stability})
+            _log(f"{name}: [5.2-strong] trial {i}: {score} stability={stability}")
+        result["full_displacement_repacked_trials"] = trials
+
+    def _d(r):
+        return r.get("druggability_score") if isinstance(r, dict) and "error" not in r else None
+
+    d_native = _d(result["native_apo"])
+    d_full_prerepack = _d(result["full_displacement_prerepack"])
+    d_trials = [t.get("druggability_score") for t in trials if "error" not in t]
+    result["summary"] = {
+        "druggability_native_apo": d_native,
+        "druggability_full_displacement_prerepack": d_full_prerepack,
+        "druggability_full_displacement_repacked_trials": d_trials,
+        "max_over_trials": max(d_trials) if d_trials else None,
+        "any_trial_crosses_bar": any(v is not None and v >= DRUGGABILITY_BAR for v in d_trials) if d_trials else None,
+        "native_apo_vdwrep": result["native_apo_stability"].get("vdwrep"),
+        "k50_projected_prerepack_vdwrep": result["k50_projected_prerepack_stability"].get("vdwrep"),
+        "full_displacement_prerepack_vdwrep": result["full_displacement_prerepack_stability"].get("vdwrep"),
+    }
+    _log(f"{name}: [5.2-strong] SUMMARY {result['summary']}")
+    return result
 
 
 def run_5_2(name: str) -> dict:

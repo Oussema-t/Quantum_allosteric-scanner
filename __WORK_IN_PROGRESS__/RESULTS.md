@@ -6916,3 +6916,28 @@ not a contradiction of [[TASK-0227]]'s own §5.1 (collective motion IS reachable
 Full tables, per-step curves, and the chain-relabeling bug found and fixed en route
 (latent in [[TASK-0204]]'s own original function too, not fixed there):
 `.ai/tasks/DONE/TASK-0230-anm-ceiling-and-scorer-brittleness.md`.
+
+**Addendum — the stronger (full-displacement) ceiling exposes a real confound, not a
+missed positive (2026-08-21).** User's own follow-up: was §5.2 under-powered (only
+k=50 modes), and is the rigid-translation approximation itself trustworthy? Both
+checked directly. Supplying the FULL true displacement instead of k=50 modes did
+**not** flip any target to a clean positive — all 12 repacked trials (4 independent
+EvoEF2 seeds × 3 targets) stayed below the 0.5 bar (closest: BCR_ABL1, max 0.432).
+But a new geometry-sanity check (EvoEF2 `ComputeStability`'s `interS_vdwrep`, steric
+clash) found the pre-repack full-displacement structures sit **3–12× native apo's own
+clash energy** (worst on KRAS_G12C, 12.1×) — and KRAS_G12C's one apparent "positive"
+(pre-repack druggability 0.79, crosses the bar) is exactly the most clash-distorted
+structure, almost certainly a geometric artifact (an overlapping, non-physical cavity
+fpocket's detector mistakes for an open pocket), not a real signal. Side-chain-only
+repacking (EvoEF2 `SideChainRepack`) recovers some of the clash but never approaches
+native apo's own relaxed state on any target. **Conclusion: the rigid-per-residue-
+translation backbone-placement method is not trustworthy enough to believe either a
+positive or a negative from it** — every ceiling result in this task (both passes) is
+confounded by its own structural approximation, not just measuring pocket
+reachability. [[TASK-0227]]'s own §5.1 (static, non-adaptive low-mode overlap,
+0.58–0.90 on real targets, no rigid-translation step, no repacking) remains the
+program's cleanest positive evidence that the *collective* part is reachable; this
+task's own data neither closes nor opens the *local* half — "not shown open by any
+method tried here, and the method itself isn't yet trustworthy enough to fully
+believe that negative." Full tables:
+`.ai/tasks/DONE/TASK-0230-anm-ceiling-and-scorer-brittleness.md`'s own Addendum.

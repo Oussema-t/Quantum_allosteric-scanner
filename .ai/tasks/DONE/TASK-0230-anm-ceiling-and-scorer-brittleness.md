@@ -221,3 +221,80 @@ diagnosis, not a contradiction of TASK-0227's §5.1.
 **Not done, stated per this task's own Out Of Scope**: a literal DEE/A*/
 ILP/Rosetta global-optimum repacker (not installed, not built here); any
 change to TASK-0228's own separate, still-active work.
+
+## Addendum — the stronger (full-displacement) ceiling + a geometry-sanity
+check, requested by the user after reviewing the above (2026-08-21)
+
+User's follow-up, verbatim in spirit: is the §5.2 negative real, or did we
+under-power it (only k=50 modes, never the full true displacement) — and
+does the rigid-per-residue-translation approximation itself produce
+structures EvoEF2/fpocket can actually trust? Both real, unanswered gaps
+this task's own first pass left open. Addressed directly, not deferred
+again.
+
+**Method**: `run_5_2_stronger` (same script, extended) — the FULL,
+untruncated true apo→holo displacement (not k=50-projected) as the same
+rigid per-residue translation, then EvoEF2 `SideChainRepack` (4
+independent trials per target, matching the robustness discipline already
+used for BCR_ABL1), fpocket-scored. Added `_compute_stability` (EvoEF2
+`ComputeStability`, parses `Total` energy and `interS_vdwrep` — steric
+repulsion, the direct clash signal) at native apo, the k=50-projected
+pre-repack structure, the full-displacement pre-repack structure, and
+each post-repack trial — the geometry-sanity check the first pass didn't
+run.
+
+| target | native apo `vdwrep` | k=50 pre-repack `vdwrep` | full pre-repack `vdwrep` | full pre-repack druggability | post-repack `vdwrep` (mean) | post-repack druggability (4 trials) |
+|---|---|---|---|---|---|---|
+| KRAS_G12C | 84.1 | 399.2 (4.7×) | **1014.8 (12.1×)** | 0.79 (crosses bar) | ≈524.9 (6.2×) | 0.129, 0.247, 0.247, 0.214 |
+| BCR_ABL1 | 300.1 | 511.0 (1.7×) | 876.0 (2.9×) | 0.487 | ≈906.4 (3.0×) | 0.23, 0.432, 0.23, 0.432 |
+| CARDIAC_MYOSIN | 335.6 | 585.4 (1.7×) | 1014.3 (3.0×) | 0.005 | ≈1042.9 (3.1×) | 0.21, 0.12, 0.004, 0.169 |
+
+**Finding, and it's the load-bearing one: the full-displacement structure
+is severely clash-distorted before anyone even looks at druggability** —
+3–12× native apo's own steric repulsion energy, worst on KRAS_G12C, whose
+pre-repack druggability (0.79, crosses the bar) is exactly the target
+with the worst clash (12.1×). That "positive" reading is far more likely
+a geometric artifact — a badly overlapping, non-physical cavity that
+fpocket's geometric detector mistakes for an open pocket — than a real
+signal, and treating it as evidence the pocket "opens" would be a
+mistake. EvoEF2's `SideChainRepack` (side chains only, no backbone
+relaxation) recovers *some* of the clash (KRAS: 1014.8→524.9) but never
+gets close to native apo's own relaxed state (84.1) on any target — a
+real backbone-torsion-level distortion from the rigid-translation
+approximation that side-chain repacking alone cannot fix.
+
+**Answering the user's two questions directly**:
+- *Did we under-power it?* Yes, partially — but supplying the full
+  displacement instead of k=50 modes did **not** flip any target to a
+  clean positive. All 12 repacked trials (4 × 3 targets) stayed below the
+  0.5 bar (closest: BCR_ABL1, max 0.432). The "positive" pre-repack
+  readings are the clash artifact described above, not evidence the
+  under-powering was hiding a real signal.
+- *Is the rigid-translation approximation trustworthy enough to believe
+  either a positive or a negative from it?* **No — confirmed directly,
+  not merely suspected.** Every displaced structure, before or after
+  repacking, sits 1.7×–12× above native apo's own steric-repulsion energy.
+  The ceiling experiment (both the original k=50 version and this
+  stronger one) is confounded by its own backbone-placement method:
+  a negative from this pipeline is genuinely ambiguous between "the
+  pocket doesn't open" and "our backbone approximation is too crude to
+  tell." Reported as an open confound, not resolved here — the honest
+  next step (not attempted, real scope, real tooling gap) would be a
+  torsion-based or energy-minimized backbone placement instead of a
+  rigid whole-residue translation, before this ceiling question can be
+  answered cleanly.
+
+**Bearing on Phase 2 plausibility (the user's own framing — "any Phase 2
+plausibility relies on SOME working approach")**: this task's own data,
+across both passes, does not supply a working approach at the pocket-
+opening/repacking layer — every variant tried here, generous or not,
+stays negative or produces an artifact rather than a trustworthy
+positive. [[TASK-0227]]'s own §5.1 result (collective apo→holo motion IS
+well-captured by a *static, non-adaptive* low-mode subspace, 0.58–0.90
+overlap on real targets, no rigid-translation step involved, no
+repacking involved — a cleaner, less confounded method than anything in
+this task) remains the strongest positive evidence in the program for
+the "collective part is reachable" half of the question. This task's own
+data narrows, rather than closes, the *local* half: not "closed," but
+"not shown open by any method tried here, and the method itself is not
+yet trustworthy enough to fully believe that negative."
