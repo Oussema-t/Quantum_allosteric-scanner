@@ -72,19 +72,33 @@ have done: **we audited whether the benchmark can certify the answer.**
 
 It cannot.
 
-**Finding 1 — only 2 of 7 standard targets exhibit the contrast the entire
-premise assumes.** Applying a blind, pre-registered rule (apo pocket scores
-closed, holo pocket scores open, ligand stripped, fpocket druggability) to
-every target in our register with a genuine small-molecule drug ligand:
+**Finding 1 — two of the three mandated targets cannot express the contrast
+the challenge's own premise assumes.** We applied a blind, pre-registered rule
+(apo pocket scores closed, holo pocket scores open, ligand stripped, fpocket
+druggability) to every target with a genuine small-molecule drug ligand —
+first the challenge's own set, then the extension §6 directs participants to
+make:
 
-| Verdict | Targets |
-|---|---|
-| **VALID** (apo closed → holo open) | KRAS_G12C, PTP1B |
-| INVALID | BCR_ABL1, CARDIAC_MYOSIN, GLUCOKINASE, CASPASE1, CASPASE7 |
+| Target set | Source | Valid |
+|---|---|---|
+| Mandated, scoreable (KRAS_G12C, BCR-ABL1, Cardiac Myosin) | Table 1 | **1 of 3** — KRAS_G12C only |
+| ASD extension (PTP1B, glucokinase, caspase-1, caspase-7) | §6's own recommended database | **1 of 4** — PTP1B only |
 
-**Two of the three mandatory targets are INVALID.** For any claim that depends
-on a druggability contrast, the standard three-target gate has been operating
-at **1/3 validated coverage**. *(TASK-0209)*
+c-Myc, the fourth mandated target, has no drug-bound structure and therefore
+cannot carry this contrast at all.
+
+We stress the provenance because it determines what the result means: **we did
+not select the failing targets.** Two of the three came from Table 1; the
+extension followed §6's instruction (*"participants are highly encouraged to
+test the robustness of their quantum approach on additional targets… may refer
+to the Allosteric Database"*) and its named source. Extending into the
+database the challenge itself recommends recovered exactly one more usable
+instance.
+
+For any claim depending on a druggability contrast, the mandated three-target
+gate has therefore been operating at **1/3 validated coverage** — and the
+shortfall is systemic across two independent target sources, not an artifact
+of our choices. *(TASK-0209)*
 
 **Finding 2 — the failures are diagnosable, and two are previously
 unreported.** Three mechanistically distinct modes:
