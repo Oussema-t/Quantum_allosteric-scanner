@@ -1,4 +1,4 @@
-# TASK-0237 Collaborator's ported `hamiltonians.py` cell — verify fidelity (done), get and run the actual scoring cells (blocked)
+# TASK-0237 Collaborator's ported `hamiltonians.py` cell — H14 question answered (Done); other operators still blocked if ever revisited
 
 ## Context
 
@@ -7,15 +7,16 @@
   (a Colab-notebook cell the collaborator provided) invalidates this
   project's own finding that CTQW does not deliver a floor-beating result
   across different proteins.
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Claimed By: —
 - Claimed At: —
 - Source: Bartosz, 2026-08-23 — collaborator-provided file, asked whether it
-  invalidates the CTQW-cross-protein-negative hypothesis.
-- Priority: **P1, but currently blocked on missing input — see Dependency.**
-  Not urgent-and-actionable today; urgent to resolve *what's missing* so it
-  doesn't sit unactioned.
+  invalidates the CTQW-cross-protein-negative hypothesis. **Narrowed same
+  day**: only `H14_anm_pinv` is of interest — does it help CTQW score
+  better, checkable with this project's own existing methods.
+- Priority: P1 — resolved same day as filed, no blocker in the end for the
+  question actually asked.
 
 ## What was checked, and the answer to the question as asked
 
@@ -138,4 +139,45 @@ about.
 
 ## Done
 
-—
+**2026-08-23, Architect.** Scope narrowed the same day the task was filed:
+Bartosz clarified only `H14_anm_pinv` (the collaborator's port) is of
+interest, and asked whether this project's own existing methods can check
+whether it helps CTQW score better — no need to wait on the collaborator's
+missing notebook cells for this specific question, since the collaborator's
+`H14_anm_pinv` is, per this task's own fidelity check above, formula-for-
+formula identical to this repo's own `H14_anm_pinv_trace`
+(`hamiltonians.py`). That means this repo's own history already answers the
+question directly, with more rigor than a fresh port would add.
+
+**Answer: no. H14 does not help CTQW score better on any of the 3 mandatory
+targets.** Already established in [[TASK-0138]] (2026-07-19), which ran
+exactly this project's own full validation stack against H14 — ceiling
+search under [[TASK-0130]]'s converged (not truncated) propagator, a
+permutation null matching [[TASK-0131]]'s own methodology, and a trial-
+density convergence check — the same scrutiny this project applies to its
+own `H_new` operator, not a lighter-touch standard for a favorable-looking
+candidate:
+
+| Target | H14 ceiling − floor margin | vs. `H_new`'s own ceiling | Permutation-null result |
+|---|---|---|---|
+| CARDIAC_MYOSIN | **−0.0218** (negative) | `H_new` wins by 0.059 | 0th percentile (n=30) — worse than every null replicate; no positive margin to test |
+| KRAS_G12C | +0.091 (0.573, ~0.595 once trial-density-converged) | `H_new`'s 0.629 still higher | 70th percentile (n=200), p=0.30 uncorrected |
+| BCR_ABL1 | +0.136, and H14's ceiling *does* exceed `H_new`'s here (0.717 vs 0.667, +0.050) | — | **79th percentile (n=200), p=0.21 uncorrected** — not significant even before any multi-target correction |
+
+This is a *ceiling* result — the best score reachable with the answer key
+in hand, the single most favorable test this project's own methodology
+offers an operator. Since even the ceiling fails to clear the floor with
+statistical support on 2 of 3 targets (and doesn't clear it at all on the
+third), the blind/frozen-config actual score — what CTQW would report in a
+real run — would be equal or worse. **H14 does not rescue CTQW's
+cross-protein performance on any target this project has tested it on.**
+
+**Consequence for this task's original (broader) question**: unaffected
+for H14 specifically — resolved without needing any of the collaborator's
+missing cells. The broader question (does the *rest* of the collaborator's
+notebook, e.g. whatever "sec 20" scores, contain a genuine new result for
+some *other* operator) remains exactly as blocked as originally filed —
+not reopened here, since Bartosz's own narrowing makes that moot unless
+raised again separately.
+
+No new files. Full detail: `.ai/tasks/DONE/TASK-0138-h14-ceiling-validity-characterization.md`.
