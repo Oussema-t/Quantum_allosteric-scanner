@@ -7007,3 +7007,45 @@ filed: a third quantum hypothesis (Gibbs/Boltzmann sampling over collective conf
 space via a quantum walk, distinct from QUBO-minimization and Montanaro backtracking
 search), named and scoped to the collective layer specifically, not built or costed.
 Full numbers: `.ai/tasks/DONE/TASK-0233-conformational-selection-reframing.md`.
+
+## Quantum Gibbs-sampling hypothesis retired — the collective layer is not rare, four independent measurements agree ([[TASK-0234]], 2026-08-23)
+
+[[TASK-0233]]'s own graduation condition (ΔG plausible, few kT) was necessary but not
+sufficient — a quantum search/sampling speedup needs the target state to be *rare*,
+not merely thermodynamically plausible. Checking the [[TASK-0229]] hypothesis family's
+own outcomes on pickup (per instruction) surfaced [[TASK-0185]] (2026-08-02, pre-dating
+this whole line of work by three weeks): real ANM Boltzmann-ensemble sampling
+(`allostery.shortcuts.equipartition_ensemble`, the actual classical version of what
+[[TASK-0234]] proposed accelerating) already recovers the real pocket in **1–8
+classical draws** on every real target — *"a Grover-style backbone-layer rare-event
+search argument requires a rare target event, and it is not rare on any real target
+measured here."*
+
+**Four independent methods, three weeks, one conclusion**: [[TASK-0185]]'s real-
+ensemble recovery rate and its own n_modes sweep (p=0.244–0.694, 2026-08-02),
+[[TASK-0228]]'s progress probability `p` (0.237–0.492, 2026-08-21/22), and
+[[TASK-0233]]'s own harmonic Boltzmann weight (`exp(−ΔG)`=0.10–0.82, 2026-08-22/23) all
+agree the collective layer is not rare. **A second, independent disqualifier**: quantum
+Gibbs sampling's own value proposition is a mixing-time speedup over a slow-converging
+MCMC process — `equipartition_ensemble` is not that, it is a closed-form, exact,
+one-shot Gaussian draw (the ANM harmonic ensemble's equilibrium distribution is
+analytically known). There is no mixing-time bottleneck to accelerate, independent of
+the rarity finding.
+
+**Checked whether this reasoning extends to the joint (collective+side-chain) layer,
+not assumed**: [[TASK-0204]]'s own exact rotamer solver (bucket elimination, real
+pocket windows, 0.001–0.159s, validated against brute force) already closes that layer
+too — an exact solver this cheap leaves nothing for a sampling algorithm, quantum or
+classical, to accelerate. **Both layers this program has actually modeled turn out
+classically cheap by exact or near-exact methods.** [[TASK-0234]] retired, not
+scoped-for-later; its Done section records the correction plainly, and
+[[TASK-0233]]'s own Done section carries a matching correction note rather than being
+left silently stale.
+
+**What this leaves as the program's real remaining gap**: [[TASK-0230]]'s own
+still-open finding (severe steric clash from rigid-per-residue backbone translation)
+is a classical structural-modeling-fidelity problem, not a search-cost one — solving it
+would let the program's own already-cheap collective sampling and already-exact
+rotamer solving be trusted on a physically realistic structure, not create a new
+quantum opportunity. Full write-up:
+`.ai/tasks/DONE/TASK-0234-quantum-gibbs-sampling-collective-layer.md`.

@@ -265,3 +265,22 @@ asciminib/myristoyl and mavacamten/SRX mechanism citations against live
 DOIs (still open, not asserted validated); estimating the local
 residual's own elastic/repacking cost (the natural next step if this
 line of work continues).
+
+**Correction, 2026-08-23, on picking up [[TASK-0234]]**: this task's own
+graduation-condition application (below) filed [[TASK-0234]] on the
+ΔG-plausibility bar alone, without first checking whether the same
+displacement was already known to be *rare* — the actual condition a
+quantum search/sampling hypothesis needs, not just "plausible." User's
+instruction on picking up [[TASK-0234]] ("check the outcomes of the 229
+family — these may be relevant") surfaced [[TASK-0185]] (2026-08-02, pre-
+existing, not itself a TASK-0229.xxx file but adjacent prior work this
+task's own filing should have cross-checked): real classical ANM
+ensemble sampling already recovers the pocket in 1–8 draws on every real
+target — not rare, independently reconfirmed by [[TASK-0228]]'s own `p`
+and this task's own `exp(−ΔG)`. **The ΔG numbers above still stand as
+correct and real** — the error was treating "plausible" alone as
+sufficient grounds to file a quantum-sampling hypothesis subtask, when
+"plausible and common" (the actual, now four-times-independently-
+confirmed finding) argues against one instead. See [[TASK-0234]]'s own
+Done section for the full retraction and what it leaves as the program's
+actual remaining gap (backbone-modeling fidelity, not search cost).
