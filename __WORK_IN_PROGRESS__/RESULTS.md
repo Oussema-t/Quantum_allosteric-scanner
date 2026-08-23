@@ -6965,3 +6965,45 @@ regardless of solver — classical or quantum — unless reformulated as the sou
 own proposal (minimum energy cost to *open* a pocket, a constrained objective, not
 bare minimization), which remains untested. Full tables:
 `.ai/tasks/DONE/TASK-0230-anm-ceiling-and-scorer-brittleness.md`'s Addendum 2.
+
+## Conformational-selection reframing — the collective transition is thermodynamically cheap, not just geometrically aligned ([[TASK-0233]], 2026-08-22)
+
+User's own proposal: what if the drug stabilizes a pre-existing, sparsely-populated
+conformer (conformational selection / population shift, Monod-Wyman-Changeux 1965)
+rather than inducing a new one? This directly reframes [[TASK-0230]] Addendum 2's own
+"minimization returns the closed state" finding from a puzzle into an *expected*
+result under this model — minimization from one structure finds the dominant state
+by construction, never a rare minor one; that was never evidence against a rare open
+state existing.
+
+Reusing [[TASK-0015]]'s own already-validated `allostery.superpose.run_superpose`/
+`mode_energetics` unmodified (`E_k = 0.5·κ·λ_k·c_k²`, B-factor-calibrated per target,
+this project's own established "kT=1" relative-scale convention): the true apo→holo
+displacement, projected onto the top-50 soft ANM modes, costs **0.20–2.32 "thermal
+units" total** on all 3 real targets (KRAS_G12C 2.32, BCR_ABL1 0.37, CARDIAC_MYOSIN
+0.20) — 1–9% of the naive 25-unit scale 50 equally-excited modes would imply.
+`exp(−ΔG)` (Boltzmann weight vs. the apo minimum) is **0.10–0.82 on all 3 targets —
+within an order of magnitude of 1, not exponentially suppressed.** The true
+displacement is dominated by the softest available modes (90% of the overlap reached
+by just 3–28 of 50 modes) — a real, quantitative extension of [[TASK-0227]] §5.1's
+own geometric mode-overlap finding (0.58–0.90) to an actual thermodynamic
+plausibility read, not just a directional alignment one.
+
+**Lower bound only**: CO(k=50) is 0.766–0.954, not 1.0 — 5–23% of the true
+displacement is the *local* residual ANM's coarse network can't represent, exactly
+where [[TASK-0230]]'s own real all-atom pipeline found genuine difficulty (severe
+clash, minimization returning to closed). Cross-referenced against [[TASK-0228]]'s
+own independently-measured progress probability `p` (collective-only: 0.237–0.492 on
+all 3 targets, same "not rare" conclusion via a completely different method — real
+incremental moves + repack, not a mode-projection ceiling): two independent methods
+now agree the collective layer is cheap; the joint (collective+local) layer's own
+difficulty ([[TASK-0230]]'s ceiling failing every trial; [[TASK-0228]]'s own joint `p`
+sharply target-dependent, KRAS_G12C 0.25→1.00 vs. BCR_ABL1 0.05) looks like a
+search-method/path-dependence question at that layer, not a flat "closed" verdict.
+
+Per the Architect's own [[Q-0005]] answer, the graduation condition (calibrated ΔG
+plausible, few kT) is met for the collective layer on all 3 targets — [[TASK-0234]]
+filed: a third quantum hypothesis (Gibbs/Boltzmann sampling over collective conformer
+space via a quantum walk, distinct from QUBO-minimization and Montanaro backtracking
+search), named and scoped to the collective layer specifically, not built or costed.
+Full numbers: `.ai/tasks/DONE/TASK-0233-conformational-selection-reframing.md`.

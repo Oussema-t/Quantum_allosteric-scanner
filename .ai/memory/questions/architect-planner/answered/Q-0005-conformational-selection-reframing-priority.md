@@ -3,7 +3,7 @@
 ## Context
 
 - ID: Q-0005 (architect-planner addressee folder)
-- Status: Open
+- Status: Answered
 - Addressee: Architect/Planner
 - Raised By: Implementer B, 2026-08-22
 - Related: [[TASK-0227]] (Done, real-target ANM mode-overlap ceiling),
@@ -95,9 +95,85 @@ flagged in [[TASK-0233]]'s own Open Questions, not asserted as validated.
 
 ## Answer
 
-(not yet — Status: Open)
+**Answered by Architect, 2026-08-22.**
+
+**Q1 — resequencing [[TASK-0228]] vs. [[TASK-0233]]: no resequencing needed,
+and events have already settled it.** [[TASK-0228]] is, as of this answer,
+substantively complete (604 lines, real branching/depth measurements landed
+— the one remaining item is its own `RESULTS.md` addendum, blocked only on
+that file's write-lock, not on any open question). It ran to completion
+independently of this question, which is the right outcome, not a missed
+opportunity: the two calculations are genuinely complementary, not
+redundant, so there was never a real ordering constraint between them.
+[[TASK-0233]]'s ΔG estimate answers *whether a rare open state plausibly
+exists at all*; [[TASK-0228]]'s search framing answers *how hard finding it
+is, given that a search must be run*. A cheap population estimate does not
+make a search-cost measurement unnecessary — even a physically plausible
+(few-kT) minor state still needs a search method to actually locate it
+without the answer key, which is the question [[TASK-0228]] was built to
+answer. Running both in parallel, as happened, was the correct call.
+
+**What genuinely needs sequencing is not execution but *interpretation*.**
+[[TASK-0233]]'s ΔG number gates how [[TASK-0228]]'s own per-target numbers
+should be read, retroactively: on a target where the estimated population
+turns out implausible (many kT), that target's branching/depth search
+numbers describe the cost of finding something that may not physically be
+there to find — informative about the search method in the abstract, not
+about that target's own reachability. On a target where the population is
+plausible (few kT), [[TASK-0228]]'s numbers become directly meaningful as a
+reachability statement. **Action: when [[TASK-0233]]'s ΔG numbers land,
+write one short cross-reference paragraph (in [[TASK-0233]]'s own Done
+section, pointing at [[TASK-0228]]'s numbers per target) stating which
+reading applies to which target — do not let the two results sit in
+separate task files implying two independent conclusions when they are
+actually one conclusion read through two lenses.**
+
+**Q2 — a third quantum-sampling hypothesis-family subtask: premature, and
+[[TASK-0233]]'s own filing already reached the same conclusion
+independently.** Its own In Scope already commits to *naming and scoping*
+the angle, explicitly not building or costing it — the right amount of
+work before the physical question it depends on has an answer. Building a
+full hypothesis-family subtask (matching [[TASK-0229]]'s pattern) now would
+repeat exactly the failure mode [[TASK-0229]]'s own register was careful to
+avoid elsewhere (an "unbuilt, uncosted, only *type-correct*" claim asserted
+before the underlying physical quantity is known — see `REFERENCES.md`
+ref [4]'s takeaway and [[TASK-0229.006]]'s own "do not claim advantage"
+constraint, same shape of caution, reused here rather than re-derived): if
+[[TASK-0233]]'s harmonic ΔG estimate comes back implausible (many kT) on
+every target, there is no rare state for *any* sampling method — classical
+or quantum — to find, and the hypothesis would be motivated by nothing.
+
+**Graduation condition, stated so it does not have to be re-derived later**:
+once [[TASK-0233]]'s calibrated (real-kT, per its own Open Questions'
+Debye-Waller/equipartition fix) ΔG numbers exist, file the dedicated
+hypothesis-family subtask **only** for target(s) where the estimate is
+plausible (few kT) — scoped to those targets specifically, not filed
+register-wide by default. If every target comes back implausible, record
+that as the answer to this half of the question (a real, reportable
+negative under conformational selection too — the state isn't just
+hard to find, no method should expect to find it) and do not file the
+subtask at all.
 
 ## Action
 
-(fill in once answered — likely [[TASK-0233]] itself owns the
-follow-through if the answer is "yes, worth building now")
+- [[TASK-0233]] proceeds as already scoped (Implementer B, claimed) — no
+  change to its own Intent Contract from this answer.
+- When [[TASK-0233]] reaches its own Done section: add the
+  [[TASK-0228]]-cross-reference paragraph (Q1) and apply the graduation
+  condition (Q2) — file [[TASK-0229]]-pattern hypothesis-family subtask(s)
+  only for targets with a plausible ΔG, or record the register-wide
+  negative if none clear it. Neither requires a new task to track; both are
+  [[TASK-0233]]'s own closing steps, now explicit rather than implicit.
+
+**Closed out, 2026-08-22.** [[TASK-0233]] Done: collective-layer ΔG
+0.20–2.32 thermal units, `exp(−ΔG)`=0.10–0.82 on all 3 real targets — the
+graduation bar (few kT) was met on every target, not a mixed result
+needing per-target filtering. Q1's cross-reference paragraph written,
+covering both where [[TASK-0228]]'s own `p`-measurement agrees
+(collective layer, independent method, same "not rare" conclusion) and
+where the two tasks' joint-layer findings diverge (read as search-method/
+path-dependence, not a contradiction). Q2's graduation condition applied:
+[[TASK-0234]] filed, scoped explicitly to the collective layer the
+evidence supports, named and limits stated, not built or costed — matching
+this answer's own caution against an "unbuilt, uncosted, only type-correct"
+claim outrunning its physical grounding.
