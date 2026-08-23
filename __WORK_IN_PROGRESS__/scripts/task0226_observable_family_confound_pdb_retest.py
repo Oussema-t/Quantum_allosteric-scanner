@@ -70,11 +70,23 @@ not discovered mid-run):
 modal" family, no existing repo implementation found): this script's own
 straightforward reading -- the lowest non-trivial GNM (Kirchhoff) mode's
 amplitude, negated in magnitude (`score = -|mode_1|`), so residues near
-that mode's node/hinge score highest. A standard ENM hinge-point heuristic
-(Gerstein & Krebs 1998 lineage), stated here as this task's own proxy for
-ref [16]'s concept -- not independently verified against that reference's
-exact method, mirroring how `dS_vib_global` is already flagged in the
-drop itself as "harmonic proxy, not genuine EAM."
+that mode's node/hinge score highest. Ref [16] itself is Erman B., "The
+Gaussian network model: precise prediction of residue fluctuations and
+application to binding problems," Biophys J 2006;91:3589-3599 (challenge
+bibliography, `documentation/REFERENCES.md` row 16) -- that paper's own
+stated finding is exactly this: binding sites sit at minima of the
+slowest modes. (An earlier draft of this docstring cited "Gerstein &
+Krebs 1998" from memory instead -- checked directly, per
+`.ai/reference/PAPER_CITATION_PROTOCOL.md`, and found imprecise: that
+1998 paper is the Database of Macromolecular Motions catalog, not a
+slow-mode/hinge paper; the actual normal-mode/hinge connection in that
+lineage is Krebs et al., Proteins 2002;48:682-695, a different citation
+this project has no independent need for once ref [16] already covers
+the claim directly. Corrected here rather than left uncited.) This
+script's own `score = -|mode_1|` is still this task's own operational
+proxy for ref [16]'s concept, not independently verified against that
+paper's exact method -- mirroring how `dS_vib_global` is already flagged
+in the drop itself as "harmonic proxy, not genuine EAM."
 
 **Resolves** (drop Section 4.3, "load-bearing... discrepancy"): the drop's
 own `GNM_corr_low10` (10-mode port, its own hand-rolled math) stayed

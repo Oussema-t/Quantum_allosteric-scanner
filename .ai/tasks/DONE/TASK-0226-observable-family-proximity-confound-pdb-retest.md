@@ -326,3 +326,24 @@ real challenge targets**, not just non-target structures — safe to cite in
 it: the negative control is a single-condition confirmatory check, not a full LOD
 characterization, and `dS_vib_global`'s own escape from the confound is not yet shown
 to correspond to detecting a real planted signal at this tested strength.
+
+### Addendum 2026-08-22 — citation audit per `.ai/reference/PAPER_CITATION_PROTOCOL.md`
+
+`scripts/task0226_observable_family_confound_pdb_retest.py`'s own docstring cited
+"Gerstein & Krebs 1998 lineage" for the `slow1_minima` proxy, from memory, without
+checking `documentation/REFERENCES.md` first — exactly the failure mode the protocol
+exists to prevent. Checked directly: that 1998 paper (Gerstein & Krebs, Nucleic Acids
+Res 26:4280-4290) is the Database of Macromolecular Motions catalog, not a slow-mode/
+hinge paper; the actual normal-mode/hinge connection in that lineage is a different,
+later paper (Krebs et al., Proteins 2002;48:682-695). Neither was actually needed:
+ref [16] (Erman 2006, already in `REFERENCES.md` row 16, already verified, already
+part of this project's own bibliography) states the exact claim being used ("binding
+sites sit at minima of the slowest modes") directly. Corrected in the script's own
+docstring rather than left uncited or citing an unnecessary second source.
+
+`REFERENCES.md` rows 4, 7, 8, 16 and the Atilgan 2009 (`prs_low`) method-paper row
+updated with this task's real PDB-retest numbers, replacing/supplementing the
+non-target-structure numbers those rows previously carried. Row 7 (Stock & Hamm 2018)
+left `UNTESTED`, precisely: `transmission_E0` (this task's own `transmission_E0`) is a
+steady-state quantity, not a test of that paper's own non-equilibrium impulse-response
+claim — noted as a related-but-distinct measurement, not a false test-of-ref-7 claim.
