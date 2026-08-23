@@ -382,7 +382,7 @@ def test_kras_g12c_real_target_ceiling_cross_check(_):
     """
     pytest.importorskip("prody")
     from allostery.clean import clean, load_target_config
-    from allostery.labels import build_labels, ligand_groups_from_atomgroup
+    from allostery.labels import build_labels, ligand_groups_from_atomgroup, protein_heavy_atoms_by_residue
 
     try:
         apo = clean("4OBE", chains=["A"])
@@ -395,6 +395,14 @@ def test_kras_g12c_real_target_ceiling_cross_check(_):
     prody.confProDy(verbosity="none")
     holo_struct = prody.parsePDB("6OIM", compressed=False).select("chain A")
     holo.ligand_groups = ligand_groups_from_atomgroup(holo_struct)
+    # TASK-0231: without heavy-atom data, functional_indices' GDP contact
+    # check falls back to Calpha-only geometry, which misses GDP entirely
+    # at this cutoff -- silently fell back to the top-degree proxy before
+    # TASK-0231's own guard existed to catch it (matching test_fpocket_pin
+    # .py's own already-established pattern, not a new one).
+    holo.heavy_atom_coords, holo.heavy_atom_seq_index = protein_heavy_atoms_by_residue(
+        holo_struct, ["A"], holo.resnums
+    )
 
     cfg = load_target_config("KRAS_G12C")
     labels_obj = build_labels(apo, holo, cfg, cutoff=4.5)

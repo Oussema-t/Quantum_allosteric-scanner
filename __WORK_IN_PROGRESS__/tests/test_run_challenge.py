@@ -251,7 +251,16 @@ class TestRunTarget:
     def test_no_drug_ligand_resolved_is_a_handled_failure_not_a_crash(self, monkeypatch, tmp_path):
         apo, holo = _synthetic_apo_holo()
         holo.ligand_groups = []  # LIG never resolves -> build_labels.pocket is None
-        monkeypatch.setattr(run_challenge, "load_target_config", lambda name: dict(_TARGET_CONFIG))
+        # TASK-0231: an empty ligand_groups also breaks FUNC's own tier-1
+        # resolution -- this test's own scenario deliberately has no
+        # ligand data at all, a legitimate reason to hit the top-degree
+        # fallback tier, so it needs the same explicit opt-in a real
+        # target's config would need (this test isolates the *pocket*
+        # failure specifically; the active-site fallback here is an
+        # accepted side effect of the synthetic setup, not what's under
+        # test).
+        cfg = dict(_TARGET_CONFIG, allow_topdegree_fallback=True)
+        monkeypatch.setattr(run_challenge, "load_target_config", lambda name: cfg)
         monkeypatch.setattr(run_challenge, "_load_apo_holo", lambda name, cfg: (apo, holo))
 
         result = run_challenge.run_target("SYNTH", tmp_path)

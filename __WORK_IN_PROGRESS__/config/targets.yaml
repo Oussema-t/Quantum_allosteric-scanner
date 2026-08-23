@@ -321,11 +321,33 @@ targets:
                                  # is the reportable result this task's own
                                  # Constraint calls for, not an error to route
                                  # around.
-    func_ligand: ["ADP", "ATP"]  # 6C1H does contain ADP (confirmed above) —
-                                 # the active-site SEED can resolve even
-                                 # though the POCKET label cannot; the two
-                                 # failures are independent and this config
-                                 # deliberately does not conflate them.
+    func_ligand: ["ADP", "ATP"]  # 6C1H does contain ADP, but bound to the
+                                 # ACTIN chains (A-E), not myosin-Ib chain P
+                                 # this config restricts holo_chains to —
+                                 # confirmed directly (TASK-0231, 2026-08-23):
+                                 # under this config's own chain restriction,
+                                 # holo.ligand_groups is empty, so func_ligand
+                                 # tier-1 contact resolution never matches.
+                                 # CORRECTS this comment's own prior claim
+                                 # ("the active-site SEED can resolve even
+                                 # though the POCKET label cannot") — checked
+                                 # directly and found wrong, not left
+                                 # standing. functional_indices falls through
+                                 # to the last-resort top-degree-fallback
+                                 # tier for the active-site seed too, not
+                                 # just the pocket label.
+    allow_topdegree_fallback: true  # TASK-0231's own explicit opt-in,
+                                 # required as of that task: this target's
+                                 # active-site seed has no resolvable
+                                 # func_ligand contact (above) and no
+                                 # active_site_uniprot curation, so
+                                 # functional_indices legitimately falls back
+                                 # to the topological proxy. Consistent with
+                                 # TASK-0222's own already-accepted verdict
+                                 # for this target (NO_SIGNAL_IN_APO,
+                                 # "reportable result... not an error to
+                                 # route around") — this opt-in makes that
+                                 # acceptance explicit instead of silent.
     status: verified
     verified: true
     confidence: 0.0              # deliberately 0.0, not inherited from the

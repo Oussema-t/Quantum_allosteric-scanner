@@ -510,6 +510,49 @@ def functional_indices(
     return np.argsort(-degree)[:5], "top-degree fallback"
 
 
+def assert_functional_provenance_allowed(provenance, target_config, target_name=None):
+    # type: (str, dict, str | None) -> None
+    """TASK-0231: raises if `functional_indices` fell back to the
+    last-resort 'top-degree fallback' provenance and this target's own
+    config carries no explicit opt-in (`allow_topdegree_fallback: true`).
+
+    TASK-0216 found this firing silently on 9 of 13 register targets --
+    `build_labels` computed it, `Labels.functional_provenance` recorded
+    it, and nothing downstream ever checked it. This is the check: called
+    from `build_labels` itself so every real caller is protected, not
+    only whichever tests happen to assert on `functional_provenance`
+    directly (`.ai/tasks/DONE/TASK-0231-...md`'s own diagnosis -- "the
+    tests verify that functions compute what they compute, and never
+    that the pipeline is wired to real inputs").
+
+    A top-degree-fallback active site is a topological proxy, not a real
+    functional site: any active-site-seeded observable computed on it
+    measures graph degree, and is correlated with
+    `baselines.degree_centrality`, itself a proximity-floor baseline --
+    see `functional_indices`'s own `RuntimeWarning` for the full
+    mechanism. That warning alone did not stop [[TASK-0216]]'s defect
+    from shipping (warnings do not fail a green pytest run); this does.
+    """
+    if provenance != "top-degree fallback":
+        return
+    if target_config.get("allow_topdegree_fallback"):
+        return
+    who = target_name or target_config.get("apo_pdb") or "<unnamed target>"
+    raise ValueError(
+        f"{who}: functional_indices fell back to the last-resort "
+        "'top-degree fallback' provenance (a topological proxy, not a "
+        "real functional site), and this target's config has no explicit "
+        "allow_topdegree_fallback opt-in. This is almost always a "
+        "func_ligand data error (TASK-0216's own root cause: a "
+        "human-readable description or malformed code in `func_ligand` "
+        "instead of a real PDB chem-comp code, or a missing "
+        "`active_site_uniprot` curation) -- fix targets.yaml's own "
+        "func_ligand/active_site_uniprot entry for this target, or set "
+        "allow_topdegree_fallback: true in its config if the fallback is "
+        "a genuinely accepted choice for this specific target."
+    )
+
+
 # ---------------------------------------------------------------------------
 # Assembly -- the actual pocket label (TASK-0070, SEAM-0003)
 # ---------------------------------------------------------------------------
@@ -545,6 +588,7 @@ def build_labels(
     target_config: dict,
     cutoff: float = 4.5,
     terminal_fraction: float = 0.05,
+    target_name: str | None = None,
 ) -> Labels:
     """Assemble the final pocket label: `pocket_raw & ~active_site & ~terminal`.
 
@@ -569,6 +613,11 @@ def build_labels(
     pocket and active-site contact geometry when present on `holo` (same
     optional attributes `holo_pocket_mask`/`functional_indices` already
     accept), falling back to the Calpha-only approximation otherwise.
+
+    TASK-0231: raises via `assert_functional_provenance_allowed` if
+    `functional_indices` fell back to the last-resort topological proxy
+    without this target's own explicit opt-in -- `target_name` is
+    optional, used only to name the target in that error message.
     """
     n = len(apo.resnums)
     ligand_code = target_config.get("drug_ligand")
@@ -590,6 +639,7 @@ def build_labels(
         coords_resnames=(apo.resnames if heavy_atom_coords is not None else None),
         coords_resnums=apo.resnums,
     )
+    assert_functional_provenance_allowed(provenance, target_config, target_name=target_name)
     active_site = np.zeros(n, dtype=bool)
     active_site[func_idx] = True
     terminal = terminal_mask(n, terminal_fraction)

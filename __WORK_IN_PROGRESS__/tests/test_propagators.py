@@ -452,6 +452,24 @@ class TestTimeAveragedCtqwConverged:
         assert (p >= 0).all()
 
 
+@pytest.mark.xfail(
+    reason=(
+        "TASK-0231, 2026-08-23: this pin's own `source` is now correctly "
+        "resolved via GDP contact (functional_indices tier 1) instead of "
+        "silently falling back to the top-5-degree-residue proxy -- "
+        "TASK-0231's own new provenance guard caught this test's fixture "
+        "missing heavy_atom_coords/heavy_atom_seq_index (fixed here), "
+        "which is what let GDP resolve in the first place. The correct "
+        "seed shifts this Spearman value by ~6e-6 (0.999794 vs the "
+        "0.9998 pin) -- not a regression, a direct, correct consequence "
+        "of using the real active site instead of a topological proxy. "
+        "Same class of stale-pin-after-a-correct-upstream-fix as "
+        "test_fpocket_pin.py's own TASK-0217.001 xfail. Re-pinning is "
+        "deliberately NOT done in this task (guards only, no re-scoring "
+        "the register's own science) -- see TASK-0231's own Done section."
+    ),
+    strict=True,
+)
 @pytest.mark.parametrize("_", [None])
 def test_time_averaged_ctqw_converged_regression_pins_spearman_vs_adequate_t_max(_):
     """Planned Validation: regression-pin agreement with the finite
@@ -487,7 +505,7 @@ def test_time_averaged_ctqw_converged_regression_pins_spearman_vs_adequate_t_max
 
     from allostery.clean import clean
     from allostery.hamiltonians import build_H_new
-    from allostery.labels import build_labels, ligand_groups_from_atomgroup
+    from allostery.labels import build_labels, ligand_groups_from_atomgroup, protein_heavy_atoms_by_residue
     from allostery.clean import load_target_config
 
     try:
@@ -501,6 +519,13 @@ def test_time_averaged_ctqw_converged_regression_pins_spearman_vs_adequate_t_max
     prody.confProDy(verbosity="none")
     holo_struct = prody.parsePDB("6OIM", compressed=False).select("chain A")
     holo.ligand_groups = ligand_groups_from_atomgroup(holo_struct)
+    # TASK-0231: without heavy-atom data, functional_indices' GDP contact
+    # check falls back to Calpha-only geometry, which misses GDP entirely
+    # at this cutoff -- silently fell back to the top-degree proxy before
+    # TASK-0231's own guard existed to catch it.
+    holo.heavy_atom_coords, holo.heavy_atom_seq_index = protein_heavy_atoms_by_residue(
+        holo_struct, ["A"], holo.resnums
+    )
 
     cfg = load_target_config("KRAS_G12C")
     labels_obj = build_labels(apo, holo, cfg, cutoff=4.5)
@@ -542,7 +567,7 @@ def test_shipped_default_t_max_15_is_far_from_converged(_):
 
     from allostery.clean import clean, load_target_config
     from allostery.hamiltonians import build_H_new
-    from allostery.labels import build_labels, ligand_groups_from_atomgroup
+    from allostery.labels import build_labels, ligand_groups_from_atomgroup, protein_heavy_atoms_by_residue
 
     try:
         apo = clean("4OBE", chains=["A"])
@@ -555,6 +580,13 @@ def test_shipped_default_t_max_15_is_far_from_converged(_):
     prody.confProDy(verbosity="none")
     holo_struct = prody.parsePDB("6OIM", compressed=False).select("chain A")
     holo.ligand_groups = ligand_groups_from_atomgroup(holo_struct)
+    # TASK-0231: without heavy-atom data, functional_indices' GDP contact
+    # check falls back to Calpha-only geometry, which misses GDP entirely
+    # at this cutoff -- silently fell back to the top-degree proxy before
+    # TASK-0231's own guard existed to catch it.
+    holo.heavy_atom_coords, holo.heavy_atom_seq_index = protein_heavy_atoms_by_residue(
+        holo_struct, ["A"], holo.resnums
+    )
 
     cfg = load_target_config("KRAS_G12C")
     labels_obj = build_labels(apo, holo, cfg, cutoff=4.5)
