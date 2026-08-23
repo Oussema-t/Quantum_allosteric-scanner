@@ -55,6 +55,32 @@
 > whole document that clears the qubit-count bar, *if* paired with an
 > amplitude-encoded register this project has not built or costed —
 > stated as a real, honestly-caveated option, not a built result.
+>
+> **2026-08-22 update ([[TASK-0229.004]])**: new Finding 5 — implemented
+> [1] Zheng 2023 (NMA-guided conformational sampling), the challenge's own
+> reference #1, as a scored classical baseline for the first time. It
+> beats this project's own quantum observable on KRAS_G12C by a wide
+> point-estimate margin (AUC 0.728 vs. 0.557-0.590), reported per this
+> project's own standing rule that a classical method outperforming the
+> quantum arm is disclosed, not suppressed — while explicitly not counted
+> as a significant result against the register's own multiplicity bar.
+> **Correction, 2026-08-23**: this Finding was drafted and its numbers
+> verified in the originating task, but a shared-file collision during
+> that task's own commit silently dropped the actual document edit while
+> absorbing a different, unrelated in-flight edit from another thread —
+> the commit message claimed the insertion; the diff did not contain it.
+> Caught and landed only now, alongside Finding 6 below. See
+> [[TASK-0229.004]]'s own Done section for the added correction note.
+>
+> **2026-08-23 update ([[TASK-0229.005]])**: new Finding 6 — [1]+[2]
+> stitched (NMA sampling feeding persistent homology, the register's own
+> flagged "highest-value construction") fails at its own cheapest,
+> first gate: the known pocket is not a persistent-homology H2 void even
+> on the fully open, drug-bound structure, on either TASK-0209-VALID
+> target. The ensemble question this construction was built to answer
+> (does TDA over an ensemble beat TDA on one structure) is reported
+> untested-and-untestable-as-scoped, not forced past a failed positive
+> control.
 
 ---
 
@@ -134,6 +160,60 @@ disclosed here because it must be: the field's flagship cryptic-pocket
 target is validated against the wrong genotype, a benchmark-integrity defect
 of exactly the kind Findings 1-2 already demonstrate this team can find and
 the field has not.
+
+**Finding 5 — a second, independent classical method also beats the quantum
+observable, and it is the challenge's own reference #1.** We implemented
+Zheng (2023) — NMA-guided conformational sampling, the challenge's own
+bibliography entry [1], never previously run as a scored baseline despite
+being the canonical published version of the same conformational-search
+reframing this program independently arrived at. On KRAS_G12C, the one
+mandated target with a validated apo-closed/holo-open contrast (Finding 1):
+**AUC 0.728, vs. our own quantum-observable AUC of 0.557-0.590 (floor
+0.530)** — a wide point-estimate margin, from a dynamics-based classical
+method this time, not a static geometric one like fpocket (Finding 3).
+Checked against a permutation null (1000 draws, the same corrected
+compact-patch construction used elsewhere in this register): p=0.024 —
+clears a naive two-test local bar by a hair, but is roughly three orders of
+magnitude short of this program's own register-wide multiplicity bar
+(≈0.00022 across 226+ scored cells). **We do not count this as a
+significant result** — the register's own standing bar is the one that
+governs, and this does not clear it — but the point-estimate margin itself
+is real and, per this report's own stated method, reported rather than
+omitted. On PTP1B (the register's other validated target), the method
+beats the floor (0.610 vs. 0.451) but its own preferred statistic (pocket-
+level hit rate) does not show the same specificity the residue-level AUC
+does — a genuine internal disagreement, disclosed rather than resolved in
+whichever direction looks better. *(TASK-0229.004)*
+
+**Finding 6 — the register's own "highest-value construction" fails at its
+first, cheapest gate.** [2] Koseki et al. 2025 (CrypToth) argues cryptic
+pockets carry a persistent-homology (topological-cavity) signature, and
+specifically that computing it over a conformational **ensemble** should
+outperform any single structure. [1]+[2] stitched — Zheng's NMA sampling
+feeding CrypToth's persistent-homology layer — was this register's own
+explicitly flagged highest-value forward proposal: zero MD, both halves
+drawn from the challenge's own bibliography. Before running the ensemble at
+all, we required the observable to clear its own cheapest possible check
+first: on the already-open, drug-bound structure (no sampling needed — the
+best case for detecting a void), does the known pocket sit inside a
+persistent H2 cavity at all? On both TASK-0209-VALID targets, no: KRAS_G12C's
+top H2 lifetime is 0.81 (this project's own established noise floor is 2.5)
+and the void-proximity score is barely above chance against the known pocket
+(AUC 0.557); PTP1B's top lifetime is 1.54 (also sub-floor) and its void
+score is *anti-correlated* with the known pocket (AUC 0.116) — confirmed not
+a filtration-cap artifact (identical values from thresh=16 through
+thresh=30). Per this task's own Planned Validation, ensemble scoring on the
+apo structure was gated on this positive control passing; it did not, on
+either target, so **the ensemble question (does TDA-over-an-ensemble beat
+TDA-on-one-structure) is reported untested-and-untestable-as-scoped, not
+forced past a failed gate.** Run anyway as an explicit, ungated diagnostic
+for transparency: the 120-conformation NMA-sampled apo ensemble scores AUC
+0.521 (KRAS_G12C) / 0.487 (PTP1B) — both within noise of chance, neither
+beating its own proximity floor consistently. This directly explains, rather
+than merely repeats, an earlier single-structure apo-only finding on this
+same H2 observable: the missing signal is not an apo-vs-holo timing
+artifact — these specific real binding sites are not the "capped cavity"
+shape H2 requires, in either conformational state. *(TASK-0229.005)*
 
 The impact claim is therefore not "we can find cryptic pockets." It is:
 **the community currently has no instrument capable of certifying that
