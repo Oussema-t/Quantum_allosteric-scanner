@@ -7,7 +7,7 @@
   from QUBO energy minimization and Montanaro backtracking search —
   quantum-enhanced sampling of the Boltzmann distribution over
   *collective* (low-ANM-mode) conformer space.
-- Status: TODO
+- Status: In Progress
 - Owner: Implementer
 - Claimed By: —
 - Claimed At: —
