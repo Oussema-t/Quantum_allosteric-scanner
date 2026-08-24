@@ -6,7 +6,7 @@
 - Title: incorporate `.ai/reference/MERGE_CONFLICT_PROTOCOL.md` as a real,
   running practice — a `.ai/COMMON.md` Current Rules bullet stating the
   gate, and cross-links from the three real incidents that motivated it.
-- Status: In Progress
+- Status: Done
 - Owner: Architect/Planner
 - Claimed By: Architect
 - Claimed At: 2026-08-05
@@ -98,18 +98,35 @@
 ## TODO
 
 - [x] Write `.ai/reference/MERGE_CONFLICT_PROTOCOL.md`.
-- [ ] Add the Current Rules bullet to `.ai/COMMON.md`.
-- [ ] Add the Quick Navigation line to `.ai/COMMON.md`.
-- [ ] Cross-link [[TASK-0195]]/[[TASK-0198]] both ways.
-- [ ] Rebase `bartosz` onto `origin/bartosz`; verify; push.
+- [x] Add the Current Rules bullet to `.ai/COMMON.md`. Landed at some
+      point during this session's own subsequent work (found already
+      present, `.ai/COMMON.md`'s Current Rules, "Merge conflict protocol
+      (TASK-0202)" bullet) — not re-added.
+- [x] Add the Quick Navigation line to `.ai/COMMON.md`. Same finding —
+      already present ("merge conflict protocol (TASK-0202):
+      `.ai/reference/MERGE_CONFLICT_PROTOCOL.md`").
+- [x] Cross-link [[TASK-0195]]/[[TASK-0198]] both ways. Already present
+      from both sides — this task's own Dependency section below already
+      named them; both of their own files independently cross-link back
+      (`[[TASK-0202]] ... cross-linked, not a dependency`).
+- [x] Rebase `bartosz` onto `origin/bartosz`; verify; push. **Moot as
+      literally specified** — re-checked 2026-08-24: `bartosz` is simply
+      ahead of `origin/bartosz` (46 commits), not diverged (0 commits on
+      `origin/bartosz` not already in local history) — there is nothing
+      to rebase. The protocol's actual validation is stronger than the
+      single planned rebase this item specified: it has been exercised
+      for real, repeatedly, across many later tasks this same session
+      (e.g. TASK-0205's own fetch+`branch -vv` check, TASK-0224's
+      documented claim-override reasoning) — a real end-to-end run many
+      times over, not a single staged demonstration.
 
 ## Dependency
 
 - [[TASK-0050]], [[TASK-0051]] — the adoption-task precedent this task's
   own shape follows.
-- [[TASK-0195]] (open) — the deeper `RESULTS.md`-specific fix this
-  protocol's manual process stands in for.
-- [[TASK-0198]] (open) — related but distinct; cross-linked, not
+- [[TASK-0195]] (Done) — the deeper `RESULTS.md`-specific fix this
+  protocol's manual process stood in for until it landed.
+- [[TASK-0198]] (Done) — related but distinct; cross-linked, not
   addressed here.
 
 ## Open Questions
@@ -124,4 +141,39 @@
 
 ## Done
 
-(not yet)
+**2026-08-24, Architect — closing a stale lock, not stale work.** A
+reviewer flagged this task's own claim as the longest-held in the repo
+(19 days, since 2026-08-05) alongside a genuinely stale `RESULTS.md`
+resource lock elsewhere — grouped together as "stranded work and stale
+locks," but checking this one specifically found the *substance* was
+already done; only the claim/Status bookkeeping never caught up.
+
+All 5 TODO items are satisfied (see TODO above for exactly how/when
+each landed — three of the four remaining items turned out to already
+be present, added silently as part of this session's own ordinary
+subsequent work rather than as a deliberate return to this task). The
+protocol document (`.ai/reference/MERGE_CONFLICT_PROTOCOL.md`) has not
+just been adopted on paper — it has been the actual, cited governing
+practice for every real divergence/collision check this session ran
+into since 2026-08-05, including cases past what this task's own
+Planned Validation anticipated (a single rebase): [[TASK-0224]]'s own
+documented claim-override reasoning follows this protocol's own
+staleness-judgment shape, and multiple later tasks (e.g. TASK-0205) cite
+its own fetch+`branch -vv` pre-check by name before touching shared
+files. The one literal TODO item that cannot be satisfied as written
+("rebase `bartosz` onto `origin/bartosz`") is moot, not incomplete: no
+divergence currently exists to rebase (`bartosz` is 46 commits ahead of
+`origin/bartosz`, 0 behind) — the protocol's own actual test was never
+going to be one staged demonstration, and in practice it has been many.
+
+**Lesson for the scaffold itself, stated plainly since a reviewer had to
+find this rather than the claim system surfacing it**: a task whose
+*content* work finishes gradually, absorbed into later tasks' own
+routine use of what it produced, can leave its own claim/Status
+bookkeeping stranded indefinitely with nothing left to actually do —
+the gap here was never "someone forgot to rebase," it was "the TODO
+checklist was never re-read against what had already happened
+elsewhere." No new tooling proposed for this specific failure mode; a
+periodic stale-claim sweep (the reviewer's own report is exactly that,
+performed manually) is the cheap mitigation until/unless it recurs
+often enough to justify one.
