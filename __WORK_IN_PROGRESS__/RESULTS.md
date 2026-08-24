@@ -7393,3 +7393,65 @@ power. Full tables, exclusion diligence, and curation-order log:
 `scripts/task0243_stage1_and_rerun.py`.
 **Data:** `results/tasks/0243_curate_untuned_targets/`.
 
+
+## The composite "DUMB" baseline decisively beats CTQW, both designs, proper power ([[TASK-0249]], 2026-08-24)
+
+Built the strongest simple, classical competitor this register can assemble
+(fpocket druggability + banded hop-shell one-hot + degree + euclid, LOTO-fit —
+"doing their homework" for the joint two-stage experiment with the
+collaborating thread) and gave the operator every chance to beat it, on
+[[TASK-0243]]'s own frozen, untuned 22-target set (20/22 usable), reusing
+[[TASK-0242]]'s own apparatus and [[TASK-0246]]'s own one-hot encoding
+verbatim.
+
+**Headline, per-residue AUC (LOTO, median, n=20)**: `fpocket_drug` alone
+**0.756**, `composite+ctqw` 0.730, `composite` 0.710, `ctqw` **0.592**,
+random 0.521, `hop` alone 0.431 (see below). **Two-stage candidate ranking
+(LOTO, denominator = 22 targets attempted)**: `fpocket_drug` alone MRR
+**0.344**/top-1 6, `composite+ctqw` 0.320/5, `composite` 0.304/5, `ctqw`
+**0.161**/2, `hop` 0.067/0, random 0.046/0.
+
+**Explicit answer to this task's own central question**: CTQW's own
+incremental value over the composite is small and positive (`composite+ctqw
+− composite` = +0.020 AUC / +0.016 MRR) — real in direction, not a driver of
+the result. **The composite, and even `fpocket_drug` alone (its single
+strongest ingredient, no fitting needed), both clearly and substantially
+beat CTQW on its own** — 0.710/0.756 vs. 0.592 per-residue; MRR 0.304/0.344
+vs. 0.161 two-stage. Reported exactly as it landed, per this task's own
+Constraint that a negative is as reportable as a positive: **on this
+untuned, frozen, proper-power set, the operator does not beat the honest
+classical baselines it should be compared against.**
+
+**Unregistered nuance, load-bearing for how the composite itself should be
+read**: `fpocket_drug` alone beats the full 4-feature composite in both
+designs — adding banded-hop/degree/euclid does not help under true
+cross-target LOTO, even though [[TASK-0246]]'s own within-target CV found
+real signal in the banded hop encoding. This register's own strongest
+simple baseline for the joint experiment is `fpocket_drug` alone, not the
+4-feature composite.
+
+**A real data-quality defect found in [[TASK-0243]]'s own frozen set**:
+`HIV_INTEGRASE_MUT871`/`HIV_INTEGRASE_MUT916` (apo `1M9D`) have an empty
+active-site seed on every one of 1M9D's 4 chains — confirmed directly,
+contradicting that task's own "zero fell back to a top-degree proxy" claim.
+Handled as a real target-attempted failure (excluded from the pooled LOTO
+fit, counted in every denominator above), flagged for whoever owns that
+curation next, not investigated further here.
+
+**`hop` alone scoring below random (0.431 median) under LOTO is real, not a
+bug** — checked directly (13/20 targets below 0.5, not a single-target
+artifact; the same `hop_from_seed` direction embedded inside `composite`
+performs well, confirming no sign-flip). Read as a genuine LOTO-
+generalization failure specific to the 8-column one-hot encoding across a
+much wider size range (225–1205 residues) than [[TASK-0246]]'s own
+within-target-CV set.
+
+Preliminary (labelled as such, [[TASK-0245]]'s own 9-target set, n too
+small to trust over the headline): `fpocket_drug` 0.638, `composite+ctqw`
+0.622, `ctqw` 0.610, `composite` 0.582 — a different, reversed ranking
+between `composite` and `ctqw` than the headline, exactly the
+underpowered-sample instability [[TASK-0243]] was filed to resolve.
+
+**Script:** `scripts/task0249_composite_dumb_baseline.py`. **Full tables:**
+`.ai/tasks/DONE/TASK-0249-composite-dumb-baseline-vs-ctqw.md`'s Done
+section.
