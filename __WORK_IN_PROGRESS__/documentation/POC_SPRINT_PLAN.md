@@ -280,6 +280,53 @@ register's own standing convention for exactly that class of call.
   curated and mechanism-validated, exactly as [[TASK-0215]]'s 6 pairs
   already do.
 
+## Addendum, 2026-08-24 — a candidate quantum target named after this plan had already shipped
+
+**Added after this document's own closing (TASK-0183, Done 2026-08-17) —
+not folded into the milestones above, and not a revision of anything
+already committed.** [[TASK-0229.006]] (2026-08-23) tested the Ensemble
+Allosteric Model (ref [4], Motlagh/Wrabl/Li/Hilser 2014) — the largest
+previously-untested item in the challenge's own bibliography — via a
+COREX-style implementation on the two TASK-0209-VALID targets. Real,
+mixed result, reported here exactly as it landed: EAM's own coupling
+ranking correlates with this register's propagation-based ranking at
+Spearman ρ=0.542 (KRAS_G12C) / 0.493 (PTP1B) — real and highly
+significant, but far short of the ~0.85-0.95 this register's other
+proximity-confounded observables show when they turn out to be distance
+detectors in disguise ([[TASK-0226]]). Read plainly: EAM is not an
+independent signal from propagation, but it is not redundant with it
+either — roughly 70-75% of its own ranking variance is unexplained by
+hop-distance alone.
+
+**Why it belongs in this plan's own record regardless of that mixed
+result**: the EAM's true object — a partition function over 2^N
+folded/unfolded microstates, which COREX's own sliding-window
+approximation exists specifically to avoid computing directly — is a
+**type-correct quantum target** (Gibbs-state preparation / partition-
+function estimation via amplitude estimation), independent of what
+[[TASK-0229.006]]'s own tractable classical approximation found. This is
+a different *kind* of quantum route than anything named in §3(d) of
+`PHASE1_SUBMISSION_DRAFT.md` (circuit cutting, SVD/dilation) — those
+target this register's existing propagation observable; this one targets
+a structurally different quantity this program had not previously
+connected to a quantum formulation at all. It is also, per
+[[TASK-0229.006]]'s own Constraint, the only route in this register's
+current hypothesis set with any path to c-Myc/Max (1NKP) — via ref [4]'s
+own H4.3, disorder amplifies allosteric coupling — though c-Myc has no
+holo structure and cannot itself be validated.
+
+**Stated with the same discipline this plan's own Explicit Exclusions
+already commit to**: this is **not** an advantage claim. Quantum speedups
+for classical partition-function estimation are at best quadratic and
+conditional, and the classical ensemble [[TASK-0229.006]] actually
+enumerated (O(N·W) sliding windows, a few hundred to a few thousand
+states) is itself classically trivial — the type-correctness argument is
+about the true, intractable 2^N microstate space COREX approximates
+away, not about the tractable approximation this task built and tested.
+Not scoped into any milestone above; named here so it is on record as a
+candidate, not lost in a subtask file, and so a reader of this plan does
+not have reason to conclude it was overlooked.
+
 ## Self-audit (Planned Validation, run before this document ships)
 
 - Every milestone above has a stated exit criterion that could fail

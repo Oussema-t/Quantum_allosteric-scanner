@@ -3,7 +3,7 @@
 ## Context
 
 - ID: TASK-0229 (parent; subtasks .001–.007)
-- Status: TODO
+- Status: Done
 - Owner: Architect/Planner (parent), Implementer (subtasks)
 - Source: `.claude/hypotheses/reference_register.md` — systematic extraction of
   testable hypotheses from the Challenge Statement's own references [1]–[25],
@@ -72,4 +72,49 @@ carry this individually.
 
 ## Done
 
-—
+**2026-08-24, Architect (closing synthesis).** All 7 subtasks Done
+(`.001`–`.007`, 2026-08-21 through 2026-08-23); this parent itself was
+never formally closed until now — picked up on direct user instruction
+after an audit found the family's own subtasks solid but two of its own
+Dependency commitments unfulfilled.
+
+**What the family found, in one place**: 3 real classical baselines beat
+this project's own quantum observable on real targets (Zheng NMA
+sampling, `.004`; the harmonic ensemble-coupling proxy stayed confounded,
+`.001`'s negative-class audit); 2 forward-proposal constructions failed
+their own cheapest gates decisively (NMA+persistent-homology, `.005`;
+the genuine nonlinear EAM gave a real mixed result instead of a clean
+failure, `.006`); 1 real database-completeness gap found and bounded
+(`.003`'s BCR_ABL1 second site, correction to the top-5 hit list: zero);
+2 hardware-story citations checked against this register's own resource
+numbers (`.002` — circuit cutting reinforces `FAULT_TOLERANT_ONLY`,
+SVD/dilation is the one route that clears the qubit-count bar under an
+unbuilt encoding); 1 principled instrument built to quantify (not just
+assert) [[TASK-0209]]'s own 2/7 finding, with an honest non-generalizing
+result (`.007`). [[TASK-0226]] separately resolved the family's own
+internal `GNM_corr_low10`/`prs_low` discrepancy (different observables,
+not a real conflict, confirmed on real PDB data).
+
+**Audit found before this closing, now fixed**: the parent's own
+Dependency line ("`.004`/`.005`/`.006` feed [[TASK-0184]]'s
+forward-proposal section and [[TASK-0183]]") was only half true.
+`.004`/`.005` reached `PHASE1_SUBMISSION_DRAFT.md` (Findings 5/6) but
+`.006` never did, and **none of the three reached
+`documentation/POC_SPRINT_PLAN.md`, which had already shipped and
+closed** ([[TASK-0183]], Done 2026-08-17) before `.006` even ran
+(2026-08-23). Closed today, honestly dated as a post-closing addition in
+both documents, not a silent backfill: new Finding 7 + a §3(d)
+cross-reference in `PHASE1_SUBMISSION_DRAFT.md`, a dated addendum
+section in `POC_SPRINT_PLAN.md` (named as a candidate, not folded into
+any already-committed milestone), and `RESULTS.md` row 81 (`.001`/`.002`/
+`.004`/`.005` already had rows 76-79; `.006` did not, until now).
+
+**Not chased further, flagged rather than silently closed**: `.003`'s
+own residual gap (a full whole-protein re-score against the ASD union
+key, beyond the top-5 check actually run) and `.007`'s own (GLUCOKINASE
+as an unexplained counterexample to the pocket-restricted two-state-ANM
+instrument) are each already honestly recorded in their own Done
+sections — not re-opened here, since neither was named in this parent's
+own Dependency as something owed to another document.
+
+Full detail: each subtask's own Done section; `RESULTS.md` rows 76-81.

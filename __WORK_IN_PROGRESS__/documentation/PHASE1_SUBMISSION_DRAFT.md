@@ -81,6 +81,17 @@
 > (does TDA over an ensemble beat TDA on one structure) is reported
 > untested-and-untestable-as-scoped, not forced past a failed positive
 > control.
+>
+> **2026-08-24 update ([[TASK-0229.006]])**: new Finding 7 — the Ensemble
+> Allosteric Model (ref [4]), the largest previously-untested item in the
+> challenge's own bibliography, tested via a real COREX-style
+> implementation on both VALID targets. A genuine mixed result (real,
+> significant, but partial agreement with propagation ranking, not
+> redundancy) plus a type-correct quantum target this program had not
+> previously connected to a formulation. **Added here, and to
+> `POC_SPRINT_PLAN.md`, after [[TASK-0183]] had already shipped and
+> closed** — see that document's own dated addendum for the honest
+> record of the timing; nothing already committed there was revised.
 
 ---
 
@@ -214,6 +225,45 @@ than merely repeats, an earlier single-structure apo-only finding on this
 same H2 observable: the missing signal is not an apo-vs-holo timing
 artifact — these specific real binding sites are not the "capped cavity"
 shape H2 requires, in either conformational state. *(TASK-0229.005)*
+
+**Finding 7 — the largest previously-untested item in the bibliography
+gives a genuine mixed result, and a quantum target of a different kind
+than anything above.** [4] Motlagh, Wrabl, Li & Hilser (2014) — the
+Ensemble Allosteric Model — holds that allosteric coupling is a
+partition-function quantity over 2^N folded/unfolded microstates, not a
+pathway on a contact graph, and can occur with zero mean structural
+change. A **harmonic proxy** of this idea was already tested and landed
+in the same confounded room as every other observable here (\|partial
+ρ\|=0.773 on non-target structures, [[TASK-0226]]) — the ensemble route
+is not an exit this program walked past. The **genuine, nonlinear EAM**
+was not tested until now: a real COREX-style implementation (sliding-
+window folding units, ASA-parameterised free energy, per-residue
+stability constants) on both TASK-0209-VALID targets. Sanity check
+passes on both (buried residues significantly more stable than exposed,
+ρ=−0.365/−0.298, p<2×10⁻⁶). The decisive test — does EAM's own coupling
+ranking agree with, or diverge from, this register's propagation-based
+ranking — gives neither of the two clean answers pre-registered for it:
+**Spearman ρ=0.542 (KRAS_G12C) / 0.493 (PTP1B)** against hop-distance —
+real and highly significant, substantially more agreement than chance,
+but far short of the ~0.85-0.95 this register's other observables show
+when they turn out to be distance detectors wearing a different name.
+Roughly 70-75% of EAM's own ranking variance is not explained by
+proximity alone — reported as a genuinely mixed result, not forced into
+either bin. Independent of that empirical result, the EAM's true object
+— the partition function COREX's own tractable approximation exists to
+avoid computing directly — is a **type-correct quantum target** (Gibbs-
+state preparation / partition-function estimation), a structurally
+different kind of route than the propagation-observable hardware stories
+in §3(d) below, and the only one in this register's current hypothesis
+set with any path to c-Myc/Max, via ref [4]'s own disorder-amplifies-
+coupling claim (though c-Myc has no holo structure and stays
+unvalidatable). **Not an advantage claim**: quantum speedups for
+classical partition-function estimation are at best quadratic and
+conditional, and the classical ensemble this task actually enumerated is
+itself trivial to compute — stated with the same discipline this
+proposal applies to every other candidate route. *(TASK-0229.006 —
+added, honestly dated, after `POC_SPRINT_PLAN.md` had already shipped;
+see that document's own addendum.)*
 
 The impact claim is therefore not "we can find cryptic pockets." It is:
 **the community currently has no instrument capable of certifying that
@@ -528,6 +578,16 @@ one route in this document, across both hardware-story references and
 count alone. Reconciled with [[TASK-0182]]: that task never costed this
 encoding, so there is no contradiction to resolve, only an unbuilt option
 now on record rather than left unstated.
+
+*A fourth route, of a different kind — Gibbs-state preparation over the
+Ensemble Allosteric Model's own partition function (Finding 7, §1).*
+Where the three routes above all target this register's existing
+propagation observable, this one targets a structurally different
+quantity: the 2^N folded/unfolded microstate space ref [4]'s own model
+poses and COREX's tractable approximation exists to avoid enumerating
+directly. Type-correct, not advantage-claiming, and not scoped into any
+sprint milestone — see `POC_SPRINT_PLAN.md`'s own dated addendum for why
+it is recorded here rather than built into the plan.
 
 Detailed scope, milestones, resources and pre-registered success criteria:
 **[[TASK-0183]]**, `documentation/POC_SPRINT_PLAN.md` — month-by-month
