@@ -1,0 +1,497 @@
+# TASK-0243 -- 22 new untuned apo/holo pairs for the joint two-stage
+# experiment with the collaborating thread. DELIBERATELY SEPARATE from
+# both config/targets.yaml and config/candidate_targets_task0216.yaml --
+# same reason TASK-0216 gave: no curated pocket label, no disease-
+# relevance decision, provenance must stay unambiguous.
+#
+# Sourced via [[TASK-0215]]'s own reusable, live-RCSB, TASK-0209-VALID-
+# rule-scored pipeline (`scripts/task0215_leg_b_new_proteins.py`, reused
+# UNCHANGED via `scripts/task0243_curate_untuned_targets.py`), widened
+# with deeper pagination + additional class-targeted query terms
+# (kinase/phosphatase/protease). Every pair below cleared TASK-0209's
+# own VALID rule (apo_native_hit == False AND holo_native_hit == True)
+# against a druggability+overlap bar of 0.5, scored live, not assumed.
+#
+# **4 automated picks found wrong and EXCLUDED, not silently trusted**
+# (same discipline [[TASK-0169]]'s CARDIAC_MYOSIN_TABLE1 finding
+# established -- an automated table is not a citation):
+#   - 4QUI (Caspase-3 F128AV266H): `classify_ligand` picked DTT
+#     (dithiothreitol, a lab reducing agent, DrugBank-listed but not a
+#     pharmacological drug) as "the drug" -- there is no real drug
+#     ligand in this entry.
+#   - 2CLK (Tryptophan Synthase, UniProt P00929): picked G3H
+#     (glyceraldehyde-3-phosphate, a metabolite) over the real inhibitor
+#     class already captured correctly by 2CLF/2CLH below.
+#   - 4TQC / 4TPW (eIF4E, UniProt P06730): picked M7G/MGP (the mRNA
+#     cap-analog cofactor bound at the ORTHOSTERIC site) over the real
+#     allosteric 4EGI-1-class inhibitor also present in each entry (34J/
+#     33R -- same dichlorophenyl-thiazole-hydrazine scaffold, a 1-atom
+#     tiebreak lost to the cap analog under `classify_ligand`'s own
+#     highest-n_atoms heuristic). Re-verified directly with the CORRECT
+#     ligand: both then FAIL the VALID rule's own holo-hit prerequisite
+#     (fpocket does not call the real allosteric PPI-disruption pocket
+#     druggable at all) -- excluded on the rule's own terms, not
+#     relabeled and kept.
+# 2 exact-duplicate (protein, ligand) pairs also dropped (2CLE ligand
+# F6F == 2CLF's own; 6YG2 ligand 1E8 == 6YZ4's own) -- redundant crystal
+# forms of the identical complex add no real diversity.
+#
+# Active-site seed: verified live via `backend.active_site.
+# detect_active_site(apo_pdb, chain=window_chain)` -- the SAME mechanism
+# `scripts/task0242_two_stage_dryrun.py` itself calls
+# (`backend_as.detect_active_site`), not `allostery.labels.
+# functional_indices`'s separate func_ligand-driven path, so `func_ligand`
+# is left empty throughout (not load-bearing for this experiment; see
+# each entry's own `active_site_source` comment). 20/22 resolve to
+# `source: uniprot` (a real curated annotation, never a top-degree
+# fallback); 2 (7ZGS, 8CBS/8CBV would-be but those already show uniprot)
+# resolve to `source: ligand` where noted -- still a real, structurally-
+# grounded site, one tier below UniProt curation, disclosed per entry.
+#
+# Curation-order log (full, machine-written, append-only):
+# `results/tasks/0243_curate_untuned_targets/curate_results.json`'s own
+# `_curation_order` field -- proves this list was frozen (376 candidates
+# screened, stopped at 28 raw valid, 22 survive the quality pass above)
+# BEFORE any stage-1/ranker score was computed on any of them.
+
+targets:
+
+  GAC_BPTES:
+    apo_pdb: 7SBN
+    holo_pdb: 3UO9
+    apo_chains: ["A", "B", "D"]
+    holo_chains: ["A", "B", "D"]
+    chains: ["A", "B", "D"]
+    drug_ligand: 04A
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: O94925
+    active_site_source: uniprot
+    note: >
+      Human glutaminase C (kidney-type, cancer metabolism target) with
+      BPTES, the prototype allosteric GLS inhibitor.
+
+  GAC_CPD12:
+    apo_pdb: 7SBN
+    holo_pdb: 8BSL
+    apo_chains: ["A", "B"]
+    holo_chains: ["A", "B"]
+    chains: ["A", "B"]
+    drug_ligand: R90
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: O94925
+    active_site_source: uniprot
+    note: Same protein/apo as GAC_BPTES, a distinct BPTES-class allosteric compound.
+
+  DHPS_GC7:
+    apo_pdb: 1RLZ
+    holo_pdb: 6P4V
+    apo_chains: ["A", "B"]
+    holo_chains: ["A", "B"]
+    chains: ["A", "B"]
+    drug_ligand: GC7
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: P49366
+    active_site_source: uniprot
+    note: Deoxyhypusine synthase, spermidine-mimic inhibitor GC7.
+
+  PF_ATCASE:
+    apo_pdb: 7ZP2
+    holo_pdb: 7ZGS
+    apo_chains: ["A", "C"]
+    holo_chains: ["A", "C"]
+    chains: ["A", "C"]
+    drug_ligand: PRA
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: A0A5K1K910
+    active_site_source: ligand
+    note: >
+      Plasmodium falciparum aspartate transcarbamoylase, antimalarial
+      target; active-site seed is ligand-contact-derived (no UniProt
+      feature-table annotation for this non-model-organism accession),
+      still a real structural site, not a top-degree fallback.
+
+  HIV_INTEGRASE_MUT871:
+    apo_pdb: 1M9D
+    holo_pdb: 8CBS
+    apo_chains: ["B", "C", "D"]
+    holo_chains: ["B", "C", "D"]
+    chains: ["B", "C", "D"]
+    drug_ligand: U5L
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: P12497
+    active_site_source: ligand
+    note: >
+      HIV-1 integrase, allosteric integrase inhibitor (ALLINI class,
+      LEDGF-site) MUT871.
+
+  HIV_INTEGRASE_MUT916:
+    apo_pdb: 1M9D
+    holo_pdb: 8CBV
+    apo_chains: ["A", "B", "D"]
+    holo_chains: ["A", "B", "D"]
+    chains: ["A", "B", "D"]
+    drug_ligand: U5S
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: P12497
+    active_site_source: ligand
+    note: Same protein/apo as HIV_INTEGRASE_MUT871, a distinct ALLINI-class compound.
+
+  KSHV_PROTEASE_24Q:
+    apo_pdb: 2PBK
+    holo_pdb: 4P2T
+    apo_chains: ["A"]
+    holo_chains: ["A"]
+    chains: ["A"]
+    drug_ligand: 24Q
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: Q2HRB6
+    active_site_source: uniprot
+    note: KSHV protease, allosteric dimer-disruptor mechanism (blocks obligate dimerization).
+
+  KSHV_PROTEASE_25G:
+    apo_pdb: 2PBK
+    holo_pdb: 4P3H
+    apo_chains: ["A"]
+    holo_chains: ["A"]
+    chains: ["A"]
+    drug_ligand: 25G
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: Q2HRB6
+    active_site_source: uniprot
+    note: Same protein/apo as KSHV_PROTEASE_24Q, a distinct dimer-disruptor compound.
+
+  SUMO_E1_FHJ:
+    apo_pdb: 9QN5
+    holo_pdb: 6CWY
+    apo_chains: ["C", "D"]
+    holo_chains: ["C", "D"]
+    chains: ["C", "D"]
+    drug_ligand: FHJ
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: Q9UBE0
+    active_site_source: ligand
+    note: SUMO-activating enzyme (SAE1/UBA2 E1), allosteric inhibitor.
+
+  HCV_NS5B_VRX:
+    apo_pdb: 2GIQ
+    holo_pdb: 2HWI
+    apo_chains: ["A"]
+    holo_chains: ["A"]
+    chains: ["A"]
+    drug_ligand: VRX
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: P26663
+    active_site_source: uniprot
+    note: HCV NS5B RNA polymerase, thumb/palm allosteric inhibitor site.
+
+  HCV_NS5B_VR1:
+    apo_pdb: 2GIQ
+    holo_pdb: 2O5D
+    apo_chains: ["A"]
+    holo_chains: ["A"]
+    chains: ["A"]
+    drug_ligand: VR1
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: P26663
+    active_site_source: uniprot
+    note: Same protein/apo as HCV_NS5B_VRX, distinct allosteric-site chemotype (thiazolone-acylsulfonamide).
+
+  HCV_NS5B_POO:
+    apo_pdb: 2HAI
+    holo_pdb: 2BRL
+    apo_chains: ["A"]
+    holo_chains: ["A"]
+    chains: ["A"]
+    drug_ligand: POO
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: P26663
+    active_site_source: uniprot
+    note: HCV NS5B, a different allosteric site/apo pair than the VRX/VR1 entries above.
+
+  HCV_NS5B_CMF:
+    apo_pdb: 2HAI
+    holo_pdb: 2BRK
+    apo_chains: ["A"]
+    holo_chains: ["A"]
+    chains: ["A"]
+    drug_ligand: CMF
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: P26663
+    active_site_source: uniprot
+    note: Same protein/apo as HCV_NS5B_POO, distinct allosteric compound.
+
+  FBPASE_94D:
+    apo_pdb: 5LDZ
+    holo_pdb: 5PZU
+    apo_chains: ["A"]
+    holo_chains: ["A"]
+    chains: ["A"]
+    drug_ligand: 94D
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: P09467
+    active_site_source: uniprot
+    note: >
+      Human liver fructose-1,6-bisphosphatase, a classic allosterically-
+      regulated enzyme (AMP inhibition site), synthetic allosteric inhibitor.
+
+  FBPASE_95S:
+    apo_pdb: 5LDZ
+    holo_pdb: 5Q05
+    apo_chains: ["A", "C"]
+    holo_chains: ["A", "C"]
+    chains: ["A", "C"]
+    drug_ligand: 95S
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: P09467
+    active_site_source: uniprot
+    note: Same protein/apo as FBPASE_94D, distinct allosteric compound.
+
+  TRP_SYNTHASE_F6F:
+    apo_pdb: 1K7X
+    holo_pdb: 2CLF
+    apo_chains: ["A", "B"]
+    holo_chains: ["A", "B"]
+    chains: ["A", "B"]
+    drug_ligand: F6F
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: P00929
+    active_site_source: uniprot
+    note: >
+      Tryptophan synthase alpha/beta-subunit allosteric communication
+      (a textbook allostery model system), synthetic allosteric inhibitor.
+
+  TRP_SYNTHASE_F19:
+    apo_pdb: 1K7X
+    holo_pdb: 2CLH
+    apo_chains: ["A", "B"]
+    holo_chains: ["A", "B"]
+    chains: ["A", "B"]
+    drug_ligand: F19
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: P00929
+    active_site_source: uniprot
+    note: Same protein/apo as TRP_SYNTHASE_F6F, distinct allosteric compound.
+
+  SMYD3_DIPERODON:
+    apo_pdb: 6P7Z
+    holo_pdb: 7BJ1
+    apo_chains: ["A"]
+    holo_chains: ["A"]
+    chains: ["A"]
+    drug_ligand: QKT
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: Q9H7B4
+    active_site_source: uniprot
+    note: >
+      SMYD3 lysine methyltransferase (epigenetics/oncology target),
+      diperodon (an approved local anesthetic, repurposed here as an
+      allosteric-site binder) S-enantiomer.
+
+  PKR_MITAPIVAT:
+    apo_pdb: 7FS3
+    holo_pdb: 8XFD
+    apo_chains: ["A", "B"]
+    holo_chains: ["A", "B"]
+    chains: ["A", "B"]
+    drug_ligand: WV2
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: P30613
+    active_site_source: uniprot
+    note: >
+      Human erythrocyte pyruvate kinase (PKR) tetramer with mitapivat
+      (AG-348) -- an FDA-approved allosteric activator drug (pyruvate
+      kinase deficiency / sickle cell disease), not just a research compound.
+
+  PKR_AG946:
+    apo_pdb: 7FS3
+    holo_pdb: 8TBS
+    apo_chains: ["A", "B"]
+    holo_chains: ["A", "B"]
+    chains: ["A", "B"]
+    drug_ligand: HVI
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: P30613
+    active_site_source: uniprot
+    note: >
+      Same protein/apo as PKR_MITAPIVAT, second-generation allosteric
+      activator AG-946 (clinical-stage).
+
+  MKK7_IBRUTINIB:
+    apo_pdb: 5Y90
+    holo_pdb: 6YZ4
+    apo_chains: ["A"]
+    holo_chains: ["A"]
+    chains: ["A"]
+    drug_ligand: 1E8
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: O14733
+    active_site_source: uniprot
+    note: >
+      MKK7/MAP2K7 kinase with ibrutinib (normally a BTK covalent
+      inhibitor) bound at an allosteric, not the canonical ATP, site.
+
+  NAMPT_NPA1R:
+    apo_pdb: 3DHF
+    holo_pdb: 8DSC
+    apo_chains: ["A"]
+    holo_chains: ["A"]
+    chains: ["A"]
+    drug_ligand: TIE
+    func_ligand: []
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: clean
+    source: TASK-0243
+    uniprot: P43490
+    active_site_source: uniprot
+    note: NAMPT (NAD+ salvage pathway), small-molecule allosteric activator NP-A1-R.

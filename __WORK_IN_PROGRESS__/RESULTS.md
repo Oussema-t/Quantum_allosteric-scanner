@@ -7333,3 +7333,63 @@ own Done section has the reproducible scripts. `_is_hit`, not bare
 druggability, is recommended as this line of work's primary ceiling
 criterion going forward — no prior justification for the relaxed bar exists
 in either task's record.
+## Properly powered re-run of the collaborating thread's two-stage protocol — the "CTQW leads every control" finding does not survive ([[TASK-0243]], 2026-08-24)
+
+**[OBSERVED]** A prior dry run of the collaborating thread's proposed
+protocol ([[TASK-0242]], candidate pockets from fpocket on apo, ONE
+pre-registered operator H_new/CTQW converged, hop reported as a covariate)
+found CTQW leading every control in direction at n=7 untuned targets, none
+significant, and explicitly flagged the fix needed: "n ≥ 12 untuned
+targets, not 5" — the effect had already weakened as the sample grew
+(Fisher p 0.053 at n=4 → 0.164 at n=7). This task supplied the sample: 22
+new untuned pairs, curated live against RCSB
+(`config/candidate_targets_task0243.yaml`, full curation-order log in
+`results/tasks/0243_curate_untuned_targets/`), 6 of 28 raw automated finds
+excluded on direct inspection before freezing (DTT/G3H misclassified as
+"drug" by the automated picker; two eIF4E entries where the picker chose
+the orthosteric cap-analog cofactor over the real allosteric compound,
+re-verified to fail the VALID rule outright under the correct ligand — the
+same TASK-0169-style diligence this register requires, not a literature
+table trusted blindly).
+
+That dry run's own `prep`/`run` machinery reused unchanged
+(`scripts/task0243_stage1_and_rerun.py`). **Real bug found and fixed
+along the way**: `prep()`'s direct `prody.parsePDB()` calls carry the
+exact same defect [[TASK-0039]] just fixed in `allostery.clean.clean()`
+— default `altloc="A"` silently drops a ligand whose only conformer is
+labelled otherwise (NAMPT's own ligand, altloc='D', crashed `prep()`
+outright). Patched locally in this task's own wrapper (the dry run's own
+script itself untouched, another thread's artifact); the other 21
+targets' numbers were bit-for-bit unchanged after the patch, confirming
+nothing else was silently affected.
+
+**Stage-1 recall 16/22 = 72.7%** (vs the prior dry run's own 64%).
+
+| ranker | mean rank (n=16) | MRR | top-1 |
+|---|---|---|---|
+| fpocket_drug | **8.12** | **0.483** | 6/16 |
+| fpocket_score | 7.56 | 0.342 | 2/16 |
+| **ctqw** | 9.50 | 0.286 | 3/16 |
+| random | 16.38 | 0.195 | 2/16 |
+| hop_covariate | 13.00 | 0.194 | 1/16 |
+
+Head-to-head: **ctqw vs fpocket_drug 5–9–2 (ctqw loses more often now),
+Wilcoxon p=0.509** — the direction the n=7 dry run found has reversed,
+not merely lost significance. ctqw vs hop_covariate 8–5–3, p=0.248 — a
+little more separation than the dry run's own exact tie, still not
+significant. **ctqw vs random: 12–1–3, Wilcoxon p=0.0157 — survives
+Bonferroni (α=0.05/3) — the one individually significant result**, and
+the weakest, least informative of the three: it shows CTQW is not noise,
+not that it beats the actual competing baseline (fpocket's own
+druggability score) the two-stage design exists to test against.
+
+**Per this task's own pre-registered Constraint ("a positive is as
+reportable as a negative")**: reported exactly as it landed, not
+softened. The dry run's own optimistic reading does not survive proper
+power. Full tables, exclusion diligence, and curation-order log:
+`.ai/tasks/DONE/TASK-0243-untuned-target-curation-for-joint-two-stage-experiment.md`.
+
+**Scripts:** `scripts/task0243_curate_untuned_targets.py`,
+`scripts/task0243_stage1_and_rerun.py`.
+**Data:** `results/tasks/0243_curate_untuned_targets/`.
+
