@@ -294,6 +294,39 @@ numbers carry a 95% block-bootstrap CI ([[TASK-0112]]), wired in directly.**
 > row is not read as current when it is five weeks stale by the document's own
 > internal evidence.
 
+> **CAVEAT ([[TASK-0239]], 2026-08-24): this table's KRAS_G12C and BCR_ABL1 floor/
+> actual numbers are themselves stale, for an unrelated reason — a live code fix,
+> not a re-anchored structure.** Commit `1924e5e` ([[TASK-0217.001]], 2026-08-14)
+> fixed a real array-correspondence bug in `labels.functional_indices` (holo-space
+> heavy-atom contact indices were used directly as apo-space indices, exposing
+> 10 of 13 targets) — it correctly re-pinned fpocket's own golden AUC but never
+> propagated a refreshed floor/actual/margin triplet here. Fresh `run_challenge.py`
+> run this task, commit `821dbfb`, cross-validated against [[TASK-0238]] Leg B1's
+> independent run (both reproduce to 3-4 decimals):
+>
+> | Target | Floor (was) | Floor (now) | Actual (was) | Actual (now) | Margin (was) | Margin (now) |
+> |---|---|---|---|---|---|---|
+> | KRAS_G12C | 0.4818 | **0.5296** | 0.5901 | **0.5565** | +0.1083 | **+0.0269** |
+> | BCR_ABL1 | 0.5817 | **0.5031** | 0.5266 | **0.5408** | −0.0551 | **+0.0377** |
+>
+> **Both directions, reported with equal prominence, per this task's own
+> Constraint**: KRAS_G12C's headline margin is **~4× weaker** than published — the
+> table's own "+73.7% headroom" figure (`(actual−floor)/(ceiling−floor)`) cannot be
+> honestly restated at a corrected percentage without also re-running the ceiling
+> search (this task's own floor/actual re-run does not touch ceiling; re-running it
+> is out of this task's scope, flagged as a follow-up, not silently assumed
+> unchanged). What *can* be said without further compute: the simple point-estimate
+> margin the ceiling-relative figure was built from shrank from +0.1083 to +0.0269,
+> so +73.7% is not trustworthy as currently stated and should not be cited without
+> that caveat. **BCR_ABL1 flips sign** — its point estimate now clears its own floor
+> (was reported as a floor failure throughout this document); its `NO_SIGNAL_IN_APO`
+> diagnosis is unaffected (re-confirmed this run) but now comes from the **chance
+> bar** (permutation null / CI-overlap), not the floor gate — any prose attributing
+> this target's negative to "fails to clear the floor" is no longer accurate. Not
+> corrected in place, per this document's own convention. Full detail, including
+> CARDIAC_MYOSIN's own (already-tracked-separately) correction: `RESULTS.md`
+> row 80, `.ai/tasks/DONE/TASK-0239-*.md`.
+
 **Headline: KRAS_G12C's point-estimate diagnosis changes** (`NO_SIGNAL_IN_APO` under
 TASK-0129 -> `NO_FAILURE_DETECTED` here) — the actual result's point estimate now clears
 its own floor by a real margin, a genuine change once the clock gauge is fully removed
@@ -671,6 +704,22 @@ Full re-run under the current (TASK-0130 closed-form) convention,
 |---|---|---|---|---|---|
 | CARDIAC_MYOSIN (8QYP/8QYR, N=704) | 0.5679 [0.415, 0.735] | 0.6452 [0.360, 0.867] | 0.5176 [0.348, 0.768] | `NO_SIGNAL_IN_APO` | −65.4% |
 
+> **CAVEAT ([[TASK-0239]], 2026-08-24): this row is itself stale, for the same
+> `labels.functional_indices` fix ([[TASK-0217.001]], commit `1924e5e`,
+> 2026-08-14) flagged in the KRAS_G12C/BCR_ABL1 section above — distinct from,
+> and downstream of, this section's own TASK-0124 structural re-anchor (the
+> 0.7921→0.5679 drop two paragraphs below is real and explained; this is a
+> second, later, unrelated drop on top of it).** Fresh `run_challenge.py` run
+> this task (commit `821dbfb`), cross-validated against [[TASK-0238]] Leg B1's
+> independent run: floor **0.5679 → 0.4538**, actual **0.5176 → 0.5485**,
+> margin **−0.0503 → +0.0947**. Diagnosis (`NO_SIGNAL_IN_APO`) unaffected
+> (re-confirmed this run), but for the same reason as BCR_ABL1 above: the point
+> estimate now clears its own floor, so the negative comes from the **chance
+> bar**, not the floor gate — the opposite of what this table currently shows.
+> Ceiling (0.6452) not re-run (out of this task's scope); headroom% not
+> restated without it. Not corrected in place, per this document's own
+> convention. Full detail: `RESULTS.md` row 80.
+
 **Headline: every one of this section's four independent reasons for caution (seed,
 `LARGE_N_THRESHOLD`, the clock, and now the structure itself) pointed the same
 direction, and the fourth removes the result entirely rather than merely re-scoring
@@ -909,7 +958,65 @@ using no active-site seed at all. Full per-target reasoning, the c-Myc/1NKP scop
 and the constructive 5-point certifying-benchmark specification: `RESULTS.md`'s own
 "Benchmark discriminability audit" section.
 
+> **CAVEAT ([[TASK-0239]], 2026-08-24): the "task non-trivial?" column's floor/
+> actual numbers above are the same stale [[TASK-0217.001]] vintage corrected
+> earlier in this document.** Corrected: KRAS_G12C floor 0.5296/actual 0.5565
+> (fpocket 0.7910-0.8348 still decisively beats both — verdict unchanged);
+> BCR_ABL1 floor 0.5031/actual 0.5408 (fpocket 0.8596-0.8618 still decisively
+> beats both — verdict unchanged); CARDIAC_MYOSIN floor 0.4538/actual 0.5485
+> (fpocket 0.5303-0.5345 now **clears its own floor** instead of missing it by
+> −0.033 — flips from "misses floor" to "clears floor," though fpocket itself
+> no longer clearly beats the *quantum* actual, 0.530 vs. 0.5485, so the
+> "beats a geometric baseline" reading for this target needs re-judgment, not
+> mechanically re-stated as "Yes" — left as an open call for whoever next
+> revises this table, not decided here). Not corrected in place. Full detail:
+> `RESULTS.md` row 80.
+
 ---
+
+## Variance attribution — what geometry and CTQW each explain, and what neither does ([[TASK-0238]], 2026-08-24)
+
+This document has tracked floor / ceiling / actual per target since
+[[TASK-0094]] without ever decomposing *which* component supplies the
+discrimination. This closes that gap.
+
+Method: on apo coordinates, seed rows excluded from evaluation, the z-scored
+CTQW occupation vector is regressed on the three z-scored geometric baselines
+(`degree_centrality`, `euclid_from_seed_centroid`, `hop_from_seed`) for
+redundancy R²; OLS(geometry) and OLS(geometry + CTQW) are fitted against the
+pocket label; shares of discrimination above chance are attributed as
+(AUC − 0.5) / 0.5.
+
+| target | best single geom | CTQW raw | CTQW residual | R²(CTQW~geom) | CTQW ΔAUC | geometry | CTQW | **unexplained** |
+|---|---|---|---|---|---|---|---|---|
+| KRAS_G12C | 0.6007 | 0.6190 | 0.6721 | 0.493 | +0.0408 | 65% | 8% | **27%** |
+| BCR_ABL1 | 0.5351 | 0.5752 | 0.5283 | 0.476 | +0.0050 | 19% | 1% | **80%** |
+| CARDIAC_MYOSIN | 0.4659 | 0.5632 | 0.6457 | 0.463 | +0.0671 | 23% | 13% | **63%** |
+| HIV1_RT | 0.7773 | 0.7538 | 0.5868 | 0.322 | +0.0083 | 60% | 2% | **39%** |
+| **range** | | | | **0.32–0.49** | | **19–65%** | **1–13%** | **27–80%** |
+
+**Estimate of record: unexplained 27–80% (major, median ~51%); geometry
+19–65% (considerable, highly variable); CTQW 1–13% (minor, never dominant on
+any target).** The unexplained share exceeds geometry and CTQW combined on
+three of four targets.
+
+Caveats, all cutting against the estimate: the stacked AUC is an **in-sample**
+OLS fit (4 parameters, 16–17 positives), so it is an optimistic ceiling and
+**27–80% is a lower bound**; the attribution is linear, so any non-linear
+geometry–CTQW interaction is booked as unexplained; per-target variation is a
+factor of ~3 (geometry) and ~13 (CTQW), so a single pooled figure would
+misrepresent every target.
+
+Two structural notes. CTQW is **least** redundant with geometry (R²=0.32) on
+HIV1_RT — the one target it was never tuned against — versus 0.46–0.49 on the
+three mandatory targets, suggesting part of the measured redundancy is shared
+tuning history rather than shared physics ([[TASK-0199]]). And on KRAS_G12C
+and CARDIAC_MYOSIN the CTQW **residual outscores raw CTQW** (0.6721 vs 0.6190;
+0.6457 vs 0.5632) — geometry masks the non-geometric component rather than
+containing it.
+
+Full write-up: `RESULTS.md`, "Variance attribution" section.
+Script: `scripts/task0238_geometry_vs_ctqw_decomposition.py`.
 
 ## Open items
 

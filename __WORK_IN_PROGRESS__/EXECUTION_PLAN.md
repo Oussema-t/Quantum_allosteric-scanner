@@ -454,7 +454,14 @@ targets** (KRAS_G12C 0.8348, BCR_ABL1 0.8596, vs. floor 0.4818/0.5817 and actual
 0.5679). **Superseded 2026-08-06 ([[TASK-0206]]): these fpocket AUCs came
 from a since-unreproducible machine-specific binary; authoritative set is
 0.7910/0.8618/0.5303 (same verdict) — `RESULTS.md`'s "fpocket binary
-drift" section.** PocketMiner mixed (beats actual on KRAS_G12C/CARDIAC_MYOSIN, falls short
+drift" section.** **Also superseded 2026-08-24 ([[TASK-0239]]): the floor/
+actual (quantum) numbers above, a separate later drift — commit `1924e5e`
+([[TASK-0217.001]]) fixed a live `labels.functional_indices` bug and never
+refreshed this triplet. Current: floor 0.5296/0.5031/0.4538, actual
+0.5565/0.5408/0.5485 — fpocket still decisively beats both on
+KRAS_G12C/BCR_ABL1; on CARDIAC_MYOSIN it now clears its own floor instead
+of missing it, but no longer clearly beats the quantum actual either —
+`RESULTS.md` row 80.** PocketMiner mixed (beats actual on KRAS_G12C/CARDIAC_MYOSIN, falls short
 of floor on BCR_ABL1). ProteinLens confirmed live, no login required, but
 browser-only with no API — explicit blocker, not run, stated per this task's own
 Intent Contract rather than silently skipped. `fpocket` installed as a new,

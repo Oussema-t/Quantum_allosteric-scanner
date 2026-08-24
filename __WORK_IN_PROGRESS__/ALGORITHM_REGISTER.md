@@ -161,6 +161,19 @@ below its own floor. Full detail: `RESULTS.md`'s TASK-0163 section.
 unreproducible machine-specific binary build; authoritative set is
 0.7910/0.8618/0.5303, same targets, same verdict — see `RESULTS.md`'s
 "fpocket binary drift" section and `tools/fpocket/PROVENANCE.json`.**
+**Also superseded 2026-08-24 ([[TASK-0239]]), a different and later drift —
+the floor/actual (quantum) numbers above, not fpocket's own: commit
+`1924e5e` ([[TASK-0217.001]]) fixed a live `labels.functional_indices` bug
+and re-pinned fpocket's golden AUC (the fix above) but never refreshed the
+floor/actual triplet. Current (`run_challenge.py`, commit `821dbfb`,
+cross-validated against [[TASK-0238]] Leg B1): floor 0.5296/0.5031/0.4538,
+actual 0.5565/0.5408/0.5485. fpocket still decisively beats both on
+KRAS_G12C/BCR_ABL1 (verdict unchanged); on CARDIAC_MYOSIN fpocket
+(0.7910-0.8618/0.5303-0.5345 range across the two fpocket vintages above)
+now clears its own floor (0.4538) instead of sitting just below it
+(0.5679) — but no longer clearly beats the quantum actual either
+(0.5303 vs. 0.5485) — re-judgment needed, not restated as a clean beat.
+See `RESULTS.md` row 80.**
 
 **PocketMiner (GNN) — Meller, Ward, … Bowman 2023 — 4 — RUN [[TASK-0163]]**
 State-of-the-art cryptic-pocket-*location* prediction from a single structure, no MD.

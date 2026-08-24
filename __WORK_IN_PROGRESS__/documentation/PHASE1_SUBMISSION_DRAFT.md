@@ -264,6 +264,50 @@ We state this because it moves our own multiplicity arithmetic **against** us:
 rescaled by the measured ~9× redundancy, the expected-false-positive baseline
 falls from ~18.3 to ~2. A referee would find this; we would rather state it.
 
+### 2.3b Variance attribution — geometry, CTQW, and the majority neither explains
+
+**Added 2026-08-24 (TASK-0238).** The redundancy finding above says our
+observables are fewer than they look. This says what the surviving ones
+actually explain — and the largest term is neither of them.
+
+Method, per target, on apo coordinates with seed rows excluded: regress the
+z-scored CTQW occupation vector on the three z-scored geometric baselines
+(`degree_centrality`, `euclid_from_seed_centroid`, `hop_from_seed`) to get
+redundancy R²; fit OLS(geometry) and OLS(geometry + CTQW) against the pocket
+label; attribute shares of discrimination *above chance* as
+(AUC − 0.5) / 0.5.
+
+| target | geometry | CTQW | **unexplained** |
+|---|---|---|---|
+| KRAS_G12C | 65% | 8% | **27%** |
+| BCR_ABL1 | 19% | 1% | **80%** |
+| CARDIAC_MYOSIN | 23% | 13% | **63%** |
+| HIV-1 RT *(external, never tuned on)* | 60% | 2% | **39%** |
+| **range** | **19–65%** | **1–13%** | **27–80%** |
+
+**We estimate that a major and variable share of allosteric-pocket
+discrimination — 27–80%, median ~51% — is explained by neither static
+geometry nor quantum-walk transport. Geometry contributes a considerable but
+highly variable 19–65%. CTQW contributes a minor 1–13% and is never the
+dominant term on any target.**
+
+Three caveats, all of which move the estimate against us:
+
+- The stacked AUC is an **in-sample** OLS fit (4 parameters, 16–17 positives).
+  It is an optimistic ceiling. Cross-validated it falls, so **27–80% is a
+  lower bound on the unexplained share.**
+- The attribution is linear; any non-linear geometry–CTQW interaction is
+  booked as unexplained.
+- CTQW is 32–49% linearly redundant with geometry — notably *least* so
+  (32%) on HIV-1 RT, the one target it was never tuned against.
+
+We report this because it disciplines our own Phase-2 proposal. The majority
+term is not addressable by a better Hamiltonian or a better baseline: both are
+already accounted for. That fpocket — a 2009 purely geometric tool with no
+dynamics and no seed — reaches 0.8348/0.8596 on KRAS_G12C/BCR_ABL1 indicates
+a substantial part of the residue is static pocket structure that no
+dynamics-based observable in our register examines at all.
+
 ### 2.4 The one positive we had did not survive our own audit either
 
 **Updated 2026-08-14 — this section's own headline changed.** The prior
