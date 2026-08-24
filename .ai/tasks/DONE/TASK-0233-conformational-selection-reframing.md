@@ -266,6 +266,14 @@ DOIs (still open, not asserted validated); estimating the local
 residual's own elastic/repacking cost (the natural next step if this
 line of work continues).
 
+**Resolved, 2026-08-24, [[TASK-0236]]**: both mechanism citations above
+verified against live, resolving DOIs, both confirming the claim as
+stated (not just the drug name) — asciminib/myristoyl (Wylie et al.
+2017, *Nature* 543:733-737, doi:10.1038/nature21702) and mavacamten/SRX
+(Rohde et al. 2018, *PNAS* 115:E7486-E7494, doi:10.1073/pnas.1720342115).
+No correction needed to this task's own text; both added to
+`REFERENCES.md`'s method/tool papers table.
+
 **Correction, 2026-08-23, on picking up [[TASK-0234]]**: this task's own
 graduation-condition application (below) filed [[TASK-0234]] on the
 ΔG-plausibility bar alone, without first checking whether the same
