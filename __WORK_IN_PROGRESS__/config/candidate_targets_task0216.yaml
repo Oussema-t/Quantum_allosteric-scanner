@@ -126,3 +126,29 @@ targets:
     status: candidate
     tier: marginal        # apo druggability 0.530 -- ABOVE the bar; passes on overlap only
     source: TASK-0215 Leg B
+
+  # ---- TASK-0238: HIV-1 reverse transcriptase, NNRTI (nevirapine) site ----
+  # NOT a challenge target. Added to run this register's own pipeline on the
+  # target a parallel thread reports a strong result for, so the disagreement
+  # can be localised to a method difference rather than a target difference.
+  # Structures verified directly 2026-08-23: 1DLO X-ray 2.7 A chain A 556 res,
+  # ZERO HETATM (a genuinely unliganded apo -- no MYR/MRK-style confound);
+  # 3V81 X-ray 2.85 A chain A 555 res, contains NVP (nevirapine).
+  # Active site from UniProt (backend/active_site.py, source='uniprot'):
+  # [110,185,186,443,478,498,549]; catalytic Asp triad D110/D185/D186
+  # confirmed present as ASP in 1DLO. Real seed, NOT a top-degree fallback.
+  HIV1_RT:
+    apo_pdb: 1DLO
+    holo_pdb: 3V81
+    apo_chains: ["A"]
+    holo_chains: ["A"]
+    chains: ["A"]
+    drug_ligand: NVP
+    func_ligand: []          # apo has no ligand at all; seed comes from UniProt
+    enm_cutoff: 8.0
+    pocket_contact_cutoff: 4.5
+    keep_nucleic: false
+    quarantine: false
+    status: candidate
+    tier: external-comparison
+    source: TASK-0238

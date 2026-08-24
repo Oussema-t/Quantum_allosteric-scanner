@@ -1018,6 +1018,59 @@ containing it.
 Full write-up: `RESULTS.md`, "Variance attribution" section.
 Script: `scripts/task0238_geometry_vs_ctqw_decomposition.py`.
 
+## Variance attribution, CROSS-VALIDATED — supersedes the in-sample estimate ([[TASK-0245]], 2026-08-24)
+
+[[TASK-0238]]'s attribution was an in-sample OLS stack, flagged there as an
+optimistic ceiling with the explicit prediction that cross-validation would
+lower the stack AUC and **raise** the unexplained share. That check has now
+been run. The prediction held; these numbers supersede it as the estimate of
+record. The in-sample section is kept above per this document's
+no-silent-overwrite convention.
+
+5-fold stratified CV, 20 repeats, out-of-fold scoring, seed rows excluded,
+n = 9 targets (up from 4).
+
+| target | geometry | CTQW | **unexplained** |
+|---|---|---|---|
+| KRAS_G12C | 58% | 8% | **34%** |
+| BCR_ABL1 | 5% | −1% | **96%** |
+| CARDIAC_MYOSIN | 0% | 15% | **93%** |
+| HIV1_RT | 54% | 0% | **45%** |
+| PTP1B | 28% | −1% | **73%** |
+| GLUCOKINASE | 30% | 3% | **67%** |
+| CASPASE7 | 0% | −4% | **108%** |
+| GLUR2_TRU | 46% | 2% | **51%** |
+| GLUK1_BPAM | 84% | 1% | **16%** |
+| **range (median)** | **0–84% (30%)** | **−4 to +15% (+1%)** | **16–108% (67%)** |
+
+**Estimate of record: unexplained 16–108% (median 67%); geometry 0–84%
+(median 30%); CTQW −4% to +15% (median +1%).**
+
+Movement from the in-sample estimate, all in the predicted direction:
+
+| | in-sample (n=4) | cross-validated (n=9) |
+|---|---|---|
+| unexplained | 27–80%, median ~51% | **16–108%, median 67%** |
+| geometry | 19–65%, median ~35% | **0–84%, median 30%** |
+| CTQW | 1–13%, median ~5% | **−4 to +15%, median +1%** |
+
+Notes on reading it: a share above 100% (CASPASE7) means the stacked model
+scored *below* chance out-of-fold — nothing we have generalises there. CTQW's
+increment is **negative on 3 of 9 targets** and its median is +1%, i.e. not
+distinguishable from zero. Its two largest values (CARDIAC_MYOSIN +15%,
+GLUK1_BPAM +1% over the full block but +17.9% over hop alone) occur where the
+geometry block is weakest, so it is partly filling a vacuum rather than adding
+orthogonal information.
+
+Corroborated independently by [[TASK-0244]]'s two-stage controls, a different
+experimental design: CTQW and a plain hop ranker tie at mean rank 5.71
+(Wilcoxon p=0.594 two-sided); partialling hop out of CTQW makes it *worse*
+(6.29 vs 5.71); the true pocket beats a hop-matched candidate null on only 2/7
+targets (Fisher p=0.50, chance expectation 0.93/7).
+
+**Script:** `scripts/task0245_cv_attribution.py`.
+**Data:** `results/tasks/0245_cv_attribution/results.json`.
+
 ## Open items
 
 - **Closed-form re-run — done, closes every clock-gauge item below** ([[TASK-0130]],

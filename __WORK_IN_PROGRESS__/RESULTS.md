@@ -6230,7 +6230,6 @@ Full detail: `.ai/tasks/DONE/TASK-0172-spectrum-preserving-reduction.md`
 | 78 | Ref [1] (Zheng 2023, *J Chem Phys* 158:124127 — the challenge's own reference #1: NMA-guided conformational sampling for cryptic-site prediction) has never been implemented as a scored classical baseline in this register, despite this program independently converging on the same conformational-search reframing. Implement it faithfully (per-mode ANM displacement scanning, not a joint ensemble draw) and score it on [[TASK-0209]]'s VALID targets. | **resolved 2026-08-22: implemented faithfully, validated, and it beats this register's own quantum observable on KRAS_G12C by a wide point-estimate margin — reported plainly, per this task's own Constraint.** New `scripts/task0229_004_zheng_nma_baseline.py`: for each of the lowest 20 ANM modes, 6 amplitudes (±1,±2,±3 thermal-scale multiples, an Implementer's-call grid, stated as such — Zheng's own paper is not quoted as specifying this exact grid), reconstructs full-atom structure (`conformational_search_measurement`'s own TASK-0185 `_apply_ca_displacement`) and scores with the already-vendored fpocket (TASK-0163). **Planned Validation passed** on BCR_ABL1 (this register's own known positive control): real-pocket hit rate 92.5% vs. decoy 36.7% — the per-mode sampler reproduces the qualitative claim (specific, not generic, pocket opening) before being trusted on the VALID targets. **KRAS_G12C**: whole-graph AUC **0.728** (floor 0.530, beats it by a wide margin — this register's own quantum-observable AUC on the same target is ~0.557-0.590 depending on label vintage, [[TASK-0229.001]]/[[TASK-0184]] §2.2 — Zheng's classical baseline substantially outperforms it), TASK-0201's corrected compact-patch null p=0.024 (1000 draws) — clears a naive 2-test local Bonferroni bar (0.025) by a hair, but is **three orders of magnitude short of this program's own register-wide multiplicity bar** (~0.05/228≈0.00022, [[TASK-0161]]/[[TASK-0199]]) — **not counted as a new "surviving positive"** under this project's own standing convention, reported as a strong point estimate that does not clear the register's real bar, not oversold as significant. **PTP1B**: whole-graph AUC 0.610 (floor 0.451, beats it), null p=0.088 (not significant even locally) — and a genuine internal discrepancy disclosed, not hidden: Zheng's own preferred statistic (pocket-level ≥50%-overlap hit rate) shows the *opposite* of specificity here (real 12.5% vs. decoy 18.3%) even though the softer residue-level AUC clears the floor — the two readouts disagree on this target, both numbers reported side by side. **Per this task's own Constraint** ("if it outperforms our quantum arm, we report that ourselves"): done, written into `documentation/PHASE1_SUBMISSION_DRAFT.md` as a new Finding, matching Finding 3's own existing "a classical method beats our quantum observable" pattern (fpocket) with a second, independent instance (Zheng's dynamics-based method). Adds 2 real-target scored cells to the register's own running multiplicity count (not itself updated here — flagged for whoever next revises [[TASK-0161]]'s own table). **Correction 2026-08-23 ([[TASK-0229.005]]): the `documentation/PHASE1_SUBMISSION_DRAFT.md` write-up claimed above never actually landed** — a shared-file-collision bug in this task's own commit silently dropped it while absorbing another thread's unrelated in-flight edit; the numbers here and this task's own Done section were unaffected. Recovered and landed in TASK-0229.005's own commit. | [[TASK-0229.004]], [[TASK-0229]], [[TASK-0185]], [[TASK-0163]], [[TASK-0201]], [[TASK-0209]], [[TASK-0161]] |
 | 79 | The register's own "highest-value construction" (H2 in `.claude/hypotheses/reference_register.md`): [1] Zheng NMA sampling feeding [2] Koseki et al. 2025 (CrypToth) persistent homology → pocket ranking, zero MD, both halves from the challenge's own bibliography. Does the ensemble version of the H2 persistent-void signature (untested, "H2.2") outperform [[TASK-0142]]'s single-structure result, and does it recover what [[TASK-0143]]'s graph-openness proxy missed? | **resolved 2026-08-23: the observable fails its own cheapest positive control on both VALID targets, before the ensemble question is even reachable — a decisive negative, not an open question.** Citation verified directly (Koseki et al. 2025, DOI 10.1021/acs.jcim.4c02111, resolves). New `allostery.persistent_voids.ensemble_void_score` (factored from the existing single-structure `void_score`, one `ripser` call per conformation, H1 read as a free secondary diagnostic from the same call). **Real bug found and fixed while building this**: a persistence class still alive at the Rips filtration cap `thresh` was treated as having infinite lifetime, corrupting the shell-kernel score with NaN — fixed via right-censoring at `thresh` (a class open at the observation limit is *at least* as persistent as `thresh - birth`, not "no signal"), not exclusion (exclusion was tried first and silently flipped two long-passing synthetic tests, revealing their own `>3.0` checks had been passing on `inf > 3.0` all along). **Checked for retroactive impact on [[TASK-0142]]'s own 3 previously-published real-target numbers: none — all 3 reproduce to full float precision post-fix**, the bug was never actually triggered on those structures. **Planned Validation (void_score on the HOLO structure, no sampling needed) FAILED on both VALID targets**: KRAS_G12C top H2 persistence 0.812 vs. this project's own established noise floor 2.5, AUC 0.557 (near chance); PTP1B top H2 persistence 1.535 (also sub-floor), AUC **0.116 — anti-correlated** with the known pocket. Confirmed not a filtration-cap artifact (identical at thresh=16/20/24/30). **Per this task's own gating** (apo-ensemble scoring conditioned on its own target's positive control), both targets skipped as trusted scores; run anyway as an explicit **ungated diagnostic**: 120-conformation NMA-sampled apo-ensemble AUC 0.521 (KRAS_G12C, does not beat floor 0.530) / 0.487 (PTP1B, nominally beats floor 0.451 but null p=0.63 — not significant); only 5% of sampled conformations on either target ever cross the noise floor at all. **Comparison against [[TASK-0143]]'s proxy** (a genuinely different observable, not a re-reading — graph-hop-vs-Euclidean structural distance there, actual persistent H2 topology here): TASK-0143 found KRAS_G12C INSUFFICIENT (uncorrected p=0.016, not Bonferroni-significant) and PTP1B **INFEASIBLE** (its own matched-spread null could not even be constructed). This task reaches a decisive negative on both — including PTP1B, which TASK-0143's own methodology could never resolve at all. Written up as new Finding 6 in `documentation/PHASE1_SUBMISSION_DRAFT.md`, immediately after row 78's recovered Finding 5 (same commit). | [[TASK-0229.005]], [[TASK-0229]], [[TASK-0229.004]], [[TASK-0142]], [[TASK-0143]], [[TASK-0209]], [[TASK-0201]] |
 | 80 | [[TASK-0238]] Leg B1 found that this register's own published floor/actual/margin triplets for the 3 mandatory targets no longer reproduce — commit `1924e5e` ([[TASK-0217.001]]) fixed a live `labels.functional_indices` array-correspondence bug (holo-space heavy-atom indices used as apo-space indices, exposing 10/13 targets) but never refreshed the headline numbers cited as current across `EXECUTION_PLAN.md`, `ALGORITHM_REGISTER.md`, `COMPETENCE_MAP.md`, and — materially — `documentation/PHASE1_SUBMISSION_DRAFT.md:146`, which goes to the challenge organisers. 56 (now 62) citations found across 5 documents; classify each as historical record or live claim, and correct the live ones. Also resolve a second, apparently-unrelated inconsistency: CARDIAC_MYOSIN's floor cited as 0.7921 in one place and 0.5679 in another. | **resolved 2026-08-24: this task's own fresh `run_challenge.py` run (commit `821dbfb`) independently reproduces TASK-0238 Leg B1's triplets to 3-4 decimals — floor/actual/margin now KRAS_G12C 0.5296/0.5565/+0.0269 (was 0.4818/0.5901/+0.1083, margin ~4× weaker), BCR_ABL1 0.5031/0.5408/+0.0377 (was 0.5817/0.5266/−0.0551, **sign flip**), CARDIAC_MYOSIN 0.4538/0.5485/+0.0947 (was 0.5679/0.5176/−0.0503, **sign flip**).** All 62 citations classified: `RESULTS.md`'s own ~55 (this file) are dated historical measurements correctly describing the pipeline's state *at the time each ran* — left as-is, per this file's own no-silent-overwrite preamble (TASK-0238's own Leg B1 section, already in this file, already states the corrected numbers and is not touched here). Live-claim citations corrected via dated CAVEAT/superseding annotations matching each document's own existing convention, not silent rewrites: `documentation/PHASE1_SUBMISSION_DRAFT.md` (Finding 3's triplet corrected in place plus a banner update — this is the one document where the stale numbers were reported as *current*, not historical, so corrected directly rather than annotated; also fixed §2.5's own footnote, which had attributed a since-superseded number gap to [[TASK-0177]]'s label refinement when the dominant cause was this same TASK-0217.001 fix), `COMPETENCE_MAP.md` (3 new CAVEAT blocks in its own established stacked-layer style, covering the headline table, the CARDIAC_MYOSIN section's own declared-current ending, and the discriminability-audit table), `ALGORITHM_REGISTER.md` and `EXECUTION_PLAN.md`'s own most-prominent fpocket-comparison paragraphs (superseding annotations alongside the existing [[TASK-0206]] one). **BCR_ABL1 and CARDIAC_MYOSIN's negative diagnoses (`NO_SIGNAL_IN_APO`, re-confirmed this run) now come from the chance bar (CI-overlap / permutation null), not the floor gate** — every corrected annotation states this explicitly, and no prose elsewhere in the 5 documents was found attributing either negative to the floor gate specifically (checked directly, not assumed). **Second inconsistency resolved: not an error.** 0.7921 (`EXECUTION_PLAN.md:265`, dated 2026-07-19) and 0.5679 (`ALGORITHM_REGISTER.md`, dated 2026-07-27/28) are two legitimate, correctly-dated historical vintages either side of [[TASK-0124]]'s 2026-07-20 CARDIAC_MYOSIN apo re-anchor (5TBY→8QYP) — `COMPETENCE_MAP.md`'s own CARDIAC_MYOSIN section already documents this exact transition ("floor drops 0.7921→0.5679") in prose; confirmed by date, not just by that citation. `ALGORITHM_REGISTER.md`'s 0.5679 is the later, post-re-anchor, pre-TASK-0217.001 vintage — the one actually superseded by this task. **Guard proposed, not built** (per this task's own Acceptance, "not necessarily built"): a pinned-golden regression test over the 3 mandatory targets' floor/actual/margin triplet, run through `scripts/run_challenge.py`'s real path (not a mock), asserting each value matches a checked-in golden JSON to a stated tolerance and failing loudly (not silently) if a future `labels.py`/`analysis.py` change shifts it — mirrors [[TASK-0206]]'s own already-working fpocket-AUC pin (`tools/fpocket/PROVENANCE.json`) and [[TASK-0217.001]]'s post-hoc audit pattern, but pre-hoc: CI-catchable before a numeric-shifting fix lands uncited, not caught weeks later by a reviewer's wiring check. Not implemented here — flagged as the concrete next task. | [[TASK-0239]], [[TASK-0238]], [[TASK-0217.001]], [[TASK-0206]], [[TASK-0124]], [[TASK-0195]], [[TASK-0184]] |
-| 81 | [[TASK-0242]]'s own two-stage dry-run (n=7 untuned targets) found CTQW and a trivial "mean BFS hops from seed" ranker have **identical mean rank** (5.71, Wilcoxon p=0.297) — hop was reported only as a covariate, which cannot settle whether CTQW does anything beyond proximity-to-seed. Promote hop to a competing ranker in the same table, and add three controls: a residual ranker (hop partialled out of CTQW's own candidate scores), a seed-free operator control (same candidates, random seed of matched size), and a hop-matched candidate null (compete only against size/hop-matched decoys). | **resolved 2026-08-24: all three new controls point the same direction as TASK-0242's own finding — CTQW's two-stage ranking advantage is substantially, and possibly entirely, a proximity-to-seed effect, not evidence of a mechanism beyond it.** New `scripts/task0244_hop_competing_ranker.py`, reusing [[TASK-0242]]'s own `run()` unchanged (extended additively with an opt-in `return_state=True`, backward-compatible — re-ran the original script afterward and reproduced its exact published numbers, confirming no regression) so no fpocket candidate list is regenerated. Same n=7 untuned, stage-1-surviving targets throughout (the same small sample TASK-0242 itself flagged as underpowered; every number below carries that caveat, per this task's own Acceptance — folded into whatever re-run [[TASK-0243]]'s future ≥12-target frozen set produces, not reported alone). **Residual ranker** (CTQW with each target's own hop_cov linearly regressed out, re-ranked by residual): mean rank **6.29** (vs. raw CTQW's 5.71 — *worse*, not better), MRR 0.330 vs. 0.411, Wilcoxon p=0.625 — removing hop's contribution does not help CTQW, consistent with hop explaining a real share of its ranking power. **Seed-free operator control** (same candidate list, CTQW re-run from 20 random seed sets of matched size per target, no re-run of fpocket): mean rank collapses to **8.65** (MRR **0.145**, close to this experiment's own ~0.075-0.15 chance band) from the real-seed run's 5.71/0.411 — a **~2.8× MRR collapse toward chance**, Wilcoxon p=0.109 (not significant at n=7, but the largest, most decisive-looking effect of the four controls; per this task's own Scope, exactly the signature specified as confirming proximity as the mechanism). **Hop-matched candidate null** (compete only against candidates matched to the true pocket's own hop distance ±1 and size ±50%, within each target's own candidate list — feasible on 7/7 targets, not INFEASIBLE like TASK-0143's own structural-graph null): true pocket ranks **#1 in only 2/7** of its own matched pools. **None of the three individually reaches significance at n=7** (the same underpowered-sample problem TASK-0242 itself already flagged, [[TASK-0243]] exists to fix it) — but all three point the same way, and the seed-free collapse in particular is a large, coherent effect size, not noise-shaped. Per this task's own Constraint, this is not read as "the operator is proven to be nothing but proximity" (that claim is not licensed by n=7 either) — it is read as "the current n=7 evidence base is more consistent with proximity-to-seed than with a beyond-proximity mechanism, on every control tried, and the joint protocol needs [[TASK-0243]]'s larger sample before either side can interpret its own result." Apparatus built and validated now, ready to run unchanged against TASK-0243's frozen set once curated. | [[TASK-0244]], [[TASK-0242]], [[TASK-0243]], [[TASK-0094]], [[TASK-0199]], [[TASK-0238]], [[TASK-0143]] |
 
 Full process history, run mechanics, and Acceptance-Scenario checklists
 for this run live in `.ai/tasks/DONE/TASK-0079.005-run-mandatory-targets.md`
@@ -7333,6 +7332,7 @@ own Done section has the reproducible scripts. `_is_hit`, not bare
 druggability, is recommended as this line of work's primary ceiling
 criterion going forward — no prior justification for the relaxed bar exists
 in either task's record.
+
 ## Properly powered re-run of the collaborating thread's two-stage protocol — the "CTQW leads every control" finding does not survive ([[TASK-0243]], 2026-08-24)
 
 **[OBSERVED]** A prior dry run of the collaborating thread's proposed
@@ -7393,6 +7393,203 @@ power. Full tables, exclusion diligence, and curation-order log:
 `scripts/task0243_stage1_and_rerun.py`.
 **Data:** `results/tasks/0243_curate_untuned_targets/`.
 
+## Two-stage (fpocket candidates → operator ranks within) dry run — the collaborating thread's protocol, executed on our side ([[TASK-0242]], 2026-08-24)
+
+**[OBSERVED]** A collaborating thread raised a methodological objection this
+register had not tested: their pipeline uses fpocket to propose **candidate
+pockets** and an operator to rank *within* that candidate set. That is a
+different experiment from this register's per-residue AUC, and they are
+correct that our compact-patch null does not test it. Rebuilt to their spec
+rather than argued with.
+
+**Their spec, adopted verbatim:** candidate pockets from fpocket on apo;
+`MIN_HOP = 2` distality filter; **one** pre-registered operator (`H_new` /
+converged incoherent CTQW, this register's GAUGE, fixed before any number was
+seen); hop reported as a **covariate, not a filter**; targets neither side
+tuned on.
+
+**The control their argument omits.** Their supporting statistic — Friedman
+p=1.6e-224, W=0.466 across 14 Hamiltonians, modal pocket = true drug pocket —
+measures *agreement between operators*, not validity. Operators sharing a
+confound agree perfectly and are wrong together; this register measured that
+degeneracy directly ([[TASK-0199]]: ~28 observables → effective rank 2.6–4.1).
+The question consensus cannot answer is whether the operator ranks the true
+pocket better than **fpocket's own druggability score already does, on the
+identical candidate list**. Every ranker below is scored on that same list.
+
+### Results — rank of the true drug pocket (1 = best), K = surviving candidates
+
+| target | tuned on | K | **ctqw** | fpocket_drug | fpocket_score | hop | random |
+|---|---|---|---|---|---|---|---|
+| HIV1_RT | no | 34 | **4** | 33 | 10 | 9 | 19 |
+| GLUR2_TRU | no | 12 | **4** | 7 | 6 | 2 | 2 |
+| GLUR2_ANIRACETAM | no | 12 | **1** | 7 | 4 | 2 | 11 |
+| GLUK1_BPAM | no | 7 | **1** | 1 | 1 | 3 | 4 |
+| PTP1B | no | 14 | 9 | 3 | 14 | 12 | 8 |
+| GLUCOKINASE | no | 17 | **5** | 10 | 16 | 6 | 8 |
+| CASPASE7 | no | 19 | **16** | 18 | 13 | 6 | 17 |
+| KRAS_G12C | *yes* | 7 | 1 | 4 | 4 | 2 | 6 |
+| BCR_ABL1 | *yes* | 22 | 10 | 1 | 1 | 9 | 9 |
+| CARDIAC_MYOSIN | *yes* | 42 | 19 | 40 | 39 | 19 | 7 |
+
+TEM1_BLA_CBT, TEM1_BLA_FTA, FPPS_YF0282, CASPASE1 dropped: **fpocket never
+proposed the true pocket at all**. Stage-1 recall **7/11 = 64%**.
+
+| ranker | Fisher p | MRR | top-1 (conditional) | top-1 (end-to-end) |
+|---|---|---|---|---|
+| **ctqw** | **0.164** | **0.411** | **2/7** | **2/11** |
+| fpocket_drug | 0.736 | 0.258 | 1/7 | 1/11 |
+| fpocket_score | 0.701 | 0.247 | 1/7 | 1/11 |
+| hop_covariate | 0.300 | 0.266 | 0/7 | 0/11 |
+| random | 0.838 | 0.172 | 0/7 | 0/11 |
+
+### Three findings, in order of importance
+
+**1. The effect weakened as the sample grew.** At n=4 (the first pass, the
+candidate set only) CTQW's Fisher p was **0.053**. At n=7 it is **0.164**.
+Direction held, significance did not. This is the signature of a small-sample
+fluctuation, and it is the single strongest argument against signing a joint
+protocol at the proposed 5-target scale — by either side, in either direction.
+
+**2. CTQW leads every control in direction, none significantly.** Head-to-head
+against fpocket's own druggability on the identical candidate list: **5 wins,
+1 loss, 1 tie** — sign test p=0.109, Wilcoxon p=0.125. Real and consistent in
+sign; not established.
+
+**3. CTQW is not distinguishable from the hop covariate.** Mean rank **5.71
+for both**, Wilcoxon p=0.297. fpocket uses no seed information whatsoever, so
+*any* seed-aware ranker beats it — and the trivial seed-aware ranker does
+exactly as well as the quantum walk on mean rank. **CTQW's apparent edge over
+fpocket is fully consistent with it being a proximity-to-seed ranker.** This is
+the confound the proposed design does not control: hop as a *covariate* is not
+enough, it must appear as a competing *ranker* in the same table.
+
+### Consequence for the proposed joint experiment
+
+The protocol is sound and worth running, with three amendments:
+
+- **Denominator = targets attempted**, not targets where stage 1 succeeded.
+  Conditional top-1 2/7 is 2/11 end-to-end; a within-candidate metric cannot
+  see the 36% of targets where fpocket never proposes the true pocket.
+- **n ≥ 12 untuned targets**, not 5. Finding 1 is the direct evidence.
+- **fpocket's own druggability AND the hop ranker as named control arms.**
+  Both must be beaten for the operator to be doing work.
+
+**Script:** `scripts/task0242_two_stage_dryrun.py`.
+**Data:** `results/tasks/0242_two_stage_dryrun/dryrun.json`.
+
+## Variance attribution, CROSS-VALIDATED — supersedes the in-sample estimate ([[TASK-0245]], 2026-08-24)
+
+[[TASK-0238]]'s attribution was an in-sample OLS stack, flagged there as an
+optimistic ceiling with the explicit prediction that cross-validation would
+lower the stack AUC and **raise** the unexplained share. That check has now
+been run. The prediction held; these numbers supersede it as the estimate of
+record. The in-sample section is kept above per this document's
+no-silent-overwrite convention.
+
+5-fold stratified CV, 20 repeats, out-of-fold scoring, seed rows excluded,
+n = 9 targets (up from 4).
+
+| target | geometry | CTQW | **unexplained** |
+|---|---|---|---|
+| KRAS_G12C | 58% | 8% | **34%** |
+| BCR_ABL1 | 5% | −1% | **96%** |
+| CARDIAC_MYOSIN | 0% | 15% | **93%** |
+| HIV1_RT | 54% | 0% | **45%** |
+| PTP1B | 28% | −1% | **73%** |
+| GLUCOKINASE | 30% | 3% | **67%** |
+| CASPASE7 | 0% | −4% | **108%** |
+| GLUR2_TRU | 46% | 2% | **51%** |
+| GLUK1_BPAM | 84% | 1% | **16%** |
+| **range (median)** | **0–84% (30%)** | **−4 to +15% (+1%)** | **16–108% (67%)** |
+
+**Estimate of record: unexplained 16–108% (median 67%); geometry 0–84%
+(median 30%); CTQW −4% to +15% (median +1%).**
+
+Movement from the in-sample estimate, all in the predicted direction:
+
+| | in-sample (n=4) | cross-validated (n=9) |
+|---|---|---|
+| unexplained | 27–80%, median ~51% | **16–108%, median 67%** |
+| geometry | 19–65%, median ~35% | **0–84%, median 30%** |
+| CTQW | 1–13%, median ~5% | **−4 to +15%, median +1%** |
+
+Notes on reading it: a share above 100% (CASPASE7) means the stacked model
+scored *below* chance out-of-fold — nothing we have generalises there. CTQW's
+increment is **negative on 3 of 9 targets** and its median is +1%, i.e. not
+distinguishable from zero. Its two largest values (CARDIAC_MYOSIN +15%,
+GLUK1_BPAM +1% over the full block but +17.9% over hop alone) occur where the
+geometry block is weakest, so it is partly filling a vacuum rather than adding
+orthogonal information.
+
+Corroborated independently by [[TASK-0244]]'s two-stage controls, a different
+experimental design: CTQW and a plain hop ranker tie at mean rank 5.71
+(Wilcoxon p=0.594 two-sided); partialling hop out of CTQW makes it *worse*
+(6.29 vs 5.71); the true pocket beats a hop-matched candidate null on only 2/7
+targets (Fisher p=0.50, chance expectation 0.93/7).
+
+**Script:** `scripts/task0245_cv_attribution.py`.
+**Data:** `results/tasks/0245_cv_attribution/results.json`.
+
+## Is CTQW just a re-encoded distance score? No — but its non-distance signal duplicates two simpler baselines ([[TASK-0247]], 2026-08-24)
+
+**[OBSERVED]** [[TASK-0245]]/[[TASK-0244]] established that CTQW's incremental
+contribution over the geometry block is ~0 (median +1% CV). That is easily
+misread as "CTQW is a distance score in disguise." It is **not**, and this
+section records the correction with the same prominence as the original claim.
+
+Decisive test: **within-shell AUC.** Stratify residues by BFS hop shell — inside
+a shell, distance-from-seed is constant — and ask whether the score still
+separates pocket from non-pocket.
+
+| target | ρ(ctqw, hop) | R² on shell indicators | AUC uncond. | **AUC within shell** |
+|---|---|---|---|---|
+| KRAS_G12C | −0.773 | 0.420 | 0.6190 | 0.5595 |
+| BCR_ABL1 | −0.729 | 0.609 | 0.5752 | 0.6499 |
+| CARDIAC_MYOSIN | −0.750 | 0.489 | 0.5632 | 0.6690 |
+| HIV1_RT | −0.686 | 0.438 | 0.7538 | 0.5466 |
+| PTP1B | −0.508 | 0.272 | 0.5244 | 0.6305 |
+| GLUCOKINASE | −0.573 | 0.304 | 0.4853 | 0.4019 |
+| CASPASE7 | −0.464 | 0.364 | 0.6103 | 0.5816 |
+| GLUR2_TRU | −0.384 | 0.270 | 0.7900 | 0.7680 |
+| GLUK1_BPAM | −0.601 | 0.390 | 0.8393 | 0.7672 |
+| **median** | **0.601** | **0.390** | 0.6103 | **0.6305** |
+
+**CTQW is not a distance score.** Only ~39% of its variance is a pure function
+of hop shell. With distance held constant it still discriminates at median AUC
+**0.6305** — *higher* than its unconditional AUC — above 0.5 on 8/9 targets,
+above 0.55 on 7/9, one-sample Wilcoxon vs 0.5 **p=0.0273**. It computes
+something real that proximity does not.
+
+**But that something is already supplied by two much simpler quantities.** The
+same within-shell comparison, all features on equal footing:
+
+| target | ctqw | degree | euclid | best geometry | ctqw − best |
+|---|---|---|---|---|---|
+| KRAS_G12C | 0.5595 | 0.5709 | 0.7940 | 0.7940 | −0.2344 |
+| BCR_ABL1 | 0.6499 | 0.5452 | 0.5619 | 0.5619 | +0.0881 |
+| CARDIAC_MYOSIN | 0.6690 | 0.5898 | 0.5591 | 0.5898 | +0.0791 |
+| HIV1_RT | 0.5466 | 0.5126 | 0.6292 | 0.6292 | −0.0827 |
+| PTP1B | 0.6305 | 0.5356 | 0.5910 | 0.5910 | +0.0395 |
+| GLUCOKINASE | 0.4019 | 0.5713 | 0.6605 | 0.6605 | −0.2586 |
+| CASPASE7 | 0.5816 | 0.5885 | 0.5172 | 0.5885 | −0.0069 |
+| GLUR2_TRU | 0.7680 | 0.6324 | 0.6016 | 0.6324 | +0.1355 |
+| GLUK1_BPAM | 0.7672 | 0.6663 | 0.9382 | 0.9382 | −0.1710 |
+| **median** | **0.6305** | 0.5713 | **0.6292** | **0.6292** | +0.0013 |
+
+CTQW beats the best geometric baseline within-shell on **4/9** targets,
+Wilcoxon **p=0.4961**. Statistically indistinguishable.
+
+**Correct statement of the finding, superseding the looser phrasing in
+[[TASK-0245]]'s section:** CTQW is not an overcomplicated distance score — it
+is an overcomplicated *burial-plus-distance* score. Its non-proximity content
+is real and measurable, and it is the same content `degree_centrality` and
+`euclid_from_seed_centroid` deliver in two lines of numpy. The correct claim is
+"adds nothing over the **full geometry block**", not "adds nothing over
+**proximity**". The two are different and this register should not conflate
+them.
+
+**Script:** `scripts/task0247_is_ctqw_a_distance_score.py`.
 
 ## The composite "DUMB" baseline decisively beats CTQW, both designs, proper power ([[TASK-0249]], 2026-08-24)
 

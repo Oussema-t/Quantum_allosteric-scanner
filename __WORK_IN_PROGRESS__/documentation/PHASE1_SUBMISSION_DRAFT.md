@@ -266,47 +266,71 @@ falls from ~18.3 to ~2. A referee would find this; we would rather state it.
 
 ### 2.3b Variance attribution — geometry, CTQW, and the majority neither explains
 
-**Added 2026-08-24 (TASK-0238).** The redundancy finding above says our
-observables are fewer than they look. This says what the surviving ones
-actually explain — and the largest term is neither of them.
+**Added 2026-08-24, revised the same day (TASK-0238 → TASK-0245).** The
+redundancy finding above says our observables are fewer than they look. This
+says what the surviving ones explain — and the largest term is neither of them.
+**These are cross-validated numbers.** The first version of this section was an
+in-sample fit; we flagged it as an optimistic ceiling and then ran the check.
+It moved against us, as predicted, and the revised numbers are the ones below.
 
-Method, per target, on apo coordinates with seed rows excluded: regress the
-z-scored CTQW occupation vector on the three z-scored geometric baselines
-(`degree_centrality`, `euclid_from_seed_centroid`, `hop_from_seed`) to get
-redundancy R²; fit OLS(geometry) and OLS(geometry + CTQW) against the pocket
-label; attribute shares of discrimination *above chance* as
-(AUC − 0.5) / 0.5.
+Method, per target, on apo coordinates with seed rows excluded: 5-fold
+stratified CV (20 repeats) over residues; fit OLS(geometry) and
+OLS(geometry + CTQW) on train, score out-of-fold; attribute shares of
+discrimination *above chance* as (AUC − 0.5) / 0.5. Geometry = the three
+baselines `degree_centrality`, `euclid_from_seed_centroid`, `hop_from_seed`.
+Operator = converged incoherent CTQW on `H_new`. n = 9 targets.
 
 | target | geometry | CTQW | **unexplained** |
 |---|---|---|---|
-| KRAS_G12C | 65% | 8% | **27%** |
-| BCR_ABL1 | 19% | 1% | **80%** |
-| CARDIAC_MYOSIN | 23% | 13% | **63%** |
-| HIV-1 RT *(external, never tuned on)* | 60% | 2% | **39%** |
-| **range** | **19–65%** | **1–13%** | **27–80%** |
+| KRAS_G12C | 58% | 8% | **34%** |
+| BCR_ABL1 | 5% | −1% | **96%** |
+| CARDIAC_MYOSIN | 0% | 15% | **93%** |
+| HIV-1 RT | 54% | 0% | **45%** |
+| PTP1B | 28% | −1% | **73%** |
+| GLUCOKINASE | 30% | 3% | **67%** |
+| CASPASE7 | 0% | −4% | **108%** |
+| GLUR2_TRU | 46% | 2% | **51%** |
+| GLUK1_BPAM | 84% | 1% | **16%** |
+| **range (median)** | **0–84% (30%)** | **−4 to +15% (+1%)** | **16–108% (67%)** |
 
-**We estimate that a major and variable share of allosteric-pocket
-discrimination — 27–80%, median ~51% — is explained by neither static
-geometry nor quantum-walk transport. Geometry contributes a considerable but
-highly variable 19–65%. CTQW contributes a minor 1–13% and is never the
-dominant term on any target.**
+**We estimate that a major and highly variable share of allosteric-pocket
+discrimination — 16–108%, median 67% — is explained by neither static geometry
+nor quantum-walk transport. Geometry contributes 0–84% (median 30%). CTQW
+contributes −4% to +15%, median +1%, and its out-of-fold increment is negative
+on 3 of 9 targets.**
 
-Three caveats, all of which move the estimate against us:
+Reading the table honestly:
 
-- The stacked AUC is an **in-sample** OLS fit (4 parameters, 16–17 positives).
-  It is an optimistic ceiling. Cross-validated it falls, so **27–80% is a
-  lower bound on the unexplained share.**
-- The attribution is linear; any non-linear geometry–CTQW interaction is
-  booked as unexplained.
-- CTQW is 32–49% linearly redundant with geometry — notably *least* so
-  (32%) on HIV-1 RT, the one target it was never tuned against.
+- A share above 100% (CASPASE7) means the stacked model scored *below chance*
+  out-of-fold — no model we have generalises on that target at all.
+- CTQW's contribution is not distinguishable from zero on most targets. The two
+  where it is largest (CARDIAC_MYOSIN +15%, GLUK1_BPAM) are also the two where
+  the geometry block is weakest, so it is partly filling a vacuum rather than
+  adding orthogonal information.
+- A separate two-stage experiment (fpocket proposes candidate pockets, the
+  operator ranks within them) reached the same place by a different route,
+  and **updated 2026-08-24** once pushed to proper power against an honest
+  classical competitor. The original n=7 read (CTQW and a plain hop-distance
+  ranker tying at mean rank 5.71) did not survive scale-up: on TASK-0243's
+  frozen, untuned 22-target set (20/22 usable — a seed-resolution defect on
+  two HIV integrase entries left `detect_active_site` with an empty seed,
+  counted as an attempted failure, not excluded), an honest classical
+  composite — fpocket druggability + banded hop-shell one-hot + degree +
+  Euclidean distance, weights fit LOTO across targets, no access CTQW
+  doesn't also have — reaches per-residue AUC 0.710 against CTQW's 0.592,
+  and `fpocket_drug` alone, a single unfitted feature, reaches 0.756. The
+  same ordering holds under the two-stage candidate-ranking design itself:
+  composite MRR 0.304, `fpocket_drug` alone 0.344, CTQW 0.161 (denominator
+  = 22 targets attempted; 14/22 survived stage-1 fpocket + seed resolution).
+  CTQW's own increment over the full composite is real but small and
+  insufficient to lead: +0.020 AUC, +0.016 MRR *(TASK-0249)*.
 
 We report this because it disciplines our own Phase-2 proposal. The majority
-term is not addressable by a better Hamiltonian or a better baseline: both are
-already accounted for. That fpocket — a 2009 purely geometric tool with no
-dynamics and no seed — reaches 0.8348/0.8596 on KRAS_G12C/BCR_ABL1 indicates
-a substantial part of the residue is static pocket structure that no
-dynamics-based observable in our register examines at all.
+term is not addressable by a better Hamiltonian or a better baseline — both are
+already booked. That fpocket, a 2009 purely geometric tool with no dynamics and
+no seed, reaches 0.8348/0.8596 on KRAS_G12C/BCR_ABL1 indicates a substantial
+part of the residue is static pocket structure that no dynamics-based
+observable in our register examines at all.
 
 ### 2.4 The one positive we had did not survive our own audit either
 
