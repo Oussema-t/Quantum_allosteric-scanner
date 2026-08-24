@@ -55,6 +55,51 @@ combination.
   definition in isolation. See [[TASK-0118]]'s Done section for the
   re-run numbers; not duplicated here.
 
+## PROVENANCE — not GAUGE, not KNOB (added 2026-08-24, [[TASK-0232]])
+
+Every row above characterizes *how many* residues the seed contains and
+*how* they're combined (cardinality, coherence) — real transformations of
+one well-defined quantity (the active-site residue set), correctly
+classified as KNOB. **This record contained zero mentions of *whether* the
+seed is an active site at all** until [[TASK-0216]] found that, on 9 of 13
+real targets, `functional_indices` had silently fallen through to its
+last-resort tier: the top-5 highest-degree residues, a purely topological
+quantity with no relationship to function.
+
+**Classification: neither GAUGE nor KNOB.** A GAUGE transformation must not
+change the answer; a KNOB transformation may change the answer while still
+answering the *same question* under a different modeling choice (this
+record's own cardinality/coherence rows are exactly that — "how many active-
+site residues, combined how" is still a question about the active site).
+**Seed provenance does not fit either shape, because a fallback seed is not
+a transformation of the active-site quantity at all — it is a silent
+substitution of a categorically different quantity (graph-degree centrality)
+answering a different question, with no active-site content whatsoever.**
+There is no "spread" to report the way a KNOB row reports one, because the
+two provenance states are not two settings of one dial — one of them isn't
+measuring the thing this record is about.
+
+**Why this matters beyond terminology**: `baselines.degree_centrality` — a
+top-5-highest-degree quantity — is independently one of the three
+proximity-floor baselines every scored observable is checked against
+([[SEAM-0015]] states this circularity explicitly: on a fallback-seeded
+target, `seed ⊆ top-degree` and `floor ∋ degree_centrality`, so the
+observable and its own floor share a construction and the comparison stops
+being independent). A KNOB row would invite "sweep it and report the
+spread"; that framing would have been actively misleading here — sweeping
+"real seed vs. fallback seed" does not characterize sensitivity to a
+modeling choice, it characterizes whether the experiment was run at all.
+
+**Status of this row**: `labels.assert_functional_provenance_allowed`
+([[TASK-0231]], wired into `build_labels`) now raises unless a target's own
+config explicitly opts into the fallback tier — provenance is enforced at
+the code level, not merely documented here. This record exists so a future
+reader classifying a new cross-cutting seed-like quantity checks *whether
+the quantity is even the one being measured* before reaching for GAUGE/KNOB/
+SIGNAL — the register's own failure mode this task ([[TASK-0232]]) diagnosed
+was scope selection (measuring the right thing on the wrong axis), not
+absence of measurement.
+
 ## Status
 
 Mixed: the cardinality/coherence KNOB row is genuinely characterized with
