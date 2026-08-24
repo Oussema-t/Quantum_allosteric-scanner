@@ -363,3 +363,38 @@ point in this addendum. The core confound from Addendum 1 (crude rigid-
 translation backbone placement, `vdwrep` still 3–7× native apo even
 after the best relaxation tried here) stands, unresolved, on all 3
 targets.
+
+## Addendum 3 — [[TASK-0235]]'s backbone-placement fix updates this task's
+own "ceiling fails on all 3 targets" verdict per target, not as a block
+(2026-08-24)
+
+[[TASK-0235]] built the fix Addendum 1/2 both named as the real remaining
+gap (a local-sliding-window-Kabsch backbone placement instead of rigid
+per-residue translation) and re-ran this task's own ceiling experiment
+with it. Result is real but sharply target-dependent, not a blanket
+reversal — recorded here so this task's own verdict isn't read as still
+current where it no longer is:
+
+- **BCR_ABL1: reversed.** Every one of 4 post-repack trials now clears
+  the 0.5 druggability bar (0.656–0.725) — this task's own original
+  finding (max 0.432, 0/4) was an artifact of the rigid-translation
+  backbone confound this addendum already flagged as unresolved, not
+  evidence the pocket doesn't open.
+- **CARDIAC_MYOSIN: partially reversed.** 1 of 4 trials now clears the
+  bar (0.603, previously max 0.21) — a real but noisy signal, not a
+  clean flip.
+- **KRAS_G12C: unchanged, and now independently explained, not just
+  observed.** Still 0/4 with the corrected backbone method.
+  [[TASK-0235]]'s own harmonic local-residual ΔG estimate (extending
+  [[TASK-0233]]'s machinery to full mode coverage) found KRAS_G12C's
+  own local residual costs ~33 additional thermal units beyond the
+  collective k=50 part (`exp(-ΔG)`≈4.6×10⁻¹⁶) — astronomically costly
+  under the harmonic model, independent of and consistent with the
+  ceiling result rather than merely correlated with it.
+
+This task's own headline framing ("the ceiling fails on all 3 targets,
+robustly") should be read as superseded for BCR_ABL1 and partially for
+CARDIAC_MYOSIN — the underlying real numbers above stand unedited, but
+the geometry-confound caveat this task itself raised turned out to be
+load-bearing for 2 of 3 targets, not just a theoretical concern. Full
+comparison table: [[TASK-0235]]'s own Done section.

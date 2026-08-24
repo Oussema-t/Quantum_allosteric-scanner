@@ -7050,3 +7050,182 @@ would let the program's own already-cheap collective sampling and already-exact
 rotamer solving be trusted on a physically realistic structure, not create a new
 quantum opportunity. Full write-up:
 `.ai/tasks/DONE/TASK-0234-quantum-gibbs-sampling-collective-layer.md`.
+
+## HIV-1 RT independent run, threshold inversion, and a register-wide stale-number finding ([[TASK-0238]], 2026-08-24)
+
+**[OBSERVED]** Filed to answer two questions raised against this register from
+outside it: *how strict is our threshold*, and *is it too strict*. An
+independent target (HIV-1 reverse transcriptase, never previously scored here)
+was run end-to-end, then the same score was pushed through every null and every
+gate the register uses, one relaxation at a time.
+
+### Leg A — HIV-1 RT, standard settings
+
+`1DLO` (apo, X-ray 2.7 Å, chain A, 556 res, **zero HETATM** — genuinely
+unliganded) → `3V81` (holo, 2.85 Å, chain A, contains **NVP**/nevirapine).
+Seed is the UniProt-annotated catalytic site `[110, 185, 186, 443, 478, 498,
+549]` (D110/D185/D186 triad confirmed as ASP) — a **real seed, not a
+top-degree fallback**. `enm_cutoff` 8.0, `pocket_contact_cutoff` 4.5,
+pocket = 16 residues after active-site and terminal exclusion.
+
+| observable | AUC | vs floor 0.7773 | p (scattered) | p (compact) | p (graph-walk) |
+|---|---|---|---|---|---|
+| `ctqw_converged` (`H_new`) | 0.7538 | below (−0.0235) | **0.0005** | 0.1999 | 0.2024 |
+| `dcc_low` k=10 | 0.5211 | below | 0.3743 | 0.4778 | 0.4793 |
+
+**The `ctqw` row is the cleanest localisation of the null disagreement this
+register has produced.** Same structure, same seed, same score vector, same
+2000 permutations. `p = 0.0005` under a scattered (`rng.choice`) label
+permutation; `p ≈ 0.20` under a spatially-contiguous one. A **400× spread
+attributable to nothing but the null**. Any two threads disagreeing about
+whether this target is a hit are not disagreeing about physics, code, or data
+— they are disagreeing about one line of null construction, and that is now a
+measured quantity rather than an argument.
+
+### Leg B1 — wiring check failed, and the failure was the finding
+
+The check was "reproduce KRAS_G12C's published floor 0.4818 through this code
+path." It did not reproduce. Chasing it: the register's **own entry point**
+(`scripts/run_challenge.py`, run fresh) now yields floor **0.5296**, CTQW
+**0.5565**. The published 0.4818/0.5901 are **stale**.
+
+| target | floor pub | floor now | Δ | AUC pub | AUC now | Δ | margin pub | margin now |
+|---|---|---|---|---|---|---|---|---|
+| KRAS_G12C | 0.4818 | 0.5296 | +0.0478 | 0.5901 | 0.5565 | −0.0336 | +0.1083 | **+0.0269** |
+| BCR_ABL1 | 0.5817 | 0.5031 | −0.0786 | 0.5266 | 0.5408 | +0.0142 | −0.0551 | **+0.0377** |
+| CARDIAC_MYOSIN | 0.5679 | 0.4538 | −0.1141 | 0.5176 | 0.5485 | +0.0309 | −0.0503 | **+0.0947** |
+
+Cause identified: commit `1924e5e` ([[TASK-0217.001]]) fixed a live
+array-correspondence bug in `labels.functional_indices` — holo-space
+heavy-atom contact indices used directly as apo-space indices — exposing 10 of
+13 targets. That commit correctly re-pinned fpocket's golden AUC, but the
+headline floor/actual triplets were never refreshed. They are still cited as
+current in `COMPETENCE_MAP.md`, `EXECUTION_PLAN.md`, `ALGORITHM_REGISTER.md`,
+this document, and — materially — in
+`documentation/PHASE1_SUBMISSION_DRAFT.md:146`.
+
+**Two consequences point in opposite directions and both must be reported:**
+
+1. `COMPETENCE_MAP.md:240`'s "actual (0.5901) now clears its own floor
+   (0.4818)" margin of +0.1083 is actually **+0.0269** — the flagship
+   KRAS_G12C claim is ~4× weaker than stated.
+2. On BCR_ABL1 and CARDIAC_MYOSIN the point-estimate margin **flips sign**,
+   from below-floor to above-floor. The register has been reporting these two
+   as floor failures; under current code they are not. Their negative
+   diagnoses (`NO_SIGNAL_IN_APO` on both, re-confirmed this run) now come from
+   the **chance bar, not the floor gate**.
+
+Neither direction was sought. Point 2 is a correction *against* this
+reviewer's own prior reporting and is stated with the same prominence as
+point 1.
+
+### Leg B2 — is the floor itself significant? (HIV-1 RT)
+
+| baseline | AUC | p (scattered) | p (compact) |
+|---|---|---|---|
+| `degree_centrality` | 0.5811 | 0.1419 | 0.4313 |
+| `euclid_from_seed_centroid` | 0.3662 | 0.9640 | 0.6712 |
+| `hop_from_seed` | **0.7773** | **0.0005** | 0.2259 |
+
+The binding floor, `hop_from_seed`, has **the same p-value profile as the CTQW
+score it is gating** (0.0005 scattered / 0.2259 compact vs 0.0005 / 0.1999).
+"Below floor" and "null under the compact null" are therefore **not two
+independent failures** — they are one fact counted twice. The floor gate is
+not contributing the extra strictness the register credits it with; it is a
+second reading of the same seed-proximity confound.
+
+### Leg B3 — threshold inversion
+
+CTQW AUC 0.7538, floor 0.7773, deficit +0.0235. Gates relaxed one at a time:
+
+| gate configuration | verdict |
+|---|---|
+| as-published (floor gate + compact null, α=0.05) | negative |
+| relax **null** only → scattered | negative |
+| relax **floor** only → drop floor gate, keep compact | negative |
+| relax **both** → scattered null, no floor gate | **POSITIVE** |
+| relax both + Bonferroni ×28 (α=0.0018) | **POSITIVE** |
+
+Neither relaxation alone flips the verdict; **both together do, and decisively
+— it survives a ×28 Bonferroni correction.** This is the honest answer to "is
+our threshold too strict": our two gates are individually load-bearing here,
+and B2 shows they are not independent of one another.
+
+### Leg B3b — what would the parameter set have to be?
+
+Pre-registered grid, fixed before any number was seen: `enm_cutoff`
+{7,8,9,10} × `pocket_contact_cutoff` {4.0,4.5,5.0,6.0} × observables
+{`ctqw`, `ctqw` coherent, `dcc_low` k∈{5,10,20}} = **80 configurations**.
+Positive ≡ AUC > max_floor **and** p_compact < 0.05.
+
+- **0 of 80 positive.**
+- 16 of 80 beat the floor (all `ctqw`; `enm` 7/9/10 — notably **not** 8, the
+  configured value).
+- **0 of 80 reach p_compact < 0.05.** Not one. The best p across the entire
+  grid is 0.1374.
+- Closest to positive: `ctqw`, `enm=9.0`, `pocket_cut=6.0`, AUC 0.7822 vs
+  floor 0.7178, p_compact 0.1414.
+
+**There is no "slightly more permissive" parameter set that rescues this
+target.** The floor gate is soft — a routine cutoff change crosses it — but
+the compact null is not: it is not crossed anywhere in an 80-point grid
+spanning every knob the pipeline exposes. If the register's threshold is too
+strict, the strictness lives entirely in the null, and nowhere in the
+parameters.
+
+### Wiring defect found and fixed en route
+
+`scripts/task0216_score_new_pairs.py:110` and
+`scripts/task0216_ptp1b_real_seed.py:71` gate heavy-atom attachment on
+`len(holo.resnums) == len(apo.resnums)`. That guard is required only for
+`functional_indices` (which contacts holo heavy atoms against *apo* coords);
+`holo_pocket_mask` maps holo→apo by Needleman-Wunsch and needs no such
+precondition. Applying it to the pocket silently degrades the label to a
+Cα-only approximation — `labels.py`'s own docstring measures that at **9/21**
+pocket residues recovered on KRAS_G12C. On HIV-1 RT the pocket went **5 → 16**
+residues once corrected, moving the floor 0.8175 → 0.7773 and the CTQW AUC
+0.7129 → 0.7538. Leg A above is the corrected run. Every other script in
+`scripts/` attaches heavy atoms unconditionally and is unaffected.
+
+**Scripts:** `scripts/task0238_hiv1rt_and_threshold.py`,
+`scripts/task0238_legb_threshold_inversion.py`,
+`scripts/task0238_floor_convention.py`.
+**Data:** `results/tasks/0238_hiv1rt/`.
+
+## Backbone-placement fidelity fix — BCR_ABL1's ceiling reverses, KRAS_G12C's stays closed for an independently-explained reason ([[TASK-0235]], 2026-08-24)
+
+[[TASK-0230]]/[[TASK-0233]] both named the rigid-per-residue backbone
+translation used throughout that line of work as a real confound (native
+apo `vdwrep` elevated 3–12× even after the best relaxation tried). This
+task built the fix: a local sliding-window Kabsch reconstruction (each
+residue's own local rigid transform, fit from sequence-consecutive
+neighbor Cα positions, reusing `allostery.superpose.kabsch_fit`/
+`kabsch_apply` — no new dependency), chosen over literal phi/psi+NeRF
+reconstruction for handling backbone and side chain in one step.
+
+**Real, partial geometry improvement, concentrated where the old method
+was worst**: full-displacement pre-repack `vdwrep` ratio to native apo —
+KRAS_G12C 12.07×→**6.46×** (nearly halved), BCR_ABL1 2.92×→2.86×,
+CARDIAC_MYOSIN 3.02×→2.84× (both near-unchanged). Does not clear this
+task's own "close to native apo" bar — reported as partial, not oversold.
+
+**Decisive, target-dependent ceiling result**: re-running [[TASK-0230]]'s
+own §5.2-style ceiling (4 EvoEF2 trials/target) with the corrected
+backbone — **BCR_ABL1 flips from 0/4 to 4/4 trials clearing the 0.5
+druggability bar** (0.656–0.725, old method's own max was 0.432, never
+crossed) — consistent with, not independent of, this project's own
+repeated "apo-computable structural prior" finding for this target
+([[TASK-0104]]/[[TASK-0091]]). CARDIAC_MYOSIN: 0/4→1/4 (real but noisy).
+KRAS_G12C: unchanged, 0/4→0/4.
+
+**KRAS_G12C's non-improvement is independently explained, not just
+observed**: extending [[TASK-0233]]'s own harmonic ΔG machinery to full
+non-rigid mode coverage isolates the *local residual*'s own elastic
+cost (`ΔG(all modes) − ΔG(k=50)`) — KRAS_G12C **33.0** additional thermal
+units (`exp(−ΔG_all)`≈4.6×10⁻¹⁶, astronomically costly), vs. BCR_ABL1
+8.57 (`exp`≈1.3×10⁻⁴) and CARDIAC_MYOSIN 5.04 (`exp`≈5.3×10⁻³) — directly
+matching which targets a backbone-placement fix could and couldn't
+unlock. [[TASK-0230]]'s own "ceiling fails on all 3 targets" headline is
+superseded for BCR_ABL1 and partially for CARDIAC_MYOSIN by this result
+— addendum added to that task's own Done section rather than left stale.
+Full tables: `.ai/tasks/DONE/TASK-0235-backbone-modeling-fidelity.md`.
