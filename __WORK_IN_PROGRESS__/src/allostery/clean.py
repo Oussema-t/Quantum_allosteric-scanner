@@ -99,17 +99,76 @@ def clean(
     import prody
 
     prody.confProDy(verbosity="none")
-    struct = prody.parsePDB(pdb_id, compressed=False)
+    # altloc="all" (TASK-0039): prody's own default (altloc="A") silently
+    # drops every non-'A' conformer at parse time, before any occupancy
+    # comparison is possible -- confirmed directly (8QYR's own B/C-labeled
+    # atoms, real occupancy data, are invisible under the default). "all"
+    # keeps every alt-loc as a distinct atom record (same coordset, not a
+    # second model), so the block below can actually compare them.
+    struct = prody.parsePDB(pdb_id, altloc="all", compressed=False)
     if struct is None:
         raise ValueError(f"prody failed to parse '{pdb_id}'")
 
     warn_list: list[str] = []
 
-    # --- Alternate location handling: keep 'A' or highest occupancy ---
+    # --- Alternate location handling: highest-occupancy conformer per
+    # residue, 'A' as tiebreak/fallback (TASK-0039 -- matches this
+    # module's own docstring guarantee, previously unconditional 'A'). ---
     alt_locs = struct.getAltlocs()
     if alt_locs is not None and any(a not in ("", " ", "\x00") for a in alt_locs):
-        struct = struct.select("altloc _ A") or struct
-        warn_list.append(f"{pdb_id}: alternate locations detected; kept altloc='A'.")
+        chids_al = struct.getChids()
+        resnums_al = struct.getResnums()
+        occ_al = struct.getOccupancies()
+
+        by_res: dict[tuple[str, int], dict[str, list[float]]] = {}
+        for i in range(len(alt_locs)):
+            a = alt_locs[i]
+            if a in ("", " ", "\x00"):
+                continue
+            key = (str(chids_al[i]), int(resnums_al[i]))
+            by_res.setdefault(key, {}).setdefault(str(a), []).append(
+                float(occ_al[i]) if occ_al is not None else float("nan")
+            )
+
+        chosen_label: dict[tuple[str, int], str] = {}
+        non_a_flagged: list[str] = []
+        for key, label_occ in by_res.items():
+            labels = list(label_occ.keys())
+            if len(labels) == 1:
+                chosen_label[key] = labels[0]
+                continue
+            means = {lab: float(np.mean(vals)) for lab, vals in label_occ.items()}
+            if any(np.isnan(v) for v in means.values()):
+                best = "A" if "A" in labels else sorted(labels)[0]
+            else:
+                max_val = max(means.values())
+                tied = [lab for lab, v in means.items() if v == max_val]
+                best = "A" if "A" in tied else sorted(tied)[0]
+            chosen_label[key] = best
+            if best != "A":
+                chain, resnum = key
+                non_a_flagged.append(f"{chain}{resnum}(altloc={best})")
+
+        keep_mask = np.ones(len(alt_locs), dtype=bool)
+        for i in range(len(alt_locs)):
+            a = alt_locs[i]
+            if a in ("", " ", "\x00"):
+                continue
+            key = (str(chids_al[i]), int(resnums_al[i]))
+            if str(a) != chosen_label.get(key, "A"):
+                keep_mask[i] = False
+        struct = struct[np.where(keep_mask)[0]]
+
+        warn_list.append(
+            f"{pdb_id}: alternate locations detected; kept the highest-occupancy "
+            "conformer per residue ('A' as tiebreak/fallback)."
+        )
+        if non_a_flagged:
+            warn_list.append(
+                f"{pdb_id}: {len(non_a_flagged)} residue(s) kept a non-'A' alt-loc "
+                f"as the highest-occupancy conformer: {non_a_flagged[:5]}"
+                f"{'...' if len(non_a_flagged) > 5 else ''}"
+            )
 
     # --- Select protein (+ optional nucleic), specific chains ---
     type_sel = "protein"

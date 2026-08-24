@@ -9,6 +9,7 @@ tests only the chain-selection logic clean_from_config itself owns.
 from unittest.mock import patch
 
 import numpy as np
+import pytest
 
 from allostery import clean as clean_mod
 
@@ -116,3 +117,67 @@ class TestAssertConnectedIsWarnOnly:
         warn_list: list[str] = []
         clean_mod._assert_connected(coords, "FAKE_PDB", warn_list)
         assert warn_list == []
+
+
+class TestAltlocHighestOccupancy:
+    """TASK-0039: `clean()`'s own docstring promises "only the 'A' alt-loc
+    (or highest occupancy) is kept" -- the code used to unconditionally
+    select 'A' with no comparison at all. Real structures used throughout
+    (not mocks) -- ProDy's own `AtomGroup` has enough surface area that a
+    hand-rolled mock would either be unfaithful or nearly as much code as
+    the real parse; this project's own established preference (TASK-0235/
+    TASK-0241) is real data over mocks when a real regression case exists.
+
+    8QYR (this register's own CARDIAC_MYOSIN `holo_pdb`) supplies a REAL,
+    not synthetic, case where a non-'A' label has the highest occupancy --
+    stronger evidence than a synthetic fixture would be, found via direct
+    survey (`scripts/task0039_altloc_survey.py`) before writing this test,
+    not assumed. Also confirms the deeper root cause this task's own filing
+    did not anticipate: ProDy's `parsePDB` default (`altloc="A"`) silently
+    drops every non-'A' conformer before `clean()`'s own selection code
+    ever runs -- `clean()` must call it with `altloc="all"` for any
+    occupancy comparison to be possible at all.
+    """
+
+    def test_8qyr_chain_b_residue_616_keeps_highest_occupancy_conformer(self):
+        """Raw PDB (`pdb_cache/8qyr.pdb`): CA altloc A occupancy 0.25,
+        B occupancy 0.25, C occupancy 0.50 -- C must win, not the
+        previously-hardcoded 'A' (occupancy 0.25, half of C's)."""
+        result = clean_mod.clean("8QYR", chains=["B"])
+        assert 616 in result.resnums
+        idx = list(result.resnums).index(616)
+        # Real coordinate for the CA C altloc, read directly off the raw
+        # PDB record (`ATOM 4582 CA CMET B 616 -3.392 -13.193 -5.627`) --
+        # not the A altloc's (-3.375, -13.202, -5.622).
+        expected_c = np.array([-3.392, -13.193, -5.627])
+        assert result.coords[idx] == pytest.approx(expected_c, abs=1e-3)
+        assert any("B616(altloc=C)" in w for w in result.warnings)
+
+    def test_8qyr_flags_exactly_the_one_non_a_residue_found_by_direct_survey(self):
+        """Guards against over-flagging: the direct survey
+        (`task0039_altloc_survey.py`) found exactly 1 non-'A'-wins residue
+        in 8QYR (of 3 multi-altloc residues total) -- not 0, not all 3."""
+        result = clean_mod.clean("8QYR", chains=["B"])
+        non_a_warnings = [w for w in result.warnings if "non-'A' alt-loc" in w]
+        assert len(non_a_warnings) == 1
+        assert "1 residue(s)" in non_a_warnings[0]
+
+    def test_5mo4_keeps_a_where_a_genuinely_has_higher_occupancy(self):
+        """Regression: 5MO4 (this register's own BCR_ABL1 `holo_pdb`) has
+        real alt-locs where 'A' IS the genuinely correct highest-occupancy
+        pick (confirmed by direct survey) -- must not spuriously flag a
+        non-'A' winner just because alt-locs are present at all."""
+        result = clean_mod.clean("5MO4", chains=["A"])
+        assert result.n_residues == 429
+        assert any("alternate locations detected" in w for w in result.warnings)
+        assert not any("non-'A' alt-loc" in w for w in result.warnings)
+
+    def test_4obe_no_altloc_present_unaffected(self):
+        """Regression: a real benchmark target (KRAS_G12C `holo_pdb`) with
+        NO alt-locs at all must produce zero alt-loc-related warnings and
+        its already-known residue count, completely unaffected by this
+        task's own change (the block is a pure no-op when `getAltlocs()`
+        has no non-blank entries)."""
+        result = clean_mod.clean("4OBE", chains=["A"])
+        assert result.n_residues == 169
+        assert not any("altloc" in w.lower() or "alternate location" in w.lower() for w in result.warnings)
