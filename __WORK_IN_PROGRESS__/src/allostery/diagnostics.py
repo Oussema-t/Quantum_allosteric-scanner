@@ -499,3 +499,80 @@ def assert_gate_reachable(alpha: float, family_size: int, n_reps: int) -> bool:
             "n_reps, widen alpha, or shrink family_size before trusting this gate."
         )
     return True
+
+
+# ---------------------------------------------------------------------------
+# TASK-0240 -- criterion attainable-range/sign reachability guard
+# ---------------------------------------------------------------------------
+# `assert_gate_reachable` above catches one way a pre-registered criterion's
+# verdict can be structurally unreachable: an `alpha`/`n_reps` combination
+# below the smallest nonzero p-value permutation replicates can produce.
+# This is a different failure shape, same underlying class ("a criterion
+# whose positive outcome the measurement setup cannot produce", TASK-0208's
+# own words for its V1 finding, naming it explicitly "same class as
+# TASK-0204's D1"): a threshold compared against a statistic whose own
+# attainable range or sign, under its construction, cannot satisfy it.
+#
+# TASK-0204's D1: `opt_rate > 1.0` where `opt_rate` is a fraction of 8
+# trials -- its maximum attainable value is exactly `1.0`, so on any run
+# where the naive baseline already hit, the bar became `attainable_max >
+# threshold` with `attainable_max == threshold` -- never satisfiable.
+# TASK-0208's V1: `joint < 0` where `joint` (rigid holo side chains
+# transplanted onto an apo backbone) is forced non-negative by the
+# construction itself -- `attainable_min >= threshold` -- also never
+# satisfiable, a sign constraint rather than a hardcoded numeric ceiling,
+# but the identical shape once expressed as an attainable range.
+
+_COMPARATORS = {
+    ">": lambda attainable_max, threshold: attainable_max > threshold,
+    ">=": lambda attainable_max, threshold: attainable_max >= threshold,
+    "<": lambda attainable_min, threshold: attainable_min < threshold,
+    "<=": lambda attainable_min, threshold: attainable_min <= threshold,
+}
+
+
+def assert_criterion_reachable(
+    comparator: str,
+    threshold: float,
+    attainable_min: float,
+    attainable_max: float,
+) -> bool:
+    """Raise `ValueError` if no value in `[attainable_min, attainable_max]`
+    (the statistic's own attainable range given its construction -- an
+    empirically or theoretically known bound, e.g. a fraction's `[0, 1]`
+    range or a sign forced by how the quantity is built, not the range of
+    values actually observed in one run) can satisfy
+    `value <comparator> threshold`. Returns `True` if reachable (never
+    `False` -- mirrors `assert_gate_reachable`'s own "a construction error
+    to fix, not a value to branch on silently" convention).
+
+    `comparator` is one of `'>'`, `'>='`, `'<'`, `'<='` -- the four
+    directions a pre-registered pass bar is actually written in this
+    project's own criteria (`TASK-0204`'s `opt_rate > ...`, `TASK-0208`'s
+    `joint < 0`). An unsupported comparator raises `ValueError` naming the
+    input, not silently falling through.
+
+    `attainable_min > attainable_max` is a caller error (an invalid range,
+    not a reachability question) and raises `ValueError` distinctly, so it
+    is never mistaken for "unreachable given a valid range."
+    """
+    if attainable_min > attainable_max:
+        raise ValueError(
+            f"assert_criterion_reachable: invalid range, attainable_min "
+            f"({attainable_min}) > attainable_max ({attainable_max})"
+        )
+    if comparator not in _COMPARATORS:
+        raise ValueError(
+            f"assert_criterion_reachable: unsupported comparator {comparator!r} "
+            f"-- must be one of {sorted(_COMPARATORS)}"
+        )
+    bound = attainable_max if comparator in (">", ">=") else attainable_min
+    if not _COMPARATORS[comparator](bound, threshold):
+        raise ValueError(
+            f"criterion unreachable: no value in [{attainable_min}, {attainable_max}] "
+            f"satisfies value {comparator} {threshold} -- this criterion can never "
+            "return a positive verdict given its own construction, not just on this "
+            "run's data. Report not_evaluable for the cases that hit this bound "
+            "(TASK-0204's own convention), or correct the threshold/range."
+        )
+    return True

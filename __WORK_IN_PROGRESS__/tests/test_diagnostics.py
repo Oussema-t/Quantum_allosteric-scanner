@@ -14,6 +14,7 @@ from allostery.diagnostics import (
     OPERATOR_DEGENERATE,
     PERM_LEAK_THRESHOLD,
     FailureClassification,
+    assert_criterion_reachable,
     assert_gate_reachable,
     classify_failure,
     detect_permutation_leak,
@@ -524,3 +525,82 @@ class TestAssertGateReachable:
         possible p-value is not meaningfully testing that alpha."""
         with pytest.raises(ValueError):
             assert_gate_reachable(alpha=0.1, family_size=1, n_reps=10)  # 0.1 == 1/10
+
+
+class TestAssertCriterionReachable:
+    """TASK-0240 -- closes SEAM-0017's own named gap: a general guard for
+    a criterion whose threshold is unreachable given the statistic's own
+    attainable range/sign, the failure shape TASK-0204's D1 and TASK-0208's
+    V1 each hit and locally patched (TASK-0208's own text: "same class as
+    TASK-0204's D1"). Reconstructs both real conditions and demonstrates
+    the guard fires on them, per this project's own fail-first discipline,
+    then confirms it passes on a reachable case.
+    """
+
+    def test_fails_against_task0204_d1_opt_rate_ceiling(self):
+        """The exact original bug: `opt_rate > (1.0 if greedy_hit else 0.0)`.
+        On a target where the naive baseline hit, the bar becomes
+        `opt_rate > 1.0` -- but opt_rate is a fraction of 8 trials, max
+        attainable value exactly 1.0. Never satisfiable."""
+        with pytest.raises(ValueError, match="unreachable"):
+            assert_criterion_reachable(
+                comparator=">", threshold=1.0, attainable_min=0.0, attainable_max=1.0,
+            )
+
+    def test_passes_against_task0204_d1_when_greedy_missed(self):
+        """The same statistic, the *other* branch of the original bug's own
+        ternary (`greedy_hit` False): bar is `opt_rate > 0.0`, reachable at
+        any rate >= 1/8."""
+        assert assert_criterion_reachable(
+            comparator=">", threshold=0.0, attainable_min=0.0, attainable_max=1.0,
+        ) is True
+
+    def test_fails_against_task0208_v1_joint_sign_constraint(self):
+        """The exact original bug: `joint < 0` (a "textbook frustration
+        signature" bar), where `joint` (rigid holo side chains transplanted
+        onto an apo backbone) is forced non-negative by the construction
+        itself -- every real measurement was positive (+25.44 to +114.75).
+        Expressed as a range: attainable_min=0.0 (the construction's own
+        floor, not this run's smallest observed value), unbounded above.
+        Never satisfiable."""
+        with pytest.raises(ValueError, match="unreachable"):
+            assert_criterion_reachable(
+                comparator="<", threshold=0.0, attainable_min=0.0, attainable_max=np.inf,
+            )
+
+    def test_passes_against_a_genuinely_reachable_sign_bar(self):
+        """A statistic that *can* go negative (attainable_min below the
+        threshold) reaches a `< 0` bar -- the guard does not over-fire on
+        every negative-threshold criterion, only ones the construction
+        rules out."""
+        assert assert_criterion_reachable(
+            comparator="<", threshold=0.0, attainable_min=-1.0, attainable_max=1.0,
+        ) is True
+
+    def test_boundary_is_strict_not_inclusive(self):
+        """attainable_max exactly equal to threshold under '>' is still
+        unreachable (matches D1 exactly); '>=' at the same boundary is
+        reachable -- the comparator's own strictness must be respected,
+        not collapsed to one boundary rule for both."""
+        with pytest.raises(ValueError):
+            assert_criterion_reachable(
+                comparator=">", threshold=1.0, attainable_min=0.0, attainable_max=1.0,
+            )
+        assert assert_criterion_reachable(
+            comparator=">=", threshold=1.0, attainable_min=0.0, attainable_max=1.0,
+        ) is True
+
+    def test_invalid_range_raises_distinctly_from_unreachable(self):
+        """attainable_min > attainable_max is a caller error, not a
+        reachability question -- must not be silently treated as
+        'unreachable' (a different, misleading diagnosis)."""
+        with pytest.raises(ValueError, match="invalid range"):
+            assert_criterion_reachable(
+                comparator=">", threshold=0.5, attainable_min=1.0, attainable_max=0.0,
+            )
+
+    def test_unsupported_comparator_raises(self):
+        with pytest.raises(ValueError, match="unsupported comparator"):
+            assert_criterion_reachable(
+                comparator="==", threshold=0.5, attainable_min=0.0, attainable_max=1.0,
+            )
