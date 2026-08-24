@@ -7654,3 +7654,59 @@ underpowered-sample instability [[TASK-0243]] was filed to resolve.
 **Script:** `scripts/task0249_composite_dumb_baseline.py`. **Full tables:**
 `.ai/tasks/DONE/TASK-0249-composite-dumb-baseline-vs-ctqw.md`'s Done
 section.
+
+## GNM model-validity check (H16.1) — never run before, real and mixed (TASK-0250, 2026-08-24)
+
+GNM/ANM is used everywhere in this register (`dcc_low`, `prs_low`, mode energetics,
+two-state ANM, ANM reachability) and the standard per-target model-validity check —
+does the model's predicted mean-square fluctuation correlate with deposited
+crystallographic B-factors — had never been run. **Pre-registered bar** (stated in the
+task filing before any correlation below was computed): Pearson >= 0.6 PASS, 0.4-0.6
+MARGINAL, < 0.4 FAIL. GNM MSF via `potentials._gnm_msf` (this project's own existing
+implementation, not re-derived) against each target's own real apo Cα B-factors, at
+the real `enm_cutoff` each target is actually scored with (uniformly 8.0 Å across all
+15 real targets — not re-tuned to make the correlation pass, per the task's own
+Constraint).
+
+**One target excluded from the tally, checked directly against RCSB before scoring**:
+CARDIAC_MYOSIN_TABLE1's apo (5TBY) is ELECTRON MICROSCOPY at nominal 20.0 Å resolution
+— no meaningful per-atom B-factor refinement at that resolution, an invalid input, not
+a model failure.
+
+| Target | apo | N | Pearson | Spearman | Verdict |
+|---|---|---|---|---|---|
+| KRAS_G12C | 4OBE | 169 | 0.646 | 0.636 | PASS |
+| BCR_ABL1 | 1OPL | 451 | 0.493 | 0.558 | MARGINAL |
+| CARDIAC_MYOSIN | 8QYP | 704 | 0.686 | 0.671 | PASS |
+| CARDIAC_MYOSIN_TABLE1 | 5TBY | 950 | 0.435 | 0.693 | *unusable, cryo-EM 20 Å* |
+| MYC_MAX | 1NKP | 171 | 0.148 | 0.244 | **FAIL** |
+| PTP1B | 1SUG | 298 | 0.663 | 0.753 | PASS |
+| GLUCOKINASE | 1V4S | 448 | 0.473 | 0.535 | MARGINAL |
+| ATCase | 6AT1 | 912 | 0.148 | 0.051 | **FAIL** |
+| CASPASE1 | 1ICE | 255 | 0.368 | 0.521 | **FAIL** |
+| CASPASE7 | 1F1J | 461 | 0.695 | 0.631 | PASS |
+| HEMOGLOBIN | 2HHB | 574 | 0.602 | 0.636 | PASS |
+| TAR_RECEPTOR | 1LIH | 160 | 0.525 | 0.286 | MARGINAL |
+| GLYCOGEN_PHOSPHORYLASE | 1GPY | 828 | 0.410 | 0.316 | MARGINAL |
+| PFK | 1PFK | 640 | 0.708 | 0.729 | PASS |
+| GROEL_SUBUNIT | 1GRL | 3626 | 0.350 | 0.357 | **FAIL** |
+
+**14 scored: 6 PASS, 4 MARGINAL, 4 FAIL — GNM is not a valid model of the structure
+for nearly a third of this project's own real targets, at the cutoff it actually
+uses.** Consequential for the mandatory set specifically: **MYC_MAX FAILs cleanly**
+(0.148 — barely above chance) and **BCR_ABL1 is MARGINAL** (0.493). Every GNM/ANM-
+derived quantity this register has reported for MYC_MAX (mode energetics, ANM
+reachability, `dcc_low`/`prs_low` where computed) rests on a model that does not
+predict that structure's own crystallographic B-factors — read as "the model may not
+fit MYC_MAX," not additional evidence about allostery, until re-examined. BCR_ABL1's
+own GNM-derived numbers (including this register's `AUC_apo_Hnew_optimised`
+headline) carry a real, now-quantified model-fit uncertainty this register did not
+previously state. KRAS_G12C and CARDIAC_MYOSIN both clear the PASS bar — the
+mandatory-set negatives on those two targets are not explained by this failure mode.
+
+**Not done, per this task's own scope**: no downstream result was re-run, re-qualified,
+or re-derived — this task states the consequence, a follow-up decides what (if
+anything) to do about MYC_MAX's/BCR_ABL1's existing numbers. **Script:**
+`scripts/task0250_gnm_bfactor_validity.py`. **Raw data:**
+`results/tasks/0250_gnm_bfactor_validity/gnm_bfactor_validity.json`. **Full detail:**
+`.ai/tasks/DONE/TASK-0250-h16-1-gnm-model-validity-b-factors.md`.

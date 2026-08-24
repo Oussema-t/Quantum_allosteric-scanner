@@ -40,16 +40,15 @@ this register in sync" immediately below.
 | H7 | Non-equilibrium impulse-response energy transport | **TESTED — clean negative** (not a new axis vs. TASK-0199's ~3); a related steady-state quantity separately found confounded | [[TASK-0229.007]] (b), [[TASK-0226]] (`transmission_E0`) | 2026-08-23, 2026-08-21/22 |
 | H15.1/H15.2 | Two-state ANM captures apo↔holo transitions | **TESTED — mixed**: whole-structure CO fails its own pre-registered comparison; pocket-restricted variant passes that one comparison but not a clean 7-target separation | [[TASK-0229.007]] (a) | 2026-08-23 |
 | H8.1/H8.2 | Markov random walk / commute time (mandated classical baseline) | **TESTED** — real-PDB retest confirms: confounded, |partial ρ|=0.755±0.062, burial-loaded | [[TASK-0226]] | 2026-08-21/22 |
-| H16.1 | GNM reproduces experimental B-factors (model-validity check) | **UNTESTED — genuinely open, zero coverage anywhere** (confirmed by direct search) | — | — |
+| H16.1 | GNM reproduces experimental B-factors (model-validity check) | **TESTED — real, mixed.** 14/15 real targets scored (1 cryo-EM apo unusable): 6 PASS (Pearson>=0.6), 4 MARGINAL, 4 FAIL — incl. mandatory target MYC_MAX FAIL (0.148) and BCR_ABL1 MARGINAL (0.493) | [[TASK-0250]] | 2026-08-24 |
 | H16.2 | Binding sites at slow-mode minima | **TESTED** — real-PDB retest, escapes confound less cleanly than the non-target estimate: |partial ρ|=0.496±0.193 (was 0.292±0.218) | [[TASK-0226]] | 2026-08-21/22 |
 | H10 | Circuit cutting / quasiprobability for non-local channels | **TESTED (paper-level)** — real per-target cut counts, reinforces `FAULT_TOLERANT_ONLY` | [[TASK-0229.002]] | 2026-08-22 |
 | H11 | SVD/dilation for open-system hardware execution | **TESTED (paper-level)** — the one route that clears the qubit-count bar, under an unbuilt encoding | [[TASK-0229.002]] | 2026-08-22 |
 
 **Genuinely open hypotheses (zero task coverage, confirmed by direct search, not inherited
-from this register's own prior framing)**: **H5** (MWC / concerted transitions) and
-**H16.1** (GNM–B-factor model-validity check). These are the two live inputs for any
-follow-up test task this register motivates next — everything else above has at least
-a partial measurement on record.
+from this register's own prior framing)**: **H5** (MWC / concerted transitions) is the
+one remaining. **H16.1** (GNM–B-factor model-validity check) closed 2026-08-24,
+[[TASK-0250]] — real, mixed result, see that row above.
 
 ## How to keep this register in sync
 
@@ -321,9 +320,25 @@ this file should be treated as leaving a known gap, not as having implicitly upd
 
 - **H16.1** GNM reproduces experimental B-factors (per-target model-validity check).
 - **H16.2** Binding sites sit at **minima of the slowest modes**.
-- **STATUS:** H16.1 **UNTESTED — confirmed genuinely open** (direct search for a
-  B-factor-correlation model-validity check across the task history found none; the
-  second of the two hypotheses in this register with zero coverage anywhere).
+- **STATUS:** H16.1 **TESTED 2026-08-24, [[TASK-0250]], real — mixed, not a clean pass.**
+  All 15 real targets' apo structures, GNM MSF (`potentials._gnm_msf`, the project's
+  own existing implementation) vs. deposited Cα B-factors, each target's own real
+  `enm_cutoff` (uniformly 8.0 A, not re-tuned), pre-registered bar (Pearson>=0.6 PASS,
+  0.4-0.6 MARGINAL, <0.4 FAIL) stated before any correlation was computed. One target
+  (CARDIAC_MYOSIN_TABLE1, apo 5TBY) excluded from the tally — checked directly against
+  RCSB before scoring: ELECTRON MICROSCOPY, nominal 20.0 A resolution, no meaningful
+  per-atom B-factor refinement at that resolution. **14 scored: 6 PASS (KRAS_G12C 0.646,
+  CARDIAC_MYOSIN 0.686, PTP1B 0.663, CASPASE7 0.695, HEMOGLOBIN 0.602, PFK 0.708), 4
+  MARGINAL (BCR_ABL1 0.493, GLUCOKINASE 0.473, TAR_RECEPTOR 0.525, GLYCOGEN_PHOSPHORYLASE
+  0.410), 4 FAIL (MYC_MAX 0.148, ATCase 0.148, CASPASE1 0.368, GROEL_SUBUNIT 0.350).**
+  **Consequential for the mandatory set**: of KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN/MYC_MAX,
+  one (MYC_MAX) fails cleanly and one (BCR_ABL1) is marginal — every GNM/ANM-derived
+  quantity reported for MYC_MAX should be read as resting on an invalid ENM for that
+  structure, not merely an unvalidated one; BCR_ABL1's own GNM-derived numbers carry a
+  real, now-quantified uncertainty the register previously did not state. Full table,
+  per-target Pearson+Spearman, raw data:
+  `.ai/tasks/DONE/TASK-0250-h16-1-gnm-model-validity-b-factors.md`,
+  `results/tasks/0250_gnm_bfactor_validity/gnm_bfactor_validity.json`.
   H16.2 **TESTED, real challenge targets** (same TASK-0210→[[TASK-0226]] re-index note
   as H8 above). Original non-target estimate: |partial ρ|=0.292 ± 0.218.
   **[[TASK-0226]]'s real-PDB retest: |partial ρ|=0.496 ± 0.193** (range [0.01, 0.76])
@@ -338,10 +353,13 @@ this file should be treated as leaving a known gap, not as having implicitly upd
   that meaningfully escape the proximity confound. Being **seed-blind**, it cannot
   answer "connectivity to the active site" and addresses objective 4.1 only under the
   "in most cases" qualifier in the challenge text.
-- **REMAINING OPEN VENUE:** H16.1 itself (add B-factor correlation as a per-target
-  model-validity gate, as this register's own prior text already proposed — still not
-  built). A proper LOD sweep for H16.2's own negative control, same gap as H4.2 above.
-- **PDB-RETEST:** done for H16.2; H16.1 remains fully open.
+- **REMAINING OPEN VENUE:** whether MYC_MAX's/BCR_ABL1's existing GNM-derived results
+  (dcc_low/prs_low, mode energetics, ANM reachability) should be formally re-qualified
+  given the FAIL/MARGINAL model-validity finding above — [[TASK-0250]] states the
+  consequence but does not re-run or re-qualify any downstream result itself (out of
+  that task's own scope). A proper LOD sweep for H16.2's own negative control, same gap
+  as H4.2 above.
+- **PDB-RETEST:** done for both H16.1 and H16.2.
 
 ---
 
