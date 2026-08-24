@@ -7291,3 +7291,44 @@ Until then, **[[TASK-0230]]'s "ceiling fails on all 3 targets" should be read
 as still standing**, with BCR_ABL1 flagged as contested rather than reversed.
 
 **Script:** `scripts/task0238_verify0235_trial_independence.py`.
+
+## Resolution — properly powered, real trial variation confirms a modest, unproven trend, not "decisive" ([[TASK-0241]], 2026-08-24)
+
+Two experiments (`scripts/task0241_reproducibility_and_jitter.py`, real
+EvoEF2/fpocket calls, N=20/arm — this task's own Acceptance floor):
+
+**(A) Pure repacking jitter, ONE fixed BCR_ABL1 backbone per method** (no
+structural variation at all, isolates EvoEF2/fpocket's own stochastic
+spread): bare druggability-bar rate **old 4/20 (20%) vs new 15/20
+(75%)** — Fisher exact **p=0.0012**, genuinely significant. The originally
+published "4/4" is an ordinary draw from this real ~75% process (binomial
+P(4 of 4)=0.316); the reproduction's "3/4" (P=0.422) is equally ordinary —
+neither run was wrong, n=4 just couldn't distinguish them. **Under this
+register's own strict `_is_hit` (overlap≥0.5 AND druggability≥0.5), the
+SAME fixed geometry hits only 1/20 (5%) old vs 3/20 (15%) new — Fisher
+p=0.605, not significant.** Bare druggability substantially overstates the
+effect.
+
+**(B) Real re-run, all 3 targets × both methods, independent σ=0.15Å
+per-trial perturbation of the displacement field** (genuine structural
+variation, not just repacking-seed jitter): BCR_ABL1 `_is_hit` rate 1/20
+(5%) old vs 4/20 (20%) new — 4× higher, same direction as TASK-0235
+claimed, **Fisher p=0.342, not significant at n=20**. Druggability medians
+(0.516 vs 0.617) don't clear significance either (Mann-Whitney p=0.882).
+KRAS_G12C and CARDIAC_MYOSIN: no significant difference, matching their own
+already-honest "closed"/"noisy" characterization.
+
+**Mechanism resolved, not left contradictory**: `vdwrep` (clash) and
+`overlap_frac` (cavity shape) move independently, confirming the proposed
+reconciliation rather than a real contradiction — BCR_ABL1 vdwrep −2.1% vs
+overlap_frac **+12.3%**; KRAS_G12C vdwrep **−46.5%** vs overlap_frac only
++11.4%; CARDIAC_MYOSIN vdwrep −6.0% vs overlap_frac **−12.3%** (opposite
+sign). A method's effect on one is not evidence of its effect on the other.
+
+**Net verdict**: "decisive... not a noisy improvement" is not supported —
+downgraded to a real, same-direction, statistically unproven trend at
+n=20/arm. [[TASK-0230]]'s Addendum 4 carries the full numbers; this task's
+own Done section has the reproducible scripts. `_is_hit`, not bare
+druggability, is recommended as this line of work's primary ceiling
+criterion going forward — no prior justification for the relaxed bar exists
+in either task's record.

@@ -398,3 +398,66 @@ CARDIAC_MYOSIN — the underlying real numbers above stand unedited, but
 the geometry-confound caveat this task itself raised turned out to be
 load-bearing for 2 of 3 targets, not just a theoretical concern. Full
 comparison table: [[TASK-0235]]'s own Done section.
+
+## Addendum 4 — Addendum 3's "4/4" does not survive proper power;
+"supersedes" downgraded to "modest, same-direction, unproven" ([[TASK-0241]],
+2026-08-24)
+
+[[TASK-0241]] found Addendum 3's own BCR_ABL1 "4/4" claim did not reproduce
+(3/4 on a same-commit re-run) and, more fundamentally, that TASK-0235's own 4
+trials shared one byte-identical input structure — effective n=1 for the
+backbone, with the observed spread being downstream EvoEF2/fpocket seed
+jitter, not conformational sampling. Re-established properly rather than
+either discarded or re-asserted:
+
+**Experiment A — pure repacking jitter, one fixed BCR_ABL1 backbone, N=20
+independent EvoEF2 trials per method** (`task0241_reproducibility_and_
+jitter.py`, real, not simulated): bare druggability-bar rate old **4/20
+(20%)** vs new **15/20 (75%)** — Fisher exact **p=0.0012**, genuinely
+significant. On identical geometry, the new backbone repacks into a
+bare-bar-clearing pocket far more often than the old one; the originally
+published "4/4" was an ordinary draw from this real ~75% process (binomial
+P(4 of 4)=0.316, P(3 of 4)=0.422 — the 4/4→3/4 discrepancy between the
+original run and [[TASK-0241]]'s reproduction is exactly what n=4 sampling
+noise on a ~75% process looks like, not evidence either run is wrong).
+**Under the register's own strict `_is_hit` (overlap≥0.5 AND druggability
+≥0.5), the same fixed geometry hits only 1/20 (5%) old vs 3/20 (15%) new —
+Fisher p=0.605, not significant.** The bare-bar metric substantially
+overstates the effect; `_is_hit` is the criterion that should be reported.
+
+**Experiment B — real re-run, all 3 targets × both methods, N=20 trials
+each, independent small (σ=0.15Å) per-trial structural perturbation of the
+displacement field** (not just repacking-seed jitter — addresses [[TASK-0241]]'s
+own "the 4 trials are not 4 samples" finding directly): BCR_ABL1's `_is_hit`
+rate is **1/20 (5%) old vs 4/20 (20%) new — 4× higher, same direction as
+claimed, but Fisher p=0.342, not significant at this N.** Druggability
+medians (0.516 old vs 0.617 new) likewise don't clear significance
+(Mann-Whitney p=0.882). KRAS_G12C and CARDIAC_MYOSIN: no significant
+difference either target, consistent with both this task's own and
+[[TASK-0235]]'s own already-honest characterization of those two as closed
+or noisy, not flipped.
+
+**Mechanism question resolved, not left contradictory**: `vdwrep`
+(pairwise steric clash) and `overlap_frac` (fpocket cavity-shape/location
+match) move independently across targets — BCR_ABL1: vdwrep −2.1%,
+overlap_frac **+12.3%**; KRAS_G12C: vdwrep **−46.5%**, overlap_frac only
++11.4%; CARDIAC_MYOSIN: vdwrep −6.0%, overlap_frac **−12.3%** (opposite
+sign). This is the reconciliation [[TASK-0241]] proposed as testable rather
+than assumed: coherent local side-chain/backbone rotation reshapes cavity
+geometry at near-constant pairwise clash energy, so a method's effect on
+`vdwrep` and its effect on `overlap_frac`/druggability are not the same
+claim and should not be read as corroborating each other automatically.
+
+**Verdict**: Addendum 3's "BCR_ABL1: reversed" is downgraded to
+**"a real, same-direction, statistically unproven trend"** — not
+re-asserted, not discarded. The local-Kabsch method's fixed-geometry
+advantage on the bare bar is real and significant (Experiment A); under
+the stricter criterion this project's own `_is_hit` defines, and under
+real structural resampling, the same trend persists in direction but not
+yet in significance at n=20/arm. KRAS_G12C and CARDIAC_MYOSIN's readings
+stand as before. **No justification for relaxing to bare `any_trial_
+crosses_bar` (this task's own original choice, [[TASK-0235]] inherited it)
+exists anywhere in either task's record** — recommended, not yet applied
+project-wide: report `_is_hit` as the primary ceiling criterion going
+forward. Full data: `results/tasks/0241_reproducibility_and_jitter/`,
+`.ai/tasks/DONE/TASK-0241-task0235-ceiling-flip-does-not-reproduce.md`.
