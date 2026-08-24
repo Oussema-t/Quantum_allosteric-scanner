@@ -3,7 +3,7 @@
 ## Context
 
 - ID: TASK-0228
-- Status: In Progress
+- Status: Done
 - Owner: Implementer
 - Claimed By: —
 - Claimed At: —
@@ -599,6 +599,19 @@ follow-up threads, not a genuine collision.
 
 ## Done
 
-(not yet — see In Progress above; the single remaining action is the
-RESULTS.md addendum, blocked on that file's held `RESOURCE-*` claim at
-write time)
+**2026-08-24 (closed out — the work itself finished 2026-08-21/22, see
+"In Progress" above for the full record; this note only fixes the
+administrative state, no new work).** This pickup's own Intent Contract
+scope — §2 pocket-restricted PDB-retest, and §6.2 progress-probability
+`p` (both the collective-only and full-joint versions) — is complete,
+all TODO items checked, the RESULTS.md addendum landed in commit
+`a316268` and remains intact three days later, cross-referenced by
+[[TASK-0230]] and subsequent work. The "In Progress" section above is
+the real, unedited Done record; left in place rather than duplicated.
+
+**Left open, on record, not silently dropped**: §3's branching/depth
+measurement, §4's search infrastructure, §5's ceiling (independently
+covered by [[TASK-0230]] the same week), and §6.1/§6.3/§6.4 — explicit,
+substantial remaining scope from the original document, out of scope
+for this specific pickup per its own Intent Contract, available for a
+future task if this line of work continues.
