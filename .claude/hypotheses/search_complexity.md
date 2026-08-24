@@ -322,3 +322,21 @@ submission:
   §4.2 on paper.
 
 Owned by [[TASK-0226]] / [[TASK-0227]] / [[TASK-0228]] where testable.
+
+---
+
+## Cross-reference — HYP-P13 (mechanism), filed in `physics.md`
+
+The complexity half of HYP-P13 belongs here: if allostery is *stabilisation of a
+disfavoured conformation* rather than signal propagation, the search becomes
+"enumerate states → find compromised-active-site states → find druggable pockets
+in them", and the candidate hardness is the **three-way conjunction** (druggable
+∧ active-site-compromised ∧ thermodynamically accessible), not propagation.
+
+**Counter-evidence already in hand:** [[TASK-0185]]'s 1–8 draws per pocket hit
+says finding *a* pocket is not rare. The conjunction is unmeasured. Measurable
+via [[TASK-0228]] §6.2's progress-probability statistic; if it lands in the
+0.24–0.69 band, the complexity claim closes.
+
+Full record: `physics.md` § HYP-P13.
+

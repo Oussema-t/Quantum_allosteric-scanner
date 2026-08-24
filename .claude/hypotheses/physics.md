@@ -718,3 +718,122 @@ to exist. `REVIEW-panel-2026-07-20.md` itself (the source review these
 hypotheses and tasks cite) was also not generated/delivered — the
 citation chain is currently open; generate it if the citation should be
 closeable the way prior batches' reviews are.
+
+---
+
+## HYP-P13 · Allostery is stabilisation of an otherwise-disfavoured conformation, not a signal propagating to the active site
+
+*Origin: orchestrating collaborator (Bartosz), 2026-08-22, arrived at independently.
+Filed in `physics.md` rather than `search_complexity.md` — the primary claim is
+mechanistic; its complexity consequence is secondary and cross-linked there.*
+
+**Claim.** There is no allosteric *signal* travelling from pocket to active site.
+A protein occupies an ensemble of conformations; some of those have a compromised
+active site; a drug binds a pocket that happens to be **present in one of those
+conformations** and stabilises it. The observed "allosteric effect" is population
+redistribution toward an inactive state — not transmission along a path.
+
+**Status in the literature: this is mainstream, and the challenge cites it.**
+It is Monod–Wyman–Changeux conformational selection (ref [5], Changeux &
+Edelstein 2005) in its modern ensemble formulation (ref [4], Motlagh, Wrabl, Li
+& Hilser 2014; ref [6], Tsai & Nussinov 2014). It is **not** novel to the field.
+It is novel to this register as an organising frame, and it **directly
+contradicts the challenge's own §5 Assumption** — *"the topology of the contact
+network is the primary driver of signal propagation."* The challenge's §2 cites
+[4] and [6]; its §5 mandates the elastic-network premise. Those are not
+compatible. See [[TASK-0221]] organiser question (d).
+
+### Why it is worth taking seriously: one mechanism predicts four of our findings
+
+| Register finding | What HYP-P13 predicts |
+|---|---|
+| Every seed-referencing observable is a proximity detector ([[TASK-0226]]: classical 0.861/0.899, CTQW 0.697) | With nothing propagating, a seed-referencing observable on a static graph has only geometry left to measure. Distance is the default, not the defect. |
+| Coherence adds nothing — flat γ-sweeps, phase-free converged limit, coherent ≥ ENAQT under noise | There is no interference to exploit in a quantity that is not propagating. |
+| 28 observables collapse to effective rank ~3 ([[TASK-0199]]; externally reproduced at 3.65/11) | All of them measure the geometry of a single static structure, because that is all a single static structure contains. |
+| fpocket — 2009, purely geometric, no propagator — beats every observable here on 2/3 targets | Geometry *is* the signal. A geometric detector should win. |
+
+Four findings, one mechanism. That is a materially stronger claim than nine
+independent route closures, and it is the kind of *novel insight* §4.3 item 1
+asks for in place of a credible advantage.
+
+### It also reinterprets our benchmark failures as mechanism rather than defect
+
+**BCR-ABL1's `MYR` is the endogenous allosteric stabiliser.** Myristate binds the
+myristoyl pocket to lock the autoinhibited state — the same job asciminib does.
+So `1OPL` is not a broken apo structure: it is *the stabilised conformation, with
+the endogenous ligand in place of the drug*.
+
+Under a propagation model that is a benchmark defect ([[TASK-0209]]'s reading).
+Under HYP-P13 it is the mechanism showing through — the "apo" pocket is open
+because the protein is already in the stabilised state. The same rereading
+plausibly covers CASPASE1's "intrinsically open" pocket, and possibly much of the
+5-of-7 failure rate: [[TASK-0209]] may have been measuring **conformational
+state**, not data quality.
+
+**This does not retract [[TASK-0209]].** Its measurements stand and its
+consequence — those pairs cannot support a blind apo→holo prediction — is
+unchanged either way. What changes is the *explanation*.
+
+### Complexity consequence — and the measurement that cuts against the obvious reading
+
+The search reformulates: not "propagate from the active site and rank distal
+residues", but "enumerate conformational states → find those where the active
+site is compromised → find druggable pockets present in them."
+
+**Do not assume that is hard.** [[TASK-0185]] measured pocket recovery under ENM
+sampling at **1–8 draws per hit** — finding *a* pocket in the ensemble is not
+rare. If hardness exists it lives in the **conjunction**: a pocket that is
+simultaneously (a) druggable, (b) present in a state with a compromised active
+site, and (c) thermodynamically accessible. Nobody has measured that
+intersection, and this register's repeated experience is that assumed-rare
+things turn out common once measured ([[TASK-0185]], [[TASK-0213]]).
+
+**Measurement:** the same progress-probability statistic [[TASK-0228]] §6.2
+specifies, applied to the three-way conjunction. If it lands in the 0.24–0.69
+band already measured for backbone sampling, the complexity claim closes.
+
+### Consequence for the answer key
+
+If allostery is stabilisation, the correct answer is not one pocket but the
+**set** whose occupancy shifts the ensemble. The challenge supplies one
+drug-bound site; ref [6] holds that sites are effector-specific.
+[[TASK-0229.003]] (ASD multi-site audit) stops being a nicety and becomes
+central — residues we score as false positives may be genuine allosteric sites
+for a different effector.
+
+### The discriminating experiment
+
+- **Propagation** predicts a *directed*, distance-dependent response: perturb the
+  pocket, observe a specific effect at the active site.
+- **Stabilisation** predicts pocket and active site are correlated only because
+  both are markers of the same global state — **no directionality**.
+
+Partial read already in hand: [[TASK-0162]] found forward/reverse asymmetry
+(10/25 vs 4/25), weak evidence *for* directionality — but measured on a static
+apo graph, which HYP-P13 says is the wrong frame, so it should not be leaned on.
+
+**The clean test is [[TASK-0229.006]] (COREX/EAM), and its pre-registered
+negative control is already the discriminating one**: construct the case where
+ensemble ranking and propagation ranking disagree. If they agree everywhere, the
+distinction is empty on these targets. That control was written before this
+hypothesis existed and happens to be exactly what it needs.
+
+### What this does NOT establish
+
+- **We have not run EAM.** The harmonic proxy has been tested and is itself
+  proximity-confounded (|partial ρ| = 0.773, non-target structures) — so the
+  *harmonic* version of ensemble coupling is no escape. The genuine nonlinear
+  model (binary folded/unfolded units) is untested. HYP-P13 is a hypothesis that
+  explains existing data, not a result.
+- **It does not license any quantum claim.** If anything it points the quantum
+  question at partition-function estimation over 2^N microstates
+  ([[TASK-0229.006]]) — where the honest claim is *type-correctness*, never
+  advantage.
+- **It does not rescue the register's negatives into a positive.** It explains
+  them. That is more useful, and it must not be oversold as more than that.
+
+**Status:** open, unowned as a whole. Its decisive test is [[TASK-0229.006]];
+its answer-key consequence is [[TASK-0229.003]]; its complexity half is
+measurable via [[TASK-0228]] §6.2. **Usable in [[TASK-0184]] as a mechanistic
+hypothesis explaining the negative result — explicitly labelled as hypothesis,
+not finding.**
