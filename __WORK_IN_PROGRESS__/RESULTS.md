@@ -7901,3 +7901,54 @@ aggregate signal in the median.
 **Script:** `scripts/task0255_hop_angstrom_calibration.py`. **Data:**
 `results/tasks/0255_hop_angstrom_calibration/calibration.json`. **Full
 detail:** `.ai/tasks/DONE/TASK-0255-hop-to-angstrom-distality-calibration.md`.
+
+## Two independent attempts to fix the ENM model neither move CTQW off zero ([[TASK-0257]], 2026-08-25)
+
+**[OBSERVED]** [[TASK-0250]] found the Cα-only GNM invalid (B-factor
+correlation) on 4/15 targets and MARGINAL on 5 more; [[TASK-0254]] found
+CTQW's own marginal contribution when added last (after geometry+fpocket)
+is indistinguishable from zero (median −0.06%, Wilcoxon p=0.50). The one
+substantive objection left standing: "the model never got a fair run."
+This task ran the two cheapest rungs of a pre-registered improvement
+ladder against that objection, each scored first on the same label-free
+B-factor objective before any pocket-label evaluation.
+
+**R1 (heavy-atom contact weighting, replacing the binary Cα cutoff with a
+count of heavy-atom pairs within 4.5 A, same N)**: net **negative** on the
+15-target GNM-B-factor check — baseline 6 PASS/4 MARGINAL/4 FAIL becomes
+4 PASS/6 MARGINAL/4 FAIL. **0/4 originally-FAIL targets improve past
+FAIL.** 2 targets regress from PASS to MARGINAL (KRAS_G12C, PFK). Real,
+mixed, target-dependent underneath the net negative (7/14 up, 7/14 down).
+
+**R2 (real SASA replacing `degree` as the burial proxy inside
+`potentials.V_R`)**: real, positive, on its own narrower objective —
+SASA beats degree as a direct predictor of B-factor on **11/14 targets**
+(both signs physically correct: buried/high-degree ⇒ low B, exposed/high-
+SASA ⇒ high B), fixing 3 targets from FAIL to MARGINAL. **But rebuilding
+`H_new` with SASA-based `V_R` and re-running [[TASK-0254]]'s own Shapley
+attribution (fpocket in the stack, 20-target frozen set) shows CTQW's
+added-last marginal does not move**: median +0.11% (was −0.06%), Wilcoxon
+p=0.79 (was 0.50, so if anything *less* significant), improves on only
+10/20 targets — a coin flip. CTQW's overall Shapley share barely moves
+either (median +11.2% → +12.4%).
+
+**This is the outcome [[TASK-0257]]'s own Constraint pre-registered as the
+strongest possible negative**: a real, independently-motivated model
+improvement (SASA genuinely is a better burial proxy, confirmed directly)
+still leaves CTQW's downstream marginal at zero. Reported precisely, not
+rounded up: the "unfair model" objection is **weakened but not fully
+retired** — R1 did not achieve GNM-B-factor validity on the 4 FAIL
+targets, so what CTQW does on a model that actually fits those specific
+4 targets remains genuinely untested, not negatively tested. Ladder
+stopped after R1+R2 per its own "stop as soon as a rung fails to improve
+the objective" rule — R3-R6 (Cα+Cβ, all-heavy-atom GNM/ANM,
+parameter-free ENM) are materially more expensive and nothing measured so
+far motivates climbing to them.
+
+**Scripts:** `scripts/task0257_r1_heavy_atom_contact_weighting.py`,
+`scripts/task0257_r2_sasa_burial_vs_degree.py`,
+`scripts/task0257_r2_shapley_rerun.py`. **Data:**
+`results/tasks/0257_r1_heavy_atom_contact_weighting/r1_results.json`,
+`results/tasks/0257_r2_sasa_burial_vs_degree/r2_results.json`,
+`results/tasks/0257_r2_shapley_rerun/part_a_shapley_sasa.json`. **Full
+detail:** `.ai/tasks/DONE/TASK-0257-beyond-calpha-enm-against-a-label-free-objective.md`.
