@@ -201,15 +201,15 @@ footer{border-top:1px solid var(--rule); padding-top:20px; margin-top:20px;
   <div class="headline-stat">
     <div class="lab">CTQW's contribution when added last, on top of geometry and fpocket</div>
     <div class="val"><em>−0.1%</em> &nbsp;·&nbsp; p = 0.50 &nbsp;·&nbsp; positive on 9 / 20</div>
-    <p>Cross-validated, out-of-fold, on a frozen 20-target set neither thread tuned on. This is the increment CTQW adds that geometry and cavity shape do not already supply.</p>
+    <p>Cross-validated, out-of-fold, on a frozen 20-target set neither thread tuned on. This is the increment CTQW adds that geometry and cavity shape do not already supply. <strong>Every p-value on this page is also reported cluster-robust</strong> (n = 13 apo structures, not 20 rows — see the panel at the end of this section): this one moves to p = 0.22, unchanged in substance.</p>
   </div>
 
-  <p>For comparison, the same statistic computed identically for the other two blocks:</p>
+  <p>For comparison, the same statistic computed identically for the other two blocks, row-level then cluster-robust:</p>
 
   <div class="stat-row">
-    <div class="stat"><div class="k">Geometry, added last</div><div class="v pos">+15.0%</div><div class="n">p = 0.0002 · 19/20 targets</div></div>
-    <div class="stat"><div class="k">fpocket, added last</div><div class="v pos">+4.9%</div><div class="n">p = 0.0019 · 18/20 targets</div></div>
-    <div class="stat"><div class="k">CTQW, added last</div><div class="v zero">−0.1%</div><div class="n">p = 0.50 · 9/20 targets</div></div>
+    <div class="stat"><div class="k">Geometry, added last</div><div class="v pos">+15.0%</div><div class="n">p = 0.0002 → 0.0002 · 19/20 targets</div></div>
+    <div class="stat"><div class="k">fpocket, added last</div><div class="v pos">+4.9%</div><div class="n">p = 0.0019 → 0.0042 · 18/20 targets</div></div>
+    <div class="stat"><div class="k">CTQW, added last</div><div class="v zero">−0.1%</div><div class="n">p = 0.50 → 0.22 · 9/20 targets</div></div>
   </div>
 
   <p>Geometry and cavity shape each carry real, unique, statistically robust information. CTQW carries none that survives their presence. <strong>This is not a claim that CTQW measures nothing</strong> — section 06 shows it demonstrably does. It is a claim about what remains once two much cheaper quantities are already in the model.</p>
@@ -263,16 +263,16 @@ footer{border-top:1px solid var(--rule); padding-top:20px; margin-top:20px;
 
   <div class="tw">
   <table>
-    <thead><tr><th>Block</th><th class="num">Shapley share</th><th class="num">Range</th><th class="num">Added last</th><th class="num">p</th><th class="num">Positive on</th></tr></thead>
+    <thead><tr><th>Block</th><th class="num">Shapley share</th><th class="num">Range</th><th class="num">Added last</th><th class="num">p (n=20 rows)</th><th class="num">p (n=13 clusters)</th><th class="num">Positive on</th></tr></thead>
     <tbody>
-      <tr><td>Geometry</td><td class="num">+42%</td><td class="num">+6% … +83%</td><td class="num">+15.0%</td><td class="num">0.0002</td><td class="num">19/20</td></tr>
-      <tr><td>fpocket</td><td class="num">+8%</td><td class="num">−9% … +65%</td><td class="num">+4.9%</td><td class="num">0.0019</td><td class="num">18/20</td></tr>
-      <tr class="emph"><td>CTQW</td><td class="num">+11%</td><td class="num">−15% … +49%</td><td class="num">−0.1%</td><td class="num">0.50</td><td class="num">9/20</td></tr>
-      <tr><td>Unexplained</td><td class="num">29%</td><td class="num">2% … 62%</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
+      <tr><td>Geometry</td><td class="num">+42%</td><td class="num">+6% … +83%</td><td class="num">+15.0%</td><td class="num">0.0002</td><td class="num">0.0002</td><td class="num">19/20</td></tr>
+      <tr><td>fpocket</td><td class="num">+8%</td><td class="num">−9% … +65%</td><td class="num">+4.9%</td><td class="num">0.0019</td><td class="num">0.0042</td><td class="num">18/20</td></tr>
+      <tr class="emph"><td>CTQW</td><td class="num">+11%</td><td class="num">−15% … +49%</td><td class="num">−0.1%</td><td class="num">0.50</td><td class="num">0.22</td><td class="num">9/20</td></tr>
+      <tr><td>Unexplained</td><td class="num">29%</td><td class="num">2% … 62%</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
     </tbody>
   </table>
   </div>
-  <p class="cap">Full three-block model reaches median cross-validated AUC 0.857, above chance on 20/20 targets.</p>
+  <p class="cap">Full three-block model reaches median cross-validated AUC 0.857, above chance on 20/20 targets. Cluster-robust column: the frozen set has 20 scoreable rows but only 13 distinct apo structures (seven apo entries each carry a second ligand) — method and why it matters below.</p>
 
   <div class="box">
     <h4>Read the CTQW row carefully — it is the row most open to misreading</h4>
@@ -294,8 +294,45 @@ footer{border-top:1px solid var(--rule); padding-top:20px; margin-top:20px;
     </tbody>
   </table>
   </div>
-  <p class="cap">Composite vs CTQW, per-residue: Wilcoxon p = 0.0137, composite wins 14/20.</p>
+  <p class="cap">Composite vs CTQW, per-residue: Wilcoxon p = 0.0137 (n=20 rows) → p = 0.0449 cluster-robust (n=13 apo structures, see below), composite wins 14/20. Survives at the conventional 0.05 bar, materially more narrowly than the row-level number suggested — said plainly, not left at the more comfortable number.</p>
   <p><strong>One correction we owe our own record here.</strong> The implementer's write-up read "fpocket alone beats even the composite" from the medians. Tested properly that does not hold: <code>fpocket_drug</code> vs composite is p = 0.279, the composite wins 11/20 by count and 0.7396 vs 0.6936 by mean. fpocket alone is high-variance (above chance on 16/20 vs the composite's 19/20). The median flattered it. Please do not cite that claim; we have withdrawn it.</p>
+
+  <h3>Every p-value above is over-counted, and here is the corrected version</h3>
+  <p>The frozen set has 20 scoreable rows but only <strong>13 distinct apo structures</strong> — seven apo entries each carry a second bound ligand (a legitimate, informative design choice; the error is purely statistical). Every apo-side quantity — geometry, CTQW, ENM validity, hop distance, fpocket cavities — is computed from the same apo coordinates for both rows of a pair, so they are not independent observations, yet every test above treated all 20 (or every subgroup) as if they were.</p>
+  <p><strong>Method, and why</strong>: not simple averaging within a cluster — that is a legitimate first pass but discards real within-cluster information the underlying test statistic should keep. With only 13 clusters (six singletons, seven pairs) there is nowhere near enough replication to fit a mixed-model random intercept reliably. We used exact cluster-level permutation instead: for one-sample and paired tests, every row in a cluster is sign-flipped together (2<sup>13</sup> = 8,192 patterns, enumerated exactly, generalising the classical Wilcoxon test's own exact-enumeration logic from the row to the cluster); for the two-group and correlation tests, whole clusters are reassigned between groups or re-paired (exact where the outcome space is small enough to enumerate, Monte Carlo with 40,000 draws otherwise).</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>Statistic</th><th class="num">p (n=20 rows)</th><th class="num">p (n=13 clusters)</th><th class="num">Conclusion</th></tr></thead>
+    <tbody>
+      <tr><td>Composite vs CTQW (section 04)</td><td class="num">0.0137</td><td class="num">0.0449</td><td>survives, more narrowly</td></tr>
+      <tr><td>Geometry Shapley share</td><td class="num">0.0001</td><td class="num">0.0002</td><td>unchanged</td></tr>
+      <tr><td>Geometry added-last</td><td class="num">0.0002</td><td class="num">0.0002</td><td>unchanged</td></tr>
+      <tr><td>fpocket Shapley share</td><td class="num">0.0032</td><td class="num">0.0188</td><td>survives, more narrowly</td></tr>
+      <tr><td>fpocket added-last</td><td class="num">0.0019</td><td class="num">0.0042</td><td>survives, more narrowly</td></tr>
+      <tr><td>CTQW Shapley share</td><td class="num">0.0333</td><td class="num">0.0420</td><td>survives, more narrowly</td></tr>
+      <tr class="emph"><td>CTQW added-last (the decision number)</td><td class="num">0.50</td><td class="num">0.22</td><td>null either way</td></tr>
+      <tr><td>R2 paired (SASA vs degree, section 05)</td><td class="num">0.478</td><td class="num">0.335</td><td>null either way</td></tr>
+      <tr><td>ENM valid &gt; invalid (pre-registered direction)</td><td class="num">0.9674</td><td class="num">0.9615</td><td>unchanged — the data run the other way</td></tr>
+      <tr><td>Spearman(ENM validity, CTQW added-last)</td><td class="num">0.6171</td><td class="num">0.6325</td><td>unchanged</td></tr>
+      <tr><td>CTQW added-last, ENM-valid targets only, vs 0</td><td class="num">0.7820</td><td class="num">0.8379</td><td>unchanged</td></tr>
+      <tr><td>Spearman(apo crypticity, unexplained share)</td><td class="num">0.0001</td><td class="num">0.0005</td><td>unchanged, still the strongest correlate</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="cap">Pseudo-replication cannot manufacture a null — the headline decision number was a null at n=20 and stays one at n=13. Direction of the corrections: they cut against <em>our own</em> positive claims (composite-vs-CTQW, fpocket, CTQW's own Shapley share all weaken), not against CTQW.</p>
+
+  <div class="box warn">
+    <h4>One exploratory finding this correction surfaces, reported carefully</h4>
+    <p>The pre-registered subgroup test (section 07 item 4) asked whether CTQW's marginal is positive on ENM-valid targets and negative on ENM-invalid ones — it is the reverse, and both the row-level and cluster-robust tests of <em>that specific direction</em> correctly report non-significance (p = 0.97 either way), because that is not the direction the data show. Testing the <em>reverse</em> direction post hoc, the same data move from p = 0.080 (n = 20 rows) to p = 0.042 (n = 13 clusters) — borderline, and only borderline. This is not a new positive result for CTQW: it says CTQW's marginal is, if anything, <em>larger</em> where its own physical model does not fit, which further undercuts rather than rescues the "give it a valid model" defence tested in section 05. Flagged as exploratory and post hoc, not pre-registered, and not treated as more than it is.</p>
+  </div>
+
+  <p>Two independence checks, both negative (i.e. no further correction needed): the 15 register targets used in section 05's ENM validity check each use a distinct apo PDB entry — no shared-structure clustering there. The 7-target candidate set from an earlier round similarly has 7 distinct apo entries. The clustering is isolated to this frozen 22-target set.</p>
+
+  <div class="box">
+    <h4>The rule going forward</h4>
+    <p>A second ligand bound to an apo structure already in the set counts as a new target for label-side questions (pocket identity, ranking, druggability — these differ genuinely between rows) and does <strong>not</strong> count as a new target for apo-side questions (ENM validity, geometry, any statistic tested against zero or correlated across targets without conditioning on the label) — cluster by apo structure for the latter, always, not decided per analysis.</p>
+  </div>
 </section>
 
 <section>
@@ -331,11 +368,11 @@ footer{border-top:1px solid var(--rule); padding-top:20px; margin-top:20px;
 
   <div class="tw">
   <table>
-    <thead><tr><th>CTQW's added-last marginal</th><th class="num">Median</th><th class="num">Wilcoxon vs 0</th><th class="num">Improves on</th></tr></thead>
+    <thead><tr><th>CTQW's added-last marginal</th><th class="num">Median</th><th class="num">Wilcoxon vs 0</th><th class="num">Cluster-robust p</th><th class="num">Improves on</th></tr></thead>
     <tbody>
-      <tr><td>Baseline (degree-based H_new)</td><td class="num">−0.06%</td><td class="num">0.50</td><td class="num">—</td></tr>
-      <tr><td>R2 (SASA-based H_new)</td><td class="num">+0.11%</td><td class="num">0.79</td><td class="num">10/20</td></tr>
-      <tr><td>Paired difference (SASA − degree)</td><td class="num">—</td><td class="num">0.478</td><td class="num">coin flip</td></tr>
+      <tr><td>Baseline (degree-based H_new)</td><td class="num">−0.06%</td><td class="num">0.50</td><td class="num">0.22</td><td class="num">—</td></tr>
+      <tr><td>R2 (SASA-based H_new)</td><td class="num">+0.11%</td><td class="num">0.79</td><td class="num">—</td><td class="num">10/20</td></tr>
+      <tr><td>Paired difference (SASA − degree)</td><td class="num">—</td><td class="num">0.478</td><td class="num">0.335</td><td class="num">coin flip</td></tr>
     </tbody>
   </table>
   </div>
@@ -465,6 +502,7 @@ pip install -r requirements.txt
     <dt>task0257_r1_heavy_atom_contact_weighting.py</dt><dd>Section 05 — R1.</dd>
     <dt>task0257_r2_sasa_burial_vs_degree.py</dt><dd>Section 05 — R2 feature comparison.</dd>
     <dt>task0257_r2_shapley_rerun.py</dt><dd>Section 05 — CTQW re-scored under the SASA-based Hamiltonian.</dd>
+    <dt>task0261_cluster_robust_stats.py</dt><dd>Section 04 — every p-value above, reclustered by apo structure (n=13).</dd>
     <dt>task0256_classical_diffusion_parity.py</dt><dd>Section 07 — quantum vs classical arm on the same Hamiltonian.</dd>
     <dt>task0247_is_ctqw_a_distance_score.py</dt><dd>Section 06 — within-shell discrimination.</dd>
     <dt>task0255_hop_angstrom_calibration.py</dt><dd>Section 08 — hop-to-Ångström calibration.</dd>
@@ -473,13 +511,14 @@ pip install -r requirements.txt
   </dl>
 
   <div class="box warn">
-    <h4>Five places your reproduction will legitimately diverge from ours</h4>
+    <h4>Six places your reproduction will legitimately diverge from ours</h4>
     <ol>
       <li><strong>Alternate locations.</strong> We parse with <code>altloc="all"</code>. Dropping to the default silently removes heavy atoms and corrupts every distance statistic.</li>
       <li><strong>The <code>hop_from_seed</code> sign convention.</strong> It returns <em>negated</em> BFS distance. We shipped a bug from this ourselves — a filter that removed every candidate on every target before we caught it.</li>
       <li><strong>Heavy-atom attachment.</strong> A same-length guard is required for <code>functional_indices</code> (which contacts holo heavy atoms against <em>apo</em> coordinates) but must <em>not</em> be applied to <code>holo_pocket_mask</code>, which maps holo→apo by Needleman–Wunsch. We had this wrong; it degraded pockets to a Cα approximation and moved HIV-1 RT's pocket from 5 residues to 16.</li>
       <li><strong>Randomness in trial loops.</strong> Our EvoEF2 wrapper accepts no seed, so repeated "trials" write byte-identical inputs. We caught a published 4/4 result that was one computation repeated four times; it reproduced as 3/4. Check hashes before treating repeats as samples.</li>
       <li><strong>Stage-1 recall.</strong> In any two-stage design, fpocket fails to propose the true pocket at all on ~36% of targets — 14/22 usable here, 7/11 on an independent set. Denominators must be targets <em>attempted</em>, not targets where stage 1 succeeded.</li>
+      <li><strong>Clustering.</strong> The frozen set has 20 scoreable rows but only 13 distinct apo structures (section 04). Every apo-side p-value computed at n=20 is optimistic; recluster by apo structure before trusting significance on anything apo-side.</li>
     </ol>
   </div>
 </section>
@@ -494,6 +533,7 @@ pip install -r requirements.txt
     <li><strong>Two curation errors in the frozen set</strong> — the empty-seed HIV integrase pair, contradicting the curation task's own claim.</li>
     <li><strong>Four targets whose ENM still fails validity</strong>, on which we cannot interpret our own CTQW results in either direction.</li>
     <li><strong>Bin edges in section 08 are ours</strong>, stated openly and chosen from physical meaning. They are not a literature taxonomy and should not be cited as one.</li>
+    <li><strong>Every p-value in the frozen-set analyses was computed at n=20 rows against 13 distinct apo structures</strong>, self-caught and corrected in section 04 before this brief went out — full accounting there, including the two claims (fpocket's significance, the crypticity correlation) that weaken most.</li>
   </ul>
 </section>
 

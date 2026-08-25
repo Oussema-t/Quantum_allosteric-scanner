@@ -7952,3 +7952,88 @@ far motivates climbing to them.
 `results/tasks/0257_r2_sasa_burial_vs_degree/r2_results.json`,
 `results/tasks/0257_r2_shapley_rerun/part_a_shapley_sasa.json`. **Full
 detail:** `.ai/tasks/DONE/TASK-0257-beyond-calpha-enm-against-a-label-free-objective.md`.
+
+## 20 rows, 13 structures: every frozen-set p-value was over-counted, self-caught before the collaborating thread found it ([[TASK-0261]], 2026-08-25)
+
+**[OBSERVED]** [[TASK-0243]]'s frozen set has 20 scoreable rows but only 13
+distinct apo structures — 7 apo entries each carry a second bound ligand,
+a legitimate curation choice, but every apo-side quantity (geometry, CTQW,
+ENM validity, hop, fpocket cavities) is computed from the same apo
+coordinates for both rows of a pair. Every Wilcoxon/Mann-Whitney/Spearman
+test across [[TASK-0249]]/[[TASK-0254]]/[[TASK-0257]]/[[TASK-0259]] treated
+all 20 (or every subgroup) as independent.
+
+**Premise checked before fixing it**: the filing's own "every apo-side
+score is identical within a pair" is not quite right — checked directly
+against the frozen config, 5/7 pairs use an identical apo chain selection
+(bit-identical) but 2/7 (GAC_BPTES/GAC_CPD12, FBPASE_94D/FBPASE_95S) use a
+different chain *subset* of the same deposited entry (correlated, not
+identical — `gnm_r` differs, 0.697 vs 0.811). Doesn't change the clustering
+unit, reported precisely rather than repeated unchecked.
+
+**Method: exact cluster-level permutation**, not averaging (ruled out by
+the task's own Scope as discarding real information) and not a mixed
+model (13 clusters, only 7 non-trivial, is not enough to fit a random-
+intercept variance component reliably). One-sample/paired tests use
+cluster-level sign-flips (2^13=8,192 patterns, exact — generalises
+Wilcoxon's own exact enumeration from rows to clusters); two-group and
+correlation tests use cluster-block reassignment (exact via enumeration
+where the outcome space is small enough — true for every two-group test
+here; Monte Carlo, 40,000 draws, for the two correlation tests).
+
+**Every re-run statistic** (n=20/subgroup p → n=13-cluster p): composite
+vs CTQW 0.0137→0.0449 (survives, more narrowly); geometry Shapley/added-
+last 0.0001/0.0002→0.0002/0.0002 (unchanged); fpocket Shapley/added-last
+0.0032/0.0019→0.0188/0.0042 (survive, more narrowly); CTQW Shapley
+0.0333→0.0420 (survives, more narrowly); **CTQW added-last (the headline
+null) 0.5016→0.2170 (null either way — pseudo-replication cannot
+manufacture a null)**; TASK-0257's R2 paired 0.4781→0.3354 (null either
+way); ENM valid>invalid pre-registered direction 0.9674→0.9615
+(unchanged); Spearman(ENM validity, CTQW added-last) 0.6171→0.6325
+(unchanged); CTQW added-last on ENM-valid-only 0.7820→0.8379 (unchanged);
+Spearman(apo crypticity, unexplained) 0.0001→0.0005 (unchanged, still the
+strongest correlate). **No pre-registered conclusion flips. Corrections
+cut against our own positive claims, not against CTQW** — exactly the
+direction the filing's own first-pass measurement anticipated.
+
+**One caught mistake before it shipped**: a first pass compared a
+one-sided row-level Mann-Whitney (the pre-registered "valid>invalid"
+direction) against a two-sided cluster permutation, manufacturing an
+apparent flip that was really just mismatched alternatives. Fixed by
+computing both sides identically at both levels. The pre-registered
+direction stays solidly non-significant (0.9674→0.9615) — a genuine,
+*exploratory, non-pre-registered* finding survives the fix instead: the
+reverse-direction/two-sided version moves from p=0.080 (already
+borderline at n=20) to p=0.042 (n=13 clusters) — borderline evidence that
+CTQW's marginal is *larger*, not smaller, where its own ENM doesn't fit.
+Reported as exploratory and post hoc, not a new positive — it further
+undercuts, rather than rescues, [[TASK-0257]]'s "give it a valid model"
+defence.
+
+**Standing rule, written down once**: a second ligand on an apo structure
+already in the set is a new target for label-side questions (pocket
+identity, ranking) and not a new target for apo-side questions (ENM
+validity, geometry, anything tested against zero or correlated across
+targets unconditional on the label) — cluster by apo structure for the
+latter, always.
+
+**Independence checks elsewhere, both negative**: the 15 [[TASK-0250]]
+register targets each use a distinct apo PDB — no clustering.
+CARDIAC_MYOSIN/CARDIAC_MYOSIN_TABLE1, this task's own filing's named
+"probable case," is **not** one (8QYP vs 5TBY, different entries) — the
+suspicion is corrected, not confirmed. [[TASK-0216]]'s 7-target set
+likewise has 7 distinct apo entries. The clustering is isolated to
+[[TASK-0243]]'s frozen set.
+
+**`documentation/CTQW_CONTRIBUTION_BRIEF.html` updated** in the same
+task: cluster-robust p added to §01's decision-number row and §04's main
+table, new §04 subsection with the full corrected table/method/standing
+rule/exploratory finding, §05's R2 table gets a cluster-robust column,
+§09's "Five places your reproduction will diverge" becomes six, §10 gets
+a new self-disclosed-defect bullet — reported to the collaborating thread
+before they could find it themselves, per this task's own Constraint.
+
+**Script:** `scripts/task0261_cluster_robust_stats.py`. **Data:**
+`results/tasks/0261_cluster_robust_stats/cluster_robust_results.json`.
+**Full detail:**
+`.ai/tasks/DONE/TASK-0261-pseudo-replication-20-rows-13-structures.md`.
