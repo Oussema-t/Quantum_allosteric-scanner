@@ -1,0 +1,602 @@
+{
+ "GAC_BPTES": {
+  "shapley": {
+   "geometry": 0.4678736772486774,
+   "fpocket": 0.5562064884433303,
+   "ctqw": -0.05944983987747132
+  },
+  "full_auc": 0.9823151629072682,
+  "full_share": 0.9646303258145363,
+  "unexplained": 0.03536967418546366,
+  "seq_geom_first": {
+   "geometry": 0.8958124477861322,
+   "fpocket": 0.06847326649958196,
+   "ctqw": 0.0003446115288221474
+  },
+  "seq_fpocket_first": {
+   "fpocket": 0.9557069757727645,
+   "geometry": 0.008578738512949657,
+   "ctqw": 0.0003446115288221474
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.9479062238930661,
+   "fpocket,geometry": 0.9821428571428571,
+   "ctqw,fpocket,geometry": 0.9823151629072682,
+   "ctqw,geometry": 0.9204730576441102,
+   "fpocket": 0.9778534878863823,
+   "ctqw,fpocket": 0.978858604845447,
+   "ctqw": 0.42386695906432753
+  }
+ },
+ "GAC_CPD12": {
+  "shapley": {
+   "geometry": 0.5286601921470345,
+   "fpocket": 0.3431808688387634,
+   "ctqw": -0.08953111946532995
+  },
+  "full_auc": 0.891154970760234,
+  "full_share": 0.782309941520468,
+  "unexplained": 0.21769005847953204,
+  "seq_geom_first": {
+   "geometry": 0.9232664995822888,
+   "fpocket": -0.14074770258980718,
+   "ctqw": -0.00020885547201365817
+  },
+  "seq_fpocket_first": {
+   "fpocket": 0.6965434419381786,
+   "geometry": 0.08597535505430298,
+   "ctqw": -0.00020885547201365817
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.9616332497911444,
+   "fpocket,geometry": 0.8912593984962408,
+   "ctqw,fpocket,geometry": 0.891154970760234,
+   "ctqw,geometry": 0.9545217209690897,
+   "fpocket": 0.8482717209690893,
+   "ctqw,fpocket": 0.8824039264828738,
+   "ctqw": 0.352297410192147
+  }
+ },
+ "DHPS_GC7": {
+  "shapley": {
+   "geometry": 0.30145089285714277,
+   "fpocket": 0.010856331168831371,
+   "ctqw": 0.25506290584415575
+  },
+  "full_auc": 0.783685064935065,
+  "full_share": 0.5673701298701299,
+  "unexplained": 0.4326298701298701,
+  "seq_geom_first": {
+   "geometry": 0.5279220779220779,
+   "fpocket": 0.04476461038961044,
+   "ctqw": -0.005316558441558428
+  },
+  "seq_fpocket_first": {
+   "fpocket": -0.06536120129870115,
+   "geometry": 0.6380478896103895,
+   "ctqw": -0.005316558441558428
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.763961038961039,
+   "fpocket,geometry": 0.7863433441558442,
+   "ctqw,fpocket,geometry": 0.783685064935065,
+   "ctqw,geometry": 0.7586647727272726,
+   "fpocket": 0.4673193993506494,
+   "ctqw,fpocket": 0.7647118506493508,
+   "ctqw": 0.7392045454545454
+  }
+ },
+ "PF_ATCASE": {
+  "shapley": {
+   "geometry": 0.5397607395323545,
+   "fpocket": 0.39702011963023387,
+   "ctqw": -0.022816748232735013
+  },
+  "full_auc": 0.9569820554649267,
+  "full_share": 0.9139641109298533,
+  "unexplained": 0.0860358890701467,
+  "seq_geom_first": {
+   "geometry": 0.729331158238173,
+   "fpocket": 0.1627732463295266,
+   "ctqw": 0.02185970636215373
+  },
+  "seq_fpocket_first": {
+   "fpocket": 0.6397063621533445,
+   "geometry": 0.25239804241435504,
+   "ctqw": 0.02185970636215373
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.8646655791190865,
+   "fpocket,geometry": 0.9460522022838498,
+   "ctqw,fpocket,geometry": 0.9569820554649267,
+   "ctqw,geometry": 0.9141598694942905,
+   "fpocket": 0.8198531810766723,
+   "ctqw,fpocket": 0.8162316476345841,
+   "ctqw": 0.4319086460032627
+  }
+ },
+ "KSHV_PROTEASE_24Q": {
+  "shapley": {
+   "geometry": 0.06370634920634917,
+   "fpocket": 0.12244444444444443,
+   "ctqw": 0.2626428571428571
+  },
+  "full_auc": 0.7243968253968254,
+  "full_share": 0.44879365079365074,
+  "unexplained": 0.5512063492063493,
+  "seq_geom_first": {
+   "geometry": 0.13057142857142856,
+   "fpocket": 0.29907936507936506,
+   "ctqw": 0.019142857142857128
+  },
+  "seq_fpocket_first": {
+   "fpocket": 0.01268253968253985,
+   "geometry": 0.41696825396825377,
+   "ctqw": 0.019142857142857128
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.5652857142857143,
+   "fpocket,geometry": 0.7148253968253968,
+   "ctqw,fpocket,geometry": 0.7243968253968254,
+   "ctqw,geometry": 0.6320317460317461,
+   "fpocket": 0.5063412698412699,
+   "ctqw,fpocket": 0.7497142857142857,
+   "ctqw": 0.7293333333333334
+  }
+ },
+ "KSHV_PROTEASE_25G": {
+  "shapley": {
+   "geometry": 0.1742803580067731,
+   "fpocket": 0.07923318819545233,
+   "ctqw": 0.12983188195452355
+  },
+  "full_auc": 0.6916727140783745,
+  "full_share": 0.383345428156749,
+  "unexplained": 0.616654571843251,
+  "seq_geom_first": {
+   "geometry": 0.19782293178519583,
+   "fpocket": 0.202322206095791,
+   "ctqw": -0.016799709724237832
+  },
+  "seq_fpocket_first": {
+   "fpocket": -0.04687953555878077,
+   "geometry": 0.4470246734397676,
+   "ctqw": -0.016799709724237832
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.5989114658925979,
+   "fpocket,geometry": 0.7000725689404934,
+   "ctqw,fpocket,geometry": 0.6916727140783745,
+   "ctqw,geometry": 0.5898222060957911,
+   "fpocket": 0.4765602322206096,
+   "ctqw,fpocket": 0.6171262699564586,
+   "ctqw": 0.6374092888243832
+  }
+ },
+ "SUMO_E1_FHJ": {
+  "shapley": {
+   "geometry": 0.40887820512820533,
+   "fpocket": 0.0758265856950067,
+   "ctqw": 0.21909075573549266
+  },
+  "full_auc": 0.8518977732793523,
+  "full_share": 0.7037955465587047,
+  "unexplained": 0.2962044534412953,
+  "seq_geom_first": {
+   "geometry": 0.7675101214574902,
+   "fpocket": -0.04684210526315846,
+   "ctqw": -0.016872469635627052
+  },
+  "seq_fpocket_first": {
+   "fpocket": 0.27797570850202424,
+   "geometry": 0.4426923076923075,
+   "ctqw": -0.016872469635627052
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.8837550607287451,
+   "fpocket,geometry": 0.8603340080971659,
+   "ctqw,fpocket,geometry": 0.8518977732793523,
+   "ctqw,geometry": 0.8767408906882592,
+   "fpocket": 0.6389878542510121,
+   "ctqw,fpocket": 0.7884564777327936,
+   "ctqw": 0.7658451417004047
+  }
+ },
+ "HCV_NS5B_VRX": {
+  "shapley": {
+   "geometry": 0.3372686044114614,
+   "fpocket": 0.46874665017522155,
+   "ctqw": -0.05754277468563177
+  },
+  "full_auc": 0.8742362399505256,
+  "full_share": 0.7484724799010511,
+  "unexplained": 0.25152752009894885,
+  "seq_geom_first": {
+   "geometry": 0.5337043908472479,
+   "fpocket": 0.217934446505875,
+   "ctqw": -0.003166357452071722
+  },
+  "seq_fpocket_first": {
+   "fpocket": 0.6586147186147187,
+   "geometry": 0.09302411873840422,
+   "ctqw": -0.003166357452071722
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.7668521954236239,
+   "fpocket,geometry": 0.8758194186765614,
+   "ctqw,fpocket,geometry": 0.8742362399505256,
+   "ctqw,geometry": 0.7662337662337662,
+   "fpocket": 0.8293073593073593,
+   "ctqw,fpocket": 0.835256648113791,
+   "ctqw": 0.41260358688930127
+  }
+ },
+ "HCV_NS5B_VR1": {
+  "shapley": {
+   "geometry": 0.4143590024464161,
+   "fpocket": 0.40604483879212744,
+   "ctqw": -0.057801146529375104
+  },
+  "full_auc": 0.8813013473545842,
+  "full_share": 0.7626026947091684,
+  "unexplained": 0.23739730529083158,
+  "seq_geom_first": {
+   "geometry": 0.6034834045349982,
+   "fpocket": 0.16526454157081827,
+   "ctqw": -0.0061452513966480105
+  },
+  "seq_fpocket_first": {
+   "fpocket": 0.6020593712345275,
+   "geometry": 0.16668857487128896,
+   "ctqw": -0.0061452513966480105
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.8017417022674991,
+   "fpocket,geometry": 0.8843739730529082,
+   "ctqw,fpocket,geometry": 0.8813013473545842,
+   "ctqw,geometry": 0.7986581224668641,
+   "fpocket": 0.8010296856172637,
+   "ctqw,fpocket": 0.7910559754628108,
+   "ctqw": 0.4228995508818053
+  }
+ },
+ "HCV_NS5B_POO": {
+  "shapley": {
+   "geometry": 0.5109134763222632,
+   "fpocket": 0.08035247539975394,
+   "ctqw": 0.11190517373923732
+  },
+  "full_auc": 0.8515855627306272,
+  "full_share": 0.7031711254612545,
+  "unexplained": 0.2968288745387455,
+  "seq_geom_first": {
+   "geometry": 0.585239852398524,
+   "fpocket": 0.040590405904058935,
+   "ctqw": 0.0773408671586715
+  },
+  "seq_fpocket_first": {
+   "fpocket": 0.1310943265682658,
+   "geometry": 0.4947359317343172,
+   "ctqw": 0.0773408671586715
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.792619926199262,
+   "fpocket,geometry": 0.8129151291512915,
+   "ctqw,fpocket,geometry": 0.8515855627306272,
+   "ctqw,geometry": 0.8349227398523986,
+   "fpocket": 0.5655471632841329,
+   "ctqw,fpocket": 0.6314345018450185,
+   "ctqw": 0.5750922509225092
+  }
+ },
+ "HCV_NS5B_CMF": {
+  "shapley": {
+   "geometry": 0.5109134763222632,
+   "fpocket": 0.08035247539975394,
+   "ctqw": 0.11190517373923732
+  },
+  "full_auc": 0.8515855627306272,
+  "full_share": 0.7031711254612545,
+  "unexplained": 0.2968288745387455,
+  "seq_geom_first": {
+   "geometry": 0.585239852398524,
+   "fpocket": 0.040590405904058935,
+   "ctqw": 0.0773408671586715
+  },
+  "seq_fpocket_first": {
+   "fpocket": 0.1310943265682658,
+   "geometry": 0.4947359317343172,
+   "ctqw": 0.0773408671586715
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.792619926199262,
+   "fpocket,geometry": 0.8129151291512915,
+   "ctqw,fpocket,geometry": 0.8515855627306272,
+   "ctqw,geometry": 0.8349227398523986,
+   "fpocket": 0.5655471632841329,
+   "ctqw,fpocket": 0.6314345018450185,
+   "ctqw": 0.5750922509225092
+  }
+ },
+ "FBPASE_94D": {
+  "shapley": {
+   "geometry": 0.8264957264957267,
+   "fpocket": 0.002808302808302835,
+   "ctqw": -0.1493284493284495
+  },
+  "full_auc": 0.83998778998779,
+  "full_share": 0.67997557997558,
+  "unexplained": 0.32002442002442,
+  "seq_geom_first": {
+   "geometry": 0.6100122100122103,
+   "fpocket": 0.0146520146520146,
+   "ctqw": 0.055311355311355115
+  },
+  "seq_fpocket_first": {
+   "fpocket": -0.1164835164835164,
+   "geometry": 0.7411477411477413,
+   "ctqw": 0.055311355311355115
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.8050061050061051,
+   "fpocket,geometry": 0.8123321123321124,
+   "ctqw,fpocket,geometry": 0.83998778998779,
+   "ctqw,geometry": 0.8360805860805861,
+   "fpocket": 0.4417582417582418,
+   "ctqw,fpocket": 0.37564102564102564,
+   "ctqw": 0.2658730158730158
+  }
+ },
+ "FBPASE_95S": {
+  "shapley": {
+   "geometry": 0.6971145072992702,
+   "fpocket": -0.06776916058394174,
+   "ctqw": -0.05521213503649627
+  },
+  "full_auc": 0.787066605839416,
+  "full_share": 0.574133211678832,
+  "unexplained": 0.425866788321168,
+  "seq_geom_first": {
+   "geometry": 0.4084397810218978,
+   "fpocket": 0.06423357664233542,
+   "ctqw": 0.10145985401459878
+  },
+  "seq_fpocket_first": {
+   "fpocket": -0.2761633211678832,
+   "geometry": 0.7488366788321165,
+   "ctqw": 0.10145985401459878
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.7042198905109489,
+   "fpocket,geometry": 0.7363366788321166,
+   "ctqw,fpocket,geometry": 0.787066605839416,
+   "ctqw,geometry": 0.7731295620437957,
+   "fpocket": 0.3619183394160584,
+   "ctqw,fpocket": 0.35054744525547443,
+   "ctqw": 0.3376824817518248
+  }
+ },
+ "TRP_SYNTHASE_F6F": {
+  "shapley": {
+   "geometry": 0.26211111111111113,
+   "fpocket": 0.4503644444444444,
+   "ctqw": 0.01598311111111102
+  },
+  "full_auc": 0.8642293333333333,
+  "full_share": 0.7284586666666666,
+  "unexplained": 0.2715413333333334,
+  "seq_geom_first": {
+   "geometry": 0.44462933333333354,
+   "fpocket": 0.289504,
+   "ctqw": -0.005674666666666939
+  },
+  "seq_fpocket_first": {
+   "fpocket": 0.6072586666666666,
+   "geometry": 0.1268746666666669,
+   "ctqw": -0.005674666666666939
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.7223146666666668,
+   "fpocket,geometry": 0.8670666666666668,
+   "ctqw,fpocket,geometry": 0.8642293333333333,
+   "ctqw,geometry": 0.7197173333333333,
+   "fpocket": 0.8036293333333333,
+   "ctqw,fpocket": 0.8266560000000001,
+   "ctqw": 0.5165973333333334
+  }
+ },
+ "TRP_SYNTHASE_F19": {
+  "shapley": {
+   "geometry": 0.3590359652256758,
+   "fpocket": 0.32857419316422537,
+   "ctqw": -0.02121144456353463
+  },
+  "full_auc": 0.8331993569131833,
+  "full_share": 0.6663987138263665,
+  "unexplained": 0.3336012861736335,
+  "seq_geom_first": {
+   "geometry": 0.4970078599499821,
+   "fpocket": 0.1759289031797071,
+   "ctqw": -0.0065380493033226905
+  },
+  "seq_fpocket_first": {
+   "fpocket": 0.45196498749553404,
+   "geometry": 0.22097177563415515,
+   "ctqw": -0.0065380493033226905
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.748503929974991,
+   "fpocket,geometry": 0.8364683815648446,
+   "ctqw,fpocket,geometry": 0.8331993569131833,
+   "ctqw,geometry": 0.7462888531618435,
+   "fpocket": 0.725982493747767,
+   "ctqw,fpocket": 0.7383485173276171,
+   "ctqw": 0.46637638442300816
+  }
+ },
+ "SMYD3_DIPERODON": {
+  "shapley": {
+   "geometry": 0.18512588001224362,
+   "fpocket": 0.6515342822161004,
+   "ctqw": 0.14300007652280367
+  },
+  "full_auc": 0.9898301193755739,
+  "full_share": 0.9796602387511477,
+  "unexplained": 0.020339761248852284,
+  "seq_geom_first": {
+   "geometry": 0.50479797979798,
+   "fpocket": 0.4730257116620751,
+   "ctqw": 0.0018365472910926162
+  },
+  "seq_fpocket_first": {
+   "fpocket": 0.9641528925619838,
+   "geometry": 0.013670798898071324,
+   "ctqw": 0.0018365472910926162
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.75239898989899,
+   "fpocket,geometry": 0.9889118457300275,
+   "ctqw,fpocket,geometry": 0.9898301193755739,
+   "ctqw,geometry": 0.745684113865932,
+   "fpocket": 0.9820764462809919,
+   "ctqw,fpocket": 0.982415059687787,
+   "ctqw": 0.7167699724517906
+  }
+ },
+ "PKR_MITAPIVAT": {
+  "shapley": {
+   "geometry": 0.5956111810803247,
+   "fpocket": -0.07404142177441915,
+   "ctqw": 0.20165652113070245
+  },
+  "full_auc": 0.861613140218304,
+  "full_share": 0.7232262804366081,
+  "unexplained": 0.2767737195633919,
+  "seq_geom_first": {
+   "geometry": 0.676469353484467,
+   "fpocket": 0.047795969773299696,
+   "ctqw": -0.0010390428211586311
+  },
+  "seq_fpocket_first": {
+   "fpocket": -0.3164147774979009,
+   "geometry": 1.0406801007556676,
+   "ctqw": -0.0010390428211586311
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.8382346767422335,
+   "fpocket,geometry": 0.8621326616288834,
+   "ctqw,fpocket,geometry": 0.861613140218304,
+   "ctqw,geometry": 0.8390008396305625,
+   "fpocket": 0.34179261125104954,
+   "ctqw,fpocket": 0.6657903022670025,
+   "ctqw": 0.640622376154492
+  }
+ },
+ "PKR_AG946": {
+  "shapley": {
+   "geometry": 0.626445587955022,
+   "fpocket": -0.07163903182771099,
+   "ctqw": 0.17294644558795494
+  },
+  "full_auc": 0.863876500857633,
+  "full_share": 0.727753001715266,
+  "unexplained": 0.272246998284734,
+  "seq_geom_first": {
+   "geometry": 0.6841738136077757,
+   "fpocket": 0.04746712407089837,
+   "ctqw": -0.0038879359634080846
+  },
+  "seq_fpocket_first": {
+   "fpocket": -0.31277301315037165,
+   "geometry": 1.0444139508290458,
+   "ctqw": -0.0038879359634080846
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.8420869068038879,
+   "fpocket,geometry": 0.865820468839337,
+   "ctqw,fpocket,geometry": 0.863876500857633,
+   "ctqw,geometry": 0.8401029159519726,
+   "fpocket": 0.3436134934248142,
+   "ctqw,fpocket": 0.6404917095483132,
+   "ctqw": 0.6139165237278446
+  }
+ },
+ "MKK7_IBRUTINIB": {
+  "shapley": {
+   "geometry": 0.3936976144422953,
+   "fpocket": 0.030915538362346912,
+   "ctqw": 0.4893778207607995
+  },
+  "full_auc": 0.9569954867827208,
+  "full_share": 0.9139909735654417,
+  "unexplained": 0.08600902643455832,
+  "seq_geom_first": {
+   "geometry": 0.7562540296582849,
+   "fpocket": 0.07640232108317235,
+   "ctqw": 0.0813346228239844
+  },
+  "seq_fpocket_first": {
+   "fpocket": 0.037459703417150214,
+   "geometry": 0.7951966473243071,
+   "ctqw": 0.0813346228239844
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.8781270148291425,
+   "fpocket,geometry": 0.9163281753707286,
+   "ctqw,fpocket,geometry": 0.9569954867827208,
+   "ctqw,geometry": 0.9509348807221147,
+   "fpocket": 0.5187298517085751,
+   "ctqw,fpocket": 0.9475499677627337,
+   "ctqw": 0.9425854287556416
+  }
+ },
+ "NAMPT_NPA1R": {
+  "shapley": {
+   "geometry": 0.42075649481760663,
+   "fpocket": -0.08926504240139994,
+   "ctqw": 0.2460829182931754
+  },
+  "full_auc": 0.7887871853546911,
+  "full_share": 0.5775743707093821,
+  "unexplained": 0.4224256292906179,
+  "seq_geom_first": {
+   "geometry": 0.596136761340692,
+   "fpocket": 0.005613137703593507,
+   "ctqw": -0.02417552833490344
+  },
+  "seq_fpocket_first": {
+   "fpocket": -0.2787454569928657,
+   "geometry": 0.8804953560371512,
+   "ctqw": -0.02417552833490344
+  },
+  "subset_aucs": {
+   "(none)": 0.5,
+   "geometry": 0.798068380670346,
+   "fpocket,geometry": 0.8008749495221428,
+   "ctqw,fpocket,geometry": 0.7887871853546911,
+   "ctqw,geometry": 0.7857517835509489,
+   "fpocket": 0.36062727150356716,
+   "ctqw,fpocket": 0.7131713554987211,
+   "ctqw": 0.7110983981693364
+  }
+ }
+}

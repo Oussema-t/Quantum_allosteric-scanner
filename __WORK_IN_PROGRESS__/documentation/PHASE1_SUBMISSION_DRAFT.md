@@ -382,6 +382,37 @@ no seed, reaches 0.8348/0.8596 on KRAS_G12C/BCR_ABL1 indicates a substantial
 part of the residue is static pocket structure that no dynamics-based
 observable in our register examines at all.
 
+**Updated 2026-08-24 ([[TASK-0254]]) — the 67% figure above moved materially
+and is superseded as the estimate of record.** The table above never included
+`fpocket` as its own block — [[TASK-0249]] had already shown `fpocket_drug`
+alone beats the full geometry+CTQW stack. TASK-0254 re-ran the attribution
+with fpocket as a third block, **order-independent** (geometry and fpocket
+are correlated; a fixed entry order misassigns their shared variance — exact
+Shapley value over 3 blocks, not a sequential fit), on the frozen, untuned
+22-target set (n=20 usable) rather than the 9-target set above.
+
+**Corrected estimate of record: unexplained 2–62%, median 29%** (was 16–108%,
+median 67%). Geometry 6–83% (median 42%), fpocket −9% to +65% (median +8%,
+wide and target-dependent — dominant on some targets, negative on others),
+CTQW −15% to +49% (median +11%, up from median +1% — a real change from
+Shapley properly crediting CTQW's own share instead of it being absorbed by
+whichever block entered first in a sequential fit). **Most of what the
+original table called "unexplained" was static pocket geometry the three
+simple baselines don't measure and fpocket does** — confirming this section's
+own hypothesis, not merely revising a number downward for its own sake.
+
+The same task ran a systematic apo-crypticity screen (no such screen existed
+before it — the register had one target's worth of evidence, BCR_ABL1) and
+found **9/20 (45%) of the frozen set already has ≥80% of its true pocket open
+in apo** — cross-tabulated against `fpocket_drug`'s own per-target AUC, those
+already-open targets score a median 0.854 versus 0.515 (near chance) on the
+genuinely cryptic-testing remainder. **This benchmark's apparent difficulty is
+substantially a mixture of two different tasks** — static retrieval and
+genuine cryptic-site discovery — bundled into every number reported above and
+in §2.3 generally. Full tables, method, and both screens: `RESULTS.md`'s
+dated TASK-0254 section; `.ai/tasks/DONE/
+TASK-0254-fpocket-in-the-variance-stack-and-apo-crypticity-screen.md`.
+
 ### 2.3c A theoretical reason this pattern was the expected one, not a defect
 
 **Added 2026-08-24 (TASK-0252).** §2.3/§2.3b establish, empirically, that every

@@ -1,0 +1,122 @@
+{
+ "GAC_BPTES": {
+  "n_true_pocket": 8,
+  "n_open_in_apo": 8,
+  "fraction_open": 1.0,
+  "already_open": true
+ },
+ "GAC_CPD12": {
+  "n_true_pocket": 6,
+  "n_open_in_apo": 6,
+  "fraction_open": 1.0,
+  "already_open": true
+ },
+ "DHPS_GC7": {
+  "n_true_pocket": 8,
+  "n_open_in_apo": 5,
+  "fraction_open": 0.625,
+  "already_open": false
+ },
+ "PF_ATCASE": {
+  "n_true_pocket": 5,
+  "n_open_in_apo": 5,
+  "fraction_open": 1.0,
+  "already_open": true
+ },
+ "KSHV_PROTEASE_24Q": {
+  "n_true_pocket": 15,
+  "n_open_in_apo": 6,
+  "fraction_open": 0.4,
+  "already_open": false
+ },
+ "KSHV_PROTEASE_25G": {
+  "n_true_pocket": 13,
+  "n_open_in_apo": 5,
+  "fraction_open": 0.38461538461538464,
+  "already_open": false
+ },
+ "SUMO_E1_FHJ": {
+  "n_true_pocket": 13,
+  "n_open_in_apo": 9,
+  "fraction_open": 0.6923076923076923,
+  "already_open": false
+ },
+ "HCV_NS5B_VRX": {
+  "n_true_pocket": 15,
+  "n_open_in_apo": 13,
+  "fraction_open": 0.8666666666666667,
+  "already_open": true
+ },
+ "HCV_NS5B_VR1": {
+  "n_true_pocket": 17,
+  "n_open_in_apo": 14,
+  "fraction_open": 0.8235294117647058,
+  "already_open": true
+ },
+ "HCV_NS5B_POO": {
+  "n_true_pocket": 16,
+  "n_open_in_apo": 8,
+  "fraction_open": 0.5,
+  "already_open": false
+ },
+ "HCV_NS5B_CMF": {
+  "n_true_pocket": 16,
+  "n_open_in_apo": 8,
+  "fraction_open": 0.5,
+  "already_open": false
+ },
+ "FBPASE_94D": {
+  "n_true_pocket": 3,
+  "n_open_in_apo": 0,
+  "fraction_open": 0.0,
+  "already_open": false
+ },
+ "FBPASE_95S": {
+  "n_true_pocket": 4,
+  "n_open_in_apo": 2,
+  "fraction_open": 0.5,
+  "already_open": false
+ },
+ "TRP_SYNTHASE_F6F": {
+  "n_true_pocket": 15,
+  "n_open_in_apo": 13,
+  "fraction_open": 0.8666666666666667,
+  "already_open": true
+ },
+ "TRP_SYNTHASE_F19": {
+  "n_true_pocket": 18,
+  "n_open_in_apo": 14,
+  "fraction_open": 0.7777777777777778,
+  "already_open": false
+ },
+ "SMYD3_DIPERODON": {
+  "n_true_pocket": 11,
+  "n_open_in_apo": 11,
+  "fraction_open": 1.0,
+  "already_open": true
+ },
+ "PKR_MITAPIVAT": {
+  "n_true_pocket": 12,
+  "n_open_in_apo": 11,
+  "fraction_open": 0.9166666666666666,
+  "already_open": true
+ },
+ "PKR_AG946": {
+  "n_true_pocket": 11,
+  "n_open_in_apo": 9,
+  "fraction_open": 0.8181818181818182,
+  "already_open": true
+ },
+ "MKK7_IBRUTINIB": {
+  "n_true_pocket": 11,
+  "n_open_in_apo": 6,
+  "fraction_open": 0.5454545454545454,
+  "already_open": false
+ },
+ "NAMPT_NPA1R": {
+  "n_true_pocket": 17,
+  "n_open_in_apo": 13,
+  "fraction_open": 0.7647058823529411,
+  "already_open": false
+ }
+}
