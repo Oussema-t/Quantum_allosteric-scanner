@@ -166,6 +166,28 @@ list, and a methodological report, without stating file formats, whether the
 matrix must be dense, or whether c-Myc requires all three given it has no
 ground truth. A one-line answer removes a compliance guess.
 
+**(f) Does Constraint 3 exclude a third-party tool trained on MD data whose
+own inference is MD-free?** Raised by [[TASK-0260]]'s citation/constraint
+gate for candidate cryptic-pocket predictors. **PocketMiner** (Meller et al.
+2023, ref-adjacent to this register's own H1) is trained on MD-simulation-
+derived cryptic-pocket labels, but inference requires only a single static
+structure — no MD trajectory is supplied by us, at runtime, as an input to
+our pipeline. Under this register's own settled literal reading of
+Constraint 3 (HYP-P... / HYP-S7: *"forbids classical MD trajectories as
+inputs"*, governing what WE supply, not a third party's historical training
+provenance), this reads as **permitted** — but it is a closer call than
+HYP-S7's own settled precedent (in-project conformational sampling design),
+since the tool's own stated purpose is "predict where pockets open in MD
+simulations." [[TASK-0260]] proceeds under the permissive reading, flagged
+here rather than silently assumed, per that task's own explicit instruction.
+Contrast, for the record: **CryptoSite**'s full model runs its own internal
+MD-based conformational sampling (AllosMod) *at inference time* to compute
+its single most informative feature — this is MD executing as part of
+scoring our own target structures, not just training-time provenance, and
+[[TASK-0260]] rules it **excluded** under the same literal reading (no
+organiser question needed there — the two cases are qualitatively
+different, not a matter of degree).
+
 ## Intent Contract
 
 - Outcome: both documents in `documentation/`; a recorded decision on
