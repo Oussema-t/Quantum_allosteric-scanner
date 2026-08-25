@@ -48,3 +48,9 @@ documentation/references/
 # only relative to the .gitignore file's own directory, not at every depth;
 # confirmed directly, this is not the same rule as the root-level one above).
 __WORK_IN_PROGRESS__/documentation/references/
+
+# Collaborator-provided Colab export (TASK-0237), CTQW-Hamiltonian-formulation
+# contribution debate with Reviewer + external agent + collaborator. Not this
+# project's own code, not a decided-on artifact -- discussion material, kept
+# local for reference. See the tracked README.md alongside it for context.
+.ai/reviews/2026-08-23 - hamiltonians/hamiltonians.py
