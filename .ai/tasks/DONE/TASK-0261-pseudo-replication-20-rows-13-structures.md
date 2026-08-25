@@ -174,6 +174,16 @@ conditioning on the label) — cluster by apo structure for the latter, always,
 written down once (this section + the brief's own new box) rather than
 decided per analysis.
 
+**Superseded (label-side clause only), 2026-08-25, [[TASK-0265]]**: the
+label-side clause above is too generous. Direct pocket-label Jaccard overlap
+on the same apo structure runs 0.40–1.00 across the 7 scored pairs (median
+0.77) — 6 of 7 pairs share ≥75% of their label residues, barely independent
+on the label side either. [[TASK-0265]] revises this to: label-side
+independence requires Jaccard **< 0.5** between the two ligands' pocket
+labels; under that bar, 14 (not 20) of the frozen set's rows are genuinely
+independent label-side observations. This section's own apo-side clause is
+unaffected and unchallenged — kept as originally written.
+
 ### Independence check elsewhere in the register (Scope item 4)
 
 Checked directly, not assumed: the **15 register targets** [[TASK-0250]]
