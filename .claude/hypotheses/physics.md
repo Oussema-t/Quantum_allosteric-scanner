@@ -735,7 +735,10 @@ redistribution toward an inactive state — not transmission along a path.
 
 **Status in the literature: this is mainstream, and the challenge cites it.**
 It is Monod–Wyman–Changeux conformational selection (ref [5], Changeux &
-Edelstein 2005) in its modern ensemble formulation (ref [4], Motlagh, Wrabl, Li
+Edelstein 2005, DOI 10.1126/science.1108595, citation re-verified live
+[[TASK-0251]] — this register's own H5.1 *is* this claim's formal literature
+statement, folded into HYP-P13 rather than tracked separately, [[TASK-0251]]
+2026-08-24) in its modern ensemble formulation (ref [4], Motlagh, Wrabl, Li
 & Hilser 2014; ref [6], Tsai & Nussinov 2014). It is **not** novel to the field.
 It is novel to this register as an organising frame, and it **directly
 contradicts the challenge's own §5 Assumption** — *"the topology of the contact
@@ -833,7 +836,10 @@ hypothesis existed and happens to be exactly what it needs.
   them. That is more useful, and it must not be oversold as more than that.
 
 **Status:** open, unowned as a whole. Its decisive test is [[TASK-0229.006]];
-its answer-key consequence is [[TASK-0229.003]]; its complexity half is
+its formal literature grounding (H5.1) and the CS-vs-IF distinguishability
+question are addressed by [[TASK-0251]] (2026-08-24) — not decidable with a
+single static apo/holo pair, one COREX-reanalysis follow-up flagged there,
+not built; its answer-key consequence is [[TASK-0229.003]]; its complexity half is
 measurable via [[TASK-0228]] §6.2. **Usable in [[TASK-0184]] as a mechanistic
 hypothesis explaining the negative result — explicitly labelled as hypothesis,
 not finding.**

@@ -33,7 +33,7 @@ this register in sync" immediately below.
 | H4.2 | Zero-mean-structural-change (Cooper–Dryden) entropic coupling | **PARTIAL** — proxy escapes the proximity confound on real targets; single-condition LOD check inconclusive | [[TASK-0226]] | 2026-08-21/22 |
 | H4.3 | Disorder amplifies coupling (only route to c-Myc) | **UNTESTED** — c-Myc explicitly excluded as unvalidatable | [[TASK-0229.006]] (excluded, not tested) | 2026-08-23 |
 | H4.4 | Coupling free energy doesn't decompose onto graph edges | **UNTESTED** | — | — |
-| H5.1/H5.2 | MWC conformational selection; concerted multi-subunit transitions | **UNTESTED — genuinely open, zero coverage anywhere** (confirmed by direct search, not inherited) | — | — |
+| H5.1/H5.2 | MWC conformational selection; concerted multi-subunit transitions | **RESOLVED** — H5.1 folded into [[HYP-P13]] (same population-shift claim, not decidable with single static apo/holo pairs, one COREX-reanalysis follow-up flagged); H5.2 tested and answered per-target — CARDIAC_MYOSIN (both pairs) unscoreable-by-construction, all 6 other scoreable targets verified intra-domain/monomeric or inter-subunit-but-scope-retained | [[TASK-0251]] | 2026-08-24 |
 | H1 | NMA-guided conformational sampling finds cryptic sites | **TESTED** — implemented, validated, beats quantum arm's point estimate on KRAS_G12C (not register-significant) | [[TASK-0229.004]] | 2026-08-22 |
 | H2.1 | Single-structure persistent-homology void signature | **TESTED (pre-existing)** — no real void detected, apo | [[TASK-0142]] | 2026-07-22 |
 | H2.2 | TDA over an ensemble beats TDA on one structure | **TESTED — decisive negative**, positive control itself fails on both VALID targets | [[TASK-0229.005]] | 2026-08-23 |
@@ -169,30 +169,51 @@ this file should be treated as leaving a known gap, not as having implicitly upd
   measurement; not done for H4.3/H4.4 or H4.2's own negative-control LOD sweep.
 
 ### H5 — MWC / conformational selection; concerted transitions
-*Ref [5] Changeux & Edelstein 2005, Science.*
+*Ref [5] Changeux & Edelstein 2005, Science — citation re-verified directly, [[TASK-0251]].*
 
 - **H5.1** Pre-existing equilibrium between states; ligand selects rather than induces.
 - **H5.2** Allosteric transitions are concerted across subunits in oligomers.
-- **STATUS:** **UNTESTED — confirmed genuinely open** (direct search of the [[TASK-0229]]
-  family and the wider task history found no task addressing either H5.1 or H5.2; this
-  is one of only two hypotheses in this register with zero coverage anywhere, per
-  [[TASK-0248]]'s own reconciliation pass, not inherited from this register's original
-  framing without checking).
-- **WHY IT MATTERS:** H5.2 interacts with the challenge's own Scope ("Included: the
-  catalytic domains"). For any target whose mechanism is inter-subunit or inter-domain,
-  **scope truncation removes the coupling from the model by construction** — a
-  setup-validity failure orthogonal to, and possibly deeper than, the apo/holo contrast
-  finding in TASK-0209.
-- **HYPOTHESIS (needs verification, not asserted):** Cardiac Myosin may be exactly this
-  case — mavacamten stabilises the super-relaxed state, and SRX is associated with the
-  interacting-heads motif, a **two-head** arrangement. If so, a single catalytic-domain
-  contact graph cannot represent the mechanism at all. **Verify against refs [22][23]
-  and the 6C1H entity composition before writing this.**
-- **OPEN VENUE:** Add an explicit "mechanism-in-scope?" gate per target, upstream of the
-  apo/holo contrast gate. This strengthens TASK-0209 rather than duplicating it. This is
-  the clearer of the two genuinely-open hypotheses this register carries forward as the
-  input to a follow-up test task.
-- **PDB-RETEST:** **YES** — check oligomeric/multi-domain state of 5TBY, 6C1H, 1OPL, 5MO4.
+- **STATUS:** **RESOLVED, 2026-08-24, [[TASK-0251]].**
+  **H5.1 folded into [[HYP-P13]]** (`physics.md`) — same population-shift claim,
+  independently arrived at; H5.1 is its formal literature citation, HYP-P13 is this
+  register's own elaboration with four findings it explains and a decisive test already
+  specified ([[TASK-0229.006]]). Tracked under HYP-P13 going forward, not as a separate
+  open item. On the narrower question this task's own Scope asked — what would
+  distinguish conformational selection from induced fit using apo/holo structure pairs
+  only, no MD — **not decidable with current inputs**: a single deposited apo structure
+  and a single deposited holo structure predict the same endpoint (apo ≠ holo) under
+  either model; the real discriminating signatures are kinetic (concentration-dependence
+  of binding rates) or require an ensemble of independent apo structures, neither
+  available here. One cheap, unbuilt follow-up identified: [[TASK-0229.006]]'s own COREX
+  ensemble is already computed from a single structure (no MD) and could be re-analysed
+  for whether low-stability microstates already sample an active-site-disrupting
+  conformation absent ligand — a genuine CS-vs-IF test constraint 3 would allow.
+  **H5.2 tested per-target, primary-literature citations verified live** (not inferred
+  from structure): KRAS_G12C and PTP1B and GLUCOKINASE intra-domain/monomeric (Ostrem
+  2013; Wiesmann 2004; Kamata 2004); BCR_ABL1 inter-domain but single-chain, confirmed
+  the crystallised construct (1OPL/5MO4, ~500 residues/chain) retains the full
+  SH3-SH2-kinase autoinhibitory unit (Nagar 2003); CASPASE1/CASPASE7 genuinely
+  inter-subunit (dimer-interface allosteric site, Scheer/Romanowski/Wells 2006, Hardy
+  et al. 2004) but scope-retained — `chains: ["A","B"]` already keeps both protomers.
+  **CARDIAC_MYOSIN (both the incumbent 8QYP/8QYR pair and the Table-1-mandated
+  5TBY/6C1H pair) is unscoreable-by-construction**: the SRX/interacting-heads-motif
+  mechanism this target's own `objective` field names requires two myosin-heavy-chain
+  motor domains folding onto each other (Anderson 2018, Green 2016, Rohde 2018 —
+  confirmed live), and both configured pairs retain only one head. A separate,
+  single-head-intrinsic component of mavacamten's action does exist (Rohde 2017,
+  phosphate-release slowing within one S1) — the physical binding pocket is
+  representable in a single chain; the named SRX/IHM mechanism is not. Full per-target
+  table and citation list: [[TASK-0251]]'s own Done section.
+- **WHY IT MATTERED:** H5.2 interacts with the challenge's own Scope ("Included: the
+  catalytic domains", `Cleveland-Clinic-Challenge-Statement-vF-1.md:83`, quote verified).
+  For CARDIAC_MYOSIN, **scope truncation removes the coupling from the model by
+  construction** — a third, independent defect alongside [[TASK-0222]] (mandated pair's
+  ligand doesn't resolve) and [[TASK-0169]] (6C1H isn't mavacamten-bound), reported per
+  [[TASK-0251]]'s own Constraint as a benchmark finding for the Phase 1 submission.
+- **PDB-RETEST:** done — 8QYP/8QYR (single motor domain each, config's own prior note),
+  5TBY (confirmed 6-chain IHM, only chain B used), 6C1H (wrong myosin isoform,
+  pre-existing finding, unaffected by this task), 1OPL/5MO4 (confirmed SH3-SH2-kinase
+  construct retained in full within the single chain used).
 
 ---
 
