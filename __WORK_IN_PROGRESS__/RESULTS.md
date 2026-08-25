@@ -7712,3 +7712,73 @@ anything) to do about MYC_MAX's/BCR_ABL1's existing numbers. **Script:**
 `scripts/task0250_gnm_bfactor_validity.py`. **Raw data:**
 `results/tasks/0250_gnm_bfactor_validity/gnm_bfactor_validity.json`. **Full detail:**
 `.ai/tasks/DONE/TASK-0250-h16-1-gnm-model-validity-b-factors.md`.
+
+## `MIN_HOP >= 2` does not mean "genuinely distal" — the answer key itself fails a separation bar on 16/20 targets ([[TASK-0255]], 2026-08-25)
+
+**[OBSERVED]** [[TASK-0246]] found pocket residues concentrate at graph-hop
+2-4 from the active site; `MIN_HOP = 2` is the two-stage design's own
+operational definition of "distal" ([[TASK-0242]]/[[TASK-0244]]/[[TASK-0249]]).
+[[TASK-0169]] had already found one case (KRAS_G12C, min Ca-Ca 3.75 A) where
+a nominally-distal pocket sits at van der Waals contact range. This task
+calibrated hop against real 3D separation across [[TASK-0243]]'s full frozen
+22-target set, using minimum HEAVY-ATOM distance (not Ca-Ca — side chains
+reach several A closer than backbone), to find out whether TASK-0169's case
+was an outlier or the norm.
+
+**It is the norm, not the outlier.** Per-target true-pocket (the answer key
+itself, not a fpocket candidate) minimum heavy-atom distance to the active
+site: **20/20 usable targets fail a 20 A genuine-separation bar; 16/20 fail
+even 15 A.** Several sit under 1.5 A (DHPS_GC7 1.33, PF_ATCASE 1.36,
+TRP_SYNTHASE 1.29, MKK7_IBRUTINIB 1.32, FBPASE_95S 1.35) — spot-checked one
+(DHPS_GC7) directly: its closest true-pocket residue is hop **1** from the
+active site, an immediate contact-graph neighbour, confirmed not a bug.
+
+**Hop -> Angstrom calibration, pooled across all 20 targets, all residues**
+(median [IQR] / **min**): hop1 3.18 [1.38,3.76] / **1.21**; hop2 7.50
+[6.35,8.94] / **2.09**; hop3 12.14 [10.66,13.79] / **2.79**; hop4 16.88
+[14.96,18.58] / **3.55**; hop5 21.72 [19.23,23.57] / **7.02**; hop6 26.47
+[23.85,28.81] / **10.42**; hop7 31.48 [27.39,33.91] / **7.73**; hop8+ 40.96
+[36.42,46.54] / **17.63**. Both readings are real at once: the *median*
+grows monotonically (hop is a genuine aggregate distance signal), but the
+*minimum* stays under 4 A through hop 4 — `MIN_HOP >= 2` guarantees a
+graph-contact path of >=2 edges, nothing about any single candidate's real
+spatial separation. Candidate-level check: **115/492 (23.4%)** of fpocket
+candidates surviving `MIN_HOP >= 2` across the frozen set have a residue
+within 8 A of the active site despite passing the filter.
+
+**Cost of a hard 15-20 A floor, measured not assumed**: 15 A removes 8/14
+currently-scoreable targets (57%) and 327/407 surviving candidates (80%);
+20 A removes 10/14 (71%) and 365/407 (90%).
+
+**Recommendation: not a hard floor.** Two independent reasons: the cost
+alone is severe, and more fundamentally the answer key itself fails the bar
+in most targets — a hard filter built from it would in those cases exclude
+the *correct* candidate from the pool, which is worse than an uninformative
+filter. Recommended instead: keep `MIN_HOP >= 2` as the primary gate (its
+median trend is real); report minimum heavy-atom distance as a **required
+disclosed statistic** alongside every scored candidate and the true pocket,
+never again silently read as "genuinely separated"; treat distality as a
+covariate/competing feature (as [[TASK-0244]] already does for hop, and
+[[TASK-0249]]'s composite baseline already does structurally) rather than a
+binary gate, since no single Ångström threshold both excludes noise and
+retains the ground truth on this frozen set.
+
+**Real bug found and fixed en route**: `allostery.labels.
+protein_heavy_atoms_by_residue`'s own residue-lookup dict is keyed on bare
+residue number only, which silently collapses same-numbered residues across
+chains in a multi-chain target — confirmed on GAC_BPTES (3 chains, 1223
+residues, only 411 unique resnums; the bare-resnum map left 812/1223
+residues with zero heavy atoms mapped). Not fixed at the shared helper
+(other established callers, out of this task's scope) — re-implemented
+locally in this task's own script, keyed on `(chain, resnum)`.
+
+**Note for the collaborating thread**: `MIN_HOP` is a parameter their own
+joint protocol proposes to freeze. This calibration is the reason it should
+not be frozen as a hard distality gate without disclosure — both threads
+would otherwise be freezing a parameter that does not mean what its name
+implies for any single candidate, even though it remains a real, useful
+aggregate signal in the median.
+
+**Script:** `scripts/task0255_hop_angstrom_calibration.py`. **Data:**
+`results/tasks/0255_hop_angstrom_calibration/calibration.json`. **Full
+detail:** `.ai/tasks/DONE/TASK-0255-hop-to-angstrom-distality-calibration.md`.
