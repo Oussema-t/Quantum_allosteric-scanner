@@ -127,6 +127,38 @@ unfinished.
 
 ## 3. Questions to the organisers — an under-used channel
 
+### ANSWERED 2026-08-26 — organiser reply received
+
+**Verbatim text and full provenance:
+`documentation/2026-08-26-organiser-clarifications.md`.** A **private reply to
+us**; no corresponding public revision of the Challenge Statement exists
+(checked same day), so any submission claim resting on these must cite the
+clarification explicitly.
+
+| our question | outcome |
+|---|---|
+| **(a)** Cardiac Myosin's mandated structures | **ANSWERED** — "Your 8QYP–8QYR substitution is accepted as primary." Resolves [[TASK-0222]]. |
+| **(c)** Deliverable format | **ANSWERED** — "No specific formats are prescribed. Please use formats accessible with conventional software." |
+| **(b)** the benchmark-validity finding | **Substantively responsive, not directly answered.** They offered KRAS G12C `8S8C` unprompted and granted BCR-ABL1 apo latitude — a tacit acknowledgement that the mandated structures are not beyond question. **Not an endorsement of our finding; do not report it as one.** |
+| **(d)** which reference governs when the bibliography contradicts itself | **STILL OPEN** |
+| **(e)** does Constraint 3 exclude minimisation / Monte-Carlo sampling? | **STILL OPEN** |
+| **(f)** MD-*trained* tool with MD-free inference (PocketMiner) | **STILL OPEN — gates [[TASK-0269]]** |
+
+Two structure substitutions now need a deliberate decision, filed as
+[[TASK-0270]]: KRAS G12C `8S8C` (a *suggestion*, and it is not stated whether
+they mean it as apo or holo — establish that first), and a permitted BCR-ABL1
+apo substitution for which **the organisers explicitly require a documented
+rationale in the submission**.
+
+**Recommended follow-up ask, for Bartosz:** the channel is live and
+responsive. **(e)** and **(f)** are both worth re-sending — (f) especially,
+since an organiser ruling would let [[TASK-0269]] proceed on their authority
+rather than our own permissive reading of Constraint 3.
+
+### Original question list (kept for the record)
+
+
+
 Three questions where an official answer would be worth more than our own
 reasoning, and where asking is itself evidence of rigour:
 
