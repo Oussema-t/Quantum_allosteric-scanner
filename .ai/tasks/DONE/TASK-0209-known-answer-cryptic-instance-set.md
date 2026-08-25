@@ -185,6 +185,52 @@ even where the boolean lands on the expected side.
 
 ## Done
 
+### Framing correction 2026-08-19 — "2 of 7" understates the finding and invites the wrong objection
+
+Reporting this as "2 of 7 targets valid" invites a reviewer to ask *"why did
+you pick five bad targets?"* That is the wrong question, and the honest
+decomposition answers it:
+
+| Set | Source | Valid |
+|---|---|---|
+| **Challenge-mandated, scoreable** (KRAS_G12C, BCR_ABL1, CARDIAC_MYOSIN) | Challenge Statement Table 1 | **1 of 3** — only KRAS_G12C, and it is validated against a wild-type structure ([[TASK-0155]]) |
+| **ASD extension** (PTP1B, GLUCOKINASE, CASPASE1, CASPASE7) | Challenge Statement §6, which *directs* participants to the Allosteric Database | **1 of 4** — only PTP1B |
+
+**We did not select the failing targets — the challenge did.** c-Myc (1NKP)
+is the fourth mandated target but has no holo structure, so it cannot carry an
+apo-closed/holo-open contrast at all and is excluded from this audit by
+construction, not by choice.
+
+The extension was not target-shopping either: §6 states *"participants are
+highly encouraged to test the robustness of their quantum approach on
+additional targets of their choice… For this purpose, participants may refer
+to the Allosteric Database (ASD)."* `config/targets.yaml`'s own block comment
+marks these entries **"ASD expansion"**. We followed the challenge's own
+instruction and its own named source.
+
+**So the finding is stronger than the raw ratio suggests**: 2 of the 3
+mandated scoreable targets fail, and extending into the database the challenge
+recommends recovered only one more. The failure is systemic across two
+independent target sources, not an artifact of our selection.
+
+**Pointer added 2026-08-25 — three later results all strengthen the paragraph
+above; none weakens it.** The 2026-08-19 text stands as written:
+
+- [[TASK-0251]] found CARDIAC_MYOSIN **unscoreable by construction** — its
+  mechanism is inter-subunit, and the challenge's own catalytic-domain scope
+  removes the coupling before any observable is computed. That is a *third*
+  independent defect on that target, on top of [[TASK-0169]]'s ligand finding
+  and [[TASK-0222]]'s unscoreable mandated pair.
+- [[TASK-0255]] calibrated the distality criterion in Ångströms: `MIN_HOP >= 2`
+  corresponds to a median of only **7.5 Å** (minimum 2.09 Å), and **4 of 20**
+  frozen-set targets meet a 15 Å separation bar while **0 of 20** meet 20 Å.
+  The systemic failure this section describes is broader than target selection
+  — it reaches the definition of "distal" itself.
+- [[TASK-0254]] found **9 of 20** frozen-set targets already >=80% open in apo,
+  with `fpocket_drug` scoring 0.854 on those versus 0.515 on the rest — the
+  benchmark bundles static retrieval and cryptic-site discovery into one number.
+
+
 **Verdict: 2/7 real drug-ligand targets are VALID (KRAS_G12C, PTP1B). 5/7 are
 INVALID (BCR_ABL1, CARDIAC_MYOSIN, GLUCOKINASE, CASPASE1, CASPASE7) — and
 critically, the construction leg's own precondition (a verified-open holo to
