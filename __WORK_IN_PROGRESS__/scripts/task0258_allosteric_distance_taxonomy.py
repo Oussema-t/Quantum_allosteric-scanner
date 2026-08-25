@@ -81,9 +81,15 @@ for _p in (_ROOT/"src", _ROOT/"scripts", _ROOT.parent):
     if str(_p) not in sys.path: sys.path.insert(0, str(_p))
 import prody; prody.confProDy(verbosity="none")
 
-from task0255_hop_angstrom_calibration import (
-    min_heavy_atom_dist_to_seed, _parsePDB_all_altloc)
-prody.parsePDB = _parsePDB_all_altloc
+# Importing task0255 already leaves prody.parsePDB correctly composed
+# (altloc="all" default wrapping allostery's own folder default) as a
+# side effect of its own module-level patch dance -- re-assigning
+# prody.parsePDB to its bare _parsePDB_all_altloc here (as this line used
+# to) clobbers that composition and drops the folder default, since the
+# function object's own closure was bound before allostery's patch ran.
+# Silently scattered PDB fetches back into this process's cwd; found via
+# TASK-0258/0259 sharing the identical bug. Do not re-add the assignment.
+from task0255_hop_angstrom_calibration import min_heavy_atom_dist_to_seed
 from task0242_two_stage_dryrun import prep, CAND
 from allostery.baselines import hop_from_seed
 

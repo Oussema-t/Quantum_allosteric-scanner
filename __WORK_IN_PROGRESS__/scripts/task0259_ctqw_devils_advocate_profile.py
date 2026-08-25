@@ -58,8 +58,15 @@ for _p in (_ROOT / "src", _ROOT / "scripts", _ROOT.parent):
 import prody  # noqa: E402
 prody.confProDy(verbosity="none")
 
-from task0255_hop_angstrom_calibration import _parsePDB_all_altloc  # noqa: E402
-prody.parsePDB = _parsePDB_all_altloc
+# Importing task0255 for its own side effect: it leaves prody.parsePDB
+# correctly composed (altloc="all" default wrapping allostery's own
+# folder default). Do NOT re-assign prody.parsePDB to a name pulled from
+# it (this line used to do `prody.parsePDB = _parsePDB_all_altloc`) --
+# that function object's closure was bound before allostery's patch ran,
+# so the re-assignment clobbers the folder default and scatters fetched
+# PDB files into this process's cwd instead of pdb_cache/. Found via
+# TASK-0258 sharing the identical bug.
+import task0255_hop_angstrom_calibration  # noqa: E402,F401
 
 import yaml  # noqa: E402
 from task0242_two_stage_dryrun import prep, CAND  # noqa: E402

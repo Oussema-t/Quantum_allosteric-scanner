@@ -72,3 +72,12 @@ on independent grounds.
 
 **Script:** `scripts/task0259_ctqw_devils_advocate_profile.py`.
 **Data:** `results/tasks/0259_ctqw_devils_advocate/profile.json`.
+
+**2026-08-26 fix (unrelated to the finding above, numbers unaffected):** this
+script's own `prody.parsePDB = _parsePDB_all_altloc` (imported by name from
+`task0255_hop_angstrom_calibration.py`) was silently discarding
+`allostery/__init__.py`'s folder-default patch, scattering fetched PDB files
+into cwd instead of `pdb_cache/` — same bug as
+[[TASK-0258]]'s identically-patterned script. Fixed by importing the module
+for its patching side effect instead of reassigning to its exported name; see
+`pdb_cache/README.md` for the general rule. Already-run results untouched.
