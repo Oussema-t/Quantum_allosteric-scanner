@@ -8039,3 +8039,97 @@ before they could find it themselves, per this task's own Constraint.
 `results/tasks/0261_cluster_robust_stats/cluster_robust_results.json`.
 **Full detail:**
 `.ai/tasks/DONE/TASK-0261-pseudo-replication-20-rows-13-structures.md`.
+
+## Was the physics right and the propagator wrong? Yes — `build_H_new`'s own potential terms beat the CTQW built from them, decisively (TASK-0263, 2026-08-25)
+
+Bartosz's framing, 2026-08-25: *"We tried to introduce these to the Hamiltonians of
+the CTQW some time ago. Maybe the route was reasonable, but simply not because of
+CTQW at all."* A testable claim: `build_H_new`'s five potential terms (`V_B`
+B-factor, `V_T` terminal suppression, `V_R` rigidity, `V_C` DCC coupling
+centrality, `V_M` low-mode participation) encode real structural physics — but
+until now they had only ever been seen mixed into a Hamiltonian a CTQW then
+propagates over. A walk mixes a sharp local field into a smooth diffusion
+profile; if the terms carry real signal the walk destroys, the encoding was
+right and the propagator was the mistake.
+
+**Method**: each term extracted as its own per-residue vector
+(`np.diag(potentials.V_X(...))` — all five are already public, individually
+callable, individually z-scored functions, the same route [[TASK-0257]]'s own
+extraction script already used and validated). Scored with [[TASK-0254]]'s
+protocol unchanged (5-fold stratified CV, 20 repeats, out-of-fold, OLS,
+seed rows excluded), [[TASK-0243]]'s frozen 22-target set (n=20 usable).
+Significance via [[TASK-0261]]'s cluster-robust exact sign-flip test (13
+clusters, not row-level Wilcoxon — this set is pseudo-replicated).
+
+**Headline — terms-block (all 5, concatenated) vs. CTQW alone, same targets,
+same folds**: median AUC **0.751 vs. 0.575** (range 0.470–0.979 vs.
+0.266–0.943). **Cluster-robust p = 0.019** (13 clusters) — the terms block
+beats CTQW significantly, not just in the median.
+
+**The sharpest version of the question — does the walk add anything to its own
+ingredients?** Four-block Shapley attribution (geometry / fpocket / CTQW /
+potential-terms), CTQW's own **added-last** marginal (its contribution once
+geometry, fpocket, *and* the potential terms it was itself built from are
+already in the model as direct predictors): **median −0.4%, range −4% to
++12%, cluster-robust p = 0.973.** Indistinguishable from zero. **No — CTQW
+retains no residual contribution once its own ingredients are given a fair
+chance to predict directly.**
+
+| target | best term | best-term AUC | terms-block AUC | CTQW AUC | terms − CTQW | ctqw added-last |
+|---|---|---|---|---|---|---|
+| GAC_BPTES | V_B | 0.807 | 0.799 | 0.424 | +0.375 | −0.1% |
+| GAC_CPD12 | V_C | 0.926 | 0.926 | 0.352 | +0.574 | +0.2% |
+| DHPS_GC7 | V_R | 0.513 | 0.596 | 0.739 | −0.143 | −2.1% |
+| PF_ATCASE | V_B | 0.812 | 0.880 | 0.432 | +0.448 | +1.4% |
+| KSHV_PROTEASE_24Q | V_R | 0.636 | 0.692 | 0.729 | −0.037 | −3.9% |
+| KSHV_PROTEASE_25G | V_R | 0.658 | 0.704 | 0.637 | +0.067 | −0.6% |
+| SUMO_E1_FHJ | V_M | 0.715 | 0.703 | 0.766 | −0.063 | −1.4% |
+| HCV_NS5B_VRX | V_C | 0.870 | 0.850 | 0.413 | +0.437 | −0.7% |
+| HCV_NS5B_VR1 | V_C | 0.880 | 0.870 | 0.423 | +0.447 | −0.6% |
+| HCV_NS5B_POO | V_B | 0.873 | 0.915 | 0.575 | +0.340 | −2.0% |
+| HCV_NS5B_CMF | V_B | 0.873 | 0.915 | 0.575 | +0.340 | −2.0% |
+| FBPASE_94D | V_C | 0.483 | 0.546 | 0.266 | +0.280 | +8.7% |
+| FBPASE_95S | V_M | 0.539 | 0.470 | 0.338 | +0.132 | +12.2% |
+| TRP_SYNTHASE_F6F | V_C | 0.629 | 0.608 | 0.517 | +0.091 | −0.5% |
+| TRP_SYNTHASE_F19 | V_C | 0.666 | 0.654 | 0.466 | +0.188 | +0.1% |
+| SMYD3_DIPERODON | V_B | 0.561 | 0.572 | 0.717 | −0.145 | +0.2% |
+| PKR_MITAPIVAT | V_B | 0.851 | 0.881 | 0.641 | +0.240 | −0.1% |
+| PKR_AG946 | V_B | 0.857 | 0.873 | 0.614 | +0.259 | −0.3% |
+| MKK7_IBRUTINIB | V_C | 0.973 | 0.979 | 0.943 | +0.036 | −1.5% |
+| NAMPT_NPA1R | V_C | 0.644 | 0.618 | 0.711 | −0.093 | +0.6% |
+
+**Best single term is `V_C` (DCC coupling centrality) on 8/20 targets, `V_B`
+(B-factor) on 7/20, `V_R` on 3/20, `V_M` on 2/20 — `V_T` (terminal suppression)
+never wins, consistent with it being the crudest of the five.** Several single
+terms alone (`V_C` on GAC_CPD12/HCV_NS5B_VRX/VR1/MKK7_IBRUTINIB; `V_B` on
+GAC_BPTES/PF_ATCASE/HCV_NS5B_POO/CMF/PKR_MITAPIVAT/PKR_AG946) reach AUC
+0.81–0.93 with **zero fitting** — stronger than CTQW manages on the same
+targets even after fitting.
+
+**One target's full 4-block model scores below chance out-of-fold**
+(FBPASE_94D, full AUC 0.445) — its own "terms added-last" figure (−78.9% in
+the raw per-target Shapley output, not tabulated above) reflects a model that
+does not generalize on this target at all, not a genuine negative
+contribution; read per [[TASK-0245]]'s own established convention for
+share-outside-[0,1] cases, not taken at face value.
+
+**Answered plainly, per this task's own Constraint** ("if the potential terms
+beat the CTQW built from them, that is a positive result for the project's
+physics and a negative for the propagator — report it as both, with the same
+prominence"): **the physics encoding was right. The propagator was where the
+signal was lost.** `build_H_new`'s potential terms, scored directly, beat the
+CTQW computed from the Hamiltonian they build — decisively on the headline
+comparison (p=0.019) and with the walk's own added-last contribution
+statistically null (p=0.973) once those terms are given a fair chance as
+direct predictors. This does not mean CTQW is worthless in isolation (it
+still beats chance on most targets) — it means whatever the potential terms
+know, the walk does not add to it, and the terms alone already know most of
+what the whole construction knows.
+
+**Flagged, not edited here** (this task's own parallelisation/scope note):
+`documentation/CTQW_CONTRIBUTION_BRIEF.html` §04 should be updated with this
+finding — a separate task's job, not touched in this one.
+
+**Script:** `scripts/task0263_potential_terms_direct_predictors.py`. **Data:**
+`results/tasks/0263_potential_terms_direct_predictors/`. **Full detail:**
+`.ai/tasks/DONE/TASK-0263-potential-terms-as-direct-predictors.md`.
