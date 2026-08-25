@@ -382,6 +382,46 @@ no seed, reaches 0.8348/0.8596 on KRAS_G12C/BCR_ABL1 indicates a substantial
 part of the residue is static pocket structure that no dynamics-based
 observable in our register examines at all.
 
+### 2.3c A theoretical reason this pattern was the expected one, not a defect
+
+**Added 2026-08-24 (TASK-0252).** §2.3/§2.3b establish, empirically, that every
+graph/pathway-based observable we have built — CTQW included — is redundant
+with simple geometry and explains only a small, often negative, share of
+discrimination beyond it. The literature this challenge itself cites predicts
+exactly this outcome, not merely tolerates it. The Ensemble Allosteric Model
+(ref [4], Motlagh, Wrabl, Li & Hilser 2014, *Nature* 508:331) states allosteric
+coupling free energy as a partition-function quantity over an exponential space
+of folded/unfolded microstates, explicitly **not** a pathway on a contact
+graph. That is not an incidental phrasing choice: partition-function-derived
+quantities are a nonlinear (log-sum-exp) transform of the underlying microstate
+energies, and a coupling free energy computed through one is generically
+non-separable into a sum of independent pairwise (graph-edge) terms — separable
+only in the degenerate case where the two sites are statistically independent,
+i.e. not actually coupled. **A graph-edge decomposition of allosteric coupling
+free energy is not merely difficult to find; the ensemble formalism this
+challenge cites says none should be expected to exist.** Every graph-shaped
+observable we have built — contact-graph propagation, hop distance, and CTQW,
+which our own within-shell audit shows duplicates two much simpler geometric
+baselines rather than adding orthogonal signal (§2.3b, [[TASK-0247]]) — sits
+entirely inside the representational class this argument says is structurally
+insufficient.
+
+This reframing is corroborated, not merely asserted: our own genuine
+(COREX-style) ensemble-coupling measurement ([[TASK-0229.006]]) correlates
+with graph-propagation ranking at ρ≈0.5 on both validated targets — real and
+significant, but far short of the ~0.85–0.95 agreement this register's other
+observables show when they turn out to be simple distance detectors in
+disguise. Partial overlap, not identity, is exactly what "pathways are a
+high-flux *subset* of population redistribution, not the whole causal story"
+(ref [6], Tsai & Nussinov 2014) predicts. We read our own repeated negative
+result — graph-based dynamics observables underperform static geometry, and
+what little they add duplicates simpler baselines — as **consistent with,
+not merely undefeated by,** the field's own leading account of how allosteric
+coupling is actually structured. Full citation-level analysis, including a
+diagnosed confound in this project's own COREX coupling metric found while
+testing a related claim (disorder-amplified coupling, ref [4]'s H4.3):
+[[TASK-0252]].
+
 ### 2.4 The one positive we had did not survive our own audit either
 
 **Updated 2026-08-14 — this section's own headline changed.** The prior

@@ -754,10 +754,25 @@ compatible. See [[TASK-0221]] organiser question (d).
 | Coherence adds nothing — flat γ-sweeps, phase-free converged limit, coherent ≥ ENAQT under noise | There is no interference to exploit in a quantity that is not propagating. |
 | 28 observables collapse to effective rank ~3 ([[TASK-0199]]; externally reproduced at 3.65/11) | All of them measure the geometry of a single static structure, because that is all a single static structure contains. |
 | fpocket — 2009, purely geometric, no propagator — beats every observable here on 2/3 targets | Geometry *is* the signal. A geometric detector should win. |
+| CTQW's own non-distance signal, isolated by within-shell AUC, duplicates two simpler baselines (degree/euclid) rather than adding orthogonal information ([[TASK-0247]]); the ensemble-based EAM/COREX coupling metric ([[TASK-0229.006]]) is, on a decisive random-reference-site control, nearly as strongly explained by a candidate's own intrinsic κ_f as by the real active site (ρ≈-0.83 to -0.99 either way, [[TASK-0252]]) | Graph observables collapse to geometry; the ensemble-level observable collapses to intrinsic per-residue instability — the same signature (a seed/site-referencing quantity reduces to a site-independent property) recurring in a completely different observable class, not merely the graph-based ones. |
 
-Four findings, one mechanism. That is a materially stronger claim than nine
+Five findings, one mechanism. That is a materially stronger claim than nine
 independent route closures, and it is the kind of *novel insight* §4.3 item 1
 asks for in place of a credible advantage.
+
+**H4.4 (Motlagh et al. 2014 — coupling free energy does not decompose onto
+graph edges), CLOSED ON ARGUMENT, [[TASK-0252]] 2026-08-24**: partition-
+function-derived coupling is a nonlinear (log-sum-exp) transform of microstate
+energies, non-separable into pairwise graph-edge terms except when sites are
+statistically independent (i.e. not coupled at all) — a direct theoretical
+reason every graph/pathway-shaped observable in this register (CTQW, hop,
+propagation) sits in a representational class the field's own ensemble
+formalism says is structurally insufficient for genuine allosteric coupling.
+This is the mechanistic *reason*, not just a fifth data point, for the pattern
+the table above documents. See [[TASK-0252]]'s own Done section for the full
+argument and its consistency check against [[TASK-0229.006]]'s ρ≈0.5
+EAM-vs-propagation correlation (partial, not full agreement — exactly what
+"pathways are a high-flux subset, not the whole story" predicts).
 
 ### It also reinterprets our benchmark failures as mechanism rather than defect
 

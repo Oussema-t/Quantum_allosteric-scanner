@@ -27,12 +27,12 @@ this register in sync" immediately below.
 | Hyp. | Claim (short) | Status | Task(s) | Date |
 |---|---|---|---|---|
 | H9 | No clean non-allosteric negative class | **PARTIAL** (conceptual claim untestable directly, as anticipated; response metrics built and run) | [[TASK-0229.001]] | 2026-08-21 |
-| H6.1 | Allostery = population redistribution (unified mechanism) | **UNTESTED** | — | — |
+| H6.1 | Allostery = population redistribution (unified mechanism) | **MERGED, not carried as its own open entry** — "pathways are a high-flux subset, not causal channels" clause folds into H4.1 (already TESTED, same empirical signature: ρ≈0.5 partial overlap); "pre-existing landscape" clause overlaps H5.1, already folded into HYP-P13 by TASK-0251 — doubly covered, not left dangling | [[TASK-0252]] | 2026-08-24 |
 | H6.2 | Sites are effector-specific (answer-key multiplicity) | **PARTIAL/TESTED** — 1 genuine second site found (BCR_ABL1), 3/4 targets single-site | [[TASK-0229.003]] | 2026-08-22 |
 | H4.1 | EAM: partition-function coupling over 2^N microstates, not graph pathway | **TESTED** — harmonic proxy (real targets) still confounded; genuine COREX EAM run, real mixed result | [[TASK-0226]], [[TASK-0229.006]] | 2026-08-21/22, 2026-08-23 |
 | H4.2 | Zero-mean-structural-change (Cooper–Dryden) entropic coupling | **PARTIAL** — proxy escapes the proximity confound on real targets; single-condition LOD check inconclusive | [[TASK-0226]] | 2026-08-21/22 |
-| H4.3 | Disorder amplifies coupling (only route to c-Myc) | **UNTESTED** — c-Myc explicitly excluded as unvalidatable | [[TASK-0229.006]] (excluded, not tested) | 2026-08-23 |
-| H4.4 | Coupling free energy doesn't decompose onto graph edges | **UNTESTED** | — | — |
+| H4.3 | Disorder amplifies coupling (only route to c-Myc) | **UNDECIDABLE WITH CURRENT TOOLING** — real, robust, correctly-signed correlation found (κ_f vs \|coupling\|, ρ=-0.83 to -0.94, both VALID targets) but a decisive random-reference-site control shows the SAME strength regardless of which site is used as reference — the existing COREX coupling metric is confounded for this specific test, not a power/variation problem (disorder variation itself confirmed real via B-factor measurement) | [[TASK-0252]] | 2026-08-24 |
+| H4.4 | Coupling free energy doesn't decompose onto graph edges | **CLOSED ON ARGUMENT** — partition-function-derived coupling is a nonlinear transform of microstate energies, non-separable into pairwise graph-edge terms except when sites are independent (i.e. uncoupled); consistent with H4.1's own ρ≈0.5 (partial, not full) EAM-vs-propagation overlap | [[TASK-0252]] | 2026-08-24 |
 | H5.1/H5.2 | MWC conformational selection; concerted multi-subunit transitions | **RESOLVED** — H5.1 folded into [[HYP-P13]] (same population-shift claim, not decidable with single static apo/holo pairs, one COREX-reanalysis follow-up flagged); H5.2 tested and answered per-target — CARDIAC_MYOSIN (both pairs) unscoreable-by-construction, all 6 other scoreable targets verified intra-domain/monomeric or inter-subunit-but-scope-retained | [[TASK-0251]] | 2026-08-24 |
 | H1 | NMA-guided conformational sampling finds cryptic sites | **TESTED** — implemented, validated, beats quantum arm's point estimate on KRAS_G12C (not register-significant) | [[TASK-0229.004]] | 2026-08-22 |
 | H2.1 | Single-structure persistent-homology void signature | **TESTED (pre-existing)** — no real void detected, apo | [[TASK-0142]] | 2026-07-22 |
@@ -46,9 +46,13 @@ this register in sync" immediately below.
 | H11 | SVD/dilation for open-system hardware execution | **TESTED (paper-level)** — the one route that clears the qubit-count bar, under an unbuilt encoding | [[TASK-0229.002]] | 2026-08-22 |
 
 **Genuinely open hypotheses (zero task coverage, confirmed by direct search, not inherited
-from this register's own prior framing)**: **H5** (MWC / concerted transitions) is the
-one remaining. **H16.1** (GNM–B-factor model-validity check) closed 2026-08-24,
-[[TASK-0250]] — real, mixed result, see that row above.
+from this register's own prior framing)**: **none remain**, as of 2026-08-24. H5 (MWC /
+concerted transitions) — the last one carried here — was resolved the same day
+([[TASK-0251]], see its row above); H6.1's own "pathways" clause was independently
+merged into H4.1 the same day ([[TASK-0252]], not a zero-coverage entry to begin with,
+noted here only to keep this sentence accurate given both landed together). **H16.1**
+(GNM–B-factor model-validity check) closed 2026-08-24, [[TASK-0250]] — real, mixed
+result, see that row above.
 
 ## How to keep this register in sync
 
@@ -103,7 +107,19 @@ this file should be treated as leaving a known gap, not as having implicitly upd
   "pathways" are high-flux subsets of that redistribution, not causal channels.
 - **H6.2** The allosteric site is **effector-specific** — one protein has different
   allosteric sites for different effectors.
-- **STATUS:** H6.1 **UNTESTED** (no task addresses the unified-mechanism claim itself).
+- **STATUS:** H6.1 **MERGED, 2026-08-24, [[TASK-0252]]** — checked directly whether it
+  is empirically distinguishable from H4.1 given this project's own inputs: it is not,
+  for its "pathways" clause. H4.1's own already-TESTED result (EAM-vs-propagation
+  ρ≈0.5, [[TASK-0229.006]] — real, significant, but far short of the ~0.85–0.95 this
+  register's other observables show when they are pure distance detectors) is exactly
+  the "pathways are a high-flux *subset*, not the whole causal story" signature H6.1
+  predicts — the same empirical test, different theoretical vocabulary. That clause is
+  folded into H4.1 rather than carried as a separate permanently-open duplicate. H6.1's
+  other clause ("population redistribution on a *pre-existing* landscape" — i.e.
+  conformational selection, not induction) overlaps H5.1 far more than H4.1 (H5.1:
+  "ligand selects rather than induces") — and H5.1 was independently folded into
+  [[HYP-P13]] by [[TASK-0251]] the same day, so this clause is doubly covered, not left
+  as its own open H6.1 entry.
   H6.2 **PARTIAL/TESTED** — [[TASK-0229.003]] (2026-08-22) ran a live ASD lookup on 4
   targets (KRAS_G12C, BCR_ABL1, CARDIAC_MYOSIN, PTP1B). 3/4 confirmed single-site
   (all ASD records map to the same incumbent pocket). **BCR_ABL1 has a real second
@@ -116,7 +132,8 @@ this file should be treated as leaving a known gap, not as having implicitly upd
 - **WHY IT MATTERS:** H6.2 attacks the **answer-key design.** A single ground-truth
   pocket per target assumes site uniqueness. A residue scoring high may be a genuine
   allosteric site for a different effector and is being counted as a false positive.
-- **REMAINING OPEN VENUE:** H6.1 itself; the full whole-protein re-score against
+- **REMAINING OPEN VENUE:** H6.1 resolved by merge, 2026-08-24 (see STATUS above) — no
+  longer a remaining venue in its own right. The full whole-protein re-score against
   BCR_ABL1's union key ([[TASK-0229.003]]'s own flagged gap); extending the ASD audit
   beyond the 4 targets checked.
 - **PDB-RETEST:** done for H6.2 on the 4 targets listed; not extended further.
@@ -130,8 +147,8 @@ this file should be treated as leaving a known gap, not as having implicitly upd
   (Cooper–Dryden dynamic allostery).
 - **H4.3** Intrinsic **disorder amplifies** allosteric coupling.
 - **H4.4** Coupling free energy does **not decompose onto graph edges.**
-- **STATUS:** TESTED (H4.1, two independent measurements), PARTIAL (H4.2), UNTESTED
-  (H4.3, H4.4).
+- **STATUS:** TESTED (H4.1, two independent measurements), PARTIAL (H4.2), CLOSED ON
+  ARGUMENT (H4.4), UNDECIDABLE WITH CURRENT TOOLING (H4.3) — [[TASK-0252]], 2026-08-24.
   - **Harmonic proxy of H4.1, real-target retest**: [[TASK-0226]] (2026-08-21/22) reran
     the original non-target-structure measurement (|partial ρ|=0.773±0.162) on 5 real
     challenge targets with real annotated active sites and real SASA burial:
@@ -160,13 +177,22 @@ this file should be treated as leaving a known gap, not as having implicitly upd
   state preparation over 2^N, independent of what [[TASK-0229.006]]'s own real numbers
   show — that task's own forward-proposal write-up states this explicitly, with no
   advantage claim (out of scope per its own Intent Contract).
-- **REMAINING OPEN VENUE:** H4.3/H4.4 remain fully untested. c-Myc/1NKP has no holo
+- **REMAINING OPEN VENUE:** H4.4 resolved by argument, 2026-08-24 ([[TASK-0252]]) — no
+  longer open. H4.3 resolved to UNDECIDABLE WITH CURRENT TOOLING, same task: a real
+  correlation was found (κ_f vs coupling magnitude) but a random-reference-site control
+  showed it holds regardless of which site is used, meaning the existing COREX coupling
+  metric cannot currently distinguish "coupling to the real active site" from "coupling
+  to any reference set" — a genuine tooling gap, not a power problem (disorder variation
+  itself confirmed real). A valid H4.3 test needs a coupling metric shown to discriminate
+  the real site from a random one first; not built. c-Myc/1NKP has no holo
   structure and was correctly excluded from [[TASK-0229.006]]'s headline as
   unvalidatable, not silently run anyway. H4.2's own negative control needs a proper
   LOD sweep (`scripts/mechanism_discriminating_plant.py` machinery exists,
   [[TASK-0168]]), not just the single strength/patch check [[TASK-0226]] ran.
-- **PDB-RETEST:** done for H4.1 (both the proxy and the genuine EAM) and H4.2's escape
-  measurement; not done for H4.3/H4.4 or H4.2's own negative-control LOD sweep.
+- **PDB-RETEST:** done for H4.1 (both the proxy and the genuine EAM), H4.2's escape
+  measurement, and H4.3's real-target correlation test ([[TASK-0252]], real targets,
+  found undecidable via a tooling confound, not skipped); H4.4 closed on argument
+  (no measurement applicable); not done for H4.2's own negative-control LOD sweep.
 
 ### H5 — MWC / conformational selection; concerted transitions
 *Ref [5] Changeux & Edelstein 2005, Science — citation re-verified directly, [[TASK-0251]].*
