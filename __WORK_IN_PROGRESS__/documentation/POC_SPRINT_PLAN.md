@@ -327,6 +327,22 @@ Not scoped into any milestone above; named here so it is on record as a
 candidate, not lost in a subtask file, and so a reader of this plan does
 not have reason to conclude it was overlooked.
 
+## Addendum, 2026-08-25 — Braket/Classiq account access resolved: Phase-2-only
+
+**Added after this document's own closing (TASK-0183, Done 2026-08-17); the
+Feasibility/Data paragraph above (§"Named platforms: Amazon Braket and
+Classiq...") is left as originally written, not revised.** The organisers
+answered [[TASK-0221]]'s question directly, 2026-08-25: *"access will be
+provided in Phase 2, once teams have been selected as finalists. No access
+is required for Phase 1 submissions."*
+
+That paragraph's own conditional framing — "this plan targets both
+concretely once available," "if accounts do not arrive in time" — is now
+settled on the branch it treated as the fallback: accounts were never going
+to arrive in Phase 1, by design. The **Explicit exclusions**' own "Braket
+access is an open item, not a milestone dependency" (below) reads the same
+either way, and needed no correction: it never depended on the outcome.
+
 ## Self-audit (Planned Validation, run before this document ships)
 
 - Every milestone above has a stated exit criterion that could fail

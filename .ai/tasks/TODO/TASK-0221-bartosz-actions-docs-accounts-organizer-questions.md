@@ -102,7 +102,7 @@ to `documentation/`. If they exist only as PDFs, that is fine — a
 `Cleveland-Clinic-Challenge-Statement-vF-1.{pdf,md}` pairing, is the
 convention already in place.
 
-## 2. AWS Braket and Classiq accounts
+## 2. AWS Braket and Classiq accounts — **RESOLVED 2026-08-25, by organiser answer**
 
 §Constraint 4: *"participants will have access to AWS Braket and Classiq
 services, provided as part of the challenge infrastructure at no cost."*
@@ -112,13 +112,18 @@ Neither has been used. [[TASK-0182]] ran its transpilation against a
 map, and recorded both gaps explicitly rather than hiding them: Braket
 blocked on absent credentials, Classiq never evaluated.
 
-A reviewer will notice that infrastructure provided at no cost went unused —
-and the resource/feasibility numbers are exactly the section where using it
-would have carried weight.
+**Organiser reply, 2026-08-25** (their "Point 1"): *"access will be provided
+in Phase 2, once teams have been selected as finalists. No access is
+required for Phase 1 submissions."*
 
-**Needed:** accounts/credentials for both, or a decision (recorded here) that
-we ship the local-simulator numbers with the gap disclosed. The second is
-defensible; leaving it unstated is not.
+This resolves the risk this item was tracking. It was never a gap to close —
+Phase 1 was never going to have account access, so the local-simulator
+numbers with the gap disclosed are the *correct* Phase 1 deliverable, not a
+fallback needing a defended decision. No accounts to request; nothing further
+to do here. [[TASK-0182]]'s own "Blocked" items (real Braket execution,
+Classiq evaluation) are correctly deferred to Phase 2, not outstanding Phase-1
+work — worth a one-line note there so a reader doesn't read them as
+unfinished.
 
 ## 3. Questions to the organisers — an under-used channel
 
@@ -179,8 +184,15 @@ ground truth. A one-line answer removes a compliance guess.
 
 - [ ] Add the two-phase description document to `documentation/`.
 - [ ] Add the organisational document to `documentation/`.
-- [ ] Braket + Classiq accounts, or a recorded decision to ship without.
-- [ ] Send organiser questions (a), (b), (c); record answers here.
+- [x] Braket + Classiq accounts, or a recorded decision to ship without. —
+      moot: organiser confirmed 2026-08-25 no Phase-1 access exists to
+      request.
+- [ ] Send organiser questions (a), (b), (c); record answers here. — sent;
+      organiser reply 2026-08-25 says "points 2 through 5" are forwarded to
+      the Cleveland Clinic team, answer pending. **Mapping from their
+      numbering to this task's (a)–(e) lettering is not recorded here** —
+      whoever sent the email should confirm which point is which so answers
+      can be filed against the right question when they arrive.
 - [ ] Re-verify TASK-0184's weights + ideation premise once (1) lands.
 
 ## Dependency

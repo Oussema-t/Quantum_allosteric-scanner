@@ -303,3 +303,9 @@ None
     real feasibility bar even coarse-grained, which sharpens the case for
     checking this alternative rather than iterating further on Trotter
     step count.
+
+  **2026-08-25 note ([[TASK-0221]]):** the organisers confirmed Braket/Classiq
+  access is a **Phase-2-only** benefit — *"No access is required for Phase 1
+  submissions."* The Braket-execution and Classiq-evaluation follow-ups above
+  were never Phase-1-blocking; this local-simulator accounting was always the
+  correct Phase-1 deliverable, not a placeholder pending credentials.
