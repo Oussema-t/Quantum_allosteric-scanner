@@ -49,7 +49,7 @@ from allostery.labels import (holo_pocket_mask, terminal_mask, build_labels,
                               ligand_groups_from_atomgroup, protein_heavy_atoms_by_residue)
 from allostery.baselines import hop_from_seed, _parse_fpocket_info
 from allostery.hamiltonians import build_H_new
-from allostery.propagators import time_averaged_ctqw_converged
+from allostery.propagators import ground_state_relaxation, time_averaged_ctqw_converged
 from backend import active_site as backend_as
 
 MIN_HOP = 2                      # their spec
@@ -112,7 +112,10 @@ def prep(t):
     return cfg, apo, sd, pocket
 
 
-def run(t, tuned, return_state=False):
+T_CLASSICAL = 15.0  # TASK-0256: matches analysis.operator_sweep's own established t_max default
+
+
+def run(t, tuned, return_state=False, include_classical=False):
     cfg, apo, seed, pocket = prep(t)
     if len(seed) == 0:
         # TASK-0253: an unresolved active site (detect_active_site returns
@@ -144,8 +147,21 @@ def run(t, tuned, return_state=False):
     # baselines.hop_from_seed returns NEGATED BFS distance (higher = closer to
     # seed), so flip it back to true hop counts for the MIN_HOP distality filter.
     hops = -hop_from_seed(coords, seed, cutoff=cut)
-    ctqw = time_averaged_ctqw_converged(
-        build_H_new(coords, apo.bfactors, cutoff=cut), source=seed, coherent=False)
+    H = build_H_new(coords, apo.bfactors, cutoff=cut)
+    ctqw = time_averaged_ctqw_converged(H, source=seed, coherent=False)
+    is_psd = min_eig = None
+    classical = None
+    if include_classical:
+        # TASK-0256: the classical-diffusion twin, on the IDENTICAL H the
+        # ctqw arm above just used (not a separately-built graph Laplacian,
+        # per this task's own Scope) -- ground_state_relaxation is exp(-Ht),
+        # classical diffusion only when H is PSD (TASK-0095/P1-B). H_new is
+        # indefinite in general (its V_R/V_C/V_M terms contribute negative
+        # diagonals) -- reported honestly per-target below, not assumed.
+        w = np.linalg.eigvalsh(H)
+        min_eig = float(w.min())
+        is_psd = bool(min_eig >= -1e-9)
+        classical = ground_state_relaxation(H, T_CLASSICAL, source=seed)
     seedset = set(int(resn[i]) for i in seed)
     truth = set(int(resn[i]) for i in np.where(pocket)[0])
 
@@ -166,6 +182,7 @@ def run(t, tuned, return_state=False):
             "overlap": len(set(p["resnums"]) & truth) / max(1, len(truth)),
             "is_seed_pocket": bool(set(p["resnums"]) & seedset),
             "res_idx": ii,   # apo-array indices, TASK-0244: re-scoring candidates under alternate seeds/nulls without re-running fpocket
+            **({"classical": float(np.mean(classical[ii]))} if include_classical else {}),
         })
     kept = [c for c in cands if c["min_hop"] >= MIN_HOP]
     if not kept:
@@ -198,17 +215,22 @@ def run(t, tuned, return_state=False):
 
     K = len(kept)
     rng = np.random.default_rng(7)
+    arms = [("ctqw", [c["ctqw"] for c in kept]),
+            ("fpocket_drug", [c["fpocket_drug"] for c in kept]),
+            ("fpocket_score", [c["fpocket_score"] for c in kept]),
+            ("hop_covariate", [-c["hop_cov"] for c in kept]),
+            ("random", list(rng.random(K)))]
+    if include_classical:
+        arms.append(("classical", [c["classical"] for c in kept]))
     ranks = {}
-    for key, vals in (("ctqw", [c["ctqw"] for c in kept]),
-                      ("fpocket_drug", [c["fpocket_drug"] for c in kept]),
-                      ("fpocket_score", [c["fpocket_score"] for c in kept]),
-                      ("hop_covariate", [-c["hop_cov"] for c in kept]),
-                      ("random", list(rng.random(K)))):
+    for key, vals in arms:
         order = np.argsort(-np.asarray(vals, float))
         ranks[key] = int(np.where(order == true_i)[0][0]) + 1
     out = {"target": t, "tuned_on": tuned, "n_candidates": len(cands), "n_kept": K,
            "true_pocket_overlap": kept[true_i]["overlap"], "ranks": ranks,
            "n_seed_pockets_removed": sum(1 for c in cands if c["min_hop"] < MIN_HOP)}
+    if include_classical:
+        out.update(is_psd=is_psd, min_eig=min_eig)
     if return_state:
         # TASK-0244: enough state to re-score the identical candidate list
         # under an alternate seed or matched-null selection, without
@@ -216,7 +238,13 @@ def run(t, tuned, return_state=False):
         # Not JSON-serializable (numpy arrays) -- opt-in only, main()'s own
         # dryrun.json write path is unaffected (return_state defaults False).
         out.update(kept=kept, true_i=true_i, seed_idx=[int(i) for i in seed],
-                    coords=coords, bfactors=apo.bfactors, cut=cut, resn=resn)
+                    coords=coords, bfactors=apo.bfactors, cut=cut, resn=resn,
+                    # TASK-0256: the full per-residue occupation vectors and
+                    # pocket label, for the per-residue-AUC design (TASK-0249's
+                    # own "both designs" convention) -- not just the two-stage
+                    # candidate means already in `kept`.
+                    pocket=pocket, ctqw_full=ctqw,
+                    **({"classical_full": classical} if include_classical else {}))
     return out
 
 

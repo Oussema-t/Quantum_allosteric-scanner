@@ -7713,6 +7713,125 @@ anything) to do about MYC_MAX's/BCR_ABL1's existing numbers. **Script:**
 `results/tasks/0250_gnm_bfactor_validity/gnm_bfactor_validity.json`. **Full detail:**
 `.ai/tasks/DONE/TASK-0250-h16-1-gnm-model-validity-b-factors.md`.
 
+## fpocket in the variance stack: the "67% unexplained" headline was missing its strongest predictor — corrected to 29%, order-independent (TASK-0254, 2026-08-24)
+
+[[TASK-0245]]'s own cross-validated attribution (geometry/CTQW/unexplained =
+30%/+1%/67% median, n=9) never included `fpocket` — [[TASK-0249]] then found
+`fpocket_drug` alone reaches median per-residue AUC **0.756** on the frozen
+22-target set, higher than the whole 4-feature composite. This task re-runs the
+attribution with fpocket in the stack, **order-independent** (geometry and
+fpocket are correlated; a fixed entry order misassigns their shared variance —
+exact Shapley value over the 3 blocks, 3! = 6 orderings, cheap to brute-force),
+on [[TASK-0243]]'s frozen 22-target set (n=20 usable, matching [[TASK-0249]]'s
+own filter exactly). Method: [[TASK-0245]]'s own protocol verbatim (5-fold
+stratified CV, 20 repeats, out-of-fold, OLS via `lstsq`, seed rows excluded) —
+extended from 2 blocks to 3, sequential attribution replaced with Shapley.
+
+### Part A — order-independent 4-block attribution
+
+| target | geometry | fpocket | CTQW | **unexplained** | full AUC |
+|---|---|---|---|---|---|
+| GAC_BPTES | 47% | 56% | −6% | **4%** | 0.982 |
+| GAC_CPD12 | 53% | 34% | −9% | **22%** | 0.891 |
+| DHPS_GC7 | 30% | 1% | 26% | **43%** | 0.784 |
+| PF_ATCASE | 54% | 40% | −2% | **9%** | 0.957 |
+| KSHV_PROTEASE_24Q | 6% | 12% | 26% | **55%** | 0.724 |
+| KSHV_PROTEASE_25G | 17% | 8% | 13% | **62%** | 0.692 |
+| SUMO_E1_FHJ | 41% | 8% | 22% | **30%** | 0.852 |
+| HCV_NS5B_VRX | 34% | 47% | −6% | **25%** | 0.874 |
+| HCV_NS5B_VR1 | 41% | 41% | −6% | **24%** | 0.881 |
+| HCV_NS5B_POO | 51% | 8% | 11% | **30%** | 0.852 |
+| HCV_NS5B_CMF | 51% | 8% | 11% | **30%** | 0.852 |
+| FBPASE_94D | 83% | 0% | −15% | **32%** | 0.840 |
+| FBPASE_95S | 70% | −7% | −6% | **43%** | 0.787 |
+| TRP_SYNTHASE_F6F | 26% | 45% | 2% | **27%** | 0.864 |
+| TRP_SYNTHASE_F19 | 36% | 33% | −2% | **33%** | 0.833 |
+| SMYD3_DIPERODON | 19% | 65% | 14% | **2%** | 0.990 |
+| PKR_MITAPIVAT | 60% | −7% | 20% | **28%** | 0.862 |
+| PKR_AG946 | 63% | −7% | 17% | **27%** | 0.864 |
+| MKK7_IBRUTINIB | 39% | 3% | 49% | **9%** | 0.957 |
+| NAMPT_NPA1R | 42% | −9% | 25% | **42%** | 0.789 |
+| **range (median)** | **6–83% (42%)** | **−9 to +65% (+8%)** | **−15 to +49% (+11%)** | **2–62% (29%)** | — |
+
+**The headline moves materially: unexplained median 67% → 29%.** Most of what
+[[TASK-0245]]'s 3-block model called "unexplained" was static pocket geometry
+fpocket measures and the three simple baselines don't — exactly this task's own
+hypothesis, confirmed. **fpocket's own Shapley share is wide and target-
+dependent (−9% to +65%)**, not uniformly large — on some targets it explains
+most of the discrimination (SMYD3_DIPERODON 65%, GAC_BPTES 56%), on others
+essentially nothing or slightly negative (PKR_MITAPIVAT/PKR_AG946 −7%). **CTQW's
+own share also moved, from median +1% to median +11%** — a real, reportable
+change from properly partitioning shared variance with Shapley rather than a
+fixed-order sequential fit (the old 3-block sequential design could credit a
+correlated confound to whichever block entered first; order-independence
+removes that artifact in both directions, not just fpocket's). CTQW's range is
+still wide and includes clearly negative cases (FBPASE_94D −15%), so "CTQW adds
+something now" is not the reading either — read as: once fpocket and geometry's
+shared variance is fairly split, CTQW's own real, small, target-dependent
+contribution becomes visible instead of buried in whichever block absorbed it
+first.
+
+### Part B — apo crypticity screen
+
+No systematic screen existed before this task; the register had exactly one
+target (BCR_ABL1, RMSD ratio 0.49, [[TASK-0120]]/[[TASK-0139]]/[[TASK-0169]]).
+**Pre-registered overlap definition** (stated before any number below was
+computed): a true-pocket residue counts as "already open in apo" if it belongs
+to *any* apo-side fpocket-detected pocket (not just the top-ranked candidate),
+residue-level. **Pre-registered bar**: ≥80% open ⇒ target tests static
+retrieval, not cryptic-site discovery.
+
+| target | open/true | fraction | already-open? |
+|---|---|---|---|
+| GAC_BPTES | 8/8 | 100.0% | **yes** |
+| GAC_CPD12 | 6/6 | 100.0% | **yes** |
+| PF_ATCASE | 5/5 | 100.0% | **yes** |
+| SMYD3_DIPERODON | 11/11 | 100.0% | **yes** |
+| PKR_MITAPIVAT | 11/12 | 91.7% | **yes** |
+| HCV_NS5B_VRX | 13/15 | 86.7% | **yes** |
+| TRP_SYNTHASE_F6F | 13/15 | 86.7% | **yes** |
+| HCV_NS5B_VR1 | 14/17 | 82.4% | **yes** |
+| PKR_AG946 | 9/11 | 81.8% | **yes** |
+| TRP_SYNTHASE_F19 | 14/18 | 77.8% | no |
+| NAMPT_NPA1R | 13/17 | 76.5% | no |
+| SUMO_E1_FHJ | 9/13 | 69.2% | no |
+| DHPS_GC7 | 5/8 | 62.5% | no |
+| MKK7_IBRUTINIB | 6/11 | 54.5% | no |
+| HCV_NS5B_POO | 8/16 | 50.0% | no |
+| HCV_NS5B_CMF | 8/16 | 50.0% | no |
+| FBPASE_95S | 2/4 | 50.0% | no |
+| KSHV_PROTEASE_24Q | 6/15 | 40.0% | no |
+| KSHV_PROTEASE_25G | 5/13 | 38.5% | no |
+| FBPASE_94D | 0/3 | 0.0% | no |
+
+**9/20 (45%) of the frozen set is already-open in apo.** That number belongs
+in the submission regardless of which way it came out, per this task's own
+instruction — it does, both ways: nearly half the "cryptic-site discovery"
+benchmark is not testing cryptic-site discovery at all.
+
+**Cross-tabulation against [[TASK-0249]]'s own per-target `fpocket_drug` AUC —
+the prediction tested, confirmed cleanly**: median AUC on already-open targets
+**0.854**, median AUC on cryptic-testing targets **0.515** (barely above
+chance). `fpocket_drug` scores highest almost exactly where the pocket was
+never hidden to begin with. **The benchmark's apparent difficulty is
+substantially a mixture of two different tasks** — static retrieval (already-
+open, fpocket-solvable) and genuine cryptic-site discovery (closed in apo,
+fpocket near chance) — bundled into one reported number throughout this
+register's prior work.
+
+**Not done, per this task's own scope**: no existing scored result (TASK-0245's
+own 9-target table, TASK-0249's own composite numbers) was re-derived under
+this new attribution — this task supersedes the *headline estimate* (the number
+cited going forward) while leaving those tasks' own Done sections and original
+tables intact, per this document's no-silent-overwrite convention.
+`documentation/PHASE1_SUBMISSION_DRAFT.md` §2.3b updated in the same commit,
+since the 67% figure moved materially, per this task's own Acceptance
+requirement.
+
+**Script:** `scripts/task0254_fpocket_variance_and_crypticity.py`. **Data:**
+`results/tasks/0254_fpocket_variance_and_crypticity/`. **Full detail:**
+`.ai/tasks/DONE/TASK-0254-fpocket-in-the-variance-stack-and-apo-crypticity-screen.md`.
+
 ## `MIN_HOP >= 2` does not mean "genuinely distal" — the answer key itself fails a separation bar on 16/20 targets ([[TASK-0255]], 2026-08-25)
 
 **[OBSERVED]** [[TASK-0246]] found pocket residues concentrate at graph-hop
