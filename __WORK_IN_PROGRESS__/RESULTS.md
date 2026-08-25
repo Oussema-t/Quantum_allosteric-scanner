@@ -8199,3 +8199,68 @@ justification.
 **Script:** `scripts/task0265_pocket_label_overlap.py`. **Data:**
 `results/tasks/0265_pocket_label_overlap/pocket_label_overlap.json`. **Full
 detail:** `.ai/tasks/DONE/TASK-0265-is-allostery-a-property-of-the-ligand-too.md`.
+
+## Cryptic-opening instance hardness, checked before any QUBO — still closed on complexity grounds ([[TASK-0264]], 2026-08-25)
+
+[[TASK-0204]]'s own complexity closure (treewidth 2-5 at m=12, exact solve
+in milliseconds) only measured **fixed-backbone** rotamer packing. It left
+a real gap: cryptic-pocket *opening* couples backbone displacement to
+rotamer choice, and nobody had measured whether that coupled instance is
+genuinely harder. This task closes that gap.
+
+**Real instance, real coupling, definition written before measuring**: one
+rotamer-choice variable per window residue (domain n=15, TASK-0204's own
+value, unchanged) plus ONE shared backbone-choice variable for the whole
+window (domain K=11 — apo static plus apo stepped ±6 Å along its own first
+5 ANM modes, [[TASK-0228]]'s own already-validated `adaptive_anm_modes`
+convention, turned into real full-atom structures via [[TASK-0235]]'s own
+`local_rigid_reconstruction`, both reused unchanged). The backbone variable
+is a hub node connected to every rotamer variable; the interaction graph is
+the CB-CB proximity graph unioned across all K conformations. Measured on
+[[TASK-0243]]'s frozen set, prioritising the 11 genuinely-cryptic targets
+([[TASK-0254]] Part B, `already_open == False`) plus TASK-0204's own
+original 4 mandatory targets.
+
+**Sanity-checked against TASK-0204's own published number first**: this
+pipeline's own single-static-backbone treewidth at KRAS_G12C, m=12,
+cutoff=8 Å reproduces TASK-0204's own published value exactly (tw=3).
+Mixed-domain bucket elimination (a real, necessary generalisation of
+TASK-0204's own uniform-domain solver, since the backbone hub's domain,
+K=11, differs from the rotamer nodes', n=15) re-validated against brute
+force on enumerable synthetic instances before trusting it on real data.
+
+| m (window) | median union tw, 11 cryptic (cutoff 8 Å) | median static (fixed-backbone) tw | max union tw |
+|---|---|---|---|
+| 12 (this line's own stated typical window) | **5** | 5 | 7 |
+| 20 | **8** | 6 | 9 |
+
+**Verdict: formulation exercise only — the same conclusion TASK-0204
+already reached, now checked for the coupled case specifically.** Never
+crosses 9 at the primary 8 Å cutoff on any tested target/window size; the
+pre-registered ≥12 "real quantum target" bar is not reached at realistic
+instance size. Coupling is real and measured (union treewidth exceeds
+static on every target at every window size, 0-2 higher at m=12, up to
++2-3 at m=20) — not nothing, but a shift in the constant, not a change in
+growth regime. **Caveat, reported not hidden**: at looser cutoffs (10-12 Å)
+and the largest window tested (m=20, past this line's own stated typical
+range), treewidth climbs further, one condition (MKK7_IBRUTINIB, m=20,
+cutoff=12 Å) reaching tw=15, over the ≥12 bar.
+
+**Exact-solve wall-clock**: real bucket elimination run wherever projected
+cost stayed under TASK-0204's own `MAX_FACTOR_ENTRIES=1e8` guard (reused
+verbatim). Median max-feasible window before the guard fires: m=8 on the
+11 cryptic targets (vs. m=7 mandatory) — the practical boundary moves down
+roughly half relative to fixed-backbone packing (TASK-0204 solved m=12 in
+under a second), driven by the added K=11 domain size on the hub node
+inflating projected cost faster than treewidth alone would, not by
+treewidth exploding. All feasible timings stayed in the tens-to-hundreds
+of milliseconds.
+
+**Recommendation: do not build the coupled backbone+rotamer QUBO.** No
+quantum formulation is built for this objective either, matching
+TASK-0204's own criterion-#1 closure and Phase A's binding precedent.
+
+**Script:** `scripts/task0264_cryptic_opening_hardness.py`. **Data:**
+`results/tasks/0264_cryptic_opening_hardness/hardness.json`. **Full
+detail:** `.ai/tasks/DONE/TASK-0264-cryptic-opening-instance-hardness-before-qubo.md`;
+`src/allostery/PHASE_B_ROTAMER_QUBO.md`'s own new closure section.

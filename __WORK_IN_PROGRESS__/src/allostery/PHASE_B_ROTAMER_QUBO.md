@@ -224,3 +224,37 @@ an open question. Full trial-level numbers:
 `results/tasks/0204_rotamer_repack_baseline/results.json`; task file:
 `.ai/tasks/DONE/TASK-0204-*.md`; `RESULTS.md` §"Phase B rotamer-QUBO
 classical baseline — criterion #1 closes the route".
+
+## ⛔ Complexity gate re-closed for the COUPLED instance, 2026-08-25 ([[TASK-0264]])
+
+TASK-0204's own complexity closure, above, only measured **fixed-backbone**
+rotamer packing (treewidth 2-5 at m=12). It explicitly did not check the
+physically correct cryptic-*opening* instance — backbone move choice
+coupled to rotamer choice together — leaving a real gap: a QUBO built for
+the coupled problem could not have cited TASK-0204's own numbers as
+evidence it was easy too.
+
+**Checked directly, real structures, real coupling.** One shared
+backbone-choice variable (K=11 conformations, [[TASK-0228]]'s own
+`adaptive_anm_modes` convention, turned into real full-atom structures via
+[[TASK-0235]]'s own `local_rigid_reconstruction`) connected to every
+rotamer variable in the window; the interaction graph is the CB-CB
+proximity graph **unioned across all K conformations**. Measured on
+[[TASK-0243]]'s frozen set, prioritising the 11 genuinely-cryptic targets
+([[TASK-0254]] Part B).
+
+**Verdict: still closed on complexity grounds — a real, quantified, but
+modest correction, not a reopening.** At realistic instance size (m=12,
+this document's own stated typical window), median joint treewidth is
+**5** across the 11 cryptic targets (vs. TASK-0204's own static-backbone
+median 5 at the same m — coupling adds 0-2 per target, never negative,
+but does not change the growth regime). Never crosses 9 at the primary
+8 A cutoff on any tested target/window size; the pre-registered ≥12 "real
+quantum target" bar is not reached. Exact bucket-elimination stays
+feasible into the tens-of-milliseconds range at m up to ~8-12 before
+TASK-0204's own `MAX_FACTOR_ENTRIES` guard fires (reused unchanged) — a
+real practical boundary shift down from fixed-backbone packing's own
+m~20+, driven by the added K=11 domain size on the hub node, not by
+treewidth blowing up. **No quantum formulation is built for the coupled
+objective either.** Full record: `.ai/tasks/DONE/TASK-0264-*.md`;
+`RESULTS.md` §"Cryptic-opening instance hardness".
