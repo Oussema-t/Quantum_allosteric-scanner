@@ -8134,3 +8134,68 @@ finding — a separate task's job, not touched in this one.
 **Script:** `scripts/task0263_potential_terms_direct_predictors.py`. **Data:**
 `results/tasks/0263_potential_terms_direct_predictors/`. **Full detail:**
 `.ai/tasks/DONE/TASK-0263-potential-terms-as-direct-predictors.md`.
+
+## Is a pocket allosteric partly because of *what* binds it? The label can't say — and label-side independence is worse than TASK-0261 found ([[TASK-0265]], 2026-08-25)
+
+**[OBSERVED]** Mirrors H9 ([[TASK-0229.001]]) from the positive-class side:
+maybe the same pocket is allosteric with one ligand and inert with another,
+so our positive labels aren't clean either. Measured directly via pocket-
+label Jaccard overlap on identical apo coordinates, all 7 same-apo-structure
+ligand pairs in [[TASK-0243]]'s frozen set (the Reviewer's own first pass
+found 5; 2 more — GAC_BPTES/CPD12, FBPASE_94D/95S — were silently excluded
+by a transient script's chain-selection grouping, found and fixed here).
+
+**Real artifact caught before trusting the numbers**: those 2 pairs initially
+scored Jaccard=0.000 — turned out to be a homo-oligomer symmetric-copy
+artifact (same binding site, same residue numbers, deposited on a different
+chain letter across the two structures — e.g. GAC_BPTES's pocket is chain D
+317-394, GAC_CPD12's is chain B at the *same numbers*, 321-325/394). Corrected
+via a resnum-only Jaccard for these 2 cases: 0.750 and 0.400 respectively,
+not 0.000.
+
+**Corrected result, all 7 pairs: median 0.769, min 0.400, 6/7 pairs ≥0.75.**
+Higher (i.e. the finding is *stronger*) than the first pass's own median
+0.833 on 5 pairs suggested — the two previously-missed pairs don't weaken the
+picture, they confirm it. **Two ligands on the same apo structure produce
+near-identical pocket labels.** The label is drug-contact geometry; it cannot
+express "myristoyl works, myristic acid doesn't" even if that were true —
+a construct-validity finding distinct from anything else in the register.
+
+**[[TASK-0261]]'s standing rule revised**: label-side independence now
+requires pocket-label Jaccard **< 0.5** between a pair's two labels (only
+1/7 pairs, FBPASE at 0.400, clears that bar). Applied to the frozen set:
+6 pairs collapse to one label-side observation each (12 rows → 6), FBPASE
+stays as 2, the 6 singletons are unaffected — **14 genuinely independent
+label-side observations, not 20.** [[TASK-0261]]'s own apo-side clause
+(13 independent apo-side observations) is unchanged, unchallenged.
+
+**BCR-ABL1 mechanism, live-verified rather than repeated as fact** (the
+originating question, from Bartosz): does covalent tethering of the native
+myristoyl-glycine matter for the local "latch" (αI-helix bend enabling SH2
+docking), or does simple pocket occupancy suffice? **Established, convergent
+across independent structural/NMR groups**: non-covalent, non-tethered
+occupancy alone is sufficient — GNF-2 (Zhang et al. 2010, *Nature*
+463:501-506) and asciminib (Wylie et al. 2017, already verified
+[[TASK-0236]]) both stabilise the same bent conformation Nagar et al. 2006
+(*Mol Cell* 21:787-798) defined structurally; Grzesiek et al. 2022 states it
+directly via NMR. Tethering's real role is effective concentration/
+localisation, not the local bend — a genuine distinction, but not the one
+the original framing implied (that the pocket "acts differently"). Honest
+gap: no source co-crystallises free myristic acid itself, untethered, to
+close this completely — flagged, not filled. BCR_ABL1's own config confirmed
+to derive its pocket from AY7 (asciminib) contacts — genuinely the myristoyl
+site, not a different one.
+
+**Extended to the rest of the register, both negative**: the 15 register
+targets and [[TASK-0216]]'s 7-target set each have zero same-apo pairs.
+CARDIAC_MYOSIN/CARDIAC_MYOSIN_TABLE1, flagged a "probable case," is
+confirmed not one (8QYP vs 5TBY, different entries).
+
+**`documentation/CTQW_CONTRIBUTION_BRIEF.html`** §10 gains a new
+self-disclosed-defect bullet (this task's own brief edit for the batch):
+label-side independence revised from 20 to 14, with the bar and its
+justification.
+
+**Script:** `scripts/task0265_pocket_label_overlap.py`. **Data:**
+`results/tasks/0265_pocket_label_overlap/pocket_label_overlap.json`. **Full
+detail:** `.ai/tasks/DONE/TASK-0265-is-allostery-a-property-of-the-ligand-too.md`.
