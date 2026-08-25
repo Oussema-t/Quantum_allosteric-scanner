@@ -120,6 +120,29 @@ binder), and NAMPT. Active-site seed verified live via
 (still a real structural site, one tier below curation, disclosed per
 entry) — **zero fell back to a top-degree proxy.**
 
+> **Correction, 2026-08-24 ([[TASK-0253]]): this claim was wrong, and the
+> config's own per-target `active_site_source` field disagreed with it
+> even before any live re-check** — the field already read `uniprot: 18,
+> ligand: 4` (not 20/2), and a fresh live re-run of
+> `detect_active_site` for all 22 targets found **`uniprot: 18, ligand: 2,
+> none: 2`** — `HIV_INTEGRASE_MUT871`/`HIV_INTEGRASE_MUT916` (both apo
+> `1M9D`) resolve **no active site at all**, exactly [[TASK-0249]]'s own
+> independent finding. Root cause, live-RCSB-confirmed, not assumed: apo
+> `1M9D` is **not an HIV-1 integrase structure** — its two polymer
+> entities are Cyclophilin A (chains A/B, UniProt P62937) and **HIV-1
+> Capsid** (chains C/D, UniProt P12497, RCSB's own `pdbx_description`).
+> Capsid and integrase are both cleavage products of the *same* Gag-Pol
+> polyprotein (P12497), so this pair was curated by matching on that
+> shared parent accession alone, without checking the domain/region
+> actually resolved matches the holo structures (8CBS/8CBV, independently
+> confirmed live: 233-residue, genuinely "Integrase," same UniProt). A
+> real domain-identity gap in the curation pipeline, not a seed-detection
+> code bug (though [[TASK-0253]] also found and fixed a real code bug
+> this same case exposed — see that task's own Done section). **Verdict:
+> drop the pair** from the frozen set rather than replace it in place —
+> [[TASK-0253]]'s own Done section has the detail and a starting
+> candidate list for whoever curates a genuine replacement.
+
 Curation-order log:
 `results/tasks/0243_curate_untuned_targets/curation_order_log.md`
 (full, machine-written, append-only — proves the freeze happened before
@@ -153,6 +176,58 @@ apo-side search never proposes the true pocket) instead of crashing.
 comfortably clears the "12 scoreable" target this task's own math was
 built around.
 
+> **Correction, 2026-08-24 ([[TASK-0253]]): 72.7%/16 is wrong, and the
+> table below it is computed on contaminated data — real stage-1 recall
+> is 14/22 = 63.6%.** Root cause: with an unresolved (empty) active-site
+> seed, `hop_from_seed` returns a constant sentinel and
+> `time_averaged_ctqw_converged` divides by `len(seed)==0`, producing an
+> all-NaN score array — neither raised an error, and `np.argsort` on a
+> NaN/constant array still returns *some* index order, which the pipeline
+> then reported as a real rank. `HIV_INTEGRASE_MUT871`/`916` (empty seed,
+> see the correction above) therefore appeared as ordinary stage-1
+> **successes** (K=26/24, `ctqw` ranks 1 and 22) in this task's own
+> `stage1_rerun.json`, not failures — fabricated-looking numbers from an
+> undefined computation, not real candidate rankings. [[TASK-0253]] fixed
+> this at the source (`task0242_two_stage_dryrun.run()` now raises a clear
+> error on an empty seed instead of silently ranking) and recomputed:
+> stage-1 recall **14/22 = 63.6%** — matching [[TASK-0249]]'s own
+> independently-derived "14/22 stage-1+seed survivors" number exactly, a
+> real cross-validation of the fix, not just a changed count. Corrected
+> table and head-to-head below, n=14. **Separately, this section's own
+> claim that "NAMPT_NPA1R... fpocket's own apo-side search never proposes
+> the true pocket" is also wrong**: [[TASK-0253]]'s failure-mode
+> decomposition found fpocket *did* propose a 47%-overlap candidate for
+> NAMPT_NPA1R — `MIN_HOP` removed it (`min_hop=0`, i.e. immediately
+> adjacent to the seed), not a detection miss. 5 of this set's 6 genuine
+> stage-1 failures are `MIN_HOP` removing a real, fpocket-found candidate,
+> not fpocket missing the pocket — see [[TASK-0253]] for the full
+> decomposition and what it means for the joint protocol's own frozen
+> `MIN_HOP=2` parameter.
+>
+> | ranker | mean rank | MRR | top-1 (of 14 survivors) |
+> |---|---|---|---|
+> | fpocket_drug | **6.86** | **0.541** | — |
+> | fpocket_score | 8.43 | 0.284 | — |
+> | random | 17.86 | 0.191 | — |
+> | **ctqw** | 9.21 | 0.253 | — |
+> | hop_covariate | 13.21 | 0.147 | — |
+>
+> | comparison | wins–losses–ties (n=14) | Wilcoxon p |
+> |---|---|---|
+> | ctqw vs fpocket_drug | 4–8–2 | 0.386 |
+> | ctqw vs hop_covariate | 8–5–1 | 0.248 |
+> | ctqw vs random | 11–0–3 | **0.0032** |
+>
+> **This correction does not overturn any of this section's own qualitative
+> verdicts** (ctqw still trails fpocket_drug in direction, still not
+> significant vs. hop_covariate, still significantly beats random, now
+> more decisively) — but the exact win/loss counts and p-values originally
+> reported below were computed on 2 fabricated data points and should not
+> be cited; use the corrected table above.
+
+The original (now-superseded) table and head-to-head, kept for the
+record, per this document's own no-silent-overwrite convention:
+
 | ranker | mean rank | MRR | top-1 (of 16 survivors) |
 |---|---|---|---|
 | fpocket_drug | **8.12** | **0.483** | 6/16 |
@@ -161,7 +236,7 @@ built around.
 | random | 16.38 | 0.195 | 2/16 |
 | hop_covariate | 13.00 | 0.194 | 1/16 |
 
-**Head-to-head, n=16:**
+**Head-to-head, n=16 (superseded, see correction above):**
 
 | comparison | wins–losses–ties | Wilcoxon p |
 |---|---|---|

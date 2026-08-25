@@ -114,6 +114,20 @@ def prep(t):
 
 def run(t, tuned, return_state=False):
     cfg, apo, seed, pocket = prep(t)
+    if len(seed) == 0:
+        # TASK-0253: an unresolved active site (detect_active_site returns
+        # no residues) previously fell through silently -- hop_from_seed
+        # returns a constant sentinel for an empty seed and
+        # time_averaged_ctqw_converged divides by len(seed)==0, producing
+        # an all-NaN score array. Neither raises; both then feed
+        # np.argsort, which gives an arbitrary (not meaningful) rank for
+        # ctqw and hop_covariate on a NaN/constant array -- confirmed this
+        # silently produced fabricated-looking ranks (e.g. ctqw "rank 1")
+        # for HIV_INTEGRASE_MUT871/916 in TASK-0243's own committed
+        # results before this guard existed. Fail loudly instead.
+        return {"target": t, "error": "empty active-site seed (detect_active_site "
+                "resolved no residues) -- ctqw/hop_covariate would be computed from "
+                "an undefined seed, not a real target-attempted failure to silently rank"}
     coords = apo.coords; cut = float(cfg.get("enm_cutoff", 8.0))
     resn = np.asarray(apo.resnums)
     idx_of = {int(r): i for i, r in enumerate(resn)}
@@ -155,11 +169,32 @@ def run(t, tuned, return_state=False):
         })
     kept = [c for c in cands if c["min_hop"] >= MIN_HOP]
     if not kept:
-        return {"target": t, "error": f"MIN_HOP={MIN_HOP} removed all {len(cands)} candidates"}
+        err = {"target": t, "error": f"MIN_HOP={MIN_HOP} removed all {len(cands)} candidates"}
+        if return_state:
+            err["failure_reason"] = "min_hop_removed_all"
+        return err
     true_i = max(range(len(kept)), key=lambda i: kept[i]["overlap"])
     if kept[true_i]["overlap"] == 0.0:
-        return {"target": t, "error": "true drug pocket not among surviving fpocket candidates",
-                "n_candidates": len(cands), "n_kept": len(kept)}
+        err = {"target": t, "error": "true drug pocket not among surviving fpocket candidates",
+               "n_candidates": len(cands), "n_kept": len(kept)}
+        if return_state:
+            # TASK-0253: distinguish "fpocket never proposed the true pocket at
+            # all" from "fpocket proposed it, but MIN_HOP filtered it out" --
+            # the pre-filter run() error above reports these identically
+            # (n_candidates/n_kept only), which is exactly the ambiguity this
+            # task exists to resolve. Check the PRE-filter cands list, not
+            # just kept, for the best-overlap candidate.
+            best_pre_i = max(range(len(cands)), key=lambda i: cands[i]["overlap"])
+            best_pre = cands[best_pre_i]
+            if best_pre["overlap"] == 0.0:
+                err["failure_reason"] = "fpocket_miss"
+            else:
+                err["failure_reason"] = "min_hop_removed"
+                err["min_hop_removed_candidate"] = {
+                    "overlap": best_pre["overlap"], "min_hop": best_pre["min_hop"],
+                    "n_res": best_pre["n_res"],
+                }
+        return err
 
     K = len(kept)
     rng = np.random.default_rng(7)
