@@ -49,6 +49,27 @@ cite them as a literature taxonomy:
                            separately -- an oligomeric-interface mechanism,
                            which the challenge's catalytic-domain scope may
                            truncate outright, cf. [[TASK-0251]])
+
+[[TASK-0262]], 2026-08-25: a literature "Type I-IV ALLOSTERIC SITE"
+taxonomy (second-sphere/intra-domain/inter-domain/inter-subunit) was
+sought, live, and NOT FOUND -- confirmed not to exist as a general
+classification, and not something ASD itself defines (checked directly
+against the ASD site). A real, differently-defined "Type I-IV" taxonomy
+DOES exist, but for KINASE INHIBITORS relative to the ATP pocket (Dar &
+Shokat 2011, Annu Rev Biochem 80:769-795, doi:10.1146/
+annurev-biochem-090308-173656; extended by Gavrin & Saiah 2013,
+MedChemComm 4:41-51, doi:10.1039/c2md20180a) -- ATP-competitive vs.
+allosteric conformational state, not distance/structural-relationship
+categories like these bins. Do not conflate the two under the same
+"Type I-IV" label. Two of the four proposed exemplars also don't match
+what this pipeline actually measures: BCR_ABL1's cited exemplar (SH2/SH3-
+kinase interface, TASK-0229.003's real second site) is a DIFFERENT site
+than the myristoyl pocket this script measures (proximal, 7.96 A);
+CARDIAC_MYOSIN's cited "inter-subunit" classification doesn't match this
+pipeline's own same_chain=True measurement -- the true SRX/IHM mechanism
+is inter-subunit (TASK-0251), but the scope-truncated single-chain
+construct this project actually scores is not. Our own bins stand,
+undecorated. Full verification: [[TASK-0262]]'s own Done section.
 """
 from __future__ import annotations
 import json, sys, warnings
