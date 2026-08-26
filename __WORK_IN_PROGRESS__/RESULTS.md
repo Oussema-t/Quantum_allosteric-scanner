@@ -8850,3 +8850,98 @@ section, same prominence as [[TASK-0268]]'s decisive negative.
 **Script:** `scripts/task0271_repulsor_scmf_retention.py`. **Data:**
 `results/tasks/0271_repulsor_scmf_retention/results.json`. **Full detail:**
 `.ai/tasks/DONE/TASK-0271-repulsor-constrained-scmf-retention-test.md`.
+
+## `V_C` decomposed: it's the strongest of five physical terms, not the strongest predictor overall — and holo does not obviously beat apo ([[TASK-0275]], 2026-08-26)
+
+[[TASK-0263]] scored `build_H_new`'s five potential terms (`V_B`, `V_T`,
+`V_R`, `V_C`, `V_M`) as one lumped block and found terms 0.751 vs CTQW
+0.575 — a real result, but it hid that `V_C` (GNM dynamic cross-correlation
+centrality, the field's own standard allosteric-coupling measure) already
+beats CTQW alone in solo AUC, and that CTQW's own added-last marginal
+against the lumped block was p=0.973 (nothing). This task decomposes the
+block into its five separate terms in a full Shapley attribution, and
+extends the question to holo: does the bound conformation actually help?
+
+**Method, up front**: every number below (apo AND holo) is computed on the
+**matched common apo/holo (chain, resnum) residue set**
+(`allostery.superpose.align_apo_holo`), not apo's own full residue set —
+required so both flavours are scored on an identical node set for a fair
+gap comparison. Apo-flavour numbers here therefore differ from
+[[TASK-0263]]'s own apo numbers (checked directly, e.g. `DHPS_GC7` `V_C`:
+0.392 → 0.586) — CTQW and geometry are graph-topology-sensitive, and
+restricting to the common set changes the graph. `fpocket` is excluded
+from the holo arm entirely (a cavity detector on a drug-shaped-open
+cavity trivially recovers the label) — every holo number is a ceiling,
+never predictive performance, per this task's own pre-registered leakage
+table. 8-block (apo) / 7-block (holo) exact Shapley ran in full — timed
+first (~0.042s/`cv_auc` call, ~11 min projected for both flavours) — the
+6-block fallback this task's Scope allowed for was not needed.
+
+**Headline: does CTQW add anything once `V_C` alone is in the model?
+No, in apo, exactly as `V_C`'s own solo strength predicted.**
+AUC(`V_C`+CTQW) − AUC(`V_C` alone): apo median **−0.0047**, cluster-robust
+p=0.30 ([[TASK-0261]]'s method, 13 clusters) — CTQW's marginal on top of
+`V_C` alone is at or below zero. On holo, a small, real, positive effect
+reaches marginal significance (median **+0.0051**, p=0.037) — real but
+tiny (half a percentage point of AUC), not the "CTQW recovers value given
+the right conformation" result that would have made [[TASK-0263]]'s
+finding conformation-dependent rather than propagator-dependent. The full
+8/7-block added-last marginal (CTQW against every other block, not just
+`V_C`) stays indistinguishable from zero in both flavours (apo median
+−0.0005 p=0.21; holo median +0.0016 p=0.69) — confirming [[TASK-0263]]'s
+own original finding (p=0.973 there) against `V_C` specifically as well
+as the lumped block.
+
+**Complementary, not subsumed.** `V_C` carries the largest median Shapley
+share among the five terms (apo +13.3%, holo +14.3%, clearly above
+`V_B`/`V_R`/`V_T`/`V_M`), but every other term still contributes a real,
+if smaller, positive median share in at least one flavour — none driven
+to zero by `V_C`'s presence, consistent with [[TASK-0263]]'s own finding
+that all ten cross-term correlations are weak. Geometry (apo +26.5%, holo
++24.6%) and fpocket (apo +10.5%, apo-only) remain the largest single
+contributors overall: `V_C` is the strongest of the five *physical* terms,
+not the strongest predictor in the full model — a real distinction from
+how [[TASK-0263]]'s own lumped framing could be read.
+
+**Per-term apo→holo gap vs. the pre-registered crypticity prediction
+(negative correlation, larger gap on cryptic targets): does not hold.**
+Cluster-permutation correlation against [[TASK-0254]] Part B's own
+`fraction_open`: `V_B` ρ=−0.376 p=0.14 (right direction, not
+significant); `V_R` ρ=**+0.464 p=0.025** (significant, **wrong
+direction**); `V_C` ρ=+0.166 p=0.57; `V_M` ρ=+0.001 p=0.999; CTQW
+ρ=+0.038 p=0.87. `V_T` excluded — a real structural fact, not noise: it
+depends only on residue count, not coordinates/B-factors, so on the
+matched common set its gap is identically 0.0 for all 20 targets. At the
+per-term level, crypticity is not what the apo penalty is made of —
+[[TASK-0259]]'s own ρ=−0.771 (a different, aggregate observable) does not
+decompose cleanly onto these five physical terms.
+
+**A bigger, unplanned finding underneath that null: holo does not
+obviously act as a ceiling above apo at all, on these 7 non-leaky blocks.**
+A like-for-like check (apo scored on the identical 7-block set as holo,
+fpocket excluded from both) shows apo's own median full AUC (0.896) is
+numerically *higher* than holo's (0.834), apo ahead on 14/20 targets — not
+statistically significant (cluster-robust p=0.10), so not a claim that
+apo beats holo, but a clean absence of the assumed holo advantage for
+this feature set.
+
+**Read together with [[TASK-0276]], per this task's own instruction**:
+[[TASK-0276]] (completed concurrently) found a real positive signature —
+`V_C`, the same term this task centers on, significantly discriminates
+allosteric from orthosteric sites within holo structures, in two
+independent families (KRAS_G12C, HCV_NS5B). That is not this task's own
+"tension" scenario (which required [[TASK-0276]] to find *no* separation
+while this task found large holo gains) — instead the two combine: `V_C`'s
+signal is real and robust ([[TASK-0276]]), and it does not require the
+bound conformation to be present (this task: no significant apo→holo
+gain). **The physics `V_C` captures is already available from the unbound
+structure** — the actionable, favourable version of the ceiling question
+at the feature level.
+
+`documentation/CTQW_CONTRIBUTION_BRIEF.html` §04 **flagged for an update,
+not edited here** — needs the sharper `V_C`-vs-CTQW headline (both
+flavours) and the apo/holo ceiling-null finding.
+
+**Script:** `scripts/task0275_term_decomposition_apo_holo.py`. **Data:**
+`results/tasks/0275_term_decomposition_apo_holo/`. **Full detail:**
+`.ai/tasks/DONE/TASK-0275-per-term-decomposition-V_C-carries-it.md`.
