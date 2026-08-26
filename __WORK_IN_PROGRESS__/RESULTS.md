@@ -9055,3 +9055,82 @@ BCR-ABL1's pre-formed pocket without this cause.
 `scripts/task0278_bcr_abl1_myr_strip.py`. **Data:** `results/tasks/
 0278_apo_contents_audit/`. **Full detail:** `.ai/tasks/DONE/TASK-0278-
 our-apo-structures-are-not-apo.md`.
+
+## The ligand-selectivity gate: `V_C` does not survive contact with an inert-vs-efficacious control ([[TASK-0279]], 2026-08-26)
+
+[[TASK-0276]] found `V_C` (GNM dynamic cross-correlation centrality)
+significantly separates allosteric from orthosteric sites in two families
+— the register's first real holo-side positive. [[TASK-0278]] flagged the
+gap it could not close: does `V_C` measure allosteric *efficacy*, or just
+that a cavity is occupied and coupled? BCR-ABL1 gives the one controlled
+pair in this register where the imprint confound cancels — same protein,
+same myristoyl cavity, one inert occupant (`1OPL`/`MYR`, myristic acid, no
+therapeutic autoinhibition) and one efficacious modulator
+(`5MO4`/`AY7`, asciminib).
+
+**Method**: reuses [[TASK-0276]]'s own ligand-stripping
+(`write_ligand_stripped_pdb`/`ligand_stripped_sasa`) unchanged. Node sets
+matched via `allostery.superpose.align_apo_holo` (429 common (chain,
+resnum) Cα pairs; 16/16 myristoyl-pocket and 26/26 active-site residues
+survive), per [[TASK-0275]]'s own established requirement — an unmatched
+comparison moved `DHPS_GC7`'s own `V_C` by 0.19 in that task. Graph
+features (`V_C`, `degree`, `euclid`, `hop`) computed on coordinates
+RESTRICTED to the common set; `V_B`/`SASA` computed on each structure's
+own full resnums (a local, all-real-neighbours quantity) and indexed
+afterward. Both arms are doubly occupied (`1OPL`: `MYR` + `P16`; `5MO4`:
+`AY7` + `NIL`) — stated explicitly, not treated as apo, per [[TASK-0278]]'s
+own precedent.
+
+| feature | myristate (`1OPL`) median | asciminib (`5MO4`) median | Δ | frac. favouring asciminib (n=16) | Wilcoxon p |
+|---|---|---|---|---|---|
+| **`V_C`** | **+57.44** | **+53.63** | **−3.86** | **0/16** | **<0.0001** |
+| `degree` | +9.50 | +9.50 | +0.00 | 1/16 | 0.317 |
+| `euclid` | −24.88 | −24.72 | +0.15 | 15/16 | 0.0001 |
+| `hop` | −3.00 | −3.00 | +0.00 | 1/16 | 0.317 |
+| `V_B` | +57.43 | +25.33 | −33.05 | 0/16 | <0.0001 |
+| `SASA` | +15.83 | +15.22 | +1.45 | 12/16 | 0.079 |
+
+**`V_C` is HIGHER on the inert myristate pocket than the efficacious
+asciminib pocket, 16/16 residues, ~7% relative** — the opposite direction
+the efficacy-specific reading of [[TASK-0276]]'s own positive required.
+Not the pre-registered "no separation" outcome exactly — a significant
+separation in the *wrong* direction, a stronger negative for the efficacy
+reading than a null would have been.
+
+**A confound this task cannot rule out, disclosed prominently**: `1OPL`
+(myristate) is 3.42 Å resolution; `5MO4` (asciminib) is 2.17 Å. `V_B`'s
+own huge, maximally clean gap (0/16, 57.4 vs 25.3) is almost certainly
+this artifact — [[TASK-0250]] had already independently flagged `1OPL` as
+MARGINAL (r=0.493) on the B-factor-correlation ENM-validity check, itself
+consistent with a lower-quality model. `V_C` is coordinate- not
+B-factor-derived, so not susceptible to the *same* mechanism, but
+coordinate precision at 3.42 Å is coarser regardless — this n=2-structure
+gate cannot distinguish "asciminib genuinely produces lower coupling" from
+"the coarser model differs regardless of ligand." **[[TASK-0278]] landed
+the same day and independently corroborates this**: its own MYR-stripping
+control on `1OPL` found the myristoyl pocket does NOT close when the
+ligand atoms are computationally removed — "the confound is the
+crystallized backbone conformation, not the ligand atoms' mere presence"
+— the same open question from a different angle.
+
+**Read plainly**: `V_C` provides no support for the efficacy-specific
+reading of [[TASK-0276]]'s own positive, and — subject to the resolution
+caveat — points the opposite direction. [[TASK-0276]]'s own positive
+should now be read as a real holo-side structural pattern, **not yet
+distinguished from an occupancy/cavity-coupling explanation** — recorded
+directly in that task's own Done section.
+
+**Extending the design (searched, not found)**: KRAS's ten-drug ensemble
+ruled out (all efficacious, per the task's own filing). Checked live —
+HCV_NS5B's own thumb/palm allosteric-site literature and glutaminase/GAC's
+own BPTES-site literature — no specific inert occupant of the SAME site
+as one of this register's own already-curated ligands was identified
+within this task's own bounded search; establishing that with confidence
+needs a structure-by-structure potency check, a real follow-up not
+attempted further here.
+
+**Script:** `scripts/task0279_ligand_selectivity_gate.py`. **Data:**
+`results/tasks/0279_ligand_selectivity_gate/ligand_selectivity_gate.json`.
+**Full detail:**
+`.ai/tasks/DONE/TASK-0279-ligand-selectivity-gate-occupancy-vs-efficacy.md`;
+[[TASK-0276]]'s own DONE file carries a dated note recording this reading.
