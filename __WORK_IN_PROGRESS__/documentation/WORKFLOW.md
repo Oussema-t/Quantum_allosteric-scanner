@@ -329,15 +329,19 @@ Stated plainly, not left implicit:
   of 7 real-drug-ligand targets are validated instances today
   ([[TASK-0209]]); the pipeline itself has no code path that would refuse to
   run on one of the other 5.
-- **The flagship target is a documented outlier, not a typical case.**
-  KRAS_G12C's own apo structure (`4OBE`) is wild-type KRAS, not the G12C
-  mutant — kept unchanged because every historical number in the register is
-  conditioned on it, but the register's own apo-structure sensitivity sweep
-  ([[TASK-0155]], propagated by [[TASK-0192]]) found it is **a lucky-draw
-  outlier among 10 independently RCSB-verified true-G12C structures**: median
-  AUC **0.482** (below the 0.5 chance line) and P@5 = **0.000 on all ten**. A
-  reader should not generalize from KRAS_G12C's own headline number to "this
-  method works on KRAS."
+- **The flagship target's apo structure was a documented outlier, and has
+  since been corrected.** KRAS_G12C's original apo structure (`4OBE`) was
+  wild-type KRAS, not the G12C mutant — the register's own apo-structure
+  sensitivity sweep ([[TASK-0155]], propagated by [[TASK-0192]]) found it was
+  **a lucky-draw outlier among the genuinely apo true-G12C structures
+  checked**, scoring well above their own median. **2026-08-26 ([[TASK-0270]],
+  organiser-sanctioned): swapped to `4LDJ`**, the best-resolution genuine
+  G12C apo structure a live RCSB sweep found — every KRAS_G12C figure in the
+  register was re-run old-vs-new and the flagship result does not survive
+  the fix (AUC 0.557→0.514, PASS→below-floor, diagnosis
+  `NO_FAILURE_DETECTED`→`NO_SIGNAL_IN_APO`). A reader should not generalize
+  from KRAS_G12C's own headline number to "this method works on KRAS" —
+  truer now than before the fix, not less.
 - **No automated significance testing by default.** As Step 9 states, the
   corrected-null significance layer is applied per-claim, by a human/thread
   choosing to run it, not automatically for every target/operator pair a run
@@ -345,9 +349,10 @@ Stated plainly, not left implicit:
 
 ## Walkthrough — KRAS_G12C through the pipeline
 
-Config resolves (`--dry-run` confirms): `apo_pdb: 4OBE`, `holo_pdb: 6OIM`,
+Config resolves (`--dry-run` confirms): `apo_pdb: 4LDJ`, `holo_pdb: 6OIM`,
 chain `A`, `enm_cutoff: 8.0`, `pocket_contact_cutoff: 4.5`,
-`drug_ligand: MOV`, `func_ligand: ["GDP"]`. N = 169 residues.
+`drug_ligand: MOV`, `func_ligand: ["GDP"]`. N = 170 residues (169 under the
+pre-fix `4OBE`; updated 2026-08-26, [[TASK-0270]]/[[TASK-0272]]).
 
 1. **Resolve pair** — no `apo_chains`/`holo_chains` override is set (both
    structures already share chain `A`); `align_apo_holo` finds well more than
@@ -363,7 +368,7 @@ chain `A`, `enm_cutoff: 8.0`, `pocket_contact_cutoff: 4.5`,
    chem-comp match), not a fallback; no warning fires. Post-fix, the correct
    residue (11, not the pre-fix 12) is what seeds the propagation.
 6. **Contact graph** — built at 8.0 Å; `_assert_connected` finds one
-   component (169 residues, no reported chain break); the real gate
+   component (170 residues, no reported chain break); the real gate
    (`superpose.py`'s ANM nullspace check) never fires because there is
    nothing disconnected to catch.
 7. **Propagate** — `time_averaged_ctqw_converged`, incoherent mixture over
@@ -374,7 +379,7 @@ chain `A`, `enm_cutoff: 8.0`, `pocket_contact_cutoff: 4.5`,
    elsewhere in the register (see the apo-structure sensitivity sweep
    section, `RESULTS.md`) — not repeated here since this walkthrough is about
    which code path runs, not re-deriving the number.
-9. **Significance** — GATE-B4 runs at `n_perm=30` (N=169 ≤ 250,
+9. **Significance** — GATE-B4 runs at `n_perm=30` (N=170 ≤ 250,
    `_leak_check_n_perm_for`); no corrected-null significance layer runs
    automatically.
 10. **Interpret** — the compound-criterion audit ([[TASK-0217.002]]) does not

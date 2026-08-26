@@ -92,6 +92,24 @@
 > `POC_SPRINT_PLAN.md`, after [[TASK-0183]] had already shipped and
 > closed** — see that document's own dated addendum for the honest
 > record of the timing; nothing already committed there was revised.
+>
+> **2026-08-26 update ([[TASK-0270]]/[[TASK-0272]])**: `4OBE`, KRAS_G12C's
+> apo structure named as misannotated in Finding 4, has now been swapped —
+> organiser-sanctioned, `documentation/2026-08-26-organiser-clarifications.md`
+> — for `4LDJ`, the best-resolution genuinely-G12C apo structure found by a
+> live RCSB sweep ([[TASK-0270]]'s own Done section; the organisers'
+> suggested `8S8C` turned out to be holo, not usable). Every KRAS_G12C
+> number in Findings 5-6 that depends on the apo structure was computed on
+> the misannotated wild-type protein. Re-run on the corrected structure:
+> **quantum-observable AUC 0.557 → 0.514, diagnosis `NO_FAILURE_DETECTED` →
+> `NO_SIGNAL_IN_APO`, ENM validity r=0.646 (PASS) → 0.496 (MARGINAL)**,
+> pocket-to-active-site min heavy-atom distance materially unchanged (1.32
+> Å → 1.31 Å). Findings 5 corrected in place below; Finding 6's own AUC
+> 0.557 figure is a *holo*-structure measurement (6OIM, independently
+> re-verified genuine G12C, unaffected by the apo swap) — checked
+> directly, not assumed, and left as-is. Corrected the same way every
+> other apo-genotype-sensitive number in this register was: reported
+> plainly, including that it is a worse result than the one it replaces.
 
 ---
 
@@ -179,9 +197,13 @@ bibliography entry [1], never previously run as a scored baseline despite
 being the canonical published version of the same conformational-search
 reframing this program independently arrived at. On KRAS_G12C, the one
 mandated target with a validated apo-closed/holo-open contrast (Finding 1):
-**AUC 0.728, vs. our own quantum-observable AUC of 0.557-0.590 (floor
-0.530)** — a wide point-estimate margin, from a dynamics-based classical
-method this time, not a static geometric one like fpocket (Finding 3).
+**AUC 0.728, vs. our own quantum-observable AUC of 0.514** (floor 0.530;
+**below floor**, diagnosis `NO_SIGNAL_IN_APO` — corrected 2026-08-26,
+[[TASK-0270]]/[[TASK-0272]], after the apo genotype fix in Finding 4's own
+update above; the pre-fix figure was 0.557 on `4OBE`, the misannotated
+wild-type structure) — a wide point-estimate margin, from a dynamics-based
+classical method this time, not a static geometric one like fpocket
+(Finding 3).
 Checked against a permutation null (1000 draws, the same corrected
 compact-patch construction used elsewhere in this register): p=0.024 —
 clears a naive two-test local bar by a hair, but is roughly three orders of
@@ -526,6 +548,14 @@ better than chance the reported top-k list is). Recomputed on the same
 0.5266/0.5176 — expected drift from intervening pocket-label refinements
 [[TASK-0177]], not a new measurement disagreeing with an old one; both are
 real numbers from the same live pipeline at different points in time.)*
+
+*(Found while auditing this document for KRAS_G12C's own apo-genotype fix,
+2026-08-26, [[TASK-0270]]/[[TASK-0272]] — flagged, not silently fixed: this
+row's own N=169 and AUC 0.557 are `4OBE`-era (the misannotated wild-type
+apo). The rank-of-known-site and enrichment-at-k statistics here were not
+among the figures [[TASK-0270]] re-ran on the corrected `4LDJ` structure —
+they need their own re-run before being cited as current, a real,
+disclosed gap rather than an inherited stale number presented as live.)*
 
 They do not tell a different story — they tell the same one more
 concretely. **Zero of the top-5 residues in our own headline hit list are

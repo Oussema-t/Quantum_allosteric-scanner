@@ -20,3 +20,13 @@ hop is the strongest single baseline on 5/9 targets; accounts for 46-492% of the
 **Script:** `scripts/task0246_hop_contribution_anatomy.py`
 **Data:** `results/tasks/0246_hop_anatomy/`
 **Write-up:** `RESULTS.md`, the dated [[TASK-0246]] section.
+
+**2026-08-26 note ([[TASK-0272]]):** this task's own 9-target set included
+KRAS_G12C, scored on `4OBE`, since found misannotated (wild-type, not
+G12C — [[TASK-0270]]). Kept as a historical artifact, not recomputed. This
+task's own conclusions (hop strongest on 5/9 targets, banded shell
+profile, one-hot re-encoding does not uniformly win) are reported as
+aggregate/cross-target findings with no per-target breakdown preserved in
+this task's own Done section or `RESULTS.md` write-up — there is no
+single KRAS-specific number here whose own change could flip the
+conclusion, and no evidence any of them turned on KRAS specifically.

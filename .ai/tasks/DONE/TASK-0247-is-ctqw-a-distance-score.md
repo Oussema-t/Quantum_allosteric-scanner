@@ -20,3 +20,15 @@ NO, it is not a distance score: within-shell AUC 0.6305 (median), above 0.5 on 8
 **Script:** `scripts/task0247_is_ctqw_a_distance_score.py`
 **Data:** `results/tasks/0247_ctqw_vs_distance/`
 **Write-up:** `RESULTS.md`, the dated [[TASK-0247]] section.
+
+**2026-08-26 note ([[TASK-0272]]):** this task's own KRAS_G12C row (both
+tables) was computed on `4OBE`, since found misannotated (wild-type, not
+G12C — [[TASK-0270]]). Kept as a historical artifact, not recomputed.
+**Checked, not assumed**: KRAS_G12C's within-shell AUC (0.5595) is not the
+median-determining row in either table (PTP1B, 0.6305, occupies that
+position in both) — the headline median claims are not directly set by
+this row. KRAS_G12C *is* the single most extreme value in the
+"ctqw − best geometry" gap column (−0.2344, driven by an unusually high
+`euclid` baseline on this target) — a reader should not treat that one
+data point as representative of the register going forward, independent
+of the genotype question.

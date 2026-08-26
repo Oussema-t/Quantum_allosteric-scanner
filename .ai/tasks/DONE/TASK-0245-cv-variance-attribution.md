@@ -20,3 +20,15 @@ Superseded [[TASK-0238]]'s in-sample estimate. 5-fold stratified CV, 20 repeats,
 **Script:** `scripts/task0245_cv_attribution.py`
 **Data:** `results/tasks/0245_cv_attribution/`
 **Write-up:** `RESULTS.md`, the dated [[TASK-0245]] section.
+
+**2026-08-26 note ([[TASK-0272]]):** this task's own KRAS_G12C row (geometry
+58%, CTQW 8%, unexplained 34%) was computed on `4OBE`, since found
+misannotated (wild-type, not G12C — [[TASK-0270]]). Kept as a historical
+artifact, not recomputed, per `RESULTS.md`'s own no-silent-overwrite
+convention. **Checked, not assumed**: KRAS_G12C's own unexplained-share
+value (34%) is the 2nd-lowest of the 9 rows, not the median (67%,
+PTP1B) — the headline median statistic is not directly determined by this
+row. Whether the *exact* median would shift under a recomputed KRAS row
+was not tested (that requires an actual re-run, out of this task's own
+scope) — stated as a real limit on this note's own confidence, not
+papered over.

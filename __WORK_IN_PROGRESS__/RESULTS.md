@@ -8486,3 +8486,76 @@ the brief for this batch, not touched here.
 `tools/pocketminer/` (Dockerfile, `predict.py`, README.md). **Data:**
 `results/tasks/0269_pocketminer_residual/`. **Full detail:**
 `.ai/tasks/DONE/TASK-0269-pocketminer-environment-and-run.md`.
+
+## Finishing the KRAS swap: propagating TASK-0270's fix, plus two flagged-but-unmade brief updates ([[TASK-0272]], 2026-08-26)
+
+Document-propagation task, no new computation — [[TASK-0270]]'s own
+already-verified KRAS_G12C genotype-fix numbers (`4OBE`→`4LDJ`,
+organiser-sanctioned) were still cited as current in the submission draft
+and the CTQW brief; two independently-flagged results
+([[TASK-0263]], [[TASK-0269]]) were still missing from the brief.
+
+**`documentation/PHASE1_SUBMISSION_DRAFT.md`**: new dated banner entry
+added (matching this document's own established convention of appending a
+dated correction rather than rewriting old changelog narration). Finding
+5 corrected in place: AUC 0.557-0.590 → **0.514** (floor 0.530, now below
+floor), diagnosis `NO_SIGNAL_IN_APO`. **Finding 6 checked, not assumed
+stale**: its own "AUC 0.557" citation is a *holo*-structure (6OIM)
+measurement per [[TASK-0229.005]]'s own text, unaffected by the apo
+swap — correcting the task's own filing, which had assumed it needed the
+same fix as Finding 5. A second stale table found by this task's own
+grep-check (not in the original filing): §2.5's rank-of-known-site /
+enrichment-at-k table carries 4OBE-era N/AUC — flagged inline, not
+recomputed (those statistics were never re-run on `4LDJ`).
+
+**`documentation/CTQW_CONTRIBUTION_BRIEF.html`**: §05's ENM-validity
+stat-row and R1 table's own *baseline* row recounted (6/5/4→5/6/4;
+6/4/4→5/5/4) for KRAS_G12C's PASS→MARGINAL move. **The R1 experimental
+row itself was explicitly left unaltered** — that specific
+heavy-atom-weighting measurement was never re-run on `4LDJ`; disclosed
+inline rather than fabricated. §04 gained [[TASK-0263]]'s own
+terms-block-vs-CTQW result (0.751 vs 0.575, cluster-robust p=0.019;
+CTQW's own added-last once terms are in the model, p=0.973) — flagged by
+that task itself as "the strongest single result in the brief's argument"
+and missing until now. §08's PocketMiner paragraph updated from "could
+not be run" to [[TASK-0269]]'s own real outcome (added-last median +0.4%,
+cluster-p=0.277, not significant; crypticity-stratified the right
+direction, +7.0% cryptic vs +0.0% open, not formally tested).
+
+**Historical entries** ([[TASK-0245]], [[TASK-0246]], [[TASK-0247]], and
+`task0258_allosteric_distance_taxonomy.py`, which has no task file to
+annotate — already independently confirmed missing by another thread):
+dated pointers added, kept as historical artifacts per this document's own
+no-silent-overwrite convention. **Checked, not assumed**: in both
+[[TASK-0245]] and [[TASK-0247]], KRAS_G12C's own row is not the
+median-determining value in any cited table (PTP1B occupies that rank
+throughout) — the headline conclusions do not turn directly on the KRAS
+row, though whether the *exact* median would move under a full recompute
+was not tested, stated as a real limit on this check's own confidence.
+
+**Also found and fixed, beyond the task's own named scope**:
+`documentation/WORKFLOW.md`'s own "what this pipeline cannot do" section
+and KRAS_G12C walkthrough both stated `4OBE`/N=169 as current — corrected
+to `4LDJ`/N=170 in three places, with the real re-run numbers. Its own
+stale "10 structures, median AUC 0.482" claim was dropped rather than
+repeated, since [[TASK-0270]] separately found 8 of those 10 were
+actually drug-bound — restating it would have perpetuated a second,
+independent error. `documentation/2026-08-26-organiser-clarifications.md`
+(the decision record [[TASK-0270]] itself was filed from) gained a short
+dated update note, kept as the historical record it is.
+
+**Grep-check** (this task's own explicit Acceptance requirement):
+`grep -rn "4OBE"` / `"0.646"` across every live document, re-run after
+every edit. Every remaining hit is either the organisers' own Challenge
+Statement (not ours to edit), a generic API-example PDB code, or
+explicitly dated/historical/disclosed text — no live document presents a
+`4OBE` figure as a current KRAS_G12C result.
+
+**Not done**: §2.5's rank-of-known-site/enrichment-at-k table and the
+CTQW brief's own R1 heavy-atom-weighting experiment both need a real
+re-run on `4LDJ` before their own KRAS_G12C numbers can be stated as
+current — new measurements, out of this doc-propagation task's own scope,
+disclosed rather than silently absorbed.
+
+**Full detail:**
+`.ai/tasks/DONE/TASK-0272-kras-swap-blast-radius-and-pending-doc-updates.md`.

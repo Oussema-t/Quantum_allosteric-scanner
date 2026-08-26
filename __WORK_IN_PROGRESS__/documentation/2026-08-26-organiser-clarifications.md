@@ -75,6 +75,14 @@ floor, AUC, ENM validity (`r = 0.646`, PASS), attribution shares, the pocket
 distance category (contact-adjacent, min heavy-atom **1.32 Å**) — is computed
 on 4OBE. Substituting changes all of them.
 
+> **2026-08-26 update ([[TASK-0270]]):** decided. `8S8C` turned out to be
+> HOLO, not apo (checked live — MK-1084-bound, not usable as an apo
+> replacement). `4LDJ` adopted instead, on structural grounds (best
+> resolution of the genuinely-apo true-G12C candidates a live RCSB sweep
+> found). This section is kept as the decision record at the time it was
+> written, not rewritten — see [[TASK-0270]]'s own Done section for the
+> full analysis and re-run numbers.
+
 Note carefully: the organisers say "a nice structure ... would be 8S8C". That
 is a **suggestion, not a mandate**, and it does not say whether 8S8C is
 intended as apo, holo, or simply a better-resolved reference. **Establish what

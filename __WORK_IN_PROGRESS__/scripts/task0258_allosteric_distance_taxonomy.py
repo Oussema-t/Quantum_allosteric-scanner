@@ -70,6 +70,21 @@ pipeline's own same_chain=True measurement -- the true SRX/IHM mechanism
 is inter-subunit (TASK-0251), but the scope-truncated single-chain
 construct this project actually scores is not. Our own bins stand,
 undecorated. Full verification: [[TASK-0262]]'s own Done section.
+
+[[TASK-0272]], 2026-08-26: this script's own stored KRAS_G12C output
+(results/tasks/0258_allosteric_distance_taxonomy/) was last run against
+`4OBE`, since found misannotated -- wild-type, not the real G12C mutant
+([[TASK-0270]], organiser-sanctioned swap to `4LDJ`). This script calls
+`prep()` against live `config/targets.yaml`, already updated to `4LDJ` --
+re-running it today would use the corrected structure automatically, no
+code change needed -- but the STORED artifact is stale relative to that
+config and was not re-run here (a results-generating re-run, out of this
+doc-fix task's own scope, not silently claimed as done). Checked, not
+assumed: TASK-0270's own re-measured pocket-to-active-site min heavy-atom
+distance for KRAS_G12C barely moves (1.32 A -> 1.31 A, both far inside
+the 4.5 A BIN_CONTACT edge), so the "contact-adjacent" category label this
+script assigns KRAS_G12C does not change even though the stored number
+predates the fix.
 """
 from __future__ import annotations
 import json, sys, warnings
