@@ -105,7 +105,26 @@ def clean(
     # atoms, real occupancy data, are invisible under the default). "all"
     # keeps every alt-loc as a distinct atom record (same coordset, not a
     # second model), so the block below can actually compare them.
-    struct = prody.parsePDB(pdb_id, altloc="all", compressed=False)
+    try:
+        struct = prody.parsePDB(pdb_id, altloc="all", compressed=False)
+    except prody.proteins.pdbfile.PDBParseError:
+        # TASK-0276: legacy PDB text format cannot represent a 5-character
+        # extended chemical-component ID (RCSB's newer convention once the
+        # classic 3-character alphabet was exhausted, e.g. A1L9E/A1H5U) --
+        # the fixed-width HETATM columns overflow and corrupt the
+        # coordinate fields for EVERY atom in the file, not just the
+        # offending ligand's, so even a protein-only parse fails (confirmed
+        # directly: 9UOH, 8S8C). Falls back to mmCIF -- prody's AtomGroup
+        # from parseMMCIF supports the same getAltlocs/getChids/getResnums/
+        # getIcodes/select methods the rest of this function already calls,
+        # so nothing below this block needs to change. `format="cif"` must
+        # be fetched via the ALREADY-wrapped `prody.fetchPDB` (this
+        # package's own `pdb_cache/` folder default) rather than
+        # `parseMMCIF(pdb_id)` directly -- that function's own internal
+        # fetch call bypasses the folder default entirely (TASK-0273's own
+        # finding), scattering files into cwd.
+        cif_path = prody.fetchPDB(pdb_id, format="cif", compressed=False)
+        struct = prody.parseMMCIF(cif_path, altloc="all")
     if struct is None:
         raise ValueError(f"prody failed to parse '{pdb_id}'")
 

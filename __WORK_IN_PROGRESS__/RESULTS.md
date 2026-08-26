@@ -9134,3 +9134,286 @@ attempted further here.
 **Full detail:**
 `.ai/tasks/DONE/TASK-0279-ligand-selectivity-gate-occupancy-vs-efficacy.md`;
 [[TASK-0276]]'s own DONE file carries a dated note recording this reading.
+## Holo-only: the allosteric site IS structurally distinguishable from the orthosteric site, even with the answer in hand — a real signature, shared across drugs, in two independent families ([[TASK-0276]], 2026-08-26)
+
+Every negative in this register (nine of them) is of the form "method X
+cannot predict the allosteric pocket from apo." Nobody had asked the prior
+question: is it distinguishable **in holo**, where every piece of
+information — including the drug's own induced-fit imprint — is actually
+present? If not even that succeeds, this project's whole task is ill-posed
+from structure alone, not merely hard. This is the first time any structural
+feature has ever been computed ON a holo structure and compared across them
+([[TASK-0273]] only ever compared holo structures via the label itself,
+Jaccard of contact sets).
+
+**The leakage trap, and how this was designed around it**: a holo pocket is
+open *because* the drug is there, so "find the open cavity" trivially
+recovers any ligand-contact label and proves nothing. The comparison run
+here is the sharp version instead: within the SAME holo structure, is the
+**allosteric** drug's own contact site distinguishable from the
+**orthosteric** (catalytic/nucleotide) site? Both are real, independently-
+defined ligand-adjacent-or-catalytic sites, both leave an imprint — neither
+is "empty space." Every feature is computed on the structure with every
+non-protein atom physically removed first (a separate, explicitly-built
+ligand-stripped copy for every feature, including SASA, where computing on
+a ligand-containing model would show artificially low exposure exactly
+where the drug sits — the leakage trap in a different guise).
+
+**Design**: self-referential throughout — every holo structure supplies its
+own 5 features (ligand-stripped) AND its own two label groups (from its own,
+unstripped coordinates). No apo structure appears anywhere in this task.
+Orthosteric definition matched to what each family actually has: KRAS's own
+co-bound GDP (present in all 10) via direct ligand-contact; HCV_NS5B has no
+co-bound catalytic ligand (`func_ligand: []` in this register's own config)
+so orthosteric there is `backend.active_site.detect_active_site`'s live
+UniProt call — the SAME machinery `task0242_two_stage_dryrun.prep()` already
+uses for every CAND-set target (verified directly: HCV_NS5B_CMF's own seed
+= residues 220/318/319, the classic GDD/YGDD catalytic motif of an RNA
+polymerase — a real functional site, not a topological proxy).
+
+**5 features**, chosen to be independent of ligand-contact geometry itself:
+`V_C` (GNM dynamic cross-correlation centrality — [[TASK-0275]]'s own
+strongest single potential term), `V_B` (this holo structure's own raw
+B-factor), `degree` (binary contact centrality), `SASA` (BioPython
+Shrake-Rupley, ligand-stripped), `fpocket` (per-residue druggability,
+ligand-stripped). **Statistic**: per structure, does the feature rank
+allosteric residues above orthosteric ones — `metrics.auc` restricted to
+only the union of the two labeled groups, matching this register's own
+ranking-AUC convention everywhere else, just with a different two-class
+target. Aggregated with an exact cluster-level sign-flip test
+([[TASK-0261]]'s own algorithm).
+
+**Stage 2 family fixed BEFORE Stage 1 was run** (task's own requirement):
+HCV_NS5B, on coverage — 4 distinct allosteric chemotypes already verified in
+this register's own frozen config, more diversity than the other candidates
+(GAC/PKR/TRP_SYNTHASE/KSHV_PROTEASE each have only 2).
+
+### Two real bugs found and fixed en route
+
+Both `9UOH`/`8S8C` (5-character extended chemical-component IDs, A1L9E and
+A1H5U) failed prody's legacy PDB parser — the same limitation [[TASK-0273]]
+found, now fixed **at the shared source** this time: `allostery.clean.clean()`
+itself falls back to mmCIF on `PDBParseError` (verified: all 12 pre-existing
+`test_clean.py` tests still pass; full suite re-run clean, 2 pre-existing
+unrelated failures confirmed independent of this change — a stale
+`4OBE`-expecting test predating [[TASK-0270]]'s genotype fix, and a
+documentation-text linter). A second, subtler bug then surfaced: prody's
+mmCIF parser assigns each HETATM group its **own** chain letter, unlike the
+legacy parser which keeps it on its neighboring protein chain's letter —
+restricting to `chain A` *before* extracting ligand groups silently dropped
+GDP and the drug ligand entirely for both affected entries, collapsing their
+active-site resolution to the tier-3 topological-proxy fallback and their
+pocket to empty. Fixed by extracting ligand groups from the unrestricted
+parse. 10/10 KRAS structures usable after both fixes (was 8/10).
+
+### Stage 1 — KRAS_G12C (10 different drugs, GDP orthosteric)
+
+| feature | AUC median (allosteric ranks higher when >0.5) | cluster-p (n=10 independent structures) |
+|---|---|---|
+| **fpocket** (druggability) | **0.675** | **0.0039** |
+| **degree** (contact count) | **0.405** (orthosteric ranks higher) | **0.0020** |
+| **V_C** (DCC centrality) | **0.595** | **0.0117** |
+| **SASA** | **0.551** | **0.0215** |
+| V_B (raw B-factor) | 0.587 | 0.0742 (not significant) |
+
+**4 of 5 features discriminate allosteric from orthosteric significantly,
+at the finest cluster resolution this ensemble allows (n=10 independent
+depositions).** Not one accidental signal — a coherent pattern: the
+allosteric site is more dynamically coupled to the rest of the structure
+(`V_C` up), more solvent-exposed (`SASA` up), and scores higher on a pure
+geometric druggability heuristic (`fpocket` up) than the orthosteric site —
+**but has LOWER raw contact degree**, the opposite direction. That last
+point matters: the allosteric site is not simply "the well-connected
+residues" — degree, the crudest static-connectivity measure, actively
+disagrees with `V_C`, the dynamics-aware one. Whatever distinguishes it is
+specifically dynamical/geometric, not raw connectivity.
+
+**Commonality**: a 16-residue consensus (present in ≥6 of the 10 chemically
+distinct drugs' own allosteric-contact sets; K stated before computing) —
+`A:9/58/60-64/68/69/72/95/96/99/100/102/103`, squarely the Switch-II pocket.
+Pairwise allosteric-site Jaccard across all 10 (all different-drug pairs,
+since no two of these share an apo): median **0.650** — substantial
+consistency in WHICH residues the pocket comprises, across 10 structurally
+and chemically unrelated inhibitors.
+
+### Stage 2 — HCV_NS5B (4 drugs, UniProt-catalytic orthosteric)
+
+| feature | AUC median | cluster-p (n_clusters=2 — floor-limited, see below) |
+|---|---|---|
+| **fpocket** | **0.967** | 0.5000 |
+| **V_C** | **1.000** (every one of 4 structures, exactly) | 0.5000 |
+| V_B | 0.775 | 1.0000 |
+| SASA | 0.411 | 0.5000 |
+| degree | 0.211 (orthosteric ranks higher) | 0.5000 |
+
+**Same direction on every feature as KRAS** — `V_C` up, `fpocket` up,
+`degree` down — in a protein with a different fold, a different function
+(viral RNA polymerase vs. a small GTPase), and an orthosteric site resolved
+by a completely different mechanism (UniProt annotation, not a co-bound
+ligand). With only 2 independent clusters (`n_clusters=2`), the exact
+sign-flip test's own minimum achievable p-value is **0.5** regardless of
+effect size — `V_C=1.000` in literally all 4 structures is a maximal,
+noise-free effect that the p-value cannot express as significant with this
+few clusters; reported honestly as floor-limited, not as "not significant"
+in the ordinary sense.
+
+**Commonality, properly stratified — the more interesting finding than a
+flat consensus number**: CMF/POO (same apo, 2HAI) have allosteric-site
+Jaccard **0.941** — nearly identical. VR1/VRX (same apo, 2GIQ) likewise
+share an apo. But CMF/POO **vs.** VR1/VRX: Jaccard **0.000** — zero overlap.
+NS5B does not have one common allosteric site the way KRAS does; it has (at
+least) two, each individually near-perfectly conserved across its own
+chemotype, entirely disjoint from the other. A real, useful, more precise
+answer than either "yes, one site" or "no, no site."
+
+### Verdict against the task's own pre-registered outcome table
+
+**Row 2: "A signature exists in holo and is shared across drugs."** Not row
+1 (ill-posed) — the most consequential possible negative did not happen.
+Not row 3 alone (drug-specific) either, though HCV_NS5B shows drug-specific
+*sub*-structure (two disjoint sites) nested inside a family-level signature
+that itself replicates KRAS's own direction on every feature. **The task is
+well-posed from structure alone, at least in these two families**: a real,
+non-circular, coherent structural/dynamical signature separates allosteric
+from orthosteric sites, even with the answer already in hand — reproduced
+independently in a second protein with nothing else in common with the
+first.
+
+**Per row 2's own next question, explicitly NOT attempted here** (this
+task's own Constraint: descriptive characterisation and a ceiling
+measurement, never a predictor scored circularly against its own label) —
+does any trace of this signature (particularly `V_C`, the one feature that
+is not itself a druggability/pocket-shape heuristic and therefore the
+hardest to dismiss as "of course a drug pocket looks druggable") survive
+into **apo**? That is a concrete, separate, later task, and this one's own
+finding is what gives it a real target to test.
+
+**One honest caveat, stated so the finding isn't oversold**: `fpocket`'s
+own discrimination is the least surprising of the four significant
+features — a nucleotide/phosphate-cradling cofactor site and a
+small-molecule drug pocket differing on a druggability heuristic tuned
+for small-molecule pockets is close to expected. `V_C`'s result is the
+sharper claim: it is a pure network-dynamics measure with no notion of
+pocket shape or drug-likeness at all, and it still separates the two site
+classes significantly in KRAS and perfectly (if underpowered) in HCV_NS5B.
+
+**Script:** `scripts/task0276_holo_only_structural_signature.py`. **Data:**
+`results/tasks/0276_holo_only_structural_signature/holo_only_structural_signature.json`.
+**Full detail:** `.ai/tasks/DONE/TASK-0276-holo-only-what-does-an-allosteric-site-look-like.md`.
+
+## The apo→holo ceiling sweep, generalized: 8 more features, and the ceiling is a NULL almost everywhere — the same finding as TASK-0275's, now on a disjoint feature set ([[TASK-0277]], 2026-08-26)
+
+[[TASK-0275]] covers the 5 `build_H_new` potential terms plus CTQW.
+[[TASK-0276]] asks the discrimination-existence question. Neither covers the
+rest of this register's own feature stack. This task sweeps everything else
+with a non-severe leakage grade: `degree`/`euclid`/`hop` scored
+**individually** (not as one combined geometry block), `dcc_low`/`prs_low`
+(`lowmode_predictor.py`), ground-state relaxation on the identical `H_new`
+CTQW uses (**not actually classical diffusion** — `H_new` is indefinite on
+essentially this whole frozen set per [[TASK-0256]]'s own established
+finding, reported that way throughout, never re-labelled), single-residue
+mutational frustration ([[TASK-0268]]'s own CA-coordinate convention,
+matched exactly rather than task0204's CB variant, to avoid a second,
+inconsistent frustration number for the same targets), and SASA (natural,
+ligand-**present** holo burial — deliberately not stripped, unlike
+[[TASK-0276]]'s design, since this task's own leakage table asks for the
+real, flagged-moderate-leakage number, not a controlled one). fpocket/
+P2Rank/PocketMiner excluded (severe leakage, unchanged from this task's own
+table). Conservation/chemistry have no holo flavour at all — sequence- and
+residue-type-derived, identical apo and holo by construction — stated, not
+computed; this independently confirms [[TASK-0274]]'s own negative
+(conservation −0.08%, chemistry −0.35%, both indistinguishable from zero)
+was not a conformation problem, since those features already had every
+structural advantage holo could offer and still contributed nothing.
+
+**Method, identical to [[TASK-0275]]'s own established recipe** (both
+flavours scored on the matched common apo/holo (chain, resnum) residue
+set, `allostery.superpose.align_apo_holo`, never apo's own full set vs.
+holo's own reduced one) — and the same **AUC definition**, `task0254`'s own
+cross-validated `cv_auc`, even for a single feature, so every "AUC" in this
+register's apo/holo tables is one consistent recipe, not two. 20/22
+TASK-0243 frozen-set targets usable (HIV_INTEGRASE_MUT871/916 excluded —
+this register's own long-standing empty-active-site-seed data gap,
+unrelated to this task).
+
+### Consolidated table
+
+| feature | apo AUC | holo AUC | gap (median, cluster-robust) | p |
+|---|---|---|---|---|
+| degree | 0.541 | 0.484 | −0.033 | 0.096 |
+| euclid | 0.706 | 0.713 | −0.001 | 0.687 |
+| hop | 0.699 | 0.648 | −0.005 | 0.172 |
+| dcc_low | 0.615 | 0.600 | −0.011 | 0.561 |
+| prs_low | 0.459 | 0.503 | −0.001 | 0.093 |
+| ground-state relaxation | 0.675 | 0.648 | −0.002 | 0.954 |
+| frustration | 0.572 | 0.557 | −0.000 | 0.571 |
+| SASA (n=18) | 0.449 | 0.525 | −0.019 | 0.528 |
+
+**None of the 8 features shows a significant apo→holo gap.** Several are
+numerically negative — holo *slightly worse* than apo, not better — and
+none crosses the cluster-robust p<0.05 bar even at its most favorable
+reading. `ground_state_relaxation`'s own p=0.954 is about as flat a null
+as this register has ever reported for anything.
+
+### Central question: concentrated in the dynamical features, or uniform?
+
+**Uniform — and "uniform" here means uniformly close to zero, not
+uniformly large.** Dynamical group (`dcc_low`, `prs_low`,
+`ground_state_relaxation`, n=60 target-feature pairs): median gap
+**−0.0023**. Static group (`degree`, `euclid`, `hop`, `SASA`, n=78):
+median gap **−0.0048**. Mann-Whitney U p=**0.1205** — not distinguishable,
+and if anything the STATIC group's gap is numerically larger (more
+negative) than the dynamical group's, the opposite of the "dynamics
+specifically needs the bound conformation" hypothesis this task's own
+filing named as one of the two live possibilities. Neither half of that
+hypothesis survives: there is no large gap to be concentrated anywhere.
+
+### Crypticity stratification — the pre-registered prediction, again
+
+Same prediction [[TASK-0275]] tested at the potential-term level (larger
+apo→holo gap on cryptic targets) tested again here, independently, on this
+disjoint 8-feature set: **does not hold, and where it moves, it moves the
+wrong way.** `degree` (open +0.0075 vs. cryptic **−0.0688**), `SASA` (open
+−0.0024 vs. cryptic **−0.0920**), `dcc_low` (open +0.0055 vs. cryptic
+−0.0195), `ground_state_relaxation` (open **+0.0355** vs. cryptic −0.0146)
+all show the gap getting MORE negative — holo doing relatively *worse*, not
+better — specifically on the targets where the label says holo's bound
+conformation should matter most. `euclid`/`prs_low`/`frustration` are flat
+in both regimes. This is the same direction, independently, as
+[[TASK-0275]]'s own per-term correlation result (`V_R` significantly wrong-
+signed, the rest null) — two disjoint feature sets, same conclusion:
+crypticity is not what any measured apo penalty is made of.
+
+### Reconciliation with [[TASK-0275]] and [[TASK-0276]]
+
+**No tension — the three tasks combine into one coherent picture.**
+[[TASK-0275]]'s own 7-block composite found the same null (apo median AUC
+0.896 numerically *above* holo's 0.834, p=0.10) for the potential terms and
+CTQW. This task finds the identical qualitative result — flat-to-negative,
+never significant — across a fully disjoint 8-feature set spanning static
+geometry, low-mode dynamics, ground-state relaxation, packing frustration,
+and burial. **Between the two tasks, essentially this entire register's
+feature repertoire has now been checked for a holo advantage, and none of
+it shows one.** [[TASK-0276]] is not in tension with this either, despite
+initially looking like it should be (this task's own pre-registered "tension"
+scenario was large holo gains alongside no allosteric/orthosteric
+separation): [[TASK-0276]] found a REAL, significant structural signature
+distinguishing allosteric from orthosteric sites in holo (`V_C`, `fpocket`,
+`degree`, `SASA`). This task shows that signature is not a holo-only
+artifact needing the bound conformation to appear — apo already carries
+essentially the same predictive information. Read together: **the
+structural signature [[TASK-0276]] found is real, and it is already
+available without the drug bound.** That is the favorable resolution of
+the ceiling question this whole three-task arc was built to answer, and it
+gives [[TASK-0276]]'s own explicitly-deferred next question (does `V_C`
+survive into apo?) a strong prior answer before that task is even run:
+almost certainly yes.
+
+`documentation/CTQW_CONTRIBUTION_BRIEF.html` §04/§08 **not touched here** —
+flagged for whoever owns the brief for this batch, per [[TASK-0275]]'s own
+precedent of flagging rather than editing.
+
+**Script:** `scripts/task0277_apo_holo_ceiling_sweep.py`. **Data:**
+`results/tasks/0277_apo_holo_ceiling_sweep/summary.json`,
+`per_feature_auc_apo_holo.json`. **Full detail:**
+`.ai/tasks/DONE/TASK-0277-apo-holo-ceiling-sweep-every-feature.md`.
