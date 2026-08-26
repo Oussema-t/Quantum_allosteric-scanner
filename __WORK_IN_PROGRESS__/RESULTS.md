@@ -8389,3 +8389,100 @@ concurrent thread — not duplicated.
 `results/tasks/0270_kras_g12c_genotype_fix/kras_genotype_fix.json`. **Full
 detail:**
 `.ai/tasks/DONE/TASK-0270-organiser-sanctioned-structure-substitutions.md`.
+
+## PocketMiner, unblocked — does the one purpose-built cryptic-*opening* predictor close the residual? Not significantly (TASK-0269, 2026-08-26)
+
+[[TASK-0260]] identified PocketMiner (Meller et al. 2023, Nat Commun 14:2135,
+doi:10.1038/s41467-023-36699-3) as the one predictor in its comparison set
+actually trained to predict pocket *opening* — but it never ran: Python
+3.7–3.9 + TensorFlow≤2.9 could not be satisfied by this repo's own toolchain
+(Python 3.13 / TensorFlow 2.16), and a native `pyenv install 3.9.18` failed
+to compile `_ssl` twice. This task unblocks it via Docker
+(`tools/pocketminer/`, full recipe in that directory's own README.md) and
+runs the actual comparison.
+
+**Environment, real and working now**: `python:3.9-slim-bullseye` base,
+`--platform linux/amd64` (this host is Apple Silicon; TensorFlow 2.6–2.9 has
+no `linux/arm64` PyPI wheels for this vintage, confirmed directly, not
+assumed), PocketMiner pinned to `Mickdub/gvp`'s `pocket_pred` branch at
+commit `187062d` (a SHA, not a branch name). Two real build-environment bugs
+found and fixed along the way, not smoothed over: `mdtraj==1.9.7` ships no
+Linux wheel for any cpython version and its Cython source fails to compile
+under Cython≥3 (fixed: pin `cython<3`, `--no-build-isolation`); TensorFlow
+2.6.2's generated protobuf code raises `TypeError: Descriptors cannot be
+created directly` under a too-new protobuf (fixed: pin `protobuf==3.18.1`,
+upstream's own lock file value). A genuine sandbox-specific finding, not a
+PocketMiner issue: `docker build --platform linux/amd64` (cross-arch image
+resolution) hung indefinitely on this session's first several attempts
+while native-arch pulls completed in seconds — resolved by waiting out a
+slow first connection through this environment's own registry proxy
+(`http.docker.internal:3128`), not a permanent block.
+
+**Constraint-3 status, unchanged since this task's own filing**: the
+organiser question this depends on (`documentation/2026-08-26-organiser-
+clarifications.md`'s item (f), re-sent standalone as Q7 the same day) is
+**still open** as of this run. Proceeding under this register's own
+provisional reading (MD used only for the external authors' *training*
+labels; our own inference supplies zero trajectories) — this result is not
+organiser-endorsed and must carry that caveat until an answer arrives.
+
+**Run**: 20/22 of [[TASK-0243]]'s frozen set (same 2 excluded as every other
+task on this set — HIV_INTEGRASE_MUT871/916's own empty active-site seed,
+[[TASK-0249]]'s finding). **2 further targets failed inside PocketMiner
+itself** (HCV_NS5B_CMF, HCV_NS5B_POO) — both apo structures contain `CME`
+(S-methylcysteine, a modified residue), and PocketMiner's own hardcoded
+20-canonical-amino-acid lookup table has no entry for it. A real upstream
+limitation, not a pipeline bug — **n=18 usable**.
+
+**Headline — PocketMiner's own added-last contribution** (four-block
+Shapley, geometry/fpocket/CTQW/PocketMiner, the marginal value of adding
+PocketMiner once the other three are already in the model — this task's own
+decision statistic): **median +0.4%, range −20% to +27%, cluster-robust
+p = 0.277** ([[TASK-0261]]'s method, 12 clusters over 18 rows). **Not
+significant.** Four-block unexplained share: median 27% (2–62%) — barely
+moved from [[TASK-0260]]'s own 27–29% baseline. PocketMiner's own Shapley
+share (averaged over orderings, not the added-last decision statistic):
+median +11%, range −29% to +40% — real per-target signal exists, but does
+not survive as a genuine marginal contribution once geometry/fpocket/CTQW
+are already accounted for.
+
+**Crypticity-stratified, the pre-registered prediction from [[TASK-0260]]'s
+own filing**: a genuine cryptic-opening specialist's gain should concentrate
+on the cryptic targets, not the already-open ones — P2Rank failed this
+test (gain concentrated on already-open, the wrong direction). PocketMiner's
+own split: already-open (n=9) median added-last **+0.0%**, cryptic-testing
+(n=9) median added-last **+7.0%** — the *right* direction, unlike P2Rank,
+though **not formally significance-tested**: at least one shared-apo cluster
+has members on both sides of the 80% crypticity bar (crypticity is a
+property of the apo/ligand-specific-holo *pair*, not the apo structure
+alone, so it is not guaranteed cluster-consistent the way ENM validity is) —
+[[TASK-0261]]'s own cluster-permutation test correctly refuses to run on a
+split that violates its cluster-integrity assumption, reported as a
+descriptive median comparison instead of forced through.
+
+**Answered per this task's own Constraint** ("both outcomes are decisive and
+must be reported with equal prominence"): **PocketMiner does not close the
+residual.** Its own added-last contribution is statistically indistinguishable
+from zero (p=0.277) and the four-block unexplained share is essentially
+unchanged from the pre-PocketMiner baseline. The one purpose-built
+cryptic-*opening* predictor tested does not solve this project's residual —
+**genuinely unmodelled signal remains in the cryptic regime**, the strongest
+available motivation for Phase 2 this project has, per this task's own
+framing. The directional nuance (PocketMiner's gain leans toward cryptic
+targets, P2Rank's leaned the wrong way) is real but should not be
+oversold — it is not a significant result, only a more encouraging shape
+than the one confirmed non-starter.
+
+**One target flagged**: FBPASE_95S shows the single largest negative
+PocketMiner contribution (Shapley −29%, added-last −20%) — not investigated
+further here (a per-target model-fit anomaly, real remaining scope, not
+smoothed into the summary).
+
+**Not done, per this task's own scope/parallelisation note**: `documentation/
+CTQW_CONTRIBUTION_BRIEF.html` §08 needs this finding — [[TASK-0265]] owns
+the brief for this batch, not touched here.
+
+**Script:** `scripts/task0269_pocketminer_residual.py`. **Environment:**
+`tools/pocketminer/` (Dockerfile, `predict.py`, README.md). **Data:**
+`results/tasks/0269_pocketminer_residual/`. **Full detail:**
+`.ai/tasks/DONE/TASK-0269-pocketminer-environment-and-run.md`.
