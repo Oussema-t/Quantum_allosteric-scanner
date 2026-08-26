@@ -850,11 +850,58 @@ hypothesis existed and happens to be exactly what it needs.
 - **It does not rescue the register's negatives into a positive.** It explains
   them. That is more useful, and it must not be oversold as more than that.
 
-**Status:** open, unowned as a whole. Its decisive test is [[TASK-0229.006]];
-its formal literature grounding (H5.1) and the CS-vs-IF distinguishability
-question are addressed by [[TASK-0251]] (2026-08-24) — not decidable with a
-single static apo/holo pair, one COREX-reanalysis follow-up flagged there,
-not built; its answer-key consequence is [[TASK-0229.003]]; its complexity half is
-measurable via [[TASK-0228]] §6.2. **Usable in [[TASK-0184]] as a mechanistic
-hypothesis explaining the negative result — explicitly labelled as hypothesis,
-not finding.**
+### Local energetic frustration — the direct, pre-registered test, and it fails ([[TASK-0268]], 2026-08-25)
+
+**Pre-registered prediction** (written before a single frustration number was
+computed, per this task's own Constraint that a favourable result from
+Reviewer's own hypothesis is *less* trustworthy, not more): if HYP-P13 is
+right, local energetic frustration should be elevated at true pocket
+residues, **more so on genuinely-cryptic targets than already-open ones** —
+a site whose native packing is already near-optimal has nothing left to
+relieve by a population shift.
+
+Single-residue mutational frustration (Jenik et al. 2012, *Nucleic Acids
+Research* 40:W348-W351, doi:10.1093/nar/gks447 — citation verified live;
+real PyPI `frustratometer` package found genuinely uninstallable in this
+environment, `llvmlite`'s own LLVM toolchain dependency absent, not forced
+through — a from-scratch port built instead, `allostery/frustration.py`,
+Miyazawa & Jernigan 1996 pairwise potential, doi:10.1006/jmbi.1996.0114,
+sourced from AAindex MIYS960101, sanity-checked before use) added as a 5th
+attribution block (geometry/fpocket/SASA/CTQW/frustration) on
+[[TASK-0243]]'s frozen set, added-last value, [[TASK-0261]]'s exact
+cluster-permutation significance, [[TASK-0260]]'s own crypticity
+stratification.
+
+**Result: the predicted direction does not hold, and the effect is not
+distinguishable from zero either way.** Frustration's own added-last
+contribution: cryptic median −0.09% vs. open median +0.05% — cryptic is
+numerically *lower*, the opposite of HYP-P13's own prediction (cluster-perm
+p=0.452, nowhere near significant). Fraction of highly-frustrated residues
+(z>0.78, the field-standard cutoff): cryptic 36.0% vs. open 35.2% —
+essentially identical. Overall, frustration's own unique contribution once
+the other 4 blocks are already in the model is indistinguishable from zero
+(cluster-p=0.727). It does carry a real, positive Shapley share on its own
+(+6.5% median, unconditional on ordering) — but this collapses to near-zero
+added-last, meaning it is *redundant* with what geometry/fpocket/SASA/CTQW
+already capture, not a source of new, crypticity-specific signal.
+
+**Read plainly, with the same prominence a positive would have received**:
+this is HYP-P13's own most direct empirical test to date, and it is a clean
+negative. It does not disprove the broader population-shift picture (a
+static-structure frustration index cannot rule out a genuine ensemble/
+kinetic effect the way [[TASK-0229.006]]'s own EAM measurement more
+directly probes), but the specific, falsifiable, sharp prediction this task
+set out to test — cryptic sites carry more native frustration than
+already-open ones — is not supported by real data.
+
+**Status:** open, unowned as a whole — **now carries one genuine, decisive
+negative** (this section) alongside [[TASK-0229.006]]'s own inconclusive
+EAM-vs-propagation result (ρ≈0.5, neither closure anticipated). Its formal
+literature grounding (H5.1) and the CS-vs-IF distinguishability question
+are addressed by [[TASK-0251]] (2026-08-24) — not decidable with a single
+static apo/holo pair, one COREX-reanalysis follow-up flagged there, not
+built; its answer-key consequence is [[TASK-0229.003]]; its complexity half
+is measurable via [[TASK-0228]] §6.2. **Usable in [[TASK-0184]] as a
+mechanistic hypothesis explaining the negative result — explicitly labelled
+as hypothesis, not finding, and now with one of its own sharpest sub-
+predictions checked and failed, not just untested.**

@@ -8264,3 +8264,69 @@ TASK-0204's own criterion-#1 closure and Phase A's binding precedent.
 `results/tasks/0264_cryptic_opening_hardness/hardness.json`. **Full
 detail:** `.ai/tasks/DONE/TASK-0264-cryptic-opening-instance-hardness-before-qubo.md`;
 `src/allostery/PHASE_B_ROTAMER_QUBO.md`'s own new closure section.
+
+## Local energetic frustration — the direct, pre-registered test of HYP-P13, and it fails ([[TASK-0268]], 2026-08-25)
+
+**Pre-registered prediction, written before a single number was computed**:
+if HYP-P13 (allostery as stabilisation of an otherwise-disfavoured
+conformation, not signal propagation) is right, native energetic
+frustration should be elevated at true pocket residues, **more so on
+genuinely-cryptic targets than already-open ones**.
+
+**Citations verified live**: Jenik et al. 2012, *Nucleic Acids Research*
+40:W348-W351, doi:10.1093/nar/gks447 (Frustratometer formalism); Miyazawa &
+Jernigan 1996, *J Mol Biol* 256:623-644, doi:10.1006/jmbi.1996.0114
+(pairwise contact potential). **Installability checked directly**: the real
+PyPI `frustratometer` package resolves but fails to build — its own
+`numba`→`llvmlite` dependency needs a system LLVM toolchain absent here
+(confirmed directly, not assumed); installing LLVM system-wide judged out
+of scope. A real, honestly-scoped port built instead
+(`allostery/frustration.py`) — single-residue mutational frustration, the
+real 20×20 Miyazawa-Jernigan matrix (AAindex MIYS960101, not hand-recalled,
+sanity-checked before use), matching this project's own established
+precedent ([[TASK-0229.006]]'s own COREX/EAM build when the full tool
+wasn't practical to import either).
+
+Added as a 5th attribution block (geometry/fpocket/SASA/CTQW/frustration)
+on [[TASK-0243]]'s frozen set, [[TASK-0261]]'s exact cluster-permutation
+significance, [[TASK-0260]]'s own crypticity stratification — n=20/22 (the
+2 known empty-seed HIV-integrase entries, [[TASK-0253]], correctly
+skipped).
+
+| block | Shapley share (median) | added-last (median) |
+|---|---|---|
+| geometry | +39.1% | +13.2% |
+| fpocket | +7.0% | +3.3% |
+| SASA | −0.4% | −0.4% |
+| CTQW | +5.4% | +0.0% |
+| **frustration** | **+6.5%** | **+0.1%** |
+
+**Verdict: HYP-P13's own frustration prediction fails — a clean negative,
+reported with the same prominence a positive would get.**
+
+| statistic | cryptic (n=10) | open (n=8) | cluster-perm p (cryptic>open) |
+|---|---|---|---|
+| frustration Shapley share | +6.96% | +0.27% | 0.355 |
+| **frustration added-last** | **−0.09%** | **+0.05%** | **0.452** |
+| frac. residues highly frustrated (z>0.78) | 36.0% | 35.2% | 0.537 |
+
+Direction predicted (cryptic > open) **does not hold** on the statistic
+that matters most — added-last, the unique non-redundant contribution —
+cryptic targets show numerically *lower* frustration than open ones, the
+opposite of the prediction, though the gap is small and not significant
+either way. Frustration's own overall added-last value is indistinguishable
+from zero (cluster-p=0.727, 13 clusters) — its real, positive Shapley share
+(+6.5%, p=0.128, also not significant) reflects redundant information
+already captured by geometry/fpocket/SASA/CTQW, not new signal.
+
+**Read plainly**: this is HYP-P13's own most direct empirical test to date.
+It does not disprove the broader population-shift picture (a static-
+structure index cannot rule out a genuine ensemble/kinetic effect the way
+[[TASK-0229.006]]'s own EAM measurement more directly probes), but the
+specific, falsifiable, sharp prediction this task set out to test is not
+supported by real data. `.claude/hypotheses/physics.md`'s own HYP-P13
+section updated with the same prominence.
+
+**Script:** `scripts/task0268_local_frustration_hyp_p13.py`. **Data:**
+`results/tasks/0268_local_frustration_hyp_p13/`. **Full detail:**
+`.ai/tasks/DONE/TASK-0268-local-frustration-and-hyp-p13.md`.
