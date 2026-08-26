@@ -380,3 +380,62 @@ ladder). Cross-links [[TASK-0169]] (the finding this converts into a
 reusable instrument) and feeds [[TASK-0210]]/[[TASK-0208]] (target
 validity) with a concrete per-target verdict list rather than a single
 observation.
+
+---
+
+**Addendum, 2026-08-26 ([[TASK-0278]]) — the HETATM audit's own reusable
+classification rule, written down, and its blind spot fixed.**
+
+This task's own `hetatm_audit` already flagged BCR_ABL1's `MYR` as
+"unexpected_near_pocket" (`min_dist_to_pocket_window=3.47`) at the time
+this file was written — the underlying measurement existed from day one.
+What was missing was (a) a *reusable, named* classification rule
+distinguishing a legitimate apo occupant from a benchmark-breaking one,
+applied consistently across every target, and (b) live verification of
+the register's other apo structures by the same standard (this task never
+ran that audit on [[TASK-0243]]'s own 22-target config, which did not yet
+exist when this task ran).
+
+**The rule, fixed by [[TASK-0278]]:**
+1. Enumerate every non-water HETATM group directly from the resolved
+   structure (`backend.rcsb.ligands_and_sites` — NOT the RCSB Data API's
+   own `nonpolymer_bound_components` summary field, which [[TASK-0270]]
+   already found silently omits non-metal-coordinating ligands).
+2. Exclude any HETATM group that is **peptide-bonded** to a normal
+   neighbouring residue (C-N distance <1.5 Å either side) — a covalently
+   modified residue embedded in the chain (e.g. `M3L`/N-trimethyllysine,
+   `ACE`/N-terminal acetyl cap), not a free ligand. `Bio.PDB`'s own hetero
+   flag does not distinguish these; a real bond-distance check is
+   required (found necessary directly — an early resnum-adjacency-only
+   version of this check produced false positives).
+3. Classify what remains via `backend.rcsb.classify_ligand`
+   (cofactor / solvent-ion / ligand / drug), **with one required
+   correction**: `classify_ligand`'s own top-level "solvent/ion" bucket
+   silently includes lipids/fatty-acid additives via `_is_aliphatic_
+   additive` (built for the live app's own display purposes, where most
+   surface-bound fatty acids really are inert) — `MYR` itself is the
+   exact case this swallows. Re-check every "solvent/ion" verdict against
+   `_is_aliphatic_additive` directly and flag a hit separately
+   (`broken_lipid_pocket_occupant`), the same correction [[TASK-0214]]'s
+   own `_is_buffer_or_water` already made privately for its candidate
+   filter, generalised here into a reusable function
+   (`task0278_apo_contents_audit.apo_ligand_verdict`).
+4. **The decisive check is not "is this ligand natural," it is whether it
+   overlaps the SPECIFIC pocket window being scored** — a cognate ligand
+   at a *different* site (KRAS's GDP at the nucleotide pocket, BCR_ABL1's
+   own `P16` at the ATP site) does not confound the benchmark; the same
+   molecule at the *scored* site does. Checked directly, not assumed, via
+   heavy-atom/binding-site overlap against each target's own pocket
+   window: `BCR_ABL1` (`MYR`, 75% window overlap), `GLUCOKINASE` (`MRK`,
+   88%), and — newly found, not in [[TASK-0278]]'s own original filing —
+   `PKR_MITAPIVAT`/`PKR_AG946` (`O9I`, an allosteric modulator already
+   bound in the shared "apo" `7FS3`, 91–92% window overlap, the single
+   worst case found) are genuinely pocket-confounded. `CARDIAC_MYOSIN`'s
+   `VO4` (vanadate) does **not** overlap its own scored window at all
+   (0%) — this task's own "suspect" classification for `8QYP` is
+   corrected: not a pocket confound by this test, whatever its other
+   caveats as a chemically-trapped state.
+
+Full per-structure results: `results/tasks/0278_apo_contents_audit/
+apo_contents_audit.json`. See [[TASK-0278]]'s own Done section for the
+BCR_ABL1 decision and the full register-wide table.

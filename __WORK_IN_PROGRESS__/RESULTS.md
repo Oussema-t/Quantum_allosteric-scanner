@@ -8945,3 +8945,113 @@ flavours) and the apo/holo ceiling-null finding.
 **Script:** `scripts/task0275_term_decomposition_apo_holo.py`. **Data:**
 `results/tasks/0275_term_decomposition_apo_holo/`. **Full detail:**
 `.ai/tasks/DONE/TASK-0275-per-term-decomposition-V_C-carries-it.md`.
+
+## Our "apo" structures are not apo: three are pocket-confounding, one is BCR-ABL1's own mandatory target ([[TASK-0278]], 2026-08-26)
+
+BCR-ABL1's myristoyl pocket is "pre-formed" in our own apo (`1OPL`) —
+checked live against RCSB, and worse than a spot-check would suggest:
+`1OPL` is doubly ligand-bound (`MYR` myristic acid + `P16`, an ATP-site
+inhibitor), and `MYR` sits directly in the pocket the pipeline is asked
+to predict. The underlying measurement already existed — [[TASK-0209]]'s
+own `hetatm_audit` (2026-08-07) flagged `MYR` as `unexpected_near_pocket`
+at the time — but it never had a named, reusable rule, and was never
+extended to the rest of the register.
+
+**Method, and a real defect caught in the naive version before trusting
+any number**: every non-water HETATM group across all 29 distinct apo
+PDB structures in `config/targets.yaml` and `config/candidate_targets_
+task0243.yaml` was enumerated directly from the resolved structure
+(`backend.rcsb.ligands_and_sites` — not the RCSB Data API's own
+`nonpolymer_bound_components`, [[TASK-0270]]'s own already-found blind
+spot for silently missing non-coordinating ligands). The first pass
+over-flagged 16/29 structures — two correctable defects, both fixed
+before reporting a single number:
+
+1. **Covalent in-chain modifications counted as free ligands.** `M3L`
+   (N-trimethyllysine, `CARDIAC_MYOSIN`'s own `8QYP`), `ACE`/`GG7`
+   (N-terminal caps) are peptide-bonded to their chain neighbours (C–N
+   distance ~1.34 Å, checked directly, not assumed) — `Bio.PDB`'s own
+   hetero flag does not distinguish "free small molecule" from "covalent
+   modified residue," both are HETATM in the PDB format. Excluded via a
+   real bond-distance check. 14/29 structures remain flagged after this
+   fix.
+2. **Cognate substrates/products misread as synthetic.** `backend.rcsb.
+   classify_ligand` was built for the live app's "is this worth
+   highlighting as a drug" question, not "is this cognate for THIS
+   enzyme" — it flags `GLN` (glutaminase's own substrate, `GAC_BPTES`/
+   `GAC_CPD12`'s apo `7SBN`, itself deposited as "...with L-Gln, closed
+   conformation"), `GLC` (glucose, `GLUCOKINASE`'s own substrate), `FBP`
+   (phosphofructokinase's own reaction product — `1PFK` is explicitly
+   titled "...WITH ITS REACTION PRODUCTS"), and `NMN` (NAMPT's own
+   reaction product) as drug-like. Corrected by hand, each checked
+   against the specific enzyme's own biology, not a blanket override.
+
+**The decisive test is not "does the apo structure contain a ligand," it
+is whether that ligand overlaps the SPECIFIC pocket window being
+scored** — computed directly (binding-site residues vs. each target's own
+pocket window), not assumed from presence alone:
+
+| target | apo | occupant | window overlap | verdict |
+|---|---|---|---|---|
+| **BCR_ABL1** (mandatory) | `1OPL` | `MYR` | **75%** | **pocket-confounding** |
+| **GLUCOKINASE** | `1V4S` | `MRK` | **88%** | **pocket-confounding** |
+| **PKR_MITAPIVAT** / **PKR_AG946** | `7FS3` | `O9I` | **92% / 91%** | **pocket-confounding — the worst case found, and not in this task's own original filing** |
+| CARDIAC_MYOSIN | `8QYP` | `VO4` (vanadate) | **0%** | not pocket-confounding — corrects this task's own filing's "suspect" label |
+| HCV_NS5B ×4, KSHV_PROTEASE ×2, SMYD3_DIPERODON, PF_ATCASE | `2GIQ`/`2HAI`/`2PBK`/`6P7Z`/`7ZP2` | real inhibitors (each entry's own RCSB title names it a complex) | 0% each | ligand-bound, not clean apo, but not confounding *this* pocket |
+
+**`PKR_MITAPIVAT`/`PKR_AG946` is a new, real, and worse-than-BCR_ABL1
+finding**, surfaced only because this task's own Scope asked for the full
+register sweep rather than stopping at BCR-ABL1. `7FS3` — used as "apo"
+for both targets — is deposited as "Structure of liver pyruvate kinase in
+complex with allosteric modulator 15"; that modulator (`O9I`) covers
+91–92% of the very window these two targets are scored on. **Not
+remediated here** (PKR is not a mandatory target and this task's own
+Scope asks only for a BCR_ABL1 decision) — flagged with full prominence
+for a follow-up task.
+
+**BCR_ABL1 decision: keep `1OPL`, report the defect explicitly.**
+Finding a genuinely myristoyl-pocket-empty ABL1 structure is foreclosed —
+[[TASK-0270]] already searched real candidates (`2G1T`, `2G2H`, `2G2I`)
+and found none clean, with scored evidence against substituting (`2G1T`
+AUC=0.350, below chance). Computationally stripping `MYR` was run
+explicitly, as a **disclosed control, not a silent fix** — and the result
+argues decisively against treating it as one:
+
+| | native `1OPL` (`MYR` present) | `MYR` computationally stripped |
+|---|---|---|
+| window overlap_frac | 0.875 | 0.875 (**unchanged**) |
+| window druggability_score | 0.761 | 0.566 (drops, still a hit) |
+| residue-level fpocket AUC | 0.8952 | 0.8952 (**bit-identical**) |
+| `apo_native_hit` | **True** | **True** (unchanged) |
+
+**Deleting `MYR`'s own atoms does not close the pocket**, because
+fpocket's cavity detection is driven by the protein backbone's own
+geometry — already in the myristate-stabilised open conformation — and
+nothing in this register's toolchain relaxes a backbone after ligand
+removal (the same absence of a real minimiser [[TASK-0271]]'s own
+repulsor-release test hit from a different angle). This sharpens, not
+softens, the finding: the confound is not "an atom happens to be present
+in the file," it is that the crystallised conformation itself was
+captured with the pocket already held open.
+
+**Why this matters beyond one target**: [[TASK-0120]]/[[TASK-0139]]'s
+"pre-formed pocket" (RMSD ratio 0.49) and fpocket's own strong BCR_ABL1
+solo score are, at least in significant part, properties of `1OPL`'s own
+crystal contents, not a discovery about c-Abl's intrinsic dynamics. It is
+also direct, mechanistic, single-target evidence for [[TASK-0265]]'s own
+statistical finding: myristic acid occupies the myristoyl pocket without
+producing the therapeutic allosteric effect asciminib does — same pocket,
+different occupant, different outcome. Allostery is a property of the
+protein–ligand complex, not of the cavity.
+
+`.claude/hypotheses/` not touched (this is a benchmark-construction
+finding, not a mechanistic hypothesis test). `.ai/tasks/DONE/TASK-0209-
+known-answer-cryptic-instance-set.md` carries the reusable classification
+rule as a dated addendum. `documentation/PHASE1_SUBMISSION_DRAFT.md`
+**flagged for an update, not edited here** — it currently discusses
+BCR-ABL1's pre-formed pocket without this cause.
+
+**Scripts:** `scripts/task0278_apo_contents_audit.py`,
+`scripts/task0278_bcr_abl1_myr_strip.py`. **Data:** `results/tasks/
+0278_apo_contents_audit/`. **Full detail:** `.ai/tasks/DONE/TASK-0278-
+our-apo-structures-are-not-apo.md`.
