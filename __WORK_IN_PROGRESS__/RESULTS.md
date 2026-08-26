@@ -8559,3 +8559,88 @@ disclosed rather than silently absorbed.
 
 **Full detail:**
 `.ai/tasks/DONE/TASK-0272-kras-swap-blast-radius-and-pending-doc-updates.md`.
+
+## Two decades-old classical feature families, never tested until now — neither closes the residual ([[TASK-0274]], 2026-08-26)
+
+Every attribution block this register had ever tested was geometric or
+dynamical (geometry / fpocket / ctqw / sasa [[TASK-0266]] / p2rank
+[[TASK-0260]] / potential terms [[TASK-0263]] / pocketminer [[TASK-0269]]).
+Checked directly: no sequence-conservation feature and no residue chemistry
+existed anywhere in `src/allostery/`. This task builds both, real, and adds
+them to [[TASK-0254]]'s own Shapley attribution, making it a 5-block model
+(geometry/fpocket/ctqw/conservation/chemistry).
+
+**Conservation, real, not a placeholder**: for each of the 20 frozen-set
+targets, `backend.active_site`'s own UniProt-offset machinery (reused
+verbatim — `get_uniprot`/`_residues_by_num`/`_uniprot_features`/
+`_find_offset`) places a UniProt accession and offset; InterPro's own API
+resolves the largest Pfam domain match; the Pfam **seed** alignment
+(curated, not the HMM-derived full alignment) is fetched via InterPro's
+alignment endpoint and parsed with `Bio.AlignIO` — no MSA binary is
+installed in this environment (checked: no clustalo/mafft/muscle/hmmalign),
+so a per-column Shannon-entropy conservation score is computed directly
+from the seed, then transferred onto the query's own residues via a
+pairwise alignment (BLOSUM62, `Bio.Align.PairwiseAligner`) against the
+seed's own best-matching row (nearest-homolog transfer, not a full
+profile/HMM alignment — cheap and standard, its own depth reported per
+target, not hidden). Citation verified live: Mistry et al. 2021, Nucleic
+Acids Research, DOI 10.1093/nar/gkaa913. **20/20 targets got a real Pfam
+seed mapping** — n_seed sequences median 32 (range 5-245), best-homolog
+identity to the query domain median 97% (range 44-100%; PF_ATCASE, KSHV
+protease, MKK7, SMYD3 sit at 44-53%, genuinely shallow homology, flagged
+per target in `conservation_depth.json`, not smoothed into the summary).
+Multi-chain targets: conservation is chain[0]-scoped only (the same
+limitation `detect_active_site` itself already has) — other chains' rows
+get NaN, imputed via nanmedian like every other NaN block value in this
+register, and true coverage (`cov=n_mapped/n_total`) is reported per target.
+
+**Chemistry, deliberately simple**: hydrophobicity (Kyte & Doolittle 1982,
+DOI 10.1016/0022-2836(82)90515-0), charge at physiological pH (D/E=-1,
+K/R=+1, H=0), aromaticity (F/W/Y), side-chain volume (Zamyatnin 1972, DOI
+10.1016/0079-6107(72)90005-3) — four z-scored columns from residue
+identity alone, no structure-derived component.
+
+**Headline — the decision statistic this task's own Scope specified**
+(each new block added on top of the geometry+fpocket+CTQW baseline
+specifically, not on top of the other new block): **conservation median
+-0.08%, chemistry median -0.35%.** Both slightly negative — no measurable
+gain, and cluster-robust ([[TASK-0261]]'s exact permutation, 13 clusters):
+conservation p=0.6946, chemistry p=0.6492. Full 5-block added-last (on top
+of everything else, including each other) confirms it: conservation
+median -0.05% (p=0.8423), chemistry median -0.27% (p=0.8318). **Neither is
+distinguishable from zero.** The 5-block unexplained share (median 30.7%)
+is not lower than the pre-existing 3-block baseline (28.6%) — it is
+marginally *higher*, consistent with adding two uninformative dimensions to
+a 20-row 5-fold CV rather than any real signal.
+
+**Crypticity-stratified** (this task's own pre-registered prediction:
+conservation should help on functional sites regardless of openness — if
+its gain concentrates on already-open targets the way fpocket/P2Rank's
+does, it is tracking cavity presence, not function): conservation's own
+cryptic-vs-open split is -0.66% vs -0.07% (p=0.572) — not significant, and
+if anything in the wrong direction. The prediction is not confirmed, but
+there is nothing to confirm it *with*: conservation carries no signal here
+in either regime.
+
+**Answered per this task's own Constraint** ("if conservation closes a
+large share of the residual, say so plainly — that is a more useful
+finding than another negative"): it does not close any of it. Two ordinary,
+decades-old feature families, real implementations (not placeholders),
+tested with the same cluster-robust rigor as every other block in this
+register — both come back statistically indistinguishable from noise. This
+closes two of the three concretely-named remaining candidate categories in
+this task's own filing ([[TASK-0273]] covers the third, label noise);
+what is left is "ligand-side properties" (explicitly out of scope — a
+different experimental design, per-pocket not per-residue) and
+"irreducible." One per-target outlier noted, not chased further here:
+DHPS_GC7 shows a real +32.7% conservation Shapley share, the only target
+where conservation does anything — a single point, not a pattern (real
+remaining scope, if anyone wants it).
+
+`documentation/CTQW_CONTRIBUTION_BRIEF.html` §08 **not flagged** — this
+task's own Acceptance only requires flagging it if the residual drops
+materially; it did not (28.6% → 30.7%, in the wrong direction).
+
+**Script:** `scripts/task0274_conservation_chemistry_residual.py`. **Data:**
+`results/tasks/0274_conservation_chemistry_residual/`. **Full detail:**
+`.ai/tasks/DONE/TASK-0274-what-are-the-missing-contribution-categories.md`.
