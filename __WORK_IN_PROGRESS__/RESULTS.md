@@ -8645,6 +8645,136 @@ materially; it did not (28.6% → 30.7%, in the wrong direction).
 `results/tasks/0274_conservation_chemistry_residual/`. **Full detail:**
 `.ai/tasks/DONE/TASK-0274-what-are-the-missing-contribution-categories.md`.
 
+## The pocket label's own noise floor: real crystal replicates measured, and broadening the label makes AUC *worse*, not better ([[TASK-0273]], 2026-08-26)
+
+Every AUC this register has published treats the pocket label as exact
+("residues within 4.5 A of the drug in one crystal structure"). This task
+measures the noise floor beneath that label directly, using real,
+independently-deposited RCSB holo structures — no simulation. Filed same-day
+as [[TASK-0274]] as the third of three concretely-named candidate
+explanations for the residual; that task closed conservation/chemistry,
+this one closes label noise.
+
+**Live re-verification caught real contamination, same pattern [[TASK-0270]]
+found in [[TASK-0155]]'s own pool**: searching RCSB for every OTHER
+deposition of each of KRAS G12C's 10 already-verified drugs found 23
+candidate replicates — after checking each one live (X-ray method, and for
+KRAS, the deposited sequence at the anchor-relative position-12 offset),
+**13 of 23 were off-genotype or off-method**: BI-2865's other 7 hits are
+wild-type or G12D/G12V/G13D KRAS, not G12C; sotorasib's other 5 hits are
+cryo-EM, and 4 of those 5 are antibody/MHC-peptide complexes, not the intact
+protein-drug pocket at all. **Two drugs (BI-2865, sotorasib) have ZERO
+genuine same-drug X-ray G12C replicates anywhere in the PDB** — a real,
+useful negative finding on its own. Only GNE-1952 (ligand MKZ, [[TASK-0270]]'s
+own "covalently alkylated" 7RP3) has any: 6T5V and 7RP4, both genuine. For
+GAC, one of 6 BPTES replicate hits was mouse glutaminase, not human —
+excluded. Two real bugs were also caught and fixed mid-task: an
+organism-string exact-match check wrongly excluded 10/12 genuine
+*S. typhimurium* TRP_SYNTHASE replicates (RCSB's own free-text field returns
+4 different capitalizations/strain-suffix variants for the identical
+organism — fixed to a case-insensitive keyword match); and prody's legacy
+PDB parser cannot read 2 KRAS entries at all (9UOH, 8S8C) because their
+5-character extended chemical-component IDs overflow the fixed-width HETATM
+columns — fixed with an mmCIF fallback.
+
+**Contact extraction** is self-contained per entry (heavy-atom, 4.5 A,
+matching this project's own established convention) — no apo/holo overlay,
+no cross-entry alignment. **Jaccard reported both ways** ([[TASK-0265]]'s
+own fix, reused): (chain,resnum)-exact and resnum-only, since a
+homo-oligomer can deposit the identical physical site under a differently-
+lettered symmetric chain across independent depositions.
+
+| protein | same-drug n (pairs) | same-drug Jaccard (resnum-only) | diff-drug Jaccard (resnum-only) |
+|---|---|---|---|
+| KRAS_G12C (MKZ triplet only) | 3 | median 0.875 [0.840, 0.885] | median 0.591 [0.000, 0.917], n=63 |
+| GAC_BPTES (04A, 6 depositions) | 15 | median 0.818 [0.636, 1.000] | median 0.739 [0.636, 1.000], n=6 |
+| TRP_SYNTHASE_F6F (13 depositions) | 79 | median 0.500 [0.000, 1.000] | median 0.420 [0.000, 0.857], n=26 |
+
+(chain,resnum)-exact Jaccard is reported in the data but not headlined here:
+for KRAS it is artificially deflated for 2 of the 3 same-drug pairs because
+7RP4 alone carries two independent ligand copies in its asymmetric unit
+(48 contact residues vs. ~21-24 for the single-copy depositions it's
+compared against) — a real ASU-copy-count artifact, not evidence of pocket
+disagreement; resnum-only correctly absorbs it. For TRP_SYNTHASE, 4 of the
+79 same-drug pairs hit Jaccard = 0.000 *exactly* — every one of them
+involves 7ME8, whose own deposition captured F6F at the beta site only,
+compared against depositions that captured it at the alpha site only. That
+is a real binary catalytic-state difference (which active site the crystal
+happened to trap the inhibitor in), not stochastic crystallographic noise —
+folded into "same-drug reproducibility" here because it is real experimental
+variance on the identical ligand, but it means this range is an upper bound
+on pure crystallographic noise, not a purified estimate of it.
+
+**Headline, in the same direction for all three proteins**: same-drug
+depositions of the identical ligand agree with each other more than
+different-drug depositions do (0.875 vs 0.591 for KRAS; 0.818 vs 0.739 for
+GAC; 0.500 vs 0.420 for TRP_SYNTHASE) — ligand identity carries real signal,
+confirming [[TASK-0265]]'s own qualitative claim. **But the same-drug floor
+itself is nowhere near 1.0** — even the *identical* drug on the *identical*
+protein, independently solved, reproduces the contact-residue set at only
+42-88% Jaccard depending on target. The label is not exact, at a magnitude
+large enough to matter.
+
+**Consensus/union labels** (K stated before computing: majority, K =
+ceil(N/2)) were built for all three ensembles. **Re-scored for KRAS_G12C
+and TRP_SYNTHASE_F6F only** — GAC_BPTES is a genuine homo-oligomer with no
+established chain-correspondence across independent depositions;
+re-scoring it against a consensus mask built from possibly-mismatched chain
+letters would silently launder that ambiguity into a number, so its
+consensus/union labels are defined and reported but deliberately NOT used
+to re-score.
+
+- **KRAS_G12C** (not in [[TASK-0243]]'s frozen 22-target set — scored on its
+  own native metric, the single-operator CTQW AUC [[TASK-0270]]'s own
+  numbers use): single label AUC=0.514, consensus (K=6/12, 22 residues)
+  AUC=0.509, union (62 residues) AUC=0.510. Flat, and the diagnosis stays
+  `NO_SIGNAL_IN_APO` for all three — matches [[TASK-0270]]'s own finding
+  that this target's floor-clear does not survive its genotype fix; no
+  label definition rescues it.
+- **TRP_SYNTHASE_F6F** (in the frozen set — re-scored in the SAME
+  cross-validated geometry+fpocket+CTQW composite framework that actually
+  produces this register's "X% unexplained" headline, [[TASK-0254]]'s own
+  machinery reused unmodified, features held fixed, only `y` swapped):
+  single label AUC=**0.8642** (reproduces [[TASK-0254]]'s own published
+  0.864 for this target exactly), consensus (41 residues) AUC=**0.7792**,
+  union (53 residues) AUC=**0.7974**. **Broadening the label makes the
+  cross-validated AUC substantially WORSE, not better** — an 8.5-point drop
+  against consensus. On the single-operator metric too (AUC=0.591 single vs.
+  0.549 consensus vs. 0.532 union), AUC falls as the label broadens, though
+  P@5 rises (0.0 -> 0.2 -> 0.4) — the union label is easier to partially
+  hit in the top-5 even as its own ranking-quality score drops, because a
+  larger pocket dilutes what counts as a true negative.
+
+**Answered directly, both outcomes reported with equal prominence per this
+task's own Constraint**: no, part of what this register calls "unexplained"
+is **not** label noise. In the one case where this was tested against the
+actual metric that produces the "unexplained" number (TRP_SYNTHASE_F6F,
+cross-validated composite AUC), using a more-agreed-upon, majority-vote
+label makes the model's performance *worse*, not better — the single
+crystal structure's own label was already at or above the achievable
+ceiling for this feature stack, not suppressing it. The reproducibility
+measurement is itself real and non-trivial (0.42-0.88 same-drug Jaccard,
+never 1.0) — the label genuinely is noisy — but that noise is not what is
+holding this register's AUC numbers down. This is a different diagnosis
+from [[TASK-0259]]'s crypticity finding and from [[TASK-0254]]'s own
+fpocket-variance correction: both of those found real missing predictors;
+this task finds the ceiling is not the label.
+
+**Feeds back to [[TASK-0265]]'s independence rule** ("a second ligand on an
+apo structure already counted is a new target for label-side questions"):
+confirmed, more strongly than that task could show with its own n=5-7 same-
+apo pairs — same-drug replicates (a *stronger* form of "the same thing")
+still disagree at up to 58% dissimilarity, so two different-drug labels on
+the same apo structure are certainly independent enough to count separately.
+
+`documentation/CTQW_CONTRIBUTION_BRIEF.html` §08 **not flagged** — per this
+task's own Acceptance, only required if AUC rises against consensus; it
+fell.
+
+**Script:** `scripts/task0273_holo_ensemble_label_noise.py`. **Data:**
+`results/tasks/0273_holo_ensemble_label_noise/holo_ensemble_label_noise.json`.
+**Full detail:** `.ai/tasks/DONE/TASK-0273-experimental-holo-ensembles-and-the-label-noise-floor.md`.
+
 ## Does a released, repulsor-held-open pocket stay open? Not testable — it never reliably opens in the first place ([[TASK-0271]], 2026-08-26)
 
 Three prior tasks — [[TASK-0230]] (ceiling), [[TASK-0235]] (local-Kabsch +

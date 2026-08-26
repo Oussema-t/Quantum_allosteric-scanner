@@ -86,9 +86,16 @@ for _p in (_ROOT / "src", _ROOT / "scripts", _ROOT.parent):
 import prody  # noqa: E402
 
 prody.confProDy(verbosity="none")
-from task0255_hop_angstrom_calibration import _parsePDB_all_altloc  # noqa: E402
 
-prody.parsePDB = _parsePDB_all_altloc
+# Importing task0255 for its own side effect only: it leaves prody.parsePDB
+# correctly composed (altloc="all" wrapping allostery's own pdb_cache/
+# folder default). Do NOT re-assign prody.parsePDB to a name pulled out of
+# it -- that function object's closure was bound before allostery's own
+# init-time patch ran, so re-assigning it clobbers the folder default and
+# scatters every fetched structure into this process's cwd instead of
+# pdb_cache/ (TASK-0258's own finding; fixed here retroactively by
+# TASK-0273's cleanup pass, which found the identical bug in this script).
+import task0255_hop_angstrom_calibration  # noqa: E402,F401
 
 import yaml  # noqa: E402
 

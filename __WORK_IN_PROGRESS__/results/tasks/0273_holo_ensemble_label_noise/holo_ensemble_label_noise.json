@@ -1,0 +1,4000 @@
+{
+ "KRAS": {
+  "verified": {
+   "8AZX": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.04,
+    "title": "KRAS-G12C in complex with BI-2865",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4",
+     "5"
+    ],
+    "ligand": "OFU",
+    "ok": true,
+    "reason": "verified G12C X-ray",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": true
+   },
+   "7A1X": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.32,
+    "title": "KRASG12C GDP form in complex with Cpd1",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4"
+    ],
+    "ligand": "QWB",
+    "ok": true,
+    "reason": "verified G12C X-ray",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": true
+   },
+   "8QUG": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.56,
+    "title": "KRAS-G12C in Complex with Compound 1",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4"
+    ],
+    "ligand": "WYU",
+    "ok": true,
+    "reason": "verified G12C X-ray",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": true
+   },
+   "9UOH": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.75,
+    "title": "KRasG12C in complex with ASP2453",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4",
+     "5"
+    ],
+    "ligand": "A1L9E",
+    "ok": true,
+    "reason": "verified G12C X-ray",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": true
+   },
+   "7YCE": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.8,
+    "title": "KRas G12C in complex with Compound 7b",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4",
+     "5"
+    ],
+    "ligand": "IQN",
+    "ok": true,
+    "reason": "verified G12C X-ray",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": true
+   },
+   "7MDP": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.96,
+    "title": "KRas G12C in complex with G-2897",
+    "nonpolymer_entity_ids": [
+     "4",
+     "5",
+     "6",
+     "7",
+     "8",
+     "9",
+     "10",
+     "11"
+    ],
+    "ligand": "Z07",
+    "ok": true,
+    "reason": "verified G12C X-ray",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": true
+   },
+   "7RP3": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 2.0,
+    "title": "Crystal structure of GNE-1952 alkylated KRAS G12C in complex with 2H11 CLAMP",
+    "nonpolymer_entity_ids": [
+     "4",
+     "5",
+     "6",
+     "7",
+     "8",
+     "9"
+    ],
+    "ligand": "MKZ",
+    "ok": true,
+    "reason": "verified G12C X-ray",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": true
+   },
+   "8AFC": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 2.41,
+    "title": "CRYSTAL STRUCTURE OF KRAS-G12C IN COMPLEX WITH COMPOUND 12",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4",
+     "5"
+    ],
+    "ligand": "LXK",
+    "ok": true,
+    "reason": "verified G12C X-ray",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": true
+   },
+   "8S8C": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.9,
+    "title": "Structure of Kras in complex with inhibitor MK-1084",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4"
+    ],
+    "ligand": "A1H5U",
+    "ok": true,
+    "reason": "verified G12C X-ray",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": true
+   },
+   "6OIM": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.65,
+    "title": "Crystal Structure of human KRAS G12C covalently bound to AMG 510",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4"
+    ],
+    "ligand": "MOV",
+    "ok": true,
+    "reason": "verified G12C X-ray",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": true
+   },
+   "8AZV": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.05,
+    "title": "KRAS in complex with BI-2865",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4",
+     "5"
+    ],
+    "ligand": "OFU",
+    "ok": false,
+    "reason": "not G12C (residue 12 = G)",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": false
+   },
+   "8AZY": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.09,
+    "title": "KRAS-G12D in complex with BI-2865",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4",
+     "5"
+    ],
+    "ligand": "OFU",
+    "ok": false,
+    "reason": "not G12C (residue 12 = D)",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": false
+   },
+   "8AZZ": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.02,
+    "title": "KRAS-G12V in complex with BI-2865",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4",
+     "5"
+    ],
+    "ligand": "OFU",
+    "ok": false,
+    "reason": "not G12C (residue 12 = V)",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": false
+   },
+   "8B00": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.04,
+    "title": "KRAS-G13D in complex with BI-2865",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4",
+     "5"
+    ],
+    "ligand": "OFU",
+    "ok": false,
+    "reason": "not G12C (residue 12 = G)",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": false
+   },
+   "9OU2": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.55,
+    "title": "K-Ras Wild Type 1-169 Bound to BI-2865 at 100 K",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4"
+    ],
+    "ligand": "OFU",
+    "ok": false,
+    "reason": "not G12C (residue 12 = G)",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": false
+   },
+   "9OU3": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.5,
+    "title": "K-Ras Wild Type 1-169 bound to BI-2865 at 293K",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4"
+    ],
+    "ligand": "OFU",
+    "ok": false,
+    "reason": "not G12C (residue 12 = G)",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": false
+   },
+   "9OU4": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.89,
+    "title": "K-Ras Wild Type 1-169 bound to BI-2865 at 313 K",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4"
+    ],
+    "ligand": "OFU",
+    "ok": false,
+    "reason": "not G12C (residue 12 = G)",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": false
+   },
+   "9IAY": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 0.953,
+    "title": "Structure of 10 in complex with GDP-KRAS",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4",
+     "5"
+    ],
+    "ligand": "WYU",
+    "ok": false,
+    "reason": "not G12C (residue 12 = G)",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": false
+   },
+   "6T5V": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.31,
+    "title": "KRasG12C ligand complex",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4"
+    ],
+    "ligand": "MKZ",
+    "ok": true,
+    "reason": "verified G12C X-ray",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": false
+   },
+   "7RP4": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 2.15,
+    "title": "Crystal structure of KRAS G12C in complex with GNE-1952",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4",
+     "5"
+    ],
+    "ligand": "MKZ",
+    "ok": true,
+    "reason": "verified G12C X-ray",
+    "ligand_chains": [
+     "A",
+     "B"
+    ],
+    "is_base": false
+   },
+   "8G47": {
+    "method": "ELECTRON MICROSCOPY",
+    "resolution": 3.19,
+    "title": "KRAS G12C complex with GDP and AMG 510 imaged on a cryo-EM imaging scaffold",
+    "nonpolymer_entity_ids": [
+     "3",
+     "4",
+     "5"
+    ],
+    "ligand": "MOV",
+    "ok": false,
+    "reason": "not X-ray (ELECTRON MICROSCOPY)",
+    "is_base": false
+   },
+   "8UDR": {
+    "method": "ELECTRON MICROSCOPY",
+    "resolution": 3.1,
+    "title": "Structure of the P1B7 antibody bound to the Sotorasib-modified KRas G12C peptide presented by the A*03:01 MHC I complex",
+    "nonpolymer_entity_ids": [
+     "6"
+    ],
+    "ligand": "MOV",
+    "ok": false,
+    "reason": "not X-ray (ELECTRON MICROSCOPY)",
+    "is_base": false
+   },
+   "8VR9": {
+    "method": "ELECTRON MICROSCOPY",
+    "resolution": 3.06,
+    "title": "Structure of a synthetic antibody in complex with a class I MHC presenting a hapten-peptide conjugate",
+    "nonpolymer_entity_ids": [
+     "6"
+    ],
+    "ligand": "MOV",
+    "ok": false,
+    "reason": "not X-ray (ELECTRON MICROSCOPY)",
+    "is_base": false
+   },
+   "8VRA": {
+    "method": "ELECTRON MICROSCOPY",
+    "resolution": 3.12,
+    "title": "Structure of a synthetic antibody in complex with a class I MHC presenting a hapten-peptide conjugate",
+    "nonpolymer_entity_ids": [
+     "6"
+    ],
+    "ligand": "MOV",
+    "ok": false,
+    "reason": "not X-ray (ELECTRON MICROSCOPY)",
+    "is_base": false
+   },
+   "8VRB": {
+    "method": "ELECTRON MICROSCOPY",
+    "resolution": 3.25,
+    "title": "Structure of a synthetic antibody in complex with a class I MHC presenting a hapten-peptide conjugate",
+    "nonpolymer_entity_ids": [
+     "6"
+    ],
+    "ligand": "MOV",
+    "ok": false,
+    "reason": "not X-ray (ELECTRON MICROSCOPY)",
+    "is_base": false
+   }
+  },
+  "same_drug_pairs": [
+   {
+    "a": "6T5V",
+    "b": "7RP3",
+    "ligand_a": "MKZ",
+    "ligand_b": "MKZ",
+    "jaccard": 0.875,
+    "jaccard_resnum_only": 0.875,
+    "n_a": 24,
+    "n_b": 21
+   },
+   {
+    "a": "6T5V",
+    "b": "7RP4",
+    "ligand_a": "MKZ",
+    "ligand_b": "MKZ",
+    "jaccard": 0.44,
+    "jaccard_resnum_only": 0.8846153846153846,
+    "n_a": 24,
+    "n_b": 48
+   },
+   {
+    "a": "7RP3",
+    "b": "7RP4",
+    "ligand_a": "MKZ",
+    "ligand_b": "MKZ",
+    "jaccard": 0.4375,
+    "jaccard_resnum_only": 0.84,
+    "n_a": 21,
+    "n_b": 48
+   }
+  ],
+  "diff_drug_pairs": [
+   {
+    "a": "6OIM",
+    "b": "6T5V",
+    "ligand_a": "MOV",
+    "ligand_b": "MKZ",
+    "jaccard": 0.875,
+    "jaccard_resnum_only": 0.875,
+    "n_a": 21,
+    "n_b": 24
+   },
+   {
+    "a": "6OIM",
+    "b": "7A1X",
+    "ligand_a": "MOV",
+    "ligand_b": "QWB",
+    "jaccard": 0.0,
+    "jaccard_resnum_only": 0.0,
+    "n_a": 21,
+    "n_b": 11
+   },
+   {
+    "a": "6OIM",
+    "b": "7MDP",
+    "ligand_a": "MOV",
+    "ligand_b": "Z07",
+    "jaccard": 0.4583333333333333,
+    "jaccard_resnum_only": 0.4583333333333333,
+    "n_a": 21,
+    "n_b": 14
+   },
+   {
+    "a": "6OIM",
+    "b": "7RP3",
+    "ligand_a": "MOV",
+    "ligand_b": "MKZ",
+    "jaccard": 0.8260869565217391,
+    "jaccard_resnum_only": 0.8260869565217391,
+    "n_a": 21,
+    "n_b": 21
+   },
+   {
+    "a": "6OIM",
+    "b": "7RP4",
+    "ligand_a": "MOV",
+    "ligand_b": "MKZ",
+    "jaccard": 0.40816326530612246,
+    "jaccard_resnum_only": 0.84,
+    "n_a": 21,
+    "n_b": 48
+   },
+   {
+    "a": "6OIM",
+    "b": "7YCE",
+    "ligand_a": "MOV",
+    "ligand_b": "IQN",
+    "jaccard": 0.72,
+    "jaccard_resnum_only": 0.72,
+    "n_a": 21,
+    "n_b": 22
+   },
+   {
+    "a": "6OIM",
+    "b": "8AFC",
+    "ligand_a": "MOV",
+    "ligand_b": "LXK",
+    "jaccard": 0.4583333333333333,
+    "jaccard_resnum_only": 0.4583333333333333,
+    "n_a": 21,
+    "n_b": 14
+   },
+   {
+    "a": "6OIM",
+    "b": "8AZX",
+    "ligand_a": "MOV",
+    "ligand_b": "OFU",
+    "jaccard": 0.5,
+    "jaccard_resnum_only": 0.5,
+    "n_a": 21,
+    "n_b": 21
+   },
+   {
+    "a": "6OIM",
+    "b": "8QUG",
+    "ligand_a": "MOV",
+    "ligand_b": "WYU",
+    "jaccard": 0.5416666666666666,
+    "jaccard_resnum_only": 0.5416666666666666,
+    "n_a": 21,
+    "n_b": 16
+   },
+   {
+    "a": "6OIM",
+    "b": "8S8C",
+    "ligand_a": "MOV",
+    "ligand_b": "A1H5U",
+    "jaccard": 0.7083333333333334,
+    "jaccard_resnum_only": 0.7083333333333334,
+    "n_a": 21,
+    "n_b": 20
+   },
+   {
+    "a": "6OIM",
+    "b": "9UOH",
+    "ligand_a": "MOV",
+    "ligand_b": "A1L9E",
+    "jaccard": 0.8,
+    "jaccard_resnum_only": 0.8,
+    "n_a": 21,
+    "n_b": 24
+   },
+   {
+    "a": "6T5V",
+    "b": "7A1X",
+    "ligand_a": "MKZ",
+    "ligand_b": "QWB",
+    "jaccard": 0.0,
+    "jaccard_resnum_only": 0.0,
+    "n_a": 24,
+    "n_b": 11
+   },
+   {
+    "a": "6T5V",
+    "b": "7MDP",
+    "ligand_a": "MKZ",
+    "ligand_b": "Z07",
+    "jaccard": 0.52,
+    "jaccard_resnum_only": 0.52,
+    "n_a": 24,
+    "n_b": 14
+   },
+   {
+    "a": "6T5V",
+    "b": "7YCE",
+    "ligand_a": "MKZ",
+    "ligand_b": "IQN",
+    "jaccard": 0.7692307692307693,
+    "jaccard_resnum_only": 0.7692307692307693,
+    "n_a": 24,
+    "n_b": 22
+   },
+   {
+    "a": "6T5V",
+    "b": "8AFC",
+    "ligand_a": "MKZ",
+    "ligand_b": "LXK",
+    "jaccard": 0.5833333333333334,
+    "jaccard_resnum_only": 0.5833333333333334,
+    "n_a": 24,
+    "n_b": 14
+   },
+   {
+    "a": "6T5V",
+    "b": "8AZX",
+    "ligand_a": "MKZ",
+    "ligand_b": "OFU",
+    "jaccard": 0.6071428571428571,
+    "jaccard_resnum_only": 0.6071428571428571,
+    "n_a": 24,
+    "n_b": 21
+   },
+   {
+    "a": "6T5V",
+    "b": "8QUG",
+    "ligand_a": "MKZ",
+    "ligand_b": "WYU",
+    "jaccard": 0.6,
+    "jaccard_resnum_only": 0.6,
+    "n_a": 24,
+    "n_b": 16
+   },
+   {
+    "a": "6T5V",
+    "b": "8S8C",
+    "ligand_a": "MKZ",
+    "ligand_b": "A1H5U",
+    "jaccard": 0.6923076923076923,
+    "jaccard_resnum_only": 0.6923076923076923,
+    "n_a": 24,
+    "n_b": 20
+   },
+   {
+    "a": "6T5V",
+    "b": "9UOH",
+    "ligand_a": "MKZ",
+    "ligand_b": "A1L9E",
+    "jaccard": 0.8461538461538461,
+    "jaccard_resnum_only": 0.8461538461538461,
+    "n_a": 24,
+    "n_b": 24
+   },
+   {
+    "a": "7A1X",
+    "b": "7MDP",
+    "ligand_a": "QWB",
+    "ligand_b": "Z07",
+    "jaccard": 0.0,
+    "jaccard_resnum_only": 0.0,
+    "n_a": 11,
+    "n_b": 14
+   },
+   {
+    "a": "7A1X",
+    "b": "7RP3",
+    "ligand_a": "QWB",
+    "ligand_b": "MKZ",
+    "jaccard": 0.0,
+    "jaccard_resnum_only": 0.0,
+    "n_a": 11,
+    "n_b": 21
+   },
+   {
+    "a": "7A1X",
+    "b": "7RP4",
+    "ligand_a": "QWB",
+    "ligand_b": "MKZ",
+    "jaccard": 0.017241379310344827,
+    "jaccard_resnum_only": 0.02857142857142857,
+    "n_a": 11,
+    "n_b": 48
+   },
+   {
+    "a": "7A1X",
+    "b": "7YCE",
+    "ligand_a": "QWB",
+    "ligand_b": "IQN",
+    "jaccard": 0.0,
+    "jaccard_resnum_only": 0.0,
+    "n_a": 11,
+    "n_b": 22
+   },
+   {
+    "a": "7A1X",
+    "b": "8AFC",
+    "ligand_a": "QWB",
+    "ligand_b": "LXK",
+    "jaccard": 0.0,
+    "jaccard_resnum_only": 0.0,
+    "n_a": 11,
+    "n_b": 14
+   },
+   {
+    "a": "7A1X",
+    "b": "8AZX",
+    "ligand_a": "QWB",
+    "ligand_b": "OFU",
+    "jaccard": 0.03225806451612903,
+    "jaccard_resnum_only": 0.03225806451612903,
+    "n_a": 11,
+    "n_b": 21
+   },
+   {
+    "a": "7A1X",
+    "b": "8QUG",
+    "ligand_a": "QWB",
+    "ligand_b": "WYU",
+    "jaccard": 0.0,
+    "jaccard_resnum_only": 0.0,
+    "n_a": 11,
+    "n_b": 16
+   },
+   {
+    "a": "7A1X",
+    "b": "8S8C",
+    "ligand_a": "QWB",
+    "ligand_b": "A1H5U",
+    "jaccard": 0.03333333333333333,
+    "jaccard_resnum_only": 0.03333333333333333,
+    "n_a": 11,
+    "n_b": 20
+   },
+   {
+    "a": "7A1X",
+    "b": "9UOH",
+    "ligand_a": "QWB",
+    "ligand_b": "A1L9E",
+    "jaccard": 0.0,
+    "jaccard_resnum_only": 0.0,
+    "n_a": 11,
+    "n_b": 24
+   },
+   {
+    "a": "7MDP",
+    "b": "7RP3",
+    "ligand_a": "Z07",
+    "ligand_b": "MKZ",
+    "jaccard": 0.5909090909090909,
+    "jaccard_resnum_only": 0.5909090909090909,
+    "n_a": 14,
+    "n_b": 21
+   },
+   {
+    "a": "7MDP",
+    "b": "7RP4",
+    "ligand_a": "Z07",
+    "ligand_b": "MKZ",
+    "jaccard": 0.2916666666666667,
+    "jaccard_resnum_only": 0.56,
+    "n_a": 14,
+    "n_b": 48
+   },
+   {
+    "a": "7MDP",
+    "b": "7YCE",
+    "ligand_a": "Z07",
+    "ligand_b": "IQN",
+    "jaccard": 0.5,
+    "jaccard_resnum_only": 0.5,
+    "n_a": 14,
+    "n_b": 22
+   },
+   {
+    "a": "7MDP",
+    "b": "8AFC",
+    "ligand_a": "Z07",
+    "ligand_b": "LXK",
+    "jaccard": 0.8666666666666667,
+    "jaccard_resnum_only": 0.8666666666666667,
+    "n_a": 14,
+    "n_b": 14
+   },
+   {
+    "a": "7MDP",
+    "b": "8AZX",
+    "ligand_a": "Z07",
+    "ligand_b": "OFU",
+    "jaccard": 0.6666666666666666,
+    "jaccard_resnum_only": 0.6666666666666666,
+    "n_a": 14,
+    "n_b": 21
+   },
+   {
+    "a": "7MDP",
+    "b": "8QUG",
+    "ligand_a": "Z07",
+    "ligand_b": "WYU",
+    "jaccard": 0.6666666666666666,
+    "jaccard_resnum_only": 0.6666666666666666,
+    "n_a": 14,
+    "n_b": 16
+   },
+   {
+    "a": "7MDP",
+    "b": "8S8C",
+    "ligand_a": "Z07",
+    "ligand_b": "A1H5U",
+    "jaccard": 0.36,
+    "jaccard_resnum_only": 0.36,
+    "n_a": 14,
+    "n_b": 20
+   },
+   {
+    "a": "7MDP",
+    "b": "9UOH",
+    "ligand_a": "Z07",
+    "ligand_b": "A1L9E",
+    "jaccard": 0.5833333333333334,
+    "jaccard_resnum_only": 0.5833333333333334,
+    "n_a": 14,
+    "n_b": 24
+   },
+   {
+    "a": "7RP3",
+    "b": "7YCE",
+    "ligand_a": "MKZ",
+    "ligand_b": "IQN",
+    "jaccard": 0.7916666666666666,
+    "jaccard_resnum_only": 0.7916666666666666,
+    "n_a": 21,
+    "n_b": 22
+   },
+   {
+    "a": "7RP3",
+    "b": "8AFC",
+    "ligand_a": "MKZ",
+    "ligand_b": "LXK",
+    "jaccard": 0.5909090909090909,
+    "jaccard_resnum_only": 0.5909090909090909,
+    "n_a": 21,
+    "n_b": 14
+   },
+   {
+    "a": "7RP3",
+    "b": "8AZX",
+    "ligand_a": "MKZ",
+    "ligand_b": "OFU",
+    "jaccard": 0.6153846153846154,
+    "jaccard_resnum_only": 0.6153846153846154,
+    "n_a": 21,
+    "n_b": 21
+   },
+   {
+    "a": "7RP3",
+    "b": "8QUG",
+    "ligand_a": "MKZ",
+    "ligand_b": "WYU",
+    "jaccard": 0.6818181818181818,
+    "jaccard_resnum_only": 0.6818181818181818,
+    "n_a": 21,
+    "n_b": 16
+   },
+   {
+    "a": "7RP3",
+    "b": "8S8C",
+    "ligand_a": "MKZ",
+    "ligand_b": "A1H5U",
+    "jaccard": 0.64,
+    "jaccard_resnum_only": 0.64,
+    "n_a": 21,
+    "n_b": 20
+   },
+   {
+    "a": "7RP3",
+    "b": "9UOH",
+    "ligand_a": "MKZ",
+    "ligand_b": "A1L9E",
+    "jaccard": 0.875,
+    "jaccard_resnum_only": 0.875,
+    "n_a": 21,
+    "n_b": 24
+   },
+   {
+    "a": "7RP4",
+    "b": "7YCE",
+    "ligand_a": "MKZ",
+    "ligand_b": "IQN",
+    "jaccard": 0.42857142857142855,
+    "jaccard_resnum_only": 0.8076923076923077,
+    "n_a": 48,
+    "n_b": 22
+   },
+   {
+    "a": "7RP4",
+    "b": "8AFC",
+    "ligand_a": "MKZ",
+    "ligand_b": "LXK",
+    "jaccard": 0.2653061224489796,
+    "jaccard_resnum_only": 0.5,
+    "n_a": 48,
+    "n_b": 14
+   },
+   {
+    "a": "7RP4",
+    "b": "8AZX",
+    "ligand_a": "MKZ",
+    "ligand_b": "OFU",
+    "jaccard": 0.3269230769230769,
+    "jaccard_resnum_only": 0.5862068965517241,
+    "n_a": 48,
+    "n_b": 21
+   },
+   {
+    "a": "7RP4",
+    "b": "8QUG",
+    "ligand_a": "MKZ",
+    "ligand_b": "WYU",
+    "jaccard": 0.30612244897959184,
+    "jaccard_resnum_only": 0.5769230769230769,
+    "n_a": 48,
+    "n_b": 16
+   },
+   {
+    "a": "7RP4",
+    "b": "8S8C",
+    "ligand_a": "MKZ",
+    "ligand_b": "A1H5U",
+    "jaccard": 0.36,
+    "jaccard_resnum_only": 0.7307692307692307,
+    "n_a": 48,
+    "n_b": 20
+   },
+   {
+    "a": "7RP4",
+    "b": "9UOH",
+    "ligand_a": "MKZ",
+    "ligand_b": "A1L9E",
+    "jaccard": 0.46938775510204084,
+    "jaccard_resnum_only": 0.8846153846153846,
+    "n_a": 48,
+    "n_b": 24
+   },
+   {
+    "a": "7YCE",
+    "b": "8AFC",
+    "ligand_a": "IQN",
+    "ligand_b": "LXK",
+    "jaccard": 0.44,
+    "jaccard_resnum_only": 0.44,
+    "n_a": 22,
+    "n_b": 14
+   },
+   {
+    "a": "7YCE",
+    "b": "8AZX",
+    "ligand_a": "IQN",
+    "ligand_b": "OFU",
+    "jaccard": 0.5925925925925926,
+    "jaccard_resnum_only": 0.5925925925925926,
+    "n_a": 22,
+    "n_b": 21
+   },
+   {
+    "a": "7YCE",
+    "b": "8QUG",
+    "ligand_a": "IQN",
+    "ligand_b": "WYU",
+    "jaccard": 0.5833333333333334,
+    "jaccard_resnum_only": 0.5833333333333334,
+    "n_a": 22,
+    "n_b": 16
+   },
+   {
+    "a": "7YCE",
+    "b": "8S8C",
+    "ligand_a": "IQN",
+    "ligand_b": "A1H5U",
+    "jaccard": 0.68,
+    "jaccard_resnum_only": 0.68,
+    "n_a": 22,
+    "n_b": 20
+   },
+   {
+    "a": "7YCE",
+    "b": "9UOH",
+    "ligand_a": "IQN",
+    "ligand_b": "A1L9E",
+    "jaccard": 0.9166666666666666,
+    "jaccard_resnum_only": 0.9166666666666666,
+    "n_a": 22,
+    "n_b": 24
+   },
+   {
+    "a": "8AFC",
+    "b": "8AZX",
+    "ligand_a": "LXK",
+    "ligand_b": "OFU",
+    "jaccard": 0.6666666666666666,
+    "jaccard_resnum_only": 0.6666666666666666,
+    "n_a": 14,
+    "n_b": 21
+   },
+   {
+    "a": "8AFC",
+    "b": "8QUG",
+    "ligand_a": "LXK",
+    "ligand_b": "WYU",
+    "jaccard": 0.6666666666666666,
+    "jaccard_resnum_only": 0.6666666666666666,
+    "n_a": 14,
+    "n_b": 16
+   },
+   {
+    "a": "8AFC",
+    "b": "8S8C",
+    "ligand_a": "LXK",
+    "ligand_b": "A1H5U",
+    "jaccard": 0.36,
+    "jaccard_resnum_only": 0.36,
+    "n_a": 14,
+    "n_b": 20
+   },
+   {
+    "a": "8AFC",
+    "b": "9UOH",
+    "ligand_a": "LXK",
+    "ligand_b": "A1L9E",
+    "jaccard": 0.52,
+    "jaccard_resnum_only": 0.52,
+    "n_a": 14,
+    "n_b": 24
+   },
+   {
+    "a": "8AZX",
+    "b": "8QUG",
+    "ligand_a": "OFU",
+    "ligand_b": "WYU",
+    "jaccard": 0.7619047619047619,
+    "jaccard_resnum_only": 0.7619047619047619,
+    "n_a": 21,
+    "n_b": 16
+   },
+   {
+    "a": "8AZX",
+    "b": "8S8C",
+    "ligand_a": "OFU",
+    "ligand_b": "A1H5U",
+    "jaccard": 0.41379310344827586,
+    "jaccard_resnum_only": 0.41379310344827586,
+    "n_a": 21,
+    "n_b": 20
+   },
+   {
+    "a": "8AZX",
+    "b": "9UOH",
+    "ligand_a": "OFU",
+    "ligand_b": "A1L9E",
+    "jaccard": 0.6666666666666666,
+    "jaccard_resnum_only": 0.6666666666666666,
+    "n_a": 21,
+    "n_b": 24
+   },
+   {
+    "a": "8QUG",
+    "b": "8S8C",
+    "ligand_a": "WYU",
+    "ligand_b": "A1H5U",
+    "jaccard": 0.44,
+    "jaccard_resnum_only": 0.44,
+    "n_a": 16,
+    "n_b": 20
+   },
+   {
+    "a": "8QUG",
+    "b": "9UOH",
+    "ligand_a": "WYU",
+    "ligand_b": "A1L9E",
+    "jaccard": 0.6666666666666666,
+    "jaccard_resnum_only": 0.6666666666666666,
+    "n_a": 16,
+    "n_b": 24
+   },
+   {
+    "a": "8S8C",
+    "b": "9UOH",
+    "ligand_a": "A1H5U",
+    "ligand_b": "A1L9E",
+    "jaccard": 0.6923076923076923,
+    "jaccard_resnum_only": 0.6923076923076923,
+    "n_a": 20,
+    "n_b": 24
+   }
+  ],
+  "same_drug_summary": {
+   "n": 3,
+   "jaccard_median": 0.44,
+   "jaccard_min": 0.4375,
+   "jaccard_max": 0.875,
+   "jaccard_resnum_only_median": 0.875
+  },
+  "diff_drug_summary": {
+   "n": 63,
+   "jaccard_median": 0.5833333333333334,
+   "jaccard_min": 0.0,
+   "jaccard_max": 0.9166666666666666,
+   "jaccard_resnum_only_median": 0.5909090909090909
+  },
+  "by_ligand": {
+   "OFU": [
+    "8AZX"
+   ],
+   "QWB": [
+    "7A1X"
+   ],
+   "WYU": [
+    "8QUG"
+   ],
+   "A1L9E": [
+    "9UOH"
+   ],
+   "IQN": [
+    "7YCE"
+   ],
+   "Z07": [
+    "7MDP"
+   ],
+   "MKZ": [
+    "7RP3",
+    "6T5V",
+    "7RP4"
+   ],
+   "LXK": [
+    "8AFC"
+   ],
+   "A1H5U": [
+    "8S8C"
+   ],
+   "MOV": [
+    "6OIM"
+   ]
+  },
+  "consensus_union": {
+   "k": 6,
+   "n_entries": 12,
+   "consensus_size": 22,
+   "union_size": 62,
+   "consensus_keys": [
+    [
+     "A",
+     9
+    ],
+    [
+     "A",
+     10
+    ],
+    [
+     "A",
+     11
+    ],
+    [
+     "A",
+     12
+    ],
+    [
+     "A",
+     16
+    ],
+    [
+     "A",
+     34
+    ],
+    [
+     "A",
+     58
+    ],
+    [
+     "A",
+     59
+    ],
+    [
+     "A",
+     60
+    ],
+    [
+     "A",
+     61
+    ],
+    [
+     "A",
+     62
+    ],
+    [
+     "A",
+     63
+    ],
+    [
+     "A",
+     64
+    ],
+    [
+     "A",
+     68
+    ],
+    [
+     "A",
+     69
+    ],
+    [
+     "A",
+     72
+    ],
+    [
+     "A",
+     95
+    ],
+    [
+     "A",
+     96
+    ],
+    [
+     "A",
+     99
+    ],
+    [
+     "A",
+     100
+    ],
+    [
+     "A",
+     102
+    ],
+    [
+     "A",
+     103
+    ]
+   ],
+   "union_keys": [
+    [
+     "A",
+     5
+    ],
+    [
+     "A",
+     6
+    ],
+    [
+     "A",
+     7
+    ],
+    [
+     "A",
+     9
+    ],
+    [
+     "A",
+     10
+    ],
+    [
+     "A",
+     11
+    ],
+    [
+     "A",
+     12
+    ],
+    [
+     "A",
+     13
+    ],
+    [
+     "A",
+     16
+    ],
+    [
+     "A",
+     34
+    ],
+    [
+     "A",
+     37
+    ],
+    [
+     "A",
+     39
+    ],
+    [
+     "A",
+     54
+    ],
+    [
+     "A",
+     55
+    ],
+    [
+     "A",
+     56
+    ],
+    [
+     "A",
+     58
+    ],
+    [
+     "A",
+     59
+    ],
+    [
+     "A",
+     60
+    ],
+    [
+     "A",
+     61
+    ],
+    [
+     "A",
+     62
+    ],
+    [
+     "A",
+     63
+    ],
+    [
+     "A",
+     64
+    ],
+    [
+     "A",
+     65
+    ],
+    [
+     "A",
+     68
+    ],
+    [
+     "A",
+     69
+    ],
+    [
+     "A",
+     71
+    ],
+    [
+     "A",
+     72
+    ],
+    [
+     "A",
+     74
+    ],
+    [
+     "A",
+     75
+    ],
+    [
+     "A",
+     78
+    ],
+    [
+     "A",
+     88
+    ],
+    [
+     "A",
+     92
+    ],
+    [
+     "A",
+     95
+    ],
+    [
+     "A",
+     96
+    ],
+    [
+     "A",
+     99
+    ],
+    [
+     "A",
+     100
+    ],
+    [
+     "A",
+     102
+    ],
+    [
+     "A",
+     103
+    ],
+    [
+     "B",
+     9
+    ],
+    [
+     "B",
+     10
+    ],
+    [
+     "B",
+     11
+    ],
+    [
+     "B",
+     12
+    ],
+    [
+     "B",
+     13
+    ],
+    [
+     "B",
+     16
+    ],
+    [
+     "B",
+     34
+    ],
+    [
+     "B",
+     58
+    ],
+    [
+     "B",
+     59
+    ],
+    [
+     "B",
+     60
+    ],
+    [
+     "B",
+     61
+    ],
+    [
+     "B",
+     62
+    ],
+    [
+     "B",
+     63
+    ],
+    [
+     "B",
+     64
+    ],
+    [
+     "B",
+     65
+    ],
+    [
+     "B",
+     68
+    ],
+    [
+     "B",
+     69
+    ],
+    [
+     "B",
+     72
+    ],
+    [
+     "B",
+     95
+    ],
+    [
+     "B",
+     96
+    ],
+    [
+     "B",
+     99
+    ],
+    [
+     "B",
+     100
+    ],
+    [
+     "B",
+     102
+    ],
+    [
+     "B",
+     103
+    ]
+   ]
+  },
+  "rescore": {
+   "single": {
+    "label": "single (shipped)",
+    "pocket_size": 17,
+    "auc": 0.5136485966935793,
+    "p_at_5": 0.0,
+    "diagnosis": "NO_SIGNAL_IN_APO"
+   },
+   "consensus": {
+    "label": "consensus",
+    "pocket_size": 19,
+    "auc": 0.5085395608225862,
+    "p_at_5": 0.0,
+    "diagnosis": "NO_SIGNAL_IN_APO"
+   },
+   "union": {
+    "label": "union",
+    "pocket_size": 31,
+    "auc": 0.5103272220932931,
+    "p_at_5": 0.0,
+    "diagnosis": "NO_SIGNAL_IN_APO"
+   }
+  }
+ },
+ "GAC": {
+  "verified": {
+   "3UO9": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 2.3,
+    "title": "Crystal Structure of Human GAC in Complex with Glutamate and BPTES",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3"
+    ],
+    "ligand": "04A",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "B",
+     "C"
+    ],
+    "is_base": true
+   },
+   "3VOZ": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 2.4,
+    "title": "Crystal structure of human glutaminase in complex with BPTES",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3"
+    ],
+    "ligand": "04A",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": false
+   },
+   "3VP1": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 2.3,
+    "title": "Crystal structure of human glutaminase in complex with L-glutamate and BPTES",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3",
+     "4"
+    ],
+    "ligand": "04A",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": false
+   },
+   "4JKT": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 2.77,
+    "title": "Crystal structure of mouse Glutaminase C, BPTES-bound form",
+    "nonpolymer_entity_ids": [
+     "2"
+    ],
+    "ligand": "04A",
+    "ok": false,
+    "reason": "organism mismatch ({'Mus musculus'} does not contain 'Homo sapiens')",
+    "ligand_chains": [
+     "B",
+     "D"
+    ],
+    "is_base": false
+   },
+   "5UQE": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 3.6,
+    "title": "Multidomain structure of human kidney-type glutaminase(KGA/GLS)",
+    "nonpolymer_entity_ids": [
+     "2"
+    ],
+    "ligand": "04A",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A",
+     "B",
+     "F"
+    ],
+    "is_base": false
+   },
+   "7RGG": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 3.0,
+    "title": "Room temperature serial crystal structure of Glutaminase C in complex with inhibitor BPTES",
+    "nonpolymer_entity_ids": [
+     "2"
+    ],
+    "ligand": "04A",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A",
+     "D"
+    ],
+    "is_base": false
+   },
+   "8BSK": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 2.1,
+    "title": "Human GLS in complex with compound 3",
+    "nonpolymer_entity_ids": [
+     "2",
+     "3"
+    ],
+    "ligand": "04A",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": false
+   },
+   "8BSL": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 2.38,
+    "title": "Human GLS in complex with compound 12",
+    "nonpolymer_entity_ids": [
+     "2"
+    ],
+    "ligand": "R90",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A",
+     "D"
+    ],
+    "is_base": null
+   }
+  },
+  "same_drug_pairs": [
+   {
+    "a": "3UO9",
+    "b": "3VOZ",
+    "ligand_a": "04A",
+    "ligand_b": "04A",
+    "jaccard": 0.20588235294117646,
+    "jaccard_resnum_only": 0.8,
+    "n_a": 33,
+    "n_b": 8
+   },
+   {
+    "a": "3UO9",
+    "b": "3VP1",
+    "ligand_a": "04A",
+    "ligand_b": "04A",
+    "jaccard": 0.23529411764705882,
+    "jaccard_resnum_only": 0.9,
+    "n_a": 33,
+    "n_b": 9
+   },
+   {
+    "a": "3UO9",
+    "b": "5UQE",
+    "ligand_a": "04A",
+    "ligand_b": "04A",
+    "jaccard": 0.6304347826086957,
+    "jaccard_resnum_only": 0.9090909090909091,
+    "n_a": 33,
+    "n_b": 42
+   },
+   {
+    "a": "3UO9",
+    "b": "7RGG",
+    "ligand_a": "04A",
+    "ligand_b": "04A",
+    "jaccard": 0.8,
+    "jaccard_resnum_only": 0.9090909090909091,
+    "n_a": 33,
+    "n_b": 39
+   },
+   {
+    "a": "3UO9",
+    "b": "8BSK",
+    "ligand_a": "04A",
+    "ligand_b": "04A",
+    "jaccard": 0.21212121212121213,
+    "jaccard_resnum_only": 0.7,
+    "n_a": 33,
+    "n_b": 7
+   },
+   {
+    "a": "3VOZ",
+    "b": "3VP1",
+    "ligand_a": "04A",
+    "ligand_b": "04A",
+    "jaccard": 0.8888888888888888,
+    "jaccard_resnum_only": 0.8888888888888888,
+    "n_a": 8,
+    "n_b": 9
+   },
+   {
+    "a": "3VOZ",
+    "b": "5UQE",
+    "ligand_a": "04A",
+    "ligand_b": "04A",
+    "jaccard": 0.16279069767441862,
+    "jaccard_resnum_only": 0.7272727272727273,
+    "n_a": 8,
+    "n_b": 42
+   },
+   {
+    "a": "3VOZ",
+    "b": "7RGG",
+    "ligand_a": "04A",
+    "ligand_b": "04A",
+    "jaccard": 0.20512820512820512,
+    "jaccard_resnum_only": 0.7272727272727273,
+    "n_a": 8,
+    "n_b": 39
+   },
+   {
+    "a": "3VOZ",
+    "b": "8BSK",
+    "ligand_a": "04A",
+    "ligand_b": "04A",
+    "jaccard": 0.875,
+    "jaccard_resnum_only": 0.875,
+    "n_a": 8,
+    "n_b": 7
+   },
+   {
+    "a": "3VP1",
+    "b": "5UQE",
+    "ligand_a": "04A",
+    "ligand_b": "04A",
+    "jaccard": 0.1590909090909091,
+    "jaccard_resnum_only": 0.8181818181818182,
+    "n_a": 9,
+    "n_b": 42
+   },
+   {
+    "a": "3VP1",
+    "b": "7RGG",
+    "ligand_a": "04A",
+    "ligand_b": "04A",
+    "jaccard": 0.23076923076923078,
+    "jaccard_resnum_only": 0.8181818181818182,
+    "n_a": 9,
+    "n_b": 39
+   },
+   {
+    "a": "3VP1",
+    "b": "8BSK",
+    "ligand_a": "04A",
+    "ligand_b": "04A",
+    "jaccard": 0.7777777777777778,
+    "jaccard_resnum_only": 0.7777777777777778,
+    "n_a": 9,
+    "n_b": 7
+   },
+   {
+    "a": "5UQE",
+    "b": "7RGG",
+    "ligand_a": "04A",
+    "ligand_b": "04A",
+    "jaccard": 0.6875,
+    "jaccard_resnum_only": 1.0,
+    "n_a": 42,
+    "n_b": 39
+   },
+   {
+    "a": "5UQE",
+    "b": "8BSK",
+    "ligand_a": "04A",
+    "ligand_b": "04A",
+    "jaccard": 0.16666666666666666,
+    "jaccard_resnum_only": 0.6363636363636364,
+    "n_a": 42,
+    "n_b": 7
+   },
+   {
+    "a": "7RGG",
+    "b": "8BSK",
+    "ligand_a": "04A",
+    "ligand_b": "04A",
+    "jaccard": 0.1794871794871795,
+    "jaccard_resnum_only": 0.6363636363636364,
+    "n_a": 39,
+    "n_b": 7
+   }
+  ],
+  "diff_drug_pairs": [
+   {
+    "a": "3UO9",
+    "b": "8BSL",
+    "ligand_a": "04A",
+    "ligand_b": "R90",
+    "jaccard": 0.7272727272727273,
+    "jaccard_resnum_only": 0.7,
+    "n_a": 33,
+    "n_b": 24
+   },
+   {
+    "a": "3VOZ",
+    "b": "8BSL",
+    "ligand_a": "04A",
+    "ligand_b": "R90",
+    "jaccard": 0.18518518518518517,
+    "jaccard_resnum_only": 0.875,
+    "n_a": 8,
+    "n_b": 24
+   },
+   {
+    "a": "3VP1",
+    "b": "8BSL",
+    "ligand_a": "04A",
+    "ligand_b": "R90",
+    "jaccard": 0.17857142857142858,
+    "jaccard_resnum_only": 0.7777777777777778,
+    "n_a": 9,
+    "n_b": 24
+   },
+   {
+    "a": "5UQE",
+    "b": "8BSL",
+    "ligand_a": "04A",
+    "ligand_b": "R90",
+    "jaccard": 0.5714285714285714,
+    "jaccard_resnum_only": 0.6363636363636364,
+    "n_a": 42,
+    "n_b": 24
+   },
+   {
+    "a": "7RGG",
+    "b": "8BSL",
+    "ligand_a": "04A",
+    "ligand_b": "R90",
+    "jaccard": 0.6153846153846154,
+    "jaccard_resnum_only": 0.6363636363636364,
+    "n_a": 39,
+    "n_b": 24
+   },
+   {
+    "a": "8BSK",
+    "b": "8BSL",
+    "ligand_a": "04A",
+    "ligand_b": "R90",
+    "jaccard": 0.19230769230769232,
+    "jaccard_resnum_only": 1.0,
+    "n_a": 7,
+    "n_b": 24
+   }
+  ],
+  "same_drug_summary": {
+   "n": 15,
+   "jaccard_median": 0.23076923076923078,
+   "jaccard_min": 0.1590909090909091,
+   "jaccard_max": 0.8888888888888888,
+   "jaccard_resnum_only_median": 0.8181818181818182
+  },
+  "diff_drug_summary": {
+   "n": 6,
+   "jaccard_median": 0.38186813186813184,
+   "jaccard_min": 0.17857142857142858,
+   "jaccard_max": 0.7272727272727273,
+   "jaccard_resnum_only_median": 0.7388888888888889
+  },
+  "by_ligand": {
+   "04A": [
+    "3UO9",
+    "3VOZ",
+    "3VP1",
+    "5UQE",
+    "7RGG",
+    "8BSK"
+   ],
+   "R90": [
+    "8BSL"
+   ]
+  },
+  "consensus_union": {
+   "k": 4,
+   "n_entries": 7,
+   "consensus_size": 26,
+   "union_size": 49,
+   "consensus_keys": [
+    [
+     "A",
+     320
+    ],
+    [
+     "A",
+     321
+    ],
+    [
+     "A",
+     322
+    ],
+    [
+     "A",
+     323
+    ],
+    [
+     "A",
+     324
+    ],
+    [
+     "A",
+     325
+    ],
+    [
+     "A",
+     394
+    ],
+    [
+     "B",
+     320
+    ],
+    [
+     "B",
+     321
+    ],
+    [
+     "B",
+     322
+    ],
+    [
+     "B",
+     323
+    ],
+    [
+     "B",
+     324
+    ],
+    [
+     "B",
+     325
+    ],
+    [
+     "B",
+     394
+    ],
+    [
+     "C",
+     320
+    ],
+    [
+     "C",
+     321
+    ],
+    [
+     "C",
+     322
+    ],
+    [
+     "C",
+     323
+    ],
+    [
+     "C",
+     394
+    ],
+    [
+     "D",
+     320
+    ],
+    [
+     "D",
+     321
+    ],
+    [
+     "D",
+     322
+    ],
+    [
+     "D",
+     323
+    ],
+    [
+     "D",
+     324
+    ],
+    [
+     "D",
+     325
+    ],
+    [
+     "D",
+     394
+    ]
+   ],
+   "union_keys": [
+    [
+     "A",
+     317
+    ],
+    [
+     "A",
+     318
+    ],
+    [
+     "A",
+     320
+    ],
+    [
+     "A",
+     321
+    ],
+    [
+     "A",
+     322
+    ],
+    [
+     "A",
+     323
+    ],
+    [
+     "A",
+     324
+    ],
+    [
+     "A",
+     325
+    ],
+    [
+     "A",
+     327
+    ],
+    [
+     "A",
+     394
+    ],
+    [
+     "A",
+     398
+    ],
+    [
+     "B",
+     317
+    ],
+    [
+     "B",
+     320
+    ],
+    [
+     "B",
+     321
+    ],
+    [
+     "B",
+     322
+    ],
+    [
+     "B",
+     323
+    ],
+    [
+     "B",
+     324
+    ],
+    [
+     "B",
+     325
+    ],
+    [
+     "B",
+     327
+    ],
+    [
+     "B",
+     394
+    ],
+    [
+     "B",
+     398
+    ],
+    [
+     "C",
+     317
+    ],
+    [
+     "C",
+     320
+    ],
+    [
+     "C",
+     321
+    ],
+    [
+     "C",
+     322
+    ],
+    [
+     "C",
+     323
+    ],
+    [
+     "C",
+     324
+    ],
+    [
+     "C",
+     325
+    ],
+    [
+     "C",
+     327
+    ],
+    [
+     "C",
+     394
+    ],
+    [
+     "C",
+     398
+    ],
+    [
+     "D",
+     317
+    ],
+    [
+     "D",
+     318
+    ],
+    [
+     "D",
+     320
+    ],
+    [
+     "D",
+     321
+    ],
+    [
+     "D",
+     322
+    ],
+    [
+     "D",
+     323
+    ],
+    [
+     "D",
+     324
+    ],
+    [
+     "D",
+     325
+    ],
+    [
+     "D",
+     327
+    ],
+    [
+     "D",
+     394
+    ],
+    [
+     "D",
+     398
+    ],
+    [
+     "F",
+     318
+    ],
+    [
+     "F",
+     320
+    ],
+    [
+     "F",
+     321
+    ],
+    [
+     "F",
+     322
+    ],
+    [
+     "F",
+     325
+    ],
+    [
+     "F",
+     394
+    ],
+    [
+     "F",
+     398
+    ]
+   ]
+  }
+ },
+ "TRP_SYNTHASE": {
+  "verified": {
+   "2CLF": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.7,
+    "title": "Tryptophan Synthase in complex with N-(4'-trifluoromethoxybenzoyl)-2- amino-1-ethylphosphate (F6) - highF6 complex",
+    "nonpolymer_entity_ids": [
+     "3",
+     "4",
+     "5"
+    ],
+    "ligand": "F6F",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A",
+     "B"
+    ],
+    "is_base": true
+   },
+   "2CLH": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.7,
+    "title": "Tryptophan Synthase in complex with (naphthalene-2'-sulfonyl)-2-amino- 1-ethylphosphate (F19)",
+    "nonpolymer_entity_ids": [
+     "3",
+     "4",
+     "5"
+    ],
+    "ligand": "F19",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": true
+   },
+   "2CLE": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.5,
+    "title": "Tryptophan Synthase in complex with N-(4'-trifluoromethoxybenzoyl)-2- amino-1-ethylphosphate (F6) - lowF6 complex",
+    "nonpolymer_entity_ids": [
+     "3",
+     "4",
+     "5"
+    ],
+    "ligand": "F6F",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": false
+   },
+   "2CLM": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.51,
+    "title": "Tryptophan Synthase (external aldimine state) in complex with N-(4'- trifluoromethoxybenzoyl)-2-amino-1-ethylphosphate (F6F)",
+    "nonpolymer_entity_ids": [
+     "3",
+     "4",
+     "5"
+    ],
+    "ligand": "F6F",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": false
+   },
+   "4KKX": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.77,
+    "title": "Crystal structure of Tryptophan Synthase from Salmonella typhimurium with 2-aminophenol quinonoid in the beta site and the F6 inhibitor in the alpha site",
+    "nonpolymer_entity_ids": [
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "8"
+    ],
+    "ligand": "F6F",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": false
+   },
+   "4WX2": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.75,
+    "title": "Crystal structure of Tryptophan Synthase from Salmonella typhimurium in complex with two F6F molecules in the alpha-site and one F6F molecule in the beta-site",
+    "nonpolymer_entity_ids": [
+     "3",
+     "4",
+     "5",
+     "6",
+     "7"
+    ],
+    "ligand": "F6F",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A",
+     "B"
+    ],
+    "is_base": false
+   },
+   "4Y6G": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.65,
+    "title": "Crystal structure of Tryptophan Synthase from Salmonella typhimurium in complex with N-(4'-trifluoromethoxybenzoyl)-2-amino-1-ethylphosphate (F6F) inhibitor in the alpha-site and beta-site.",
+    "nonpolymer_entity_ids": [
+     "3",
+     "4",
+     "5"
+    ],
+    "ligand": "F6F",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A",
+     "B"
+    ],
+    "is_base": false
+   },
+   "4ZQC": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.54,
+    "title": "Tryptophan Synthase from Salmonella typhimurium in complex with two molecules of N-(4'-trifluoromethoxybenzoyl)-2-amino-1-ethylphosphate (F6F) inhibitor in the alpha-site and a single F6F molecule in the beta-site at 1.54 Angstrom resolution.",
+    "nonpolymer_entity_ids": [
+     "3",
+     "4",
+     "5",
+     "6"
+    ],
+    "ligand": "F6F",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A",
+     "B"
+    ],
+    "is_base": false
+   },
+   "5BW6": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.82,
+    "title": "Tryptophan Synthase from Salmonella typhimurium in complex with a single molecule of 2-({[4-(trifluoromethoxy)phenyl]carbonyl}amino)ethyl dihydrogen phosphate (F6) in the alpha-site.",
+    "nonpolymer_entity_ids": [
+     "3",
+     "4",
+     "5"
+    ],
+    "ligand": "F6F",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": false
+   },
+   "7KU9": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.4,
+    "title": "The internal aldimine form of the wild-type Salmonella typhimurium Tryptophan Synthase with sodium ion at the metal coordination site, two molecules of F6F inhibitor at the enzyme alpha-site and another F6F molecule at the enzyme beta-site at 1.40 Angstrom resolution",
+    "nonpolymer_entity_ids": [
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "8",
+     "9",
+     "10"
+    ],
+    "ligand": "F6F",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A",
+     "B"
+    ],
+    "is_base": false
+   },
+   "7LY8": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.55,
+    "title": "The internal aldimine form of the wild-type Salmonella Typhimurium Tryptophan Synthase in complex with two molecules of N-(4'-trifluoromethoxybenzoyl)-2-amino-1-ethylphosphate (F6F) inhibitor at the enzyme alpha-site, a single F6F molecule at the enzyme beta-site, and sodium ion at the metal coordination site at 1.55 Angstrom resolution. One of the beta-Q114 rotamer conformations allows a hydrogen bond to form with the PLP oxygen at the position 3 in the ring",
+    "nonpolymer_entity_ids": [
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "8"
+    ],
+    "ligand": "F6F",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A",
+     "B"
+    ],
+    "is_base": false
+   },
+   "7M2L": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.6,
+    "title": "The internal aldimine form of the wild-type Salmonella Typhimurium Tryptophan Synthase in complex with N-(4'-trifluoromethoxybenzoyl)-2-amino-1-ethylphosphate (F6F) inhibitor at the alpha-and beta-site, sodium ion at the metal coordination site, and another F6F molecule at the enzyme beta-site at 1.60 Angstrom resolution. Two of the beta-Q114 rotamer conformations allows a hydrogen bond to form with the PLP oxygen at the position 3 in the ring",
+    "nonpolymer_entity_ids": [
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "8",
+     "9"
+    ],
+    "ligand": "F6F",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A",
+     "B"
+    ],
+    "is_base": false
+   },
+   "7M3S": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.55,
+    "title": "The internal aldimine form of the wild-type Salmonella Typhimurium Tryptophan Synthase in complex with N-(4'-trifluoromethoxybenzoyl)-2-amino-1-ethylphosphate (F6F) inhibitor at the alpha-and beta-site, sodium ion at the metal coordination site, and another F6F molecule at the enzyme beta-site at 1.55 Angstrom resolution. One of the beta-Q114 rotamer conformations allows a hydrogen bond to form with the PLP oxygen at the position 3 in the ring",
+    "nonpolymer_entity_ids": [
+     "3",
+     "4",
+     "5",
+     "6",
+     "7",
+     "8",
+     "9"
+    ],
+    "ligand": "F6F",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A",
+     "B"
+    ],
+    "is_base": false
+   },
+   "7ME8": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.6,
+    "title": "The internal aldimine form of the wild-type Salmonella Typhimurium Tryptophan Synthase in complex with N-(4'-trifluoromethoxybenzoyl)-2-amino-1-ethylphosphate (F6F) inhibitor at the beta-site, sodium ion at the metal coordination site and dual beta-Q114 rotamer conformation at 1.60 Angstrom resolution",
+    "nonpolymer_entity_ids": [
+     "3",
+     "4",
+     "5",
+     "6",
+     "7"
+    ],
+    "ligand": "F6F",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "B"
+    ],
+    "is_base": false
+   },
+   "2CLO": {
+    "method": "X-RAY DIFFRACTION",
+    "resolution": 1.5,
+    "title": "Tryptophan Synthase (external aldimine state) in complex with (naphthalene-2'-sulfonyl)-2-amino-1-ethylphosphate (F19)",
+    "nonpolymer_entity_ids": [
+     "3",
+     "4",
+     "5"
+    ],
+    "ligand": "F19",
+    "ok": true,
+    "reason": "verified",
+    "ligand_chains": [
+     "A"
+    ],
+    "is_base": false
+   }
+  },
+  "same_drug_pairs": [
+   {
+    "a": "2CLE",
+    "b": "2CLF",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.4473684210526316,
+    "jaccard_resnum_only": 0.4473684210526316,
+    "n_a": 18,
+    "n_b": 37
+   },
+   {
+    "a": "2CLE",
+    "b": "2CLM",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.9473684210526315,
+    "jaccard_resnum_only": 0.9473684210526315,
+    "n_a": 18,
+    "n_b": 19
+   },
+   {
+    "a": "2CLE",
+    "b": "4KKX",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.7391304347826086,
+    "jaccard_resnum_only": 0.7391304347826086,
+    "n_a": 18,
+    "n_b": 22
+   },
+   {
+    "a": "2CLE",
+    "b": "4WX2",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.391304347826087,
+    "jaccard_resnum_only": 0.4,
+    "n_a": 18,
+    "n_b": 46
+   },
+   {
+    "a": "2CLE",
+    "b": "4Y6G",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.43902439024390244,
+    "jaccard_resnum_only": 0.43902439024390244,
+    "n_a": 18,
+    "n_b": 41
+   },
+   {
+    "a": "2CLE",
+    "b": "4ZQC",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.3829787234042553,
+    "jaccard_resnum_only": 0.391304347826087,
+    "n_a": 18,
+    "n_b": 47
+   },
+   {
+    "a": "2CLE",
+    "b": "5BW6",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.85,
+    "jaccard_resnum_only": 0.85,
+    "n_a": 18,
+    "n_b": 19
+   },
+   {
+    "a": "2CLE",
+    "b": "7KU9",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.3829787234042553,
+    "jaccard_resnum_only": 0.391304347826087,
+    "n_a": 18,
+    "n_b": 47
+   },
+   {
+    "a": "2CLE",
+    "b": "7LY8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.3829787234042553,
+    "jaccard_resnum_only": 0.391304347826087,
+    "n_a": 18,
+    "n_b": 47
+   },
+   {
+    "a": "2CLE",
+    "b": "7M2L",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.4090909090909091,
+    "jaccard_resnum_only": 0.4090909090909091,
+    "n_a": 18,
+    "n_b": 44
+   },
+   {
+    "a": "2CLE",
+    "b": "7M3S",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.4090909090909091,
+    "jaccard_resnum_only": 0.4090909090909091,
+    "n_a": 18,
+    "n_b": 44
+   },
+   {
+    "a": "2CLE",
+    "b": "7ME8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.0,
+    "jaccard_resnum_only": 0.0,
+    "n_a": 18,
+    "n_b": 23
+   },
+   {
+    "a": "2CLF",
+    "b": "2CLM",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.4358974358974359,
+    "jaccard_resnum_only": 0.4358974358974359,
+    "n_a": 37,
+    "n_b": 19
+   },
+   {
+    "a": "2CLF",
+    "b": "4KKX",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.37209302325581395,
+    "jaccard_resnum_only": 0.37209302325581395,
+    "n_a": 37,
+    "n_b": 22
+   },
+   {
+    "a": "2CLF",
+    "b": "4WX2",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.8043478260869565,
+    "jaccard_resnum_only": 0.8222222222222222,
+    "n_a": 37,
+    "n_b": 46
+   },
+   {
+    "a": "2CLF",
+    "b": "4Y6G",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.9024390243902439,
+    "jaccard_resnum_only": 0.9024390243902439,
+    "n_a": 37,
+    "n_b": 41
+   },
+   {
+    "a": "2CLF",
+    "b": "4ZQC",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.7872340425531915,
+    "jaccard_resnum_only": 0.8043478260869565,
+    "n_a": 37,
+    "n_b": 47
+   },
+   {
+    "a": "2CLF",
+    "b": "5BW6",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.4358974358974359,
+    "jaccard_resnum_only": 0.4358974358974359,
+    "n_a": 37,
+    "n_b": 19
+   },
+   {
+    "a": "2CLF",
+    "b": "7KU9",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.7872340425531915,
+    "jaccard_resnum_only": 0.8043478260869565,
+    "n_a": 37,
+    "n_b": 47
+   },
+   {
+    "a": "2CLF",
+    "b": "7LY8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.7872340425531915,
+    "jaccard_resnum_only": 0.8043478260869565,
+    "n_a": 37,
+    "n_b": 47
+   },
+   {
+    "a": "2CLF",
+    "b": "7M2L",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.8409090909090909,
+    "jaccard_resnum_only": 0.8409090909090909,
+    "n_a": 37,
+    "n_b": 44
+   },
+   {
+    "a": "2CLF",
+    "b": "7M3S",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.8409090909090909,
+    "jaccard_resnum_only": 0.8409090909090909,
+    "n_a": 37,
+    "n_b": 44
+   },
+   {
+    "a": "2CLF",
+    "b": "7ME8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.5,
+    "jaccard_resnum_only": 0.5,
+    "n_a": 37,
+    "n_b": 23
+   },
+   {
+    "a": "2CLH",
+    "b": "2CLO",
+    "ligand_a": "F19",
+    "ligand_b": "F19",
+    "jaccard": 0.9047619047619048,
+    "jaccard_resnum_only": 0.9047619047619048,
+    "n_a": 20,
+    "n_b": 20
+   },
+   {
+    "a": "2CLM",
+    "b": "4KKX",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.7083333333333334,
+    "jaccard_resnum_only": 0.7083333333333334,
+    "n_a": 19,
+    "n_b": 22
+   },
+   {
+    "a": "2CLM",
+    "b": "4WX2",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.3829787234042553,
+    "jaccard_resnum_only": 0.391304347826087,
+    "n_a": 19,
+    "n_b": 46
+   },
+   {
+    "a": "2CLM",
+    "b": "4Y6G",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.42857142857142855,
+    "jaccard_resnum_only": 0.42857142857142855,
+    "n_a": 19,
+    "n_b": 41
+   },
+   {
+    "a": "2CLM",
+    "b": "4ZQC",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.375,
+    "jaccard_resnum_only": 0.3829787234042553,
+    "n_a": 19,
+    "n_b": 47
+   },
+   {
+    "a": "2CLM",
+    "b": "5BW6",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.8095238095238095,
+    "jaccard_resnum_only": 0.8095238095238095,
+    "n_a": 19,
+    "n_b": 19
+   },
+   {
+    "a": "2CLM",
+    "b": "7KU9",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.375,
+    "jaccard_resnum_only": 0.3829787234042553,
+    "n_a": 19,
+    "n_b": 47
+   },
+   {
+    "a": "2CLM",
+    "b": "7LY8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.375,
+    "jaccard_resnum_only": 0.3829787234042553,
+    "n_a": 19,
+    "n_b": 47
+   },
+   {
+    "a": "2CLM",
+    "b": "7M2L",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.4,
+    "jaccard_resnum_only": 0.4,
+    "n_a": 19,
+    "n_b": 44
+   },
+   {
+    "a": "2CLM",
+    "b": "7M3S",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.4,
+    "jaccard_resnum_only": 0.4,
+    "n_a": 19,
+    "n_b": 44
+   },
+   {
+    "a": "2CLM",
+    "b": "7ME8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.0,
+    "jaccard_resnum_only": 0.0,
+    "n_a": 19,
+    "n_b": 23
+   },
+   {
+    "a": "4KKX",
+    "b": "4WX2",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.3333333333333333,
+    "jaccard_resnum_only": 0.34,
+    "n_a": 22,
+    "n_b": 46
+   },
+   {
+    "a": "4KKX",
+    "b": "4Y6G",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.4,
+    "jaccard_resnum_only": 0.4,
+    "n_a": 22,
+    "n_b": 41
+   },
+   {
+    "a": "4KKX",
+    "b": "4ZQC",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.35294117647058826,
+    "jaccard_resnum_only": 0.36,
+    "n_a": 22,
+    "n_b": 47
+   },
+   {
+    "a": "4KKX",
+    "b": "5BW6",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.782608695652174,
+    "jaccard_resnum_only": 0.782608695652174,
+    "n_a": 22,
+    "n_b": 19
+   },
+   {
+    "a": "4KKX",
+    "b": "7KU9",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.3269230769230769,
+    "jaccard_resnum_only": 0.3333333333333333,
+    "n_a": 22,
+    "n_b": 47
+   },
+   {
+    "a": "4KKX",
+    "b": "7LY8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.3269230769230769,
+    "jaccard_resnum_only": 0.3333333333333333,
+    "n_a": 22,
+    "n_b": 47
+   },
+   {
+    "a": "4KKX",
+    "b": "7M2L",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.43478260869565216,
+    "jaccard_resnum_only": 0.43478260869565216,
+    "n_a": 22,
+    "n_b": 44
+   },
+   {
+    "a": "4KKX",
+    "b": "7M3S",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.43478260869565216,
+    "jaccard_resnum_only": 0.43478260869565216,
+    "n_a": 22,
+    "n_b": 44
+   },
+   {
+    "a": "4KKX",
+    "b": "7ME8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.0,
+    "jaccard_resnum_only": 0.0,
+    "n_a": 22,
+    "n_b": 23
+   },
+   {
+    "a": "4WX2",
+    "b": "4Y6G",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.851063829787234,
+    "jaccard_resnum_only": 0.8695652173913043,
+    "n_a": 46,
+    "n_b": 41
+   },
+   {
+    "a": "4WX2",
+    "b": "4ZQC",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.9787234042553191,
+    "jaccard_resnum_only": 0.9782608695652174,
+    "n_a": 46,
+    "n_b": 47
+   },
+   {
+    "a": "4WX2",
+    "b": "5BW6",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.3541666666666667,
+    "jaccard_resnum_only": 0.3617021276595745,
+    "n_a": 46,
+    "n_b": 19
+   },
+   {
+    "a": "4WX2",
+    "b": "7KU9",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.9787234042553191,
+    "jaccard_resnum_only": 0.9782608695652174,
+    "n_a": 46,
+    "n_b": 47
+   },
+   {
+    "a": "4WX2",
+    "b": "7LY8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.9787234042553191,
+    "jaccard_resnum_only": 0.9782608695652174,
+    "n_a": 46,
+    "n_b": 47
+   },
+   {
+    "a": "4WX2",
+    "b": "7M2L",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.8,
+    "jaccard_resnum_only": 0.8163265306122449,
+    "n_a": 46,
+    "n_b": 44
+   },
+   {
+    "a": "4WX2",
+    "b": "7M3S",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.8,
+    "jaccard_resnum_only": 0.8163265306122449,
+    "n_a": 46,
+    "n_b": 44
+   },
+   {
+    "a": "4WX2",
+    "b": "7ME8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.46808510638297873,
+    "jaccard_resnum_only": 0.4782608695652174,
+    "n_a": 46,
+    "n_b": 23
+   },
+   {
+    "a": "4Y6G",
+    "b": "4ZQC",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.8723404255319149,
+    "jaccard_resnum_only": 0.8913043478260869,
+    "n_a": 41,
+    "n_b": 47
+   },
+   {
+    "a": "4Y6G",
+    "b": "5BW6",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.42857142857142855,
+    "jaccard_resnum_only": 0.42857142857142855,
+    "n_a": 41,
+    "n_b": 19
+   },
+   {
+    "a": "4Y6G",
+    "b": "7KU9",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.8333333333333334,
+    "jaccard_resnum_only": 0.851063829787234,
+    "n_a": 41,
+    "n_b": 47
+   },
+   {
+    "a": "4Y6G",
+    "b": "7LY8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.8333333333333334,
+    "jaccard_resnum_only": 0.851063829787234,
+    "n_a": 41,
+    "n_b": 47
+   },
+   {
+    "a": "4Y6G",
+    "b": "7M2L",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.9318181818181818,
+    "jaccard_resnum_only": 0.9318181818181818,
+    "n_a": 41,
+    "n_b": 44
+   },
+   {
+    "a": "4Y6G",
+    "b": "7M3S",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.9318181818181818,
+    "jaccard_resnum_only": 0.9318181818181818,
+    "n_a": 41,
+    "n_b": 44
+   },
+   {
+    "a": "4Y6G",
+    "b": "7ME8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.5238095238095238,
+    "jaccard_resnum_only": 0.5238095238095238,
+    "n_a": 41,
+    "n_b": 23
+   },
+   {
+    "a": "4ZQC",
+    "b": "5BW6",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.375,
+    "jaccard_resnum_only": 0.3829787234042553,
+    "n_a": 47,
+    "n_b": 19
+   },
+   {
+    "a": "4ZQC",
+    "b": "7KU9",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.9583333333333334,
+    "jaccard_resnum_only": 0.9574468085106383,
+    "n_a": 47,
+    "n_b": 47
+   },
+   {
+    "a": "4ZQC",
+    "b": "7LY8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.9583333333333334,
+    "jaccard_resnum_only": 0.9574468085106383,
+    "n_a": 47,
+    "n_b": 47
+   },
+   {
+    "a": "4ZQC",
+    "b": "7M2L",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.82,
+    "jaccard_resnum_only": 0.8367346938775511,
+    "n_a": 47,
+    "n_b": 44
+   },
+   {
+    "a": "4ZQC",
+    "b": "7M3S",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.82,
+    "jaccard_resnum_only": 0.8367346938775511,
+    "n_a": 47,
+    "n_b": 44
+   },
+   {
+    "a": "4ZQC",
+    "b": "7ME8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.4583333333333333,
+    "jaccard_resnum_only": 0.46808510638297873,
+    "n_a": 47,
+    "n_b": 23
+   },
+   {
+    "a": "5BW6",
+    "b": "7KU9",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.3469387755102041,
+    "jaccard_resnum_only": 0.3541666666666667,
+    "n_a": 19,
+    "n_b": 47
+   },
+   {
+    "a": "5BW6",
+    "b": "7LY8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.3469387755102041,
+    "jaccard_resnum_only": 0.3541666666666667,
+    "n_a": 19,
+    "n_b": 47
+   },
+   {
+    "a": "5BW6",
+    "b": "7M2L",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.4,
+    "jaccard_resnum_only": 0.4,
+    "n_a": 19,
+    "n_b": 44
+   },
+   {
+    "a": "5BW6",
+    "b": "7M3S",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.4,
+    "jaccard_resnum_only": 0.4,
+    "n_a": 19,
+    "n_b": 44
+   },
+   {
+    "a": "5BW6",
+    "b": "7ME8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.0,
+    "jaccard_resnum_only": 0.0,
+    "n_a": 19,
+    "n_b": 23
+   },
+   {
+    "a": "7KU9",
+    "b": "7LY8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 1.0,
+    "jaccard_resnum_only": 1.0,
+    "n_a": 47,
+    "n_b": 47
+   },
+   {
+    "a": "7KU9",
+    "b": "7M2L",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.82,
+    "jaccard_resnum_only": 0.8367346938775511,
+    "n_a": 47,
+    "n_b": 44
+   },
+   {
+    "a": "7KU9",
+    "b": "7M3S",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.82,
+    "jaccard_resnum_only": 0.8367346938775511,
+    "n_a": 47,
+    "n_b": 44
+   },
+   {
+    "a": "7KU9",
+    "b": "7ME8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.48936170212765956,
+    "jaccard_resnum_only": 0.5,
+    "n_a": 47,
+    "n_b": 23
+   },
+   {
+    "a": "7LY8",
+    "b": "7M2L",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.82,
+    "jaccard_resnum_only": 0.8367346938775511,
+    "n_a": 47,
+    "n_b": 44
+   },
+   {
+    "a": "7LY8",
+    "b": "7M3S",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.82,
+    "jaccard_resnum_only": 0.8367346938775511,
+    "n_a": 47,
+    "n_b": 44
+   },
+   {
+    "a": "7LY8",
+    "b": "7ME8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.48936170212765956,
+    "jaccard_resnum_only": 0.5,
+    "n_a": 47,
+    "n_b": 23
+   },
+   {
+    "a": "7M2L",
+    "b": "7M3S",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 1.0,
+    "jaccard_resnum_only": 1.0,
+    "n_a": 44,
+    "n_b": 44
+   },
+   {
+    "a": "7M2L",
+    "b": "7ME8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.5227272727272727,
+    "jaccard_resnum_only": 0.5227272727272727,
+    "n_a": 44,
+    "n_b": 23
+   },
+   {
+    "a": "7M3S",
+    "b": "7ME8",
+    "ligand_a": "F6F",
+    "ligand_b": "F6F",
+    "jaccard": 0.5227272727272727,
+    "jaccard_resnum_only": 0.5227272727272727,
+    "n_a": 44,
+    "n_b": 23
+   }
+  ],
+  "diff_drug_pairs": [
+   {
+    "a": "2CLE",
+    "b": "2CLH",
+    "ligand_a": "F6F",
+    "ligand_b": "F19",
+    "jaccard": 0.8095238095238095,
+    "jaccard_resnum_only": 0.8095238095238095,
+    "n_a": 18,
+    "n_b": 20
+   },
+   {
+    "a": "2CLE",
+    "b": "2CLO",
+    "ligand_a": "F6F",
+    "ligand_b": "F19",
+    "jaccard": 0.7272727272727273,
+    "jaccard_resnum_only": 0.7272727272727273,
+    "n_a": 18,
+    "n_b": 20
+   },
+   {
+    "a": "2CLF",
+    "b": "2CLH",
+    "ligand_a": "F6F",
+    "ligand_b": "F19",
+    "jaccard": 0.425,
+    "jaccard_resnum_only": 0.425,
+    "n_a": 37,
+    "n_b": 20
+   },
+   {
+    "a": "2CLF",
+    "b": "2CLO",
+    "ligand_a": "F6F",
+    "ligand_b": "F19",
+    "jaccard": 0.3902439024390244,
+    "jaccard_resnum_only": 0.3902439024390244,
+    "n_a": 37,
+    "n_b": 20
+   },
+   {
+    "a": "2CLH",
+    "b": "2CLM",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.7727272727272727,
+    "jaccard_resnum_only": 0.7727272727272727,
+    "n_a": 20,
+    "n_b": 19
+   },
+   {
+    "a": "2CLH",
+    "b": "4KKX",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.8260869565217391,
+    "jaccard_resnum_only": 0.8260869565217391,
+    "n_a": 20,
+    "n_b": 22
+   },
+   {
+    "a": "2CLH",
+    "b": "4WX2",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.3469387755102041,
+    "jaccard_resnum_only": 0.3541666666666667,
+    "n_a": 20,
+    "n_b": 46
+   },
+   {
+    "a": "2CLH",
+    "b": "4Y6G",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.4186046511627907,
+    "jaccard_resnum_only": 0.4186046511627907,
+    "n_a": 20,
+    "n_b": 41
+   },
+   {
+    "a": "2CLH",
+    "b": "4ZQC",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.3673469387755102,
+    "jaccard_resnum_only": 0.375,
+    "n_a": 20,
+    "n_b": 47
+   },
+   {
+    "a": "2CLH",
+    "b": "5BW6",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.8571428571428571,
+    "jaccard_resnum_only": 0.8571428571428571,
+    "n_a": 20,
+    "n_b": 19
+   },
+   {
+    "a": "2CLH",
+    "b": "7KU9",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.34,
+    "jaccard_resnum_only": 0.3469387755102041,
+    "n_a": 20,
+    "n_b": 47
+   },
+   {
+    "a": "2CLH",
+    "b": "7LY8",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.34,
+    "jaccard_resnum_only": 0.3469387755102041,
+    "n_a": 20,
+    "n_b": 47
+   },
+   {
+    "a": "2CLH",
+    "b": "7M2L",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.45454545454545453,
+    "jaccard_resnum_only": 0.45454545454545453,
+    "n_a": 20,
+    "n_b": 44
+   },
+   {
+    "a": "2CLH",
+    "b": "7M3S",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.45454545454545453,
+    "jaccard_resnum_only": 0.45454545454545453,
+    "n_a": 20,
+    "n_b": 44
+   },
+   {
+    "a": "2CLH",
+    "b": "7ME8",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.0,
+    "jaccard_resnum_only": 0.0,
+    "n_a": 20,
+    "n_b": 23
+   },
+   {
+    "a": "2CLM",
+    "b": "2CLO",
+    "ligand_a": "F6F",
+    "ligand_b": "F19",
+    "jaccard": 0.6956521739130435,
+    "jaccard_resnum_only": 0.6956521739130435,
+    "n_a": 19,
+    "n_b": 20
+   },
+   {
+    "a": "2CLO",
+    "b": "4KKX",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.8260869565217391,
+    "jaccard_resnum_only": 0.8260869565217391,
+    "n_a": 20,
+    "n_b": 22
+   },
+   {
+    "a": "2CLO",
+    "b": "4WX2",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.32,
+    "jaccard_resnum_only": 0.32653061224489793,
+    "n_a": 20,
+    "n_b": 46
+   },
+   {
+    "a": "2CLO",
+    "b": "4Y6G",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.38636363636363635,
+    "jaccard_resnum_only": 0.38636363636363635,
+    "n_a": 20,
+    "n_b": 41
+   },
+   {
+    "a": "2CLO",
+    "b": "4ZQC",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.34,
+    "jaccard_resnum_only": 0.3469387755102041,
+    "n_a": 20,
+    "n_b": 47
+   },
+   {
+    "a": "2CLO",
+    "b": "5BW6",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.8571428571428571,
+    "jaccard_resnum_only": 0.8571428571428571,
+    "n_a": 20,
+    "n_b": 19
+   },
+   {
+    "a": "2CLO",
+    "b": "7KU9",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.3137254901960784,
+    "jaccard_resnum_only": 0.32,
+    "n_a": 20,
+    "n_b": 47
+   },
+   {
+    "a": "2CLO",
+    "b": "7LY8",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.3137254901960784,
+    "jaccard_resnum_only": 0.32,
+    "n_a": 20,
+    "n_b": 47
+   },
+   {
+    "a": "2CLO",
+    "b": "7M2L",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.4222222222222222,
+    "jaccard_resnum_only": 0.4222222222222222,
+    "n_a": 20,
+    "n_b": 44
+   },
+   {
+    "a": "2CLO",
+    "b": "7M3S",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.4222222222222222,
+    "jaccard_resnum_only": 0.4222222222222222,
+    "n_a": 20,
+    "n_b": 44
+   },
+   {
+    "a": "2CLO",
+    "b": "7ME8",
+    "ligand_a": "F19",
+    "ligand_b": "F6F",
+    "jaccard": 0.0,
+    "jaccard_resnum_only": 0.0,
+    "n_a": 20,
+    "n_b": 23
+   }
+  ],
+  "same_drug_summary": {
+   "n": 79,
+   "jaccard_median": 0.48936170212765956,
+   "jaccard_min": 0.0,
+   "jaccard_max": 1.0,
+   "jaccard_resnum_only_median": 0.5
+  },
+  "diff_drug_summary": {
+   "n": 26,
+   "jaccard_median": 0.42041343669250647,
+   "jaccard_min": 0.0,
+   "jaccard_max": 0.8571428571428571,
+   "jaccard_resnum_only_median": 0.42041343669250647
+  },
+  "by_ligand": {
+   "F6F": [
+    "2CLF",
+    "2CLE",
+    "2CLM",
+    "4KKX",
+    "4WX2",
+    "4Y6G",
+    "4ZQC",
+    "5BW6",
+    "7KU9",
+    "7LY8",
+    "7M2L",
+    "7M3S",
+    "7ME8"
+   ],
+   "F19": [
+    "2CLH",
+    "2CLO"
+   ]
+  },
+  "consensus_union": {
+   "k": 8,
+   "n_entries": 15,
+   "consensus_size": 41,
+   "union_size": 53,
+   "consensus_keys": [
+    [
+     "A",
+     22
+    ],
+    [
+     "A",
+     49
+    ],
+    [
+     "A",
+     59
+    ],
+    [
+     "A",
+     60
+    ],
+    [
+     "A",
+     64
+    ],
+    [
+     "A",
+     100
+    ],
+    [
+     "A",
+     127
+    ],
+    [
+     "A",
+     129
+    ],
+    [
+     "A",
+     153
+    ],
+    [
+     "A",
+     175
+    ],
+    [
+     "A",
+     179
+    ],
+    [
+     "A",
+     212
+    ],
+    [
+     "A",
+     213
+    ],
+    [
+     "A",
+     214
+    ],
+    [
+     "A",
+     232
+    ],
+    [
+     "A",
+     233
+    ],
+    [
+     "A",
+     234
+    ],
+    [
+     "A",
+     235
+    ],
+    [
+     "B",
+     18
+    ],
+    [
+     "B",
+     87
+    ],
+    [
+     "B",
+     109
+    ],
+    [
+     "B",
+     110
+    ],
+    [
+     "B",
+     111
+    ],
+    [
+     "B",
+     112
+    ],
+    [
+     "B",
+     113
+    ],
+    [
+     "B",
+     114
+    ],
+    [
+     "B",
+     115
+    ],
+    [
+     "B",
+     116
+    ],
+    [
+     "B",
+     166
+    ],
+    [
+     "B",
+     170
+    ],
+    [
+     "B",
+     174
+    ],
+    [
+     "B",
+     186
+    ],
+    [
+     "B",
+     188
+    ],
+    [
+     "B",
+     189
+    ],
+    [
+     "B",
+     190
+    ],
+    [
+     "B",
+     192
+    ],
+    [
+     "B",
+     193
+    ],
+    [
+     "B",
+     194
+    ],
+    [
+     "B",
+     280
+    ],
+    [
+     "B",
+     281
+    ],
+    [
+     "B",
+     306
+    ]
+   ],
+   "union_keys": [
+    [
+     "A",
+     22
+    ],
+    [
+     "A",
+     49
+    ],
+    [
+     "A",
+     58
+    ],
+    [
+     "A",
+     59
+    ],
+    [
+     "A",
+     60
+    ],
+    [
+     "A",
+     61
+    ],
+    [
+     "A",
+     64
+    ],
+    [
+     "A",
+     100
+    ],
+    [
+     "A",
+     127
+    ],
+    [
+     "A",
+     129
+    ],
+    [
+     "A",
+     153
+    ],
+    [
+     "A",
+     175
+    ],
+    [
+     "A",
+     177
+    ],
+    [
+     "A",
+     179
+    ],
+    [
+     "A",
+     183
+    ],
+    [
+     "A",
+     184
+    ],
+    [
+     "A",
+     211
+    ],
+    [
+     "A",
+     212
+    ],
+    [
+     "A",
+     213
+    ],
+    [
+     "A",
+     214
+    ],
+    [
+     "A",
+     232
+    ],
+    [
+     "A",
+     233
+    ],
+    [
+     "A",
+     234
+    ],
+    [
+     "A",
+     235
+    ],
+    [
+     "B",
+     18
+    ],
+    [
+     "B",
+     19
+    ],
+    [
+     "B",
+     20
+    ],
+    [
+     "B",
+     21
+    ],
+    [
+     "B",
+     87
+    ],
+    [
+     "B",
+     109
+    ],
+    [
+     "B",
+     110
+    ],
+    [
+     "B",
+     111
+    ],
+    [
+     "B",
+     112
+    ],
+    [
+     "B",
+     113
+    ],
+    [
+     "B",
+     114
+    ],
+    [
+     "B",
+     115
+    ],
+    [
+     "B",
+     116
+    ],
+    [
+     "B",
+     166
+    ],
+    [
+     "B",
+     170
+    ],
+    [
+     "B",
+     174
+    ],
+    [
+     "B",
+     175
+    ],
+    [
+     "B",
+     178
+    ],
+    [
+     "B",
+     186
+    ],
+    [
+     "B",
+     188
+    ],
+    [
+     "B",
+     189
+    ],
+    [
+     "B",
+     190
+    ],
+    [
+     "B",
+     192
+    ],
+    [
+     "B",
+     193
+    ],
+    [
+     "B",
+     194
+    ],
+    [
+     "B",
+     280
+    ],
+    [
+     "B",
+     281
+    ],
+    [
+     "B",
+     303
+    ],
+    [
+     "B",
+     306
+    ]
+   ]
+  },
+  "rescore": {
+   "single": {
+    "label": "single (shipped)",
+    "pocket_size": 15,
+    "auc": 0.5914149443561207,
+    "p_at_5": 0.0,
+    "diagnosis": "BEATS_CHANCE_NOT_FLOOR"
+   },
+   "consensus": {
+    "label": "consensus",
+    "pocket_size": 37,
+    "auc": 0.5488668239903824,
+    "p_at_5": 0.2,
+    "diagnosis": "NO_SIGNAL_IN_APO"
+   },
+   "union": {
+    "label": "union",
+    "pocket_size": 47,
+    "auc": 0.5322356463166898,
+    "p_at_5": 0.4,
+    "diagnosis": "NO_SIGNAL_IN_APO"
+   }
+  },
+  "rescore_cv_composite": {
+   "single (shipped)": {
+    "cv_auc": 0.8642293333333333,
+    "n_pos": 15,
+    "n": 640
+   },
+   "consensus": {
+    "cv_auc": 0.7791965378562686,
+    "n_pos": 38,
+    "n": 640
+   },
+   "union": {
+    "cv_auc": 0.7973536036036036,
+    "n_pos": 48,
+    "n": 640
+   }
+  }
+ }
+}
