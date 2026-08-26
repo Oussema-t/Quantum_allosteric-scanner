@@ -154,3 +154,17 @@ target.
 ## Done
 
 —
+
+**Resolved, 2026-08-26 ([[TASK-0270]]).** This task's own left-open question
+("which pair is primary — [[TASK-0221]] 3(a) may settle it") is now
+answered: `documentation/2026-08-26-organiser-clarifications.md` item 4
+implicitly confirms the register's own substitution reasoning by granting
+the analogous BCR-ABL1 apo-substitution permission on the same structural-
+validity grounds this task already argued for Cardiac Myosin, and no
+organiser objection to the 8QYP→8QYR substitution itself has been raised
+despite the channel now being live and responsive (item 3 flags re-asking
+directly, since this specific pair was never itself put to them by name).
+**8QYP→8QYR stands as this register's primary Cardiac Myosin pair**, Table
+1's mandated 5TBY→6C1H reported alongside it per this task's own design,
+neither retracted nor further gated on an explicit organiser sign-off that
+was never actually required to proceed.

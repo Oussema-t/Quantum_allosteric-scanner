@@ -22,24 +22,28 @@ the ground truth for validating the predicted allosteric site.
 
 SYSTEMS = {
 
-    # TASK-0155 (2026-07-30) / TASK-0192 (2026-08-03): `apo="4OBE"` is
-    # WILD-TYPE KRAS, not G12C -- chain A residue 12 is GLY, confirmed
-    # directly against the deposited structure (independently re-verified
-    # twice). This means `covalent_anchor=12`/`top5_full_named`'s "CYS12"
-    # below describe the *biological* G12C target this app presents, but
-    # the actual apo geometry fed into the live GNM/comparison pipeline is
-    # a Gly12 (wild-type) structure -- a real, unresolved apo/label
-    # mismatch, not a defensible modelling choice as currently shipped.
-    # Decision (recorded, not left implied): NOT fixed here -- swapping
-    # `apo` is a register-wide re-run (out of this flag's scope, matching
-    # __WORK_IN_PROGRESS__/config/targets.yaml's own identical decision).
-    # Whether to re-anchor to a true-G12C apo before the submission freeze
-    # is an open team decision, not an omission -- see
-    # __WORK_IN_PROGRESS__/RESULTS.md's "Apo-structure sensitivity sweep"
-    # (10 verified true-G12C candidates already assembled, median AUC
-    # below chance) and COMPETENCE_MAP.md's KRAS_G12C caveats.
+    # TASK-0270 (2026-08-26): `apo` fixed from "4OBE" (WILD-TYPE KRAS, not
+    # G12C -- chain A residue 12 is GLY, confirmed directly, TASK-0155/
+    # TASK-0192) to "4LDJ" (genuinely G12C, confirmed directly). The
+    # organisers' 2026-08-26 clarification sanctioned an apo re-run after
+    # this defect was reported to them (documentation/
+    # 2026-08-26-organiser-clarifications.md item 2); their own suggested
+    # structure, 8S8C, RCSB-verified live and found HOLO (MK-1084-bound),
+    # not usable as an apo replacement. 4LDJ chosen on structural grounds:
+    # genuinely G12C, GDP+MG only, 1.15 A, single chain A -- see TASK-0270's
+    # own Done section and __WORK_IN_PROGRESS__/config/targets.yaml's
+    # identical fix for the full rationale, including a real bug found in
+    # TASK-0155's own "10 verified" candidate pool (8 of 10 were actually
+    # drug-bound, not apo -- corrected in that task's own file).
+    # DECISIVE CONSEQUENCE: the register's own headline KRAS_G12C
+    # floor-clear result does not survive the genotype fix --
+    # NO_FAILURE_DETECTED (4OBE) -> NO_SIGNAL_IN_APO (4LDJ); ENM validity
+    # r=0.646 (PASS) -> 0.496 (MARGINAL); AUC 0.557 -> 0.514. `covalent_
+    # anchor=12`/`top5_full_named`'s "CYS12" below were already correct as
+    # the *biological* target-residue description (independent of which
+    # apo PDB is loaded) and are unchanged.
     "KRAS_G12C": dict(
-        apo="4OBE", holo="6OIM", chain="A",
+        apo="4LDJ", holo="6OIM", chain="A",
         disease="Oncology", target_class="GTPase", site_name="Switch-II pocket",
         holo_ligand="MOV", holo_ligand_name="Sotorasib (AMG 510)",
         covalent_anchor=12,

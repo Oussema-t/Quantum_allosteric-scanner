@@ -215,6 +215,36 @@ cell.
 structure-robust — it is a lucky draw, and the structure it was drawn
 from is not even the correct mutant.**
 
+**Correction, 2026-08-26, [[TASK-0270]]: the "10 true-genotype structures"
+candidate pool above was not what it claimed to be.** This section's own
+text states the pool is "GDP+Mg-only ligand set (excludes ~90
+inhibitor-bound structures)." Re-checked directly, per-structure, by
+enumerating every non-polymer entity (not the RCSB summary field
+`nonpolymer_bound_components`, which lists only metal-*coordinated*
+components and silently misses non-coordinating small-molecule
+inhibitors — almost certainly why the original filter passed these
+through): **8 of the 10 candidates are drug-bound, not apo** —
+8AZX (BI-2865), 7A1X (Cpd1), 8QUG (Compound 1), 9UOH (ASP2453), 7YCE
+(Compound 7b), 7MDP (G-2897), 7RP3 (GNE-1952, covalently alkylated),
+8AFC (Compound 12). Only **4LDJ** and **8TXJ** are genuinely apo
+(GDP+MG exactly). The distribution claims above (median AUC 0.482,
+"P@5 exactly 0.000 on all 10", "spread 0.187") mix genuine apo variance
+with holo-state conformational bias from 8 mislabeled entries and should
+not be cited as an apo-structure-sensitivity result as stated. The two
+genuinely-apo rows (4LDJ AUC=0.518, 8TXJ AUC=0.571, both P@5=0.000) are
+individually still valid — [[TASK-0270]] independently re-ran 4LDJ
+through this same pipeline and reproduced AUC=0.514 (noise-level
+agreement) — but n=2 does not support a "structure-robust vs. lucky draw"
+distributional claim either way. [[TASK-0270]] adopted 4LDJ as
+`KRAS_G12C`'s corrected `apo_pdb` on structural grounds (best resolution
+of the two genuine candidates) and found the register's own headline
+floor-clear result does **not** survive on it (`NO_SIGNAL_IN_APO`, not
+`NO_FAILURE_DETECTED`) — see that task for the full, decisive number.
+**Not re-run here**: a properly-filtered replacement sensitivity sweep
+(new candidate pool, ligand set checked by full enumeration) would need
+its own task — flagged as a real, valuable follow-up, not attempted as
+part of this correction.
+
 **Not extended to BCR-ABL1/PTP1B** (this task's own "optionally, if KRAS
 shows large spread" condition) — the spread found is already large and
 decisive, and per the review's own binding 2026-08-08 writing-freeze

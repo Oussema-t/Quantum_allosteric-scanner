@@ -327,6 +327,25 @@ numbers carry a 95% block-bootstrap CI ([[TASK-0112]]), wired in directly.**
 > CARDIAC_MYOSIN's own (already-tracked-separately) correction: `RESULTS.md`
 > row 80, `.ai/tasks/DONE/TASK-0239-*.md`.
 
+> **CAVEAT ([[TASK-0270]], 2026-08-26): the "register-wide re-run, explicitly
+> out of scope" the [[TASK-0155]] caveat above deferred has now happened —
+> the organisers sanctioned it, and this table's KRAS_G12C row is now stale
+> in the strongest possible way: `apo_pdb` is fixed (`4OBE`→`4LDJ`,
+> genuinely G12C, see `config/targets.yaml`/`backend/systems.py`), and the
+> corrected diagnosis is worse, not better.** `NO_FAILURE_DETECTED` (this
+> table's own row) → **`NO_SIGNAL_IN_APO`** on the real genotype — the
+> register's only clean mandatory-target floor-clear does not survive.
+> ENM validity (a different, label-free check, [[TASK-0250]]) also drops:
+> r=0.646 (PASS) → 0.496 (MARGINAL). AUC 0.557 (matches this table's own
+> [[TASK-0239]]-corrected "Actual (now)" row above, cross-validated) →
+> 0.514. A real bug also found and fixed in [[TASK-0155]]'s own "10
+> verified true-G12C structures" candidate pool this caveat cites above —
+> 8 of those 10 turned out to be drug-bound, not apo (that task's own file
+> now carries the correction). This table's numeric cells are **not**
+> re-run in place, per this document's own convention — read the KRAS_G12C
+> row above as retired, not current. Full side-by-side: `RESULTS.md`'s
+> KRAS_G12C genotype-fix section, `.ai/tasks/DONE/TASK-0270-*.md`.
+
 **Headline: KRAS_G12C's point-estimate diagnosis changes** (`NO_SIGNAL_IN_APO` under
 TASK-0129 -> `NO_FAILURE_DETECTED` here) — the actual result's point estimate now clears
 its own floor by a real margin, a genuine change once the clock gauge is fully removed

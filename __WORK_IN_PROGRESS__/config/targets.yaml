@@ -55,17 +55,28 @@ targets:
   # ---------------------------------------------------------------------
 
   KRAS_G12C:
-    apo_pdb: 4OBE   # TASK-0155 (2026-07-30) / TASK-0192 (2026-08-03): 4OBE is
-                    # WILD-TYPE KRAS, not G12C -- chain A residue 12 is GLY,
-                    # confirmed directly against the deposited structure
-                    # (independently re-verified twice). Kept unchanged: every
-                    # historical number in this register is conditioned on
-                    # this value; swapping it silently would invalidate the
-                    # whole apo-side register. See RESULTS.md's "Apo-structure
-                    # sensitivity sweep" section and COMPETENCE_MAP.md's
-                    # KRAS_G12C caveats -- this is also a lucky-draw outlier
-                    # among 10 verified true-G12C structures (median AUC
-                    # below chance, P@5=0.000 on all ten).
+    apo_pdb: 4LDJ   # TASK-0270 (2026-08-26): 4OBE replaced -- it is WILD-TYPE
+                    # KRAS, not G12C (chain A residue 12 is GLY, confirmed
+                    # directly, [[TASK-0155]]/[[TASK-0192]]). The organisers'
+                    # 2026-08-26 clarification sanctioned an apo re-run after
+                    # this defect was reported to them (documentation/
+                    # 2026-08-26-organiser-clarifications.md item 2) -- their
+                    # own suggested structure, 8S8C, RCSB-verified live and
+                    # found to be HOLO (MK-1084-bound), not usable as an apo
+                    # replacement. 4LDJ chosen instead, on structural grounds
+                    # (not for a flattering result, per TASK-0270's own
+                    # Constraint): genuinely G12C (residue 12 = Cys,
+                    # independently re-verified), GDP+MG only (genuinely
+                    # apo, unlike 8 of TASK-0155's own original "10 verified"
+                    # candidates -- see that task's own 2026-08-26 correction
+                    # note), 1.15 A, single chain A, same convention as 4OBE.
+                    # CONSEQUENCE, decisive: the register's own headline
+                    # KRAS_G12C floor-clear result does NOT survive on the
+                    # correct genotype -- diagnosis flips NO_FAILURE_DETECTED
+                    # (4OBE, WT) -> NO_SIGNAL_IN_APO (4LDJ, real G12C); ENM
+                    # validity r=0.646 (PASS) -> 0.496 (MARGINAL); AUC 0.557
+                    # -> 0.514. Full side-by-side: TASK-0270's own Done
+                    # section and RESULTS.md.
     holo_pdb: 6OIM
     chains: ["A"]
     keep_nucleic: false

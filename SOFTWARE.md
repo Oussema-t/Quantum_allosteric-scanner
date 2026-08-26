@@ -228,22 +228,27 @@ Errors (422): self-comparison; no drug-bearing chain.
 
 | Key | Protein | apo | holo | Drug | Site |
 |---|---|---|---|---|---|
-| KRAS_G12C | KRAS G12C (GTPase) | 4OBE ⚠️¹ | 6OIM | Sotorasib (MOV) | Switch-II pocket |
+| KRAS_G12C | KRAS G12C (GTPase) | 4LDJ ¹ | 6OIM | Sotorasib (MOV) | Switch-II pocket |
 | BCR_ABL1 | BCR-ABL1 (kinase) | 1OPL | 5MO4 | Asciminib (AY7) | Myristoyl pocket |
 | CARDIAC_MYOSIN | β-cardiac myosin | 5TBY | 6C1H (challenge) / 8QYR (validation) | Mavacamten (XB2) | Mavacamten site |
 | MYC_MAX | c-Myc (IDP) | 1NKP | none | — | none (discovery only) |
 | PTP1B | PTP1B (phosphatase) | 1SUG | 1T49 | BB inhibitor (892) | Allosteric BB site |
 | GLUCOKINASE | Glucokinase | 1V4S | 3H1V | GKA (TK1) | GKA site |
 
-¹ **4OBE is wild-type KRAS, not G12C** (chain A residue 12 is GLY, confirmed
-directly against the deposited structure — [[TASK-0155]]/[[TASK-0192]],
-2026-07-30/2026-08-03). Kept unchanged — a swap is a research-register-wide
-re-run, out of this flag's scope — but every KRAS_G12C benchmark number
-computed against this apo structure should be read with that caveat. See
-`__WORK_IN_PROGRESS__/RESULTS.md`'s "Apo-structure sensitivity sweep" section
-(10 verified true-G12C apo structures score at median AUC below chance,
-P@5=0.000 on all ten — this structure's own result is also a lucky draw,
-independent of the genotype error).
+¹ **Fixed 2026-08-26 ([[TASK-0270]])**: apo was `4OBE`, wild-type KRAS not
+G12C (chain A residue 12 GLY, confirmed directly — [[TASK-0155]]/
+[[TASK-0192]], 2026-07-30/2026-08-03). Organiser clarification
+(`documentation/2026-08-26-organiser-clarifications.md`) sanctioned an apo
+re-run; their own suggested structure (8S8C) verified live and found HOLO,
+not usable — `4LDJ` adopted instead on structural grounds (genuinely G12C,
+GDP+MG only, 1.15 Å). **Decisive consequence**: the register's own headline
+KRAS_G12C floor-clear result does not survive the fix — diagnosis flips
+`NO_FAILURE_DETECTED` → `NO_SIGNAL_IN_APO`; ENM validity r=0.646 (PASS) →
+0.496 (MARGINAL); AUC 0.557 → 0.514. Full side-by-side and a real
+correctness bug found in TASK-0155's own original 10-structure candidate
+pool (8 of 10 turned out to be drug-bound, not apo): `__WORK_IN_PROGRESS__/
+RESULTS.md`'s KRAS_G12C genotype-fix section and
+`.ai/tasks/DONE/TASK-0270-organiser-sanctioned-structure-substitutions.md`.
 
 ---
 

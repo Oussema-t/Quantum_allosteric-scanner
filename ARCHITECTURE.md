@@ -163,6 +163,20 @@ roadmap linkage (or flagged as unclear): [`.ai/reviews/PRODUCT_INTENT_MAP.md`](.
 Newest first; one line per change, **dated + signed** so teammates can see what changed
 when: `- YYYY-MM-DD · <name> · <summary>`. See [COLLABORATION.md](COLLABORATION.md).
 
+- 2026-08-26 · Implementer B · **Closes the 2026-08-03 KRAS_G12C genotype
+  entry below** (TASK-0270): the organisers sanctioned an apo re-run after
+  the mismatch was reported to them (`documentation/
+  2026-08-26-organiser-clarifications.md`). `backend/systems.py`'s
+  `KRAS_G12C["apo"]` fixed `4OBE`→`4LDJ` (genuinely G12C, live-RCSB
+  re-verified; the organisers' own suggestion, 8S8C, was verified and
+  found HOLO, not usable). Decisive, not cosmetic: the register's own
+  headline KRAS_G12C floor-clear result does not survive on the correct
+  genotype (`NO_FAILURE_DETECTED`→`NO_SIGNAL_IN_APO`; ENM validity
+  0.646 PASS→0.496 MARGINAL). `config/targets.yaml`, `SOFTWARE.md`,
+  `COMPETENCE_MAP.md` updated in the same commit. A real bug also found
+  in TASK-0155's own original apo-candidate pool (8 of its "10 verified"
+  structures were actually drug-bound) — corrected in that task's own
+  file, not silently left standing.
 - 2026-08-19 · Implementer B · `backend/systems.py`'s GLUCOKINASE had a
   live bug (TASK-0219, found incidentally during TASK-0033): apo (1V4S,
   chain A) and holo (3H1V, chain X) disagree on the chain letter, but the

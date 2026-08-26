@@ -8330,3 +8330,62 @@ section updated with the same prominence.
 **Script:** `scripts/task0268_local_frustration_hyp_p13.py`. **Data:**
 `results/tasks/0268_local_frustration_hyp_p13/`. **Full detail:**
 `.ai/tasks/DONE/TASK-0268-local-frustration-and-hyp-p13.md`.
+
+## Organiser-sanctioned structure fixes: KRAS_G12C's genotype corrected, and the register's own only clean floor-clear does not survive it ([[TASK-0270]], 2026-08-26)
+
+**[OBSERVED]** The organisers privately confirmed 4OBE is the wrong protein
+for KRAS_G12C and suggested `8S8C`; separately granted BCR-ABL1 apo-
+substitution latitude with a required rationale
+(`documentation/2026-08-26-organiser-clarifications.md`). Neither
+suggestion was taken at face value.
+
+**`8S8C`, live-verified, is HOLO** — X-ray 1.90 Å, MK-1084 (a covalent
+Switch-II inhibitor) + GDP + MG bound (Ma et al. 2024, *J Med Chem*
+67:11024-11052). Genuinely G12C (residue 12 = Cys, confirmed directly),
+but not usable as an apo replacement; no companion apo structure exists in
+that paper's own deposition. **A real bug found in [[TASK-0155]]'s own
+"10 verified true-G12C" candidate pool before trusting it for a
+replacement**: 8 of the 10 are actually drug-bound, not apo (checked by
+enumerating every non-polymer entity directly, not the misleading RCSB
+summary field that only lists metal-coordinated components). Only
+**4LDJ** and **8TXJ** are genuinely apo; [[TASK-0155]]'s own file
+corrected in place. `4LDJ` (1.15 Å, the better-resolution of the two)
+adopted as the new `apo_pdb`, on structural grounds.
+
+**Decisive: KRAS_G12C's flagship result does not survive the genotype
+fix.** Old (4OBE, wild-type) vs. new (4LDJ, genuine G12C), same holo
+(6OIM), same pipeline: AUC 0.557→0.514; **diagnosis
+`NO_FAILURE_DETECTED`→`NO_SIGNAL_IN_APO`** — the register's own only clean
+mandatory-target floor-clear does not survive; ENM validity r=0.646
+(PASS)→0.496 (MARGINAL). Pocket-to-active-site distance essentially
+unchanged (1.32→1.31 Å heavy-atom, still contact-adjacent). Propagated to
+the live app and every doc carrying the old flag in the same commit:
+`config/targets.yaml`, `backend/systems.py`, `SOFTWARE.md`,
+`COMPETENCE_MAP.md` (new dated caveat), `ARCHITECTURE.md` (change-log
+entry closing the 2026-08-03 one). Live-app smoke-tested via
+`backend.pipeline.build_view` before treating the swap as safe to ship.
+
+**BCR-ABL1: enumerated, scored, declined.** No genuinely apo (fully
+ligand-free) kinase-domain-only ABL1 structure exists in RCSB — the
+closest family (2G1T/2G2H/2G2I, ~287 residues) all carry an ATP-site
+occupant. Scored the best of these (2G1T, 1.8 Å) against 1OPL: ENM
+validity improves (0.493 MARGINAL→0.660 PASS) but **AUC collapses to
+below chance** (0.541→0.350) — real, measured evidence for exactly the
+scope-truncation risk the filing named ("may remove the mechanism from
+the model entirely," the [[TASK-0251]] failure mode in a new place).
+Coordinated with [[TASK-0265]]'s own live-verified finding (covalent
+tethering isn't required for the local mechanism, but the SH3-SH2
+regulatory domains being physically present is). **Decision: keep 1OPL**
+— on structural grounds (the scored evidence above), not because 1OPL's
+own result is flattering (it isn't — `NO_SIGNAL_IN_APO` either way).
+Submission-ready rationale written into the task's own Done section.
+
+**Housekeeping**: [[TASK-0222]] marked resolved (8QYP→8QYR confirmed
+primary). [[TASK-0221]]'s own §3 update and the organiser-channel
+follow-up (re-asking open items (e)/(f)) found already complete by a
+concurrent thread — not duplicated.
+
+**Scripts:** `scripts/task0270_kras_g12c_genotype_fix.py`. **Data:**
+`results/tasks/0270_kras_g12c_genotype_fix/kras_genotype_fix.json`. **Full
+detail:**
+`.ai/tasks/DONE/TASK-0270-organiser-sanctioned-structure-substitutions.md`.
