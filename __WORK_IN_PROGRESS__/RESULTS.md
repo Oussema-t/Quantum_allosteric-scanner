@@ -8644,3 +8644,79 @@ materially; it did not (28.6% → 30.7%, in the wrong direction).
 **Script:** `scripts/task0274_conservation_chemistry_residual.py`. **Data:**
 `results/tasks/0274_conservation_chemistry_residual/`. **Full detail:**
 `.ai/tasks/DONE/TASK-0274-what-are-the-missing-contribution-categories.md`.
+
+## Does a released, repulsor-held-open pocket stay open? Not testable — it never reliably opens in the first place ([[TASK-0271]], 2026-08-26)
+
+Three prior tasks — [[TASK-0230]] (ceiling), [[TASK-0235]] (local-Kabsch +
+EvoEF2), [[TASK-0213]] (coupled search) — displaced a backbone toward the
+true holo target and repacked side chains, but **none ever released the
+displacement and asked whether the opened pocket stays open.** That is a
+direct [[HYP-P13]] test (allostery as *stabilisation of an
+otherwise-disfavoured conformation* predicts collapse on release) by a
+route independent of [[TASK-0268]]'s frustration test.
+
+**Pre-registered before any structure was scored** (task file has the
+full text, not duplicated here): "repulsor held open" = the pre-registered
+full apo→holo Cα displacement ([[TASK-0230]]/[[TASK-0235]]'s own
+`local_rigid_reconstruction`, reused unchanged — this project has no
+backbone minimiser or torsion-space machinery to build a literal pinned
+steric atom without risking fabricated clash artifacts, disclosed as such,
+not silently substituted). A release trajectory t ∈ {1.0, 0.75, 0.5, 0.25,
+0.0} applies the **absolute** (never-compounded) transform at each step; at
+t=0.0 the transform is the identity — true, unmodified native apo,
+independently repacked by EvoEF2 with no memory of the open state. Run on
+[[TASK-0243]]'s own 11 genuinely cryptic-testing targets ([[TASK-0254]]
+Part B's own pre-registered crypticity screen — "already_open: false"),
+N=4 trials at the two decisive points (t=1.0, t=0.0) with independent
+coordinate jitter (σ=0.15 Å, [[TASK-0241]]'s own established magnitude)
+and forced-distinct EvoEF2 seeds, trial inputs hashed to confirm
+distinctness (44/44 unique at t=1.0, 44/44 at t=0.0). Retention criterion,
+fixed in advance:
+[[TASK-0204]]'s own `_is_hit` (fpocket overlap ≥0.5 AND druggability
+≥0.5), majority (≥3/4) of t=0.0 trials.
+
+**Citation check, done before implementation**: Koehl & Delarue 1994 (*J
+Mol Biol* 239:249-275) is real and correctly the origin of SCMF
+side-chain packing (verified live) — but it is fixed-backbone; the
+filing's own equivalence to Rosetta's FastRelax (which does real backbone
+minimisation) overstates it. Corrected, this register's third inherited
+citation detail requiring a fix after [[TASK-0260]]/[[TASK-0262]].
+
+**Result, and why the literal pre-registered readout is misleading**: by
+the letter of the rule, 11/11 targets return COLLAPSES at t=0.0
+(0-1 hits of 4). But the SAME rule applied symmetrically to t=1.0 — the
+fully displaced, supposedly "held open" state — ALSO fails a majority for
+every single target (0/4 for 9 of 11 targets; 1/4 for the remaining 2:
+KSHV_PROTEASE_24Q, KSHV_PROTEASE_25G). **The pocket essentially never
+opens correctly-located and druggable at once, anywhere along the
+trajectory, including full displacement to the true holo target.** This is
+floor-to-floor, not open-to-closed — nothing demonstrably collapses
+because nothing demonstrably opened. A cluster-permutation test on the raw
+hit counts ([[TASK-0261]]'s own exact method, 8 clusters over 11 targets —
+KSHV_PROTEASE_24Q/25G share PDB 2PBK, HCV_NS5B_POO/CMF share 2HAI,
+FBPASE_94D/95S share 5LDZ) does return p=0.0078, reported for completeness
+only — it measures "hit rate below majority" on a near-zero-variance
+series, not retention.
+
+**Verdict: NOT EVALUABLE**, not a clean win for HYP-P13 despite what the
+raw pass/fail table would suggest at a glance — read with the same
+scrutiny a favourable result would get, per this task's own Constraint.
+Joins [[TASK-0264]]/[[TASK-0267]]'s "closed on a prerequisite" category,
+reasserting [[TASK-0230]]/[[TASK-0235]]'s own long-standing finding that
+the strict overlap+druggability bar is rarely cleared by this register's
+rigid/local-Kabsch displacement machinery — this time it swamps the new
+question entirely rather than merely limiting it. Descriptive side-note,
+not part of the formal bar: druggability_score alone (ignoring overlap) is
+sometimes *higher* at t=0.0 than t=1.0 for several targets (FBPASE_94D:
+0.75 vs ≤0.46; NAMPT_NPA1R: up to 0.93 vs ≤0.10) — independent EvoEF2
+repacking of true native apo can open *some* druggable cavity, just not
+reliably the correct one, an echo of [[TASK-0230]] §5.3's own
+scorer-brittleness theme rather than a retention finding.
+
+**`.claude/hypotheses/physics.md` updated** with the full method, the
+floor-problem caveat, and the citation correction, under [[HYP-P13]]'s own
+section, same prominence as [[TASK-0268]]'s decisive negative.
+
+**Script:** `scripts/task0271_repulsor_scmf_retention.py`. **Data:**
+`results/tasks/0271_repulsor_scmf_retention/results.json`. **Full detail:**
+`.ai/tasks/DONE/TASK-0271-repulsor-constrained-scmf-retention-test.md`.

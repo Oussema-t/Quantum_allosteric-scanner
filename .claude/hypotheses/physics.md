@@ -894,14 +894,82 @@ directly probes), but the specific, falsifiable, sharp prediction this task
 set out to test — cryptic sites carry more native frustration than
 already-open ones — is not supported by real data.
 
-**Status:** open, unowned as a whole — **now carries one genuine, decisive
-negative** (this section) alongside [[TASK-0229.006]]'s own inconclusive
-EAM-vs-propagation result (ρ≈0.5, neither closure anticipated). Its formal
-literature grounding (H5.1) and the CS-vs-IF distinguishability question
-are addressed by [[TASK-0251]] (2026-08-24) — not decidable with a single
-static apo/holo pair, one COREX-reanalysis follow-up flagged there, not
-built; its answer-key consequence is [[TASK-0229.003]]; its complexity half
-is measurable via [[TASK-0228]] §6.2. **Usable in [[TASK-0184]] as a
-mechanistic hypothesis explaining the negative result — explicitly labelled
-as hypothesis, not finding, and now with one of its own sharpest sub-
-predictions checked and failed, not just untested.**
+### Repulsor-constrained SCMF retention — an independent route, and it turns out NOT EVALUABLE ([[TASK-0271]], 2026-08-26)
+
+**Pre-registered prediction** (recorded before any structure was scored, per
+this same Constraint): if HYP-P13 is right, a cryptic pocket displaced open
+and repacked should **collapse** once the displacement is released and
+side-chain repacking runs again on true, unmodified native apo geometry —
+persistence would mean the open state is its own local minimum, independent
+of the drug's own stabilising role.
+
+**Method** (full pre-registration in the task file, not duplicated here):
+the "pinned repulsor" is operationalised as the pre-registered full
+apo→holo Cα displacement ([[TASK-0230]]/[[TASK-0235]]'s own already-
+validated `local_rigid_reconstruction`, reused unchanged) — the same "hold
+open" mechanism those two tasks and [[TASK-0213]] already used, now
+extended with the release arm none of them ran. A trajectory
+t ∈ {1.0, 0.75, 0.5, 0.25, 0.0} sweeps the displacement back to exactly
+native apo (t=0.0 = identity transform = true apo, repacked independently,
+no memory of the open state), on [[TASK-0243]]'s own 11 genuinely
+cryptic-testing targets ([[TASK-0254]] Part B), N=4 trials at the two
+decisive points with independent coordinate jitter + forced-distinct EvoEF2
+seeds (hashed to confirm distinctness — [[TASK-0241]]'s own established
+discipline), [[TASK-0204]]'s own `_is_hit` bar (overlap ≥0.5 AND
+druggability ≥0.5) as the pre-registered retention criterion.
+
+**The literal pre-registered rule returns COLLAPSES for 11/11 targets —
+and that reading is misleading, not a clean win for the hypothesis it was
+built to test.** The SAME `_is_hit` majority rule, applied symmetrically to
+the fully-displaced "held open" state (t=1.0), ALSO returns a hit in fewer
+than half the trials for every single target (0/4 for 9 of 11; 1/4 for the
+other 2 — never a majority). **The pocket essentially never opens
+correctly-located AND druggable in the first place, at any point along the
+trajectory, including full displacement to the true holo target.** This is
+floor-to-floor, not open-to-closed: nothing observably collapses, because
+nothing observably opened. A cluster-level permutation test on the raw
+hit counts (8 clusters over 11 targets, [[TASK-0261]]'s own exact
+sign-flip method) does return p=0.0078 — reported for completeness, not
+as support: it is measuring "hit rate is below majority" on a data set
+with almost no variance either arm of the trajectory, not measuring
+retention.
+
+**Read plainly, with the prominence a positive would have received**: this
+is [[TASK-0230]]/[[TASK-0235]]'s own long-standing finding (the strict
+overlap+druggability ceiling is rarely cleared by rigid/local-Kabsch
+displacement) reasserting itself and swamping the new question this task
+set out to ask. **Verdict: NOT EVALUABLE**, joining [[TASK-0264]]/
+[[TASK-0267]]'s own "closed on a prerequisite, not a clean test" category —
+neither the decisive negative [[TASK-0268]]'s frustration test delivered,
+nor support for HYP-P13. A descriptive side-note, not part of the formal
+bar: druggability_score alone (ignoring the overlap half of the bar) is
+sometimes *higher* at t=0.0 (true apo, freshly repacked) than at t=1.0 for
+several targets (e.g. FBPASE_94D, NAMPT_NPA1R) — EvoEF2 repacking
+native apo alone can open *some* cavity, just not reliably the correct
+one — an echo of [[TASK-0230]] §5.3's own scorer-brittleness theme, not a
+retention finding.
+
+**Citation correction, made before implementation, not after**: Koehl &
+Delarue 1994 (*J Mol Biol* 239(2):249-275, doi confirmed live via PubMed
+8196057) is real and correctly attributed to SCMF **side-chain** packing —
+but it is a fixed-backbone method; the filing's own claim that it is
+"operationally what Rosetta's FastRelax has done for over a decade"
+overstates it (FastRelax couples real backbone minimisation with
+repacking; Koehl-Delarue's own method has none). This register's third
+inherited citation detail requiring correction from an external source,
+after [[TASK-0260]] and [[TASK-0262]].
+
+**Status:** open, unowned as a whole — carries one genuine, decisive
+negative ([[TASK-0268]]'s frustration test) and one test that turned out
+not evaluable ([[TASK-0271]], this section) alongside [[TASK-0229.006]]'s
+own inconclusive EAM-vs-propagation result (ρ≈0.5, neither closure
+anticipated). Its formal literature grounding (H5.1) and the CS-vs-IF
+distinguishability question are addressed by [[TASK-0251]] (2026-08-24) —
+not decidable with a single static apo/holo pair, one COREX-reanalysis
+follow-up flagged there, not built; its answer-key consequence is
+[[TASK-0229.003]]; its complexity half is measurable via [[TASK-0228]]
+§6.2. **Usable in [[TASK-0184]] as a mechanistic hypothesis explaining the
+negative result — explicitly labelled as hypothesis, not finding, and now
+with one of its own sharpest sub-predictions checked and failed
+([[TASK-0268]]) alongside a second independent route that could not
+actually test it ([[TASK-0271]]).**
