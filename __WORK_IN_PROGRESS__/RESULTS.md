@@ -9417,3 +9417,80 @@ precedent of flagging rather than editing.
 `results/tasks/0277_apo_holo_ceiling_sweep/summary.json`,
 `per_feature_auc_apo_holo.json`. **Full detail:**
 `.ai/tasks/DONE/TASK-0277-apo-holo-ceiling-sweep-every-feature.md`.
+
+## The post-hoc "capacity to couple" rescue of `V_C`, tested on data that did not generate it — it dies ([[TASK-0281]], 2026-08-27)
+
+[[TASK-0279]] found `V_C` (GNM dynamic cross-correlation centrality)
+**higher on BCR-ABL1's inert myristate pocket than its efficacious
+asciminib pocket** — the wrong direction for an efficacy reading. A
+reading proposed *after* seeing that result: `V_C` measures a pocket's
+**capacity to couple**, not whether coupling is exercised — an
+efficacious drug clamps the site and quenches fluctuations; an inert
+occupant leaves it intact (the Cooper–Dryden mechanism, arrived at from
+this register's own data). Post-hoc and worth nothing until it survives a
+test on independent data — this task is that test, pre-registered before
+a single new number was computed.
+
+**The instrument**: [[TASK-0280]]'s clustering of [[TASK-0276]]'s stored
+KRAS footprints found KRAS is a 9:1 two-site protein — nine of ten
+verified holo structures dock at Switch-II (consensus residues 9,
+58–72, 95–103); `7A1X` alone docks at a different site, the Switch-I/II
+groove (footprint 37, 39, 54, 55, 56, 71, 74, 75). That gives each site
+observed both docked and undocked in the same protein — a different site,
+different protein, from the pair that generated the hypothesis.
+
+**Pre-registered predictions, fixed in the task file before any number
+was computed**: P1, `V_C` at Switch-I/II higher when undocked (9 holo +
+`4LDJ` apo, n=10) than docked (`7A1X`, n=1). P2, the same direction at
+Switch-II (undocked `7A1X` higher than the nine docked). **Both must hold
+for the hypothesis to survive** — "a result that holds at one and not the
+other is a null, not a partial success," fixed in advance specifically so
+this could not be adjusted after seeing the numbers.
+
+**Method**: every one of the ten holo structures aligned independently
+against `4LDJ` (the register's own verified genuine apo) via
+`align_apo_holo` — `V_C`/`degree` computed on the common-set-restricted,
+matched coordinates (non-negotiable per [[TASK-0275]]/[[TASK-0279]]);
+`V_B`/SASA on each structure's full resnums, indexed at the common set
+afterward. Ligand stripped throughout ([[TASK-0276]]'s own method).
+
+**P1: weak, direction-consistent, not clean.** 9 of 10 undocked
+observations score higher `V_C` than the one docked structure (`7A1X`,
+12.684) — median undocked 12.967 vs docked 12.684, the predicted
+direction. But separation is not clean: one undocked structure (`6OIM`,
+12.604) scores *below* the docked value, and two more sit within 0.05 of
+it.
+
+**P2: fails outright, wrong direction.** Predicted: undocked (`7A1X`,
+14.966) higher than the nine docked structures. Measured: **the docked
+group's own median (15.097) is HIGHER than the undocked value**, and 6 of
+9 individual docked structures exceed it. Not merely "no difference" —
+this points in the direction the hypothesis explicitly predicts *against*,
+the same direction as the original BCR-ABL1 anomaly the capacity reading
+was invented to explain away.
+
+**Verdict, per the task's own pre-registered logic: the capacity
+hypothesis DIES.** P1's weak trend and P2's outright reversal do not
+together support it. Not untestable — both predictions produced clear,
+computable answers at the pre-specified sites. Not a partial success —
+the task's own Constraint forbids reading P1 alone as a win when P2 was
+pre-registered as an equally decisive arm. `V_C`'s BCR-ABL1-derived
+direction does not generalise, and no reading proposed so far explains
+both the original anomaly and this test.
+
+**P3, answered independently of the verdict above**: fpocket detects a
+real cavity overlapping the Switch-I/II window in effectively every
+undocked structure (best overlap_frac 0.125–1.00, ≥0.5 in 7 of 10;
+`4LDJ` apo itself: 0.875). Per the pre-registered reading rule, this site
+is an **unoccupied open groove, not a genuinely cryptic pocket**, in most
+of these structures — independently informative for how [[TASK-0259]]'s
+own crypticity correlation should be read on a multi-site protein.
+
+[[TASK-0279]]'s own record updated with a dated addendum recording this
+outcome, per this register's own cross-task convention. Extending to a
+second multi-site protein was not attempted — [[TASK-0280]] had not yet
+surfaced one when this task ran — and is flagged, not silently dropped.
+
+**Script:** `scripts/task0281_docked_undocked_capacity.py`. **Data:**
+`results/tasks/0281_docked_undocked_capacity/`. **Full detail:**
+`.ai/tasks/DONE/TASK-0281-docked-vs-undocked-and-the-capacity-hypothesis.md`.

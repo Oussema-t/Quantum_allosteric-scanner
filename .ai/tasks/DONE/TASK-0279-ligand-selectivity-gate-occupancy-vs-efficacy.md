@@ -245,3 +245,24 @@ docstring and repeated here so the number is not later mis-cited as one.
 
 **Script:** `scripts/task0279_ligand_selectivity_gate.py`. **Data:**
 `results/tasks/0279_ligand_selectivity_gate/ligand_selectivity_gate.json`.
+
+---
+
+**Addendum, 2026-08-27 ([[TASK-0281]]) — the post-hoc "capacity to
+couple" reading this task's own failed prediction prompted has been
+tested on independent data, and it dies.** [[TASK-0281]] ran the
+pre-registered two-site KRAS test (Switch-I/II docked in exactly one of
+ten verified holo structures, undocked in the other nine plus `4LDJ`
+apo; Switch-II docked in those same nine, undocked in the tenth) that
+this reading requires to hold in the SAME direction at both sites to
+survive. **P1 (Switch-I/II): weak, direction-consistent but not clean**
+(9/10 undocked structures score higher `V_C` than the one docked
+structure, but the docked value is not uniquely separated — one undocked
+structure scores lower still). **P2 (Switch-II): fails outright, wrong
+direction** — the docked group's own median `V_C` (15.10) is HIGHER than
+the undocked value (14.97), 6 of 9 docked structures individually exceed
+it; the reading predicted the opposite. Per this task's own pre-registered
+logic ("a result that holds at one and not the other is a null, not a
+partial success"): **the capacity hypothesis does not survive.** Full
+numbers: `results/tasks/0281_docked_undocked_capacity/
+docked_undocked_capacity.json`; `.ai/tasks/DONE/TASK-0281-*.md`.
