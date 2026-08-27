@@ -445,7 +445,59 @@ footer{border-top:1px solid var(--rule); padding-top:20px; margin-top:20px;
 </section>
 
 <section>
-  <h2><span class="num">07</span>What would change our mind</h2>
+  <section>
+  <h2><span class="num">06b</span>What the last two weeks changed</h2>
+  <p class="sub">Added 2026-08-27. Seven further tasks. One real positive, three explanations for it killed, and a defect in our own structures.</p>
+
+  <h3>A real signature exists, and it is classical</h3>
+  <p>Asking whether an allosteric site is distinguishable from the orthosteric site <em>in holo</em> — with the answer in hand, ligands physically stripped, allosteric-vs-orthosteric so both groups carry a ligand imprint — the answer is <strong>yes</strong>. On KRAS G12C across ten different drugs, 4 of 5 features discriminate significantly; on HCV NS5B, every feature moves the same direction on a different fold and function.</p>
+  <div class="tw"><table>
+    <thead><tr><th>feature</th><th class="num">KRAS AUC</th><th class="num">p</th><th>direction</th></tr></thead>
+    <tbody>
+      <tr><td>fpocket</td><td class="num">0.675</td><td class="num">0.0039</td><td>allosteric higher</td></tr>
+      <tr class="emph"><td><code>V_C</code> — GNM dynamic cross-correlation</td><td class="num">0.595</td><td class="num">0.0117</td><td>allosteric higher</td></tr>
+      <tr><td>SASA</td><td class="num">0.551</td><td class="num">0.0215</td><td>allosteric higher</td></tr>
+      <tr><td><code>degree</code></td><td class="num">0.405</td><td class="num">0.0020</td><td><strong>orthosteric higher</strong></td></tr>
+    </tbody>
+  </table></div>
+  <p class="cap">The direction disagreement is the substance: static connectivity favours the orthosteric site; the dynamics-aware coupling measure favours the allosteric one. Allosteric sites are not simply the well-connected residues.</p>
+  <p><strong>And apo already carries it.</strong> An apo↔holo ceiling sweep across eight features found the gap uniform and uniformly near zero — apo median full AUC 0.896 against holo 0.834, apo ahead on 14/20, cluster-robust p=0.10. There is no meaningful penalty for lacking the bound conformation.</p>
+
+  <h3>Three explanations for that signature, all killed</h3>
+  <div class="tw"><table>
+    <thead><tr><th>proposed reading</th><th>test</th><th class="num">outcome</th></tr></thead>
+    <tbody>
+      <tr><td><code>V_C</code> measures allosteric <em>efficacy</em></td><td>BCR-ABL1: inert myristate vs efficacious asciminib, same pocket, matched node sets</td><td class="num"><strong>dead</strong> — <code>V_C</code> is <em>higher</em> on the inert pocket, 16/16 residues</td></tr>
+      <tr><td><code>V_C</code> measures <em>capacity to couple</em>, consumed by an efficacious drug</td><td>KRAS Switch-I/II site, docked once and undocked nine times, pre-registered P1/P2/P3</td><td class="num"><strong>dead</strong> — P2 fails outright, wrong direction</td></tr>
+      <tr><td>Allostery is stabilisation of a disfavoured conformation (our own hypothesis)</td><td>local energetic frustration at cryptic residues</td><td class="num"><strong>dead</strong> — frustration is <em>lower</em>, not higher; p=0.727</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>We have a discriminator that works and we cannot say what it measures.</strong> That is the honest state. The second and third readings were ours, both post-hoc, and both were pre-registered against independent data and killed within a day of being proposed.</p>
+
+  <h3>What is owed to your contributions</h3>
+  <p>Four things from your side changed what we did, and all four improved the work:</p>
+  <ul>
+    <li><strong>The two-stage design</strong> — fpocket proposes candidates, an operator ranks within them — is a genuinely different experiment from our per-residue AUC, and you were right that our compact null did not test it. We rebuilt it rather than argue, and it is now a standing arm.</li>
+    <li><strong>The power objection to our forward test</strong> was correct. It produced the frozen, blind-curated 22-target set that every number in this brief now rests on.</li>
+    <li><strong>The Hamiltonian work is the reason we found our best result.</strong> Scoring <code>H_new</code>'s potential terms directly rather than as walk ingredients: terms 0.751 against CTQW 0.575, cluster-robust p=0.019. Single terms reach 0.81–0.93 with no fitting. <strong>The physics encoding was right.</strong></li>
+    <li><strong>Your consensus analysis</strong> prompted our effective-rank measurement, which found ~28 observables collapse to rank 2.6–4.1 — a result we needed and would not have looked for.</li>
+  </ul>
+
+  <h3>What should now be put aside, and why</h3>
+  <div class="tw"><table>
+    <thead><tr><th>item</th><th>reason</th></tr></thead>
+    <tbody>
+      <tr><td><strong>CTQW as the ranking operator</strong></td><td>Added-last marginal p=0.973 against geometry + fpocket + its own potential terms; p=0.30 against <code>V_C</code> alone. It adds nothing over its own ingredients.</td></tr>
+      <tr><td><strong>The scattered permutation null</strong></td><td>Same score, structure, seed and 2000 permutations: p=0.0005 scattered, p≈0.20 spatially contiguous. A 400× spread from the null construction alone.</td></tr>
+      <tr><td><strong>Operator consensus as evidence</strong></td><td>Measures agreement, not validity. Operators sharing a confound agree perfectly and are wrong together — and we measured that redundancy directly.</td></tr>
+      <tr><td><strong>Fock-like state graphs with ⟨S<sub>k</sub>|S<sub>m</sub>⟩</strong></td><td>Conformers are classical configurations. There is no Hilbert space, so the overlap integral is undefined.</td></tr>
+      <tr><td><strong>The CASSCF/CI-vector analogy</strong></td><td>CASSCF's power is a <em>coherent</em> superposition with signed amplitudes and interference. A Boltzmann-weighted conformer sum is a classical probability mixture. The mapping drops precisely the ingredient that makes CASSCF quantum — it is SCF, and SCF carries no quantum-computational implication.</td></tr>
+      <tr><td><strong>Our own: the efficacy and capacity readings of <code>V_C</code>, and HYP-P13</strong></td><td>All three tested, all three dead. Listed here so they are not revived.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<h2><span class="num">07</span>What would change our mind</h2>
   <p class="sub">Pre-registered, so neither side can move the goalposts after seeing a result.</p>
 
   <div class="box">
@@ -549,6 +601,9 @@ pip install -r requirements.txt
     <li><strong>A stale hypothesis register.</strong> Eleven hypotheses were recorded as untested after tasks had in fact tested them, causing us to report tested work as untested. Now fully reconciled with zero open entries.</li>
     <li><strong>Two curation errors in the frozen set</strong> — the empty-seed HIV integrase pair, contradicting the curation task's own claim.</li>
     <li><strong>Four targets whose ENM still fails validity</strong>, on which we cannot interpret our own CTQW results in either direction.</li>
+    <li><strong>Three of six &quot;apo&quot; structures are not apo.</strong> Verified live, entity by entity. <code>1OPL</code> — our BCR-ABL1 apo — contains <strong>myristic acid in the myristoyl pocket we are trying to predict</strong>, plus an ATP-site inhibitor. So that target's apo→holo contrast is ligand-swap → ligand-swap, not empty → bound. <code>1V4S</code> (glucokinase) carries a synthetic compound; <code>8QYP</code> (cardiac myosin) is an ADP-vanadate transition-state analogue. This mechanically explains our own earlier report that BCR-ABL1's pocket is &quot;measurably pre-formed in apo&quot; — it is pre-formed because a ligand is holding it open. We reported a property of the crystal's contents as a property of protein dynamics.</li>
+    <li><strong>Our KRAS apo was the wrong genotype.</strong> <code>4OBE</code> is wild-type at residue 12, not G12C — a known, recorded, unfixed defect until the organisers sanctioned a replacement. Corrected to <code>4LDJ</code>. The correction cost us our only clean mandatory-target floor-clear: AUC 0.557 → 0.514, diagnosis <code>NO_FAILURE_DETECTED</code> → <code>NO_SIGNAL_IN_APO</code>.</li>
+    <li><strong>Pseudo-replication.</strong> The frozen set is 20 scoreable rows but only 13 distinct apo structures. Every p-value was recomputed under exact cluster-level permutation; no conclusion flipped, but our own positive claims weakened — composite-vs-CTQW 0.0137 → 0.0449, fpocket 0.0032 → 0.0188.</li>
     <li><strong>Bin edges in section 08 are ours</strong>, stated openly and chosen from physical meaning. They are not a literature taxonomy and should not be cited as one.</li>
     <li><strong>Every p-value in the frozen-set analyses was computed at n=20 rows against 13 distinct apo structures</strong>, self-caught and corrected in section 04 before this brief went out — full accounting there, including the two claims (fpocket's significance, the crypticity correlation) that weaken most.</li>
     <li><strong>The 13 apo-independent structures are not 13 independent labels either.</strong> Pocket-label Jaccard overlap between the two ligands on the same apo structure runs 0.40–1.00 across all 7 pairs (median 0.77) — 6 of 7 share at least three-quarters of their label residues. Revised rule: label-side independence requires Jaccard &lt; 0.5, which only one pair clears. <strong>14 of the frozen set's 20 rows are genuinely independent label-side observations, not 20.</strong> A deeper point sits underneath the number: our pocket label is drug-contact geometry, so it cannot express "this ligand binds allosterically, that one doesn't" even where that may be true — the same pocket, occupied by two different small molecules, produces near-identical labels almost every time we can check it.</li>
