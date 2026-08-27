@@ -28,7 +28,7 @@ this register in sync" immediately below.
 |---|---|---|---|---|
 | H9 | No clean non-allosteric negative class | **PARTIAL** (conceptual claim untestable directly, as anticipated; response metrics built and run) | [[TASK-0229.001]] | 2026-08-21 |
 | H6.1 | Allostery = population redistribution (unified mechanism) | **MERGED, not carried as its own open entry** — "pathways are a high-flux subset, not causal channels" clause folds into H4.1 (already TESTED, same empirical signature: ρ≈0.5 partial overlap); "pre-existing landscape" clause overlaps H5.1, already folded into HYP-P13 by TASK-0251 — doubly covered, not left dangling | [[TASK-0252]] | 2026-08-24 |
-| H6.2 | Sites are effector-specific (answer-key multiplicity) | **PARTIAL/TESTED** — 1 genuine second site found (BCR_ABL1), 3/4 targets single-site | [[TASK-0229.003]] | 2026-08-22 |
+| H6.2 | Sites are effector-specific (answer-key multiplicity) | **TESTED, more strongly confirmed** — direct structural (not ASD-lookup) evidence: 3/7 frozen-set proteins genuinely multi-site (KRAS_G12C 9:1, HCV_NS5B 2:2 disjoint, TRP_SYNTHASE internal alpha/beta heterogeneity), 1/7 ambiguous (FBPASE), 3/7 single-site | [[TASK-0229.003]], [[TASK-0280]] | 2026-08-22, 2026-08-27 |
 | H4.1 | EAM: partition-function coupling over 2^N microstates, not graph pathway | **TESTED** — harmonic proxy (real targets) still confounded; genuine COREX EAM run, real mixed result | [[TASK-0226]], [[TASK-0229.006]] | 2026-08-21/22, 2026-08-23 |
 | H4.2 | Zero-mean-structural-change (Cooper–Dryden) entropic coupling | **PARTIAL** — proxy escapes the proximity confound on real targets; single-condition LOD check inconclusive | [[TASK-0226]] | 2026-08-21/22 |
 | H4.3 | Disorder amplifies coupling (only route to c-Myc) | **UNDECIDABLE WITH CURRENT TOOLING** — real, robust, correctly-signed correlation found (κ_f vs \|coupling\|, ρ=-0.83 to -0.94, both VALID targets) but a decisive random-reference-site control shows the SAME strength regardless of which site is used as reference — the existing COREX coupling metric is confounded for this specific test, not a power/variation problem (disorder variation itself confirmed real via B-factor measurement) | [[TASK-0252]] | 2026-08-24 |
@@ -129,14 +129,35 @@ this file should be treated as leaving a known gap, not as having implicitly upd
   already-published hit list needs no correction, but a full whole-protein re-score
   against the union key was **not** done (flagged as the honest remaining gap in that
   task's own Done section, not silently closed).
+  **[[TASK-0280]] (2026-08-27)** — direct structural clustering (pairwise Jaccard of
+  live-verified holo footprints, [[TASK-0276]]'s own KRAS/HCV_NS5B ensembles plus
+  [[TASK-0265]]/[[TASK-0273]]'s own frozen-set pairwise/replicate data), not a
+  database lookup, across every frozen-set protein with ≥2 holo structures (7 total).
+  **KRAS_G12C is a real 9:1 two-site protein**: 9 drugs share the Switch-II pocket,
+  1 (`7A1X`/QWB) sits at the "Switch I/II"/"Tyr71" pocket, Jaccard 0.00–0.04 against
+  the other nine — live-verified as a real, published, recognized site (Mathieu et
+  al. 2022, *Small GTPases* 13:225–238, PMID 34558391), not a fragment-hit artefact
+  or a numbering error (KRAS's own construct confirmed monomeric via RCSB, ruling out
+  the chain-letter ambiguity that would otherwise make a 0.00 Jaccard untrustworthy).
+  **HCV_NS5B is 2:2 fully disjoint** (within-apo-pair Jaccard 0.88–1.00, across-pair
+  0.00 on all 4 pairs). TRP_SYNTHASE nominally single-site by its own 2-ligand
+  comparison (0.833) but shows real internal alpha/beta-site heterogeneity within its
+  own 13-structure same-drug ensemble. GAC/KSHV_PROTEASE/PKR single-site; FBPASE
+  ambiguous (resnum-only 0.40, not cleanly resolved either way). **3 of 7 proteins
+  checked (43%) show genuine multi-site character** — a materially stronger base than
+  [[TASK-0229.003]]'s own 1/4 (25%) ASD-lookup estimate, upgrading H6.2 from
+  PARTIAL/TESTED to TESTED (more strongly confirmed, still not universal).
 - **WHY IT MATTERS:** H6.2 attacks the **answer-key design.** A single ground-truth
   pocket per target assumes site uniqueness. A residue scoring high may be a genuine
   allosteric site for a different effector and is being counted as a false positive.
 - **REMAINING OPEN VENUE:** H6.1 resolved by merge, 2026-08-24 (see STATUS above) — no
   longer a remaining venue in its own right. The full whole-protein re-score against
-  BCR_ABL1's union key ([[TASK-0229.003]]'s own flagged gap); extending the ASD audit
-  beyond the 4 targets checked.
-- **PDB-RETEST:** done for H6.2 on the 4 targets listed; not extended further.
+  BCR_ABL1's union key ([[TASK-0229.003]]'s own flagged gap) — still not done. FBPASE's
+  own ambiguous architecture ([[TASK-0280]]) not chased further. The ASD audit itself
+  (a different, orthogonal method) still stops at the original 4 targets.
+- **PDB-RETEST:** done for H6.2 on the original 4 ASD-lookup targets;
+  [[TASK-0280]] (2026-08-27) extended it structurally (not via ASD) to 7 frozen-set
+  proteins with ≥2 holo structures.
 
 ### H4 — Ensemble Allosteric Model (EAM)
 *Ref [4] Motlagh, Wrabl, Li & Hilser 2014, Nature 508:331.*

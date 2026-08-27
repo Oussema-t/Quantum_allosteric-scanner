@@ -1,0 +1,458 @@
+{
+ "7a1x_citation": {
+  "title": "KRAS G12C fragment screening renders new binding pockets.",
+  "journal": "Small GTPases",
+  "year": 2022,
+  "volume": "13",
+  "pages": "225-238",
+  "doi": "10.1080/21541248.2021.1979360",
+  "pmid": 34558391,
+  "authors": [
+   "Mathieu, M.",
+   "Steier, V.",
+   "Fassy, F.",
+   "Delorme, C.",
+   "Papin, D.",
+   "Genet, B.",
+   "Duffieux, F.",
+   "Bertrand, T.",
+   "Delarbre, L.",
+   "Le-Borgne, H.",
+   "Parent, A.",
+   "Didier, P.",
+   "Marquette, J.P.",
+   "Lowinski, M.",
+   "Houtmann, J.",
+   "Lamberton, A.",
+   "Debussche, L.",
+   "Alexey, R."
+  ]
+ },
+ "kras_monomeric": {
+  "pdb_id": "8AZX",
+  "oligomeric_state": "monomeric"
+ },
+ "kras_architecture": {
+  "footprints": {
+   "8AZX": [
+    9,
+    58,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    68,
+    69,
+    72,
+    78,
+    88,
+    92,
+    95,
+    96,
+    99,
+    100,
+    102,
+    103
+   ],
+   "7A1X": [
+    37,
+    39,
+    54,
+    55,
+    56,
+    71,
+    74,
+    75
+   ],
+   "8QUG": [
+    9,
+    60,
+    61,
+    62,
+    63,
+    64,
+    68,
+    69,
+    72,
+    92,
+    95,
+    96,
+    99,
+    100,
+    102,
+    103
+   ],
+   "9UOH": [
+    9,
+    10,
+    34,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    68,
+    69,
+    72,
+    92,
+    95,
+    96,
+    99,
+    100,
+    102,
+    103
+   ],
+   "7YCE": [
+    10,
+    34,
+    58,
+    59,
+    60,
+    61,
+    62,
+    64,
+    65,
+    68,
+    69,
+    72,
+    92,
+    95,
+    96,
+    99,
+    100,
+    102,
+    103
+   ],
+   "7MDP": [
+    9,
+    58,
+    62,
+    63,
+    64,
+    65,
+    68,
+    69,
+    72,
+    96,
+    99,
+    100,
+    102,
+    103
+   ],
+   "7RP3": [
+    9,
+    10,
+    34,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    68,
+    69,
+    72,
+    95,
+    96,
+    99,
+    100,
+    102,
+    103
+   ],
+   "8AFC": [
+    9,
+    58,
+    62,
+    63,
+    64,
+    68,
+    69,
+    72,
+    78,
+    96,
+    99,
+    100,
+    102,
+    103
+   ],
+   "8S8C": [
+    9,
+    10,
+    34,
+    37,
+    58,
+    59,
+    60,
+    68,
+    72,
+    92,
+    95,
+    96,
+    99,
+    100,
+    102,
+    103
+   ],
+   "6OIM": [
+    9,
+    10,
+    34,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    68,
+    69,
+    72,
+    95,
+    96,
+    99,
+    100,
+    103
+   ]
+  },
+  "outlier_vs_rest": {
+   "6OIM": 0.0,
+   "7MDP": 0.0,
+   "7RP3": 0.0,
+   "7YCE": 0.0,
+   "8AFC": 0.0,
+   "8AZX": 0.0,
+   "8QUG": 0.0,
+   "8S8C": 0.043478260869565216,
+   "9UOH": 0.0
+  },
+  "rest_pairwise_range": [
+   0.42857142857142855,
+   0.9047619047619048
+  ]
+ },
+ "hcv_architecture": {
+  "within_cluster": [
+   1.0,
+   0.8823529411764706
+  ],
+  "across_cluster": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ "frozen_set_pairs": {
+  "1K7X": {
+   "apo": "1K7X",
+   "a": "TRP_SYNTHASE_F6F",
+   "b": "TRP_SYNTHASE_F19",
+   "nA": 15,
+   "nB": 18,
+   "shared": 15,
+   "union": 18,
+   "jaccard": 0.8333333333333334,
+   "jaccard_resnum_only": 0.8333333333333334,
+   "chains_a": [
+    "A",
+    "B"
+   ],
+   "chains_b": [
+    "A",
+    "B"
+   ],
+   "same_chain_selection": true,
+   "drugA": "F6F",
+   "drugB": "F19"
+  },
+  "1M9D": {
+   "apo": "1M9D",
+   "a": "HIV_INTEGRASE_MUT871",
+   "b": "HIV_INTEGRASE_MUT916",
+   "nA": 20,
+   "nB": 18,
+   "shared": 6,
+   "union": 32,
+   "jaccard": 0.1875,
+   "jaccard_resnum_only": 0.1875,
+   "chains_a": [
+    "B",
+    "C",
+    "D"
+   ],
+   "chains_b": [
+    "A",
+    "B",
+    "D"
+   ],
+   "same_chain_selection": false,
+   "drugA": "U5L",
+   "drugB": "U5S"
+  },
+  "2GIQ": {
+   "apo": "2GIQ",
+   "a": "HCV_NS5B_VRX",
+   "b": "HCV_NS5B_VR1",
+   "nA": 15,
+   "nB": 17,
+   "shared": 15,
+   "union": 17,
+   "jaccard": 0.8823529411764706,
+   "jaccard_resnum_only": 0.8823529411764706,
+   "chains_a": [
+    "A"
+   ],
+   "chains_b": [
+    "A"
+   ],
+   "same_chain_selection": true,
+   "drugA": "VRX",
+   "drugB": "VR1"
+  },
+  "2HAI": {
+   "apo": "2HAI",
+   "a": "HCV_NS5B_POO",
+   "b": "HCV_NS5B_CMF",
+   "nA": 16,
+   "nB": 16,
+   "shared": 16,
+   "union": 16,
+   "jaccard": 1.0,
+   "jaccard_resnum_only": 1.0,
+   "chains_a": [
+    "A"
+   ],
+   "chains_b": [
+    "A"
+   ],
+   "same_chain_selection": true,
+   "drugA": "POO",
+   "drugB": "CMF"
+  },
+  "2PBK": {
+   "apo": "2PBK",
+   "a": "KSHV_PROTEASE_24Q",
+   "b": "KSHV_PROTEASE_25G",
+   "nA": 15,
+   "nB": 13,
+   "shared": 12,
+   "union": 16,
+   "jaccard": 0.75,
+   "jaccard_resnum_only": 0.75,
+   "chains_a": [
+    "A"
+   ],
+   "chains_b": [
+    "A"
+   ],
+   "same_chain_selection": true,
+   "drugA": "24Q",
+   "drugB": "25G"
+  },
+  "5LDZ": {
+   "apo": "5LDZ",
+   "a": "FBPASE_94D",
+   "b": "FBPASE_95S",
+   "nA": 3,
+   "nB": 4,
+   "shared": 0,
+   "union": 7,
+   "jaccard": 0.0,
+   "jaccard_resnum_only": 0.4,
+   "chains_a": [
+    "A"
+   ],
+   "chains_b": [
+    "A",
+    "C"
+   ],
+   "same_chain_selection": false,
+   "drugA": "94D",
+   "drugB": "95S"
+  },
+  "7FS3": {
+   "apo": "7FS3",
+   "a": "PKR_MITAPIVAT",
+   "b": "PKR_AG946",
+   "nA": 12,
+   "nB": 11,
+   "shared": 10,
+   "union": 13,
+   "jaccard": 0.7692307692307693,
+   "jaccard_resnum_only": 0.7692307692307693,
+   "chains_a": [
+    "A",
+    "B"
+   ],
+   "chains_b": [
+    "A",
+    "B"
+   ],
+   "same_chain_selection": true,
+   "drugA": "WV2",
+   "drugB": "HVI"
+  },
+  "7SBN": {
+   "apo": "7SBN",
+   "a": "GAC_BPTES",
+   "b": "GAC_CPD12",
+   "nA": 8,
+   "nB": 6,
+   "shared": 0,
+   "union": 14,
+   "jaccard": 0.0,
+   "jaccard_resnum_only": 0.75,
+   "chains_a": [
+    "A",
+    "B",
+    "D"
+   ],
+   "chains_b": [
+    "A",
+    "B"
+   ],
+   "same_chain_selection": false,
+   "drugA": "04A",
+   "drugB": "R90"
+  }
+ },
+ "gac_trp_ensembles": {
+  "GAC": {
+   "same": {
+    "n": 15,
+    "jaccard_median": 0.23076923076923078,
+    "jaccard_min": 0.1590909090909091,
+    "jaccard_max": 0.8888888888888888,
+    "jaccard_resnum_only_median": 0.8181818181818182
+   },
+   "diff": {
+    "n": 6,
+    "jaccard_median": 0.38186813186813184,
+    "jaccard_min": 0.17857142857142858,
+    "jaccard_max": 0.7272727272727273,
+    "jaccard_resnum_only_median": 0.7388888888888889
+   }
+  },
+  "TRP_SYNTHASE": {
+   "same": {
+    "n": 79,
+    "jaccard_median": 0.48936170212765956,
+    "jaccard_min": 0.0,
+    "jaccard_max": 1.0,
+    "jaccard_resnum_only_median": 0.5
+   },
+   "diff": {
+    "n": 26,
+    "jaccard_median": 0.42041343669250647,
+    "jaccard_min": 0.0,
+    "jaccard_max": 0.8571428571428571,
+    "jaccard_resnum_only_median": 0.42041343669250647
+   }
+  }
+ }
+}

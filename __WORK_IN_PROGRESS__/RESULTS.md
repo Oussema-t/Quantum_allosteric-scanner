@@ -9494,3 +9494,86 @@ surfaced one when this task ran — and is flagged, not silently dropped.
 **Script:** `scripts/task0281_docked_undocked_capacity.py`. **Data:**
 `results/tasks/0281_docked_undocked_capacity/`. **Full detail:**
 `.ai/tasks/DONE/TASK-0281-docked-vs-undocked-and-the-capacity-hypothesis.md`.
+## KRAS's second site is real and published; the register now has direct structural evidence for H6.2 across 7 proteins ([[TASK-0280]], 2026-08-27)
+
+[[TASK-0276]]'s own stored KRAS footprints, clustered by pairwise Jaccard,
+showed a 9:1 split: nine of ten drugs share the Switch-II pocket (consensus
+9, 58–72, 95–103; pairwise range **0.43–0.90**), and one (`7A1X`, ligand
+`QWB`) sits at **0.00 Jaccard against eight of the nine, 0.04 against the
+ninth** — footprint 37, 39, 54, 55, 56, 71, 74, 75. That reading was the
+Reviewer's own inference from raw coordinates, not yet a verified citation
+— this task closes that gap, live, rather than shipping an unverified site
+identification.
+
+**Verified live**: `7A1X`'s own deposited RCSB primary citation is
+**Mathieu et al., "KRAS G12C fragment screening renders new binding
+pockets," *Small GTPases* 13:225–238 (2022), PMID 34558391, DOI
+10.1080/21541248.2021.1979360.** Fetched the full text (PMC8923024): `7A1X`'s
+ligand (Cpd1/QWB) occupies what the authors call the **"Switch I/II
+pocket," also named the "Tyr71 pocket"** — and the paper states this is "a
+known, previously described binding site for indole ligands," not novel to
+this 2022 paper itself (which reports two OTHER, genuinely new pockets from
+its own fragment screens, validated with a GEF functional assay — a
+different, stronger claim than this task needed to establish for `7A1X`).
+Their own described lining residues — Tyr71 (the namesake), Tyr64
+(switch II), Thr35 (switch I) — line up directly with this register's own
+computed footprint (71 exact match; 37/39 adjacent to Thr35; 74/75 adjacent
+to Tyr71; 54–56 the interswitch region between). **This is a real,
+recognized, published second druggable site, not a fragment-hit artefact
+or a numbering error** — the Constraint's own failure mode did not occur.
+
+**Numbering/chain artefact ruled out for KRAS specifically**, live: `8AZX`
+(representative of the shared single-chain construct across all 10
+ensemble members) is confirmed **monomeric** via RCSB's own assembly
+record. Unlike GAC or FBPASE (both flagged below, real homo-oligomer
+chain-letter ambiguity — [[TASK-0273]]'s own finding), a monomeric
+construct has no symmetric copy for a residue to be mislabeled onto, so
+KRAS's chain-exact and resnum-only Jaccard cannot diverge — the 0.00 is a
+real site difference, confirmed structurally, not a labelling artefact.
+
+### Per-protein architecture, every frozen-set protein with ≥2 holo structures
+
+| protein | architecture | evidence |
+|---|---|---|
+| **KRAS_G12C** | **9:1 split** — Switch-II (9 drugs) vs. verified Switch I/II "Tyr71" pocket (1 drug) | [[TASK-0276]], this task |
+| **HCV_NS5B** | **2:2 fully disjoint** — within-apo-pair Jaccard 0.882–1.000, across-pair **0.000** (4/4 pairs) | [[TASK-0276]], corroborated by [[TASK-0265]] |
+| TRP_SYNTHASE | Nominally single-site (F6F vs. F19 Jaccard 0.833) — but a real bifunctional enzyme: F6F alone shows internal alpha-vs-beta-site heterogeneity (some same-drug pairs at Jaccard 0.000) when scored against its own 13-structure replicate ensemble | [[TASK-0265]], [[TASK-0273]] |
+| GAC | Single-site once corrected for a real homo-oligomer chain-letter artefact (chain-exact Jaccard 0.00, resnum-only 0.75–0.82) | [[TASK-0265]], [[TASK-0273]] |
+| KSHV_PROTEASE | Single-site (Jaccard 0.750) | [[TASK-0265]] |
+| PKR | Single-site (Jaccard 0.769) | [[TASK-0265]] |
+| FBPASE | **Ambiguous, not cleanly resolved** — resnum-only Jaccard 0.400 (moderate, neither clearly same nor disjoint), same chain-letter-artefact risk flagged as GAC but not chased further here | [[TASK-0265]] |
+
+**3 of 7 proteins show genuine multi-site character** (KRAS, HCV_NS5B,
+TRP_SYNTHASE), one is ambiguous (FBPASE), three are single-site. This is
+**direct structural evidence**, not a database lookup — a materially
+stronger empirical base than [[TASK-0229.003]]'s own ASD-lookup test (1 of
+4 targets, BCR_ABL1). H6.2's own register entry updated accordingly (see
+`.claude/hypotheses/reference_register.md`).
+
+**Compounds [[TASK-0265]]'s own conclusion, more strongly than that task
+could show on its own**: if a third of the frozen set's proteins have more
+than one real, chemically-distinct allosteric site, "the allosteric pocket
+of protein X" is not a well-defined single object for several of this
+register's own targets — and this benchmark, throughout, assigns exactly
+one.
+
+**Submission paragraph, drafted for [[TASK-0184]]** (not inserted into that
+document here — that task owns it):
+
+> Structural clustering of independently-solved holo depositions shows that
+> "the allosteric site" is not always a single, well-defined object. KRAS
+> G12C splits 9:1 across our own ten-drug ensemble — nine inhibitors share
+> the well-known Switch-II pocket, but one (Cpd1, a published fragment hit,
+> Mathieu et al. 2022) occupies a distinct, independently-verified
+> "Switch I/II" pocket with zero residue overlap. HCV NS5B is more extreme:
+> its four inhibitors split 2:2 across two fully disjoint sites (Jaccard
+> 0.000 between groups). Three of seven frozen-set proteins checked show
+> this kind of genuine multi-site architecture. Since our own benchmark
+> assigns exactly one ground-truth pocket per target, this is direct,
+> structural evidence for effector-specific allostery (H6.2) — and a real
+> source of label ambiguity our own published AUC numbers inherit, not just
+> a theoretical concern.
+
+**Script:** `scripts/task0280_multi_site_architecture.py`. **Data:**
+`results/tasks/0280_multi_site_architecture/architecture_verification.json`.
+**Full detail:** `.ai/tasks/DONE/TASK-0280-multi-site-architecture-and-the-second-kras-site.md`.
