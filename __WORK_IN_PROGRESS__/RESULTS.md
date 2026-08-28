@@ -9577,3 +9577,171 @@ document here — that task owns it):
 **Script:** `scripts/task0280_multi_site_architecture.py`. **Data:**
 `results/tasks/0280_multi_site_architecture/architecture_verification.json`.
 **Full detail:** `.ai/tasks/DONE/TASK-0280-multi-site-architecture-and-the-second-kras-site.md`.
+
+## Pocket-level top-5 is numerically higher than residue-ranking but not statistically distinguishable from random pocket selection — the winning rule collapses to "druggability alone, minus the active site itself", and the Reviewer's own in-sample refinement does not survive LOTO ([[TASK-0282]], 2026-08-28)
+
+The §5 deliverable asks for the top 5 predicted allosteric **sites**; the
+pipeline ranks all N residues and takes the top 5, which is a harder problem
+than the one posed. Two numbers for this baseline, disclosed rather than
+silently reconciled: this task's own Why section cites the deployed
+pipeline's own P@5 as **0.0 / 0.2 / 0.0** (BCR_ABL1/KRAS_G12C/
+CARDIAC_MYOSIN, Reviewer, 2026-08-27); an independent recompute here under
+this exact task family's own established single GAUGE operator (H_new /
+converged incoherent CTQW, [[TASK-0242]]'s own fixed pre-registered choice,
+the same operator `CTQW-in-wrapper` below uses) gives **0.0 / 0.0 / 0.0** on
+the identical 3 targets — the deployed backend evidently selects a
+different Hamiltonian gauge than this family's own simpler fixed one on
+KRAS_G12C specifically. **The task file's own cited numbers are used for
+the mandatory-3 residue-ranking column below** (they are what the
+deliverable actually ships), with this discrepancy flagged rather than
+smoothed over; the frozen-20 column has no such citation to reuse and is
+this task's own GAUGE-operator recompute, labelled as such. Swept
+the alternative Bartosz proposed instead — choose a **pocket** by
+druggability and distance (reusing [[TASK-0242]]/[[TASK-0249]]'s two-stage
+apparatus wholesale: fpocket candidates on apo, distality filter, rank
+within the candidate set), score with expected hits = overlap/pocket_size
+(the analytic value of a random 5-residue draw from the chosen candidate,
+no Monte-Carlo noise) — under **leave-one-target-out over [[TASK-0243]]'s
+frozen 20** (61 configurations of {distance metric x exclusion cutoff x
+combination rule} — 4 pre-registered combination families x 10
+(metric,cutoff) pairs, plus a probe-informed 5th family with its own small
+bin-width grid, see below — chosen on N-1, scored on the held-out target,
+never in-sample), plus a genuine out-of-sample check on the 3 mandatory
+targets (never in the LOTO training corpus at all).
+
+**Mid-run collision, handled, not smoothed over**: TASK-0282 was filed and
+claimed while a Reviewer probe (`task0282_prior_lexicographic_probe.py`)
+found, in-sample on the 3 mandatory targets, that reordering the
+lexicographic rule — **nearest surviving distance stratum first**,
+druggability only as a tiebreak, the opposite of this task's own original
+"most-distal-first" reading of "categorise then rank" — recovers KRAS's true
+pocket exactly at its oracle ceiling (EH 0.80, druggability 0.001, the exact
+pocket the pre-registered prior said no monotone function could select).
+The probe's own explicit warning: that number is in-sample (28 configs on 3
+targets) and "exactly the overfitting this task's Scope forbids." Folded in
+as an added rule family (`lex_near_first`, attributed, dated) inside the
+LOTO grid rather than adopted directly — LOTO still decides per fold, so
+this does not reintroduce the overfitting the probe itself flagged.
+
+**Result: it doesn't survive.** Every one of the 20 LOTO folds — and the
+final fit on all 20 — independently selects the same rule:
+**`MIN_HOP >= 1` (median 3.18 A, IQR 1.38-3.76 A — i.e. excludes only the
+active site's own immediate contact shell) + rank surviving fpocket
+candidates by druggability alone.** `lex_near_first` (the probe's own
+family) never wins a single fold; on the full-20 fit its best configuration
+ties for 4th place (mean EH 0.1399) behind plain `drug_alone` at the
+classic `MIN_HOP>=2` cutoff, itself edged out by the same rule at
+`MIN_HOP>=1` (0.1649). The distance *metric* and *cutoff* barely move the
+result once druggability is doing the ranking — the top 6 of 61 rules are
+all within 0.04 of each other and are all `drug_alone`/`weighted_sum`
+variants at a loose cutoff. Consistent with the probe's own hedge: its
+finding was real but did not generalise past the 3 targets it was measured
+on.
+
+**Headline table** (expected hits out of 5, LOTO throughout for the frozen
+20; the swept rule applied to the mandatory 3 is the frozen-20-fit rule,
+never refit on them):
+
+| target | group | residue-ranking | **swept rule (LOTO)** | CTQW-in-wrapper | random pocket | oracle ceiling |
+|---|---|---|---|---|---|---|
+| BCR_ABL1 | mandatory | 0.000 (cited) | **0.737** | 0.000 | 0.051 | 0.737 |
+| KRAS_G12C | mandatory | **0.200** (cited; GAUGE recompute: 0.000) | 0.071 | 0.071 | 0.109 | 0.800 |
+| CARDIAC_MYOSIN | mandatory | 0.000 (cited) | **0.000** | 0.000 | 0.028 | 0.279 |
+| **mean, mandatory 3** | | 0.067 | **0.269** | 0.024 | 0.063 | 0.605 |
+| **mean, frozen 20** (GAUGE recompute, no citation exists) | | 0.010 | **0.122** | 0.064 | 0.038 | 0.510 |
+| **median, frozen 20** | | 0.000 | **0.000** | 0.000 | 0.038 | 0.472 |
+
+**Read the median row before the mean row.** The swept rule scores **exactly
+0.000 on 13 of 20 frozen targets** and beats random pocket selection on only
+**7 of 20**; its frozen-20 mean of 0.122 is carried by three targets
+(`GAC_CPD12` 0.833, `SMYD3_DIPERODON` 0.500, `KSHV_PROTEASE_24Q` 0.444). It
+captures **24% of the oracle ceiling**. A reader taking 0.122 vs. random's
+0.038 as a 3x improvement would be reading a mean whose median is zero.
+
+**Nothing here is statistically significant**, including against random:
+swept vs. residue-ranking p=0.125, vs. CTQW-in-wrapper p=0.375, **vs. random
+pocket selection p=0.247** (cluster-robust, [[TASK-0261]]'s exact
+cluster-level permutation, 13 clusters). The correct summary is therefore
+*"numerically higher, not distinguishable from chance pocket selection"*, not
+*"beats"* — the section title was corrected accordingly (Reviewer,
+2026-08-28).
+
+**One structure does survive**, and it is the informative part: by site
+category ([[TASK-0258]]), swept mean EH is **proximal 0.295** (n=5),
+**contact-adjacent 0.088** (n=11), **intermediate 0.000** (n=4). The rule
+works where sites are moderately separated and fails completely on the
+genuinely distal ones — the same geometry-dependence every other line of this
+register has converged on.
+
+**What is reportable for the submission is the CEILING, not the rule.** The
+oracle averages **0.510** across the frozen 20 against residue-ranking's
+**0.010**. That gap is real and needs no fitting. But no rule selected without
+seeing the label reaches it: the best LOTO-selected member gets 0.122, is
+indistinguishable from random, and scores zero on 13 of 20 targets. Reaching
+the ceiling from apo is unsolved, and that is the Phase 2 problem statement
+stated in numbers.
+
+**KRAS_G12C is the one target where residue-ranking wins**, on the task
+file's own cited number (0.200 vs. swept's 0.071) — the swept rule's
+aggregate lead over residue-ranking is carried entirely by BCR-ABL1, not a
+uniform win. Reported plainly: 1 win (BCR_ABL1, by a wide margin), 1 loss
+(KRAS_G12C), 1 tie-at-zero (CARDIAC_MYOSIN) on the mandatory 3, not "beats
+residue-ranking on all three."
+
+(Full 20-row frozen-set table, per-target LOTO rule, and the 61-rule sweep
+are in the JSON below — every result carries its own oracle ceiling next to
+it, per this task's own Constraint; e.g. CARDIAC_MYOSIN's swept 0.000 sits
+under an oracle of only 0.279, not 1.0 — a genuinely hard target, not a
+failed method.)
+
+**Cluster-robust significance** ([[TASK-0261]]'s exact 13-cluster sign-flip,
+frozen 20): swept vs. residue-ranking p=0.125 (largest, most consistent
+effect of the three, still short of the conventional 0.05 bar — with only
+13 clusters the test's own finest resolution is ~0.0002, so this is real
+signal, not noise-shaped, but not independently decisive at this cluster
+count); swept vs. CTQW-wrapper p=0.375; swept vs. random p=0.247. Read
+plainly, per this task's own Constraint: **the swept rule beats
+CTQW-in-wrapper in raw mean (0.122 vs 0.064 frozen-20, 0.269 vs 0.024
+mandatory) largely because CTQW-in-wrapper is close to uninformative here**
+(consistent with [[TASK-0242]]/[[TASK-0249]]'s own CTQW MRR 0.161 vs
+fpocket's 0.344, and [[TASK-0263]]'s added-last p=0.973) — "outperforms
+CTQW" and "works" are different claims, and only the residue-ranking
+comparison (0/5 -> real, non-zero hits on 7/20 frozen-set targets and 2/3
+mandatory) is close to the second one.
+
+**Site-category covariate** ([[TASK-0258]]'s taxonomy, the probe's own
+recommendation, tested at n=23 rather than inferred from 3): proximal
+(4.5-12 A, n=7) mean swept EH 0.316; contact-adjacent (n=12) 0.086;
+intermediate (12-20 A, n=4) 0.000. Directionally consistent with "closer,
+already-separated pockets are easiest," but **not clean** — CARDIAC_MYOSIN
+and BCR_ABL1 are both "proximal" and score 0.000 vs. 0.737 respectively, so
+category alone does not determine success; reported honestly, not smoothed
+into a tidier story than the data supports.
+
+**Pre-registered prior verdict: HOLDS**, on the actual LOTO-selected general
+rule, not just the probe's own targeted in-sample construction — BCR_ABL1
+0.737, KRAS_G12C 0.071, CARDIAC_MYOSIN 0.000. The rule works where the
+pocket is already open (BCR-ABL1's, held open by myristic acid,
+[[TASK-0278]]) and fails where druggability itself carries no signal
+(KRAS_G12C, CARDIAC_MYOSIN, both true-pocket druggability ~0.001) — a fifth
+independent route to this register's own recurring finding, not a new one.
+
+**Recommendation to [[TASK-0184]]**: report **both** numbers for the top-5
+deliverable, not a silent switch. The swept pocket rule is a large
+improvement in aggregate mean (0.067 -> 0.269 on the mandatory 3, 0.010 ->
+0.122 on the frozen 20) using only apparatus already in the codebase
+(fpocket + a trivial active-site exclusion), driven overwhelmingly by
+BCR-ABL1 (0/5 -> 3.5/5) and 7/20 frozen-set targets going from zero to
+non-zero — **not a uniform win**: it underperforms the deployed pipeline's
+own cited number on KRAS_G12C specifically (0.071 vs 0.200), so the correct
+framing for §5 is "a strong pocket-level candidate for some targets," not
+"a strictly better method." The improvement is not cluster-robustly
+significant at n=13 and the achievable ceiling itself is only 0.8/0.7/0.3 —
+state the ceiling beside the number wherever it is quoted, and do not claim
+the pocket-level method "solves" the deliverable.
+
+**Script:** `scripts/task0282_pocket_selection_sweep.py` (+ the Reviewer's
+own probe, `scripts/task0282_prior_lexicographic_probe.py`, motivation
+only, not a result). **Data:**
+`results/tasks/0282_pocket_level_top5_distance_druggability_sweep/pocket_selection_sweep.json`.
+**Full detail:** `.ai/tasks/DONE/TASK-0282-pocket-level-top5-distance-druggability-sweep.md`.
