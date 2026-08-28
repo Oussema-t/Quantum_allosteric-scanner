@@ -9816,3 +9816,94 @@ binaries in place), `tools/evoef2/PROVENANCE.json` (new),
 three `.gitignore`s updated to track the new recipe files, all three
 `README.md`s updated. **Full detail:**
 `.ai/tasks/DONE/TASK-0285-dockerize-vendored-agentic-tools.md`.
+## KRAS_G12C's shipped hit list was stale, not a different operator — regenerated, and all three mandatory targets now genuinely score 0/5 ([[TASK-0283]], 2026-08-28)
+
+[[TASK-0282]] flagged, without resolving, that its own residue-ranking
+recompute (P@5=0.000 on KRAS_G12C, under this task family's single
+pre-registered GAUGE operator) disagreed with this task's own citation of
+the shipped `results/KRAS_G12C/hit_list.json` (P@5=0.200). Traced the real
+`run_challenge.py` code path — not inferred from the numbers — to settle it.
+
+**Not an operator disagreement.** For all 3 mandatory (ground-truth)
+targets, `run_frozen_verdict`/`select_frozen_config` picks among exactly 2
+candidates (`H_new_default`, `H10_disorder_suppressed`) via a label-free
+score; `_winner_index=0` (`H_new_default`) for all three — the identical
+operator this whole task family already uses as its own fixed GAUGE.
+`assemble_hit_list` does deliberately exclude active-site/seed residues
+before ranking (`report.py`'s own documented design, "so a trivial
+self-hit never appears in the list") — a real difference from this task
+family's own simpler `precision_at_k(ctqw_full, pocket, k=5)` convention
+(also used by `apo_structure_sensitivity_sweep.run_one`, so this is a
+second place carrying the same simplification) — but reproducing that
+exclusion alone still gives P@5=0.000 on KRAS_G12C, not 0.200. It does not
+explain the gap.
+
+**The real cause: a stale deliverable, six days out of date.**
+`results/KRAS_G12C/{hit_list,verdict}.json` and both `.npz` connectivity
+matrices were generated 2026-08-20 (`4917e17`, TASK-0225) against
+`apo_pdb: 4OBE` — the wild-type structure [[TASK-0270]] (2026-08-26) found
+was never the G12C mutant at all, and replaced with `4LDJ` in
+`config/targets.yaml`. TASK-0270 re-scored the AUC/diagnosis in its own
+task-scoped analysis (0.557->0.514, `NO_FAILURE_DETECTED`-
+>`NO_SIGNAL_IN_APO`) but never regenerated the shared `results/KRAS_G12C/`
+deliverable directory `run_challenge.py` actually writes and Sec.5 quotes
+from — a real propagation gap the fix itself left behind, the same class
+of defect TASK-0270 itself was filed to catch. Confirmed directly: the
+`0.200` hit `results/KRAS_G12C/hit_list.json` reports (resnum 60) traces
+to a 169-residue structure; `4LDJ` is 170 residues — the connectivity
+matrix shapes disagreed (169x169 vs 170x170) before either JSON was even
+read, an unambiguous structural fingerprint, not a numerical coincidence.
+`results/RESULTS.md`'s own auto-appended log independently confirms it —
+its KRAS_G12C entry read "*From 4OBE alone we predict...*" by name.
+
+**BCR_ABL1 and CARDIAC_MYOSIN are NOT stale** — their `targets.yaml`
+entries have not changed since 2026-08-20 (git history checked, not
+assumed), and re-running `run_challenge.py` fresh reproduces their shipped
+`hit_list.json`/`verdict.json` **byte-for-byte** (identical resnums,
+scores, diagnosis, AUC) — confirmed, not inferred from "nothing looks
+different."
+
+**Fixed, not just diagnosed**: re-ran `run_challenge.py --target KRAS_G12C`
+against the current (correct) config and overwrote the stale deliverables
+in place (`hit_list.json`, `verdict.json`, both `.npz` matrices,
+`report.txt`, `end_to_end.json`) — `results/RESULTS.md` auto-appended its
+own new, correctly-named `4LDJ` block alongside the stale `4OBE` one (left
+in place; historical, not deleted).
+
+**Corrected numbers, old vs. new, TASK-0270's own reporting format**:
+
+| target | P@5 (residue, old) | P@5 (new) | diagnosis (old -> new) | AUC (old -> new) |
+|---|---|---|---|---|
+| KRAS_G12C | 0.200 (**stale, 4OBE**) | **0.000** | NO_FAILURE_DETECTED -> NO_SIGNAL_IN_APO | 0.557 -> 0.514 |
+| BCR_ABL1 | 0.000 | 0.000 (confirmed) | NO_SIGNAL_IN_APO (unchanged) | 0.541 (unchanged) |
+| CARDIAC_MYOSIN | 0.000 | 0.000 (confirmed) | NO_SIGNAL_IN_APO (unchanged) | 0.548 (unchanged) |
+
+**All three mandatory targets now genuinely score P@5 = 0/5** on the
+deployed operator. Note: `sites.site_hit_metrics`' own coarser,
+distance-based `hit_at_1` (TASK-0180's clustered-site criterion, a
+different metric from residue-level P@5) registers `True` for KRAS_G12C's
+top cluster even now — both numbers are real and both are reported;
+neither should be quoted as "P@5" for the other.
+
+**Matrix/hit-list operator agreement, for the record**: for all 3
+mandatory targets, the connectivity matrix and the hit list are built from
+the *same* winning `H`/eigendecomposition (`run_challenge.py:441-450`) —
+they agree by construction. This is **not** true for no-ground-truth
+targets (e.g. MYC_MAX): there, the matrix uses the single
+`H_new`-with-highest-cross-operator-agreement while the hit list is a
+genuine 4-operator consensus ranking — a real, deliberate, already-code-
+documented asymmetry, flagged here so [[TASK-0184]]'s methodological
+report states it rather than implying one uniform operator throughout.
+
+**One number of record per mandatory target, with provenance, for
+[[TASK-0184]]**: BCR_ABL1 P@5=0.000 (H_new, `apo=1OPL`, unchanged since
+2026-08-20); KRAS_G12C P@5=0.000 (H_new, `apo=4LDJ`, corrected
+2026-08-28, supersedes the stale 0.200); CARDIAC_MYOSIN P@5=0.000 (H_new,
+`apo=8QYP`, unchanged since 2026-08-20). **All three mandatory targets: 0
+hits in fifteen.** Per this task's own Constraint, that is what the
+submission says — not the favourable number.
+
+**Script:** `scripts/run_challenge.py` (unmodified; re-run only). **Data:**
+`results/KRAS_G12C/{hit_list,verdict}.json` (updated in place),
+`results/RESULTS.md` (appended). **Full detail:**
+`.ai/tasks/DONE/TASK-0283-shipped-backend-and-research-pipeline-disagree.md`.

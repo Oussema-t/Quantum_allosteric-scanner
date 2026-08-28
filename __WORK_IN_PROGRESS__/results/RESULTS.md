@@ -22,3 +22,7 @@ From 1OPL alone we predict pocket residues [401, 336, 337, 402, 311, 400, 308, 3
 ## CARDIAC_MYOSIN
 
 From 8QYP alone we predict pocket residues [134, 127, 682, 185, 128, 683, 681, 680, 133, 679, 92, 114, 132, 684, 186, 111, 110, 93, 130, 137, 180, 136, 115, 190, 113, 677, 126, 106, 131, 184, 112, 183, 181, 238, 142, 240, 107, 685, 179, 154, 676, 135, 86, 678, 242, 237, 465, 239, 461, 182, 191, 686, 187, 674, 189, 236, 124, 91, 103, 155, 675, 235, 188, 141, 105, 116, 125, 85, 671, 140, 460, 670, 123, 138, 177, 241, 89, 178, 194, 673, 688, 101, 243, 119, 176] for CARDIAC_MYOSIN, which does not overlap the incumbent_4.5A_contact pocket derived from 8QYR (centroid 17.4 A away).
+
+## KRAS_G12C
+
+From 4LDJ alone we predict pocket residues [120, 31, 119, 122, 32, 30, 33, 121, 12, 29, 13, 148, 145, 117, 34, 28, 15, 147, 14, 26] for KRAS_G12C, which overlaps the incumbent_4.5A_contact pocket derived from 6OIM (1 shared residue(s)).
