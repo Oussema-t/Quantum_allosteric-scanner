@@ -1,0 +1,280 @@
+{
+ "sweep": [
+  {
+   "target": "GAC_BPTES",
+   "n1": 6,
+   "s1": "uniprot",
+   "n2": 6,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "GAC_CPD12",
+   "n1": 6,
+   "s1": "uniprot",
+   "n2": 6,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "DHPS_GC7",
+   "n1": 22,
+   "s1": "ligand",
+   "n2": 28,
+   "s2": "uniprot",
+   "stable": false
+  },
+  {
+   "target": "PF_ATCASE",
+   "n1": 22,
+   "s1": "ligand",
+   "n2": 22,
+   "s2": "ligand",
+   "stable": true
+  },
+  {
+   "target": "KSHV_PROTEASE_24Q",
+   "n1": 3,
+   "s1": "uniprot",
+   "n2": 3,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "KSHV_PROTEASE_25G",
+   "n1": 3,
+   "s1": "uniprot",
+   "n2": 3,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "SUMO_E1_FHJ",
+   "n1": 26,
+   "s1": "ligand",
+   "n2": 26,
+   "s2": "ligand",
+   "stable": true
+  },
+  {
+   "target": "HCV_NS5B_VRX",
+   "n1": 3,
+   "s1": "uniprot",
+   "n2": 3,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "HCV_NS5B_VR1",
+   "n1": 3,
+   "s1": "uniprot",
+   "n2": 3,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "HCV_NS5B_POO",
+   "n1": 3,
+   "s1": "uniprot",
+   "n2": 3,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "HCV_NS5B_CMF",
+   "n1": 3,
+   "s1": "uniprot",
+   "n2": 3,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "FBPASE_94D",
+   "n1": 35,
+   "s1": "uniprot",
+   "n2": 35,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "FBPASE_95S",
+   "n1": 35,
+   "s1": "uniprot",
+   "n2": 35,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "TRP_SYNTHASE_F6F",
+   "n1": 2,
+   "s1": "uniprot",
+   "n2": 2,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "TRP_SYNTHASE_F19",
+   "n1": 2,
+   "s1": "uniprot",
+   "n2": 2,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "SMYD3_DIPERODON",
+   "n1": 18,
+   "s1": "uniprot",
+   "n2": 18,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "PKR_MITAPIVAT",
+   "n1": 26,
+   "s1": "uniprot",
+   "n2": 26,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "PKR_AG946",
+   "n1": 26,
+   "s1": "uniprot",
+   "n2": 26,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "MKK7_IBRUTINIB",
+   "n1": 11,
+   "s1": "uniprot",
+   "n2": 11,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "NAMPT_NPA1R",
+   "n1": 18,
+   "s1": "ligand",
+   "n2": 10,
+   "s2": "uniprot",
+   "stable": false
+  },
+  {
+   "target": "TEM1_BLA_CBT",
+   "n1": 6,
+   "s1": "uniprot",
+   "n2": 6,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "TEM1_BLA_FTA",
+   "n1": 7,
+   "s1": "uniprot",
+   "n2": 7,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "GLUR2_TRU",
+   "n1": 3,
+   "s1": "uniprot",
+   "n2": 3,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "GLUR2_ANIRACETAM",
+   "n1": 3,
+   "s1": "uniprot",
+   "n2": 3,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "GLUK1_BPAM",
+   "n1": 6,
+   "s1": "uniprot",
+   "n2": 6,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "FPPS_YF0282",
+   "n1": 12,
+   "s1": "uniprot",
+   "n2": 12,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "HIV1_RT",
+   "n1": 0,
+   "s1": "none",
+   "n2": 7,
+   "s2": "uniprot",
+   "stable": false
+  },
+  {
+   "target": "KRAS_G12C",
+   "n1": 21,
+   "s1": "ligand",
+   "n2": 21,
+   "s2": "ligand",
+   "stable": true
+  },
+  {
+   "target": "BCR_ABL1",
+   "n1": 17,
+   "s1": "uniprot",
+   "n2": 17,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "CARDIAC_MYOSIN",
+   "n1": 8,
+   "s1": "uniprot",
+   "n2": 8,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "PTP1B",
+   "n1": 9,
+   "s1": "uniprot",
+   "n2": 9,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "GLUCOKINASE",
+   "n1": 28,
+   "s1": "uniprot",
+   "n2": 28,
+   "s2": "uniprot",
+   "stable": true
+  },
+  {
+   "target": "CASPASE7",
+   "n1": 21,
+   "s1": "pdb_site",
+   "n2": 21,
+   "s2": "pdb_site",
+   "stable": true
+  }
+ ],
+ "spike_test": {
+  "rho_nseed_minA": -0.148,
+  "p_nseed_minA": 0.4525,
+  "mwu_p": 0.4436,
+  "spike_mean_nseed": 15.9,
+  "rest_mean_nseed": 12.6,
+  "source_counts": {
+   "uniprot": 24,
+   "ligand": 3,
+   "pdb_site": 1
+  }
+ }
+}

@@ -1,6 +1,6 @@
 # TASK-0288 — Can the allosteric-site category be predicted without labels? And what is the near/far split made of?
 
-- Status: **PARTIAL — Findings A–E complete; Finding F BLOCKED on [[TASK-0289]]**
+- Status: Done — Finding F's provenance objection was raised, tested, and **rejected** ([[TASK-0289]])
 - Assignee: Reviewer thread
 - Priority: **High — benchmark-validity finding; corrects [[TASK-0284]] Finding A as published in the collaborator brief**
 - Filed: 2026-08-28 by Reviewer thread (user-directed: "I am damn curious if we can crack the problem … categorise the proteins without looking at their labels")
@@ -82,7 +82,7 @@ pocket is covalently bonded to the active site.** That is not a distal
 site; it is the same site. No distance-, walk-, or dynamics-based method
 can score it as allosteric, because there is no distal signal present.
 
-> **!! FINDING F IS PROVISIONAL AND MUST NOT BE REPORTED YET.**
+> **Provenance objection — raised, tested, REJECTED (2026-08-29).**
 > While writing this up, `prep()` was found to be **non-deterministic**:
 > `HCV_NS5B_POO` returns a 32-residue active site on the first call in a
 > process and a 3-residue one on later calls, swinging its `min_A`
@@ -93,14 +93,27 @@ can score it as allosteric, because there is no distal signal present.
 > A transient network failure silently changes which tier answers, and
 > `prep()` discards the returned `source` provenance.
 >
-> **This threatens Finding F directly.** A broad UniProt annotation (whole
-> nucleotide pocket) makes any nearby pocket abut the active site
-> (`min_A ≈ 1.3`); a narrow 3-residue ligand-derived site does not. That
-> heterogeneity **alone** could manufacture the observed spike — and the
-> `n_seed/N` control above (spike 0.054 vs rest 0.030, p=0.072) points the
-> same way. Until the per-target source distribution is known, the spike
-> cannot be attributed to the benchmark rather than to our own detection
-> fallback. Filed as [[TASK-0289]].
+> This threatened Finding F directly: a broad UniProt annotation makes any
+> nearby pocket abut the active site (`min_A ≈ 1.3`) while a narrow
+> 3-residue ligand-derived site does not, so heterogeneous provenance
+> could in principle manufacture the whole spike.
+>
+> **[[TASK-0289]]'s sweep tested it and it does not hold.** With fresh,
+> provenance-recorded seed sizes: `n_seed` vs `min_A` **rho=−0.148,
+> p=0.45**; spike mean `n_seed` 15.9 vs rest 12.6, **MWU p=0.44**; 7 of
+> the 9 spike targets are `uniprot`-sourced, the same tier as most of the
+> far group. The counterexamples are structural and not defeasible:
+> **TRP_SYNTHASE has a 2-residue active site and sits in the spike
+> (1.29 Å); PKR has 26 and sits in the far group (11.69 Å)** — the
+> opposite of the artifact's prediction.
+>
+> **The `n_seed/N` control quoted above (p=0.072) was itself contaminated**
+> — it used `n_seed` from the committed rows, recorded under whichever
+> tier answered that run. On fresh values the effect vanishes entirely.
+>
+> **Residual caveat:** `min_A` is still the committed taxonomy value. A
+> fully clean answer needs `min_A` recomputed under deterministic seeds,
+> still owed by [[TASK-0289]]'s Scope.
 
 **Control — is the spike our own artefact?** Partly, but not mainly. A
 broad active-site annotation does push `min_A` down (`n_seed/N` vs
@@ -111,10 +124,13 @@ which cannot be over-broad. **Contributing factor, not the explanation.**
 ## Consequences
 
 1. **[[TASK-0284]] Finding A's bimodality evidence is inconclusive at this
-   n** (Finding B above). That much is safe to restate now.
-2. Whether the spike is a **benchmark** defect (orthosteric-adjacent drug
-   annotations) or **our own** defect (heterogeneous active-site
-   provenance) is **undetermined** and gates the whole claim. [[TASK-0289]].
+   n** (Finding B above).
+2. The spike is a **benchmark-validity finding**, not an artifact of our
+   own detection — same class as the KRAS genotype defect ([[TASK-0270]])
+   and the myosin ligand defect. It is the sharpest available answer to
+   why every method in this register floors on a large subset: **~32% of
+   the benchmark is not an allostery problem.** Report it with the
+   deterministic-recompute caveat until [[TASK-0289]] closes.
 3. The negative result in D is the strongest evidence yet that pocket
    *location* is not encoded at any structural scale we can measure — and
    it is **unaffected** by the provenance defect, because it tests
@@ -123,11 +139,10 @@ which cannot be over-broad. **Contributing factor, not the explanation.**
 
 ## Next
 
-- **[[TASK-0289]] first.** Nothing from Finding F goes into the brief,
-  [[TASK-0184]], or any message to the collaborator until the active-site
-  provenance per target is known and `min_A` has been recomputed under a
-  deterministic, provenance-recorded active site.
-- Then: restate Finding A in `CTQW_CONTRIBUTION_BRIEF.html` and
+- **[[TASK-0289]]'s deterministic `min_A` recompute** before Finding F
+  goes to the collaborator as a headline. The provenance objection is
+  already rejected; what remains is confirming the numbers move nowhere.
+- Restate Finding A in `CTQW_CONTRIBUTION_BRIEF.html` and
   [[TASK-0184]]. **Not done here — the brief is under collaborator review.**
 - Then: consider reporting `min_A` stratified by seq-gap >= 2 as the
   honest allosteric subset.

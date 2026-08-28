@@ -49,20 +49,32 @@ processes in the same session (1.324 Å / res A164 vs 1.37 Å / res A136).
 category, and every distance-based comparison in this register. If the
 active site differs between runs, so does everything derived from it.
 
-**It also threatens [[TASK-0288]] Finding F directly.** A broad UniProt
-annotation (an entire nucleotide pocket) makes any adjacent pocket abut
-the active site (`min_A ≈ 1.3 Å`); a narrow 3-residue ligand-derived site
-does not. **Heterogeneous provenance across targets could manufacture the
-observed 9/28 contact spike without any benchmark defect at all** — and
-the `n_seed/N` control in [[TASK-0288]] (spike group 0.054 vs rest 0.030,
-MWU p=0.072) points the same way.
+**It appeared to threaten [[TASK-0288]] Finding F — tested, and it does
+not.** With fresh provenance-recorded seed sizes, `n_seed` vs `min_A` is
+**rho=−0.148, p=0.45**, and spike vs rest on `n_seed` is **MWU p=0.44**.
+7 of the 9 spike targets are `uniprot`-sourced, the same tier as most of
+the far group. Decisive counterexamples: **`TRP_SYNTHASE_F6F` has a
+2-residue active site and sits in the spike (1.29 Å); `PKR_MITAPIVAT` has
+26 and sits in the far group (11.69 Å)**. The `n_seed/N` control that
+originally raised the alarm (p=0.072) was itself computed from
+tier-contaminated `n_seed` values and does not survive fresh measurement.
+
+The defect remains **Critical on its own merits** — it silently
+substitutes one scientific input for another — but it does not explain
+Finding F.
 
 ## Scope
 
-- [ ] Record `source` per target for every target in the taxonomy, twice,
-      and report how many are unstable and what the tier distribution is.
-      *(A first pass was started by the Reviewer thread and is still
-      running at filing time — do not assume it completed.)*
+- [x] **DONE.** Sweep run over all 33 taxonomy targets, two consecutive
+      calls each (`scripts/task0289_active_site_provenance_sweep.py`).
+      **3/33 unstable**: `DHPS_GC7` (22 ligand → 28 uniprot),
+      `NAMPT_NPA1R` (18 ligand → 10 uniprot), and **`HIV1_RT`
+      (0 residues / source `none` → 7 uniprot)** — [[TASK-0253]]'s
+      empty-seed failure mode occurring live. Tier distribution:
+      24–26 `uniprot`, 3–5 `ligand`, 1 `pdb_site`, 1 `none`.
+      Note `HCV_NS5B_POO` was stable at `3, uniprot` across both warm
+      calls — its 32-residue cold-start result was the ligand fallback,
+      so the **committed** taxonomy value (17.94 Å) is on the correct tier.
 - [ ] Make detection **deterministic**: cache the resolved active site to
       disk on first successful resolution, keyed by (pdb_id, chain), and
       read from that cache thereafter. Network only on a cache miss.
