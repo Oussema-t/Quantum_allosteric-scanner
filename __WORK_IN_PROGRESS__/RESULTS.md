@@ -10012,3 +10012,53 @@ evolutionary history, neither recoverable from an apo backbone.
 `scripts/task0284_domain_architecture.py`; `results/tasks/
 0284_two_populations/{bimodality_and_nulls,domain_architecture}.json`.
 Full detail: [[TASK-0284]].
+
+## Chasing TASK-0284 Part B's Pfam-coarseness caveat: three geometric domain parsers, all fail their own control check ([[TASK-0286]], 2026-08-28)
+
+User-directed follow-up to [[TASK-0284]] Part B's own disclosed caveat
+(Pfam domains are sequence-family boundaries — CARDIAC_MYOSIN's entire
+~700-residue motor head is one Pfam entry despite several real structural
+subdomains). Built three candidate geometric/graph-based domain-parser
+methods and validated each against three known controls **before**
+trusting any at scale (KRAS_G12C = textbook single domain; CARDIAC_MYOSIN
+= several real structural subdomains within one Pfam entry; BCR_ABL1 =
+textbook bilobed kinase, N-lobe/C-lobe):
+
+1. **Modularity communities** (`networkx.greedy_modularity_communities`
+   on the apo Cα contact graph, resolution swept 0.3–1.0): KRAS_G12C never
+   comes out as a clean single community at any resolution tested (2–5
+   communities); behaviour across the resolution sweep is non-monotonic
+   (the greedy heuristic's own order-dependence, not a real signal).
+2. **Spatial k-means + silhouette-selected k** (reusing [[TASK-0284]]
+   Finding A's own silhouette-based model-selection idea, applied to 3-D
+   coordinates instead of a 1-D distance): KRAS's own best-k silhouette
+   (k=4, 0.302) is not meaningfully lower than CARDIAC_MYOSIN's (k=2,
+   0.371) or BCR_ABL1's (k=3, 0.352) — any non-spherical single domain
+   gets a moderate-silhouette "split" for the mundane geometric reason
+   that few real folds are perfect spheres.
+3. **Sequence-contiguous split-density scan** (single-split intra- vs
+   inter-segment contact-density maximisation, the classical PUU/
+   DomainParser principle at its simplest level): dominated by a trivial
+   edge effect — the best split lands at/near the minimum-segment-size
+   boundary for 4/5 targets, including both KRAS (single-domain control,
+   split at residue 149/170) and BCR_ABL1 (known bilobed, split at
+   430/451) — a small terminal fragment trivially minimizes inter-segment
+   contacts regardless of any real domain boundary.
+
+**All three fail their own control check.** No fourth method was
+attempted: per this task's own Constraint, tuning further until one
+"looks right" on the controls would itself be the outcome-fishing this
+follow-up exists to avoid. A real structural-domain assignment needs a
+validated tool (PUU, DomainParser2, or a published ENM/hinge-detection
+method) not available in this environment — the same class of gap as no
+DSSP/biotite ([[TASK-0284]]'s own Finding B).
+
+**Verdict: [[TASK-0284]] Part B's Pfam-based result (FAILS, p=0.1206,
+n=32) is neither confirmed nor overturned.** No structural-parser result
+was produced to compare against it. Pfam remains the best available,
+live-verified domain source for this register; its coarseness caveat is
+now resolved as "attempted, found genuinely hard with what's available"
+rather than merely asserted.
+
+**Script**: `scripts/task0286_structural_domain_parser.py`. Full detail:
+[[TASK-0286]].

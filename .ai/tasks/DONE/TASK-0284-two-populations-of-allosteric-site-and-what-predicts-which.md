@@ -241,3 +241,20 @@ config, superseding the pre-[[TASK-0270]] stored artifact — same 33
 scoreable targets, same categories).
 
 **Moved TODO → IN_PROGRESS → DONE.**
+
+---
+
+**Addendum, 2026-08-28 ([[TASK-0286]]):** the coarseness caveat on Part
+B's Pfam source (stated above, CARDIAC_MYOSIN's whole motor head as one
+Pfam entry) was chased at the user's direction. Three candidate
+structural/geometric domain-parser methods (contact-graph modularity
+communities; spatial k-means with silhouette-selected k; a
+sequence-contiguous split-density scan) were built and validated against
+three known controls (KRAS_G12C=single domain, CARDIAC_MYOSIN=several
+real subdomains, BCR_ABL1=bilobed kinase) **before** being trusted at
+scale — **all three failed their own control check** (details in
+[[TASK-0286]]'s Done section). No structural-parser result was produced
+to compare against the Pfam-based Fisher exact. **This Part B result
+(FAILS, p=0.1206, n=32) stands, neither confirmed nor overturned** — the
+caveat is now "attempted, found genuinely hard with what's available in
+this environment" rather than merely asserted.
