@@ -9745,3 +9745,74 @@ own probe, `scripts/task0282_prior_lexicographic_probe.py`, motivation
 only, not a result). **Data:**
 `results/tasks/0282_pocket_level_top5_distance_druggability_sweep/pocket_selection_sweep.json`.
 **Full detail:** `.ai/tasks/DONE/TASK-0282-pocket-level-top5-distance-druggability-sweep.md`.
+
+## Dockerizing the vendored external tools -- fpocket/EvoEF2/P2Rank containerized, PocketMiner validated ([[TASK-0285]], 2026-08-28)
+
+Filed and completed same-session, per Bartosz's own direct request. This
+register has four vendored external tools, each installed a different,
+host-dependent way. [[TASK-0206]] already caught a real, on-record
+cross-machine reproducibility bug for one of them (fpocket: two machines'
+own hand-compiled binaries produced different AUCs on the same three
+targets); [[TASK-0268]] hit an installability wall a third way
+(`frustratometer`'s own missing system LLVM). [[TASK-0269]] had already
+proven Docker was the fix for exactly this class of problem (PocketMiner).
+This task generalizes that fix to the other three.
+
+**The wrapper pattern, one design, zero call-site changes**:
+`tools/{fpocket/bin/fpocket, evoef2/EvoEF2, p2rank/p2rank_2.5.1/prank}`
+are now small Python scripts, not binaries, at the *exact* paths
+`FPOCKET_BIN`/`EVOEF2_BIN`/`P2RANK_BIN` already pointed to across 12
+existing call sites — every one works unmodified. fpocket/P2Rank mount
+this repo's own root plus the system temp root 1:1 (no argument
+rewriting needed, since every real caller stages I/O under
+`tempfile.TemporaryDirectory()`). EvoEF2 preserves a confirmed,
+load-bearing quirk (`argv[0]` must be a short relative path or the binary
+SIGSEGVs) by having the container exec through a relative symlink
+deliberately NOT named `EvoEF2` — that name is the wrapper's own path
+inside the same live bind mount, and would overwrite itself.
+
+**A real near-miss, caught before shipping**: the first draft overwrote
+the shared, gitignored native `fpocket` binary before the Docker image
+had been validated — other concurrent threads could have been calling it
+mid-build. Fixed by backing up the native binary first for every
+subsequent tool, before replacement, every time.
+
+**All base images pinned by digest, not just tag — load-bearing, not
+cosmetic.** The first fpocket build (tag-only pin) produced a **third**,
+still-different AUC set from either number already in
+`tools/fpocket/PROVENANCE.json`: BCR_ABL1 0.8596/CARDIAC_MYOSIN 0.5345 —
+matching [[TASK-0163]]'s own ORIGINAL (superseded) numbers, not
+[[TASK-0206]]'s own re-verified native-rebuild numbers (0.8618/0.5303),
+on the identical source tag. Real, decisive evidence that Docker alone
+does not fix this reproducibility class of bug without a digest pin —
+all three AUC sets kept on record, none silently preferred. (KRAS_G12C's
+own AUC is no longer a valid comparison point at all — [[TASK-0270]]'s
+apo swap changed the input structure independent of the fpocket
+question.)
+
+**EvoEF2 — a clean positive, by contrast.** `GreedyRepack` on the
+identical real input (KRAS_G12C, `4LDJ`), native macOS binary vs. this
+image's own Linux/amd64 binary: **byte-identical output** (107,203 bytes,
+both arms). First provenance record for this tool.
+
+**Real end-to-end verification, every tool, on a real target (`4LDJ`),
+through the unmodified real calling code**: fpocket 9 real pockets
+(druggability 0.682, 18 residues); EvoEF2 `GreedyRepack` real
+107,203-byte structure; P2Rank 170 real per-residue probability rows;
+PocketMiner (existing image, not rebuilt) real inference,
+`n_residues=170, mean=0.4902` — confirmed still functional, not assumed.
+
+**Not done**: a from-scratch multi-machine rebuild test of the
+now-digest-pinned fpocket recipe (does it converge to a stable fourth
+value, or reproduce one of the three already on record) — a real, flagged
+follow-up. `frustratometer` not revisited (a different class of gap — an
+already-working from-scratch port exists, per [[TASK-0268]]).
+
+**Files:** `tools/{fpocket,evoef2,p2rank}/Dockerfile` (new),
+`tools/fpocket/bin/fpocket`, `tools/evoef2/EvoEF2`,
+`tools/p2rank/p2rank_2.5.1/prank` (wrapper scripts, replacing the native
+binaries in place), `tools/evoef2/PROVENANCE.json` (new),
+`tools/fpocket/PROVENANCE.json` (containerized-build entry added), all
+three `.gitignore`s updated to track the new recipe files, all three
+`README.md`s updated. **Full detail:**
+`.ai/tasks/DONE/TASK-0285-dockerize-vendored-agentic-tools.md`.

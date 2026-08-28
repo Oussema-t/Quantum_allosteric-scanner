@@ -1,5 +1,12 @@
-# Ignore everything in this directory except the patch, README, and this file
+# Ignore everything in this directory except the patch, README, this
+# file, and the Docker recipe (TASK-0285) -- Dockerfile and the wrapper
+# script `EvoEF2` are tracked; the native binary, its own `library/`/
+# `wread/` data, and every scratch output directory a real run creates
+# here are not.
 *
 !.gitignore
 !README.md
 !*.patch
+!Dockerfile
+!EvoEF2
+!PROVENANCE.json

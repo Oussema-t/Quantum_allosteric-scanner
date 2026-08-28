@@ -1,4 +1,6 @@
-# Ignore everything in this directory
+# Ignore everything in this directory except this file and the Docker
+# wrapper (TASK-0285) -- the wrapper is a small, tracked Python script,
+# not a rebuildable vendored binary; it belongs in git.
 *
-# Except this file
 !.gitignore
+!fpocket

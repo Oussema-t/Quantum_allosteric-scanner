@@ -60,4 +60,43 @@ before trusting any output:
 ```
 
 Used by `scripts/task0204_rotamer_repack_baseline.py`
-(`EVOEF2_BIN = tools/evoef2/bin/EvoEF2`).
+(`EVOEF2_BIN = tools/evoef2/EvoEF2`).
+
+## Docker (TASK-0285)
+
+`EvoEF2` (this directory's own top-level copy — the path every caller's
+own `EVOEF2_BIN` actually points to) is now a small Python wrapper, not
+the native binary — a drop-in replacement, no caller changes. The
+original native binary is kept at `EvoEF2.native-backup` (host-local,
+gitignored, not relied on by anything).
+
+Build:
+
+```bash
+cd tools/evoef2
+docker build --platform linux/amd64 -t qas-evoef2:task0204 .
+```
+
+Same pinned recipe as above (clone, apply
+`task0204_single_pass_repack.patch`, `g++ -O3`), inside a
+`debian:bookworm-slim` base pinned by digest (see
+`tools/fpocket/Dockerfile`'s own comment for why tag-only pinning is not
+enough).
+
+**The confirmed relative-argv0 quirk is preserved, not accidentally
+broken.** `_run_evoef2` invokes this file as `./EvoEF2` with `cwd=`
+this directory — EvoEF2 SIGSEGVs if its own argv[0] is a long/absolute
+path (see the calling script's own comment for the full story). The
+wrapper honors that contract on the outside (it *is* invoked as
+`./EvoEF2`) and reproduces it on the inside too: the container creates a
+short relative symlink to its own baked-in binary and execs through
+*that*, not through an absolute container path — see the wrapper's own
+docstring for exactly why it can't reuse the name `EvoEF2` for that
+symlink (it would overwrite this same file via the live bind mount).
+
+`library/`/`wread/` (the ~140 MB Dunbrack rotamer library data, already
+gitignored, already built by the existing native recipe) are **not**
+baked into the image — the container reads them from the host via a bind
+mount of this whole directory, exactly as the native binary already did
+via relative paths from its own cwd. Only the compiled binary itself
+comes from the image.

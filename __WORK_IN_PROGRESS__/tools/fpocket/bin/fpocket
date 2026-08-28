@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+"""TASK-0285 -- Docker-backed drop-in replacement for the native `fpocket`
+binary this file used to be. Every existing caller
+(`scripts/task0163_external_baseline_scoring.py`'s `_run_fpocket`, and the
+9 other scripts that import `FPOCKET_BIN` from it) invokes this exact path
+via `subprocess.run([str(FPOCKET_BIN), "-f", str(pdb_path)], cwd=work_dir,
+...)` -- so this wrapper must accept the identical argv, honor the same
+`cwd` (fpocket resolves both its input path and its own `<stem>_out/`
+output directory relative to the process's cwd), and pass stdout/stderr/
+exit code straight through. No caller needs to change.
+
+Path strategy: rather than parsing argv to find every path fpocket might
+touch, this mounts two fixed roots 1:1 (host path == container path, no
+rewriting needed) that cover every real call site in this register:
+the system temp root (every caller stages its PDB + output dir under
+`tempfile.TemporaryDirectory()`) and this repository's own root (covers
+any caller that instead points directly at `results/tasks/...`). `-w`
+replicates the caller's own `cwd` inside the container so fpocket's
+relative-path output-directory convention is unaffected.
+"""
+from __future__ import annotations
+
+import os
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+IMAGE = "qas-fpocket:4.2.3"
+_REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent  # tools/fpocket/bin/fpocket -> repo root
+_TMP_ROOT = Path(tempfile.gettempdir()).parent  # /var/folders/XX/.../T -> /var/folders/XX (covers all subdirs)
+
+
+def main() -> int:
+    cwd = os.getcwd()
+    cmd = [
+        "docker", "run", "--rm", "--platform", "linux/amd64",
+        "-v", f"{_REPO_ROOT}:{_REPO_ROOT}",
+        "-v", f"{_TMP_ROOT}:{_TMP_ROOT}",
+        "-w", cwd,
+        IMAGE,
+    ] + sys.argv[1:]
+    result = subprocess.run(cmd)
+    return result.returncode
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

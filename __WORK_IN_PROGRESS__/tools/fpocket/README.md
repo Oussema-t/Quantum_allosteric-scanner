@@ -38,3 +38,37 @@ any rebuild, regenerate and diff against that file before trusting a new
 run — a changed SHA256 with an unchanged AUC set is fine; a changed SHA256
 with a changed AUC set needs the same treatment TASK-0206 gave this one
 (both numbers kept on record, dated, neither silently overwritten).
+
+## Docker (TASK-0285)
+
+`bin/fpocket` is now a small Python wrapper, not the native binary — it
+shells out to `docker run` and is a drop-in replacement at the exact same
+path `scripts/task0163_external_baseline_scoring.py`'s `FPOCKET_BIN`
+already points to; no caller changes. The native binary is not required
+on the host any more, only Docker.
+
+Build:
+
+```bash
+cd tools/fpocket
+docker build --platform linux/amd64 -t qas-fpocket:4.2.3 .
+```
+
+Same pinned source recipe as above (`git clone --branch 4.2.3`), inside a
+`debian:bookworm-slim` base pinned by **digest**, not just tag — a
+floating tag was tried first and produced a *third*, still-different AUC
+set from both numbers already in `PROVENANCE.json` (see that file's own
+`containerized_build_TASK_0285` entry) — real, on-record evidence that a
+digest pin, not just "use Docker," is what this reproducibility problem
+actually needs.
+
+`--platform linux/amd64` is required even though the build host may be
+arm64 (Apple Silicon) — matching `tools/pocketminer/`'s own established
+reason: keeps every tool in this project on one known-working emulated
+platform rather than chasing per-tool native-arch support.
+
+The wrapper mounts this repository's own root and the system temp root
+1:1 (host path == container path) so every existing caller's own
+`tempfile.TemporaryDirectory()`-based I/O works unmodified — no argument
+rewriting needed. See the wrapper script's own docstring for the exact
+mechanism.

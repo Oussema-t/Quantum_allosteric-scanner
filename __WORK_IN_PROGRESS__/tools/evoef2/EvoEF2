@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+"""TASK-0285 -- Docker-backed drop-in replacement for the native `EvoEF2`
+binary this file used to be (native copy kept at `EvoEF2.native-backup`,
+host-local, gitignored, not relied on). `scripts/task0204_rotamer_repack_
+baseline.py::_run_evoef2` (and the 2 other scripts that import
+`EVOEF2_BIN` from it) invoke this exact path as
+`subprocess.run([f"./{EVOEF2_BIN.name}", f"--command={command}", ...],
+cwd=EVOEF2_DIR, ...)` -- i.e. argv[0] is literally the string "./EvoEF2"
+and cwd is this file's own directory. No caller needs to change.
+
+**The relative-argv0 quirk, preserved deliberately.** README.md/the
+calling script both document a confirmed bug: EvoEF2 SIGSEGVs when its own
+argv[0] is a long/absolute path (suspected fixed-size buffer overflow in
+`Main.cpp`'s `ExtractPathAndName`) and runs cleanly with a short relative
+one. This wrapper is itself invoked as "./EvoEF2" (satisfying the
+caller's own contract) but it is NOT the binary that SIGSEGVs on a long
+path -- the real compiled binary lives inside the image at
+`/usr/local/bin/EvoEF2`. To give THAT binary a short relative argv[0] too,
+the container creates a relative symlink inside the bind-mounted working
+directory and execs through it. That symlink must NOT be named `EvoEF2`
+-- this file, the host's own wrapper, already occupies that exact path
+inside the same bind-mounted directory, and the bind mount is a live,
+two-way mirror; overwriting it from inside the container would destroy
+this wrapper on its own next invocation. Named `.evoef2_container_bin`
+instead (short, relative, distinct), removed after each run.
+
+`library/`/`wread/` are NOT baked into the image -- they are real,
+already-built data (~140 MB, gitignored) already sitting in this same
+directory on the host from the existing native build recipe; the bind
+mount makes them visible to the container unchanged, exactly as the
+native binary already reads them via relative paths from its own cwd.
+"""
+from __future__ import annotations
+
+import shlex
+import subprocess
+import sys
+from pathlib import Path
+
+IMAGE = "qas-evoef2:task0204"
+_EVOEF2_DIR = Path(__file__).resolve().parent
+_SYMLINK_NAME = ".evoef2_container_bin"
+
+
+def main() -> int:
+    setup = f"ln -sf /usr/local/bin/EvoEF2 ./{_SYMLINK_NAME} && ./{_SYMLINK_NAME}"
+    args = " ".join(shlex.quote(a) for a in sys.argv[1:])
+    cmd = [
+        "docker", "run", "--rm", "--platform", "linux/amd64",
+        "-v", f"{_EVOEF2_DIR}:{_EVOEF2_DIR}",
+        "-w", str(_EVOEF2_DIR),
+        "--entrypoint", "/bin/sh",
+        IMAGE,
+        "-c", f"{setup} {args}",
+    ]
+    result = subprocess.run(cmd)
+    (_EVOEF2_DIR / _SYMLINK_NAME).unlink(missing_ok=True)
+    return result.returncode
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

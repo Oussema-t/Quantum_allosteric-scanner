@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+"""TASK-0285 -- Docker-backed drop-in replacement for the native `prank`
+launcher this file used to be (native copy kept at `prank.native-backup`,
+host-local, gitignored, not relied on). `scripts/task0260_cryptic_
+predictor_residual.py::run_p2rank` invokes this exact path as
+`subprocess.run([str(P2RANK_BIN), "predict", "-f", str(pdb_path), "-o",
+str(work)], ...)` with no `cwd=` override (inherits the caller's own
+process cwd) -- no caller needs to change.
+
+Path strategy matches `tools/fpocket/bin/fpocket`'s own wrapper: mount the
+system temp root and this repository's own root 1:1 (host path ==
+container path), covering every real call site (every caller stages its
+input PDB and output dir under `tempfile.TemporaryDirectory()`), so no
+argument rewriting is needed.
+"""
+from __future__ import annotations
+
+import os
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+IMAGE = "qas-p2rank:2.5.1"
+_REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent.parent  # tools/p2rank/p2rank_2.5.1/prank -> repo root
+_TMP_ROOT = Path(tempfile.gettempdir()).parent  # /var/folders/XX/.../T -> /var/folders/XX (covers all subdirs)
+
+
+def main() -> int:
+    cwd = os.getcwd()
+    cmd = [
+        "docker", "run", "--rm", "--platform", "linux/amd64",
+        "-v", f"{_REPO_ROOT}:{_REPO_ROOT}",
+        "-v", f"{_TMP_ROOT}:{_TMP_ROOT}",
+        "-w", cwd,
+        IMAGE,
+    ] + sys.argv[1:]
+    result = subprocess.run(cmd)
+    return result.returncode
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -19,5 +19,19 @@
     "CARDIAC_MYOSIN": 0.5345,
     "git_identity_that_committed_it": "Bartosz <chmura.quantum@gmail.com>",
     "note": "Not reproducible on this machine/binary. Root cause: tools/fpocket/bin/ is gitignored (upstream convention) -- only the build recipe is version controlled, never the binary bytes -- so each machine's fpocket is an independently-built, unpinned-until-now artifact. Whether the difference is a genuinely different build (wrong tag / stale local clone predating the README's 4.2.3 pin) or a compiler/architecture-level floating-point difference from nominally the same source was not resolved further (this task's own Constraint explicitly permits pinning without full root-cause). Kept on record, not deleted, per this project's no-overwrite convention."
+  },
+  "containerized_build_TASK_0285": {
+    "pinned_date": "2026-08-28",
+    "image": "qas-fpocket:4.2.3",
+    "base_image_digest": "debian:bookworm-slim@sha256:5ae3c39ebd15e229dcedd5cee596b2497182493d41ff162e824ba13fc1b2b867",
+    "platform": "linux/amd64 (via Docker Desktop emulation on this arm64 host)",
+    "container_binary_sha256": "ce0f6f8a230d7cfe0b4ac318836bcdb57f74e596a1f4581f5d4cd7bd3a535e64",
+    "container_binary_sha256_caveat": "Not directly comparable to this file's own native macOS sha256 pin above -- different OS/arch (linux ELF vs macOS Mach-O) means the bytes can never match even for identical source; the comparison that matters is the AUC OUTPUT, not the binary hash, see below.",
+    "auc_set": {
+      "KRAS_G12C": "not comparable -- config/targets.yaml's own apo structure changed (4OBE->4LDJ, TASK-0270) after this file's authoritative/superseded pins were recorded, so any KRAS_G12C AUC measured today reflects a different input structure, not fpocket build variance",
+      "BCR_ABL1": 0.8596264367816093,
+      "CARDIAC_MYOSIN": 0.5344539686073695,
+      "note": "Real, decisive finding, not assumed: this containerized build reproduces TASK-0163's own ORIGINAL (superseded) AUCs exactly (0.8596/0.5345), NOT TASK-0206's own re-verified native-rebuild AUCs (0.8618/0.5303) -- on the identical source tag (4.2.3). This is a THIRD independent data point on the same underlying question TASK-0206 first raised, and it does not converge with either prior one. Confirms the drift TASK-0206 found is a genuine build-environment sensitivity (compiler version/flags/qhull behavior), not an artifact of hand-compilation specifically -- Docker with an unpinned-by-digest base image does not fix it either (this build's own first attempt, before the digest pin above was added, is what produced this exact result). Whether the NOW-digest-pinned recipe converges on a stable value across repeated rebuilds, and which of the three AUC sets (if any) a from-scratch multi-machine Docker rebuild would land on, is a real open question -- not resolved further here, flagged as a genuine follow-up. All three AUC sets kept on record, none silently preferred, per this project's own no-overwrite convention."
+    }
   }
 }

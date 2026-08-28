@@ -1,0 +1,14 @@
+{
+  "_comment": "TASK-0285. First provenance record for EvoEF2 -- none existed before this task (unlike tools/fpocket/PROVENANCE.json, no prior cross-machine drift had been checked). Regenerate after any Dockerfile rebuild and diff against this file before trusting a new run.",
+  "pinned_date": "2026-08-28",
+  "image": "qas-evoef2:task0204",
+  "base_image_digest": "debian:bookworm-slim@sha256:5ae3c39ebd15e229dcedd5cee596b2497182493d41ff162e824ba13fc1b2b867",
+  "platform": "linux/amd64 (via Docker Desktop emulation on this arm64 host)",
+  "source_recipe": "README.md's own pinned recipe: git clone --depth 1 https://github.com/tommyhuangthu/EvoEF2.git, apply task0204_single_pass_repack.patch, g++ -O3 -o EvoEF2 src/*.cpp",
+  "container_binary_sha256": "10c973f30c7972fbcbc3cadb9dbabf0ede6f0201da2155fc1b6140e457e3729b",
+  "container_binary_sha256_caveat": "Linux ELF, not comparable byte-for-byte to a native macOS Mach-O build's own sha256 -- the reproducibility check that matters is the OUTPUT, not the binary hash, see below.",
+  "reproducibility_check": {
+    "method": "GreedyRepack on KRAS_G12C (4LDJ, chain A, 170 residues), native macOS arm64 binary (EvoEF2.native-backup, the binary this Dockerfile's own wrapper replaced) vs. this image's own containerized binary, identical input PDB, identical command",
+    "result": "BYTE-IDENTICAL output (_beststruct.pdb, 107203 bytes both arms) -- a clean positive, unlike tools/fpocket/PROVENANCE.json's own containerized_build_TASK_0285 entry, which found a real discrepancy for that tool. Not assumed to generalize to every target/command without further testing -- one real target checked, reported as what it is."
+  }
+}

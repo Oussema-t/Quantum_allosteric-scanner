@@ -1,4 +1,14 @@
-# Ignore everything in this directory except the README and this file
+# Ignore everything in this directory except the README, this file, and
+# the Docker recipe (TASK-0285) -- Dockerfile is tracked. The fetched
+# release payload (jars/models/docs under p2rank_2.5.1/) stays ignored,
+# except its own `prank` launcher script, which is REPLACED by the
+# Docker wrapper and must be tracked -- un-ignoring a file inside an
+# otherwise-ignored directory requires un-ignoring the directory itself
+# first (a real gitignore gotcha, not obvious from the pattern alone).
 *
 !.gitignore
 !README.md
+!Dockerfile
+!p2rank_2.5.1/
+p2rank_2.5.1/*
+!p2rank_2.5.1/prank
