@@ -384,14 +384,23 @@ end-to-end, on live RCSB data. The artifacts are not the problem.
 **The accuracy is.** Measured precision-at-5 against the true drug-contact
 pocket, mandatory targets, current structures:
 
-| target | top-5 predicted resnums | hits | P@5 |
-|---|---|---|---|
-| KRAS_G12C (`4LDJ`) | 31, 60, 33, 29, 27 | {60} | **0.2** |
-| BCR_ABL1 (`1OPL`) | 402, 311, 310, 301, 338 | — | **0.0** |
-| CARDIAC_MYOSIN (`8QYP`) | 682, 683, 681, 680, 133 | — | **0.0** |
+| target | P@5 | provenance |
+|---|---|---|
+| KRAS_G12C (`4LDJ`) | **0.000** | corrected by [[TASK-0283]]; the previously-quoted 0.200 was a **stale artifact** generated 2026-08-20 against the old `4OBE` apo, before [[TASK-0270]]'s genotype fix |
+| BCR_ABL1 (`1OPL`) | **0.000** | verified not stale |
+| CARDIAC_MYOSIN (`8QYP`) | **0.000** | verified not stale |
 
-**One hit in fifteen predictions.** Residue-level AUC 0.5565 / 0.5408 / 0.5485;
-diagnosis `NO_SIGNAL_IN_APO` on two of three.
+**Zero hits in fifteen predictions — 0/5 on every mandatory target.**
+Residue-level AUC 0.5565 / 0.5408 / 0.5485; diagnosis `NO_SIGNAL_IN_APO` on
+two of three.
+
+**This corrects a figure this file previously carried.** An earlier revision
+quoted KRAS at 0.200, which was read from a shipped `hit_list.json` predating
+the apo correction. [[TASK-0283]] found the cause structurally — not an
+operator disagreement, as first suspected, but simple staleness — and
+confirmed the matrix and hit-list deliverables share an operator on the three
+ground-truth targets (though **not** on the no-ground-truth ones, which must
+be said rather than smoothed into a blanket claim).
 
 ### Why this does not sink the submission — read §4.1 against the Assessment Criteria
 
@@ -468,6 +477,34 @@ Constructive half, equally measured:
 - **We cannot yet say what it measures.** Three readings proposed, all three
   pre-registered and killed: efficacy ([[TASK-0279]]), coupling capacity
   ([[TASK-0281]]), stabilisation/frustration ([[TASK-0268]]). Two were ours.
+
+### The site-location question is closed: it is not in the apo structure
+
+Filed as a lead, resolved as a negative. The benchmark's allosteric sites fall
+into **two structurally distinct populations** — 1D k-means silhouette
+**0.737**, near cluster n=24 (1.29–8.33 Å), far cluster n=9 (11.24–19.72 Å),
+with a **2.91 Å gap containing nothing**, and log(min_A) non-normal at
+p=0.0020 ([[TASK-0284]], reproduced bit-for-bit from an independent re-run).
+
+Which population a protein belongs to is then **not predictable from its apo
+structure by any means we could construct**:
+
+| test | result |
+|---|---|
+| 8 global structural descriptors — size, Rg, compactness, helix/sheet fraction, GNM λ₁ stiffness, contact order, packing | **none survives Bonferroni** (α=0.0063); best is chain length at p=0.072; stiffness a clean null at p=0.697 |
+| SVD of that descriptor space | **effective rank 2.70 of 8** — three PCs carry 89%, and **none of them tracks distality** (p=0.51/0.49/0.92). The only nominal signals sit in PC6/7/8, holding 2.8% of variance combined |
+| supervised separability, leave-one-out | logistic **0.676**, linear SVC **0.546**, **RBF SVC 0.500** — against in-sample 0.843/0.917/0.958. The RBF model memorised 33 points perfectly and generalised at exactly chance |
+| pocket-space dimensionality | effective rank **2.49**, axes = distality / active-site size / pocket size |
+| pocket↔protein linkage (CCA, permutation null) | a real link exists (r=0.848, **p=0.0070**) — but it runs through **size**, not distality: the distality axis against protein structure is **p=0.612** |
+| **domain architecture** — the last categorical hypothesis | **FAILS** ([[TASK-0284]] Part B): far cluster splits 3 cross-domain / 6 same-domain. [[TASK-0286]] then built three geometric domain parsers and **all three failed their own control checks**, leaving the verdict unmodified |
+
+**Conclusion for the document**: the split is real, sharp, and discovered
+rather than imposed — and it is invisible to every continuous, combined, and
+categorical structural feature we could construct. Where an allosteric site
+sits appears to be a fact about a protein's functional and evolutionary
+history, not about its shape. **No method operating on apo coordinates alone
+— quantum or classical — can recover it**, which is a statement about the
+problem rather than about our pipeline.
 
 ### Phase 2, written to the published criteria
 
