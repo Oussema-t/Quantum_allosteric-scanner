@@ -431,6 +431,16 @@ Load-bearing findings, all measured:
   with the active site (<4.5 Å heavy-atom), 27% proximal, 15% intermediate,
   **0% remote**. Only 4 of 20 targets meet a 15 Å separation bar; **none**
   meets 20 Å ([[TASK-0255]], [[TASK-0258]]).
+- **Those distances are not one continuum — they are two populations, and
+  nothing predicts which a protein has.** 1D k-means splits all 33 scoreable
+  targets at ≈10 Å (silhouette 0.737, a 2.9 Å gap with nothing in it; Shapiro
+  on log-distance p=0.0020 rejects one lognormal spread). Eight standard
+  descriptors — size, shape, secondary structure, GNM stiffness, fold
+  topology, packing density — are all silent under Bonferroni correction, and
+  the one categorical, mechanistic candidate — does the allosteric site sit
+  in a different Pfam domain from the active site — fails too (Fisher exact
+  p=0.12, n=32). The split is real and currently unexplained by structure
+  alone ([[TASK-0284]]).
 - **The benchmark is two tasks bundled.** 9 of 20 targets are ≥80% open in apo;
   fpocket scores 0.854 on those and 0.515 — chance — on the rest
   ([[TASK-0254]]).

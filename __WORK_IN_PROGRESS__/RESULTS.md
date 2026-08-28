@@ -9907,3 +9907,108 @@ submission says — not the favourable number.
 `results/KRAS_G12C/{hit_list,verdict}.json` (updated in place),
 `results/RESULTS.md` (appended). **Full detail:**
 `.ai/tasks/DONE/TASK-0283-shipped-backend-and-research-pipeline-disagree.md`.
+
+## Two structurally distinct populations of allosteric site — and nothing we measured, including domain architecture, predicts which a protein has ([[TASK-0284]], 2026-08-28)
+
+Reviewer-filed Finding A/B independently reproduced as committed code
+(`scripts/task0284_bimodality_and_nulls.py`), and Part B's own
+pre-registered domain-architecture test run for the first time
+(`scripts/task0284_domain_architecture.py`).
+
+**Finding A, reproduced exactly.** 1D k-means (k=2) on min heavy-atom
+distance from pocket to active site, across 33 scoreable targets
+([[TASK-0258]]'s own measure, re-run fresh against live config, not its
+possibly-stale stored artifact): **silhouette 0.737**. **Near cluster:
+n=24, 1.29–8.33 Å. Far cluster: n=9, 11.24–19.72 Å. Gap: 2.91 Å** with
+nothing in it. Shapiro-Wilk on log(min_A): **p=0.0020** — one lognormal
+continuum is rejected. Every number matches the filed finding bit-for-bit.
+Re-expressed against [[TASK-0258]]'s own bin edges (min_A≥12.0 Å → far)
+side by side, per this task's own Scope: **n_far=5** there vs **n_far=9**
+data-derived — the 4-target gap is CARDIAC_MYOSIN (11.81 Å, inside the
+data-derived far cluster, outside the old ≥12 Å bin) plus PTP1B/
+PKR_MITAPIVAT/PKR_AG946.
+
+**Finding B, independently recomputed.** Eight standard descriptors
+(N, Rg, compactness, helix/sheet fraction, GNM λ₁, contact order, mean
+degree) against min_A (Spearman) and near-vs-far (Mann-Whitney), both
+splits. **Nothing survives Bonferroni (α=0.05/8=0.00625):**
+
+| property | rho vs min_A | p (Spearman) | p (Mann-Whitney, data-split) |
+|---|---|---|---|
+| N (chain length) | +0.317 | 0.072 | 0.045 |
+| Rg | +0.232 | 0.193 | 0.284 |
+| compactness (Rg/N^⅓) | −0.021 | 0.910 | 0.505 |
+| helix fraction | +0.028 | 0.879 | 0.284 |
+| sheet fraction | +0.067 | 0.709 | 0.887 |
+| GNM λ₁ (global stiffness) | −0.041 | 0.821 | 0.952 |
+| contact order | −0.097 | 0.592 | 0.984 |
+| mean degree (packing) | +0.059 | 0.744 | 0.176 |
+
+N/Rg/compactness/mean_degree reproduce the filed rho values to 3 decimal
+places; helix/sheet/λ₁ diverge in magnitude (λ₁ also in sign) from the
+filed numbers — expected: this environment has **no DSSP binary and no
+biotite** (checked directly: `mkdssp`/`dssp` absent from PATH, a pinned
+`pip install biotite==0.41.0` fails to build against numpy 2.5/python3.13,
+an unpinned install hung resolving dependencies and was killed), so
+helix/sheet fraction here is a coarser ProDy `calcPhi`/`calcPsi`
+Ramachandran-region classifier, not DSSP. **The substantive conclusion is
+identical either way: none of the eight survive correction**, under
+either computation.
+
+**Part B: domain architecture — tested for the first time, and it fails,
+but only after a coverage-gap false positive was caught.** Source: RCSB
+Data API's own Pfam feature per polymer entity, verified live (4LDJ/KRAS
+checked directly before trusting the resnum-mapping arithmetic at scale).
+CATH was tried first and abandoned — `cathdb.info`'s REST API 404s on a
+2024+ deposition (8QYP), its release lags recent PDB entries.
+
+A first pass resolved 24/33 targets and reported **HOLDS at p=0.0184** —
+but the 9 unresolved were not random: **all 4 HCV_NS5B rows**, the far
+cluster's single largest subgroup, dropped because RCSB's own bundled
+Pfam feature list is empty for that entity (also TEM-1 beta-lactamase,
+HIV-1 RT, and others). Confirmed live as a genuine RCSB coverage gap, not
+a request bug — InterPro's own Pfam-by-UniProt endpoint finds "Viral RNA
+dependent RNA polymerase" for HCV NS5B's UniProt P26663 without trouble.
+Fixed with an InterPro-by-SIFTS-UniProt fallback plus correct
+`auth_asym_id`→`label_asym_id` resolution (4DEM's entity has
+`auth_asym_id="F"` but `label_asym_id="A"` — a same-string guess 404s on
+the instance endpoint). Resolution went to **32/33** (only `SUMO_E1_FHJ`
+stays unresolved — its active site/pocket span the SAE1/UBA2 heterodimer
+interface in a way neither Pfam source fully annotates for that chain).
+
+**With the gap fixed, the result flips: FAILS.**
+
+| | cross-domain | same-domain |
+|---|---|---|
+| far-cluster (n=9) | 3 | 6 |
+| near-cluster (n=23) | 2 | 21 |
+
+Fisher exact: odds ratio 5.25, **p=0.1206** (two-sided and one-sided
+far→cross alike). Direction agrees with the pre-registered prediction
+(33% of far-cluster targets cross-domain vs 9% of near-cluster) but does
+not clear significance at this n. The far cluster's own same-domain
+majority is driven mainly by HCV_NS5B (4 of 6): its allosteric thumb/palm
+site sits inside the SAME "Viral RNA dependent RNA polymerase" Pfam
+domain as the active site, 17.9–19.7 Å away in 3D regardless. The near
+cluster's two cross-domain counter-examples are HIV1_RT (seed in RNase H,
+pocket in the polymerase domain) and GLUCOKINASE (the classic bilobed
+Hexokinase_1/Hexokinase_2 fold).
+
+Caveat stated, not hidden: Pfam domains are sequence-family boundaries,
+coarser than a structural-domain parser for large multi-lobed proteins —
+CARDIAC_MYOSIN's entire ~700-residue motor head is one Pfam entry
+("Myosin_head") despite several real structural subdomains. A finer
+structural parser might move some same-domain calls to cross-domain; not
+chased further — Part B was pre-registered as one source, one test.
+
+**Verdict: the split is real (Finding A) and currently unexplained by
+structure alone (Finding B + Part B).** Size, shape, secondary structure,
+GNM stiffness, fold topology, packing density, and now Pfam domain
+architecture are all silent or non-significant. The remaining candidates
+are non-structural: ligand chemotype ([[TASK-0265]]) or functional/
+evolutionary history, neither recoverable from an apo backbone.
+
+**Script/data**: `scripts/task0284_bimodality_and_nulls.py`,
+`scripts/task0284_domain_architecture.py`; `results/tasks/
+0284_two_populations/{bimodality_and_nulls,domain_architecture}.json`.
+Full detail: [[TASK-0284]].
