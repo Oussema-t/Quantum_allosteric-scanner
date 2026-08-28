@@ -1,0 +1,424 @@
+{
+ "rows": [
+  {
+   "target": "GAC_BPTES",
+   "n_res": 8,
+   "n_seq_segments": 4,
+   "n_spatial_components": 3,
+   "n_fpocket_overlapping": 8,
+   "best_fpocket_coverage": 0.75
+  },
+  {
+   "target": "GAC_CPD12",
+   "n_res": 6,
+   "n_seq_segments": 2,
+   "n_spatial_components": 2,
+   "n_fpocket_overlapping": 7,
+   "best_fpocket_coverage": 0.8333333333333334
+  },
+  {
+   "target": "DHPS_GC7",
+   "n_res": 17,
+   "n_seq_segments": 12,
+   "n_spatial_components": 3,
+   "n_fpocket_overlapping": 6,
+   "best_fpocket_coverage": 0.4117647058823529
+  },
+  {
+   "target": "PF_ATCASE",
+   "n_res": 13,
+   "n_seq_segments": 8,
+   "n_spatial_components": 3,
+   "n_fpocket_overlapping": 9,
+   "best_fpocket_coverage": 0.6923076923076923
+  },
+  {
+   "target": "KSHV_PROTEASE_24Q",
+   "n_res": 16,
+   "n_seq_segments": 12,
+   "n_spatial_components": 3,
+   "n_fpocket_overlapping": 4,
+   "best_fpocket_coverage": 0.25
+  },
+  {
+   "target": "KSHV_PROTEASE_25G",
+   "n_res": 15,
+   "n_seq_segments": 12,
+   "n_spatial_components": 4,
+   "n_fpocket_overlapping": 4,
+   "best_fpocket_coverage": 0.2
+  },
+  {
+   "target": "SUMO_E1_FHJ",
+   "n_res": 13,
+   "n_seq_segments": 8,
+   "n_spatial_components": 3,
+   "n_fpocket_overlapping": 9,
+   "best_fpocket_coverage": 0.3076923076923077
+  },
+  {
+   "target": "HCV_NS5B_VRX",
+   "n_res": 15,
+   "n_seq_segments": 10,
+   "n_spatial_components": 2,
+   "n_fpocket_overlapping": 4,
+   "best_fpocket_coverage": 0.6
+  },
+  {
+   "target": "HCV_NS5B_VR1",
+   "n_res": 17,
+   "n_seq_segments": 11,
+   "n_spatial_components": 2,
+   "n_fpocket_overlapping": 4,
+   "best_fpocket_coverage": 0.5294117647058824
+  },
+  {
+   "target": "HCV_NS5B_POO",
+   "n_res": 16,
+   "n_seq_segments": 9,
+   "n_spatial_components": 1,
+   "n_fpocket_overlapping": 4,
+   "best_fpocket_coverage": 0.1875
+  },
+  {
+   "target": "HCV_NS5B_CMF",
+   "n_res": 16,
+   "n_seq_segments": 9,
+   "n_spatial_components": 1,
+   "n_fpocket_overlapping": 4,
+   "best_fpocket_coverage": 0.1875
+  },
+  {
+   "target": "FBPASE_94D",
+   "n_res": 14,
+   "n_seq_segments": 8,
+   "n_spatial_components": 2,
+   "n_fpocket_overlapping": 4,
+   "best_fpocket_coverage": 0.7857142857142857
+  },
+  {
+   "target": "FBPASE_95S",
+   "n_res": 13,
+   "n_seq_segments": 5,
+   "n_spatial_components": 2,
+   "n_fpocket_overlapping": 7,
+   "best_fpocket_coverage": 0.6923076923076923
+  },
+  {
+   "target": "TRP_SYNTHASE_F6F",
+   "n_res": 17,
+   "n_seq_segments": 11,
+   "n_spatial_components": 7,
+   "n_fpocket_overlapping": 12,
+   "best_fpocket_coverage": 0.47058823529411764
+  },
+  {
+   "target": "TRP_SYNTHASE_F19",
+   "n_res": 20,
+   "n_seq_segments": 13,
+   "n_spatial_components": 8,
+   "n_fpocket_overlapping": 13,
+   "best_fpocket_coverage": 0.4
+  },
+  {
+   "target": "SMYD3_DIPERODON",
+   "n_res": 12,
+   "n_seq_segments": 8,
+   "n_spatial_components": 1,
+   "n_fpocket_overlapping": 3,
+   "best_fpocket_coverage": 1.0
+  },
+  {
+   "target": "PKR_MITAPIVAT",
+   "n_res": 12,
+   "n_seq_segments": 8,
+   "n_spatial_components": 2,
+   "n_fpocket_overlapping": 14,
+   "best_fpocket_coverage": 0.6666666666666666
+  },
+  {
+   "target": "PKR_AG946",
+   "n_res": 11,
+   "n_seq_segments": 7,
+   "n_spatial_components": 2,
+   "n_fpocket_overlapping": 12,
+   "best_fpocket_coverage": 0.6363636363636364
+  },
+  {
+   "target": "MKK7_IBRUTINIB",
+   "n_res": 16,
+   "n_seq_segments": 12,
+   "n_spatial_components": 1,
+   "n_fpocket_overlapping": 1,
+   "best_fpocket_coverage": 0.4375
+  },
+  {
+   "target": "NAMPT_NPA1R",
+   "n_res": 17,
+   "n_seq_segments": 11,
+   "n_spatial_components": 1,
+   "n_fpocket_overlapping": 2,
+   "best_fpocket_coverage": 0.47058823529411764
+  },
+  {
+   "target": "TEM1_BLA_CBT",
+   "n_res": 12,
+   "n_seq_segments": 7,
+   "n_spatial_components": 1,
+   "n_fpocket_overlapping": 1,
+   "best_fpocket_coverage": 0.4166666666666667
+  },
+  {
+   "target": "TEM1_BLA_FTA",
+   "n_res": 16,
+   "n_seq_segments": 11,
+   "n_spatial_components": 1,
+   "n_fpocket_overlapping": 1,
+   "best_fpocket_coverage": 0.125
+  },
+  {
+   "target": "GLUR2_TRU",
+   "n_res": 10,
+   "n_seq_segments": 5,
+   "n_spatial_components": 1,
+   "n_fpocket_overlapping": 3,
+   "best_fpocket_coverage": 0.8
+  },
+  {
+   "target": "GLUR2_ANIRACETAM",
+   "n_res": 8,
+   "n_seq_segments": 3,
+   "n_spatial_components": 1,
+   "n_fpocket_overlapping": 2,
+   "best_fpocket_coverage": 0.625
+  },
+  {
+   "target": "GLUK1_BPAM",
+   "n_res": 7,
+   "n_seq_segments": 4,
+   "n_spatial_components": 1,
+   "n_fpocket_overlapping": 3,
+   "best_fpocket_coverage": 0.42857142857142855
+  },
+  {
+   "target": "FPPS_YF0282",
+   "n_res": 14,
+   "n_seq_segments": 11,
+   "n_spatial_components": 1,
+   "n_fpocket_overlapping": 2,
+   "best_fpocket_coverage": 0.8571428571428571
+  },
+  {
+   "target": "HIV1_RT",
+   "n_res": 16,
+   "n_seq_segments": 11,
+   "n_spatial_components": 2,
+   "n_fpocket_overlapping": 6,
+   "best_fpocket_coverage": 0.5625
+  },
+  {
+   "target": "KRAS_G12C",
+   "n_res": 21,
+   "n_seq_segments": 9,
+   "n_spatial_components": 1,
+   "n_fpocket_overlapping": 4,
+   "best_fpocket_coverage": 0.38095238095238093
+  },
+  {
+   "target": "BCR_ABL1",
+   "n_res": 20,
+   "n_seq_segments": 13,
+   "n_spatial_components": 2,
+   "n_fpocket_overlapping": 4,
+   "best_fpocket_coverage": 0.9
+  },
+  {
+   "target": "CARDIAC_MYOSIN",
+   "n_res": 15,
+   "n_seq_segments": 9,
+   "n_spatial_components": 3,
+   "n_fpocket_overlapping": 6,
+   "best_fpocket_coverage": 0.9333333333333333
+  },
+  {
+   "target": "PTP1B",
+   "n_res": 14,
+   "n_seq_segments": 6,
+   "n_spatial_components": 1,
+   "n_fpocket_overlapping": 5,
+   "best_fpocket_coverage": 0.35714285714285715
+  },
+  {
+   "target": "GLUCOKINASE",
+   "n_res": 21,
+   "n_seq_segments": 10,
+   "n_spatial_components": 1,
+   "n_fpocket_overlapping": 3,
+   "best_fpocket_coverage": 0.9047619047619048
+  },
+  {
+   "target": "CASPASE7",
+   "n_res": 9,
+   "n_seq_segments": 7,
+   "n_spatial_components": 3,
+   "n_fpocket_overlapping": 3,
+   "best_fpocket_coverage": 0.5555555555555556
+  }
+ ],
+ "n": 33,
+ "single_cavity": 14,
+ "multi_cavity": 19,
+ "one_cavity_many_fpockets": 11,
+ "inter_component_gaps": [
+  {
+   "target": "GAC_BPTES",
+   "n": 3,
+   "mn": 8.133855543344739,
+   "mx": 16.502916893688823,
+   "reading": "mixed"
+  },
+  {
+   "target": "GAC_CPD12",
+   "n": 2,
+   "mn": 8.484633050403534,
+   "mx": 8.484633050403534,
+   "reading": "one wide cavity"
+  },
+  {
+   "target": "DHPS_GC7",
+   "n": 3,
+   "mn": 12.198810146895475,
+   "mx": 19.520343695744703,
+   "reading": "mixed"
+  },
+  {
+   "target": "PF_ATCASE",
+   "n": 3,
+   "mn": 8.865729975585769,
+   "mx": 17.98616704581607,
+   "reading": "mixed"
+  },
+  {
+   "target": "KSHV_PROTEASE_24Q",
+   "n": 3,
+   "mn": 9.144840621902604,
+   "mx": 23.824284354414512,
+   "reading": "mixed"
+  },
+  {
+   "target": "KSHV_PROTEASE_25G",
+   "n": 4,
+   "mn": 8.573157003111513,
+   "mx": 27.929409445958576,
+   "reading": "mixed"
+  },
+  {
+   "target": "SUMO_E1_FHJ",
+   "n": 3,
+   "mn": 13.750370358648526,
+   "mx": 29.12758901797401,
+   "reading": "mixed"
+  },
+  {
+   "target": "HCV_NS5B_VRX",
+   "n": 2,
+   "mn": 8.186382229043547,
+   "mx": 8.186382229043547,
+   "reading": "one wide cavity"
+  },
+  {
+   "target": "HCV_NS5B_VR1",
+   "n": 2,
+   "mn": 8.186382229043547,
+   "mx": 8.186382229043547,
+   "reading": "one wide cavity"
+  },
+  {
+   "target": "FBPASE_94D",
+   "n": 2,
+   "mn": 8.024403093065551,
+   "mx": 8.024403093065551,
+   "reading": "one wide cavity"
+  },
+  {
+   "target": "FBPASE_95S",
+   "n": 2,
+   "mn": 9.418694442437355,
+   "mx": 9.418694442437355,
+   "reading": "one wide cavity"
+  },
+  {
+   "target": "TRP_SYNTHASE_F6F",
+   "n": 7,
+   "mn": 9.775207107780377,
+   "mx": 38.37713425986886,
+   "reading": "mixed"
+  },
+  {
+   "target": "TRP_SYNTHASE_F19",
+   "n": 8,
+   "mn": 8.926452542863826,
+   "mx": 38.37713425986886,
+   "reading": "mixed"
+  },
+  {
+   "target": "PKR_MITAPIVAT",
+   "n": 2,
+   "mn": 9.542048574598644,
+   "mx": 9.542048574598644,
+   "reading": "one wide cavity"
+  },
+  {
+   "target": "PKR_AG946",
+   "n": 2,
+   "mn": 8.891290232581547,
+   "mx": 8.891290232581547,
+   "reading": "one wide cavity"
+  },
+  {
+   "target": "HIV1_RT",
+   "n": 2,
+   "mn": 8.691213839274678,
+   "mx": 8.691213839274678,
+   "reading": "one wide cavity"
+  },
+  {
+   "target": "BCR_ABL1",
+   "n": 2,
+   "mn": 8.409275117392701,
+   "mx": 8.409275117392701,
+   "reading": "one wide cavity"
+  },
+  {
+   "target": "CARDIAC_MYOSIN",
+   "n": 3,
+   "mn": 8.294261027963854,
+   "mx": 13.243911846580678,
+   "reading": "one wide cavity"
+  },
+  {
+   "target": "CASPASE7",
+   "n": 3,
+   "mn": 9.371190906176224,
+   "mx": 16.781461944657856,
+   "reading": "mixed"
+  }
+ ],
+ "summary": {
+  "n": 33,
+  "single_component": 14,
+  "all_components_within_14A": 10,
+  "one_physical_pocket": 24,
+  "genuinely_multi_region": 9,
+  "seq_segments_median": 9,
+  "seq_segments_range": [
+   2,
+   13
+  ],
+  "fpocket_candidates_per_drug_site_median": 4,
+  "best_single_fpocket_coverage_median": 0.56,
+  "one_cavity_but_multiple_fpockets": 11,
+  "gap_threshold_A": 14.0,
+  "gap_threshold_note": "judgment call, ~the longest dimension of a large drug; not a derived constant"
+ }
+}
