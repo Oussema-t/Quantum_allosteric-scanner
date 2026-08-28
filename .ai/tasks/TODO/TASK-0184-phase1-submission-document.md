@@ -493,9 +493,9 @@ structure by any means we could construct**:
 |---|---|
 | 8 global structural descriptors — size, Rg, compactness, helix/sheet fraction, GNM λ₁ stiffness, contact order, packing | **none survives Bonferroni** (α=0.0063); best is chain length at p=0.072; stiffness a clean null at p=0.697 |
 | SVD of that descriptor space | **effective rank 2.70 of 8** — three PCs carry 89%, and **none of them tracks distality** (p=0.51/0.49/0.92). The only nominal signals sit in PC6/7/8, holding 2.8% of variance combined |
-| supervised separability, leave-one-out | logistic **0.676**, linear SVC **0.546**, **RBF SVC 0.500** — against in-sample 0.843/0.917/0.958. The RBF model memorised 33 points perfectly and generalised at exactly chance |
+| supervised separability, leave-one-out | logistic **0.676** vs in-sample 0.843, stable across seeds; with 9 positives in 33 (SE ≈ ±0.10) **not distinguishable from chance**. SVC figures withdrawn on re-verification — `probability=True` Platt scaling is unstable at this n, giving 0.000–0.546 across seeds |
 | pocket-space dimensionality | effective rank **2.49**, axes = distality / active-site size / pocket size |
-| pocket↔protein linkage (CCA, permutation null) | a real link exists (r=0.848, **p=0.0070**) — but it runs through **size**, not distality: the distality axis against protein structure is **p=0.612** |
+| pocket↔protein linkage (CCA, permutation null) | a real link exists (r=0.8481, **p=0.005–0.008 over five independent nulls**) — but it runs through **size**, not distality: the distality axis against protein structure is **p=0.612** |
 | **domain architecture** — the last categorical hypothesis | **FAILS** ([[TASK-0284]] Part B): far cluster splits 3 cross-domain / 6 same-domain. [[TASK-0286]] then built three geometric domain parsers and **all three failed their own control checks**, leaving the verdict unmodified |
 
 **Conclusion for the document**: the split is real, sharp, and discovered
