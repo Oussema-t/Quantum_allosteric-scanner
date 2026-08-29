@@ -16,6 +16,7 @@ human-readable names/title are skipped.
 """
 import json
 import re
+import urllib.error
 import urllib.request
 
 import numpy as np
@@ -67,7 +68,13 @@ _FORMULA_RE = re.compile(r"([A-Z][a-z]?)(\d*)")
 _GET_CACHE = {}
 
 
-def _get_json(url, timeout=8):
+def _get_json(url, timeout=8, raise_on_error=False):
+    """`raise_on_error` (TASK-0290): default False preserves every existing
+    caller's silent-None-on-failure behavior unchanged. A genuine HTTP 404
+    (the resource does not exist -- a real negative) always returns None,
+    even when `raise_on_error=True`; every other failure (timeout, DNS,
+    5xx, malformed response) propagates instead of being swallowed, so an
+    opt-in caller can distinguish "not found" from "the call failed"."""
     if url in _GET_CACHE:
         try:
             return json.loads(_GET_CACHE[url])
@@ -79,7 +86,15 @@ def _get_json(url, timeout=8):
             text = r.read().decode("utf-8")
         _GET_CACHE[url] = text
         return json.loads(text)
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return None
+        if raise_on_error:
+            raise
+        return None
     except Exception:
+        if raise_on_error:
+            raise
         return None
 
 
@@ -214,11 +229,16 @@ def _iter_hetero(model):
                 yield chain.id, res
 
 
-def ligands_and_sites(pdb_id, chains=None, contact_cutoff=4.5):
+def ligands_and_sites(pdb_id, chains=None, contact_cutoff=4.5, raise_on_error=False):
     """Every non-water HETATM group in the entry, with its chemical name and the
-    protein residues it contacts (binding site). Returns list of ligand dicts."""
+    protein residues it contacts (binding site). Returns list of ligand dicts.
+
+    `raise_on_error` (TASK-0290): threaded to this function's own `fetch()`
+    call only (the structure download, which determines the returned
+    binding-site residues) -- default False keeps every existing caller's
+    behavior unchanged."""
     from Bio.PDB import PDBParser
-    fp = fetch(pdb_id)
+    fp = fetch(pdb_id, raise_on_error=raise_on_error)
     if fp is None:
         return []
     s = PDBParser(QUIET=True).get_structure(pdb_id, fp)

@@ -259,10 +259,10 @@
    },
    {
     "target": "MKK7_IBRUTINIB",
-    "min_A": 1.3663052367608053,
-    "pocket_res": "A136",
-    "site_res": "A135",
-    "ca_ca": 3.9286544770442724,
+    "min_A": 1.3239040750749278,
+    "pocket_res": "A164",
+    "site_res": "A165",
+    "ca_ca": 3.8103470970503466,
     "seq_gap": 1
    },
    {
@@ -315,11 +315,11 @@
    },
    {
     "target": "HCV_NS5B_POO",
-    "min_A": 1.3327599183649002,
-    "pocket_res": "A424",
-    "site_res": "A423",
-    "ca_ca": 3.8029173012307242,
-    "seq_gap": 1
+    "min_A": 17.935504760111996,
+    "pocket_res": "A392",
+    "site_res": "A319",
+    "ca_ca": 22.498182704387478,
+    "seq_gap": 73
    },
    {
     "target": "CARDIAC_MYOSIN",

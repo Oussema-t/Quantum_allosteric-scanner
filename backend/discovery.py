@@ -29,16 +29,19 @@ SEARCH_API = "https://search.rcsb.org/rcsbsearch/v2/query"
 
 # ── UniProt resolution ──────────────────────────────────────────────────────
 
-def get_uniprot(pdb_id):
-    """UniProt accession(s) for an entry's polymer entities (best-effort)."""
+def get_uniprot(pdb_id, raise_on_error=False):
+    """UniProt accession(s) for an entry's polymer entities (best-effort).
+
+    `raise_on_error` (TASK-0290): threaded straight through to `_get_json`
+    -- default False keeps every existing caller's behavior unchanged."""
     pdb_id = pdb_id.upper()
-    entry = _get_json(f"{DATA_API}/entry/{pdb_id}")
+    entry = _get_json(f"{DATA_API}/entry/{pdb_id}", raise_on_error=raise_on_error)
     if not entry:
         return []
     ids = (entry.get("rcsb_entry_container_identifiers", {}) or {}).get("polymer_entity_ids", [])
     accs = []
     for eid in ids:
-        pe = _get_json(f"{DATA_API}/polymer_entity/{pdb_id}/{eid}")
+        pe = _get_json(f"{DATA_API}/polymer_entity/{pdb_id}/{eid}", raise_on_error=raise_on_error)
         if not pe:
             continue
         cont = pe.get("rcsb_polymer_entity_container_identifiers", {}) or {}

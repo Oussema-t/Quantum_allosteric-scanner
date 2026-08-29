@@ -153,6 +153,11 @@ def measure(t):
         "same_chain": same_chain, "overlaps_active_site": overlaps,
         "category": categorise(min_A, overlaps, same_chain),
         "passes_old_min_hop_2": bool(hops[pi].min() >= 2),
+        # TASK-0290: provenance of the active-site seed that produced
+        # min_A/category above -- `prep()`'s own new `active_site_source`
+        # (previously discarded), so a reader can audit which tier
+        # answered without re-running anything.
+        "active_site_source": cfg.get("active_site_source"),
     }
 
 

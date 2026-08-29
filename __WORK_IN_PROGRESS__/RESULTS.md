@@ -10062,3 +10062,190 @@ rather than merely asserted.
 
 **Script**: `scripts/task0286_structural_domain_parser.py`. Full detail:
 [[TASK-0286]].
+
+## `detect_active_site` made deterministic — and the recompute moves nothing: Finding F reproduces exactly ([[TASK-0290]], 2026-08-29)
+
+[[TASK-0289]] found `backend.active_site.detect_active_site`
+(`backend/active_site.py:174-187`) non-deterministic: a transient UniProt
+network failure silently fell through to a lower-confidence tier with no
+error, no retry, and no recorded distinction from "this tier genuinely has
+nothing" — a 16.6 Å swing on `HCV_NS5B_POO` reproduced live, 3/33 taxonomy
+targets measured unstable. This task fixes it and recomputes.
+
+**The fix, two parts, both load-bearing** (`backend/active_site.py`,
+`backend/rcsb.py`, `backend/discovery.py`, `backend/data_layer.py`):
+
+1. **Determinism.** Resolved once per `(pdb_id, chain)`, cached to disk at
+   `pdb_cache/active_site_cache.json` (same cache root `data_layer.fetch`
+   already uses) — every later call for the same key returns the cached
+   result untouched, no network. Verified directly: cold call ~1-2s, warm
+   call ~0.1ms, byte-identical result.
+2. **The silent downgrade.** Added an additive `raise_on_error` kwarg to
+   `rcsb._get_json`/`data_layer.fetch`/`rcsb.ligands_and_sites`/
+   `discovery.get_uniprot` (default `False`, every existing caller's
+   behavior unchanged — a genuine HTTP 404 still returns `None` even when
+   opted in, since that *is* a real negative). `detect_active_site`'s own
+   tier functions now opt in: a transient network failure
+   (`ActiveSiteNetworkError`, `_RETRYABLE` — `URLError`/timeout/`OSError`/
+   `JSONDecodeError` only, never an unrelated bug) is retried once, then
+   **raised** — never silently swallowed into trying the next tier. A real
+   negative (`get_uniprot` returns `[]`, no Active/Binding features,
+   `_find_offset` can't place the sequence) still returns `None` cleanly
+   and falls through, exactly as before — that path never raised and still
+   doesn't.
+
+**Verified live, not just unit-tested**: `_from_uniprot` monkeypatched to
+always throw `URLError` — confirmed 2 attempts then
+`ActiveSiteNetworkError` raised, not a silent fallback. `HIV1_RT` (1DLO/A,
+[[TASK-0253]]'s original empty-seed failure mode, reproduced live in
+[[TASK-0289]]'s own sweep) now resolves stably to `uniprot`, 7 residues,
+never empty. `DHPS_GC7`/`NAMPT_NPA1R` (the other 2 unstable targets) now
+stably resolve to `uniprot`, 28/10 residues respectively — the same tier
+[[TASK-0289]] had already identified as the correct one, now guaranteed
+rather than lucky.
+
+**Provenance propagated, not just fixed silently**: `task0242_two_stage_
+dryrun.prep()` previously discarded `detect_active_site`'s own `source`
+field — the exact gap that let the non-determinism go unnoticed. Now
+stashed on the already-returned `cfg` dict (`cfg["active_site_source"]`,
+no tuple-shape change, every existing 4-tuple-unpacking call site across
+the codebase unaffected) for the `detect_active_site`-backed branch, and
+`Labels.functional_provenance` for the 6 mandatory targets (a different,
+already-deterministic seed path, [[TASK-0217.003]]). `task0258_
+allosteric_distance_taxonomy.measure()` now records it per target.
+
+**Backend test suite**: `pytest backend/` — 6 pre-existing failures, all
+in `test_analysis_characterization.py`'s KRAS_G12C "pinned golden value"
+tests, all traced (confirmed via `git stash` — identical failures with
+this task's changes fully reverted) to `backend/systems.py`'s own
+2026-08-26 apo genotype fix (4OBE→4LDJ, same TASK-0270) never having
+propagated to those tests' hard-coded expected values — pre-existing,
+unrelated to this task, not fixed here (out of LANE 1's scope; flagged
+for whoever owns that test file).
+
+### The recompute: 0/33 targets moved
+
+Recomputed `min_A`/`median_A`/`max_A` for all 33 taxonomy targets
+(`scripts/task0258_allosteric_distance_taxonomy.py`, fresh cold cache,
+disk cache cleared before running) and diffed against the committed
+`pocket_taxonomy.json`. **Every value is byte-identical to the committed
+one, for every target, including the 3 [[TASK-0289]] found unstable.**
+Per this task's own Constraint (not gated on reproducing committed
+numbers) — this is a measured outcome, not an assumption: the previously
+non-deterministic tiers, when re-resolved deterministically, land on
+exactly the values already committed. The **risk** [[TASK-0289]] found was
+real and live-reproduced; it did not, as it happens, corrupt the
+currently-published taxonomy. Source-tier distribution over the 33: 25
+`uniprot`, 2 `ligand`, 2 `active_site_uniprot` (config-curated, mandatory
+targets), 4 `func_ligand-contact:<LIG>` (mandatory targets, TASK-0217.003
+tiers) — none `pdb_site`, none `none`.
+
+### Finding F re-run on the corrected (now-guaranteed, not lucky) values
+
+`scripts/task0284_bimodality_and_nulls.py` and `scripts/task0288_
+contact_spike_and_label_free_prediction.py` re-run end to end against the
+recomputed taxonomy (Findings A–E untouched per this task's own
+Constraint, not re-opened here):
+
+| | published (TASK-0288) | recomputed (deterministic) |
+|---|---|---|
+| spike count | 9/28 (32%) | **9/28 (32.1%)** |
+| spike window | 1.287–1.363 Å | **1.287–1.363 Å** (identical) |
+| binomial p | 2.0×10⁻⁶ | **2.033×10⁻⁶** |
+| sequence-gap check | all 9 at gap=1 | **all 9 at gap=1**, identical residue pairs |
+
+**Exact reproduction.** Finding F goes to the Phase 1 submission without
+the provenance asterisk [[TASK-0289]] left on it.
+
+**[[TASK-0291]]'s `max_A` restatement, recomputed under the same fix**
+(filed same day, recommending Finding F be restated on `max_A` since
+`min_A` is a minimum and can understate a dispersed site): confirmed
+identical to TASK-0291's own numbers — DHPS_GC7 8.18, PF_ATCASE 6.88,
+FBPASE_95S 5.93, TEM1_BLA_CBT 7.09, MKK7_IBRUTINIB 8.23, GLUK1_BPAM 8.31,
+FPPS_YF0282 5.87 (all ≤8.4 Å), vs. TRP_SYNTHASE_F6F 20.52 and KRAS_G12C
+14.43 (exceed it). **7/9 spike targets have their entire drug-contact set
+within 8.4 Å of the active site** — unaffected by the determinism fix,
+same as `min_A`.
+
+### Handoff
+
+Recompute diff posted per this task's own instruction: **0/33 moved**,
+diff performed against `/tmp/pocket_taxonomy_OLD.json` (the pre-fix
+committed file). [[TASK-0293]] can drop its PROVISIONAL label — its two
+dependency targets (`DHPS_GC7`, `NAMPT_NPA1R`) are confirmed unchanged.
+[[TASK-0184]]'s Finding F wording needs no numeric correction, only the
+provenance asterisk removed.
+
+**Scripts**: `backend/active_site.py` (+`rcsb.py`/`discovery.py`/
+`data_layer.py`), `scripts/task0242_two_stage_dryrun.py`,
+`scripts/task0258_allosteric_distance_taxonomy.py` (unchanged, re-run).
+**Data**: `results/tasks/0258_allosteric_distance_taxonomy/
+pocket_taxonomy.json` (updated in place, values unchanged, `active_site_
+source` field added), `results/tasks/0284_two_populations/
+bimodality_and_nulls.json`, `results/tasks/0288_contact_spike/
+contact_spike.json` (both re-run, unchanged). **Full detail**:
+`.ai/tasks/DONE/TASK-0290-deterministic-active-site-and-minA-recompute.md`.
+
+## `druggability / size` does not survive cluster-robust held-out evaluation — the +0.100 in-sample gain is one shared-apo pair, not a real effect ([[TASK-0293]], 2026-08-29)
+
+[[TASK-0292]] Part D found ranking fpocket candidates by
+`druggability / size` instead of `druggability` alone raises
+[[TASK-0282]]'s published ceiling rule from mean EH 0.1649 to 0.2649 (+0.100)
+**in-sample on the frozen 20**, explicitly flagged as unvalidated and
+"suspiciously close" to this register's own earlier `lex_near_first`
+mirage ([[TASK-0282]]'s reviewer probe: an in-sample 0.267 that then never
+won a single LOTO fold). This task is that check, run as the single
+pre-specified arm the task's own Constraint requires — no sweep, no
+variants.
+
+**Both arms compared are fully parameter-free** (published: `MIN_HOP>=1`,
+rank by druggability; new: `MIN_HOP>=1`, rank by `druggability/size` —
+[[TASK-0292]]'s own `d / max(n, 1)` formula, reused verbatim) — neither is
+fit to any target's own label, so per-target scoring across all 20 frozen
+targets already is the held-out number; there is no fold-wise selection
+step to run. Reused [[TASK-0282]]'s own `build_target`/`apply_rule`
+apparatus and [[TASK-0261]]'s exact 13-cluster sign-flip test.
+
+**Reproduced [[TASK-0292]]'s own numbers exactly before testing anything
+new**: mean EH 0.1649 (published) and 0.2649 (ratio), delta +0.1000, naive
+row-level Wilcoxon p=0.1573 — matches Part D's own 0.1649/0.2649/p=0.157
+to 3-4 decimals.
+
+**Per-fold result: the entire gain is 2 of 20 targets.** `ratio` beats
+`published` on exactly **2/20** folds (`HCV_NS5B_VRX`, `HCV_NS5B_VR1`,
+both jumping 0.000→**1.000**), ties on the other 18 (identical to the
+published rule, including cases where both score 0), loses on 0.
+**`HCV_NS5B_VRX`/`HCV_NS5B_VR1` are [[TASK-0261]]'s own designated
+shared-apo pair** — one structure, not two independent data points.
+
+**Cluster-robust verdict: DOES NOT SURVIVE.** [[TASK-0261]]'s exact
+13-cluster sign-flip test: median diff = 0.0000, **p = 1.0000**. Once the
+non-independence of the one pair carrying the entire effect is respected,
+there is no signal left — a cleaner, more decisive failure than the naive
+row-level p=0.157 already suggested, and mechanistically explained rather
+than merely non-significant: **this is not "weak evidence of a real
+effect," it is one shared apo structure's own idiosyncrasy, counted twice
+by row-level statistics that treat the frozen 20 as 20 independent
+structures.**
+
+**Verdict, per this task's own Note ("either outcome is publishable")**:
+`druggability/size` is a **second, independent confirmation** that this
+register's in-sample pocket-selection gains do not survive held-out
+evaluation — the same finding as [[TASK-0282]]'s own `lex_near_first`
+probe, now demonstrated on a completely different candidate rule family.
+**[[TASK-0282]]'s published ceiling (mean EH 0.1649, `MIN_HOP>=1` + rank
+by druggability alone) stands. No downstream number — the collaborator
+brief, [[TASK-0184]] — needs updating.**
+
+**Dependency on [[TASK-0290]], resolved**: this task's Scope required
+holding the run PROVISIONAL until Lane 1's recompute diff landed, since
+`DHPS_GC7`/`NAMPT_NPA1R` (2 of this task's own 20 targets) were among the
+3 targets found unstable. [[TASK-0290]]'s diff (posted the same session:
+0/33 taxonomy targets moved) resolves this — both targets' candidates in
+this run already reflect the deterministic, corrected active-site
+detection, so no PROVISIONAL label and no re-run are needed.
+
+**Script:** `scripts/task0293_loto_druggability_per_size.py`. **Data:**
+`results/tasks/0293_loto_druggability_per_size/
+loto_druggability_per_size.json`. **Full detail:**
+`.ai/tasks/DONE/TASK-0293-loto-druggability-per-size-ranking.md`.

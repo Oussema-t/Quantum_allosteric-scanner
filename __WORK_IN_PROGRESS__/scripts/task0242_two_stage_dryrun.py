@@ -106,9 +106,18 @@ def prep(t):
         raw = holo_pocket_mask(apo, holo, cfg["drug_ligand"], cutoff=float(cfg["pocket_contact_cutoff"]))
         n = len(rn); a = np.zeros(n, bool); a[sd] = True
         pocket = raw & ~a & ~terminal_mask(n, 0.05)
+        # TASK-0290: `det["source"]` (which of detect_active_site's tiers
+        # answered -- "uniprot"/"ligand"/"pdb_site"/"none") was previously
+        # discarded here, the exact gap that let TASK-0289's non-determinism
+        # go unnoticed. Stashed on `cfg` (not a 5th return value -- every
+        # downstream caller already unpacks this as a 4-tuple, and `cfg`
+        # already flows through to every one of them unchanged) so
+        # provenance is auditable from any call site without re-measuring.
+        cfg["active_site_source"] = det.get("source")
     else:
         lab = build_labels(apo, holo, cfg, cutoff=float(cfg.get("pocket_contact_cutoff", 4.5)))
         sd = np.where(lab.active_site)[0]; pocket = lab.pocket
+        cfg["active_site_source"] = lab.functional_provenance
     return cfg, apo, sd, pocket
 
 

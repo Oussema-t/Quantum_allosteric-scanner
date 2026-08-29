@@ -1,0 +1,182 @@
+{
+ "min_hop": 1.0,
+ "rows": [
+  {
+   "target": "GAC_BPTES",
+   "published_EH": 1.0,
+   "published_flag": null,
+   "ratio_EH": 1.0,
+   "ratio_flag": null,
+   "n_candidates": 80
+  },
+  {
+   "target": "GAC_CPD12",
+   "published_EH": 0.8333333333333334,
+   "published_flag": null,
+   "ratio_EH": 0.8333333333333334,
+   "ratio_flag": null,
+   "n_candidates": 55
+  },
+  {
+   "target": "DHPS_GC7",
+   "published_EH": 0.0,
+   "published_flag": null,
+   "ratio_EH": 0.0,
+   "ratio_flag": null,
+   "n_candidates": 19
+  },
+  {
+   "target": "PF_ATCASE",
+   "published_EH": 0.0,
+   "published_flag": null,
+   "ratio_EH": 0.0,
+   "ratio_flag": null,
+   "n_candidates": 52
+  },
+  {
+   "target": "KSHV_PROTEASE_24Q",
+   "published_EH": 0.4444444444444444,
+   "published_flag": null,
+   "ratio_EH": 0.4444444444444444,
+   "ratio_flag": null,
+   "n_candidates": 18
+  },
+  {
+   "target": "KSHV_PROTEASE_25G",
+   "published_EH": 0.3333333333333333,
+   "published_flag": null,
+   "ratio_EH": 0.3333333333333333,
+   "ratio_flag": null,
+   "n_candidates": 18
+  },
+  {
+   "target": "SUMO_E1_FHJ",
+   "published_EH": 0.0,
+   "published_flag": null,
+   "ratio_EH": 0.0,
+   "ratio_flag": null,
+   "n_candidates": 54
+  },
+  {
+   "target": "HCV_NS5B_VRX",
+   "published_EH": 0.0,
+   "published_flag": null,
+   "ratio_EH": 1.0,
+   "ratio_flag": null,
+   "n_candidates": 39
+  },
+  {
+   "target": "HCV_NS5B_VR1",
+   "published_EH": 0.0,
+   "published_flag": null,
+   "ratio_EH": 1.0,
+   "ratio_flag": null,
+   "n_candidates": 39
+  },
+  {
+   "target": "HCV_NS5B_POO",
+   "published_EH": 0.0,
+   "published_flag": null,
+   "ratio_EH": 0.0,
+   "ratio_flag": null,
+   "n_candidates": 39
+  },
+  {
+   "target": "HCV_NS5B_CMF",
+   "published_EH": 0.0,
+   "published_flag": null,
+   "ratio_EH": 0.0,
+   "ratio_flag": null,
+   "n_candidates": 39
+  },
+  {
+   "target": "FBPASE_94D",
+   "published_EH": 0.0,
+   "published_flag": null,
+   "ratio_EH": 0.0,
+   "ratio_flag": null,
+   "n_candidates": 31
+  },
+  {
+   "target": "FBPASE_95S",
+   "published_EH": 0.0,
+   "published_flag": null,
+   "ratio_EH": 0.0,
+   "ratio_flag": null,
+   "n_candidates": 58
+  },
+  {
+   "target": "TRP_SYNTHASE_F6F",
+   "published_EH": 0.09302325581395349,
+   "published_flag": null,
+   "ratio_EH": 0.09302325581395349,
+   "ratio_flag": null,
+   "n_candidates": 33
+  },
+  {
+   "target": "TRP_SYNTHASE_F19",
+   "published_EH": 0.09302325581395349,
+   "published_flag": null,
+   "ratio_EH": 0.09302325581395349,
+   "ratio_flag": null,
+   "n_candidates": 33
+  },
+  {
+   "target": "SMYD3_DIPERODON",
+   "published_EH": 0.5,
+   "published_flag": null,
+   "ratio_EH": 0.5,
+   "ratio_flag": null,
+   "n_candidates": 28
+  },
+  {
+   "target": "PKR_MITAPIVAT",
+   "published_EH": 0.0,
+   "published_flag": null,
+   "ratio_EH": 0.0,
+   "ratio_flag": null,
+   "n_candidates": 56
+  },
+  {
+   "target": "PKR_AG946",
+   "published_EH": 0.0,
+   "published_flag": null,
+   "ratio_EH": 0.0,
+   "ratio_flag": null,
+   "n_candidates": 56
+  },
+  {
+   "target": "MKK7_IBRUTINIB",
+   "published_EH": 0.0,
+   "published_flag": null,
+   "ratio_EH": 0.0,
+   "ratio_flag": null,
+   "n_candidates": 15
+  },
+  {
+   "target": "NAMPT_NPA1R",
+   "published_EH": 0.0,
+   "published_flag": null,
+   "ratio_EH": 0.0,
+   "ratio_flag": null,
+   "n_candidates": 27
+  }
+ ],
+ "errors": {},
+ "n_attempted": 20,
+ "n_scoreable": 20,
+ "mean_published_EH": 0.1648578811369509,
+ "mean_ratio_EH": 0.2648578811369509,
+ "n_wins": 2,
+ "n_ties": 18,
+ "n_losses": 0,
+ "naive_wilcoxon_p": 0.15729920705028502,
+ "cluster_robust": {
+  "n_rows": 20,
+  "n_clusters": 13,
+  "statistic": 2.0,
+  "p_value": 1.0,
+  "median": 0.0
+ },
+ "verdict": "DOES NOT SURVIVE"
+}

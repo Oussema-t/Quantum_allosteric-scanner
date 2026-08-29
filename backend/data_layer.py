@@ -16,8 +16,16 @@ PDB_CACHE = os.environ.get("PDB_CACHE", "./pdb_cache")
 os.makedirs(PDB_CACHE, exist_ok=True)
 
 
-def fetch(pdb):
-    """Download <pdb>.pdb from RCSB into the cache; return local path or None."""
+def fetch(pdb, raise_on_error=False):
+    """Download <pdb>.pdb from RCSB into the cache; return local path or None.
+
+    `raise_on_error` (TASK-0290): default False preserves every existing
+    caller's silent-None-on-failure behavior unchanged. Opt-in callers that
+    need to distinguish "genuinely not found" from "the network call
+    failed" (backend.active_site's deterministic-resolution path) pass
+    True to have the underlying error propagate instead of being
+    swallowed.
+    """
     fp = os.path.join(PDB_CACHE, f"{pdb}.pdb")
     if not os.path.exists(fp):
         try:
@@ -27,6 +35,8 @@ def fetch(pdb):
             # URLError is HTTPError's parent (covers DNS/connection failures
             # too); socket.timeout/TimeoutError are listed separately since
             # they're distinct classes on Python 3.9 (unified only in 3.10+).
+            if raise_on_error:
+                raise
             return None
     return fp
 
