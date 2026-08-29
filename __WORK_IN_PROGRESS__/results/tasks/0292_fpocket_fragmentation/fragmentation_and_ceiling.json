@@ -1,0 +1,59 @@
+{
+ "published": 0.1648578811369509,
+ "reimplemented": 0.1648578811369509,
+ "raw_oracle": 0.5563045288045287,
+ "merge_sweep": {
+  "shared residues": {
+   "mean_cavities": 4.0,
+   "rule_eh": 0.016196850916821687,
+   "oracle_eh": 0.16316422954187315
+  },
+  "dist 2A": {
+   "mean_cavities": 4.0,
+   "rule_eh": 0.016196850916821687,
+   "oracle_eh": 0.16316422954187315
+  },
+  "dist 3A": {
+   "mean_cavities": 4.0,
+   "rule_eh": 0.016196850916821687,
+   "oracle_eh": 0.16316422954187315
+  },
+  "dist 4A": {
+   "mean_cavities": 1.45,
+   "rule_eh": 0.02365299814279804,
+   "oracle_eh": 0.04221344018402391
+  },
+  "dist 5A": {
+   "mean_cavities": 1.3,
+   "rule_eh": 0.026310805451768136,
+   "oracle_eh": 0.041886749789087144
+  },
+  "dist 6A": {
+   "mean_cavities": 1.25,
+   "rule_eh": 0.028874908015870705,
+   "oracle_eh": 0.04172357962591698
+  },
+  "both 3A": {
+   "mean_cavities": 4.0,
+   "rule_eh": 0.016196850916821687,
+   "oracle_eh": 0.16316422954187315
+  },
+  "both 4A": {
+   "mean_cavities": 1.45,
+   "rule_eh": 0.02365299814279804,
+   "oracle_eh": 0.04221344018402391
+  }
+ },
+ "mean_candidate_size": 9.588533903738151,
+ "oracle_pick_size": 10.15,
+ "rule_pick_size": 17.55,
+ "rho_size_eh": 0.11562631696572634,
+ "rho_size_drug": 0.23927607385581026,
+ "in_sample_arms": {
+  "druggability (published)": 0.1648578811369509,
+  "druggability residualised on size": 0.15555555555555556,
+  "druggability / size": 0.2648578811369509,
+  "smallest candidate": 0.04583333333333332
+ },
+ "n_targets": 20
+}
