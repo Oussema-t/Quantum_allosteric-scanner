@@ -5,6 +5,25 @@
 - Priority: High — could raise [[TASK-0282]]'s published ceiling from 0.165 to ~0.265, or expose another in-sample mirage
 - Filed: 2026-08-29 by Reviewer thread (follow-up to [[TASK-0292]] Part D)
 - Related: [[TASK-0292]], [[TASK-0282]], [[TASK-0287]], [[TASK-0249]]
+- **LANE 2 — parallel to Lane 1, but see the dependency below. Read-only
+  on `backend/`. Must not edit `backend/active_site.py`.**
+
+## DEPENDENCY ON [[TASK-0290]] — read before starting
+
+The EH metric is **not** independent of active-site detection.
+`prep()` builds `pocket = drug_contacts & ~active_site & ~terminal`, and
+the rule's `hop >= 1` filter is measured from the seed. Both move if the
+active site moves.
+
+**Two of the frozen 20 — `DHPS_GC7` and `NAMPT_NPA1R` — are among the
+three targets [[TASK-0289]] measured as unstable.** That is 10% of this
+task's sample.
+
+**Therefore:** build and validate the harness NOW, run it, and label the
+numbers **PROVISIONAL**. Re-run against Lane 1's corrected taxonomy the
+moment its diff is posted. Do not report a verdict from the provisional
+run — the whole point of this task is to avoid believing an unvalidated
+number.
 
 ## Why
 

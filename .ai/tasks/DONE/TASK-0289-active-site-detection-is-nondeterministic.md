@@ -1,6 +1,6 @@
 # TASK-0289 — `detect_active_site` is non-deterministic: a silent network fallback changes scientific results
 
-- Status: TODO — **BLOCKER**
+- Status: Done as a DEFECT RECORD. **All remedial scope moved to [[TASK-0290]] — do not implement from this file.**
 - Assignee: unassigned
 - Priority: **Critical — invalidates an unknown fraction of every distance-based result in this register**
 - Filed: 2026-08-29 by Reviewer thread (found while writing up [[TASK-0288]])
@@ -65,6 +65,14 @@ Finding F.
 
 ## Scope
 
+> **Superseded 2026-08-29.** The measurement item below is done. The five
+> remediation items that followed it were **byte-for-byte duplicates of
+> [[TASK-0290]]'s scope** and have been removed from this file so two
+> implementers cannot pick up the same work and collide on
+> `backend/active_site.py`. **[[TASK-0290]] is the single owner of the
+> fix and the recompute.** This file remains as the evidence record of
+> what the defect is and how it was measured.
+
 - [x] **DONE.** Sweep run over all 33 taxonomy targets, two consecutive
       calls each (`scripts/task0289_active_site_provenance_sweep.py`).
       **3/33 unstable**: `DHPS_GC7` (22 ligand → 28 uniprot),
@@ -75,18 +83,6 @@ Finding F.
       Note `HCV_NS5B_POO` was stable at `3, uniprot` across both warm
       calls — its 32-residue cold-start result was the ligand fallback,
       so the **committed** taxonomy value (17.94 Å) is on the correct tier.
-- [ ] Make detection **deterministic**: cache the resolved active site to
-      disk on first successful resolution, keyed by (pdb_id, chain), and
-      read from that cache thereafter. Network only on a cache miss.
-- [ ] Make the fallback **loud**: distinguish "UniProt says there is no
-      annotation" (a real negative, fall through) from "the UniProt call
-      failed" (an error — retry, then raise). A bare `except Exception`
-      must not silently downgrade a scientific input.
-- [ ] Propagate `source` through `prep()` into every result JSON so
-      provenance is auditable after the fact.
-- [ ] Recompute `min_A` for all targets under the fixed path; diff against
-      the committed taxonomy and report every target that moves.
-- [ ] Re-run [[TASK-0288]] Finding F on the corrected values.
 
 ## Constraint
 

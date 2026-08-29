@@ -5,6 +5,13 @@
 - Priority: **High — last caveat on [[TASK-0288]] Finding F, which is headed for the Phase 1 write-up**
 - Filed: 2026-08-29 by Reviewer thread (user-directed: "let us do the recompute on Sunday")
 - Related: [[TASK-0289]], [[TASK-0288]], [[TASK-0258]], [[TASK-0253]], [[TASK-0184]]
+- **LANE 1 — critical path. Sole owner of `backend/active_site.py` and of
+  `results/tasks/0258_allosteric_distance_taxonomy/pocket_taxonomy.json`.
+  No other lane may touch either.**
+- **Blocks: [[TASK-0293]] (2 of its frozen 20 are unstable targets),
+  [[TASK-0288]] Finding F, [[TASK-0184]]'s Finding F wording.**
+- Absorbs the remediation scope formerly duplicated in [[TASK-0289]],
+  which is now closed as a defect record only.
 
 ## Why
 
@@ -57,9 +64,15 @@ go in **without an asterisk**.
   protein's own geometry and do not depend on the absolute active-site
   definition. Do not re-open them.
 
+## Handoff when done
+
+Post the recompute diff (every target whose `min_A` moved, with old and
+new values and the `source` that produced each) before doing anything
+else with it. [[TASK-0293]] is waiting on exactly that diff and can
+re-run in minutes once it exists.
+
 ## Note
 
-Worth grepping the scientific path for any remaining bare
-`except Exception` that can silently substitute one input for another.
-This is the second instance of that pattern ([[TASK-0253]] was the
-first) and Phase 2 will add more network-backed inputs.
+The bare-`except Exception` audit across the scientific path is **LANE 3**
+([[TASK-0294]]), not part of this task — it is a read-only sweep and must
+not block the recompute.
