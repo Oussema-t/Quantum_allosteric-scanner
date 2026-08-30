@@ -1,7 +1,7 @@
 # TASK-0295 — Could `classify_ligand`'s degraded mode have already mis-set a committed `drug_ligand`?
 
-- Status: TODO
-- Priority: **High — this is the one [[TASK-0294]] finding that can change which pocket is scored ground truth**
+- Status: **Diagnosis DONE (2026-08-30, Reviewer thread) — answer is NO, exposure is zero. Remediation still open, priority downgraded High → Low.**
+- Priority: ~~High~~ → **Low**, on the evidence below. The mechanism is real; the exposure in our target set is zero.
 - Filed: 2026-08-29 by Reviewer thread (promoting [[TASK-0294]]'s own highest-stakes follow-up out of a DONE file)
 - Related: [[TASK-0294]], [[TASK-0290]], [[TASK-0289]], [[TASK-0215]], [[TASK-0278]], [[TASK-0214]]
 
@@ -73,3 +73,81 @@ hiccup during one would have left no trace.
 the committed taxonomy (0/33 moved). That is the likeliest outcome here
 too — and it is worth 30 minutes to be able to say so with evidence
 rather than hope, before the Phase 1 write-up rests on these targets.
+
+
+---
+
+## Done — diagnosis (2026-08-30, Reviewer thread)
+
+`scripts/task0295_committed_drug_ligand_audit.py`. Both code paths were
+re-implemented side by side directly from `classify_ligand`'s source, and
+**every HET code in every target's holo structure** was classified both
+ways — not just the committed `drug_ligand`, because the real risk was a
+degraded run picking the *wrong* ligand from among several.
+
+**37 targets, 102 (target, HET) pairs, 88 distinct ligands.**
+
+### Q1 — is any committed `drug_ligand` wrong today?
+
+**No.** All **29** committed `drug_ligands` classify as `drug` on the
+fully-informed path.
+
+### Q2 — where do the two paths diverge?
+
+**10 ligands diverge, and ALL 10 in the same direction — false NEGATIVE**
+(informed `drug` → degraded `ligand`): `ASP`, `F19`, `F1G`, `GC7`, `GLS`,
+`LLP`, `M3L`, `NCA`, `QKT`, `XB2`. Five of them (`F19`, `F1G`, `GC7`,
+`QKT`, `XB2`) are committed `drug_ligands`.
+
+**Zero false positives.** Not one ligand anywhere in the target set would
+be *promoted* to `drug` by the degraded path.
+
+### Q3 — could a degraded run have picked a different ligand?
+
+**No — 0 targets at risk.**
+
+| outcome | n |
+|---|---|
+| committed ligand survives degraded mode | 24 |
+| **at risk of a WRONG pick** | **0** |
+| would be *dropped*, not mis-set (ligand demoted, no competitor) | 5 |
+| no committed `drug_ligand` present in structure | 7 |
+
+The 5 droppable targets — `CARDIAC_MYOSIN`, `CASPASE1`, `DHPS_GC7`,
+`SMYD3_DIPERODON`, `TRP_SYNTHASE_F19` — have **no competing HET** that
+degraded mode would call a drug. A degraded curation run would have
+produced *no* target, not a wrong one.
+
+The 7 unmatched are all benign and accounted for: 5 have no
+`drug_ligand` at all (`ATCase`, `GLYCOGEN_PHOSPHORYLASE`, `HEMOGLOBIN`,
+`PFK`, `TAR_RECEPTOR` — classic allosteric benchmarks without a drug);
+`GROEL_SUBUNIT`'s `drug_ligand` is GroES, a protein, annotated as such in
+the config; and **`CARDIAC_MYOSIN_TABLE1` (6C1H) contains only `ADP` and
+`MG`** — an independent live re-confirmation of our existing
+benchmark finding that Table 1's own structure does not contain
+mavacamten (matches `2026-08-26-organiser-clarifications.md` exactly).
+
+## Correction to [[TASK-0294]]'s severity framing
+
+[[TASK-0294]] justified the High rating by noting degraded mode loses the
+aliphatic/lipid check — *"the exact check that caught BCR-ABL1's myristic
+acid in [[TASK-0278]]"*. That check can only produce a **false positive**
+if the lipid has **≥ 30 heavy atoms** (`_DRUG_HEAVY_MIN`). Myristic acid
+has **16** — degraded mode calls it `ligand` too. **No ligand in the
+entire target set reaches that bar.**
+
+The degraded path is **conservative by construction**: its only lever is
+a high heavy-atom threshold, and drug-DB cross-references (the thing it
+loses) exist precisely to *promote* sub-30 ligands. It can miss a drug;
+it cannot invent one. [[TASK-0294]] identified a real mechanism and
+correctly flagged it — the severity estimate was the part that needed
+testing.
+
+## Remaining scope (Low priority, not done here)
+
+- [ ] Propagate a `degraded: true` flag out of `classify_ligand` so a
+      curation script can refuse to commit a degraded classification.
+
+Still worth doing — the mechanism is real and Phase 2 adds targets — but
+it is **not** a gate on the Phase 1 write-up. Nothing in the committed
+target list is wrong, and nothing could have been.
