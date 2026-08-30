@@ -150,7 +150,11 @@ def build_target(t: str):
     coords = apo.coords
     cut = float(cfg2.get("enm_cutoff", 8.0))
     resn = np.asarray(apo.resnums)
-    idx_of = {int(r): i for i, r in enumerate(resn)}
+    chids = np.asarray(apo.chain_ids)
+    # TASK-0298: (chain, resnum) compound key, matching fpocket_candidates'
+    # own now-corrected `p["resnums"]` shape -- a resnum-only dict silently
+    # kept only the last chain's index per colliding resnum.
+    idx_of = {(str(c), int(r)): i for i, (c, r) in enumerate(zip(chids, resn))}
     apo_ch = cfg2.get("apo_chains") or cfg2.get("chains")
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)

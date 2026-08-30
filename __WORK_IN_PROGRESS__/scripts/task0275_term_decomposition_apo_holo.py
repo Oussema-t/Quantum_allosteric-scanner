@@ -177,7 +177,7 @@ def _common_rows(t: str):
     if isinstance(pockets, dict):
         return None
     resn_full = np.asarray(apo.resnums)
-    fpocket_full = t0249.fpocket_druggability_per_residue(pockets, resn_full)
+    fpocket_full = t0249.fpocket_druggability_per_residue(pockets, resn_full, apo.chain_ids)
     fpocket_x = z(fpocket_full[apo_idx])[m].reshape(-1, 1)
 
     def flavour_blocks(coords, bfac):

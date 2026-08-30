@@ -9746,6 +9746,35 @@ only, not a result). **Data:**
 `results/tasks/0282_pocket_level_top5_distance_druggability_sweep/pocket_selection_sweep.json`.
 **Full detail:** `.ai/tasks/DONE/TASK-0282-pocket-level-top5-distance-druggability-sweep.md`.
 
+**Addendum, 2026-08-30 ([[TASK-0298]]): the ceiling above is superseded —
+it does not just move, it collapses.** `fpocket_candidates` parsed pocket
+residues by bare resnum, discarding chain; on a multi-chain apo selection
+(9 of the frozen 20) a colliding resnum silently resolved to whichever
+chain happened to be last in array order. Fixed (compound `(chain,
+resnum)` key throughout). Corrected numbers, same script, same LOTO
+procedure, no rule tuned to produce this:
+
+| quantity | published (buggy) | corrected |
+|---|---|---|
+| **LOTO cross-validated mean EH** (this section's own "0.010 -> 0.122" headline) | 0.122 | **0.000** |
+| in-sample full-20-fit mean EH ("0.1649" above) | 0.1649 | 0.100 |
+| winning rule | `MIN_HOP>=1` + druggability alone | `MIN_HOP>=3` + `lex_far_first` |
+
+Traced, not asserted: `GAC_BPTES`'s own oracle ceiling was a **perfect
+1.000** purely because a colliding resnum let a wrong-chain fpocket
+candidate map onto the true pocket — corrected value 0.235. Once enough
+of the 9 exposed targets' own true achievable ceilings fell, the LOTO
+procedure itself selected a different, narrower rule that scores exactly
+zero on every held-out fold, including non-exposed targets scored
+directly against it (`KSHV_PROTEASE_24Q/25G`, `SMYD3_DIPERODON` all score
+0.000 under the new rule alone — confirms the new rule is genuinely bad,
+not a symptom of residual bugs in the corrected 9). **This section's own
+"Recommendation to TASK-0184" (report both numbers, pocket-level as "a
+strong candidate for some targets") no longer holds** — the corrected
+LOTO number does not support any framing where the pocket-level rule
+beats or matches residue-ranking. Full detail, plus TASK-0287/0292/0293
+re-runs: `.ai/tasks/DONE/TASK-0298-chain-aware-fpocket-parsing.md`.
+
 ## Dockerizing the vendored external tools -- fpocket/EvoEF2/P2Rank containerized, PocketMiner validated ([[TASK-0285]], 2026-08-28)
 
 Filed and completed same-session, per Bartosz's own direct request. This
@@ -10249,6 +10278,19 @@ detection, so no PROVISIONAL label and no re-run are needed.
 `results/tasks/0293_loto_druggability_per_size/
 loto_druggability_per_size.json`. **Full detail:**
 `.ai/tasks/DONE/TASK-0293-loto-druggability-per-size-ranking.md`.
+
+**Addendum, 2026-08-30 ([[TASK-0298]]): this task's own closing claim
+("TASK-0282's published ceiling stands, no downstream number needs
+updating") is now false — see [[TASK-0298]]'s own addendum above
+TASK-0282's section.** This task's OWN verdict is unaffected: re-run on
+the chain-corrected candidates, `druggability/size` still `DOES NOT
+SURVIVE` cluster-robust LOTO, identical to 15 significant figures
+(`p=1.0000`, `n_wins=2/n_ties=18/n_losses=0`, both `HCV_NS5B_VRX`/`VR1`
+still the entire effect). Both arms' absolute EH dropped by the same
+amount as `MIN_HOP>=1+drug_alone`'s own shift (published 0.1649→0.0899,
+ratio 0.2649→0.1899) — a pure level shift; the comparison this task
+actually tests is untouched. Full detail:
+`.ai/tasks/DONE/TASK-0298-chain-aware-fpocket-parsing.md`.
 
 ## The 6 stale KRAS_G12C golden-value tests are green again — and the verdict itself moved, not just the numbers ([[TASK-0296]], 2026-08-30)
 

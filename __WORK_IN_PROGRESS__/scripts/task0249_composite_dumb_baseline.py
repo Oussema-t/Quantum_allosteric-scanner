@@ -87,20 +87,29 @@ def hop_onehot(hop_true: np.ndarray, k_max: int = K_MAX_SHELL) -> np.ndarray:
     return np.column_stack([(hop_true == k).astype(float) for k in range(1, k_max + 1)])
 
 
-def fpocket_druggability_per_residue(pockets: list, resnums: np.ndarray) -> np.ndarray:
+def fpocket_druggability_per_residue(pockets: list, resnums: np.ndarray,
+                                     chain_ids: np.ndarray) -> np.ndarray:
     """Max druggability_score over every fpocket pocket a residue belongs
     to (0 if none) -- same aggregation rule as task0163's own
     `_fpocket_per_residue_scores`, adapted to task0242's own `resnums`
-    (plain-int set, apo single-chain convention) and `druggability_score`
-    (not cavity `score`, per this task's own feature-1 spec)."""
-    lookup = {int(rn): i for i, rn in enumerate(resnums)}
+    and `druggability_score` (not cavity `score`, per this task's own
+    feature-1 spec).
+
+    TASK-0298: `pockets[i]["resnums"]` is now a set of (chain, resnum)
+    tuples (was a plain int, which silently collapsed same-numbered
+    residues across chains on a multi-chain apo selection -- exactly the
+    defect this task exists to fix). `chain_ids` is a required parameter,
+    not optional, so every call site must be explicit about which chain
+    each `resnums[i]` belongs to rather than silently falling back to a
+    bare-resnum lookup that would reintroduce the same bug."""
+    lookup = {(str(c), int(rn)): i for i, (c, rn) in enumerate(zip(chain_ids, resnums))}
     out = np.zeros(len(resnums), dtype=np.float64)
     for p in pockets:
         d = p.get("druggability_score")
         if d is None:
             continue
-        for rn in p["resnums"]:
-            i = lookup.get(int(rn))
+        for c, rn in p["resnums"]:
+            i = lookup.get((str(c), int(rn)))
             if i is not None:
                 out[i] = max(out[i], d)
     return out
@@ -146,7 +155,7 @@ def target_rows(t: str):
         return None
 
     hop_true = -hop_from_seed(coords, seed, cutoff=cut)  # flip back to true BFS distance
-    fpocket_res = fpocket_druggability_per_residue(pockets, resn)
+    fpocket_res = fpocket_druggability_per_residue(pockets, resn, apo.chain_ids)
     degree = degree_centrality(coords, cutoff=cut)
     euclid = euclid_from_seed_centroid(coords, seed)
     ctqw = time_averaged_ctqw_converged(build_H_new(coords, apo.bfactors, cutoff=cut), source=seed, coherent=False)
@@ -413,7 +422,7 @@ def main(prelim_only: bool = False) -> int:
         # own LOTO-consistent standardization (see run_two_stage_design).
         cfg, apo, seed, pocket = t0242.prep(t)
         cut = float(cfg.get("enm_cutoff", 8.0))
-        d["_fpocket_raw"] = fpocket_druggability_per_residue(d["pockets"], d["resn"])
+        d["_fpocket_raw"] = fpocket_druggability_per_residue(d["pockets"], d["resn"], apo.chain_ids)
         d["_degree_raw"] = degree_centrality(d["coords"], cutoff=cut)
         d["_euclid_raw"] = euclid_from_seed_centroid(d["coords"], seed)
         frozen_data[t] = d

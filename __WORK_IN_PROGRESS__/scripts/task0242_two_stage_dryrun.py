@@ -86,8 +86,15 @@ def fpocket_candidates(pdb_path: Path, work: Path):
         if f.exists():
             for line in f.read_text().splitlines():
                 if line.startswith(("ATOM", "HETATM")):
-                    try: res.add(int(line[22:26]))
+                    try: res.add((line[21], int(line[22:26])))
                     except ValueError: pass
+        # TASK-0298: (chain, resnum) compound key -- was bare resnum, which
+        # on a multi-chain selection silently collided across chains (a
+        # pocket lining chain A's residue 406 and chain B's own residue 406
+        # were indistinguishable, and every resnum-only `idx_of` consumer
+        # kept whichever chain happened to be last in enumeration order).
+        # `p["resnums"]` is now a set of (chain, resnum) tuples; every
+        # caller must match on the same compound key, not `int(r)` alone.
         p["resnums"] = res
     return [p for p in pockets if p["resnums"]]
 
@@ -142,7 +149,11 @@ def run(t, tuned, return_state=False, include_classical=False):
                 "an undefined seed, not a real target-attempted failure to silently rank"}
     coords = apo.coords; cut = float(cfg.get("enm_cutoff", 8.0))
     resn = np.asarray(apo.resnums)
-    idx_of = {int(r): i for i, r in enumerate(resn)}
+    chids = np.asarray(apo.chain_ids)
+    # TASK-0298: (chain, resnum) compound key -- a resnum-only dict silently
+    # kept only the LAST chain's index per colliding resnum on a multi-chain
+    # selection (9 of the frozen 20 targets carry such collisions).
+    idx_of = {(str(c), int(r)): i for i, (c, r) in enumerate(zip(chids, resn))}
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         apo_ch = (cfg.get("apo_chains") or cfg.get("chains"))
@@ -171,8 +182,8 @@ def run(t, tuned, return_state=False, include_classical=False):
         min_eig = float(w.min())
         is_psd = bool(min_eig >= -1e-9)
         classical = ground_state_relaxation(H, T_CLASSICAL, source=seed)
-    seedset = set(int(resn[i]) for i in seed)
-    truth = set(int(resn[i]) for i in np.where(pocket)[0])
+    seedset = set((str(chids[i]), int(resn[i])) for i in seed)
+    truth = set((str(chids[i]), int(resn[i])) for i in np.where(pocket)[0])
 
     cands = []
     for p in pockets:

@@ -115,7 +115,10 @@ def _fpocket_hits_switch_i_ii(pdb_id: str, chains: list, resnums: np.ndarray) ->
         return {"error": pockets.get("error", "fpocket failed")}
     best_overlap, best_drug, n_touching = 0.0, None, 0
     for p in pockets:
-        res = {("A", r) for r in p.get("resnums", set())}
+        # TASK-0298: p["resnums"] is now already a set of (chain, resnum)
+        # tuples -- was bare int, re-tagged with a hardcoded "A" here
+        # (valid only because this task's own targets are single-chain A).
+        res = p.get("resnums", set())
         overlap = len(res & target_set) / len(target_set)
         if overlap > 0:
             n_touching += 1

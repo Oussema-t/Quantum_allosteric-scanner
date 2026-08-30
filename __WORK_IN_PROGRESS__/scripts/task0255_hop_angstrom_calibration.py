@@ -131,7 +131,11 @@ def build_candidates(t: str, cfg: dict, apo, seed: np.ndarray, pocket: np.ndarra
     coords = apo.coords
     cut = float(cfg.get("enm_cutoff", 8.0))
     resn = np.asarray(apo.resnums)
-    idx_of = {int(r): i for i, r in enumerate(resn)}
+    chids = np.asarray(apo.chain_ids)
+    # TASK-0298: (chain, resnum) compound key, matching fpocket_candidates'
+    # own now-corrected `p["resnums"]` shape -- same class of defect this
+    # file's own `min_heavy_atom_dist_to_seed` was already fixed for above.
+    idx_of = {(str(c), int(r)): i for i, (c, r) in enumerate(zip(chids, resn))}
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         apo_ch = cfg.get("apo_chains") or cfg.get("chains")
@@ -148,7 +152,7 @@ def build_candidates(t: str, cfg: dict, apo, seed: np.ndarray, pocket: np.ndarra
     ctqw = time_averaged_ctqw_converged(
         build_H_new(coords, apo.bfactors, cutoff=cut), source=seed, coherent=False
     )
-    truth = set(int(resn[i]) for i in np.where(pocket)[0])
+    truth = set((str(chids[i]), int(resn[i])) for i in np.where(pocket)[0])
 
     cands = []
     for p in pockets:

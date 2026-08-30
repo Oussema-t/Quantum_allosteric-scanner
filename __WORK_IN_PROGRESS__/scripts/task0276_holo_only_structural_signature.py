@@ -201,11 +201,12 @@ def ligand_stripped_sasa(stripped_pdb_path: Path, resnums: np.ndarray, chain: st
     return np.array([asa_by_resnum.get(int(r), np.nan) for r in resnums], dtype=float)
 
 
-def fpocket_druggability(stripped_pdb_path: Path, work: Path, resnums: np.ndarray) -> np.ndarray:
+def fpocket_druggability(stripped_pdb_path: Path, work: Path, resnums: np.ndarray,
+                         chain_ids: np.ndarray) -> np.ndarray:
     pockets = t0242.fpocket_candidates(stripped_pdb_path, work)
     if isinstance(pockets, dict):
         return np.zeros(len(resnums), dtype=float)
-    return fpocket_druggability_per_residue(pockets, resnums)
+    return fpocket_druggability_per_residue(pockets, resnums, chain_ids)
 
 
 def compute_features(pdb_id: str, chains: list) -> dict:
@@ -217,7 +218,7 @@ def compute_features(pdb_id: str, chains: list) -> dict:
         stripped = tmp / f"{pdb_id.lower()}_stripped.pdb"
         write_ligand_stripped_pdb(pdb_id, chains, stripped)
         sasa = ligand_stripped_sasa(stripped, apo_like.resnums, chains[0])
-        fpock = fpocket_druggability(stripped, tmp, apo_like.resnums)
+        fpock = fpocket_druggability(stripped, tmp, apo_like.resnums, apo_like.chain_ids)
 
     feat = dict(
         V_C=dcc_centrality(apo_like.coords, CUTOFF),

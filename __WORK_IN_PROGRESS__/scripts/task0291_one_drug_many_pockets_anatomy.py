@@ -114,8 +114,14 @@ def main():
                 pk = t0242.fpocket_candidates(pdb, tmp)
             novl, best = np.nan, np.nan
             if not isinstance(pk, dict):
-                want = set(int(r) for r in resn[ii])
-                ovl = [len(want & set(int(x) for x in p["resnums"])) for p in pk]
+                # TASK-0298: (chain, resnum) compound key, matching
+                # fpocket_candidates' own now-corrected `p["resnums"]`
+                # shape -- this target set includes several of the 9
+                # exposed to the chain-collision bug (GAC_BPTES/CPD12,
+                # PKR_MITAPIVAT/AG946, PF_ATCASE, FBPASE_95S, SUMO_E1_FHJ,
+                # TRP_SYNTHASE_F6F/F19).
+                want = set(zip(chid[ii].tolist(), (int(r) for r in resn[ii])))
+                ovl = [len(want & p["resnums"]) for p in pk]
                 novl = int(sum(1 for o in ovl if o > 0))
                 best = float(max(ovl) / len(want)) if ovl else 0.0
             rows.append(dict(target=t, n_res=int(len(ii)), n_seq_segments=int(nseg),

@@ -62,8 +62,14 @@ TARGETS=("KRAS_G12C","BCR_ABL1","CARDIAC_MYOSIN")
 store={}
 for t in TARGETS:
     cfg, apo, seed, pocket = prep(t)
-    resn=np.asarray(apo.resnums); true=set(resn[pocket].tolist())
-    idx_of={int(r):i for i,r in enumerate(resn)}
+    resn=np.asarray(apo.resnums); chids=np.asarray(apo.chain_ids)
+    true=set(zip(chids[pocket].tolist(), resn[pocket].tolist()))
+    # TASK-0298: (chain, resnum) compound key, matching fpocket_candidates'
+    # own now-corrected `p["resnums"]` shape. This probe's own 3 targets
+    # (KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN) are single-chain and not among
+    # the 9 exposed to the value bug, but the bare-int comparisons below
+    # would otherwise silently break once `p["resnums"]` is tuples.
+    idx_of={(str(c),int(r)):i for i,(c,r) in enumerate(zip(chids,resn))}
     d=min_heavy_atom_dist_to_seed(cfg, apo, seed)          # per-residue min heavy-atom A
     hops=-hop_from_seed(apo.coords, seed, cutoff=float(cfg.get("enm_cutoff",8.0)))
     with tempfile.TemporaryDirectory() as tmp:
@@ -75,7 +81,7 @@ for t in TARGETS:
     for p in pk:
         ii=[idx_of[r] for r in p["resnums"] if r in idx_of]
         if not ii: continue
-        rs=set(p["resnums"])&set(resn.tolist())
+        rs=set(p["resnums"])&set(zip(chids.tolist(),resn.tolist()))
         dd=d[ii]; dd=dd[np.isfinite(dd)]
         if len(dd)==0: continue
         cands.append({"drug":p.get("druggability_score") or 0.0,"res":rs,

@@ -1,58 +1,58 @@
 {
- "published": 0.1648578811369509,
- "reimplemented": 0.1648578811369509,
- "raw_oracle": 0.5563045288045287,
+ "published": 0.1,
+ "reimplemented": 0.0898578811369509,
+ "raw_oracle": 0.45365684152448865,
  "merge_sweep": {
   "shared residues": {
-   "mean_cavities": 4.0,
-   "rule_eh": 0.016196850916821687,
-   "oracle_eh": 0.16316422954187315
+   "mean_cavities": 6.4,
+   "rule_eh": 0.013750000000000002,
+   "oracle_eh": 0.19575051432810248
   },
   "dist 2A": {
-   "mean_cavities": 4.0,
-   "rule_eh": 0.016196850916821687,
-   "oracle_eh": 0.16316422954187315
+   "mean_cavities": 6.4,
+   "rule_eh": 0.013750000000000002,
+   "oracle_eh": 0.19575051432810248
   },
   "dist 3A": {
-   "mean_cavities": 4.0,
-   "rule_eh": 0.016196850916821687,
-   "oracle_eh": 0.16316422954187315
+   "mean_cavities": 6.4,
+   "rule_eh": 0.013750000000000002,
+   "oracle_eh": 0.19575051432810248
   },
   "dist 4A": {
-   "mean_cavities": 1.45,
-   "rule_eh": 0.02365299814279804,
-   "oracle_eh": 0.04221344018402391
+   "mean_cavities": 1.95,
+   "rule_eh": 0.020625829208286907,
+   "oracle_eh": 0.04196047048487976
   },
   "dist 5A": {
-   "mean_cavities": 1.3,
-   "rule_eh": 0.026310805451768136,
-   "oracle_eh": 0.041886749789087144
+   "mean_cavities": 1.7,
+   "rule_eh": 0.023283636517257005,
+   "oracle_eh": 0.041585122594476984
   },
   "dist 6A": {
-   "mean_cavities": 1.25,
-   "rule_eh": 0.028874908015870705,
-   "oracle_eh": 0.04172357962591698
+   "mean_cavities": 1.45,
+   "rule_eh": 0.016236013035008826,
+   "oracle_eh": 0.02919294953386183
   },
   "both 3A": {
-   "mean_cavities": 4.0,
-   "rule_eh": 0.016196850916821687,
-   "oracle_eh": 0.16316422954187315
+   "mean_cavities": 6.4,
+   "rule_eh": 0.013750000000000002,
+   "oracle_eh": 0.19575051432810248
   },
   "both 4A": {
-   "mean_cavities": 1.45,
-   "rule_eh": 0.02365299814279804,
-   "oracle_eh": 0.04221344018402391
+   "mean_cavities": 1.95,
+   "rule_eh": 0.020625829208286907,
+   "oracle_eh": 0.04196047048487976
   }
  },
- "mean_candidate_size": 9.588533903738151,
- "oracle_pick_size": 10.15,
- "rule_pick_size": 17.55,
- "rho_size_eh": 0.11562631696572634,
- "rho_size_drug": 0.23927607385581026,
+ "mean_candidate_size": 9.630856430349471,
+ "oracle_pick_size": 9.6,
+ "rule_pick_size": 17.85,
+ "rho_size_eh": 0.10291061863476549,
+ "rho_size_drug": 0.24025520641897508,
  "in_sample_arms": {
-  "druggability (published)": 0.1648578811369509,
-  "druggability residualised on size": 0.15555555555555556,
-  "druggability / size": 0.2648578811369509,
+  "druggability (published)": 0.0898578811369509,
+  "druggability residualised on size": 0.08055555555555555,
+  "druggability / size": 0.1898578811369509,
   "smallest candidate": 0.04583333333333332
  },
  "n_targets": 20

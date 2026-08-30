@@ -62,7 +62,10 @@ def build_cache():
         try:
             cfg, apo, seed, pocket = prep(t)
             coords = apo.coords; cut = float(cfg.get("enm_cutoff", 8.0))
-            resn = np.asarray(apo.resnums); idx = {int(r): i for i, r in enumerate(resn)}
+            resn = np.asarray(apo.resnums); chids = np.asarray(apo.chain_ids)
+            # TASK-0298: (chain, resnum) compound key, matching
+            # fpocket_candidates' own now-corrected `p["resnums"]` shape.
+            idx = {(str(c), int(r)): i for i, (c, r) in enumerate(zip(chids, resn))}
             ach = cfg.get("apo_chains") or cfg.get("chains")
             with tempfile.TemporaryDirectory() as tmp:
                 tmp = Path(tmp)

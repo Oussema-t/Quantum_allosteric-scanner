@@ -168,7 +168,10 @@ def build(t):
     coords = apo.coords
     cut = float(cfg.get("enm_cutoff", 8.0))
     resn = np.asarray(apo.resnums)
-    idx_of = {int(r): i for i, r in enumerate(resn)}
+    chids = np.asarray(apo.chain_ids)
+    # TASK-0298: (chain, resnum) compound key, matching fpocket_candidates'
+    # own now-corrected `p["resnums"]` shape.
+    idx_of = {(str(c), int(r)): i for i, (c, r) in enumerate(zip(chids, resn))}
     apo_ch = cfg.get("apo_chains") or cfg.get("chains")
 
     with tempfile.TemporaryDirectory() as tmp:

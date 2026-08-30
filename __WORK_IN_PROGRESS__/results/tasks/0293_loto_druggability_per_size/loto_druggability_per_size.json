@@ -3,17 +3,17 @@
  "rows": [
   {
    "target": "GAC_BPTES",
-   "published_EH": 1.0,
+   "published_EH": 0.0,
    "published_flag": null,
-   "ratio_EH": 1.0,
+   "ratio_EH": 0.0,
    "ratio_flag": null,
    "n_candidates": 80
   },
   {
    "target": "GAC_CPD12",
-   "published_EH": 0.8333333333333334,
+   "published_EH": 0.3333333333333333,
    "published_flag": null,
-   "ratio_EH": 0.8333333333333334,
+   "ratio_EH": 0.3333333333333333,
    "ratio_flag": null,
    "n_candidates": 55
   },
@@ -165,8 +165,8 @@
  "errors": {},
  "n_attempted": 20,
  "n_scoreable": 20,
- "mean_published_EH": 0.1648578811369509,
- "mean_ratio_EH": 0.2648578811369509,
+ "mean_published_EH": 0.0898578811369509,
+ "mean_ratio_EH": 0.1898578811369509,
  "n_wins": 2,
  "n_ties": 18,
  "n_losses": 0,

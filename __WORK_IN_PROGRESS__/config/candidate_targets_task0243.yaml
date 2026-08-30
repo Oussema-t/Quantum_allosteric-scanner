@@ -99,9 +99,9 @@ targets:
   DHPS_GC7:
     apo_pdb: 1RLZ
     holo_pdb: 6P4V
-    apo_chains: ["A", "B"]
-    holo_chains: ["A", "B"]
-    chains: ["A", "B"]
+    apo_chains: ["A"]
+    holo_chains: ["A"]
+    chains: ["A"]
     drug_ligand: GC7
     func_ligand: []
     enm_cutoff: 8.0
@@ -114,6 +114,14 @@ targets:
     uniprot: P49366
     active_site_source: uniprot
     note: Deoxyhypusine synthase, spermidine-mimic inhibitor GC7.
+    # TASK-0298, 2026-08-30: apo_chains was ["A","B"], but 1RLZ (verified
+    # live) deposits only chain A -- chain B was a silent no-op
+    # (TASK-0297's own finding). Restricted to ["A"] throughout, matching
+    # KSHV_PROTEASE_24Q/25G's own established "monomer configuration"
+    # pattern for a homo-oligomer (6P4V does have chain B; not used, same
+    # as KSHV's own holo 4P2T/4P3H). min_A/apo-only quantities are
+    # unchanged (TASK-0297 already confirmed chain B was never load-
+    # bearing) -- this only removes the redundant, unused declaration.
 
   PF_ATCASE:
     apo_pdb: 7ZP2
