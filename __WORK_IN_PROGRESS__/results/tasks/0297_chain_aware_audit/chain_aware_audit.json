@@ -1,0 +1,176 @@
+{
+ "exposed": [
+  {
+   "target": "GAC_BPTES",
+   "apo": "7SBN",
+   "chains": [
+    "A",
+    "B",
+    "D"
+   ],
+   "collisions": 406,
+   "missing": [],
+   "kind": "homo"
+  },
+  {
+   "target": "GAC_CPD12",
+   "apo": "7SBN",
+   "chains": [
+    "A",
+    "B"
+   ],
+   "collisions": 405,
+   "missing": [],
+   "kind": "homo"
+  },
+  {
+   "target": "DHPS_GC7",
+   "apo": "1RLZ",
+   "chains": [
+    "A",
+    "B"
+   ],
+   "collisions": 0,
+   "missing": [
+    "B"
+   ],
+   "kind": "homo"
+  },
+  {
+   "target": "PF_ATCASE",
+   "apo": "7ZP2",
+   "chains": [
+    "A",
+    "C"
+   ],
+   "collisions": 328,
+   "missing": [],
+   "kind": "homo"
+  },
+  {
+   "target": "SUMO_E1_FHJ",
+   "apo": "9QN5",
+   "chains": [
+    "C",
+    "D"
+   ],
+   "collisions": 280,
+   "missing": [],
+   "kind": "hetero",
+   "min_A_committed": 2.8081157383555264,
+   "min_A_corrected": 2.8081157383555264
+  },
+  {
+   "target": "FBPASE_95S",
+   "apo": "5LDZ",
+   "chains": [
+    "A",
+    "C"
+   ],
+   "collisions": 310,
+   "missing": [],
+   "kind": "homo"
+  },
+  {
+   "target": "TRP_SYNTHASE_F6F",
+   "apo": "1K7X",
+   "chains": [
+    "A",
+    "B"
+   ],
+   "collisions": 253,
+   "missing": [],
+   "kind": "hetero",
+   "min_A_committed": 1.2874214539147621,
+   "min_A_corrected": 2.8763341252364967
+  },
+  {
+   "target": "TRP_SYNTHASE_F19",
+   "apo": "1K7X",
+   "chains": [
+    "A",
+    "B"
+   ],
+   "collisions": 253,
+   "missing": [],
+   "kind": "hetero",
+   "min_A_committed": 1.2874214539147621,
+   "min_A_corrected": 2.8763341252364967
+  },
+  {
+   "target": "PKR_MITAPIVAT",
+   "apo": "7FS3",
+   "chains": [
+    "A",
+    "B"
+   ],
+   "collisions": 422,
+   "missing": [],
+   "kind": "homo"
+  },
+  {
+   "target": "PKR_AG946",
+   "apo": "7FS3",
+   "chains": [
+    "A",
+    "B"
+   ],
+   "collisions": 422,
+   "missing": [],
+   "kind": "homo"
+  }
+ ],
+ "seed_moves": [
+  {
+   "target": "SUMO_E1_FHJ",
+   "apo": "9QN5",
+   "chains": [
+    "C",
+    "D"
+   ],
+   "collisions": 280,
+   "missing": [],
+   "kind": "hetero",
+   "min_A_committed": 2.8081157383555264,
+   "min_A_corrected": 2.8081157383555264
+  },
+  {
+   "target": "TRP_SYNTHASE_F6F",
+   "apo": "1K7X",
+   "chains": [
+    "A",
+    "B"
+   ],
+   "collisions": 253,
+   "missing": [],
+   "kind": "hetero",
+   "min_A_committed": 1.2874214539147621,
+   "min_A_corrected": 2.8763341252364967
+  },
+  {
+   "target": "TRP_SYNTHASE_F19",
+   "apo": "1K7X",
+   "chains": [
+    "A",
+    "B"
+   ],
+   "collisions": 253,
+   "missing": [],
+   "kind": "hetero",
+   "min_A_committed": 1.2874214539147621,
+   "min_A_corrected": 2.8763341252364967
+  }
+ ],
+ "finding_f_committed": {
+  "spike": 9,
+  "p": 2.032561429018017e-06
+ },
+ "finding_f_corrected": {
+  "spike": 8,
+  "p": 1.5143569008147903e-05
+ },
+ "corrections": {
+  "TRP_SYNTHASE_F6F": 2.8763341252364967,
+  "TRP_SYNTHASE_F19": 2.8763341252364967
+ }
+}
