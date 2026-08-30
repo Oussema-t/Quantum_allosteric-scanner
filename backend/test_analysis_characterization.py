@@ -2,7 +2,7 @@
 
 Golden-output tests pinning the *current* live public surface of
 `gnm_context`, `site_potentials`, `quantum_seed_readiness`, and
-`connectivity_change` on a fixed benchmark target (KRAS_G12C, apo 4OBE /
+`connectivity_change` on a fixed benchmark target (KRAS_G12C, apo 4LDJ /
 holo 6OIM, per `backend/systems.py::SYSTEMS`). This is characterization,
 not validation -- it does not assert the physics is *correct*, only that
 it doesn't silently change. Per EXECUTION_PLAN.md Phase 4's hard rule
@@ -13,6 +13,21 @@ Values below were captured 2026-07-12 against live RCSB data (real
 network fetch, not mocked) and cross-checked by an independent git-stash
 pre/post diff of TASK-0066's own refactor (byte-identical) before being
 pinned here -- not guessed, not copied from a docstring claim.
+
+**PIN PROVENANCE (keep current -- the next structure change must update
+this line and re-run this file's own regeneration, TASK-0296's own
+Constraint: from the live code path, never hand-edited):**
+KRAS_G12C goldens regenerated **2026-08-30, TASK-0296**, against
+`apo=4LDJ` -- the structure [[TASK-0270]] (2026-08-26) adopted, replacing
+`4OBE` (confirmed wild-type, not the G12C mutant). The original
+2026-07-12 capture above predates that fix; these 6 tests went stale for
+6 days (TASK-0270 -> TASK-0296) before being caught by an unrelated
+task's own `pytest backend/` run ([[TASK-0290]]) and promoted into its
+own fix here. Holo-side-only numbers (`active_shift["holo"]`,
+`reach_shift` is not holo-only -- see below) are confirmed **unchanged**
+from the original 2026-07-12 capture, a real cross-check that only the
+apo-touching computations moved, not everything: `holo=6OIM` never
+changed.
 """
 import numpy as np
 import pytest
@@ -44,11 +59,12 @@ class TestGnmContextCharacterization:
         apo, _sysinfo = _load_kras_apo()
         c = gnm_context(apo["coords"], apo["bfac"], cutoff=8.0)
 
-        assert c["N"] == 169
-        assert float(c["deg"].sum()) == 1618.0
-        assert round(float(c["msf"].sum()), 6) == 29.80022
-        assert round(float(c["clust"].sum()), 6) == 93.788795
-        assert [round(float(x), 6) for x in c["eigs"][:3]] == [0.0, 0.442318, 0.493155]
+        # TASK-0296, regenerated against 4LDJ (170 residues, was 169 on 4OBE)
+        assert c["N"] == 170
+        assert float(c["deg"].sum()) == 1624.0
+        assert round(float(c["msf"].sum()), 6) == 30.678006
+        assert round(float(c["clust"].sum()), 6) == 93.998033
+        assert [round(float(x), 6) for x in c["eigs"][:3]] == [0.0, 0.402556, 0.478177]
 
 
 class TestSitePotentialsCharacterization:
@@ -58,10 +74,11 @@ class TestSitePotentialsCharacterization:
 
         assert set(sp) == {"cutoff", "l_eigs", "labels", "resnums", "terms"}
         assert sp["cutoff"] == 8.0
-        assert len(sp["resnums"]) == 169
+        # TASK-0296, regenerated against 4LDJ (170 residues, was 169 on 4OBE)
+        assert len(sp["resnums"]) == 170
         term_sums = {k: round(float(sum(v)), 6) for k, v in sp["terms"].items()}
         assert term_sums == {
-            "V_B": -0.001, "V_T": 0.0001, "V_R": 0.0004, "V_C": -0.0002, "V_M": 0.0001,
+            "V_B": -0.0, "V_T": -0.0011, "V_R": 0.0005, "V_C": 0.0004, "V_M": 0.0006,
         }
 
     def test_kras_g12c_with_active_site_enrichment_pinned(self):
@@ -79,13 +96,21 @@ class TestQuantumSeedReadinessCharacterization:
         site_idx = res_indices(apo, sysinfo["active_site"])
         qsr = quantum_seed_readiness(apo["coords"], apo["bfac"], apo["resnums"], site_idx, cutoff=8.0)
 
-        assert qsr["verdict"] == "PARTIAL"
+        # TASK-0296, regenerated against 4LDJ -- the verdict itself moved,
+        # PARTIAL (4OBE) -> RISKY (4LDJ), not just the numbers underneath
+        # it (n_good 8->7, frac_good 0.36->0.32). Reported as a finding,
+        # not silently absorbed into the fixture per this task's own
+        # Constraint: consistent with the same G12C-vs-wild-type direction
+        # every other re-scored KRAS_G12C number in this register has
+        # moved since TASK-0270 (e.g. TASK-0283's NO_FAILURE_DETECTED ->
+        # NO_SIGNAL_IN_APO), not an isolated anomaly in this one function.
+        assert qsr["verdict"] == "RISKY"
         assert qsr["n_total"] == 22
-        assert qsr["n_good"] == 8
-        assert qsr["frac_good"] == 0.36
+        assert qsr["n_good"] == 7
+        assert qsr["frac_good"] == 0.32
         assert round(qsr["distal_reach"], 3) == 0.429
-        assert round(qsr["distal_enrich"], 3) == 0.941
-        assert qsr["recommend_seed"] == [15, 17, 18, 29, 32, 116, 117, 118]
+        assert round(qsr["distal_enrich"], 3) == 0.934
+        assert qsr["recommend_seed"] == [14, 15, 18, 29, 116, 117, 118]
 
     def test_kras_g12c_per_residue_row_shape_and_first_row_pinned(self):
         apo, sysinfo = _load_kras_apo()
@@ -180,15 +205,19 @@ class TestSeedReadinessShiftCharacterization:
             site_resnums=sysinfo["active_site"], drug_resnums=sysinfo["pocket_full"][4.5], cutoff=8.0,
         )
 
+        # TASK-0296, regenerated against 4LDJ. `holo` is unchanged from the
+        # original 2026-07-12 (4OBE) capture -- confirmed, not assumed: a
+        # real cross-check that only the apo-touching computations moved
+        # (holo=6OIM never changed), not a wholesale re-capture.
         assert r["mechanism"] == "AMBIGUOUS"
         assert r["topology"] == "orthosteric"
         assert r["n_pocket"] == 21
         assert r["drug_active_sep"] == 0.0
-        assert r["reach_shift"] == 0.002
-        assert r["active_shift"]["apo"] == {"coupling": 11.728, "msf": 0.173, "slow": 0.015}
+        assert r["reach_shift"] == 0.009
+        assert r["active_shift"]["apo"] == {"coupling": 11.563, "msf": 0.17, "slow": 0.014}
         assert r["active_shift"]["holo"] == {"coupling": 11.656, "msf": 0.172, "slow": 0.01}
-        assert r["active_shift"]["delta"] == {"coupling": -0.072, "msf": -0.001, "slow": -0.005}
-        assert r["active_shift"]["thr"] == {"coupling": 1.483, "msf": 0.042, "slow": 0.01}
+        assert r["active_shift"]["delta"] == {"coupling": 0.093, "msf": 0.002, "slow": -0.003}
+        assert r["active_shift"]["thr"] == {"coupling": 1.521, "msf": 0.047, "slow": 0.011}
         assert r["active_shift"]["sig"] == {"coupling": False, "msf": False, "slow": False}
 
     def test_returns_none_for_empty_site_resnums(self):
@@ -204,19 +233,22 @@ class TestConnectivityChangeCharacterization:
         _apo, sysinfo = _load_kras_apo()
         cc = connectivity_change(sysinfo["apo"], sysinfo["chain"], sysinfo["holo"], sysinfo["chain"], cutoff=8.0)
 
+        # TASK-0296, regenerated against 4LDJ (169->170-residue apo shifts
+        # every shared-residue-set count here too).
         assert cc["summary"] == {
-            "n_shared": 166,
-            "ddm_max": 8.84,
-            "contacts_formed": 24,
-            "contacts_broken": 26,
-            "mean_abs_ddcc": 0.01,
-            "most_reorganized": [63, 64, 60, 62, 68],
+            "n_shared": 167,
+            "ddm_max": 8.35,
+            "contacts_formed": 27,
+            "contacts_broken": 27,
+            "mean_abs_ddcc": 0.009,
+            "most_reorganized": [63, 64, 0, 60, 62],
         }
 
     def test_kras_g12c_ddcc_sample_pinned(self):
         _apo, sysinfo = _load_kras_apo()
         cc = connectivity_change(sysinfo["apo"], sysinfo["chain"], sysinfo["holo"], sysinfo["chain"], cutoff=8.0)
 
-        assert cc["ddcc"][0][:5] == pytest.approx([0.0, 0.029, 0.005, 0.002, -0.001], abs=1e-3)
+        # TASK-0296, regenerated against 4LDJ
+        assert cc["ddcc"][0][:5] == pytest.approx([0.0, 0.024, 0.028, 0.036, 0.036], abs=1e-3)
         assert cc["cutoff"] == 8.0
         assert cc["downsampled"] is False
