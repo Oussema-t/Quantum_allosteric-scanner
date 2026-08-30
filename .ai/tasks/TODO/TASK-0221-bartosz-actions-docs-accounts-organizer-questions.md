@@ -236,18 +236,44 @@ different, not a matter of degree).
 
 ## TODO
 
-- [ ] Add the two-phase description document to `documentation/`.
-- [ ] Add the organisational document to `documentation/`.
+> **Checklist reconciled 2026-08-30 (Reviewer thread).** This list had gone
+> stale against the body of its own file: it still read "answer pending"
+> four days after the answers arrived and were written up above under
+> **"ANSWERED 2026-08-26 — organiser reply received"**. Re-reading the task
+> reasonably gave the impression the organiser reply was never recorded.
+> It was — just not here. Corrected below.
+
+- [?] **Add the two-phase description document to `documentation/`.**
+      **Needs Bartosz to confirm.** No file of that name exists. But four
+      organiser documents *were* added to `documentation/` on 2026-08-19
+      (`2026-04-06-Assessment-Criteria-VF`, `-Phase-1-Submission-
+      Guidelines-VF`, `-Terms-and-Conditions-VF`, plus the Challenge
+      Statement), and [[TASK-0183]]'s `POC_SPRINT_PLAN.md` records that
+      [[Q-0002]]'s holding assumption was resolved by
+      `documentation/2026-04-06-Assessment-Criteria-VF.md` on **2026-08-19**
+      — which is exactly what the last item below was waiting on. **Most
+      likely this landed under a different name and was never ticked.**
+- [?] **Add the organisational document to `documentation/`.** Same status,
+      same reasoning. Confirm or restate what document was meant.
 - [x] Braket + Classiq accounts, or a recorded decision to ship without. —
-      moot: organiser confirmed 2026-08-25 no Phase-1 access exists to
-      request.
-- [ ] Send organiser questions (a), (b), (c); record answers here. — sent;
-      organiser reply 2026-08-25 says "points 2 through 5" are forwarded to
-      the Cleveland Clinic team, answer pending. **Mapping from their
-      numbering to this task's (a)–(e) lettering is not recorded here** —
-      whoever sent the email should confirm which point is which so answers
-      can be filed against the right question when they arrive.
-- [ ] Re-verify TASK-0184's weights + ideation premise once (1) lands.
+      organiser confirmed 2026-08-25 no Phase-1 access exists to request
+      ([[TASK-0221]] §Braket/Classiq; commit `780ced3` records it is
+      Phase-2-only). **Update 2026-08-30: Bartosz has registered for
+      Classiq independently via the Quantum Circuit Challenge; account
+      expected 2026-08-31.** This closes the Phase-2 access item early.
+- [x] **Send organiser questions (a), (b), (c); record answers here.** —
+      **DONE.** Sent; reply received **2026-08-26** and recorded in full in
+      this file under "ANSWERED 2026-08-26", plus verbatim in
+      `__WORK_IN_PROGRESS__/documentation/2026-08-26-organiser-clarifications.md`.
+      (a) and (c) answered outright; (b) substantively responsive. The
+      numbering-to-lettering mapping the old note asked for **is** recorded
+      in that clarifications file's own mapping table.
+- [ ] **Q6/Q7 (the old (e) and (f)) — still unanswered.** Re-sent standalone
+      2026-08-26, text above. Gate [[TASK-0269]] (Q7) and
+      [[TASK-0264]]/[[TASK-0268]] (Q6).
+- [ ] Re-verify TASK-0184's weights + ideation premise — **unblocked** if
+      the Assessment Criteria document is the "(1)" this was waiting for.
+      Confirm the two `[?]` items above, then do this.
 
 ## Dependency
 
