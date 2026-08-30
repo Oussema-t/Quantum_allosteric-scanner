@@ -75,6 +75,63 @@ This is *stronger* evidence for the benchmark-level conclusion both teams
 already converged on, not weaker. It removes a claim we cannot support
 and replaces it with one the data does support.
 
+## Follow-up — it is the SELECTION that failed, not classical heuristics
+
+The original **pre-specified** rule `MIN_HOP>=1 + drug_alone`, applied to
+corrected candidates with **no sweep, no selection, no fitting**:
+
+| arm | mean EH | vs random, cluster-robust |
+|---|---|---|
+| fixed pre-specified rule | **0.0899** | statistic +1.251, **p = 0.220** |
+| swept rule (LOTO-selected) | 0.0000 | statistic -0.546, **p = 0.000244** |
+| CTQW | 0.0389 | statistic +0.232, **p = 1.000** |
+| random | 0.0273 | - |
+
+The fixed rule beats random on only **6 of 20** targets and is **not**
+significantly better (p=0.22) - but it is **not worse either**. Only the
+*swept* rule is significantly worse than chance.
+
+**So the correct statement is not "classical heuristics are worse than
+random."** It is: *automated rule selection on this cohort is worse than
+random; a fixed, sensible classical rule is merely indistinguishable from
+chance, like everything else tested.*
+
+### Why the selected rule is systematically wrong
+
+`hop>=3 + lex_far_first` = discard every candidate closer than 3 hops to
+the active site, then within the survivors prefer the **far** stratum
+(>= 4.5 hops), then take the most druggable.
+
+The benchmark's true pockets are **proximal**. Traced per target -
+true-pocket candidates sit at `min_hop`: `MKK7 [1]`, `SMYD3 [1]`,
+`NAMPT [0,1]`, `PKR [0,1,2,3,4]`. **The `hop>=3` filter deletes the answer
+before ranking even begins**, and `lex_far_first` then pushes further
+away. The rule is anti-correlated with the truth by construction - which
+is [[TASK-0288]] Finding F restated: ~29% of these pockets are covalently
+adjacent to the active site.
+
+### Why the sweep chose it
+
+After the chain fix, `MIN_HOP>=1 + drug_alone` fell 0.1649 -> **0.0899**;
+`hop>=3 + lex_far_first` scored **0.100** in-sample. Margin: **0.0101**,
+and `fit_final_rule` uses `>`. On 20 rows over 13 clusters that margin is
+noise. 18/20 folds then chose it; 2 chose `centroid_euclid>=10A +
+drug_alone`. Both score 0.000 held-out.
+
+Sharpest illustration of the instability: with `HCV_NS5B_VRX` held out,
+the other 19 select `centroid_euclid>=10A + drug_alone`, which scores
+**0.000** on it - while `lex_far_first` applied to that same target
+scores **1.000**. The procedure picked the one rule that fails there.
+
+### It is NOT fpocket fragmentation
+
+A natural hypothesis, tested and rejected: [[TASK-0292]] showed merging
+fpocket fragments **hurts** at every criterion (rule 0.1649->0.0162,
+oracle 0.556->0.163); fragments average 9.6 residues against ~12 for a
+real drug site. And the corrected oracle is still **0.398** - good
+candidates exist in every protein's list. fpocket is finding the pockets;
+no selection procedure we have picks them.
+
 ## What must NOT be concluded
 
 - **Not** "CTQW wins." p=1.000 against random, on one cluster.
