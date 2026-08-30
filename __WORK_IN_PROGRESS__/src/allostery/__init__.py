@@ -1,4 +1,5 @@
 """Quantum-allosteric signal propagation – Cleveland Clinic Challenge 2026."""
+import os
 from pathlib import Path
 
 import prody
@@ -25,6 +26,20 @@ __version__ = "0.1.0"
 _PDB_CACHE_DIR = Path(__file__).resolve().parent.parent.parent / "pdb_cache"
 _PDB_CACHE_DIR.mkdir(exist_ok=True)
 prody.pathPDBFolder(str(_PDB_CACHE_DIR))
+
+# `backend/data_layer.py`/`backend/rcsb_extract.py` fetch via plain
+# `urllib`, not prody, into `os.environ.get("PDB_CACHE", "./pdb_cache")`
+# -- a path relative to cwd at call time, not this package's own
+# `_PDB_CACHE_DIR` above. Research scripts that cross-import `backend`
+# (an established, documented exception to the backend<->allostery
+# boundary, e.g. `task0242_two_stage_dryrun.py`'s own
+# `backend.active_site`) are usually run with cwd=`scripts/`, so that
+# relative default silently created a THIRD cache directory,
+# `scripts/pdb_cache/`, duplicating whatever this package already fetched.
+# `setdefault` only fills it in if unset, so an explicit `PDB_CACHE` in
+# the environment (e.g. the deployed backend's own `uvicorn` invocation
+# from the repo root) is still honored untouched.
+os.environ.setdefault("PDB_CACHE", str(_PDB_CACHE_DIR))
 
 _orig_parsePDB = prody.parsePDB
 _orig_fetchPDB = prody.fetchPDB
