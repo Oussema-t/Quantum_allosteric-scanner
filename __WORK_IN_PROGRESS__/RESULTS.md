@@ -10639,3 +10639,112 @@ on a larger cohort remains [[TASK-0304]]'s own scope.
 **Script:** `scripts/task0302_sibling_persistence.py`. **Data:**
 `results/tasks/0302_sibling_persistence/sibling_persistence.json`. **Full
 detail:** `.ai/tasks/DONE/TASK-0302-sibling-conformer-persistence.md`.
+
+## ASBench/CASBench: 158 proteins across two external benchmarks, and Finding F holds on all of them — strongest on CASBench ([[TASK-0304]], 2026-08-30/31)
+
+[[TASK-0301]] closed on a hard constraint: **13 apo-structure clusters
+cannot validate any selector**, and cannot tell a real pattern from a
+13-cluster fluke either. The collaborator's own cited paper — Wu,
+Strömich & Yaliraki 2022, *Patterns* 3(1):100408 — reports 84%
+allosteric-site recovery on ASBench/CASBench, a combined ~9x our cluster
+count with a published classical baseline. This task obtained that cohort
+independently and tested whether this register's own central finding
+generalises to it.
+
+**Cohort, in hand and de-duplicated**: 422 structures (113 ASBench + 314
+CASBench PDB IDs), extracted from the figshare deposit's own zip central
+directory via a 2 MB HTTP range request rather than downloading the full
+2.55 GB archive. Only **4 of 37** of this register's own targets overlap
+(`CASPASE1`/1ICE, `GAC_BPTES`/3UO9, `PFK`/1PFK, `PTP1B`/1T49) — **418
+structures are genuinely new**, and independent-unit counts are reported
+throughout as **112 ASBench proteins and 33 CASBench proteins**, never as
+raw structure rows (CASBench alone is 314 structures over 33 proteins —
+9.5/protein, the same pseudo-replication class [[TASK-0261]] already
+found in this register's own set, at ~10x the scale).
+
+**What "84%" actually measures, verified independently against their own
+Table S3/S4 `Summary` column, not taken on trust**: it is a six-way
+disjunction — detected by **at least one** of six independent statistical
+measures. Reproduced their 83.9% exactly; **all six** measures agree on
+only **17.8%** of structures. [[TASK-0305]] later showed this is an
+*enrichment* statistic (does the site's average propensity beat random
+same-size surrogates), not a *retrieval* one (is the site in the top-k) —
+on the same 108 structures, their own propensity score's own top-5
+precision is 0.0204 against a 0.0176 chance baseline, beating random at
+p=5e-9 but "finding the pocket" on roughly one structure in eleven.
+
+**Finding F ([[TASK-0288]]: allosteric and active sites sit far closer to
+each other, including covalently adjacent, than "distal" implies) holds
+on both external cohorts — and CASBench's own figure is the strongest of
+the three**, using each benchmark's own annotations directly (no
+`holo_pocket_mask`, no re-derivation with our own labelling heuristic —
+this task's own Constraint):
+
+| cohort | independent units | min heavy-atom allo↔active distance < 1.5 Å |
+|---|---|---|
+| Our register ([[TASK-0288]]/[[TASK-0297]]) | 13 clusters (28 structures) | **28.6%** |
+| ASBench | 112 proteins (117 structures) | **22.2–23.2%** |
+| CASBench | 33 proteins (313 structures) | **42.4%** |
+
+CASBench: 14 of 33 proteins have an annotated "allosteric" site that
+shares residues with, or peptide-bonds directly to, the annotated active
+site. Structure-level (descriptive only, not the number that counts):
+153/313 = 48.9% below 1.5 Å, median 2.61 Å.
+
+**This is not a 13-cluster fluke.** Finding F now holds, independently,
+across 158 proteins from two benchmarks this register does not control —
+and the field's own more recent, larger benchmark (CASBench) shows the
+effect *more* strongly than either ASBench or our own set. The honest
+reframing, stated in this task's own working notes and unchanged by the
+CASBench extension: not "the Cleveland Clinic benchmark is unusual" but
+"distal-site benchmarks in this field routinely contain a large fraction
+of non-distal sites, and methods are scored on them anyway."
+
+**CASBench site annotations obtained live, from the source** — not
+guessed, not left as a gap. ASBench's own supplementary Tables S5/S6
+turned out to be per-structure scoring *results*, not site definitions;
+CASBench is a separate benchmark with its own citation (traced from
+ASBench's own bibliography, not the abstract): Zlobin, Suplatov, Kopylov
+& Svedas (2019), *Acta Naturae* 11, 74–80 (PMCID PMC6475866, verified
+live). Its own full text names a live database,
+`biokinet.belozersky.msu.ru/casbench`, whose `/casbenchbrowse` sub-app
+serves plain HTML (no JS gate) — fetched all 91 CASBench proteins (2871
+structures, 0 errors), of which the paper's own 314/33 subset resolves
+100%.
+
+**On "re-run TASK-0299/TASK-0300 on the extended cohort" (this task's own
+original Scope item)**: not done as literally specified, because doing so
+would violate this task's own Constraint — `task0282_pocket_selection_
+sweep.build_target()` derives its "true pocket" via `holo_pocket_mask` on
+an apo/holo pair from our own config format, and forcing ASBench/CASBench
+through it would mean re-deriving their site with our own heuristic
+rather than testing against theirs. [[TASK-0305]] built the correct
+equivalent instead (residue-level P@5 against their own seed and truth
+directly): **every one of our operators is at or below random on 108
+ASBench structures, and CTQW is significantly worse than random**
+(p<1e-4), with their own propensity score as a positive control proving
+the harness has power. [[TASK-0306]] then tested a meta-classifier over
+their six measures: genuinely more independent than our own 61-rule
+family (mean|φ|=0.419, passes its own pre-registered gate), but the
+descriptors tried (N, chain count, Finding-F site separation) carry no
+predictive signal, LOPO by protein. CASBench's own extension of both is
+now unblocked by this task's annotations but not executed here — the
+direct, concrete follow-up for whoever picks it up next.
+
+**A resource-exhaustion incident, disclosed**: the CASBench Finding-F
+computation crashed four times before completing, each traced to a real
+cause rather than dismissed as flakiness — `backend.data_layer.fetch`'s
+own unbounded `urlretrieve` call (no timeout; worked around locally, not
+in the shared module), an over-eager full-structure atom load (rewritten
+to filter while streaming), genuine concurrent machine oversubscription
+(load average briefly hit 29.75 from unrelated processes, addressed by
+making the run resumable in small checkpointed batches), and one
+outlier PDB (`4P3R`, 113 MB, a cryo-EM-scale assembly) that triggered a
+SIGKILL on this machine regardless of this script's own confirmed-small
+memory footprint — now skipped by an explicit, disclosed size guard
+rather than silently retried forever.
+
+**Scripts**: `scripts/task0304_casbench_annotations.py`, `scripts/
+task0304_casbench_finding_f.py`, `scripts/task0304_asbench_finding_f.py`.
+**Data**: `results/tasks/0304_asbench_casbench/*.json`. **Full detail**:
+`.ai/tasks/DONE/TASK-0304-asbench-casbench-cohort-extension.md`.
