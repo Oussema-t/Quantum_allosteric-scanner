@@ -109,7 +109,7 @@ a{color:var(--accent);}
   <div class="card good">
     <span class="chip c-holds">Strengthened</span>
     <h3>A large share of “allosteric” benchmark sites are not distal at all.</h3>
-    <p>Previously measured on our 13 structures. Now confirmed independently on <strong>ASBench and CASBench</strong> — 158 proteins across three cohorts, two of which neither of us controls.</p>
+    <p>Previously measured on our own 26 proteins. Now confirmed independently on <strong>ASBench and CASBench</strong> &mdash; 171 proteins across three cohorts, two of which neither of us controls.</p>
   </div>
 </section>
 
@@ -163,16 +163,17 @@ a{color:var(--accent);}
     <table>
       <thead><tr><th>Cohort</th><th>Proteins</th><th>Sites &lt; 1.5 Å apart</th><th>Reading</th></tr></thead>
       <tbody>
-        <tr><td>ASBench</td><td class="num">112</td><td class="num big">22.2%</td><td class="sub">least affected</td></tr>
-        <tr><td>Cleveland Clinic (ours)</td><td class="num">13</td><td class="num big">28.6%</td><td class="sub">unexceptional</td></tr>
+        <tr><td>ASBench</td><td class="num">112</td><td class="num big">21.4%</td><td class="sub">least affected</td></tr>
+        <tr><td>Cleveland Clinic (ours)</td><td class="num">26</td><td class="num big">30.8%</td><td class="sub">unexceptional</td></tr>
         <tr><td>CASBench</td><td class="num">33</td><td class="num big">42.4%</td><td class="sub">most affected</td></tr>
+        <tr><td><strong>pooled</strong></td><td class="num"><strong>171</strong></td><td class="num big">26.9%</td><td class="sub">46 proteins</td></tr>
       </tbody>
     </table>
   </div>
 
-  <p>1.5 Å is shorter than a carbon–carbon bond. These are sites <strong>covalently bonded</strong> to the catalytic site. Twelve ASBench structures share residues between the two outright.</p>
+  <p>1.5 Å is shorter than a carbon–carbon bond. These are sites <strong>covalently bonded</strong> to the catalytic site. Fifteen of the 171 proteins &mdash; <strong>one in eleven</strong> &mdash; have annotated allosteric and catalytic sites that <em>share residues outright</em>.</p>
 
-  <p><strong>158 proteins, three cohorts, and our benchmark sits in the middle.</strong> This is not a quirk of the Cleveland Clinic target list — it is a property of how allosteric sites are annotated in this field. Only half of ASBench is genuinely distal.</p>
+  <p><strong>171 proteins, three cohorts, and our benchmark sits in the middle.</strong> This is not a quirk of the Cleveland Clinic target list — it is a property of how allosteric sites are annotated in this field. Only half of ASBench is genuinely distal.</p>
 
   <p class="sub">Bond-to-bond’s own failure analysis says the same thing from the other side: on PDB 1Z8D it records that “direct interactions, instead of functional coupling, occur if sites are close to the orthosteric sites, which is out of the scope of bond-to-bond propensity analysis.” The method excludes these cases by definition. The benchmarks are full of them.</p>
 </section>
@@ -426,7 +427,7 @@ a{color:var(--accent);}
     <li><strong>Score every direction.</strong> For a strict inversion <span class="mono">AUC(&minus;s) = 1 &minus; AUC(s)</span>. We scored distance farthest-first only and consequently mis-ranked the arms in an earlier draft of this page. If an arm looks strongly <em>below</em> chance, its inverse is your best arm.</li>
     <li><strong>Terminal exclusion.</strong> Flexibility and packing arms rank chain termini first unless the terminal 5% is excluded. Without it, every arm is handicapped against a metric that does not exclude them.</li>
     <li><strong>Their per-residue files are keyed to their stripped structures.</strong> Mapping bond-to-bond propensity onto deposited numbering yields exactly AUC 0.5000 &mdash; a silent, plausible-looking null. Score on their keys.</li>
-    <li><strong>Cluster by protein, not structure.</strong> Our 20 rows are 13 structures; CASBench&rsquo;s 314 are 33 proteins. Four selection procedures in our register were destroyed by ignoring this.</li>
+    <li><strong>Cluster by protein, not structure.</strong> Our 20 ceiling rows are 13 apo clusters and our 28 distance rows are 26 proteins &mdash; two different groupings for two different questions, and conflating them cost us a wrong percentage; CASBench&rsquo;s 314 are 33 proteins. Four selection procedures in our register were destroyed by ignoring this.</li>
     <li><strong>Enrichment is not retrieval.</strong> The six published measures test whether a site&rsquo;s <em>average</em> score beats surrogate sites. That is not top-k retrieval, and the two disagree sharply.</li>
     <li><strong>Getting the data.</strong> PMC serves the supplementary tables behind a JS proof-of-work challenge; Europe PMC&rsquo;s <code>supplementaryFiles</code> endpoint does not. The 2.55&nbsp;GB figshare archive need not be downloaded &mdash; a range request for its last 2&nbsp;MB returns the zip central directory, and individual files can be pulled by offset.</li>
   </ul>
