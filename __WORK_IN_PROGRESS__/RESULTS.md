@@ -10578,3 +10578,64 @@ follow-up.
 **Script:** `scripts/task0303_enm_mode_shift.py`. **Data:**
 `results/tasks/0303_enm_mode_shift/mode_shift.json`. **Full detail:**
 `.ai/tasks/DONE/TASK-0303-enm-mode-shift-as-ranker.md`.
+
+## Sibling-conformer pocket persistence -- a clean negative under both filtering regimes ([[TASK-0302]], 2026-08-31)
+
+[[TASK-0301]] ranked sibling-conformer pocket persistence as the most
+independent untested lever (external handover: every target has siblings
+at >=95% identity, median 53, min 10). This task tests whether a
+candidate cavity persists across independently solved sibling structures,
+with the circularity trap (most siblings are holo, some carry the drug)
+handled first via two filters, both reported per the task's own
+Constraint: `min_bar` (excludes only the target's own `drug_ligand`) and
+`strict_apo` (excludes any drug/ligand-category ligand at all,
+[[TASK-0278]]'s own classification reused).
+
+**Method**: `siblings.json` (external handover's own live RCSB scan)
+reused, its own apo/chain keys verified to match this repo's own frozen
+20 exactly before trusting it. Candidate/truth apparatus mirrors
+`task0282_pocket_selection_sweep.build_target`'s own call shape as a
+separate, duplicated implementation (that script untouched, Lane B still
+owns it). Sibling pockets mapped onto target apo numbering via
+`allostery.labels._needleman_wunsch_map` -- the same sequence-only
+primitive `holo_pocket_mask` already uses for apo/holo numbering offsets.
+Two disclosed proof-of-concept bounds (unfiltered sibling counts run to
+493/target, 1,999 total -- one live fetch per sibling for the holo check
+alone made the full set intractable): at most 30 siblings checked per
+target before the holo filter, at most 10 scored per filter variant
+after it. Full run: ~2 hours wall-clock (~600 live RCSB fetches + ~400
+Docker fpocket calls, [[TASK-0285]]'s own containerized fpocket).
+
+**Sibling coverage, reported before scoring**: median 88 available per
+target (min 10, max 493); capped to 30 checked; median 29.5 survive
+min-bar; median only 3.5 survive strict-apo-only, and **2 of 20 targets
+(PKR_MITAPIVAT, PKR_AG946) have ZERO strict-apo-only siblings** among the
+first 30 checked -- essentially every deposited sibling carries some
+ligand.
+
+**Verdict: no standalone ranking benefit, either filter.** Cluster-robust
+(TASK-0261's exact 13-cluster sign-flip test): min-bar mean
+Δ(persistence-selected − random EH)=−0.0006, p=0.969; strict apo-only
+(n=18, 2 zero-sibling targets correctly excluded not imputed) mean
+Δ=+0.0033, p=0.856. The persistence-selected candidate scores EH=0 on
+16/20 targets under the min-bar filter. **As a tie-break on top of
+druggability**: mean Δ=+0.0000 exactly, p=1.000 -- persistence never
+actually broke a tie in this data (real-valued druggability essentially
+never collides exactly).
+
+**Independence -- mixed, size the stronger correlate**: pooled Spearman
+across 789 candidates, persistence vs `fpocket_drug` ρ=0.129 (p=0.0003);
+persistence vs pocket size (`n_res`) ρ=0.190 (p=7e-8); persistence vs
+`fpocket_drug` controlling size, ρ=0.061 (p=0.086, borderline). Per this
+task's own Note ("if it is just size again, [[TASK-0287]], say so"):
+**partially, not fully** -- size is the dominant of the two tested
+correlates, though a genuine, modest, independent component survives too
+small to salvage the standalone-ranker null above.
+
+**Not done**: exhaustive sibling coverage (the two disclosed caps);
+`OVERLAP_JACCARD=0.2` not swept (single pre-committed value). Validation
+on a larger cohort remains [[TASK-0304]]'s own scope.
+
+**Script:** `scripts/task0302_sibling_persistence.py`. **Data:**
+`results/tasks/0302_sibling_persistence/sibling_persistence.json`. **Full
+detail:** `.ai/tasks/DONE/TASK-0302-sibling-conformer-persistence.md`.

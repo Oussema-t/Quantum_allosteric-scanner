@@ -75,6 +75,19 @@ also supplies a published classical baseline (84% recovery) to measure
 against. That is a Phase-2 proposal with a real cohort and a real target,
 not another sweep on 13.
 
+**2026-08-31 note ([[TASK-0302]]):** item 1 above, sibling-conformer
+persistence, run with the required holo filter (both a minimum-bar and a
+strict apo-only variant, per that task's own Constraint). **Does not
+reproduce a standalone benefit either**: cluster-robust p=0.969
+(min-bar) / 0.856 (strict apo-only) vs random, and exactly zero effect
+as a druggability tie-break (mean Δ=+0.0000, p=1.000 — continuous
+druggability essentially never ties, so persistence had almost no real
+chance to act as a tie-breaker regardless). Independence is mixed:
+persistence correlates more with pocket size (ρ=0.190) than with
+druggability (ρ=0.129 raw, ρ=0.061 partial, controlling size) —
+partially, not fully, "just size again." Full detail: [[TASK-0302]]'s
+own Done section.
+
 **2026-08-31 note ([[TASK-0303]]):** item 2 above, ENM mode shift,
 ported into this repo's own real per-target `enm_cutoff` pipeline and
 evaluated standalone. **Does not reproduce** — not on this register's own
