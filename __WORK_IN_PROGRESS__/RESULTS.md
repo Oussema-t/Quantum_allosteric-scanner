@@ -10686,6 +10686,17 @@ this task's own Constraint):
 | ASBench | 112 proteins (117 structures) | **22.2–23.2%** |
 | CASBench | 33 proteins (313 structures) | **42.4%** |
 
+> **Correction ([[TASK-0309]], 2026-08-31)**: "13 clusters" above is wrong
+> and the 28.6% was never actually computed at cluster level. Checked
+> against `config/*.yaml`'s own `apo_pdb` field: only 15/28 of these
+> structures are even in [[TASK-0261]]'s 13-cluster map (built for a
+> different, older 20-target set); the true cluster count for this
+> 28-structure cohort is **26** (two real pairs: GAC_BPTES/GAC_CPD12 on
+> 7SBN, FBPASE_94D/FBPASE_95S on 5LDZ). The 28.6% itself is 8/28
+> **structure**-level. Corrected, cluster-level: **8/26 = 30.8%**. See
+> [[TASK-0309]] for the full re-derivation and the extended-cohort battery
+> this correction was found while building.
+
 CASBench: 14 of 33 proteins have an annotated "allosteric" site that
 shares residues with, or peptide-bonds directly to, the annotated active
 site. Structure-level (descriptive only, not the number that counts):
@@ -10748,3 +10759,79 @@ rather than silently retried forever.
 task0304_casbench_finding_f.py`, `scripts/task0304_asbench_finding_f.py`.
 **Data**: `results/tasks/0304_asbench_casbench/*.json`. **Full detail**:
 `.ai/tasks/DONE/TASK-0304-asbench-casbench-cohort-extension.md`.
+
+## [[TASK-0284]] Finding A does not survive at n=158+; [[TASK-0288]] Finding F does, more clearly ([[TASK-0309]], 2026-08-31)
+
+[[TASK-0284]] reported **two populations** of allosteric-site distance
+(k-means silhouette 0.7367, sizes 24/9, on 33 pocket *rows* — pseudo-
+replicated). [[TASK-0288]] retested at the true n=28 structures and found
+the silhouette survives but the case for two populations does not:
+Shapiro non-normality collapses under size normalisation (p=0.0067 ->
+0.19) and a bootstrap LRT gave p=0.11, underpowered, not distinguishing
+one population from two. [[TASK-0304]]'s ASBench+CASBench cohort makes
+the same test possible at ~6-12x the n. This task pooled all three and
+reran the full battery, protein/cluster-level throughout (see the
+correction note on the table above — the corrected clustering is used
+here: **26 clusters for our own register, 112 ASBench proteins, 33
+CASBench proteins, 171 pooled**).
+
+**Corrected protein-level fractions below 1.5 Å**: ours 8/26=30.8%,
+ASBench 24/112=21.4%, CASBench 14/33=42.4%, pooled 46/171=26.9%.
+
+**A new sub-finding, found while building this**: 15/171 pooled proteins
+(12/112 ASBench, 3/33 CASBench, 0/26 ours) have LITERAL site overlap —
+`min_A = 0.0` exactly, the annotated allosteric and active/catalytic
+residue sets share a residue. A more extreme case of Finding F than
+covalent adjacency, not previously reported at this resolution.
+
+**The result, cohort by cohort, raw `min_A`**: silhouette is high
+(0.53-0.84) at every k=2..6 in every cohort, never a clean single peak at
+k=2 — the Constraint's own warning about 1-D k-means, borne out directly.
+The spike/excess-mass binomial test ([[TASK-0288]] Part F, redone fresh)
+is significant everywhere, far past any correction: ours p=1.1e-5,
+ASBench p=4.7e-10, CASBench p=9.5e-9, pooled p=**2.8e-20**. GMM BIC
+prefers k>1 in every cohort, but the winning low-mean component sits at
+**1.32-1.33 Å in every single case** — the peptide-bond distance, not a
+free mean — with a narrow fitted width (log-scale sigma 1.00-1.02, vs.
+1.2-2.7 for every other component) and a minority weight (12-37%). That
+is [[TASK-0288]]'s point mass, not [[TASK-0284]]'s second broad
+population: where BIC picks k=3 (ours, pooled), the extra component
+splits the *continuum* into two overlapping Gaussians, not a genuine
+third population.
+
+**The crux — does normalisation still kill it at 6-12x n?** Yes. On
+`min_A / Rg`, BIC prefers **k=1** in ours, ASBench, and CASBench
+separately, and only marginally favours k=2 pooled (432.5 vs 438.3, weak,
+and pooling normalised ratios across cohorts of different size
+distributions is its own caveat). The spike test is not significant
+normalised in any cohort (p=0.76-1.00) — expected, not contradictory: a
+peptide bond has a fixed physical length, so a size-relative window
+should not isolate it the way an absolute-Å window does.
+[[TASK-0288]]'s original n=28 finding — normalisation removes the
+apparent multi-population signal — **replicates independently across
+three cohorts at n=26/112/33, not merely restated at larger n.**
+
+**Verdict, flagged for [[TASK-0284]] and the collaborator brief, neither
+edited here**: the two-Gaussian-population claim does not survive at the
+extended n. What replaces it is [[TASK-0288]] Finding F, generalised — a
+narrow point mass at the covalent distance (weight 12-37%, p<1e-4 to
+p<1e-19 in every cohort) plus a broad continuum. Real and robust, but a
+materially different claim from "two populations of comparable breadth."
+
+**A disclosed fidelity limitation**: the full battery at [[TASK-0288]]'s
+own original bootstrap fidelity did not finish in a reasonable wall-clock
+budget (one LRT call alone took ~7 CPU-minutes before being killed —
+traced to BLAS thread-spawn overhead across many tiny fits, not memory;
+RSS stayed under 150 MB throughout). Reduced fidelity (B=200/80 vs.
+300-500, 3 seeds x 3 EM inits vs. 8x5) was used instead. Consequence: this
+run's own negative-control p-values jump between the floor (0.012) and
+ceiling (1.000) rather than the smooth 0.18-0.88 spread [[TASK-0288]]'s
+higher-fidelity controls showed. The LRT's own p=0.0050 (floor) results
+are corroborated independently by the spike test and the BIC
+component-width result, but should be read as suggestive, not a
+calibrated exact p-value — a higher-fidelity rerun would be needed to
+quote one with confidence.
+
+**Script**: `scripts/task0309_kmeans_extended_cohort.py`. **Data**:
+`results/tasks/0309_kmeans_extended_cohort/kmeans_extended_cohort.json`.
+**Full detail**: `.ai/tasks/DONE/TASK-0309-kmeans-rerun-on-extended-cohort.md`.
