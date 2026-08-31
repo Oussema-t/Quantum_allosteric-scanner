@@ -74,3 +74,14 @@ collaborator's own cited paper (Wu, Strömich & Yaliraki 2022) uses, which
 also supplies a published classical baseline (84% recovery) to measure
 against. That is a Phase-2 proposal with a real cohort and a real target,
 not another sweep on 13.
+
+**2026-08-31 note ([[TASK-0303]]):** item 2 above, ENM mode shift,
+ported into this repo's own real per-target `enm_cutoff` pipeline and
+evaluated standalone. **Does not reproduce** — not on this register's own
+ranker-vs-random statistic (p=0.20–0.56 everywhere) and not on Experiment
+D's own exact percentile/Fisher statistic either (open stratum p=0.306/
+0.319, vs. that experiment's own claimed 0.005–0.013). The independence
+premise itself holds (partial correlation with druggability, controlling
+pocket size: ρ=−0.044, p=0.212 — genuinely independent), but independence
+alone does not translate into ranking power on this cohort. Full detail:
+[[TASK-0303]]'s own Done section.

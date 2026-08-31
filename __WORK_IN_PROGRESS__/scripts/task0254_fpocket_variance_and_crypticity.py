@@ -158,7 +158,16 @@ def crypticity(d: dict) -> dict:
 
     apo_open_resn: set = set()
     for p in d["pockets"]:
-        apo_open_resn |= set(int(r) for r in p["resnums"])
+        # TASK-0298 changed fpocket_candidates' own `p["resnums"]` from a
+        # bare-int set to (chain, resnum) tuples (chain-collision fix) --
+        # this function was not updated at the time and crashes on any
+        # caller whose `d["pockets"]` post-dates that change (caught by
+        # TASK-0303 while reusing this function on today's data; every
+        # existing call site that already ran -- TASK-0260/0266/0268 --
+        # did so before TASK-0298 landed, so their own published numbers
+        # are unaffected by this fix, not silently invalidated). Handles
+        # both shapes defensively rather than assuming the new one only.
+        apo_open_resn |= {int(r[1]) if isinstance(r, tuple) else int(r) for r in p["resnums"]}
 
     n_true = len(true_pocket_resn)
     n_open = len(true_pocket_resn & apo_open_resn)

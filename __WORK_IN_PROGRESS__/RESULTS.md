@@ -10514,3 +10514,67 @@ exact line numbers, commit SHAs, and verdicts (`CURRENT`/`STALE`/`MISSING`/
 this task's own scope — a separate, deliberate step by whoever owns them.
 
 **Full detail:** `.ai/tasks/DONE/TASK-0307-submission-evidence-pack.md`.
+
+## ENM global mode shift, ported and evaluated standalone -- does not reproduce ([[TASK-0303]], 2026-08-31)
+
+[[TASK-0301]] ranked ENM mode shift (external Experiment D: open-stratum
+p=0.005-0.013, surviving fixed-node-budget and volume-residualisation) as
+the most independent untested signal after the rule family's own
+consensus/voting negative. This task ports Experiment D's own APOP-style
+computation (fill a candidate pocket with dummy nodes at its fpocket
+alpha-sphere centres, rebuild the GNM Kirchhoff, measure softest-mode
+stiffening) into this repo's own pipeline with the fix that experiment's
+own handover flagged as required "before the cryptic conclusion is
+trusted": this repo's own per-target `enm_cutoff`, replacing the uniform
+7.3 A placeholder that container's own `build_H_new` unavailability
+forced. **2026-08-31 lane-collision amendment**: evaluated standalone,
+NOT folded into `task0282_pocket_selection_sweep.METRICS` -- Lane B owns
+that script's own re-run of the extended cohort this window.
+
+**The cutoff fix, checked not assumed**: this repo's own per-target
+`enm_cutoff` is real (the actual config field is read) but resolves to a
+uniform 8.0 A across all 22 frozen-set targets -- a modest +0.7 A shift
+from Experiment D's own 7.3 A, not a heterogeneity correction. Reported
+precisely so the result below isn't misattributed.
+
+**Verdict: does not reproduce, on either statistic.** This register's own
+ranker-vs-random EH statistic ([[TASK-0261]]'s exact 13-cluster sign-flip
+test): raw mean Δ=+0.021 (p=0.557), kfix mean Δ=+0.063 (p=0.204),
+open/cryptic strata both non-significant (p=0.50-1.00). Experiment D's
+own exact statistic, added afterward for a genuine apples-to-apples check
+(percentile rank of the true/max-recall candidate's own mode-shift value,
+Fisher-combined per stratum, its own published method): open stratum
+Fisher p=0.306 (raw) / 0.319 (kfix) -- **not** 0.005-0.013. The only
+marginal signal is the un-stratified pooled-20 Fisher combination
+(p=0.029-0.033) and it is explicitly **not cluster-robust** (Fisher
+treats all 20 rows as independent; this register's own repeated finding,
+[[TASK-0300]]'s own count of 4 prior selection procedures broken by
+exactly this pseudo-replication) -- read as noise, not reported as a
+positive.
+
+**The one part of the premise that holds**: pooled per-target-z Spearman
+of mode_shift_kfix with `fpocket_drug` across all 789 real candidates is
+real (ρ=0.173, p=9.9e-7) but **drops to ρ=-0.044 (p=0.212) once pocket
+size is controlled for** via OLS residualisation -- the raw correlation
+was a shared-size artifact; mode shift genuinely is independent of
+druggability, confirming the one premise this task's own filing named as
+"the entire reason for adding it" -- independence alone just does not
+translate into ranking power on this cohort.
+
+**A real shared-module bug found and fixed at the source**:
+`task0254_fpocket_variance_and_crypticity.crypticity` still assumed
+`p["resnums"]` was a bare-int set; [[TASK-0298]] changed
+`fpocket_candidates`'s own output to `(chain, resnum)` tuples without
+updating this downstream consumer. Fixed to handle both shapes. Every
+existing caller ([[TASK-0260]], [[TASK-0266]], [[TASK-0268]]) ran before
+TASK-0298 landed, so their own published numbers are unaffected -- checked
+by date, not assumed.
+
+**Not done**: `task0282`'s own `METRICS`/sweep intentionally untouched
+per this task's own amended Constraint -- integration (with
+[[TASK-0300]]'s own cluster-mean selection fix) is a Lane-B-after-landing
+follow-up.
+
+**Script:** `scripts/task0303_enm_mode_shift.py`. **Data:**
+`results/tasks/0303_enm_mode_shift/mode_shift.json`. **Full detail:**
+`.ai/tasks/DONE/TASK-0303-enm-mode-shift-as-ranker.md`.
