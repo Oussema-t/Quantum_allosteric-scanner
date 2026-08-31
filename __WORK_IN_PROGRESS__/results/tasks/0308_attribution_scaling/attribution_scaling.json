@@ -1107,6 +1107,12 @@
    "share": 0.013415578671053474,
    "n": 108,
    "note": "recomputed keyed on THEIR residue keys; the original mapped their scores onto deposited numbering and produced an impossible AUC 0.5000"
+  },
+  "proximity_nearest": {
+   "mean_auc": 0.6147134671240649,
+   "share": 0.22942693424812988,
+   "n": 108,
+   "note": "exact inversion of geometry_hop; AUC(-s)=1-AUC(s). Omitting this arm caused the brief to name CTQW the strongest arm when it is second."
   }
  },
  "n": 108,
@@ -1117,7 +1123,7 @@
   "median": 0.5165742413539115,
   "frac_above_chance": 0.5555555555555556
  },
- "best_arm": "ctqw",
- "explained": 0.18417823906183006,
- "headroom": 0.8158217609381699
+ "best_arm": "proximity_nearest",
+ "explained": 0.22942693424812988,
+ "headroom": 0.7705730657518701
 }
