@@ -1,0 +1,559 @@
+{
+ "11BG": [
+  "CATH",
+  "Ribonuclease A-like domain",
+  "Alpha Beta"
+ ],
+ "1A3W": [
+  "CATH",
+  "Pyruvate kinase, C-terminal domain",
+  "Alpha Beta"
+ ],
+ "1B86": [
+  "CATH",
+  "Globins",
+  "Mainly Alpha"
+ ],
+ "1CE8": [
+  "CATH",
+  "",
+  "Alpha Beta"
+ ],
+ "1DKU": [
+  "CATH",
+  "",
+  "Alpha Beta"
+ ],
+ "1EM6": [
+  "CATH",
+  "Glycogen Phosphorylase B;",
+  "Alpha Beta"
+ ],
+ "1FRP": [
+  "CATH",
+  "Fructose-1,6-Bisphosphatase, subunit A, domain 1",
+  "Alpha Beta"
+ ],
+ "1G3L": [
+  "CATH",
+  "Spore Coat Polysaccharide Biosynthesis Protein SpsA; Chain A",
+  "Alpha Beta"
+ ],
+ "1GZ3": [
+  "CATH",
+  "Malic enzyme, N-terminal domain",
+  "Alpha Beta"
+ ],
+ "1H5S": [
+  "CATH",
+  "Spore Coat Polysaccharide Biosynthesis Protein SpsA; Chain A",
+  "Alpha Beta"
+ ],
+ "1H78": [
+  "CATH",
+  "",
+  "Alpha Beta"
+ ],
+ "1I7S": [
+  "CATH",
+  "Anthranilate synthase",
+  "Alpha Beta"
+ ],
+ "1IWH": [
+  "CATH",
+  "Globins",
+  "Mainly Alpha"
+ ],
+ "1JLR": [
+  "CATH",
+  "",
+  "Alpha Beta"
+ ],
+ "1KFL": [
+  "CATH",
+  "Aldolase class I",
+  "Alpha Beta"
+ ],
+ "1LVW": [
+  "CATH",
+  "Spore Coat Polysaccharide Biosynthesis Protein SpsA; Chain A",
+  "Alpha Beta"
+ ],
+ "1M8P": [
+  "CATH",
+  "HUPs",
+  "Alpha Beta"
+ ],
+ "1MP3": [
+  "CATH",
+  "Spore Coat Polysaccharide Biosynthesis Protein SpsA; Chain A",
+  "Alpha Beta"
+ ],
+ "1NE7": [
+  "CATH",
+  "",
+  "Alpha Beta"
+ ],
+ "1NH8": [
+  "CATH",
+  "Periplasmic binding protein-like II",
+  "Alpha Beta"
+ ],
+ "1NJJ": [
+  "CATH",
+  "Lyase, Ornithine Decarboxylase; Chain A, domain 1",
+  "Mainly Beta"
+ ],
+ "1OF6": [
+  "CATH",
+  "Aldolase class I",
+  "Alpha Beta"
+ ],
+ "1PFK": [
+  "CATH",
+  "",
+  "Alpha Beta"
+ ],
+ "1QW7": [
+  "CATH",
+  "Metal-dependent hydrolases",
+  "Alpha Beta"
+ ],
+ "1T49": [
+  "CATH",
+  "Protein tyrosine phosphatase superfamily",
+  "Alpha Beta"
+ ],
+ "1UXV": [
+  "CATH",
+  "Aldehyde Dehydrogenase; Chain A, domain 1",
+  "Alpha Beta"
+ ],
+ "1W0F": [
+  "CATH",
+  "Cytochrome P450",
+  "Mainly Alpha"
+ ],
+ "1W25": [
+  "CATH",
+  "Response regulator",
+  "Alpha Beta"
+ ],
+ "1W96": [
+  "CATH",
+  "",
+  "Alpha Beta"
+ ],
+ "1Z8D": [
+  "CATH",
+  "Glycogen Phosphorylase B;",
+  "Alpha Beta"
+ ],
+ "1ZDS": [
+  "CATH",
+  "Cupredoxins -  blue copper proteins",
+  "Mainly Beta"
+ ],
+ "2ATS": [
+  "CATH",
+  "Aldolase class I",
+  "Alpha Beta"
+ ],
+ "2BE9": [
+  "CATH",
+  "Aspartate/ornithine carbamoyltransferase",
+  "Alpha Beta"
+ ],
+ "2BU8": [
+  "CATH",
+  "Alpha-ketoacid/pyruvate dehydrogenase kinase, N-terminal domain",
+  "Mainly Alpha"
+ ],
+ "2BXA": [
+  "CATH",
+  "",
+  "Mainly Alpha"
+ ],
+ "2D60": [
+  "CATH",
+  "Globins",
+  "Mainly Alpha"
+ ],
+ "2HIM": [
+  "CATH",
+  "L-asparaginase, N-terminal domain",
+  "Alpha Beta"
+ ],
+ "2HVW": [
+  "CATH",
+  "Cytidine Deaminase, domain 2",
+  "Alpha Beta"
+ ],
+ "2IEG": [
+  "CATH",
+  "Glycogen Phosphorylase B;",
+  "Alpha Beta"
+ ],
+ "2J0X": [
+  "CATH",
+  "Acetylglutamate kinase-like",
+  "Alpha Beta"
+ ],
+ "2JHR": [
+  "CATH",
+  "",
+  "Mainly Alpha"
+ ],
+ "2NW8": [
+  "CATH",
+  "",
+  "Mainly Alpha"
+ ],
+ "2PA3": [
+  "CATH",
+  "NAD(P)-binding Rossmann-like Domain",
+  "Alpha Beta"
+ ],
+ "2PUV": [
+  "CATH",
+  "Glucose-6-phosphate isomerase like protein; domain 1",
+  "Alpha Beta"
+ ],
+ "2Q5O": [
+  "CATH",
+  "Thiamin diphosphate (ThDP)-binding fold, Pyr/PP domains",
+  "Alpha Beta"
+ ],
+ "2Q8M": [
+  "CATH",
+  "Fructose-1,6-Bisphosphatase, subunit A, domain 1",
+  "Alpha Beta"
+ ],
+ "2QMX": [
+  "CATH",
+  "Periplasmic binding protein-like II",
+  "Alpha Beta"
+ ],
+ "2QPY": [
+  "CATH",
+  "Retinoid X Receptor",
+  "Mainly Alpha"
+ ],
+ "2R1R": [
+  "CATH",
+  "",
+  "Alpha Beta"
+ ],
+ "2RD5": [
+  "CATH",
+  "Acetylglutamate kinase-like",
+  "Alpha Beta"
+ ],
+ "2V4Y": [
+  "CATH",
+  "Acetylglutamate kinase-like",
+  "Alpha Beta"
+ ],
+ "2VD3": [
+  "CATH",
+  "Periplasmic binding protein-like II",
+  "Alpha Beta"
+ ],
+ "2VGI": [
+  "CATH",
+  "Pyruvate kinase, C-terminal domain",
+  "Alpha Beta"
+ ],
+ "2VVT": [
+  "CATH",
+  "",
+  "Alpha Beta"
+ ],
+ "2W4I": [
+  "CATH",
+  "",
+  "Alpha Beta"
+ ],
+ "2XJC": [
+  "SCOP2",
+  "HAD-like",
+  "Globular proteins"
+ ],
+ "2Y0P": [
+  "CATH",
+  "TPP helical domain",
+  "Mainly Alpha"
+ ],
+ "2YHD": [
+  "CATH",
+  "Retinoid X Receptor",
+  "Mainly Alpha"
+ ],
+ "2YLO": [
+  "CATH",
+  "Retinoid X Receptor",
+  "Mainly Alpha"
+ ],
+ "3BCR": [
+  "SCOP",
+  "automated matches",
+  "Alpha and beta proteins (a/b)"
+ ],
+ "3BZ7": [
+  "CATH",
+  "",
+  "Mainly Alpha"
+ ],
+ "3C1N": [
+  "CATH",
+  "Acetylglutamate kinase-like",
+  "Alpha Beta"
+ ],
+ "3CEH": [
+  "CATH",
+  "Glycogen Phosphorylase B;",
+  "Alpha Beta"
+ ],
+ "3CSM": [
+  "CATH",
+  "Chorismate mutase, AroQ class superfamily, eukaryotic",
+  "Mainly Alpha"
+ ],
+ "3D2P": [
+  "CATH",
+  "Acetylglutamate kinase-like",
+  "Alpha Beta"
+ ],
+ "3DC2": [
+  "CATH",
+  "NAD(P)-binding Rossmann-like Domain",
+  "Alpha Beta"
+ ],
+ "3E3N": [
+  "CATH",
+  "Glycogen Phosphorylase B;",
+  "Alpha Beta"
+ ],
+ "3EK5": [
+  "CATH",
+  "Acetylglutamate kinase-like",
+  "Alpha Beta"
+ ],
+ "3EPS": null,
+ "3ETE": [
+  "CATH",
+  "",
+  "Mainly Alpha"
+ ],
+ "3ETG": [
+  "CATH",
+  "",
+  "Mainly Alpha"
+ ],
+ "3FUD": [
+  "CATH",
+  "tricorn interacting facor f3 domain",
+  "Mainly Beta"
+ ],
+ "3H30": [
+  "CATH",
+  "Transferase(Phosphotransferase) domain 1",
+  "Mainly Alpha"
+ ],
+ "3H6O": [
+  "CATH",
+  "Pyruvate kinase, C-terminal domain",
+  "Alpha Beta"
+ ],
+ "3HFR": [
+  "CATH",
+  "",
+  "Alpha Beta"
+ ],
+ "3HO6": [
+  "CATH",
+  "MARTX cysteine protease (CPD) domain",
+  "Alpha Beta"
+ ],
+ "3HQP": [
+  "CATH",
+  "Pyruvate kinase, C-terminal domain",
+  "Alpha Beta"
+ ],
+ "3IFA": [
+  "CATH",
+  "Fructose-1,6-Bisphosphatase, subunit A, domain 1",
+  "Alpha Beta"
+ ],
+ "3IRH": [
+  "CATH",
+  "Hypothetical protein af1432",
+  "Mainly Alpha"
+ ],
+ "3K5V": [
+  "CATH",
+  "Phosphorylase Kinase; domain 1",
+  "Alpha Beta"
+ ],
+ "3KGF": [
+  "SCOP",
+  "Probable DAHP synthetase AroG, phenylalanine-repressible",
+  "Alpha and beta proteins (a/b)"
+ ],
+ "3LSW": [
+  "CATH",
+  "Periplasmic binding protein-like II",
+  "Alpha Beta"
+ ],
+ "3LSX": [
+  "CATH",
+  "Periplasmic binding protein-like II",
+  "Alpha Beta"
+ ],
+ "3LU6": [
+  "CATH",
+  "",
+  "Mainly Alpha"
+ ],
+ "3M3F": [
+  "CATH",
+  "Periplasmic binding protein-like II",
+  "Alpha Beta"
+ ],
+ "3MW9": null,
+ "3MWB": [
+  "CATH",
+  "Periplasmic binding protein-like II",
+  "Alpha Beta"
+ ],
+ "3N25": [
+  "CATH",
+  "Pyruvate kinase, C-terminal domain",
+  "Alpha Beta"
+ ],
+ "3O2M": [
+  "CATH",
+  "Phosphorylase Kinase; domain 1",
+  "Alpha Beta"
+ ],
+ "3PG9": [
+  "CATH",
+  "Phospho-2-dehydro-3-deoxyheptonate aldolase; domain 1",
+  "Alpha Beta"
+ ],
+ "3PJG": [
+  "CATH",
+  "NAD(P)-binding Rossmann-like Domain",
+  "Alpha Beta"
+ ],
+ "3PTZ": [
+  "CATH",
+  "NAD(P)-binding Rossmann-like Domain",
+  "Alpha Beta"
+ ],
+ "3PXF": [
+  "CATH",
+  "Phosphorylase Kinase; domain 1",
+  "Alpha Beta"
+ ],
+ "3PYY": [
+  "CATH",
+  "Phosphorylase Kinase; domain 1",
+  "Alpha Beta"
+ ],
+ "3QH0": [
+  "CATH",
+  "Laminin",
+  "Mainly Beta"
+ ],
+ "3R1R": [
+  "CATH",
+  "",
+  "Alpha Beta"
+ ],
+ "3UO9": [
+  "CATH",
+  "",
+  "Mainly Alpha"
+ ],
+ "3ZCW": [
+  "CATH",
+  "Kinesin motor domain",
+  "Alpha Beta"
+ ],
+ "4B1F": [
+  "CATH",
+  "",
+  "Alpha Beta"
+ ],
+ "4B2D": [
+  "CATH",
+  "Pyruvate kinase, C-terminal domain",
+  "Alpha Beta"
+ ],
+ "4BBG": [
+  "CATH",
+  "Kinesin motor domain",
+  "Alpha Beta"
+ ],
+ "4CFE": [
+  "CATH",
+  "Phosphorylase Kinase; domain 1",
+  "Alpha Beta"
+ ],
+ "4E6C": [
+  "CATH",
+  "Phosphorylase Kinase; domain 1",
+  "Alpha Beta"
+ ],
+ "4G1N": [
+  "CATH",
+  "Pyruvate kinase, C-terminal domain",
+  "Alpha Beta"
+ ],
+ "4GRS": [
+  "CATH",
+  "Phospho-2-dehydro-3-deoxyheptonate aldolase; domain 1",
+  "Alpha Beta"
+ ],
+ "4HO6": [
+  "CATH",
+  "Spore Coat Polysaccharide Biosynthesis Protein SpsA; Chain A",
+  "Alpha Beta"
+ ],
+ "4HYW": [
+  "CATH",
+  "Pyruvate kinase, C-terminal domain",
+  "Alpha Beta"
+ ],
+ "4JA8": [
+  "CATH",
+  "Isopropylmalate Dehydrogenase",
+  "Alpha Beta"
+ ],
+ "4JKT": [
+  "CATH",
+  "",
+  "Mainly Alpha"
+ ],
+ "4KZT": [
+  "CATH",
+  "Acetylglutamate kinase-like",
+  "Alpha Beta"
+ ],
+ "4LRL": [
+  "CATH",
+  "Hypothetical protein af1432",
+  "Mainly Alpha"
+ ],
+ "4MRA": [
+  "CATH",
+  "Glycogen Phosphorylase B;",
+  "Alpha Beta"
+ ],
+ "4PFK": [
+  "CATH",
+  "",
+  "Alpha Beta"
+ ]
+}

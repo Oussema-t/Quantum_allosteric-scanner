@@ -117,3 +117,42 @@ live each run, no cached upstream binary committed). **Data:**
 `results/tasks/0306_six_measure_meta_classifier/six_measure_analysis.json`.
 
 **Moved TODO/IN_PROGRESS -> DONE.**
+
+---
+
+## Addendum (2026-08-31, Reviewer thread) — fold class tested, and it fails
+
+This task disclosed fold class as its one untested predictor. Closed now,
+negatively, in the hour before the collaborator sync.
+
+CATH/SCOP top-level class pulled live from the RCSB Data API
+(`polymer_entity_instance` → `rcsb_polymer_instance_annotation`) for
+**111 of 113** ASBench structures. Distribution is heavily skewed —
+Alpha-Beta 88, Mainly-Alpha 23, everything else too thin to use — so the
+test is effectively two classes.
+
+| measure | alpha-beta | mainly-alpha | Fisher p |
+|---|---|---|---|
+| pR surrogate-CI | 40/88 | 13/23 | 0.360 |
+| pb surrogate-CI | 37/88 | 14/23 | 0.158 |
+| P(pR>.95) | 33/88 | 10/23 | 0.636 |
+| P(pb>.95) | 42/88 | 11/23 | 1.000 |
+| ref pR | 52/88 | 16/23 | 0.472 |
+| ref pb | 54/88 | 20/23 | 0.025 |
+
+**Bonferroni α = 0.0083. NONE survives.** Number of measures firing does
+not differ either: 2.93 vs 3.65, Mann-Whitney **p = 0.140**.
+
+One descriptive curiosity, explicitly **not** a finding at this n:
+mainly-alpha proteins almost always get *something* to fire — **1/23**
+score zero against **17/88** for alpha-beta.
+
+**Consequence.** Every cheap protein-level predictor is now exhausted:
+size, chain count, site separation ([[TASK-0306]] main run) and fold
+class (here). The redundancy gate still passes — the six measures *are*
+independent evidence, mean |φ| = 0.419 — so the discriminator premise
+survives. What fails is predicting which fires from a lookup. It needs a
+genuinely new descriptor, or the per-residue propensity fields
+themselves. Phase-2 work.
+
+Data: `results/tasks/0306_six_measure_meta_classifier/fold_class_annotations.json`.
