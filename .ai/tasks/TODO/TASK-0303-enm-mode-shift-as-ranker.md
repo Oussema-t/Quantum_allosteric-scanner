@@ -32,10 +32,14 @@ shown effect** in your agents' Experiment D:
       was unavailable in that container — its own §3 flags this as a
       caveat that must be cleared "before the cryptic conclusion is
       trusted."
-- [ ] Add mode shift as a ranking metric alongside `hop`/`centroid_euclid`
-      in [[TASK-0282]]'s `METRICS`, and re-run the sweep — **with
-      [[TASK-0300]]'s cluster-mean selection fix**, not the row-mean
-      criterion that is now known to be defective.
+- [ ] **AMENDED 2026-08-31 (lane collision):** do **NOT** add mode shift to
+      `task0282_pocket_selection_sweep.METRICS` or re-run that sweep this
+      window. LANE B owns all `task0282` runs while it re-runs the extended
+      cohort, and two implementers editing and running the same script
+      produces results on a moving target. Evaluate mode shift **standalone**
+      — its own ranker, scored against random, cluster-robust. Integration
+      into `METRICS` (with [[TASK-0300]]'s cluster-mean selection fix, not
+      the defective row-mean criterion) is a follow-up after Lane B lands.
 - [ ] Report whether mode shift is independent of druggability and pocket
       size (partial correlation), since that independence is the entire
       reason for adding it.
