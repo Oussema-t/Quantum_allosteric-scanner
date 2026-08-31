@@ -278,6 +278,44 @@ a{color:var(--accent);}
   </ul>
 </section>
 
+<hr>
+
+<section>
+  <h2>Attribution at scale — and the headroom</h2>
+  <p>The 5&ndash;10% figure above came from 13 structures. We recomputed it on <strong>108</strong>, using the field&rsquo;s own annotations and the same AUC basis as the original, so the numbers are directly comparable. Per structure: how well does each score rank the annotated allosteric residues above every other eligible residue? AUC 0.5 is chance and 1.0 perfect, so <span class="mono">(AUC&minus;0.5)/0.5</span> is the share of available signal an arm captures.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Contributor</th><th>Mean AUC</th><th>Share of available signal</th></tr></thead>
+      <tbody>
+        <tr><td><strong>CTQW</strong> (quantum walk occupation)</td><td class="num big">0.5921</td><td class="num big">+18.4%</td></tr>
+        <tr><td>Packing / contact degree</td><td class="num">0.5498</td><td class="num">+10.0%</td></tr>
+        <tr><td>Bond-to-bond propensity (published SOTA)</td><td class="num">0.5067</td><td class="num">+1.3%</td></tr>
+        <tr><td>GNM fluctuation</td><td class="num">0.4994</td><td class="num">&minus;0.1%</td></tr>
+        <tr><td>Distance from active site (&ldquo;most distal&rdquo;)</td><td class="num">0.3853</td><td class="num">&minus;22.9%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card good">
+    <span class="chip c-holds">Reversal</span>
+    <h3>On whole-ranking, CTQW is the strongest arm we have &mdash; and it beats the published classical method.</h3>
+    <p>This is the opposite of the top-5 table earlier, and both are correct. They measure different things: <strong>CTQW ranks the site well overall but never concentrates it into the top five</strong>; bond-to-bond occasionally puts a residue right at the top but ranks the site poorly overall. Diffuse signal versus sparse signal.</p>
+    <p>At <strong>+18.4%</strong> on 108 structures, the quantum contribution is not only real &mdash; it is <em>larger</em> than the 5&ndash;10% our 13-structure attribution estimated, and it holds at eight times the cohort size.</p>
+  </div>
+
+  <p><strong>The &ldquo;most distal&rdquo; prior is actively wrong</strong> at &minus;22.9%. Ranking residues by distance from the active site is worse than guessing &mdash; Finding F restated from the ranking side, and a direct caution against the intuition the whole field starts from.</p>
+
+  <div class="card open">
+    <span class="chip c-open">Headroom</span>
+    <h3>81.6% of the available signal is explained by nothing we have.</h3>
+    <p>The best single arm captures 18.4%. Neither the quantum walk, nor packing, nor flexibility, nor distance, nor the published state of the art accounts for the rest. That is not a negative result &mdash; it is a measured target, and it is the honest case for Phase 2.</p>
+  </div>
+
+  <p class="sub">One correction made while producing this table: our first run scored the published method at exactly AUC 0.5000, which contradicted our own earlier positive control (p&nbsp;=&nbsp;5&times;10&#8315;&#8313;). The cause was ours &mdash; their per-residue files are keyed to their stripped structures and we had mapped them onto deposited numbering. Recomputed on their own keys the figure is 0.5067, and that is the number reported.</p>
+</section>
+
+
 <section>
   <h2>The discriminator idea — where it actually stands</h2>
   <p>This is the thread worth keeping. It has moved twice since we last spoke, in opposite directions.</p>
