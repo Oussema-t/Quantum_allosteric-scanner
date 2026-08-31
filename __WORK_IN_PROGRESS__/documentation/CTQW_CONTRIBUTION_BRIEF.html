@@ -1,382 +1,648 @@
-<title>The Numbers Moved</title>
+<title>What Does the Quantum Walk Contribute?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Public+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
 <style>
 :root{
-  --bg:#f6f7f5; --surface:#ffffff; --surface-2:#eef1ee;
-  --ink:#14181a; --muted:#5a686d; --rule:#dde2e0;
-  --accent:#0f6e63;
-  --holds:#1f6b4a; --corrected:#8a5a14; --retracted:#8c3030; --open:#41528a;
-  --holds-bg:#e6f2ea; --corrected-bg:#f7efdf; --retracted-bg:#f7e7e5; --open-bg:#e7ebf6;
+  --ground:#FBFCFD; --surface:#EDF2F4; --surface-2:#E3EBEE;
+  --ink:#15222A; --ink-mid:#3C525C; --ink-mute:#63777F;
+  --rule:#CFDBE0; --rule-soft:#E2EAEE;
+  --accent:#175E6E; --accent-mid:#1B7A8D; --accent-wash:#DDEDF1;
+  --warn:#8A5E10; --warn-wash:#F7EEDC; --warn-rule:#DCC08A;
+  --neg:#98322A; --neg-wash:#F8E9E7;
+  --pos:#28624A; --pos-wash:#E4F0EA;
+  --shadow:0 1px 2px rgba(21,34,42,.05), 0 8px 24px -18px rgba(21,34,42,.35);
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#101416; --surface:#171d1f; --surface-2:#1d2527;
-    --ink:#e8edeb; --muted:#93a3a6; --rule:#27302f;
-    --accent:#4fc4b4;
-    --holds:#5cc493; --corrected:#d69a4a; --retracted:#e58585; --open:#93a9dc;
-    --holds-bg:#152720; --corrected-bg:#2a2213; --retracted-bg:#2b1918; --open-bg:#181e2e;
+    --ground:#0D1418; --surface:#151F26; --surface-2:#1B272F;
+    --ink:#DCE6EA; --ink-mid:#A9BCC4; --ink-mute:#8299A2;
+    --rule:#2A3941; --rule-soft:#1F2C33;
+    --accent:#5CB9C8; --accent-mid:#7CCBD8; --accent-wash:#12303A;
+    --warn:#D9A441; --warn-wash:#2C2416; --warn-rule:#5C4A22;
+    --neg:#E0776C; --neg-wash:#2E1C1A;
+    --pos:#7ABF9B; --pos-wash:#16291F;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -18px rgba(0,0,0,.8);
   }
 }
 :root[data-theme="dark"]{
-  --bg:#101416; --surface:#171d1f; --surface-2:#1d2527;
-  --ink:#e8edeb; --muted:#93a3a6; --rule:#27302f;
-  --accent:#4fc4b4;
-  --holds:#5cc493; --corrected:#d69a4a; --retracted:#e58585; --open:#93a9dc;
-  --holds-bg:#152720; --corrected-bg:#2a2213; --retracted-bg:#2b1918; --open-bg:#181e2e;
+  --ground:#0D1418; --surface:#151F26; --surface-2:#1B272F;
+  --ink:#DCE6EA; --ink-mid:#A9BCC4; --ink-mute:#8299A2;
+  --rule:#2A3941; --rule-soft:#1F2C33;
+  --accent:#5CB9C8; --accent-mid:#7CCBD8; --accent-wash:#12303A;
+  --warn:#D9A441; --warn-wash:#2C2416; --warn-rule:#5C4A22;
+  --neg:#E0776C; --neg-wash:#2E1C1A;
+  --pos:#7ABF9B; --pos-wash:#16291F;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -18px rgba(0,0,0,.8);
 }
+
 *{box-sizing:border-box}
-body{background:var(--bg); color:var(--ink);
-  font-family:"Public Sans",system-ui,-apple-system,sans-serif;
-  font-size:16px; line-height:1.62; margin:0;
-  -webkit-font-smoothing:antialiased;}
-.wrap{max-width:53rem; margin:0 auto; padding:3.5rem 1.5rem 6rem;
-  display:flex; flex-direction:column; gap:2.75rem;}
-header{display:flex; flex-direction:column; gap:1rem; padding-bottom:2rem;
-  border-bottom:2px solid var(--ink);}
-.eyebrow{font-family:"JetBrains Mono",ui-monospace,monospace; font-size:.72rem;
-  letter-spacing:.14em; text-transform:uppercase; color:var(--accent); font-weight:700;}
-h1{font-family:"Newsreader",Georgia,serif; font-weight:600; font-size:clamp(2.4rem,6vw,3.6rem);
-  line-height:1.04; margin:0; letter-spacing:-.02em; text-wrap:balance;}
-.standfirst{font-family:"Newsreader",Georgia,serif; font-size:1.24rem; line-height:1.5;
-  color:var(--muted); max-width:44ch; margin:0;}
-.meta{font-family:"JetBrains Mono",monospace; font-size:.76rem; color:var(--muted);
-  display:flex; flex-wrap:wrap; gap:.4rem 1.4rem;}
-section{display:flex; flex-direction:column; gap:1rem;}
-h2{font-family:"Newsreader",Georgia,serif; font-weight:600; font-size:1.72rem;
-  line-height:1.2; margin:0; letter-spacing:-.01em; text-wrap:balance;}
-h3{font-family:"Public Sans",sans-serif; font-weight:700; font-size:.98rem; margin:0;
-  letter-spacing:.01em;}
-p{margin:0; max-width:66ch;}
-ul{margin:0; padding-left:1.15rem; max-width:66ch; display:flex; flex-direction:column; gap:.5rem;}
-strong{font-weight:700}
-code,.mono{font-family:"JetBrains Mono",ui-monospace,monospace; font-size:.86em;}
-code{background:var(--surface-2); padding:.1em .34em; border-radius:3px;}
-.chip{display:inline-flex; align-items:center; gap:.4rem; font-family:"JetBrains Mono",monospace;
-  font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; font-weight:700;
-  padding:.22rem .55rem; border-radius:3px; white-space:nowrap;}
-.c-holds{color:var(--holds); background:var(--holds-bg);}
-.c-corr{color:var(--corrected); background:var(--corrected-bg);}
-.c-retr{color:var(--retracted); background:var(--retracted-bg);}
-.c-open{color:var(--open); background:var(--open-bg);}
-.card{background:var(--surface); border:1px solid var(--rule); border-radius:5px;
-  padding:1.4rem 1.5rem; display:flex; flex-direction:column; gap:.85rem;}
-.card.flag{border-left:3px solid var(--retracted);}
-.card.good{border-left:3px solid var(--holds);}
-.card.open{border-left:3px solid var(--open);}
-.tablewrap{overflow-x:auto; border:1px solid var(--rule); border-radius:5px; background:var(--surface);}
-table{border-collapse:collapse; width:100%; font-size:.9rem;
-  font-variant-numeric:tabular-nums;}
-th,td{text-align:left; padding:.62rem .9rem; border-bottom:1px solid var(--rule);}
-th{font-size:.7rem; letter-spacing:.09em; text-transform:uppercase; color:var(--muted);
-  font-weight:700; background:var(--surface-2); white-space:nowrap;}
-tbody tr:last-child td{border-bottom:none;}
-td.num{font-family:"JetBrains Mono",monospace;}
-.big{font-family:"JetBrains Mono",monospace; font-weight:700; font-size:1.05em;}
-.sub{color:var(--muted); font-size:.88rem;}
-.ledger{display:flex; flex-direction:column; gap:0;}
-.ledger .row{display:grid; grid-template-columns:9.5rem 1fr; gap:1rem;
-  padding:.85rem 0; border-bottom:1px solid var(--rule); align-items:baseline;}
-.ledger .row:last-child{border-bottom:none;}
-@media (max-width:620px){ .ledger .row{grid-template-columns:1fr; gap:.35rem;} }
-hr{border:none; border-top:1px solid var(--rule); margin:0;}
-.ask{background:var(--surface-2); border-radius:5px; padding:1.5rem;
-  display:flex; flex-direction:column; gap:.9rem;}
-footer{color:var(--muted); font-size:.82rem; border-top:1px solid var(--rule);
-  padding-top:1.5rem; max-width:66ch;}
-a{color:var(--accent);}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:"Source Sans 3",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:17px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1040px; margin:0 auto; padding:0 28px 96px}
+.measure{max-width:68ch}
+
+/* ---------- masthead ---------- */
+header.mast{border-bottom:2px solid var(--ink); padding:56px 0 22px; margin-bottom:40px}
+.kicker{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11.5px;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--accent);
+  display:flex; flex-wrap:wrap; gap:14px; margin-bottom:20px;
+}
+.kicker span{white-space:nowrap}
+h1{
+  font-family:Spectral,Georgia,serif; font-weight:700; font-size:clamp(2.1rem,5.2vw,3.15rem);
+  line-height:1.08; letter-spacing:-.015em; margin:0 0 16px; text-wrap:balance;
+}
+.standfirst{
+  font-family:Spectral,Georgia,serif; font-size:1.16rem; line-height:1.55;
+  color:var(--ink-mid); max-width:64ch; margin:0;
+}
+.mast-meta{
+  display:flex; flex-wrap:wrap; gap:8px 26px; margin-top:24px;
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12px; color:var(--ink-mute);
+}
+
+/* ---------- sections ---------- */
+section{margin:0 0 56px; scroll-margin-top:20px}
+h2{
+  font-family:Spectral,Georgia,serif; font-weight:600; font-size:1.52rem;
+  line-height:1.25; margin:0 0 6px; text-wrap:balance;
+  display:flex; gap:15px; align-items:baseline;
+}
+h2 .num{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.78rem; font-weight:500;
+  color:var(--accent); letter-spacing:.06em; flex:none; padding-top:2px;
+}
+h2::after{content:""; flex:1; height:1px; background:var(--rule); align-self:center}
+.sub{color:var(--ink-mute); font-size:.94rem; margin:0 0 22px 0; padding-left:44px; max-width:62ch}
+h3{
+  font-family:"Source Sans 3",sans-serif; font-weight:600; font-size:1.02rem;
+  letter-spacing:.005em; margin:30px 0 8px;
+}
+p{margin:0 0 15px}
+ul,ol{margin:0 0 15px; padding-left:22px}
+li{margin-bottom:7px}
+strong{font-weight:600}
+a{color:var(--accent); text-underline-offset:2px}
+
+/* ---------- the decision number ---------- */
+.headline-stat{
+  background:var(--surface); border:1px solid var(--rule); border-left:3px solid var(--accent);
+  border-radius:3px; padding:26px 28px; margin:0 0 26px; box-shadow:var(--shadow);
+}
+.headline-stat .lab{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:11.5px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--ink-mute); margin-bottom:10px;
+}
+.headline-stat .val{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-weight:600;
+  font-size:clamp(1.7rem,4.4vw,2.4rem); color:var(--ink); line-height:1.1;
+  font-variant-numeric:tabular-nums; margin-bottom:10px;
+}
+.headline-stat .val em{font-style:normal; color:var(--accent)}
+.headline-stat p{margin:0; color:var(--ink-mid); font-size:.97rem; max-width:60ch}
+
+.stat-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(168px,1fr)); gap:1px;
+  background:var(--rule); border:1px solid var(--rule); border-radius:3px; overflow:hidden; margin:0 0 26px}
+.stat{background:var(--ground); padding:16px 18px}
+.stat .k{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:10.5px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ink-mute); margin-bottom:7px}
+.stat .v{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:1.34rem; font-weight:600;
+  font-variant-numeric:tabular-nums; line-height:1.15}
+.stat .n{font-size:.82rem; color:var(--ink-mute); margin-top:4px; line-height:1.4}
+.v.pos{color:var(--pos)} .v.neg{color:var(--neg)} .v.zero{color:var(--ink-mid)}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto; margin:0 0 10px; border:1px solid var(--rule); border-radius:3px}
+table{border-collapse:collapse; width:100%; font-size:14.5px; min-width:520px}
+th,td{padding:9px 13px; text-align:left; border-bottom:1px solid var(--rule-soft)}
+thead th{
+  background:var(--surface); font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:10.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-mute);
+  font-weight:500; border-bottom:1px solid var(--rule); white-space:nowrap;
+}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right; font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-variant-numeric:tabular-nums; white-space:nowrap}
+tr.emph td{background:var(--accent-wash); font-weight:600}
+.cap{font-size:.85rem; color:var(--ink-mute); margin:0 0 24px; padding-left:2px}
+code{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:.875em;
+  background:var(--surface-2); padding:1px 5px; border-radius:2px}
+
+/* ---------- callouts ---------- */
+.box{border:1px solid var(--rule); border-radius:3px; padding:20px 22px; margin:0 0 22px; background:var(--surface)}
+.box h4{margin:0 0 9px; font-size:.97rem; font-weight:600; font-family:"Source Sans 3",sans-serif}
+.box p:last-child,.box ul:last-child{margin-bottom:0}
+.box.warn{background:var(--warn-wash); border-color:var(--warn-rule)}
+.box.warn h4{color:var(--warn)}
+.box.pos{background:var(--pos-wash); border-color:var(--pos)}
+.box.pos h4{color:var(--pos)}
+
+/* ---------- cherry-pick entries ---------- */
+.cp{border:1px solid var(--rule); border-left:3px solid var(--warn); border-radius:3px;
+  margin:0 0 14px; background:var(--ground); overflow:hidden}
+.cp-claim{padding:14px 18px 12px; background:var(--warn-wash); border-bottom:1px solid var(--warn-rule)}
+.cp-claim .t{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:10.5px;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--warn); margin-bottom:6px}
+.cp-claim .q{font-family:Spectral,Georgia,serif; font-size:1.03rem; color:var(--ink); line-height:1.42}
+.cp-body{padding:15px 18px}
+.cp-body .t{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:10.5px;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--accent); margin-bottom:7px}
+.cp-body p{margin:0 0 10px; font-size:.95rem}
+.cp-body p:last-child{margin-bottom:0}
+
+/* ---------- reproduction ---------- */
+pre{
+  font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12.6px; line-height:1.62;
+  background:var(--surface); border:1px solid var(--rule); border-radius:3px;
+  padding:15px 17px; overflow-x:auto; margin:0 0 16px; color:var(--ink);
+}
+pre .c{color:var(--ink-mute)}
+dl.files{margin:0 0 20px; display:grid; grid-template-columns:auto 1fr; gap:7px 18px; align-items:baseline}
+dl.files dt{font-family:"IBM Plex Mono",ui-monospace,monospace; font-size:12.2px; color:var(--accent); white-space:nowrap}
+dl.files dd{margin:0; font-size:.92rem; color:var(--ink-mid)}
+@media (max-width:640px){
+  dl.files{grid-template-columns:1fr; gap:2px 0}
+  dl.files dd{margin:0 0 10px; padding-left:0}
+  .sub{padding-left:0}
+  h2{gap:10px}
+}
+footer{border-top:1px solid var(--rule); padding-top:20px; margin-top:20px;
+  font-size:.87rem; color:var(--ink-mute); max-width:68ch}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
 </style>
 
 <div class="wrap">
 
-<header>
-  <div class="eyebrow">Team AuraQu · joint submission brief · v2</div>
-  <h1>The Numbers Moved</h1>
-  <p class="standfirst">A defect in our own code invalidated one of the claims you agreed to. Everything we found replacing it is stronger.</p>
-  <div class="meta">
-    <span>2026-08-31</span><span>supersedes the 2026-08-28 brief</span><span>13 tasks landed since</span>
+<header class="mast">
+  <div class="kicker">
+    <span>Team AuraQu</span><span>Reviewer thread</span><span>2026-08-25</span><span>Internal → collaborator</span>
+  </div>
+  <h1>What does the quantum walk contribute?</h1>
+  <p class="standfirst">A complete accounting of the continuous-time quantum walk's measured contribution to allosteric pocket prediction — the method, the numbers, the numbers that cut the other way, and the pre-registered conditions under which we would change our conclusion.</p>
+  <div class="mast-meta">
+    <span>20 targets · frozen · untuned</span>
+    <span>Cross-validated, out-of-fold</span>
+    <span>Every script and data path cited</span>
   </div>
 </header>
 
 <section>
-  <h2>Read this first</h2>
-  <div class="card flag">
-    <span class="chip c-retr">Retracted</span>
-    <h3>“Simple classical heuristics build a ceiling that outperforms CTQW.”</h3>
-    <p>This framing does not survive. It rested on pocket-candidate residue sets that were wrong for nine of our twenty benchmark rows. We are retracting it before it reaches the submission — it was never written into the brief you have, only said out loud.</p>
+  <h2><span class="num">01</span>The decision number</h2>
+  <p class="sub">One statistic answers the investment question. Everything after this section exists so it can be checked, attacked, or overturned.</p>
+
+  <div class="headline-stat">
+    <div class="lab">CTQW's contribution when added last, on top of geometry and fpocket</div>
+    <div class="val"><em>−0.1%</em> &nbsp;·&nbsp; p = 0.50 &nbsp;·&nbsp; positive on 9 / 20</div>
+    <p>Cross-validated, out-of-fold, on a frozen 20-target set neither thread tuned on. This is the increment CTQW adds that geometry and cavity shape do not already supply. <strong>Every p-value on this page is also reported cluster-robust</strong> (n = 13 apo structures, not 20 rows — see the panel at the end of this section): this one moves to p = 0.22, unchanged in substance.</p>
   </div>
-  <div class="card good">
-    <span class="chip c-holds">Strengthened</span>
-    <h3>A large share of “allosteric” benchmark sites are not distal at all.</h3>
-    <p>Previously measured on our 13 structures. Now confirmed independently on <strong>ASBench and CASBench</strong> — 158 proteins across three cohorts, two of which neither of us controls.</p>
+
+  <p>For comparison, the same statistic computed identically for the other two blocks, row-level then cluster-robust:</p>
+
+  <div class="stat-row">
+    <div class="stat"><div class="k">Geometry, added last</div><div class="v pos">+15.0%</div><div class="n">p = 0.0002 → 0.0002 · 19/20 targets</div></div>
+    <div class="stat"><div class="k">fpocket, added last</div><div class="v pos">+4.9%</div><div class="n">p = 0.0019 → 0.0042 · 18/20 targets</div></div>
+    <div class="stat"><div class="k">CTQW, added last</div><div class="v zero">−0.1%</div><div class="n">p = 0.50 → 0.22 · 9/20 targets</div></div>
   </div>
+
+  <p>Geometry and cavity shape each carry real, unique, statistically robust information. CTQW carries none that survives their presence. <strong>This is not a claim that CTQW measures nothing</strong> — section 06 shows it demonstrably does. It is a claim about what remains once two much cheaper quantities are already in the model.</p>
 </section>
 
-<hr>
-
 <section>
-  <h2>How the ceiling “collapsed” — and what actually happened</h2>
-  <p>The short version we used in conversation — <em>“the classical ceiling collapsed to 0.000”</em> — was misleading shorthand, and it is worth being precise because the distinction is the whole finding.</p>
+  <h2><span class="num">02</span>Dataset and provenance</h2>
+  <p class="sub">What was scored, where it came from, and what was excluded.</p>
 
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>Arm, on corrected candidates</th><th>Mean EH</th><th>vs random (cluster-robust)</th></tr></thead>
-      <tbody>
-        <tr><td>Fixed, pre-specified rule <code>hop≥1 + druggability</code></td><td class="num big">0.0899</td><td class="num">p = 0.220 — not significant, <strong>not worse</strong></td></tr>
-        <tr><td>Automated rule <em>selection</em> (swept, held out)</td><td class="num big">0.0000</td><td class="num">p = 0.000244 — <strong>worse than chance</strong></td></tr>
-        <tr><td>CTQW wrapper</td><td class="num">0.0389</td><td class="num">p = 1.000</td></tr>
-        <tr><td>Random</td><td class="num">0.0273</td><td class="num">—</td></tr>
-        <tr><td>Oracle (perfect pocket pick)</td><td class="num">0.3984</td><td class="num">—</td></tr>
-      </tbody>
-    </table>
-  </div>
+  <h3>The frozen set</h3>
+  <p>22 apo/holo pairs curated blind and frozen before any score was computed (<code>config/candidate_targets_task0243.yaml</code>). Curation preceded scoring; the list was fixed first. <strong>20 of 22 are usable.</strong> <code>HIV_INTEGRASE_MUT871</code> and <code>HIV_INTEGRASE_MUT916</code> (apo <code>1M9D</code>) are excluded throughout: their active-site seed resolves empty on all four chains. This contradicted the curation task's own claim that zero targets fell back to a proxy, and is recorded as a real defect on our side, not silently dropped.</p>
 
-  <p><strong>Our actual rule still scores 0.0899 — three times random.</strong> What collapses to zero is the <em>procedure that picks a rule</em>. Those are different objects and we conflated them.</p>
+  <h3>Seed provenance</h3>
+  <p>Active-site seeds across the 22: <strong>uniprot = 18, ligand = 2, pdb_site = 0, none = 2</strong>. No target in the scored set uses a top-degree topological proxy. This matters because an earlier register-wide audit found 9 of 13 targets in a <em>previous</em> config were seeded at graph hubs rather than real active sites — that defect is fixed here, and it invalidated a prior positive result of ours (see section 06, item 3).</p>
 
-  <h3>The chain of events, in order</h3>
-  <div class="ledger">
-    <div class="row"><span class="mono sub">Defect</span><span>Our fpocket parser read residues as <code>int(line[22:26])</code>, discarding the chain. Nine of twenty benchmark rows have cross-chain residue-number collisions, so pocket residues silently mapped onto the wrong chain. Found by your agents, confirmed by us.</span></div>
-    <div class="row"><span class="mono sub">Effect</span><span>One target’s oracle was a perfect <span class="mono">1.000</span> purely because a chain-B cavity landed on chain-A ground truth. Raw oracle fell <span class="mono">0.556 → 0.454</span>.</span></div>
-    <div class="row"><span class="mono sub">Knock-on</span><span>The sensible rule’s in-sample score fell <span class="mono">0.1649 → 0.0899</span>. A different rule, <code>hop≥3 + lex_far_first</code>, scored <span class="mono">0.100</span> — and won the sweep <strong>by 0.0101</strong>.</span></div>
-    <div class="row"><span class="mono sub">Why it’s zero</span><span>That rule scores above zero on <strong>exactly two of twenty rows</strong> — and those two rows are <strong>the same apo structure</strong>. Its entire mean is one structure counted twice. On every held-out target it scores <span class="mono">0.000</span>.</span></div>
-    <div class="row"><span class="mono sub">Root cause</span><span>The selection criterion is a raw mean over pseudo-replicated rows, with no cluster correction. <strong>A rule that nails one structure beats a rule that works on four.</strong> Ours works on four.</span></div>
-  </div>
-
-  <p>We tested the fix: selecting by cluster mean instead of row mean moves the held-out score from <span class="mono">0.0000</span> to <span class="mono">0.0093</span> and the p-value from <span class="mono">0.00024</span> to <span class="mono">0.101</span>. It removes the pathology. It does not produce a working selector.</p>
-
-  <div class="card">
-    <h3>The honest statement</h3>
-    <p>At pocket level, <strong>nothing beats chance</strong> — not CTQW (p = 1.000), not a fixed classical rule (p = 0.220). Automated rule selection on 13 clusters actively backfires. Meanwhile the oracle sits at <strong>0.398</strong>: good candidates exist in every protein, and no procedure we have — classical or quantum — finds them.</p>
-  </div>
+  <h3>Labels</h3>
+  <p>The pocket label is holo drug-contact residues mapped onto apo numbering by Needleman–Wunsch global alignment, contacted at heavy-atom distance (not Cα), with active-site residues and terminal residues excluded. Heavy-atom contact is load-bearing: a Cα-only approximation recovers only 9 of 21 pocket residues on KRAS_G12C.</p>
 </section>
 
-<hr>
-
 <section>
-  <h2>What replaced it, and why it is stronger</h2>
-  <p>Your section-08 observation — that the benchmark is mostly contact-adjacent pockets, so a transport operator cannot really be tested on it — turned out to be the most important thing either of us found. We took it to the field’s own benchmarks.</p>
+  <h2><span class="num">03</span>Method, in full</h2>
+  <p class="sub">Enough detail to reproduce without reading our code. Section 09 gives the commands.</p>
 
-  <p>For every structure we computed the minimum heavy-atom distance between the annotated <em>allosteric</em> site and the annotated <em>catalytic</em> site, using each benchmark’s own annotations. No fpocket, no detection, no CTQW — only the distance.</p>
-
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>Cohort</th><th>Proteins</th><th>Sites &lt; 1.5 Å apart</th><th>Reading</th></tr></thead>
-      <tbody>
-        <tr><td>ASBench</td><td class="num">112</td><td class="num big">22.2%</td><td class="sub">least affected</td></tr>
-        <tr><td>Cleveland Clinic (ours)</td><td class="num">13</td><td class="num big">28.6%</td><td class="sub">unexceptional</td></tr>
-        <tr><td>CASBench</td><td class="num">33</td><td class="num big">42.4%</td><td class="sub">most affected</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <p>1.5 Å is shorter than a carbon–carbon bond. These are sites <strong>covalently bonded</strong> to the catalytic site. Twelve ASBench structures share residues between the two outright.</p>
-
-  <p><strong>158 proteins, three cohorts, and our benchmark sits in the middle.</strong> This is not a quirk of the Cleveland Clinic target list — it is a property of how allosteric sites are annotated in this field. Only half of ASBench is genuinely distal.</p>
-
-  <p class="sub">Bond-to-bond’s own failure analysis says the same thing from the other side: on PDB 1Z8D it records that “direct interactions, instead of functional coupling, occur if sites are close to the orthosteric sites, which is out of the scope of bond-to-bond propensity analysis.” The method excludes these cases by definition. The benchmarks are full of them.</p>
-</section>
-
-<hr>
-
-<section>
-  <h2>On the 84% — a distinction worth making carefully</h2>
-  <p>We adopted bond-to-bond as a named baseline, as you asked. Running it properly changed how we read its headline number, and we think this strengthens both of our positions rather than undercutting theirs.</p>
-
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>ASBench, allosteric ligand removed</th><th>Structures</th><th>Share</th></tr></thead>
-      <tbody>
-        <tr><td>Detected by <strong>≥ 1 of 6</strong> statistical measures</td><td class="num">99 / 118</td><td class="num big">83.9%</td></tr>
-        <tr><td>Detected by ≥ 3 of 6</td><td class="num">68 / 118</td><td class="num">57.6%</td></tr>
-        <tr><td>Detected by <strong>all 6</strong></td><td class="num">21 / 118</td><td class="num big">17.8%</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <p>The 83.9% reproduces their published 84% exactly, from their own supplementary tables. It is a <strong>six-way disjunction</strong>.</p>
-
-  <p>We then scored 108 ASBench structures with <strong>their own per-residue propensity scores</strong>, on a top-5 retrieval metric:</p>
-
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>Scorer</th><th>Mean P@5</th><th>Non-zero on</th></tr></thead>
-      <tbody>
-        <tr><td>Bond-to-bond propensity quantile</td><td class="num big">0.0204</td><td class="num">10 / 108 = 9.3%</td></tr>
-        <tr><td>Random</td><td class="num">0.0176</td><td class="num">—</td></tr>
-        <tr><td>Our CTQW</td><td class="num">0.0056</td><td class="num">3 / 108</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <p>Their method beats random at <span class="mono">p = 5.0 × 10⁻⁹</span> — so the test has power, and our own negative below it is real rather than a broken harness. But the margin is <span class="mono">0.0204</span> against <span class="mono">0.0176</span>.</p>
-
-  <div class="card">
-    <h3>The distinction</h3>
-    <p>Their six measures are <strong>set-level enrichment tests</strong>, not <strong>top-k retrieval tests</strong>. Each asks whether the annotated site’s <em>average</em> score beats surrogate sites of the same size. “84% allosteric-site recovery” therefore does not mean “finds the pocket.”</p>
-    <p><strong>On retrieval, the published state of the art is 0.0204 against a 0.0176 chance baseline.</strong> Nobody has solved this — including them, and including us.</p>
-  </div>
-
-  <p class="sub">This is not a criticism of their work. It does what it claims and it beats chance decisively. What we are correcting is the framing of the number, and the correction is what makes the benchmark problem visible.</p>
-</section>
-
-<hr>
-
-<section>
-  <h2>Our own arms, on their benchmark</h2>
-  <p>ASBench annotates both the seed and the ground truth, which bypasses every labelling defect we have found in our own pipeline. If our operators fail here, it is the operators.</p>
-
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>Arm</th><th>Mean P@5</th><th>Non-zero</th></tr></thead>
-      <tbody>
-        <tr><td>CTQW</td><td class="num">0.0056</td><td class="num">3 / 108</td></tr>
-        <tr><td>Farthest-by-hops</td><td class="num">0.0037</td><td class="num">1 / 108</td></tr>
-        <tr><td>Nearest-by-hops</td><td class="num">0.0093</td><td class="num">4 / 108</td></tr>
-        <tr><td>GNM fluctuation</td><td class="num">0.0167</td><td class="num">8 / 108</td></tr>
-        <tr><td>Inverse degree</td><td class="num">0.0130</td><td class="num">7 / 108</td></tr>
-        <tr><td><strong>Random</strong></td><td class="num big">0.0171</td><td class="num">—</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <p>Nothing beats random, and CTQW is significantly <em>worse</em>. The mechanism is consistent across arms: our operators rank <strong>extremes</strong> — most distant, most flexible, least packed, highest walk occupation — and an annotated allosteric site is not an extreme. It is an ordinary buried pocket that happens to be functionally coupled.</p>
-
-  <p class="sub">One caveat we owe you: our first run of this had every arm below random, which was too uniform to be five independent failures. The cause was ours — our pipeline excludes terminal residues and that script did not, so the flexibility and packing arms were handed chain termini before scoring anything. The table above is the corrected run.</p>
-</section>
-
-<hr>
-
-<hr>
-
-<section>
-  <h2>What the quantum side is actually worth — and why we say so</h2>
-  <p>The tables above are harsh, and read alone they would misrepresent our position. Our reservations about CTQW were never a prior — they came out of a measurement, and the same measurement found a real positive that belongs in the submission.</p>
-
-  <div class="card good">
-    <span class="chip c-holds">Holds</span>
-    <h3>The Hamiltonian terms beat the walk, and it is the register's best constructive result.</h3>
-    <div class="tablewrap" style="margin:.4rem 0;">
-      <table>
-        <thead><tr><th>Arm</th><th>AUC</th><th></th></tr></thead>
-        <tbody>
-          <tr><td>Potential terms of <code>H_new</code></td><td class="num big">0.751</td><td class="sub">cluster-robust p = 0.019</td></tr>
-          <tr><td><code>V_C</code> alone (GNM dynamic cross-correlation)</td><td class="num">0.6365</td><td class="sub">beats the whole walk by itself</td></tr>
-          <tr><td>CTQW</td><td class="num">0.575</td><td class="sub"></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p><strong>The physics encoded in the Hamiltonian is doing real work.</strong> What fails is the propagation step layered on top of it — not the model of the protein underneath.</p>
-  </div>
-
-  <p>Our variance attribution puts the quantum contribution at roughly <strong>5–10% on average</strong> (range 1–15% across targets), against <strong>20–60% for geometry</strong> and <strong>25–80% unexplained</strong>. Small, variable, but <em>not zero</em> — and it is that measured share, not a preference, that set our position.</p>
-
-  <p>Two consequences we want stated explicitly in the submission:</p>
+  <h3>The three blocks</h3>
   <ul>
-    <li><strong>Credit where it is due.</strong> The two-stage design and the Hamiltonian work are yours, and the 0.751 result is the strongest constructive number either of us has. It should be reported as a positive finding, not as context for a negative.</li>
-    <li><strong>The negative is narrow and should stay narrow.</strong> It concerns the time-averaged occupation observable on one operator — as you noted first. It is not a claim about quantum walks as a class, and we will not write it as one.</li>
+    <li><strong>Geometry</strong> — three z-scored per-residue baselines: <code>degree_centrality</code> (count of Cα within 8 Å), <code>euclid_from_seed_centroid</code> (straight-line distance to the seed centroid), <code>hop_from_seed</code> (BFS shortest path on the 8 Å contact graph). Note our convention: <code>hop_from_seed</code> returns <em>negated</em> distance, so higher means closer.</li>
+    <li><strong>fpocket</strong> — per-residue druggability score of the apo cavity a residue belongs to; 0 if it belongs to none. All-atom cavity detection, no seed, no dynamics.</li>
+    <li><strong>CTQW</strong> — <code>time_averaged_ctqw_converged</code> on <code>build_H_new</code>, incoherent, the exact infinite-time limit rather than a finite-<code>t_max</code> approximation. This is our register's fixed gauge, pre-registered before any number in this brief was seen.</li>
+  </ul>
+
+  <h3>Fitting and scoring</h3>
+  <p>Per target, on apo coordinates, with seed rows excluded from every evaluation. 5-fold stratified cross-validation, 20 repeats, OLS fitted on the training folds via <code>lstsq</code>, scored strictly out-of-fold. Shares are expressed as fractions of discrimination <em>above chance</em>: <code>(AUC − 0.5) / 0.5</code>.</p>
+
+  <div class="box warn">
+    <h4>Why in-sample fitting is not used, and why that matters to you</h4>
+    <p>Our first version of this decomposition was an in-sample OLS fit — 4 parameters against 16–17 positives. We flagged it as an optimistic ceiling and predicted that cross-validation would lower the stacked AUC and <em>raise</em> the unexplained share. It did, substantially: the unexplained share moved from a median 51% to 67%, and CTQW's share fell from ~5% to ~1%. <strong>If you reproduce this with an in-sample fit you will get materially better-looking numbers for every block, including CTQW.</strong> That is the single easiest way to accidentally generate a favourable result here.</p>
+  </div>
+
+  <h3>Two attributions, and which one decides</h3>
+  <p>Blocks are correlated — CTQW is 32–49% linearly redundant with geometry — so a sequential fit assigns shared variance to whichever block enters first. We therefore report both:</p>
+  <ul>
+    <li><strong>Shapley share</strong> — exact, all 3! = 6 orderings brute-forced, no sampling approximation. This splits shared credit fairly among correlated predictors. It answers: <em>"of the total, how much should be attributed to this block?"</em></li>
+    <li><strong>Added-last marginal</strong> — full model minus the model without that block. It answers: <em>"if I already have the other blocks, what does this one add?"</em></li>
+  </ul>
+  <p>Both are correct answers to different questions. <strong>For an investment decision the added-last marginal is the relevant one</strong>, because it is the increment you would be buying. We report the Shapley share too, prominently, including where it favours CTQW.</p>
+</section>
+
+<section>
+  <h2><span class="num">04</span>Results</h2>
+  <p class="sub">Both attributions, n = 20, medians with per-target ranges.</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>Block</th><th class="num">Shapley share</th><th class="num">Range</th><th class="num">Added last</th><th class="num">p (n=20 rows)</th><th class="num">p (n=13 clusters)</th><th class="num">Positive on</th></tr></thead>
+    <tbody>
+      <tr><td>Geometry</td><td class="num">+42%</td><td class="num">+6% … +83%</td><td class="num">+15.0%</td><td class="num">0.0002</td><td class="num">0.0002</td><td class="num">19/20</td></tr>
+      <tr><td>fpocket</td><td class="num">+8%</td><td class="num">−9% … +65%</td><td class="num">+4.9%</td><td class="num">0.0019</td><td class="num">0.0042</td><td class="num">18/20</td></tr>
+      <tr class="emph"><td>CTQW</td><td class="num">+11%</td><td class="num">−15% … +49%</td><td class="num">−0.1%</td><td class="num">0.50</td><td class="num">0.22</td><td class="num">9/20</td></tr>
+      <tr><td>Unexplained</td><td class="num">29%</td><td class="num">2% … 62%</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="cap">Full three-block model reaches median cross-validated AUC 0.857, above chance on 20/20 targets. Cluster-robust column: the frozen set has 20 scoreable rows but only 13 distinct apo structures (seven apo entries each carry a second ligand) — method and why it matters below.</p>
+
+  <div class="box">
+    <h4>Read the CTQW row carefully — it is the row most open to misreading</h4>
+    <p><strong>+11% Shapley and −0.1% added-last are both real and both ours.</strong> The gap between them is not an inconsistency; it is the measurement of CTQW's redundancy with geometry. Shapley credits CTQW for variance it holds <em>jointly</em> with geometry. Added-last credits it only for variance nothing else supplies. The joint part is large; the unique part is zero.</p>
+    <p>If you quote the +11% as evidence the walk works, we will point at the −0.1%. If we quoted only the −0.1% and hid the +11%, you would be right to object. Both are in this brief for that reason.</p>
+  </div>
+
+  <h3>Head-to-head against a classical composite</h3>
+  <p>Separately, we built the strongest simple classical competitor we could and gave the operator every chance to beat it: fpocket druggability + banded hop-shell one-hot + degree + Euclidean distance, fitted <strong>leave-one-target-out</strong> across the frozen set.</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th>Arm</th><th class="num">Per-residue AUC (median)</th><th class="num">Two-stage MRR</th></tr></thead>
+    <tbody>
+      <tr><td>fpocket druggability alone, no fitting</td><td class="num">0.756</td><td class="num">0.344</td></tr>
+      <tr><td>Composite + CTQW</td><td class="num">0.730</td><td class="num">0.320</td></tr>
+      <tr><td>Composite (4 classical features)</td><td class="num">0.710</td><td class="num">0.304</td></tr>
+      <tr class="emph"><td>CTQW alone</td><td class="num">0.592</td><td class="num">0.161</td></tr>
+      <tr><td>Random</td><td class="num">0.521</td><td class="num">0.046</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="cap">Composite vs CTQW, per-residue: Wilcoxon p = 0.0137 (n=20 rows) → p = 0.0449 cluster-robust (n=13 apo structures, see below), composite wins 14/20. Survives at the conventional 0.05 bar, materially more narrowly than the row-level number suggested — said plainly, not left at the more comfortable number.</p>
+  <p><strong>One correction we owe our own record here.</strong> The implementer's write-up read "fpocket alone beats even the composite" from the medians. Tested properly that does not hold: <code>fpocket_drug</code> vs composite is p = 0.279, the composite wins 11/20 by count and 0.7396 vs 0.6936 by mean. fpocket alone is high-variance (above chance on 16/20 vs the composite's 19/20). The median flattered it. Please do not cite that claim; we have withdrawn it.</p>
+
+  <h3>CTQW against its own ingredients</h3>
+  <p><code>build_H_new</code> encodes real structural physics directly in its potential terms — burial (<code>V_R</code>), B-factor-derived flexibility (<code>V_B</code>), DCC coupling centrality (<code>V_C</code>), a mode-energy term (<code>V_M</code>), and a topological term (<code>V_T</code>). If that physics is real, does it survive being mixed into a Hamiltonian and read out as a propagator's occupation distribution — or does scoring the terms directly, with no propagation step at all, do at least as well? We scored both, on the identical frozen set, cluster-robust.</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th>Arm</th><th class="num">Median AUC</th><th class="num">Cluster-robust p vs CTQW</th></tr></thead>
+    <tbody>
+      <tr><td>Potential terms, direct (no propagation)</td><td class="num">0.751</td><td class="num">0.019</td></tr>
+      <tr class="emph"><td>CTQW (the propagator)</td><td class="num">0.575</td><td class="num">—</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="cap">Terms-block beats CTQW's own solo AUC, cluster-robust p = 0.019 (13 clusters). This is the strongest single result in this brief: <strong>the physics the walk is built from is real; the walk itself does not preserve it.</strong> The sharpest version of the question — does CTQW add anything once geometry, fpocket, <em>and</em> its own potential terms are already in the model as direct predictors — answers just as cleanly: CTQW's own added-last marginal in that four-block Shapley is median <strong>−0.4%</strong>, cluster-robust <strong>p = 0.973</strong>. Indistinguishable from zero. The walk retains no residual contribution once its own ingredients get a fair, direct chance to predict. (TASK-0263)</p>
+
+  <h3>Every p-value above is over-counted, and here is the corrected version</h3>
+  <p>The frozen set has 20 scoreable rows but only <strong>13 distinct apo structures</strong> — seven apo entries each carry a second bound ligand (a legitimate, informative design choice; the error is purely statistical). Every apo-side quantity — geometry, CTQW, ENM validity, hop distance, fpocket cavities — is computed from the same apo coordinates for both rows of a pair, so they are not independent observations, yet every test above treated all 20 (or every subgroup) as if they were.</p>
+  <p><strong>Method, and why</strong>: not simple averaging within a cluster — that is a legitimate first pass but discards real within-cluster information the underlying test statistic should keep. With only 13 clusters (six singletons, seven pairs) there is nowhere near enough replication to fit a mixed-model random intercept reliably. We used exact cluster-level permutation instead: for one-sample and paired tests, every row in a cluster is sign-flipped together (2<sup>13</sup> = 8,192 patterns, enumerated exactly, generalising the classical Wilcoxon test's own exact-enumeration logic from the row to the cluster); for the two-group and correlation tests, whole clusters are reassigned between groups or re-paired (exact where the outcome space is small enough to enumerate, Monte Carlo with 40,000 draws otherwise).</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>Statistic</th><th class="num">p (n=20 rows)</th><th class="num">p (n=13 clusters)</th><th class="num">Conclusion</th></tr></thead>
+    <tbody>
+      <tr><td>Composite vs CTQW (section 04)</td><td class="num">0.0137</td><td class="num">0.0449</td><td>survives, more narrowly</td></tr>
+      <tr><td>Geometry Shapley share</td><td class="num">0.0001</td><td class="num">0.0002</td><td>unchanged</td></tr>
+      <tr><td>Geometry added-last</td><td class="num">0.0002</td><td class="num">0.0002</td><td>unchanged</td></tr>
+      <tr><td>fpocket Shapley share</td><td class="num">0.0032</td><td class="num">0.0188</td><td>survives, more narrowly</td></tr>
+      <tr><td>fpocket added-last</td><td class="num">0.0019</td><td class="num">0.0042</td><td>survives, more narrowly</td></tr>
+      <tr><td>CTQW Shapley share</td><td class="num">0.0333</td><td class="num">0.0420</td><td>survives, more narrowly</td></tr>
+      <tr class="emph"><td>CTQW added-last (the decision number)</td><td class="num">0.50</td><td class="num">0.22</td><td>null either way</td></tr>
+      <tr><td>R2 paired (SASA vs degree, section 05)</td><td class="num">0.478</td><td class="num">0.335</td><td>null either way</td></tr>
+      <tr><td>ENM valid &gt; invalid (pre-registered direction)</td><td class="num">0.9674</td><td class="num">0.9615</td><td>unchanged — the data run the other way</td></tr>
+      <tr><td>Spearman(ENM validity, CTQW added-last)</td><td class="num">0.6171</td><td class="num">0.6325</td><td>unchanged</td></tr>
+      <tr><td>CTQW added-last, ENM-valid targets only, vs 0</td><td class="num">0.7820</td><td class="num">0.8379</td><td>unchanged</td></tr>
+      <tr><td>Spearman(apo crypticity, unexplained share)</td><td class="num">0.0001</td><td class="num">0.0005</td><td>unchanged, still the strongest correlate</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="cap">Pseudo-replication cannot manufacture a null — the headline decision number was a null at n=20 and stays one at n=13. Direction of the corrections: they cut against <em>our own</em> positive claims (composite-vs-CTQW, fpocket, CTQW's own Shapley share all weaken), not against CTQW.</p>
+
+  <div class="box warn">
+    <h4>One exploratory finding this correction surfaces, reported carefully</h4>
+    <p>The pre-registered subgroup test (section 07 item 4) asked whether CTQW's marginal is positive on ENM-valid targets and negative on ENM-invalid ones — it is the reverse, and both the row-level and cluster-robust tests of <em>that specific direction</em> correctly report non-significance (p = 0.97 either way), because that is not the direction the data show. Testing the <em>reverse</em> direction post hoc, the same data move from p = 0.080 (n = 20 rows) to p = 0.042 (n = 13 clusters) — borderline, and only borderline. This is not a new positive result for CTQW: it says CTQW's marginal is, if anything, <em>larger</em> where its own physical model does not fit, which further undercuts rather than rescues the "give it a valid model" defence tested in section 05. Flagged as exploratory and post hoc, not pre-registered, and not treated as more than it is.</p>
+  </div>
+
+  <p>Two independence checks, both negative (i.e. no further correction needed): the 15 register targets used in section 05's ENM validity check each use a distinct apo PDB entry — no shared-structure clustering there. The 7-target candidate set from an earlier round similarly has 7 distinct apo entries. The clustering is isolated to this frozen 22-target set.</p>
+
+  <div class="box">
+    <h4>The rule going forward</h4>
+    <p>A second ligand bound to an apo structure already in the set counts as a new target for label-side questions (pocket identity, ranking, druggability — these differ genuinely between rows) and does <strong>not</strong> count as a new target for apo-side questions (ENM validity, geometry, any statistic tested against zero or correlated across targets without conditioning on the label) — cluster by apo structure for the latter, always, not decided per analysis.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">05</span>Closing the "your model was invalid" objection</h2>
+  <p class="sub">The strongest remaining defence of CTQW was that we never gave it a valid elastic network model. We tested that directly.</p>
+
+  <p>The objection has real force. The standard validity check for an elastic network model is whether predicted mean-square fluctuations correlate with crystallographic B-factors. We had never run it. When we did, across 15 targets at each target's own 8 Å cutoff, with the pass bar pre-registered from the literature convention (PASS ≥ 0.6, MARGINAL 0.4–0.6):</p>
+
+  <div class="stat-row">
+    <div class="stat"><div class="k">PASS</div><div class="v pos">5</div><div class="n">r ≥ 0.6</div></div>
+    <div class="stat"><div class="k">MARGINAL</div><div class="v zero">6</div><div class="n">0.4 ≤ r &lt; 0.6</div></div>
+    <div class="stat"><div class="k">FAIL</div><div class="v neg">4</div><div class="n">MYC_MAX 0.148 · ATCase 0.148 · GROEL 0.350 · CASPASE1 0.368</div></div>
+  </div>
+  <p class="cap">Updated 2026-08-26 ([[TASK-0270]]/[[TASK-0272]]): KRAS_G12C moves PASS→MARGINAL (r=0.646→0.496) under the corrected, genuinely-G12C apo structure (4OBE→4LDJ, organiser-sanctioned) — was 6/5/4, now 5/6/4.</p>
+
+  <p>On the four FAIL targets our ENM-derived results are <em>uninterpretable</em>, not negative. So we tried to fix the model, scored against B-factor correlation — <strong>an objective that never touches the pocket label</strong>, so there is no circularity and no multiplicity spent on the outcome of interest.</p>
+
+  <h3>R1 — heavy-atom contact weighting</h3>
+  <p>Replaced binary Cα adjacency with edge weight = count of heavy-atom pairs within 4.5 Å between each residue pair, same node count, identical Laplacian → eigendecomposition → pseudo-inverse → MSF pipeline.</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th>Adjacency</th><th class="num">PASS</th><th class="num">MARGINAL</th><th class="num">FAIL</th></tr></thead>
+    <tbody>
+      <tr><td>Baseline (binary Cα)</td><td class="num">5</td><td class="num">5</td><td class="num">4</td></tr>
+      <tr><td>R1 (heavy-atom counts)</td><td class="num">4</td><td class="num">6</td><td class="num">4</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="cap">Net negative. 0 of 4 FAIL targets recovered. KRAS_G12C regressed 0.646 → 0.472; PFK 0.708 → 0.580. Real target-dependent structure underneath (7/14 improve, 7/14 worsen), but the aggregate answer is no. <strong>Baseline row updated 2026-08-26</strong> for the KRAS_G12C apo genotype fix ([[TASK-0270]]/[[TASK-0272]]) — its own PASS→MARGINAL move happens on the corrected structure regardless of R1, so the baseline count shifts from 6/4/4 to 5/5/4. <strong>The R1 row itself, and the "0.646 → 0.472" KRAS_G12C regression this caption states, were not re-run</strong> — both still describe the misannotated `4OBE` structure; a real, disclosed gap, not silently inherited as current.</p>
+
+  <h3>R2 — real solvent accessibility replacing the burial proxy</h3>
+  <p><code>degree_centrality</code> is a poor burial proxy — it scores below 0.5 as a standalone predictor on 6 of 9 targets. Swapping in real Shrake–Rupley SASA is a genuine improvement: SASA beats degree against B-factor on <strong>11 of 14 targets</strong>, moving three from FAIL to MARGINAL. Signs came out physically correct on every target (buried ⇒ low B, exposed ⇒ high B).</p>
+  <p>We then rebuilt <code>H_new</code> term-for-term with SASA replacing degree in its burial term, recomputed CTQW on all 20 targets, and re-ran the identical Shapley attribution:</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>CTQW's added-last marginal</th><th class="num">Median</th><th class="num">Wilcoxon vs 0</th><th class="num">Cluster-robust p</th><th class="num">Improves on</th></tr></thead>
+    <tbody>
+      <tr><td>Baseline (degree-based H_new)</td><td class="num">−0.06%</td><td class="num">0.50</td><td class="num">0.22</td><td class="num">—</td></tr>
+      <tr><td>R2 (SASA-based H_new)</td><td class="num">+0.11%</td><td class="num">0.79</td><td class="num">—</td><td class="num">10/20</td></tr>
+      <tr><td>Paired difference (SASA − degree)</td><td class="num">—</td><td class="num">0.478</td><td class="num">0.335</td><td class="num">coin flip</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="box pos">
+    <h4>What this establishes</h4>
+    <p>A real, independently motivated, label-free model improvement leaves CTQW's unique contribution at zero. The SASA version is if anything <em>less</em> significant (p = 0.79 vs 0.50) and improves on 10 of 20 targets — a coin flip. <strong>The "you never gave it a fair model" objection is now closed for the improvement we could actually demonstrate.</strong> It remains open for the four targets whose ENM still fails validity; we say so plainly rather than claiming more than we tested.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">06</span>Every number in our own record that favours CTQW</h2>
+  <p class="sub">These are real results we published. We are surfacing them ourselves, with what happened to each. If you find one we have not listed, that is a gap in this brief and we want to know.</p>
+
+  <div class="cp">
+    <div class="cp-claim"><div class="t">Favourable number</div><div class="q">CTQW's Shapley share is +11%, Wilcoxon p = 0.033 — significantly above zero.</div></div>
+    <div class="cp-body"><div class="t">What happened to it</div>
+      <p>True, and it stands. But Shapley averages over orderings including those where CTQW enters first, so it receives credit for variance it shares with geometry. Its <em>unique</em> contribution, measured added-last, is −0.1% at p = 0.50. The two numbers together <em>are</em> the finding: large joint contribution, zero unique contribution.</p>
+    </div>
+  </div>
+
+  <div class="cp">
+    <div class="cp-claim"><div class="t">Favourable number</div><div class="q">On the two-stage design, CTQW beat every control including fpocket's own druggability — Fisher p = 0.053, MRR 0.625 vs 0.329, better on 3 of 4 targets.</div></div>
+    <div class="cp-body"><div class="t">What happened to it</div>
+      <p>That was n = 4. We extended it. At n = 7 the same statistic weakened to p = 0.164; at n = 20 on the frozen set CTQW's MRR was 0.161 against the composite's 0.304 and fpocket's 0.344. <strong>The effect weakened monotonically as the sample grew</strong> — the signature of a small-sample fluctuation. This is the single strongest argument against either thread signing a joint protocol at a 5-target scale.</p>
+    </div>
+  </div>
+
+  <div class="cp">
+    <div class="cp-claim"><div class="t">Favourable number</div><div class="q">PTP1B's <code>dcc_low</code> reached AUC 1.000 at p = 0.00275, clearing a Bonferroni bar of 0.003125.</div></div>
+    <div class="cp-body"><div class="t">What happened to it</div>
+      <p>It did not survive our own seed audit. The seed was the top-5 highest-degree residues, not an active site — <code>targets.yaml</code> declared a descriptive string rather than a chemical component code, no ligand matched, and the code silently fell back to a topological proxy. Under the correct UniProt catalytic site (Cys215 + P-loop) the same measurement gives AUC 0.598 at p = 0.567, with 1 of 9 seed residues in common. We have added a <code>RuntimeWarning</code> so that fallback can never again be silent.</p>
+    </div>
+  </div>
+
+  <div class="cp">
+    <div class="cp-claim"><div class="t">Favourable number</div><div class="q">On HIV-1 RT, CTQW reached p = 0.0005 — surviving a ×28 Bonferroni correction.</div></div>
+    <div class="cp-body"><div class="t">What happened to it</div>
+      <p>That p-value comes from a scattered label-permutation null. The identical score vector, structure, seed and 2000 permutations under a spatially contiguous null gives <strong>p ≈ 0.20</strong> — a 400× spread attributable to nothing but the null construction. The AUC also sits below a plain hop-distance baseline (0.7538 vs 0.7773). We consider this the cleanest single localisation of the disagreement between our threads: it is one line of null construction, not physics, code, or data.</p>
+    </div>
+  </div>
+
+  <div class="cp">
+    <div class="cp-claim"><div class="t">Favourable number</div><div class="q">CTQW is not merely a distance score — held at constant hop distance it still discriminates, AUC 0.6305, p = 0.027.</div></div>
+    <div class="cp-body"><div class="t">What happened to it</div>
+      <p>This one is <strong>true and we defend it</strong>. Only ~39% of CTQW's variance is a function of hop shell; within-shell it discriminates above chance on 8 of 9 targets. Anyone claiming CTQW is "just distance in disguise" is wrong, and we corrected our own looser phrasing on exactly this point. The limitation is different: within-shell, CTQW scores 0.6305 against the best geometric baseline's 0.6292, winning 4 of 9, p = 0.496. Its non-distance signal is real and is the same signal <code>degree</code> and <code>euclid</code> already deliver.</p>
+    </div>
+  </div>
+
+  <div class="cp">
+    <div class="cp-claim"><div class="t">Favourable number</div><div class="q">Across 14 Hamiltonians the pocket consensus is Friedman p = 1.6e−224, W = 0.466, and the modal pocket is the true drug pocket.</div></div>
+    <div class="cp-body"><div class="t">What happened to it</div>
+      <p>This is your thread's number, included because it is the strongest one on the table and we do not want it left unaddressed. It measures <em>agreement between operators</em>, not validity. Operators sharing a confound agree perfectly and are wrong together — we measured that degeneracy directly: ~28 observables in our register collapse to a participation-ratio effective rank of 2.6–4.1. The question consensus cannot answer is whether the operator ranks the true pocket better than fpocket's own score already does on the same candidate list. That comparison is in section 04, and the answer at n = 20 is no.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <section>
+  <h2><span class="num">06b</span>What the last two weeks changed</h2>
+  <p class="sub">Added 2026-08-27. Seven further tasks. One real positive, three explanations for it killed, and a defect in our own structures.</p>
+
+  <h3>A real signature exists, and it is classical</h3>
+  <p>Asking whether an allosteric site is distinguishable from the orthosteric site <em>in holo</em> — with the answer in hand, ligands physically stripped, allosteric-vs-orthosteric so both groups carry a ligand imprint — the answer is <strong>yes</strong>. On KRAS G12C across ten different drugs, 4 of 5 features discriminate significantly; on HCV NS5B, every feature moves the same direction on a different fold and function.</p>
+  <div class="tw"><table>
+    <thead><tr><th>feature</th><th class="num">KRAS AUC</th><th class="num">p</th><th>direction</th></tr></thead>
+    <tbody>
+      <tr><td>fpocket</td><td class="num">0.675</td><td class="num">0.0039</td><td>allosteric higher</td></tr>
+      <tr class="emph"><td><code>V_C</code> — GNM dynamic cross-correlation</td><td class="num">0.595</td><td class="num">0.0117</td><td>allosteric higher</td></tr>
+      <tr><td>SASA</td><td class="num">0.551</td><td class="num">0.0215</td><td>allosteric higher</td></tr>
+      <tr><td><code>degree</code></td><td class="num">0.405</td><td class="num">0.0020</td><td><strong>orthosteric higher</strong></td></tr>
+    </tbody>
+  </table></div>
+  <p class="cap">The direction disagreement is the substance: static connectivity favours the orthosteric site; the dynamics-aware coupling measure favours the allosteric one. Allosteric sites are not simply the well-connected residues.</p>
+  <p><strong>And apo already carries it.</strong> An apo↔holo ceiling sweep across eight features found the gap uniform and uniformly near zero — apo median full AUC 0.896 against holo 0.834, apo ahead on 14/20, cluster-robust p=0.10. There is no meaningful penalty for lacking the bound conformation.</p>
+
+  <h3>Three explanations for that signature, all killed</h3>
+  <div class="tw"><table>
+    <thead><tr><th>proposed reading</th><th>test</th><th class="num">outcome</th></tr></thead>
+    <tbody>
+      <tr><td><code>V_C</code> measures allosteric <em>efficacy</em></td><td>BCR-ABL1: inert myristate vs efficacious asciminib, same pocket, matched node sets</td><td class="num"><strong>dead</strong> — <code>V_C</code> is <em>higher</em> on the inert pocket, 16/16 residues</td></tr>
+      <tr><td><code>V_C</code> measures <em>capacity to couple</em>, consumed by an efficacious drug</td><td>KRAS Switch-I/II site, docked once and undocked nine times, pre-registered P1/P2/P3</td><td class="num"><strong>dead</strong> — P2 fails outright, wrong direction</td></tr>
+      <tr><td>Allostery is stabilisation of a disfavoured conformation (our own hypothesis)</td><td>local energetic frustration at cryptic residues</td><td class="num"><strong>dead</strong> — frustration is <em>lower</em>, not higher; p=0.727</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>We have a discriminator that works and we cannot say what it measures.</strong> That is the honest state. The second and third readings were ours, both post-hoc, and both were pre-registered against independent data and killed within a day of being proposed.</p>
+
+  <h3>What is owed to your contributions</h3>
+  <p>Four things from your side changed what we did, and all four improved the work:</p>
+  <ul>
+    <li><strong>The two-stage design</strong> — fpocket proposes candidates, an operator ranks within them — is a genuinely different experiment from our per-residue AUC, and you were right that our compact null did not test it. We rebuilt it rather than argue, and it is now a standing arm.</li>
+    <li><strong>The power objection to our forward test</strong> was correct. It produced the frozen, blind-curated 22-target set that every number in this brief now rests on.</li>
+    <li><strong>The Hamiltonian work is the reason we found our best result.</strong> Scoring <code>H_new</code>'s potential terms directly rather than as walk ingredients: terms 0.751 against CTQW 0.575, cluster-robust p=0.019. Single terms reach 0.81–0.93 with no fitting. <strong>The physics encoding was right.</strong></li>
+    <li><strong>Your consensus analysis</strong> prompted our effective-rank measurement, which found ~28 observables collapse to rank 2.6–4.1 — a result we needed and would not have looked for.</li>
+  </ul>
+
+  <h3>What should now be put aside, and why</h3>
+  <div class="tw"><table>
+    <thead><tr><th>item</th><th>reason</th></tr></thead>
+    <tbody>
+      <tr><td><strong>CTQW as the ranking operator</strong></td><td>Added-last marginal p=0.973 against geometry + fpocket + its own potential terms; p=0.30 against <code>V_C</code> alone. It adds nothing over its own ingredients.</td></tr>
+      <tr><td><strong>The scattered permutation null</strong></td><td>Same score, structure, seed and 2000 permutations: p=0.0005 scattered, p≈0.20 spatially contiguous. A 400× spread from the null construction alone.</td></tr>
+      <tr><td><strong>Operator consensus as evidence</strong></td><td>Measures agreement, not validity. Operators sharing a confound agree perfectly and are wrong together — and we measured that redundancy directly.</td></tr>
+      <tr><td><strong>Fock-like state graphs with ⟨S<sub>k</sub>|S<sub>m</sub>⟩</strong></td><td>Conformers are classical configurations. There is no Hilbert space, so the overlap integral is undefined.</td></tr>
+      <tr><td><strong>The CASSCF/CI-vector analogy</strong></td><td>CASSCF's power is a <em>coherent</em> superposition with signed amplitudes and interference. A Boltzmann-weighted conformer sum is a classical probability mixture. The mapping drops precisely the ingredient that makes CASSCF quantum — it is SCF, and SCF carries no quantum-computational implication.</td></tr>
+      <tr><td><strong>Our own: the efficacy and capacity readings of <code>V_C</code>, and HYP-P13</strong></td><td>All three tested, all three dead. Listed here so they are not revived.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="num">06c</span>Where the site actually sits is not in the structure at all</h2>
+  <p class="sub">Added 2026-08-28. A systematic exclusion, and a correction to our own deliverable.</p>
+
+  <h3>Two populations, discovered not imposed</h3>
+  <p>The benchmark's allosteric sites fall into two structurally distinct groups by minimum heavy-atom distance to the active site: <strong>1D k-means silhouette 0.737</strong>, near cluster n=24 (1.29–8.33 Å), far cluster n=9 (11.24–19.72 Å), with a <strong>2.91 Å gap containing nothing at the cluster boundary</strong> and log-normality rejected at p=0.0020. Silhouette and cluster membership are stable across 50 random initialisations (0.7367 every time, sizes 24/9), and the result was independently reproduced bit-for-bit.</p><p><strong>One correction to an earlier version of this section:</strong> the 2.91 Å boundary gap is not the <em>largest</em> gap in the distribution — there is a 3.28 Å gap at 11.81→15.09 Å, inside the far cluster. So the far group is itself internally split, and k=3 fits marginally better than k=2 (silhouette 0.741 vs 0.737). <strong>The two-population reading is a simplification of a distribution that may hold three groups</strong>; the empty boundary and the non-normality are the load-bearing facts, not the exact cluster count.</p>
+
+  <h3>And nothing we can compute from the apo structure predicts which group a protein is in</h3>
+  <div class="tw"><table>
+    <thead><tr><th>test</th><th>result</th></tr></thead>
+    <tbody>
+      <tr><td>8 global descriptors — size, R<sub>g</sub>, compactness, helix/sheet fraction, GNM λ₁ stiffness, contact order, packing density</td><td><strong>none survives Bonferroni</strong> (α=0.0063). Best: chain length, p=0.072. <strong>Stiffness a clean null at p=0.697</strong> — these are not rigid-vs-floppy proteins.</td></tr>
+      <tr><td>SVD of that descriptor space</td><td><strong>effective rank 2.70 of 8.</strong> Three PCs carry 89% of variance and <strong>none tracks distality</strong> (p=0.51 / 0.49 / 0.92). The only nominal signals sit in PC6/7/8 — 2.8% of variance combined, the signature of noise rather than structure.</td></tr>
+      <tr class="emph"><td>supervised separability, leave-one-out</td><td>Logistic regression: <strong>LOO AUC 0.676</strong> against in-sample 0.843 — stable to 4 decimal places across seeds. With 9 positives in 33 the standard error is roughly ±0.10, so this is <strong>not distinguishable from chance</strong>. <em>SVC results withdrawn:</em> an earlier version of this section quoted linear SVC 0.546 and RBF SVC 0.500, but re-running across seeds gives ranges of 0.000–0.546 and 0.005–0.500 — <code>SVC(probability=True)</code> uses internal Platt scaling that is numerically unstable at n=33. Those two figures are not reportable and are removed. The conclusion is unchanged: no supervised method generalises.</td></tr>
+      <tr><td>pocket-space dimensionality</td><td>effective rank <strong>2.49</strong>; axes are distality / active-site size / pocket size.</td></tr>
+      <tr><td>pocket↔protein linkage (CCA, 2000-shuffle permutation null)</td><td>A real link exists — r=0.8481, <strong>p=0.005–0.008 across five independent 2000-shuffle nulls</strong> — but it runs through <strong>size</strong>, not distality. The distality axis against protein structure: <strong>p=0.612</strong>.</td></tr>
+      <tr><td><strong>domain architecture</strong> — the last categorical hypothesis, outside the continuous space</td><td><strong>FAILS.</strong> Far cluster splits 3 cross-domain / 6 same-domain. Three geometric domain parsers were then built and <strong>all three failed their own control checks</strong>, leaving the verdict unmodified.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="box">
+    <h4>What this means, stated carefully</h4>
+    <p>The split is real, sharp, and derived from the data rather than from bin edges we chose. It is invisible to every continuous descriptor, every linear and nonlinear combination of them, and the one categorical hypothesis with a mechanism behind it.</p>
+    <p><strong>Where an allosteric site sits appears to be a fact about a protein's functional and evolutionary history, not about its shape.</strong> If that is right, no method operating on apo coordinates alone — quantum or classical — can recover it. That is a statement about the problem, not about any particular pipeline, and it applies to both of ours equally.</p>
+  </div>
+
+  <h3>A correction to our own deliverable</h3>
+  <p>An earlier version of this brief and of our submission draft quoted KRAS G12C's top-5 precision as <strong>0.200</strong>. That figure was a <strong>stale artifact</strong>, generated against the old <code>4OBE</code> apo before the genotype correction to <code>4LDJ</code>. The root cause was traced structurally rather than inferred from the numbers — it was staleness, not the operator disagreement first suspected.</p>
+  <p><strong>The corrected figures are P@5 = 0.000 on all three mandatory targets. Zero hits in fifteen predictions.</strong> BCR-ABL1 and cardiac myosin were verified not stale. We report this rather than let a favourable number stand.</p>
+</section>
+
+<h2><span class="num">07</span>What would change our mind</h2>
+  <p class="sub">Pre-registered, so neither side can move the goalposts after seeing a result.</p>
+
+  <div class="box">
+    <h4>Any one of these, and we update</h4>
+    <ol>
+      <li><strong>CTQW's added-last marginal becomes significantly positive</strong> (Wilcoxon p &lt; 0.05, positive on ≥ 14/20) on a frozen untuned set of ≥ 12 targets, with geometry <em>and</em> fpocket both in the model.</li>
+      <li><strong>The quantum and classical arms separate.</strong> Same Hamiltonian, classical diffusion twin computed alongside. Currently ρ = 0.79 median, AUC 0.5635 vs 0.4930, Wilcoxon p = 0.7775 — indistinguishable, and the classical arm ranks the true pocket better on 6 of 14. A real separation on any target would be the first evidence in our register of the operator doing something diffusion cannot.</li>
+      <li><strong>CTQW beats a hop-distance ranker</strong> on the same candidate list at adequate n. Currently they tie at mean rank 5.71 (Wilcoxon p = 0.594), and the true pocket beats a hop-matched candidate null on only 2 of 7 targets (Fisher p = 0.50).</li>
+      <li><strong>A valid-ENM subgroup effect.</strong> If CTQW's marginal is positive specifically on the targets that pass B-factor validity and negative on those that fail, that is a real, mechanistically sensible result. We have not tested this subgroup split and it is the most promising unexamined analysis we know of.</li>
+    </ol>
+  </div>
+
+  <div class="box warn">
+    <h4>What will not change our mind, and why</h4>
+    <ul>
+      <li><strong>A better p-value under a scattered permutation null.</strong> Spatial autocorrelation makes that null anti-conservative by a measured 4.8×–42× in our own tests. Any comparison must use a spatially contiguous null, or report both side by side.</li>
+      <li><strong>An in-sample or same-target fit.</strong> See section 03. Leave-one-target-out or cross-validation, or the number does not travel.</li>
+      <li><strong>A result on ≤ 5 targets.</strong> Our own n = 4 result reversed at n = 20. We would apply this rule against ourselves equally.</li>
+      <li><strong>Consensus among operators.</strong> Section 06, final item.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">08</span>When investing in CTQW would make sense — and why not yet</h2>
+  <p class="sub">The honest case for the operator, stated as strongly as we can make it.</p>
+
+  <p>The measurements above are conditional on a benchmark, and <strong>we think the benchmark is the bigger problem</strong>. Three findings, all ours, all pointing the same way:</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>What we measured</th><th class="num">Result</th></tr></thead>
+    <tbody>
+      <tr><td>Pockets in van der Waals contact with the active site (&lt; 4.5 Å, heavy-atom)</td><td class="num">19/33 (58%)</td></tr>
+      <tr><td>Pockets at genuine long range (&gt; 20 Å)</td><td class="num">0/33 (0%)</td></tr>
+      <tr><td>Targets meeting a 15 Å separation bar</td><td class="num">4/20</td></tr>
+      <tr><td>Targets already ≥ 80% open in apo (static retrieval, not cryptic discovery)</td><td class="num">9/20 (45%)</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="cap">fpocket druggability scores median AUC 0.854 on the already-open targets versus 0.515 — near chance — on the genuinely cryptic remainder. The benchmark bundles two different tasks into every number, ours included.</p>
+
+  <p><strong>Does a purpose-built cryptic-pocket predictor close the residual?</strong> We put a real classical candidate against it rather than assuming. Citation-verified live: PocketMiner (Meller et al. 2023, Nat. Commun., DOI 10.1038/s41467-023-36699-3, trained to predict cryptic-pocket opening — expected the strongest candidate), CryptoSite (Cimermancic et al. 2016, JMB, DOI 10.1016/j.jmb.2016.01.029), P2Rank (Krivák &amp; Hoksza 2018, J. Cheminform., DOI 10.1186/s13321-018-0285-8), FTMap/FTSite (Kozakov et al. 2015, Nat. Protoc., DOI 10.1038/nprot.2015.043). Constraint 3 gate, one rule applied to all four (MD as an input WE supply, not a tool's own training provenance): FTMap/FTSite legal but web-server-only, no scriptable local tool — excluded on installability. CryptoSite's full model runs its own internal MD-based conformational sampling (AllosMod) <em>at inference</em> to compute its single most informative feature — that is MD executing inside our own scoring pipeline, not training-time-only provenance — excluded. PocketMiner reads legal (MD used only for the external authors' own training labels, zero MD supplied by us at runtime) but is the closer call; flagged to the organisers rather than assumed. <strong>Installed and run: P2Rank</strong>, real ML (Random Forest, no MD anywhere), added as a fourth Shapley block on the identical frozen set. Result: median share <strong>+9%</strong> (row-level, n=20) / <strong>+10%</strong> (apo-structure-clustered, n=13, p=0.021) — real and significant, but the residual only moves <strong>29% → 27%</strong> (rows) / <strong>29% → 26%</strong> (clusters). Its contribution added <em>last</em>, on top of the already-fitted geometry+fpocket+CTQW model — the more conservative statistic, and arguably the more honest one, since it does not credit P2Rank for variance it shares with fpocket already in the model — is smaller still: median <strong>+0.0%</strong>, not significant (p=0.881). It does not close the gap, on either reading. And its own gain is concentrated on the <em>already-open</em> targets (median +30%) not the cryptic-testing ones (median +8%) — the same pattern fpocket shows, not the complementary pattern a genuine cryptic-opening specialist would produce. Read plainly: the strongest <em>general-purpose</em> geometric detector we could add still behaves like fpocket. <strong>PocketMiner — the one candidate actually trained to predict opening — has since been unblocked and run (TASK-0269, 2026-08-26)</strong>: the earlier from-source Python 3.9 build blocker was worked around with a pinned older-toolchain environment. Added as a fifth Shapley block on the same frozen set (n=18 usable): added-last median <strong>+0.4%</strong>, cluster-robust <strong>p = 0.277</strong> — not significant, residual unchanged at 27%. Crypticity-stratified it leans the <em>right</em> way for once — already-open +0.0% vs. cryptic-testing +7.0%, the opposite pattern from P2Rank — but is not formally significance-tested (a shared-apo cluster straddles the crypticity bar, so the cluster-permutation test correctly refuses rather than double-counting it). <strong>The purpose-built cryptic-opening predictor does not close the residual either.</strong> That strengthens, not weakens, the case below: even the one method trained specifically for this problem leaves the cryptic regime's own signal unmodelled by anything we or the field currently have running.</p>
+
+  <p>Our distality filter, <code>MIN_HOP ≥ 2</code>, turns out to mean a <em>median of 7.5 Å</em>, minimum 2.09 Å. It was never physically justified; we have replaced it with reported distance and an explicit site category rather than a binary filter.</p>
+
+  <div class="box pos">
+    <h4>The conditions under which we would invest</h4>
+    <p><strong>Allostery is not one phenomenon.</strong> A drug binding a cryptic extension of the catalytic cleft, a drug binding a distinct pocket on the same domain, and a drug binding an oligomeric interface are three mechanisms with different modelling requirements. Our benchmark is 58% the first kind and 0% the third — and a through-protein transport operator is least likely to add anything on exactly the contact-adjacent cases that dominate it.</p>
+    <p>A quantum-walk approach is worth investment when it is tested on <strong>genuinely distal, genuinely cryptic sites</strong> — the regime where cavity geometry alone cannot work because there is no cavity in apo and no contact path to the active site. We have essentially none of those in the current benchmark. Building that target set is, in our view, the highest-value Phase 2 work available to either thread, and it is a prerequisite for the operator getting a fair test rather than an obstacle to it.</p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">09</span>Reproduce it</h2>
+  <p class="sub">Scripts, configs, and the specific places our numbers could differ from yours.</p>
+
+  <h3>Environment</h3>
+  <pre><span class="c"># Python 3.9 target; repo convention forbids X | None at runtime</span>
+python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install -r requirements.txt
+<span class="c"># external binaries, vendored: tools/fpocket/bin/fpocket, tools/evoef2/EvoEF2</span></pre>
+
+  <h3>The scripts behind each number</h3>
+  <dl class="files">
+    <dt>task0254_fpocket_variance_and_crypticity.py</dt><dd>Sections 01, 04, 08 — Shapley attribution with fpocket, and the apo crypticity screen.</dd>
+    <dt>task0245_cv_attribution.py</dt><dd>The two-block predecessor; run it to see the in-sample vs cross-validated difference for yourself.</dd>
+    <dt>task0249_composite_dumb_baseline.py</dt><dd>Section 04 — the leave-one-target-out composite, both designs.</dd>
+    <dt>task0250_gnm_bfactor_validity.py</dt><dd>Section 05 — ENM validity, 15 targets.</dd>
+    <dt>task0257_r1_heavy_atom_contact_weighting.py</dt><dd>Section 05 — R1.</dd>
+    <dt>task0257_r2_sasa_burial_vs_degree.py</dt><dd>Section 05 — R2 feature comparison.</dd>
+    <dt>task0257_r2_shapley_rerun.py</dt><dd>Section 05 — CTQW re-scored under the SASA-based Hamiltonian.</dd>
+    <dt>task0261_cluster_robust_stats.py</dt><dd>Section 04 — every p-value above, reclustered by apo structure (n=13).</dd>
+    <dt>task0256_classical_diffusion_parity.py</dt><dd>Section 07 — quantum vs classical arm on the same Hamiltonian.</dd>
+    <dt>task0247_is_ctqw_a_distance_score.py</dt><dd>Section 06 — within-shell discrimination.</dd>
+    <dt>task0255_hop_angstrom_calibration.py</dt><dd>Section 08 — hop-to-Ångström calibration.</dd>
+    <dt>task0258_allosteric_distance_taxonomy.py</dt><dd>Section 08 — per-pocket distance and site category.</dd>
+    <dt>task0260_cryptic_predictor_residual.py</dt><dd>Section 08 — P2Rank as a fourth Shapley block; citation/constraint gate for all four candidate cryptic-pocket predictors.</dd>
+    <dt>config/candidate_targets_task0243.yaml</dt><dd>The frozen 22-target set.</dd>
+  </dl>
+
+  <div class="box warn">
+    <h4>Six places your reproduction will legitimately diverge from ours</h4>
+    <ol>
+      <li><strong>Alternate locations.</strong> We parse with <code>altloc="all"</code>. Dropping to the default silently removes heavy atoms and corrupts every distance statistic.</li>
+      <li><strong>The <code>hop_from_seed</code> sign convention.</strong> It returns <em>negated</em> BFS distance. We shipped a bug from this ourselves — a filter that removed every candidate on every target before we caught it.</li>
+      <li><strong>Heavy-atom attachment.</strong> A same-length guard is required for <code>functional_indices</code> (which contacts holo heavy atoms against <em>apo</em> coordinates) but must <em>not</em> be applied to <code>holo_pocket_mask</code>, which maps holo→apo by Needleman–Wunsch. We had this wrong; it degraded pockets to a Cα approximation and moved HIV-1 RT's pocket from 5 residues to 16.</li>
+      <li><strong>Randomness in trial loops.</strong> Our EvoEF2 wrapper accepts no seed, so repeated "trials" write byte-identical inputs. We caught a published 4/4 result that was one computation repeated four times; it reproduced as 3/4. Check hashes before treating repeats as samples.</li>
+      <li><strong>Stage-1 recall.</strong> In any two-stage design, fpocket fails to propose the true pocket at all on ~36% of targets — 14/22 usable here, 7/11 on an independent set. Denominators must be targets <em>attempted</em>, not targets where stage 1 succeeded.</li>
+      <li><strong>Clustering.</strong> The frozen set has 20 scoreable rows but only 13 distinct apo structures (section 04). Every apo-side p-value computed at n=20 is optimistic; recluster by apo structure before trusting significance on anything apo-side.</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">10</span>Known defects in our own work</h2>
+  <p class="sub">Listed because you would find them, and because a brief that omitted them would deserve to be discounted.</p>
+  <ul>
+    <li><strong>Stale published numbers.</strong> A bug fix shifted every floor and AUC and our headline triplets were not refreshed for weeks. Two of three mandatory targets flipped from below-floor to above-floor once corrected — a correction in our own favour that we had been under-reporting.</li>
+    <li><strong>An unreproducible headline.</strong> A "decisive 4/4" ceiling result reproduced as 3/4, with one trial below the comparison arm's maximum. Root cause in defect 4 above.</li>
+    <li><strong>A stale hypothesis register.</strong> Eleven hypotheses were recorded as untested after tasks had in fact tested them, causing us to report tested work as untested. Now fully reconciled with zero open entries.</li>
+    <li><strong>Two curation errors in the frozen set</strong> — the empty-seed HIV integrase pair, contradicting the curation task's own claim.</li>
+    <li><strong>Four targets whose ENM still fails validity</strong>, on which we cannot interpret our own CTQW results in either direction.</li>
+    <li><strong>Three of six &quot;apo&quot; structures are not apo.</strong> Verified live, entity by entity. <code>1OPL</code> — our BCR-ABL1 apo — contains <strong>myristic acid in the myristoyl pocket we are trying to predict</strong>, plus an ATP-site inhibitor. So that target's apo→holo contrast is ligand-swap → ligand-swap, not empty → bound. <code>1V4S</code> (glucokinase) carries a synthetic compound; <code>8QYP</code> (cardiac myosin) is an ADP-vanadate transition-state analogue. This mechanically explains our own earlier report that BCR-ABL1's pocket is &quot;measurably pre-formed in apo&quot; — it is pre-formed because a ligand is holding it open. We reported a property of the crystal's contents as a property of protein dynamics.</li>
+    <li><strong>Our KRAS apo was the wrong genotype.</strong> <code>4OBE</code> is wild-type at residue 12, not G12C — a known, recorded, unfixed defect until the organisers sanctioned a replacement. Corrected to <code>4LDJ</code>. The correction cost us our only clean mandatory-target floor-clear: AUC 0.557 → 0.514, diagnosis <code>NO_FAILURE_DETECTED</code> → <code>NO_SIGNAL_IN_APO</code>.</li>
+    <li><strong>Pseudo-replication.</strong> The frozen set is 20 scoreable rows but only 13 distinct apo structures. Every p-value was recomputed under exact cluster-level permutation; no conclusion flipped, but our own positive claims weakened — composite-vs-CTQW 0.0137 → 0.0449, fpocket 0.0032 → 0.0188.</li>
+    <li><strong>Bin edges in section 08 are ours</strong>, stated openly and chosen from physical meaning. They are not a literature taxonomy and should not be cited as one.</li>
+    <li><strong>Every p-value in the frozen-set analyses was computed at n=20 rows against 13 distinct apo structures</strong>, self-caught and corrected in section 04 before this brief went out — full accounting there, including the two claims (fpocket's significance, the crypticity correlation) that weaken most.</li>
+    <li><strong>The 13 apo-independent structures are not 13 independent labels either.</strong> Pocket-label Jaccard overlap between the two ligands on the same apo structure runs 0.40–1.00 across all 7 pairs (median 0.77) — 6 of 7 share at least three-quarters of their label residues. Revised rule: label-side independence requires Jaccard &lt; 0.5, which only one pair clears. <strong>14 of the frozen set's 20 rows are genuinely independent label-side observations, not 20.</strong> A deeper point sits underneath the number: our pocket label is drug-contact geometry, so it cannot express "this ligand binds allosterically, that one doesn't" even where that may be true — the same pocket, occupied by two different small molecules, produces near-identical labels almost every time we can check it.</li>
   </ul>
 </section>
 
-<hr>
-
-<section>
-  <h2>Attribution at scale — and the headroom</h2>
-  <p>The 5&ndash;10% figure above came from 13 structures. We recomputed it on <strong>108</strong>, using the field&rsquo;s own annotations and the same AUC basis as the original, so the numbers are directly comparable. Per structure: how well does each score rank the annotated allosteric residues above every other eligible residue? AUC 0.5 is chance and 1.0 perfect, so <span class="mono">(AUC&minus;0.5)/0.5</span> is the share of available signal an arm captures.</p>
-
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>Contributor</th><th>Mean AUC</th><th>Share of available signal</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Proximity to the active site</strong> (nearest-first)</td><td class="num big">0.6147</td><td class="num big">+22.9%</td></tr>
-        <tr><td><strong>CTQW</strong> (quantum walk occupation)</td><td class="num big">0.5921</td><td class="num big">+18.4%</td></tr>
-        <tr><td>Packing / contact degree</td><td class="num">0.5498</td><td class="num">+10.0%</td></tr>
-        <tr><td>Bond-to-bond propensity (published SOTA)</td><td class="num">0.5067</td><td class="num">+1.3%</td></tr>
-        <tr><td>GNM fluctuation</td><td class="num">0.4994</td><td class="num">&minus;0.1%</td></tr>
-        <tr><td><em>Distance from active site (&ldquo;most distal&rdquo;)</em></td><td class="num">0.3853</td><td class="num">&minus;22.9%</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="card good">
-    <span class="chip c-holds">Holds</span>
-    <h3>CTQW carries real, measurable signal &mdash; second only to proximity, and well above the published classical method.</h3>
-    <p>At <strong>+18.4%</strong> on 108 structures, the quantum contribution is real, and it is <em>larger</em> than the 5&ndash;10% our 13-structure attribution estimated. It holds at eight times the cohort size, and it is more than an order of magnitude above bond-to-bond&rsquo;s +1.3% on this metric.</p>
-    <p>Note this is the opposite of the top-5 table earlier, and both are correct &mdash; they measure different things. <strong>CTQW ranks the site well overall but never concentrates it into the top five</strong>; bond-to-bond occasionally puts a residue right at the top but ranks the site poorly overall. Diffuse signal versus sparse signal.</p>
-  </div>
-
-  <div class="card flag">
-    <span class="chip c-corr">Corrected</span>
-    <h3>The single strongest predictor is proximity &mdash; the exact inverse of the field&rsquo;s starting intuition.</h3>
-    <p>Ranking residues by distance <em>from</em> the active site scores <strong>0.3853</strong> &mdash; far worse than guessing. Flip the sign and the same quantity is the best arm in the table at <strong>0.6147</strong>, ahead of the quantum walk and twenty times the published method.</p>
-    <p>This is Finding F restated from the ranking side, and it is the sharpest form of it: allosteric sites in these benchmarks are not merely <em>often</em> proximal &mdash; <strong>proximity is the most informative single thing you can know about where they are.</strong></p>
-  </div>
-
-  <div class="card open">
-    <span class="chip c-open">Headroom</span>
-    <h3>77.1% of the available signal is explained by nothing we have.</h3>
-    <p>The best single arm captures 22.9%. Neither the quantum walk, nor packing, nor flexibility, nor distance, nor the published state of the art accounts for the rest. That is not a negative result &mdash; it is a measured target, and it is the honest case for Phase 2.</p>
-  </div>
-
-  <p class="sub">Two corrections made while producing this table. First, our initial version scored distance in one direction only and therefore reported CTQW as the strongest arm; it is second. Second, our first run scored the published method at exactly AUC 0.5000, which contradicted our own earlier positive control (p&nbsp;=&nbsp;5&times;10&#8315;&#8313;). The cause was ours &mdash; their per-residue files are keyed to their stripped structures and we had mapped them onto deposited numbering. Recomputed on their own keys the figure is 0.5067, and that is the number reported.</p>
-</section>
-
-
-<section>
-  <h2>The discriminator idea — where it actually stands</h2>
-  <p>This is the thread worth keeping. It has moved twice since we last spoke, in opposite directions.</p>
-
-  <div class="card open">
-    <span class="chip c-holds">Gate passed</span>
-    <h3>The six measures are genuinely independent evidence.</h3>
-    <p>We had killed the idea of combining rankers on our own cohort, for a specific reason: all 61 of our rules were functions of the same two inputs — distance and druggability. They were not 61 opinions but one opinion at 61 settings, so ensembling them provably could not work.</p>
-    <p><strong>The six measures are not that.</strong> Mean pairwise |φ| = <span class="mono">0.419</span>, under our pre-registered 0.6 redundancy bar, with no residue/bond block collapse. This is the first genuinely independent evidence family either of us has had.</p>
-  </div>
-
-  <div class="card open">
-    <span class="chip c-open">Open</span>
-    <h3>But we cannot yet predict which measure fires.</h3>
-    <p>The gap between <strong>99/118 by one measure</strong> and <strong>21/118 by all six</strong> is 78 structures where some fire and others do not — exactly the signature of “different measures suit different proteins.”</p>
-    <p>Protein size, chain count and site separation carry <em>no</em> signal about which. Held out by protein, per-measure AUC 0.337–0.483. A positive control — predicting one measure from the other five — reaches AUC 0.74–0.88, so the harness detects real signal when it is there.</p>
-    <p><strong>Fold class was the obvious remaining predictor. We tested it during the hour before this call, and it fails too.</strong> CATH/SCOP class pulled live for 111 of 113 ASBench structures: no measure&rsquo;s firing rate differs by class after correction (best <span class="mono">p&nbsp;=&nbsp;0.025</span> against a Bonferroni bar of <span class="mono">0.0083</span>), and the number of measures firing does not differ either (2.93 vs 3.65, <span class="mono">p&nbsp;=&nbsp;0.14</span>). One descriptive curiosity, not a finding: mainly-alpha proteins almost always get <em>something</em> to fire (1/23 score zero, against 17/88 for alpha-beta).</p>
-    <p class="sub">So every cheap protein-level predictor is now exhausted &mdash; size, chain count, site separation, fold class. The discriminator is not dead, but it will not come from a lookup. It needs either a genuinely new descriptor or the per-residue propensity fields themselves, which is Phase-2 work.</p>
-  </div>
-
-  <p>Why this matters for Phase 2: on our own cohort a per-protein meta-selector would lift expected hits from <span class="mono">0.100</span> to <span class="mono">0.331</span> — <strong>83% of everything achievable</strong>. The rankers are not the bottleneck. Choosing between them is. And with 432 structures over 146 proteins, that question is finally answerable.</p>
-
-  <p class="sub">Two other independent-signal candidates were tested and failed this week: sibling-conformer pocket persistence (p = 0.969 / 0.856, and exactly zero as a tie-break), and ENM mode shift, which did not reproduce once ported into our apparatus (Fisher p = 0.306 against a claimed 0.005–0.013). Mode shift <em>is</em> independent of druggability once pocket size is controlled — but that is now its only merit.</p>
-</section>
-
-<hr>
-
-<section>
-  <h2>One more thing, from the organisers</h2>
-  <p>Cleveland Clinic answered our constraint questions today. Both permissively — and the first one matters more than a permission:</p>
-  <div class="card">
-    <p style="font-family:Newsreader,Georgia,serif; font-size:1.08rem; line-height:1.5;">“the challenge <strong>explicitly assumes the elastic network hypothesis</strong>, which posits that the <strong>topology of the contact network is the primary driver of signal propagation</strong>. Therefore, utilizing closed-form elastic-network (ANM/GNM) mode perfectly fits with the scope of the challenge.”</p>
-  </div>
-  <p>That makes our central negative a finding <em>about the challenge’s own stated premise</em>, not a side observation. We measured topology-driven propagation against the field’s benchmarks and it does not retrieve the annotated sites.</p>
-  <p>They also confirmed PocketMiner is permitted — static PDB at inference, no trajectories. Our exclusion of CryptoSite stands and is better justified: it runs MD sampling <em>at inference</em>, which is exactly what the constraint forbids.</p>
-</section>
-
-<hr>
-
-<section>
-  <h2>What we are proposing</h2>
-  <div class="ask">
-    <div><span class="chip c-holds">Agreed</span></div>
-    <p><strong>One submission.</strong> Unchanged, and we think the corrected story is a better one to sign jointly than the version we had.</p>
-    <p><strong>Bond-to-bond named as the classical baseline.</strong> Done — we ran it, and the enrichment/retrieval distinction is the most useful thing we got from your suggestion.</p>
-    <p><strong>Alternative walk formalisms stay open.</strong> Your point stands: our negative is about the time-averaged occupation observable, not quantum walks as a class. Scoped as Phase 2, against ASBench rather than our 13 structures.</p>
-    <div style="height:.4rem"></div>
-    <div><span class="chip c-open">To decide together</span></div>
-    <p><strong>Lead the submission with the benchmark finding, not the method comparison.</strong> “A large fraction of allosteric benchmarks are not distal, and the field’s headline accuracy measures enrichment rather than retrieval” is externally verifiable, uses the field’s own data, and explains why an 84% coexists with nobody having a usable pocket-finder.</p>
-    <p><strong>The discriminator as the Phase-2 proposal.</strong> Six independent measures, 432 structures, and a measured 83%-of-achievable ceiling waiting on a selector. That is a real research programme rather than a negative result.</p>
-  </div>
-</section>
-
 <footer>
-  <p>Every figure traced to a committed artifact. Cluster-robust throughout: our 20 benchmark rows are 13 independent structures, and CASBench’s 314 are 33 proteins, so all significance is computed at protein level. Four in-sample results have been discarded this week for failing held-out evaluation; two of our own claims and one of our own scripts were corrected in the process, and all are documented rather than quietly dropped.</p>
+  <p>Every number in this brief was recomputed from committed result JSON before publication, independently of the write-ups that produced it. Where our internal write-ups and the underlying data disagreed, the data is what appears here and the discrepancy is noted in place. Scripts, configs, raw outputs and the full task records are in the repository; we will hand over any of it on request.</p>
 </footer>
 
 </div>

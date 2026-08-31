@@ -1,0 +1,441 @@
+<title>The Numbers Moved</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Public+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#f6f7f5; --surface:#ffffff; --surface-2:#eef1ee;
+  --ink:#14181a; --muted:#5a686d; --rule:#dde2e0;
+  --accent:#0f6e63;
+  --holds:#1f6b4a; --corrected:#8a5a14; --retracted:#8c3030; --open:#41528a;
+  --holds-bg:#e6f2ea; --corrected-bg:#f7efdf; --retracted-bg:#f7e7e5; --open-bg:#e7ebf6;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#101416; --surface:#171d1f; --surface-2:#1d2527;
+    --ink:#e8edeb; --muted:#93a3a6; --rule:#27302f;
+    --accent:#4fc4b4;
+    --holds:#5cc493; --corrected:#d69a4a; --retracted:#e58585; --open:#93a9dc;
+    --holds-bg:#152720; --corrected-bg:#2a2213; --retracted-bg:#2b1918; --open-bg:#181e2e;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101416; --surface:#171d1f; --surface-2:#1d2527;
+  --ink:#e8edeb; --muted:#93a3a6; --rule:#27302f;
+  --accent:#4fc4b4;
+  --holds:#5cc493; --corrected:#d69a4a; --retracted:#e58585; --open:#93a9dc;
+  --holds-bg:#152720; --corrected-bg:#2a2213; --retracted-bg:#2b1918; --open-bg:#181e2e;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink);
+  font-family:"Public Sans",system-ui,-apple-system,sans-serif;
+  font-size:16px; line-height:1.62; margin:0;
+  -webkit-font-smoothing:antialiased;}
+.wrap{max-width:53rem; margin:0 auto; padding:3.5rem 1.5rem 6rem;
+  display:flex; flex-direction:column; gap:2.75rem;}
+header{display:flex; flex-direction:column; gap:1rem; padding-bottom:2rem;
+  border-bottom:2px solid var(--ink);}
+.eyebrow{font-family:"JetBrains Mono",ui-monospace,monospace; font-size:.72rem;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--accent); font-weight:700;}
+h1{font-family:"Newsreader",Georgia,serif; font-weight:600; font-size:clamp(2.4rem,6vw,3.6rem);
+  line-height:1.04; margin:0; letter-spacing:-.02em; text-wrap:balance;}
+.standfirst{font-family:"Newsreader",Georgia,serif; font-size:1.24rem; line-height:1.5;
+  color:var(--muted); max-width:44ch; margin:0;}
+.meta{font-family:"JetBrains Mono",monospace; font-size:.76rem; color:var(--muted);
+  display:flex; flex-wrap:wrap; gap:.4rem 1.4rem;}
+section{display:flex; flex-direction:column; gap:1rem;}
+h2{font-family:"Newsreader",Georgia,serif; font-weight:600; font-size:1.72rem;
+  line-height:1.2; margin:0; letter-spacing:-.01em; text-wrap:balance;}
+h3{font-family:"Public Sans",sans-serif; font-weight:700; font-size:.98rem; margin:0;
+  letter-spacing:.01em;}
+p{margin:0; max-width:66ch;}
+ul{margin:0; padding-left:1.15rem; max-width:66ch; display:flex; flex-direction:column; gap:.5rem;}
+strong{font-weight:700}
+code,.mono{font-family:"JetBrains Mono",ui-monospace,monospace; font-size:.86em;}
+code{background:var(--surface-2); padding:.1em .34em; border-radius:3px;}
+.chip{display:inline-flex; align-items:center; gap:.4rem; font-family:"JetBrains Mono",monospace;
+  font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; font-weight:700;
+  padding:.22rem .55rem; border-radius:3px; white-space:nowrap;}
+.c-holds{color:var(--holds); background:var(--holds-bg);}
+.c-corr{color:var(--corrected); background:var(--corrected-bg);}
+.c-retr{color:var(--retracted); background:var(--retracted-bg);}
+.c-open{color:var(--open); background:var(--open-bg);}
+.card{background:var(--surface); border:1px solid var(--rule); border-radius:5px;
+  padding:1.4rem 1.5rem; display:flex; flex-direction:column; gap:.85rem;}
+.card.flag{border-left:3px solid var(--retracted);}
+.card.good{border-left:3px solid var(--holds);}
+.card.open{border-left:3px solid var(--open);}
+.tablewrap{overflow-x:auto; border:1px solid var(--rule); border-radius:5px; background:var(--surface);}
+table{border-collapse:collapse; width:100%; font-size:.9rem;
+  font-variant-numeric:tabular-nums;}
+th,td{text-align:left; padding:.62rem .9rem; border-bottom:1px solid var(--rule);}
+th{font-size:.7rem; letter-spacing:.09em; text-transform:uppercase; color:var(--muted);
+  font-weight:700; background:var(--surface-2); white-space:nowrap;}
+tbody tr:last-child td{border-bottom:none;}
+td.num{font-family:"JetBrains Mono",monospace;}
+.big{font-family:"JetBrains Mono",monospace; font-weight:700; font-size:1.05em;}
+.sub{color:var(--muted); font-size:.88rem;}
+.ledger{display:flex; flex-direction:column; gap:0;}
+.ledger .row{display:grid; grid-template-columns:9.5rem 1fr; gap:1rem;
+  padding:.85rem 0; border-bottom:1px solid var(--rule); align-items:baseline;}
+.ledger .row:last-child{border-bottom:none;}
+@media (max-width:620px){ .ledger .row{grid-template-columns:1fr; gap:.35rem;} }
+hr{border:none; border-top:1px solid var(--rule); margin:0;}
+.ask{background:var(--surface-2); border-radius:5px; padding:1.5rem;
+  display:flex; flex-direction:column; gap:.9rem;}
+footer{color:var(--muted); font-size:.82rem; border-top:1px solid var(--rule);
+  padding-top:1.5rem; max-width:66ch;}
+a{color:var(--accent);}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Team AuraQu · joint submission brief · v2</div>
+  <h1>The Numbers Moved</h1>
+  <p class="standfirst">A defect in our own code invalidated one of the claims you agreed to. Everything we found replacing it is stronger.</p>
+  <div class="meta">
+    <span>2026-08-31</span><span>v2 &mdash; v1 of 2026-08-28 kept unchanged alongside</span><span>15 tasks landed since</span>
+  </div>
+</header>
+
+<section>
+  <h2>Read this first</h2>
+  <div class="card flag">
+    <span class="chip c-retr">Retracted</span>
+    <h3>“Simple classical heuristics build a ceiling that outperforms CTQW.”</h3>
+    <p>This framing does not survive. It rested on pocket-candidate residue sets that were wrong for nine of our twenty benchmark rows. We are retracting it before it reaches the submission — it was never written into the brief you have, only said out loud.</p>
+  </div>
+  <div class="card good">
+    <span class="chip c-holds">Strengthened</span>
+    <h3>A large share of “allosteric” benchmark sites are not distal at all.</h3>
+    <p>Previously measured on our 13 structures. Now confirmed independently on <strong>ASBench and CASBench</strong> — 158 proteins across three cohorts, two of which neither of us controls.</p>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>How the ceiling “collapsed” — and what actually happened</h2>
+  <p>The short version we used in conversation — <em>“the classical ceiling collapsed to 0.000”</em> — was misleading shorthand, and it is worth being precise because the distinction is the whole finding.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Arm, on corrected candidates</th><th>Mean EH</th><th>vs random (cluster-robust)</th></tr></thead>
+      <tbody>
+        <tr><td>Fixed, pre-specified rule <code>hop≥1 + druggability</code></td><td class="num big">0.0899</td><td class="num">p = 0.220 — not significant, <strong>not worse</strong></td></tr>
+        <tr><td>Automated rule <em>selection</em> (swept, held out)</td><td class="num big">0.0000</td><td class="num">p = 0.000244 — <strong>worse than chance</strong></td></tr>
+        <tr><td>CTQW wrapper</td><td class="num">0.0389</td><td class="num">p = 1.000</td></tr>
+        <tr><td>Random</td><td class="num">0.0273</td><td class="num">—</td></tr>
+        <tr><td>Oracle (perfect pocket pick)</td><td class="num">0.3984</td><td class="num">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p><strong>Our actual rule still scores 0.0899 — three times random.</strong> What collapses to zero is the <em>procedure that picks a rule</em>. Those are different objects and we conflated them.</p>
+
+  <h3>The chain of events, in order</h3>
+  <div class="ledger">
+    <div class="row"><span class="mono sub">Defect</span><span>Our fpocket parser read residues as <code>int(line[22:26])</code>, discarding the chain. Nine of twenty benchmark rows have cross-chain residue-number collisions, so pocket residues silently mapped onto the wrong chain. Found by your agents, confirmed by us.</span></div>
+    <div class="row"><span class="mono sub">Effect</span><span>One target’s oracle was a perfect <span class="mono">1.000</span> purely because a chain-B cavity landed on chain-A ground truth. Raw oracle fell <span class="mono">0.556 → 0.454</span>.</span></div>
+    <div class="row"><span class="mono sub">Knock-on</span><span>The sensible rule’s in-sample score fell <span class="mono">0.1649 → 0.0899</span>. A different rule, <code>hop≥3 + lex_far_first</code>, scored <span class="mono">0.100</span> — and won the sweep <strong>by 0.0101</strong>.</span></div>
+    <div class="row"><span class="mono sub">Why it’s zero</span><span>That rule scores above zero on <strong>exactly two of twenty rows</strong> — and those two rows are <strong>the same apo structure</strong>. Its entire mean is one structure counted twice. On every held-out target it scores <span class="mono">0.000</span>.</span></div>
+    <div class="row"><span class="mono sub">Root cause</span><span>The selection criterion is a raw mean over pseudo-replicated rows, with no cluster correction. <strong>A rule that nails one structure beats a rule that works on four.</strong> Ours works on four.</span></div>
+  </div>
+
+  <p>We tested the fix: selecting by cluster mean instead of row mean moves the held-out score from <span class="mono">0.0000</span> to <span class="mono">0.0093</span> and the p-value from <span class="mono">0.00024</span> to <span class="mono">0.101</span>. It removes the pathology. It does not produce a working selector.</p>
+
+  <div class="card">
+    <h3>The honest statement</h3>
+    <p>At pocket level, <strong>nothing beats chance</strong> — not CTQW (p = 1.000), not a fixed classical rule (p = 0.220). Automated rule selection on 13 clusters actively backfires. Meanwhile the oracle sits at <strong>0.398</strong>: good candidates exist in every protein, and no procedure we have — classical or quantum — finds them.</p>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>What replaced it, and why it is stronger</h2>
+  <p>Your section-08 observation — that the benchmark is mostly contact-adjacent pockets, so a transport operator cannot really be tested on it — turned out to be the most important thing either of us found. We took it to the field’s own benchmarks.</p>
+
+  <p>For every structure we computed the minimum heavy-atom distance between the annotated <em>allosteric</em> site and the annotated <em>catalytic</em> site, using each benchmark’s own annotations. No fpocket, no detection, no CTQW — only the distance.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Cohort</th><th>Proteins</th><th>Sites &lt; 1.5 Å apart</th><th>Reading</th></tr></thead>
+      <tbody>
+        <tr><td>ASBench</td><td class="num">112</td><td class="num big">22.2%</td><td class="sub">least affected</td></tr>
+        <tr><td>Cleveland Clinic (ours)</td><td class="num">13</td><td class="num big">28.6%</td><td class="sub">unexceptional</td></tr>
+        <tr><td>CASBench</td><td class="num">33</td><td class="num big">42.4%</td><td class="sub">most affected</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>1.5 Å is shorter than a carbon–carbon bond. These are sites <strong>covalently bonded</strong> to the catalytic site. Twelve ASBench structures share residues between the two outright.</p>
+
+  <p><strong>158 proteins, three cohorts, and our benchmark sits in the middle.</strong> This is not a quirk of the Cleveland Clinic target list — it is a property of how allosteric sites are annotated in this field. Only half of ASBench is genuinely distal.</p>
+
+  <p class="sub">Bond-to-bond’s own failure analysis says the same thing from the other side: on PDB 1Z8D it records that “direct interactions, instead of functional coupling, occur if sites are close to the orthosteric sites, which is out of the scope of bond-to-bond propensity analysis.” The method excludes these cases by definition. The benchmarks are full of them.</p>
+</section>
+
+<hr>
+
+<section>
+  <h2>On the 84% — a distinction worth making carefully</h2>
+  <p>We adopted bond-to-bond as a named baseline, as you asked. Running it properly changed how we read its headline number, and we think this strengthens both of our positions rather than undercutting theirs.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>ASBench, allosteric ligand removed</th><th>Structures</th><th>Share</th></tr></thead>
+      <tbody>
+        <tr><td>Detected by <strong>≥ 1 of 6</strong> statistical measures</td><td class="num">99 / 118</td><td class="num big">83.9%</td></tr>
+        <tr><td>Detected by ≥ 3 of 6</td><td class="num">68 / 118</td><td class="num">57.6%</td></tr>
+        <tr><td>Detected by <strong>all 6</strong></td><td class="num">21 / 118</td><td class="num big">17.8%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The 83.9% reproduces their published 84% exactly, from their own supplementary tables. It is a <strong>six-way disjunction</strong>.</p>
+
+  <p>We then scored 108 ASBench structures with <strong>their own per-residue propensity scores</strong>, on a top-5 retrieval metric:</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Scorer</th><th>Mean P@5</th><th>Non-zero on</th></tr></thead>
+      <tbody>
+        <tr><td>Bond-to-bond propensity quantile</td><td class="num big">0.0204</td><td class="num">10 / 108 = 9.3%</td></tr>
+        <tr><td>Random</td><td class="num">0.0176</td><td class="num">—</td></tr>
+        <tr><td>Our CTQW</td><td class="num">0.0056</td><td class="num">3 / 108</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Their method beats random at <span class="mono">p = 5.0 × 10⁻⁹</span> — so the test has power, and our own negative below it is real rather than a broken harness. But the margin is <span class="mono">0.0204</span> against <span class="mono">0.0176</span>.</p>
+
+  <div class="card">
+    <h3>The distinction</h3>
+    <p>Their six measures are <strong>set-level enrichment tests</strong>, not <strong>top-k retrieval tests</strong>. Each asks whether the annotated site’s <em>average</em> score beats surrogate sites of the same size. “84% allosteric-site recovery” therefore does not mean “finds the pocket.”</p>
+    <p><strong>On retrieval, the published state of the art is 0.0204 against a 0.0176 chance baseline.</strong> Nobody has solved this — including them, and including us.</p>
+  </div>
+
+  <p class="sub">This is not a criticism of their work. It does what it claims and it beats chance decisively. What we are correcting is the framing of the number, and the correction is what makes the benchmark problem visible.</p>
+</section>
+
+<hr>
+
+<section>
+  <h2>Our own arms, on their benchmark</h2>
+  <p>ASBench annotates both the seed and the ground truth, which bypasses every labelling defect we have found in our own pipeline. If our operators fail here, it is the operators.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Arm</th><th>Mean P@5</th><th>Non-zero</th></tr></thead>
+      <tbody>
+        <tr><td>CTQW</td><td class="num">0.0056</td><td class="num">3 / 108</td></tr>
+        <tr><td>Farthest-by-hops</td><td class="num">0.0037</td><td class="num">1 / 108</td></tr>
+        <tr><td>Nearest-by-hops</td><td class="num">0.0093</td><td class="num">4 / 108</td></tr>
+        <tr><td>GNM fluctuation</td><td class="num">0.0167</td><td class="num">8 / 108</td></tr>
+        <tr><td>Inverse degree</td><td class="num">0.0130</td><td class="num">7 / 108</td></tr>
+        <tr><td><strong>Random</strong></td><td class="num big">0.0171</td><td class="num">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Nothing beats random, and CTQW is significantly <em>worse</em>. The mechanism is consistent across arms: our operators rank <strong>extremes</strong> — most distant, most flexible, least packed, highest walk occupation — and an annotated allosteric site is not an extreme. It is an ordinary buried pocket that happens to be functionally coupled.</p>
+
+  <p class="sub">One caveat we owe you: our first run of this had every arm below random, which was too uniform to be five independent failures. The cause was ours — our pipeline excludes terminal residues and that script did not, so the flexibility and packing arms were handed chain termini before scoring anything. The table above is the corrected run.</p>
+</section>
+
+<hr>
+
+<hr>
+
+<section>
+  <h2>What the quantum side is actually worth — and why we say so</h2>
+  <p>The tables above are harsh, and read alone they would misrepresent our position. Our reservations about CTQW were never a prior — they came out of a measurement, and the same measurement found a real positive that belongs in the submission.</p>
+
+  <div class="card good">
+    <span class="chip c-holds">Holds</span>
+    <h3>The Hamiltonian terms beat the walk, and it is the register's best constructive result.</h3>
+    <div class="tablewrap" style="margin:.4rem 0;">
+      <table>
+        <thead><tr><th>Arm</th><th>AUC</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Potential terms of <code>H_new</code></td><td class="num big">0.751</td><td class="sub">cluster-robust p = 0.019</td></tr>
+          <tr><td><code>V_C</code> alone (GNM dynamic cross-correlation)</td><td class="num">0.6365</td><td class="sub">beats the whole walk by itself</td></tr>
+          <tr><td>CTQW</td><td class="num">0.575</td><td class="sub"></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>The physics encoded in the Hamiltonian is doing real work.</strong> What fails is the propagation step layered on top of it — not the model of the protein underneath.</p>
+  </div>
+
+  <p>Our variance attribution puts the quantum contribution at roughly <strong>5–10% on average</strong> (range 1–15% across targets), against <strong>20–60% for geometry</strong> and <strong>25–80% unexplained</strong>. Small, variable, but <em>not zero</em> — and it is that measured share, not a preference, that set our position.</p>
+
+  <p>Two consequences we want stated explicitly in the submission:</p>
+  <ul>
+    <li><strong>Credit where it is due.</strong> The two-stage design and the Hamiltonian work are yours, and the 0.751 result is the strongest constructive number either of us has. It should be reported as a positive finding, not as context for a negative.</li>
+    <li><strong>The negative is narrow and should stay narrow.</strong> It concerns the time-averaged occupation observable on one operator — as you noted first. It is not a claim about quantum walks as a class, and we will not write it as one.</li>
+  </ul>
+</section>
+
+<hr>
+
+<section>
+  <h2>Attribution at scale — and the headroom</h2>
+  <p>The 5&ndash;10% figure above came from 13 structures. We recomputed it on <strong>108</strong>, using the field&rsquo;s own annotations and the same AUC basis as the original, so the numbers are directly comparable. Per structure: how well does each score rank the annotated allosteric residues above every other eligible residue? AUC 0.5 is chance and 1.0 perfect, so <span class="mono">(AUC&minus;0.5)/0.5</span> is the share of available signal an arm captures.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Contributor</th><th>Mean AUC</th><th>Share of available signal</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Proximity to the active site</strong> (nearest-first)</td><td class="num big">0.6147</td><td class="num big">+22.9%</td></tr>
+        <tr><td><strong>CTQW</strong> (quantum walk occupation)</td><td class="num big">0.5921</td><td class="num big">+18.4%</td></tr>
+        <tr><td>Packing / contact degree</td><td class="num">0.5498</td><td class="num">+10.0%</td></tr>
+        <tr><td>Bond-to-bond propensity (published SOTA)</td><td class="num">0.5067</td><td class="num">+1.3%</td></tr>
+        <tr><td>GNM fluctuation</td><td class="num">0.4994</td><td class="num">&minus;0.1%</td></tr>
+        <tr><td><em>Distance from active site (&ldquo;most distal&rdquo;)</em></td><td class="num">0.3853</td><td class="num">&minus;22.9%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card good">
+    <span class="chip c-holds">Holds</span>
+    <h3>CTQW carries real, measurable signal &mdash; second only to proximity, and well above the published classical method.</h3>
+    <p>At <strong>+18.4%</strong> on 108 structures, the quantum contribution is real, and it is <em>larger</em> than the 5&ndash;10% our 13-structure attribution estimated. It holds at eight times the cohort size, and it is more than an order of magnitude above bond-to-bond&rsquo;s +1.3% on this metric.</p>
+    <p>Note this is the opposite of the top-5 table earlier, and both are correct &mdash; they measure different things. <strong>CTQW ranks the site well overall but never concentrates it into the top five</strong>; bond-to-bond occasionally puts a residue right at the top but ranks the site poorly overall. Diffuse signal versus sparse signal.</p>
+  </div>
+
+  <div class="card flag">
+    <span class="chip c-corr">Corrected</span>
+    <h3>The single strongest predictor is proximity &mdash; the exact inverse of the field&rsquo;s starting intuition.</h3>
+    <p>Ranking residues by distance <em>from</em> the active site scores <strong>0.3853</strong> &mdash; far worse than guessing. Flip the sign and the same quantity is the best arm in the table at <strong>0.6147</strong>, ahead of the quantum walk and twenty times the published method.</p>
+    <p>This is Finding F restated from the ranking side, and it is the sharpest form of it: allosteric sites in these benchmarks are not merely <em>often</em> proximal &mdash; <strong>proximity is the most informative single thing you can know about where they are.</strong></p>
+  </div>
+
+  <div class="card open">
+    <span class="chip c-open">Headroom</span>
+    <h3>77.1% of the available signal is explained by nothing we have.</h3>
+    <p>The best single arm captures 22.9%. Neither the quantum walk, nor packing, nor flexibility, nor distance, nor the published state of the art accounts for the rest. That is not a negative result &mdash; it is a measured target, and it is the honest case for Phase 2.</p>
+  </div>
+
+  <p class="sub">Two corrections made while producing this table. First, our initial version scored distance in one direction only and therefore reported CTQW as the strongest arm; it is second. Second, our first run scored the published method at exactly AUC 0.5000, which contradicted our own earlier positive control (p&nbsp;=&nbsp;5&times;10&#8315;&#8313;). The cause was ours &mdash; their per-residue files are keyed to their stripped structures and we had mapped them onto deposited numbering. Recomputed on their own keys the figure is 0.5067, and that is the number reported.</p>
+</section>
+
+
+<section>
+  <h2>The discriminator idea — where it actually stands</h2>
+  <p>This is the thread worth keeping. It has moved twice since we last spoke, in opposite directions.</p>
+
+  <div class="card open">
+    <span class="chip c-holds">Gate passed</span>
+    <h3>The six measures are genuinely independent evidence.</h3>
+    <p>We had killed the idea of combining rankers on our own cohort, for a specific reason: all 61 of our rules were functions of the same two inputs — distance and druggability. They were not 61 opinions but one opinion at 61 settings, so ensembling them provably could not work.</p>
+    <p><strong>The six measures are not that.</strong> Mean pairwise |φ| = <span class="mono">0.419</span>, under our pre-registered 0.6 redundancy bar, with no residue/bond block collapse. This is the first genuinely independent evidence family either of us has had.</p>
+  </div>
+
+  <div class="card open">
+    <span class="chip c-open">Open</span>
+    <h3>But we cannot yet predict which measure fires.</h3>
+    <p>The gap between <strong>99/118 by one measure</strong> and <strong>21/118 by all six</strong> is 78 structures where some fire and others do not — exactly the signature of “different measures suit different proteins.”</p>
+    <p>Protein size, chain count and site separation carry <em>no</em> signal about which. Held out by protein, per-measure AUC 0.337–0.483. A positive control — predicting one measure from the other five — reaches AUC 0.74–0.88, so the harness detects real signal when it is there.</p>
+    <p><strong>Fold class was the obvious remaining predictor. We tested it during the hour before this call, and it fails too.</strong> CATH/SCOP class pulled live for 111 of 113 ASBench structures: no measure&rsquo;s firing rate differs by class after correction (best <span class="mono">p&nbsp;=&nbsp;0.025</span> against a Bonferroni bar of <span class="mono">0.0083</span>), and the number of measures firing does not differ either (2.93 vs 3.65, <span class="mono">p&nbsp;=&nbsp;0.14</span>). One descriptive curiosity, not a finding: mainly-alpha proteins almost always get <em>something</em> to fire (1/23 score zero, against 17/88 for alpha-beta).</p>
+    <p class="sub">So every cheap protein-level predictor is now exhausted &mdash; size, chain count, site separation, fold class. The discriminator is not dead, but it will not come from a lookup. It needs either a genuinely new descriptor or the per-residue propensity fields themselves, which is Phase-2 work.</p>
+  </div>
+
+  <p>Why this matters for Phase 2: on our own cohort a per-protein meta-selector would lift expected hits from <span class="mono">0.100</span> to <span class="mono">0.331</span> — <strong>83% of everything achievable</strong>. The rankers are not the bottleneck. Choosing between them is. And with 432 structures over 146 proteins, that question is finally answerable.</p>
+
+  <p class="sub">Two other independent-signal candidates were tested and failed this week: sibling-conformer pocket persistence (p = 0.969 / 0.856, and exactly zero as a tie-break), and ENM mode shift, which did not reproduce once ported into our apparatus (Fisher p = 0.306 against a claimed 0.005–0.013). Mode shift <em>is</em> independent of druggability once pocket size is controlled — but that is now its only merit.</p>
+</section>
+
+<hr>
+
+<section>
+  <h2>One more thing, from the organisers</h2>
+  <p>Cleveland Clinic answered our constraint questions today. Both permissively — and the first one matters more than a permission:</p>
+  <div class="card">
+    <p style="font-family:Newsreader,Georgia,serif; font-size:1.08rem; line-height:1.5;">“the challenge <strong>explicitly assumes the elastic network hypothesis</strong>, which posits that the <strong>topology of the contact network is the primary driver of signal propagation</strong>. Therefore, utilizing closed-form elastic-network (ANM/GNM) mode perfectly fits with the scope of the challenge.”</p>
+  </div>
+  <p>That makes our central negative a finding <em>about the challenge’s own stated premise</em>, not a side observation. We measured topology-driven propagation against the field’s benchmarks and it does not retrieve the annotated sites.</p>
+  <p>They also confirmed PocketMiner is permitted — static PDB at inference, no trajectories. Our exclusion of CryptoSite stands and is better justified: it runs MD sampling <em>at inference</em>, which is exactly what the constraint forbids.</p>
+</section>
+
+<hr>
+
+<section>
+  <h2>What we are proposing</h2>
+  <div class="ask">
+    <div><span class="chip c-holds">Agreed</span></div>
+    <p><strong>One submission.</strong> Unchanged, and we think the corrected story is a better one to sign jointly than the version we had.</p>
+    <p><strong>Bond-to-bond named as the classical baseline.</strong> Done — we ran it, and the enrichment/retrieval distinction is the most useful thing we got from your suggestion.</p>
+    <p><strong>Alternative walk formalisms stay open.</strong> Your point stands: our negative is about the time-averaged occupation observable, not quantum walks as a class. Scoped as Phase 2, against ASBench rather than our 13 structures.</p>
+    <div style="height:.4rem"></div>
+    <div><span class="chip c-open">To decide together</span></div>
+    <p><strong>Lead the submission with the benchmark finding, not the method comparison.</strong> “A large fraction of allosteric benchmarks are not distal, and the field’s headline accuracy measures enrichment rather than retrieval” is externally verifiable, uses the field’s own data, and explains why an 84% coexists with nobody having a usable pocket-finder.</p>
+    <p><strong>The discriminator as the Phase-2 proposal.</strong> Six independent measures, 432 structures, and a measured 83%-of-achievable ceiling waiting on a selector. That is a real research programme rather than a negative result.</p>
+  </div>
+</section>
+
+<hr>
+
+<section>
+  <h2>Reproduce it</h2>
+  <p>Same convention as v1&rsquo;s section 09. Every number above traces to one script and one committed result file.</p>
+
+  <h3>Environment</h3>
+  <div class="tablewrap"><table><tbody>
+    <tr><td class="mono"># Python 3.9 target; repo convention forbids X | None at runtime<br>python3 -m venv .venv &amp;&amp; source .venv/bin/activate<br>pip install -r requirements.txt<br># vendored binaries: tools/fpocket/bin/fpocket, tools/evoef2/EvoEF2</td></tr>
+  </tbody></table></div>
+
+  <h3>The scripts behind each number</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Script</th><th>What it produces here</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">task0297_chain_aware_seed_and_fpocket_audit.py</td><td>The chain-parsing defect; Finding F 9/28 &rarr; 8/28. Classifies each exposed target homo/hetero from RCSB polymer entities before correcting anything.</td></tr>
+        <tr><td class="mono">task0292_fpocket_fragmentation_and_the_ceiling.py</td><td>The merge sweep and the size mechanism &mdash; oracle pick 10.2 residues vs rule pick 17.6.</td></tr>
+        <tr><td class="mono">task0282_pocket_selection_sweep.py</td><td>The ceiling table. Re-run on corrected candidates; the 0.0899 / 0.0000 split.</td></tr>
+        <tr><td class="mono">task0293_loto_druggability_per_size.py</td><td>The <code>druggability/size</code> arm, leave-one-target-out.</td></tr>
+        <tr><td class="mono">task0304_asbench_finding_f.py</td><td>Finding F on ASBench, their annotations, 117 structures.</td></tr>
+        <tr><td class="mono">task0304_casbench_annotations.py</td><td>CASBench site annotations pulled live from biokinet.belozersky.msu.ru; 91 proteins, 2871 structures.</td></tr>
+        <tr><td class="mono">task0305_our_detection_on_asbench.py</td><td>The P@5 table &mdash; our arms on ASBench, with their propensity as the positive control.</td></tr>
+        <tr><td class="mono">task0306_six_measure_meta_classifier.py</td><td>The redundancy gate (mean |&phi;| = 0.419) and the meta-classifier attempt.</td></tr>
+        <tr><td class="mono">task0308_attribution_scaling.py</td><td>The attribution table &mdash; per-structure AUC and share of available signal.</td></tr>
+        <tr><td class="mono">task0261_cluster_robust_stats.py</td><td>Every p-value above, re-clustered by apo structure.</td></tr>
+        <tr><td class="mono">task0302_sibling_persistence.py &middot; task0303_enm_mode_shift.py</td><td>The two independent-signal candidates that failed.</td></tr>
+        <tr><td class="mono">config/candidate_targets_task0243.yaml</td><td>The frozen target set.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Seven places your reproduction will legitimately diverge</h3>
+  <ul>
+    <li><strong>Chain-aware pocket parsing.</strong> fpocket residues must be keyed on <code>(chain, resnum)</code>, not <code>int(line[22:26])</code>. Nine of our twenty rows carry cross-chain residue-number collisions; discarding the chain silently maps a cavity onto the wrong subunit. <em>This defect produced the retraction at the top of this brief.</em></li>
+    <li><strong>Score every direction.</strong> For a strict inversion <span class="mono">AUC(&minus;s) = 1 &minus; AUC(s)</span>. We scored distance farthest-first only and consequently mis-ranked the arms in an earlier draft of this page. If an arm looks strongly <em>below</em> chance, its inverse is your best arm.</li>
+    <li><strong>Terminal exclusion.</strong> Flexibility and packing arms rank chain termini first unless the terminal 5% is excluded. Without it, every arm is handicapped against a metric that does not exclude them.</li>
+    <li><strong>Their per-residue files are keyed to their stripped structures.</strong> Mapping bond-to-bond propensity onto deposited numbering yields exactly AUC 0.5000 &mdash; a silent, plausible-looking null. Score on their keys.</li>
+    <li><strong>Cluster by protein, not structure.</strong> Our 20 rows are 13 structures; CASBench&rsquo;s 314 are 33 proteins. Four selection procedures in our register were destroyed by ignoring this.</li>
+    <li><strong>Enrichment is not retrieval.</strong> The six published measures test whether a site&rsquo;s <em>average</em> score beats surrogate sites. That is not top-k retrieval, and the two disagree sharply.</li>
+    <li><strong>Getting the data.</strong> PMC serves the supplementary tables behind a JS proof-of-work challenge; Europe PMC&rsquo;s <code>supplementaryFiles</code> endpoint does not. The 2.55&nbsp;GB figshare archive need not be downloaded &mdash; a range request for its last 2&nbsp;MB returns the zip central directory, and individual files can be pulled by offset.</li>
+  </ul>
+
+  <h3>What changed from v1</h3>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Claim</th><th>v1 (2026-08-28)</th><th>v2</th></tr></thead>
+      <tbody>
+        <tr><td>Classical ceiling</td><td class="num">0.1649, beats CTQW</td><td class="num">retracted; 0.0899 fixed rule, selection 0.0000</td></tr>
+        <tr><td>Finding F</td><td class="num">9/28, ~32%, p=2.03e&minus;06</td><td class="num">8/28, ~29%, p=1.51e&minus;05, + 158 proteins</td></tr>
+        <tr><td>CTQW attribution</td><td class="num">1&ndash;15%, &ldquo;minor&rdquo;</td><td class="num">+18.4% on 108 structures</td></tr>
+        <tr><td>Strongest arm</td><td class="num">not stated</td><td class="num">proximity, AUC 0.6147</td></tr>
+        <tr><td>Headroom</td><td class="num">not quantified</td><td class="num">77.1% unexplained</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="sub">v1 is kept unchanged at <code>CTQW_CONTRIBUTION_BRIEF.html</code>; this is <code>CTQW_CONTRIBUTION_BRIEF_V2.html</code>. Nothing in v1 was overwritten.</p>
+</section>
+
+<footer>
+  <p>Every figure traced to a committed artifact. Cluster-robust throughout: our 20 benchmark rows are 13 independent structures, and CASBench’s 314 are 33 proteins, so all significance is computed at protein level. Four in-sample results have been discarded this week for failing held-out evaluation; two of our own claims and one of our own scripts were corrected in the process, and all are documented rather than quietly dropped.</p>
+</footer>
+
+</div>
