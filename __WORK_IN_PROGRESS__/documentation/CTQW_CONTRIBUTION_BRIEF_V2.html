@@ -290,6 +290,7 @@ a{color:var(--accent);}
       <tbody>
         <tr><td><strong>Proximity to the active site</strong> (nearest-first)</td><td class="num big">0.6147</td><td class="num big">+22.9%</td></tr>
         <tr><td><strong>CTQW</strong> (quantum walk occupation)</td><td class="num big">0.5921</td><td class="num big">+18.4%</td></tr>
+        <tr><td class="sub" style="padding-left:2rem;">&mdash; of which independent of proximity</td><td class="num">0.5184</td><td class="num">+3.7% <span class="sub">(n.s.)</span></td></tr>
         <tr><td>Packing / contact degree</td><td class="num">0.5498</td><td class="num">+10.0%</td></tr>
         <tr><td>Bond-to-bond propensity (published SOTA)</td><td class="num">0.5067</td><td class="num">+1.3%</td></tr>
         <tr><td>GNM fluctuation</td><td class="num">0.4994</td><td class="num">&minus;0.1%</td></tr>
@@ -299,10 +300,21 @@ a{color:var(--accent);}
   </div>
 
   <div class="card good">
-    <span class="chip c-holds">Holds</span>
-    <h3>CTQW carries real, measurable signal &mdash; second only to proximity, and well above the published classical method.</h3>
-    <p>At <strong>+18.4%</strong> on 108 structures, the quantum contribution is real, and it is <em>larger</em> than the 5&ndash;10% our 13-structure attribution estimated. It holds at eight times the cohort size, and it is more than an order of magnitude above bond-to-bond&rsquo;s +1.3% on this metric.</p>
-    <p>Note this is the opposite of the top-5 table earlier, and both are correct &mdash; they measure different things. <strong>CTQW ranks the site well overall but never concentrates it into the top five</strong>; bond-to-bond occasionally puts a residue right at the top but ranks the site poorly overall. Diffuse signal versus sparse signal.</p>
+    <span class="chip c-corr">Corrected</span>
+    <h3>CTQW&rsquo;s +18.4% is almost entirely proximity. Conditioned on it, the walk retains +3.7% &mdash; not distinguishable from chance.</h3>
+    <p>CTQW is seeded at the active site and diffuses outward, so its occupation is structurally tied to closeness to the seed. Within a structure the two correlate at <strong>&rho; = +0.735</strong>. Residualising CTQW on proximity, rank-wise, per structure:</p>
+    <div class="tablewrap" style="margin:.4rem 0;">
+      <table>
+        <thead><tr><th></th><th>AUC</th><th>Share</th></tr></thead>
+        <tbody>
+          <tr><td>proximity alone</td><td class="num">0.6147</td><td class="num">+22.9%</td></tr>
+          <tr><td>CTQW raw</td><td class="num">0.5921</td><td class="num">+18.4%</td></tr>
+          <tr><td><strong>CTQW residualised on proximity</strong></td><td class="num big">0.5184</td><td class="num big">+3.7%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The residual is <strong>not significantly above chance</strong> (Wilcoxon p = 0.29), and the drop from raw to residual is highly significant (p = 3.1&times;10&#8315;&#8309;). <strong>Roughly four fifths of the walk&rsquo;s apparent ranking signal is geometry it inherited from its own seeding.</strong></p>
+    <p>We are reporting this against ourselves. An earlier version of this page claimed the +18.4% as evidence that the quantum contribution was <em>larger</em> than our original 5&ndash;10% estimate. That was wrong, and it failed a test this register routinely applies elsewhere &mdash; conditioning on the obvious confound. Notably, the original Shapley-based 5&ndash;10% figure was the <em>more accurate</em> of the two: the residual +3.7% sits just below it.</p>
   </div>
 
   <div class="card flag">
@@ -399,7 +411,7 @@ a{color:var(--accent);}
         <tr><td class="mono">task0304_casbench_annotations.py</td><td>CASBench site annotations pulled live from biokinet.belozersky.msu.ru; 91 proteins, 2871 structures.</td></tr>
         <tr><td class="mono">task0305_our_detection_on_asbench.py</td><td>The P@5 table &mdash; our arms on ASBench, with their propensity as the positive control.</td></tr>
         <tr><td class="mono">task0306_six_measure_meta_classifier.py</td><td>The redundancy gate (mean |&phi;| = 0.419) and the meta-classifier attempt.</td></tr>
-        <tr><td class="mono">task0308_attribution_scaling.py</td><td>The attribution table &mdash; per-structure AUC and share of available signal.</td></tr>
+        <tr><td class="mono">task0308_attribution_scaling.py</td><td>The attribution table &mdash; per-structure AUC and share of available signal, plus the CTQW-residualised-on-proximity control.</td></tr>
         <tr><td class="mono">task0261_cluster_robust_stats.py</td><td>Every p-value above, re-clustered by apo structure.</td></tr>
         <tr><td class="mono">task0302_sibling_persistence.py &middot; task0303_enm_mode_shift.py</td><td>The two independent-signal candidates that failed.</td></tr>
         <tr><td class="mono">config/candidate_targets_task0243.yaml</td><td>The frozen target set.</td></tr>
@@ -410,6 +422,7 @@ a{color:var(--accent);}
   <h3>Seven places your reproduction will legitimately diverge</h3>
   <ul>
     <li><strong>Chain-aware pocket parsing.</strong> fpocket residues must be keyed on <code>(chain, resnum)</code>, not <code>int(line[22:26])</code>. Nine of our twenty rows carry cross-chain residue-number collisions; discarding the chain silently maps a cavity onto the wrong subunit. <em>This defect produced the retraction at the top of this brief.</em></li>
+    <li><strong>Condition on the confound before believing an arm.</strong> CTQW is seeded at the active site, so it inherits proximity (&rho; = +0.735 within structure). Its raw AUC looks like a real quantum contribution; residualised, it is not significant. The same test previously showed fpocket druggability is mostly pocket size.</li>
     <li><strong>Score every direction.</strong> For a strict inversion <span class="mono">AUC(&minus;s) = 1 &minus; AUC(s)</span>. We scored distance farthest-first only and consequently mis-ranked the arms in an earlier draft of this page. If an arm looks strongly <em>below</em> chance, its inverse is your best arm.</li>
     <li><strong>Terminal exclusion.</strong> Flexibility and packing arms rank chain termini first unless the terminal 5% is excluded. Without it, every arm is handicapped against a metric that does not exclude them.</li>
     <li><strong>Their per-residue files are keyed to their stripped structures.</strong> Mapping bond-to-bond propensity onto deposited numbering yields exactly AUC 0.5000 &mdash; a silent, plausible-looking null. Score on their keys.</li>
@@ -425,7 +438,7 @@ a{color:var(--accent);}
       <tbody>
         <tr><td>Classical ceiling</td><td class="num">0.1649, beats CTQW</td><td class="num">retracted; 0.0899 fixed rule, selection 0.0000</td></tr>
         <tr><td>Finding F</td><td class="num">9/28, ~32%, p=2.03e&minus;06</td><td class="num">8/28, ~29%, p=1.51e&minus;05, + 158 proteins</td></tr>
-        <tr><td>CTQW attribution</td><td class="num">1&ndash;15%, &ldquo;minor&rdquo;</td><td class="num">+18.4% on 108 structures</td></tr>
+        <tr><td>CTQW attribution</td><td class="num">1&ndash;15%, &ldquo;minor&rdquo;</td><td class="num">+3.7% independent of proximity (n.s.); v1&rsquo;s estimate was the better one</td></tr>
         <tr><td>Strongest arm</td><td class="num">not stated</td><td class="num">proximity, AUC 0.6147</td></tr>
         <tr><td>Headroom</td><td class="num">not quantified</td><td class="num">77.1% unexplained</td></tr>
       </tbody>
