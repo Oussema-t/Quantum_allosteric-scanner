@@ -155,6 +155,76 @@ responsive. **(e)** and **(f)** are both worth re-sending — (f) especially,
 since an organiser ruling would let [[TASK-0269]] proceed on their authority
 rather than our own permissive reading of Constraint 3.
 
+### Follow-up questions sent 2026-08-26 — (e) and (f), re-asked standalone
+
+Both were unanswered in the 2026-08-26 reply and both gate live work. Re-sent
+self-contained, since the organisers will not have our (a)-(f) lettering.
+Exact text as posted:
+
+> **Q6 — Does Constraint 3 exclude minimisation-based or Monte-Carlo
+> conformational sampling?**
+>
+> Constraint 3 forbids "classical MD trajectories as inputs". Our
+> conformational sampling uses closed-form elastic-network (ANM/GNM) mode
+> draws and discrete side-chain rotamer optimisation — no integrator, no time
+> evolution, no trajectory. We read that as permitted, but a broad reading of
+> the constraint could exclude it, and our Phase-2 approach depends on the
+> answer. Could you confirm which reading is intended?
+
+> **Q7 — Does Constraint 3 exclude a third-party tool that was *trained* on MD
+> data but whose own inference is MD-free?**
+>
+> Concretely: PocketMiner (Meller et al. 2023, Nature Communications 14:2135)
+> predicts cryptic-pocket opening from a single static structure in
+> milliseconds. Its training labels were derived from MD simulations run by
+> its authors, but running it supplies no trajectory — we provide only a PDB
+> file. For contrast, we have already excluded CryptoSite, because its full
+> model runs its own MD-based conformational sampling *at inference time* to
+> compute its most informative feature; that seems clearly disallowed to us.
+> Is the PocketMiner case (training-time provenance only) permitted?
+
+**Status: sent 2026-08-26. Record answers here on arrival, and notify
+[[TASK-0269]] (blocked on Q7) and [[TASK-0264]]/[[TASK-0268]] (both affected
+by Q6).**
+
+### ANSWERED 2026-08-31 — Q6 and Q7, both permissive
+
+Verbatim, unedited:
+
+> **1 Does Constraint 3 exclude minimisation-based or Monte-Carlo
+> conformational sampling?**
+>
+> Constraint 3 strictly states that solutions "cannot rely on classical MD
+> trajectories as inputs" and that the goal is to predict dynamics "ab
+> initio from topology". Furthermore, the challenge explicitly assumes the
+> "elastic network hypothesis", which posits that the "topology of the
+> contact network is the primary driver of signal propagation". Therefore,
+> utilizing closed-form elastic-network (ANM/GNM) mode perfectly fits with
+> the scope of the challenge, so it is allowed.
+
+> **2 Does Constraint 3 exclude a third-party tool that was trained on MD
+> data but whose own inference is MD-free?**
+>
+> The challenge constraints specify that the "solution cannot rely on
+> classical MD trajectories as inputs". PocketMiner requires only a static
+> PDB structure at inference and does not take MD trajectories as an
+> input, so it does not violate this rule.
+
+**Consequences (our reading, not theirs):**
+
+| | effect |
+|---|---|
+| **[[TASK-0269]]** | **UNBLOCKED.** PocketMiner was proceeding under our own permissive reading of Constraint 3; it now proceeds on the organisers' authority. Cite this reply in the submission. |
+| **[[TASK-0264]]/[[TASK-0268]]** | **UNBLOCKED.** Rotamer/minimisation-based sampling is permitted. |
+| **[[TASK-0303]]** | **Explicitly sanctioned.** The reply does not merely permit ANM/GNM modes — it says they *"perfectly fit with the scope"* because the challenge assumes the elastic-network hypothesis. The strongest possible answer for that task. |
+| **CryptoSite** | Our own exclusion **stands** and is now better justified: it runs MD-based sampling *at inference*, which is precisely what "cannot rely on classical MD trajectories as inputs" forbids. Distinguish it from PocketMiner explicitly in the write-up. |
+
+**Note for [[TASK-0184]]:** answer 1 confirms the challenge *assumes* the
+elastic-network hypothesis. That is worth quoting directly — this
+register's central negative is that topology-driven propagation does not
+retrieve the annotated sites ([[TASK-0305]]), which is a finding *about
+the challenge's own stated premise*, not a side observation.
+
 ### Original question list (kept for the record)
 
 
@@ -243,7 +313,7 @@ different, not a matter of degree).
 > reasonably gave the impression the organiser reply was never recorded.
 > It was — just not here. Corrected below.
 
-- [?] **Add the two-phase description document to `documentation/`.**
+- [x] **Add the two-phase description document to `documentation/`.**
       **Needs Bartosz to confirm.** No file of that name exists. But four
       organiser documents *were* added to `documentation/` on 2026-08-19
       (`2026-04-06-Assessment-Criteria-VF`, `-Phase-1-Submission-
@@ -253,7 +323,7 @@ different, not a matter of degree).
       `documentation/2026-04-06-Assessment-Criteria-VF.md` on **2026-08-19**
       — which is exactly what the last item below was waiting on. **Most
       likely this landed under a different name and was never ticked.**
-- [?] **Add the organisational document to `documentation/`.** Same status,
+- [x] **Add the organisational document to `documentation/`.** Same status,
       same reasoning. Confirm or restate what document was meant.
 - [x] Braket + Classiq accounts, or a recorded decision to ship without. —
       organiser confirmed 2026-08-25 no Phase-1 access exists to request
@@ -268,9 +338,9 @@ different, not a matter of degree).
       (a) and (c) answered outright; (b) substantively responsive. The
       numbering-to-lettering mapping the old note asked for **is** recorded
       in that clarifications file's own mapping table.
-- [ ] **Q6/Q7 (the old (e) and (f)) — still unanswered.** Re-sent standalone
-      2026-08-26, text above. Gate [[TASK-0269]] (Q7) and
-      [[TASK-0264]]/[[TASK-0268]] (Q6).
+- [x] **Q6/Q7 — ANSWERED 2026-08-31. BOTH PERMISSIVE.** See the verbatim
+      reply below. Unblocks [[TASK-0269]] (Q7), [[TASK-0264]]/[[TASK-0268]]
+      (Q6), and sanctions [[TASK-0303]]'s ENM mode shift outright.
 - [ ] Re-verify TASK-0184's weights + ideation premise — **unblocked** if
       the Assessment Criteria document is the "(1)" this was waiting for.
       Confirm the two `[?]` items above, then do this.
