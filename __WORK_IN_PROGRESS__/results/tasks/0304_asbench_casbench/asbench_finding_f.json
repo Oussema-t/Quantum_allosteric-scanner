@@ -1,0 +1,834 @@
+{
+ "rows": [
+  {
+   "pdb": "11BG",
+   "protein": "Seminal ribonuclease",
+   "n_allo_resolved": 8,
+   "n_act_resolved": 19,
+   "min_heavy_A": 5.643412177043248
+  },
+  {
+   "pdb": "1A3W",
+   "protein": "Pyruvate kinase 1",
+   "n_allo_resolved": 15,
+   "n_act_resolved": 23,
+   "min_heavy_A": 17.571281740385363
+  },
+  {
+   "pdb": "1B86",
+   "protein": "Hemoglobin subunit beta",
+   "n_allo_resolved": 4,
+   "n_act_resolved": 6,
+   "min_heavy_A": 18.841905981083755
+  },
+  {
+   "pdb": "1CE8_1",
+   "protein": "Carbamoyl-phosphate synthase large chain",
+   "n_allo_resolved": 11,
+   "n_act_resolved": 29,
+   "min_heavy_A": 1.2989026137474688
+  },
+  {
+   "pdb": "1CE8_2",
+   "protein": "Carbamoyl-phosphate synthase large chain",
+   "n_allo_resolved": 19,
+   "n_act_resolved": 29,
+   "min_heavy_A": 6.91274366659144
+  },
+  {
+   "pdb": "1DKU",
+   "protein": "Ribose-phosphate pyrophosphokinase",
+   "n_allo_resolved": 12,
+   "n_act_resolved": 12,
+   "min_heavy_A": 5.90788947086859
+  },
+  {
+   "pdb": "1EM6",
+   "protein": "Glycogen phosphorylase, liver form",
+   "n_allo_resolved": 23,
+   "n_act_resolved": 4,
+   "min_heavy_A": 17.930907785162468
+  },
+  {
+   "pdb": "1FRP",
+   "protein": "Fructose-1,6-bisphosphatase 1",
+   "n_allo_resolved": 15,
+   "n_act_resolved": 23,
+   "min_heavy_A": 13.654207666503392
+  },
+  {
+   "pdb": "1G3L",
+   "protein": "Glucose-1-phosphate thymidylyltransferase",
+   "n_allo_resolved": 18,
+   "n_act_resolved": 29,
+   "min_heavy_A": 7.636033263416288
+  },
+  {
+   "pdb": "1GZ3",
+   "protein": "NAD-dependent malic enzyme, mitochondrial",
+   "n_allo_resolved": 7,
+   "n_act_resolved": 12,
+   "min_heavy_A": 13.60776873701196
+  },
+  {
+   "pdb": "1H5S",
+   "protein": "Glucose-1-phosphate thymidylyltransferase 1",
+   "n_allo_resolved": 14,
+   "n_act_resolved": 29,
+   "min_heavy_A": 6.201477646496843
+  },
+  {
+   "pdb": "1H78",
+   "protein": "Anaerobic ribonucleoside-triphosphate reductase",
+   "n_allo_resolved": 11,
+   "n_act_resolved": 20,
+   "min_heavy_A": 16.72793355438741
+  },
+  {
+   "pdb": "1I7S",
+   "protein": "Anthranilate synthase component 1",
+   "n_allo_resolved": 13,
+   "n_act_resolved": 25,
+   "min_heavy_A": 21.723334021277672
+  },
+  {
+   "pdb": "1IWH",
+   "protein": "Hemoglobin subunit alpha",
+   "n_allo_resolved": 6,
+   "n_act_resolved": 6,
+   "min_heavy_A": 1.3417648825334465
+  },
+  {
+   "pdb": "1JLR",
+   "protein": "Uracil phosphoribosyltransferase",
+   "n_allo_resolved": 13,
+   "n_act_resolved": 9,
+   "min_heavy_A": 22.679148264430044
+  },
+  {
+   "pdb": "1KFL",
+   "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase, Phe-sensitive",
+   "n_allo_resolved": 13,
+   "n_act_resolved": 20,
+   "min_heavy_A": 5.278700029363291
+  },
+  {
+   "pdb": "1LVW",
+   "protein": "Glucose-1-phosphate thymidylyltransferase",
+   "n_allo_resolved": 13,
+   "n_act_resolved": 29,
+   "min_heavy_A": 1.3271450561261158
+  },
+  {
+   "pdb": "1M8P",
+   "protein": "Sulfate adenylyltransferase",
+   "n_allo_resolved": 18,
+   "n_act_resolved": 24,
+   "min_heavy_A": 35.03475915430275
+  },
+  {
+   "pdb": "1MP3",
+   "protein": "Glucose-1-phosphate thymidylyltransferase",
+   "n_allo_resolved": 14,
+   "n_act_resolved": 29,
+   "min_heavy_A": 6.347709902004028
+  },
+  {
+   "pdb": "1NE7",
+   "protein": "Glucosamine-6-phosphate isomerase 1",
+   "n_allo_resolved": 11,
+   "n_act_resolved": 25,
+   "min_heavy_A": 10.633934596375886
+  },
+  {
+   "pdb": "1NH8",
+   "protein": "ATP phosphoribosyltransferase",
+   "n_allo_resolved": 6,
+   "n_act_resolved": 16,
+   "min_heavy_A": 26.200195819878907
+  },
+  {
+   "pdb": "1NJJ",
+   "protein": "Ornithine decarboxylase",
+   "n_allo_resolved": 8,
+   "n_act_resolved": 28,
+   "min_heavy_A": 7.953260840686667
+  },
+  {
+   "pdb": "1OF6",
+   "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase, tyrosine-inhibited",
+   "n_allo_resolved": 13,
+   "n_act_resolved": 20,
+   "min_heavy_A": 0.0
+  },
+  {
+   "pdb": "1PFK",
+   "protein": "ATP-dependent 6-phosphofructokinase isozyme 1",
+   "n_allo_resolved": 16,
+   "n_act_resolved": 27,
+   "min_heavy_A": 18.4011380626308
+  },
+  {
+   "pdb": "1QW7",
+   "protein": "Parathion hydrolase",
+   "n_allo_resolved": 2,
+   "n_act_resolved": 9,
+   "min_heavy_A": 9.942336697175369
+  },
+  {
+   "pdb": "1T49",
+   "protein": "Tyrosine-protein phosphatase non-receptor type 1",
+   "n_allo_resolved": 12,
+   "n_act_resolved": 21,
+   "min_heavy_A": 10.568943230049067
+  },
+  {
+   "pdb": "1UXV",
+   "protein": "NAD(P)-dependent glyceraldehyde-3-phosphate dehydrogenase",
+   "n_allo_resolved": 12,
+   "n_act_resolved": 6,
+   "min_heavy_A": 13.43810860947329
+  },
+  {
+   "pdb": "1W0F",
+   "protein": "Cytochrome P450 3A4",
+   "n_allo_resolved": 6,
+   "n_act_resolved": 43,
+   "min_heavy_A": 6.221179068311724
+  },
+  {
+   "pdb": "1W25",
+   "protein": "Response regulator PleD",
+   "n_allo_resolved": 17,
+   "n_act_resolved": 16,
+   "min_heavy_A": 10.748953483944371
+  },
+  {
+   "pdb": "1W96",
+   "protein": "Acetyl-CoA carboxylase",
+   "n_allo_resolved": 15,
+   "n_act_resolved": 11,
+   "min_heavy_A": 10.085282792267158
+  },
+  {
+   "pdb": "1Z8D_1",
+   "protein": "Glycogen phosphorylase, muscle form",
+   "n_allo_resolved": 9,
+   "n_act_resolved": 4,
+   "min_heavy_A": 22.58532021026047
+  },
+  {
+   "pdb": "1Z8D_2",
+   "protein": "Glycogen phosphorylase, muscle form",
+   "n_allo_resolved": 5,
+   "n_act_resolved": 4,
+   "min_heavy_A": 6.636176233344018
+  },
+  {
+   "pdb": "1ZDS",
+   "protein": "Copper-containing nitrite reductase",
+   "n_allo_resolved": 9,
+   "n_act_resolved": 6,
+   "min_heavy_A": 3.2186919703506893
+  },
+  {
+   "pdb": "2ATS",
+   "protein": "4-hydroxy-tetrahydrodipicolinate synthase",
+   "n_allo_resolved": 1,
+   "n_act_resolved": 14,
+   "min_heavy_A": 13.860503201543581
+  },
+  {
+   "pdb": "2BE9",
+   "protein": "Aspartate carbamoyltransferase regulatory chain",
+   "n_allo_resolved": 11,
+   "n_act_resolved": 26,
+   "min_heavy_A": 35.282772651819755
+  },
+  {
+   "pdb": "2BU8",
+   "protein": "Pyruvate dehydrogenase kinase isozyme 2",
+   "n_allo_resolved": 9,
+   "n_act_resolved": 26,
+   "min_heavy_A": 9.84502579986462
+  },
+  {
+   "pdb": "2BXA",
+   "protein": "Serum albumin",
+   "n_allo_resolved": 14,
+   "n_act_resolved": 24,
+   "min_heavy_A": 9.201648602288612
+  },
+  {
+   "pdb": "2D60",
+   "protein": "Hemoglobin subunit beta",
+   "n_allo_resolved": 10,
+   "n_act_resolved": 6,
+   "min_heavy_A": 1.3242631913634106
+  },
+  {
+   "pdb": "2HIM",
+   "protein": "L-asparaginase 1",
+   "n_allo_resolved": 9,
+   "n_act_resolved": 17,
+   "min_heavy_A": 1.330060524938621
+  },
+  {
+   "pdb": "2HVW",
+   "protein": "Putative deoxycytidylate deaminase",
+   "n_allo_resolved": 11,
+   "n_act_resolved": 27,
+   "min_heavy_A": 0.0
+  },
+  {
+   "pdb": "2IEG",
+   "protein": "Glycogen phosphorylase, muscle form",
+   "n_allo_resolved": 18,
+   "n_act_resolved": 4,
+   "min_heavy_A": 18.01641792921112
+  },
+  {
+   "pdb": "2J0X",
+   "protein": "Lysine-sensitive aspartokinase 3",
+   "n_allo_resolved": 11,
+   "n_act_resolved": 30,
+   "min_heavy_A": 21.036226230006182
+  },
+  {
+   "pdb": "2JHR",
+   "protein": "Myosin-2 heavy chain",
+   "n_allo_resolved": 13,
+   "n_act_resolved": 15,
+   "min_heavy_A": 9.765808568674686
+  },
+  {
+   "pdb": "2NW8",
+   "protein": "Tryptophan 2,3-dioxygenase",
+   "n_allo_resolved": 7,
+   "n_act_resolved": 13,
+   "min_heavy_A": 16.410756259234372
+  },
+  {
+   "pdb": "2PA3",
+   "protein": "D-3-phosphoglycerate dehydrogenase",
+   "n_allo_resolved": 8,
+   "n_act_resolved": 37,
+   "min_heavy_A": 21.52749630124228
+  },
+  {
+   "pdb": "2PUV",
+   "protein": "Glutamine--fructose-6-phosphate aminotransferase",
+   "n_allo_resolved": 13,
+   "n_act_resolved": 22,
+   "min_heavy_A": 31.651337586269555
+  },
+  {
+   "pdb": "2Q5O",
+   "protein": "Indole-3-pyruvate decarboxylase",
+   "n_allo_resolved": 12,
+   "n_act_resolved": 12,
+   "min_heavy_A": 5.633927404573119
+  },
+  {
+   "pdb": "2Q8M_1",
+   "protein": "Fructose-1,6-bisphosphatase class 1",
+   "n_allo_resolved": 5,
+   "n_act_resolved": 23,
+   "min_heavy_A": 3.0918242188067526
+  },
+  {
+   "pdb": "2Q8M_2",
+   "protein": "Fructose-1,6-bisphosphatase class 1",
+   "n_allo_resolved": 14,
+   "n_act_resolved": 23,
+   "min_heavy_A": 10.81122666490718
+  },
+  {
+   "pdb": "2QMX",
+   "protein": "Prephenate dehydratase",
+   "n_allo_resolved": 13,
+   "n_act_resolved": 16,
+   "min_heavy_A": 2.8569273704453884
+  },
+  {
+   "pdb": "2QPY",
+   "protein": "Androgen receptor",
+   "n_allo_resolved": 10,
+   "n_act_resolved": 25,
+   "min_heavy_A": 14.70565826476326
+  },
+  {
+   "pdb": "2R1R",
+   "protein": "Ribonucleoside-diphosphate reductase 1 subunit alpha",
+   "n_allo_resolved": 9,
+   "n_act_resolved": 27,
+   "min_heavy_A": 15.831330518942492
+  },
+  {
+   "pdb": "2RD5",
+   "protein": "Acetylglutamate kinase, chloroplastic",
+   "n_allo_resolved": 12,
+   "n_act_resolved": 21,
+   "min_heavy_A": 7.9545625272544145
+  },
+  {
+   "pdb": "2V4Y",
+   "protein": "Uridylate kinase",
+   "n_allo_resolved": 14,
+   "n_act_resolved": 35,
+   "min_heavy_A": 6.668904182847435
+  },
+  {
+   "pdb": "2VD3",
+   "protein": "ATP phosphoribosyltransferase",
+   "n_allo_resolved": 8,
+   "n_act_resolved": 16,
+   "min_heavy_A": 11.215495976549592
+  },
+  {
+   "pdb": "2VGI",
+   "protein": "Pyruvate kinase PKLR",
+   "n_allo_resolved": 17,
+   "n_act_resolved": 21,
+   "min_heavy_A": 17.681105649817265
+  },
+  {
+   "pdb": "2VVT",
+   "protein": "Glutamate racemase",
+   "n_allo_resolved": 12,
+   "n_act_resolved": 23,
+   "min_heavy_A": 0.0
+  },
+  {
+   "pdb": "2W4I",
+   "protein": "Glutamate racemase",
+   "n_allo_resolved": 15,
+   "n_act_resolved": 23,
+   "min_heavy_A": 0.0
+  },
+  {
+   "pdb": "2XJC",
+   "protein": "Cytosolic purine 5'-nucleotidase",
+   "n_allo_resolved": 10,
+   "n_act_resolved": 29,
+   "min_heavy_A": 1.322902112780836
+  },
+  {
+   "pdb": "2Y0P",
+   "protein": "Multifunctional 2-oxoglutarate metabolism enzyme",
+   "n_allo_resolved": 18,
+   "n_act_resolved": 36,
+   "min_heavy_A": 14.916684517680194
+  },
+  {
+   "pdb": "2YHD",
+   "protein": "Androgen receptor",
+   "n_allo_resolved": 8,
+   "n_act_resolved": 25,
+   "min_heavy_A": 1.3334084145527199
+  },
+  {
+   "pdb": "2YLO",
+   "protein": "Androgen receptor",
+   "n_allo_resolved": 10,
+   "n_act_resolved": 25,
+   "min_heavy_A": 10.32012112332021
+  },
+  {
+   "pdb": "3BZ7",
+   "protein": "Myosin-2 heavy chain",
+   "n_allo_resolved": 16,
+   "n_act_resolved": 15,
+   "min_heavy_A": 0.0
+  },
+  {
+   "pdb": "3C1N",
+   "protein": "Probable aspartokinase",
+   "n_allo_resolved": 10,
+   "n_act_resolved": 34,
+   "min_heavy_A": 6.988420851665993
+  },
+  {
+   "pdb": "3CEH",
+   "protein": "Glycogen phosphorylase, liver form",
+   "n_allo_resolved": 14,
+   "n_act_resolved": 4,
+   "min_heavy_A": 20.53306292300299
+  },
+  {
+   "pdb": "3CSM",
+   "protein": "Chorismate mutase",
+   "n_allo_resolved": 8,
+   "n_act_resolved": 20,
+   "min_heavy_A": 7.867892284468573
+  },
+  {
+   "pdb": "3D2P",
+   "protein": "Amino-acid acetyltransferase",
+   "n_allo_resolved": 17,
+   "n_act_resolved": 27,
+   "min_heavy_A": 6.738368422696999
+  },
+  {
+   "pdb": "3DC2",
+   "protein": "D-3-phosphoglycerate dehydrogenase",
+   "n_allo_resolved": 8,
+   "n_act_resolved": 37,
+   "min_heavy_A": 21.68065116642025
+  },
+  {
+   "pdb": "3E3N",
+   "protein": "Glycogen phosphorylase, muscle form",
+   "n_allo_resolved": 12,
+   "n_act_resolved": 4,
+   "min_heavy_A": 22.726851673736064
+  },
+  {
+   "pdb": "3EK5",
+   "protein": "Uridylate kinase",
+   "n_allo_resolved": 15,
+   "n_act_resolved": 35,
+   "min_heavy_A": 19.03726611149826
+  },
+  {
+   "pdb": "3EPS",
+   "protein": "Isocitrate dehydrogenase kinase/phosphatase",
+   "n_allo_resolved": 13,
+   "n_act_resolved": 33,
+   "min_heavy_A": 7.368274356998387
+  },
+  {
+   "pdb": "3ETE_1",
+   "protein": "Glutamate dehydrogenase 1, mitochondrial",
+   "n_allo_resolved": 9,
+   "n_act_resolved": 10,
+   "min_heavy_A": 17.075338766771218
+  },
+  {
+   "pdb": "3ETE_2",
+   "protein": "Glutamate dehydrogenase 1, mitochondrial",
+   "n_allo_resolved": 11,
+   "n_act_resolved": 10,
+   "min_heavy_A": 1.3237371340262365
+  },
+  {
+   "pdb": "3ETG",
+   "protein": "Glutamate dehydrogenase 1, mitochondrial",
+   "n_allo_resolved": 6,
+   "n_act_resolved": 10,
+   "min_heavy_A": 13.029887413174377
+  },
+  {
+   "pdb": "3FUD",
+   "protein": "Leukotriene A-4 hydrolase",
+   "n_allo_resolved": 9,
+   "n_act_resolved": 25,
+   "min_heavy_A": 13.258194032371076
+  },
+  {
+   "pdb": "3H30",
+   "protein": "Casein kinase II subunit alpha",
+   "n_allo_resolved": 9,
+   "n_act_resolved": 20,
+   "min_heavy_A": 1.3268074464668929
+  },
+  {
+   "pdb": "3H6O",
+   "protein": "Pyruvate kinase PKM",
+   "n_allo_resolved": 16,
+   "n_act_resolved": 20,
+   "min_heavy_A": 18.966959851278226
+  },
+  {
+   "pdb": "3HFR",
+   "protein": "Glutamate racemase",
+   "n_allo_resolved": 5,
+   "n_act_resolved": 23,
+   "min_heavy_A": 2.9699149819481407
+  },
+  {
+   "pdb": "3HO6",
+   "protein": "Toxin A",
+   "n_allo_resolved": 14,
+   "n_act_resolved": 23,
+   "min_heavy_A": 0.0
+  },
+  {
+   "pdb": "3HQP",
+   "protein": "Pyruvate kinase",
+   "n_allo_resolved": 15,
+   "n_act_resolved": 34,
+   "min_heavy_A": 19.3347080143456
+  },
+  {
+   "pdb": "3IFA",
+   "protein": "Fructose-1,6-bisphosphatase isozyme 2",
+   "n_allo_resolved": 14,
+   "n_act_resolved": 23,
+   "min_heavy_A": 14.967203780265706
+  },
+  {
+   "pdb": "3IRH",
+   "protein": "HD domain protein",
+   "n_allo_resolved": 14,
+   "n_act_resolved": 26,
+   "min_heavy_A": 1.3316718815083552
+  },
+  {
+   "pdb": "3K5V",
+   "protein": "Tyrosine-protein kinase ABL1",
+   "n_allo_resolved": 17,
+   "n_act_resolved": 32,
+   "min_heavy_A": 7.867668587326236
+  },
+  {
+   "pdb": "3KGF_1",
+   "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase AroG",
+   "n_allo_resolved": 11,
+   "n_act_resolved": 18,
+   "min_heavy_A": 7.380721238469857
+  },
+  {
+   "pdb": "3KGF_2",
+   "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase AroG",
+   "n_allo_resolved": 10,
+   "n_act_resolved": 18,
+   "min_heavy_A": 7.5207631261727625
+  },
+  {
+   "pdb": "3LSW",
+   "protein": "Glutamate receptor 3",
+   "n_allo_resolved": 7,
+   "n_act_resolved": 21,
+   "min_heavy_A": 1.3311111899462038
+  },
+  {
+   "pdb": "3LSX",
+   "protein": "Glutamate receptor 3",
+   "n_allo_resolved": 2,
+   "n_act_resolved": 21,
+   "min_heavy_A": 12.32181329999769
+  },
+  {
+   "pdb": "3LU6",
+   "protein": "Serum albumin",
+   "n_allo_resolved": 12,
+   "n_act_resolved": 24,
+   "min_heavy_A": 9.39891254348076
+  },
+  {
+   "pdb": "3M3F",
+   "protein": "Glutamate receptor 3",
+   "n_allo_resolved": 12,
+   "n_act_resolved": 21,
+   "min_heavy_A": 1.3303341685456316
+  },
+  {
+   "pdb": "3MW9",
+   "protein": "Glutamate dehydrogenase 1, mitochondrial",
+   "n_allo_resolved": 17,
+   "n_act_resolved": 10,
+   "min_heavy_A": 8.188012518309918
+  },
+  {
+   "pdb": "3MWB",
+   "protein": "Prephenate dehydratase",
+   "n_allo_resolved": 15,
+   "n_act_resolved": 16,
+   "min_heavy_A": 4.159098339784724
+  },
+  {
+   "pdb": "3N25",
+   "protein": "Pyruvate kinase PKM",
+   "n_allo_resolved": 10,
+   "n_act_resolved": 20,
+   "min_heavy_A": 8.852855132667653
+  },
+  {
+   "pdb": "3O2M",
+   "protein": "Mitogen-activated protein kinase 8",
+   "n_allo_resolved": 14,
+   "n_act_resolved": 16,
+   "min_heavy_A": 18.868248116876135
+  },
+  {
+   "pdb": "3PG9",
+   "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase",
+   "n_allo_resolved": 15,
+   "n_act_resolved": 8,
+   "min_heavy_A": 33.809439953953685
+  },
+  {
+   "pdb": "3PJG",
+   "protein": "UDP-glucose 6-dehydrogenase",
+   "n_allo_resolved": 11,
+   "n_act_resolved": 10,
+   "min_heavy_A": 3.0845075782043394
+  },
+  {
+   "pdb": "3PTZ",
+   "protein": "UDP-glucose 6-dehydrogenase",
+   "n_allo_resolved": 22,
+   "n_act_resolved": 10,
+   "min_heavy_A": 0.0
+  },
+  {
+   "pdb": "3PXF",
+   "protein": "Cyclin-dependent kinase 2",
+   "n_allo_resolved": 18,
+   "n_act_resolved": 30,
+   "min_heavy_A": 0.0
+  },
+  {
+   "pdb": "3PYY",
+   "protein": "Tyrosine-protein kinase ABL1",
+   "n_allo_resolved": 12,
+   "n_act_resolved": 32,
+   "min_heavy_A": 7.967666973462182
+  },
+  {
+   "pdb": "3QH0",
+   "protein": "Prostaglandin G/H synthase 2",
+   "n_allo_resolved": 14,
+   "n_act_resolved": 26,
+   "min_heavy_A": 15.174484241647228
+  },
+  {
+   "pdb": "3R1R",
+   "protein": "Ribonucleoside-diphosphate reductase 1 subunit alpha",
+   "n_allo_resolved": 11,
+   "n_act_resolved": 27,
+   "min_heavy_A": 15.758763403262327
+  },
+  {
+   "pdb": "3UO9",
+   "protein": "Glutaminase kidney isoform, mitochondrial",
+   "n_allo_resolved": 16,
+   "n_act_resolved": 18,
+   "min_heavy_A": 3.7781400185805722
+  },
+  {
+   "pdb": "3ZCW",
+   "protein": "Kinesin-like protein KIF11",
+   "n_allo_resolved": 19,
+   "n_act_resolved": 23,
+   "min_heavy_A": 1.329609341122421
+  },
+  {
+   "pdb": "4B1F",
+   "protein": "Glutamate racemase",
+   "n_allo_resolved": 14,
+   "n_act_resolved": 23,
+   "min_heavy_A": 0.0
+  },
+  {
+   "pdb": "4B2D",
+   "protein": "Pyruvate kinase PKM",
+   "n_allo_resolved": 11,
+   "n_act_resolved": 20,
+   "min_heavy_A": 5.3755488091914865
+  },
+  {
+   "pdb": "4BBG",
+   "protein": "Kinesin-like protein KIF11",
+   "n_allo_resolved": 14,
+   "n_act_resolved": 23,
+   "min_heavy_A": 0.0
+  },
+  {
+   "pdb": "4CFE",
+   "protein": "5'-AMP-activated protein kinase catalytic subunit alpha-2",
+   "n_allo_resolved": 16,
+   "n_act_resolved": 27,
+   "min_heavy_A": 0.0
+  },
+  {
+   "pdb": "4E6C",
+   "protein": "Mitogen-activated protein kinase 14",
+   "n_allo_resolved": 4,
+   "n_act_resolved": 30,
+   "min_heavy_A": 17.27068629209621
+  },
+  {
+   "pdb": "4G1N",
+   "protein": "Pyruvate kinase PKM",
+   "n_allo_resolved": 17,
+   "n_act_resolved": 20,
+   "min_heavy_A": 7.17698836560294
+  },
+  {
+   "pdb": "4GRS",
+   "protein": "2-dehydro-3-deoxyphosphoheptonate aldolase",
+   "n_allo_resolved": 13,
+   "n_act_resolved": 8,
+   "min_heavy_A": 24.743533882612642
+  },
+  {
+   "pdb": "4HO6",
+   "protein": "Glucose-1-phosphate thymidylyltransferase",
+   "n_allo_resolved": 12,
+   "n_act_resolved": 29,
+   "min_heavy_A": 1.3229006009523163
+  },
+  {
+   "pdb": "4HYW",
+   "protein": "Pyruvate kinase 1",
+   "n_allo_resolved": 15,
+   "n_act_resolved": 21,
+   "min_heavy_A": 18.0351732456331
+  },
+  {
+   "pdb": "4JA8",
+   "protein": "Isocitrate dehydrogenase [NADP], mitochondrial",
+   "n_allo_resolved": 23,
+   "n_act_resolved": 32,
+   "min_heavy_A": 6.553071417282128
+  },
+  {
+   "pdb": "4JKT",
+   "protein": "Glutaminase kidney isoform, mitochondrial",
+   "n_allo_resolved": 17,
+   "n_act_resolved": 18,
+   "min_heavy_A": 3.137383304602738
+  },
+  {
+   "pdb": "4KZT",
+   "protein": "N-acetylglutamate kinase / N-acetylglutamate synthase",
+   "n_allo_resolved": 14,
+   "n_act_resolved": 27,
+   "min_heavy_A": 0.0
+  },
+  {
+   "pdb": "4LRL",
+   "protein": "HD domain protein",
+   "n_allo_resolved": 11,
+   "n_act_resolved": 26,
+   "min_heavy_A": 10.11757782277952
+  },
+  {
+   "pdb": "4MRA",
+   "protein": "Glycogen phosphorylase, muscle form",
+   "n_allo_resolved": 9,
+   "n_act_resolved": 4,
+   "min_heavy_A": 10.83869959912166
+  },
+  {
+   "pdb": "4PFK",
+   "protein": "ATP-dependent 6-phosphofructokinase",
+   "n_allo_resolved": 8,
+   "n_act_resolved": 27,
+   "min_heavy_A": 19.962263348628582
+  }
+ ],
+ "skipped": [
+  [
+   "3BCR",
+   "fetch: TypeError"
+  ]
+ ],
+ "n_annotated": 118,
+ "median": 8.188012518309918,
+ "frac_below_1p5": 0.2222222222222222,
+ "frac_below_4": 0.28205128205128205,
+ "frac_above_8": 0.5042735042735043
+}

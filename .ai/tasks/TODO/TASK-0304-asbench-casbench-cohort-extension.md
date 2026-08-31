@@ -154,3 +154,84 @@ confirmation of the apo/holo concern this register has been tracking.
       survive, and the resulting **independent protein count**, not rows.
 - [ ] Re-run [[TASK-0288]] Finding F, [[TASK-0299]] and [[TASK-0300]] on
       the extended cohort — the fluke-or-tendency question.
+
+---
+
+## Progress 2 (2026-08-31) — annotations obtained, and **Finding F GENERALISES**
+
+### Annotations solved
+
+PMC's JS proof-of-work blocked the supplementary tables; **Europe PMC's
+`supplementaryFiles` endpoint serves them without it**
+(`https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8767309/supplementaryFiles`,
+4.8 MB zip, all five xlsx). Their own `Filter-checkpoint.ipynb` — recovered
+from the figshare archive by range request — confirms Tables S2/S6 are the
+site definitions their pipeline reads.
+
+**Table S2 = 118 structures with BOTH `Allosteric Site Residues` AND
+`Active Site Residues` explicitly annotated.** 113 distinct PDB codes,
+zero empty rows, median allosteric site 12 residues, median active site 22.
+Committed as `results/tasks/0304_asbench_casbench/asbench_annotations.json`.
+
+> Two annotation formats, which would corrupt everything if mixed silently:
+> allosteric is `"ASP14 A"` (resname+resnum, space, chain); active is
+> `"A41"` (chain+resnum). Parsed separately.
+
+### The 84% verified independently — and decomposed
+
+Recomputed from their own Table S3/S4 `Summary` column (● per measure
+detecting):
+
+| detected by | with allosteric ligand | **without** |
+|---|---|---|
+| ≥ 1 of 6 measures | 105/118 = 89.0% | **99/118 = 83.9%** ← the headline |
+| ≥ 2 | 94/118 = 79.7% | 82/118 = 69.5% |
+| ≥ 3 | 82/118 = 69.5% | 68/118 = 57.6% |
+| ≥ 4 | 64/118 = 54.2% | 57/118 = 48.3% |
+| ≥ 5 | 49/118 = 41.5% | 38/118 = 32.2% |
+| **all 6** | 27/118 = 22.9% | **21/118 = 17.8%** |
+
+The 83.9% reproduces the paper's 84% exactly. The intermediate rows differ
+from the paper's text by ±1–2 structures (they report 106, 81, 26 / 99, 69,
+19) — within ●/○ transcription tolerance, reported as measured rather than
+adjusted to match.
+
+**"84%" is a six-way disjunction. The all-six figure is 17.8%.**
+
+### Finding F generalises — this is the important result
+
+Recomputed [[TASK-0288]] Finding F's statistic on **their** cohort using
+**their** annotations. Nothing of our pipeline is involved except the
+distance definition itself. 117 of 118 resolved (`3BCR` fetch error).
+
+| min heavy-atom distance, allosteric site → active site | ASBench |
+|---|---|
+| **exactly 0.00 Å — the two annotated sites SHARE residues** | **12/117 = 10.3%** |
+| < 1.5 Å (covalent / peptide bond) | **26/117 = 22.2%** |
+| < 4.0 Å (vdW contact or closer) | 33/117 = 28.2% |
+| ≥ 8.0 Å (genuinely distal) | **59/117 = 50.4%** |
+
+Deduplicated to 112 distinct PDB codes: 23.2% / 29.5% / 50.0% — unchanged.
+
+**Our register: 8/28 = 28.6% below 1.5 Å.** ASBench: **22.2%**. Same
+phenomenon, same order of magnitude, on a 4× larger and almost entirely
+disjoint cohort (only 4 structures shared).
+
+**Finding F was not a fluke of 13 clusters.** It is a property of how
+allosteric sites are annotated in this field. And **only half of ASBench
+is genuinely distal** — 10% of it has allosteric and active sites that
+literally share residues (`1OF6`, `2HVW`, `2VVT`, `2W4I`, `3BZ7`, `3HO6`,
+`3PTZ`, `3PXF`, …).
+
+This is the strongest external support the register has produced for its
+own central claim, and it reframes it: **not "the Cleveland Clinic
+benchmark is unusual" but "distal-site benchmarks in this field routinely
+contain a large fraction of non-distal sites, and methods are scored on
+them anyway."**
+
+### Still to do
+
+- [ ] CASBench site annotations (Tables S5/S6 are results, not
+      definitions) — from CASBench directly.
+- [ ] Ingest through `clean_from_config` and re-run [[TASK-0299]] /
+      [[TASK-0300]] on the extended cohort.
