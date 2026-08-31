@@ -10358,3 +10358,159 @@ absorbed.
 **Script:** none new — `backend/test_analysis_characterization.py` edited
 in place (assertions + provenance docstring). **Full detail:**
 `.ai/tasks/DONE/TASK-0296-stale-kras-golden-fixtures.md`.
+
+## The six-measure meta-classifier: the redundancy gate passes, but protein-level descriptors carry no real signal about which measure fires ([[TASK-0306]], 2026-08-31)
+
+[[TASK-0301]] closed the meta-selector question on our own 13-cluster
+cohort for two reasons: too few clusters to validate anything, and our 61
+rules were all functions of the same 2 raw inputs — one signal at 61
+settings, so no ensemble over them could ever help. [[TASK-0304]]'s
+ASBench/CASBench extension lifts the first constraint (79 protein
+clusters on ASBench alone). This task tests the second — are Wu,
+Strömich & Yaliraki (2022)'s own six statistical measures (three test
+types — surrogate-CI, high-propensity-proportion, reference-quantile —
+each at residue- and bond-level) the same failure mode, or genuinely
+different evidence?
+
+**Data**: fetched live from Europe PMC's `supplementaryFiles` endpoint
+(PMC8767309, [[TASK-0304]]'s own route past PMC's JS challenge), parsing
+Tables S3–S6's own `Summary` bullet column directly — their verdicts on
+their own thresholds, not re-derived. **Control passed exactly** before
+trusting anything new: reproduced [[TASK-0304]]'s own 105/118, 99/118,
+27/118, 21/118 counts to the structure.
+
+**Step 1 — pattern diversity**: 36–48 of 64 possible 6-bit patterns occur
+across the four conditions (ASBench with/without ligand, CASBench
+ortho-ligand/ortho-residues); the top 3 patterns cover only 35–42% of
+structures. Not dominated by a handful — the premise survives this first
+cut.
+
+**Step 2 — the redundancy gate (pre-registered bar: mean |phi| < 0.6,
+chosen before computing it)**: mean pairwise phi-coefficient across all
+15 measure pairs = **0.419** (ASBench, primary condition), 0.21–0.42
+across all four conditions. **Moderate, not near-total** — genuinely
+below what "the same 2 inputs at different settings" would produce (that
+regime is near-1.0 collinearity by construction). No clean pR-vs-pb block
+structure either (within-block ≈ cross-block, all ≈0.2–0.45) — the six
+measures are not secretly two signals in six costumes. **Gate: PROCEED**
+— but flagged explicitly, not smoothed over: 0.419 is real shared
+variance, not a clean slate of six independent votes.
+
+**Step 3 — meta-classifier (ASBench only, 117/118 structures, 79 protein
+clusters, LOPO by protein)**: predicted `n_fired` and each of the 6
+individual bits from three protein-level descriptors — N (resolved
+residues), oligomeric state (chain count), and site separation
+(min heavy-atom allo↔active distance, from [[TASK-0304]]'s own Finding-F
+recompute). **CASBench excluded from this step** — its own site
+annotations aren't extracted yet ([[TASK-0304]]'s Lane B, still open),
+and 314 structures / 33 proteins is exactly the pseudo-replication this
+task's own Constraint forbids working around.
+
+**Result: no usable signal, and the direction is actively suspicious.**
+`n_fired` LOPO Spearman rho = **−0.220** (p=0.017) — nominally
+"significant" but **not supported by any individual univariate
+correlation** (site_sep/N/n_chains vs. `n_fired` all p>0.28 on their
+own). Per-measure LOPO AUC: 5 of 6 sit **at or below 0.5** (0.337–0.483),
+only `refQ_pb` clears it (0.648). Below-chance AUCs across most measures,
+with no supporting univariate driver, reads as regression/LOPO
+instability on 3 weak, correlated predictors — not a genuine negative
+relationship (i.e., not "bigger/more-separated proteins detect less" as
+a real effect) and not a positive one either.
+
+**Positive control, per this window's own standing rule ("every negative
+needs one")**: same `lopo_predict`/`roc_auc_score` machinery, predicting
+one measure from the other five's own bits — a relationship already
+known real from Step 2's own phi values. **AUC 0.74–0.88 across all
+six** — confirms the harness itself works; the near/below-chance numbers
+above are a property of the protein-descriptor set tried, not a broken
+pipeline.
+
+**Verdict: partial, and reported precisely as such.** The six measures
+clear the redundancy bar TASK-0301's 61 rules failed — this is a
+different, more independent kind of evidence, not one signal restated.
+But the three readily-available protein-level descriptors (size,
+oligomeric state, site separation) carry **no demonstrated predictive
+signal** about which measure fires. **Not tried**: fold class (would
+need an external SCOP/CATH/Pfam lookup, out of this session's scope,
+disclosed rather than silently substituted with a proxy) — the one
+descriptor category this task's own Scope named that remains genuinely
+untested.
+
+**Script:** `scripts/task0306_six_measure_meta_classifier.py`. **Data:**
+`results/tasks/0306_six_measure_meta_classifier/six_measure_analysis.json`.
+**Full detail:** `.ai/tasks/DONE/TASK-0306-six-measure-meta-classifier.md`.
+
+## Submission evidence pack: neither the draft nor the brief has been touched since TASK-0299 — 14 findings missing outright ([[TASK-0307]], 2026-08-31)
+
+**Verify-only, per this task's own Constraint — `PHASE1_SUBMISSION_DRAFT.md`
+and `CTQW_CONTRIBUTION_BRIEF.html` were read, not edited.** Checked directly
+via `git log`: the draft's last commit is `3b3be11` (TASK-0272, 2026-08-26);
+the brief's is `34bf290` (2026-08-28 17:21). `git log ae1fd01..HEAD -- <both
+paths>` (`ae1fd01` = TASK-0299, 2026-08-30) returns **empty** — neither file
+has moved since. Every Done task from TASK-0288 onward (13 tasks,
+2026-08-29 through today) is therefore absent from both, not merely
+under-cited.
+
+**This task's own seven-item table, traced**: 2/7 already correct (SVC
+withdrawal, KRAS P@5=0.000 — both fixed the same evening, `34bf290`). 4/7
+are **missing outright** in both docs, not wrong-in-place: the pocket-level
+ceiling (0.1649→0.0899 in-sample, 0.122→0.0000 LOTO, [[TASK-0298]]), Finding
+F's spike count/p/% (9/28,2.03e-06,"~32%" → **8/28, 1.51e-05, "~29%"**,
+[[TASK-0297]]) — neither the old nor the new number appears anywhere; the
+finding itself (Finding F, [[TASK-0288]]) is entirely absent. The 7th item
+("classical ceiling beats CTQW", retracted per [[TASK-0299]]) **was never
+written into either committed document** — grepped for the claim directly,
+no hit — so there is nothing to edit; what's owed is telling the
+collaborator, per TASK-0299's own unchecked action item, not a text fix.
+
+**This task's own explicit coverage list, all five checked**:
+- **Finding F, min_A vs max_A**: missing entirely, and internally
+  unreconciled even within its own task family — [[TASK-0291]]'s `max_A`
+  restatement ("7/9 spike targets within 8.4 Å") was computed against the
+  pre-[[TASK-0297]] 9-member spike; nobody has recomputed it against the
+  corrected 8-member one. Flagged, not computed here (verify-only scope).
+- **Ceiling numbers**: SIX distinct values answer to "the ceiling"
+  (0.0899 fixed/in-sample, 0.1000 swept/in-sample, 0.0000 swept/LOTO,
+  0.1899 category-oracle, 0.3307 per-target-oracle, 0.3984 candidate-oracle,
+  [[TASK-0298]]/[[TASK-0300]]) — none in either document; if one is added it
+  must say which.
+- **CTQW comparison**: pocket-level (CTQW indistinguishable from random,
+  p=1.000, [[TASK-0299]]) is missing; the classical-diffusion-parity claim
+  already in the brief's §07 is **current, verified correct**.
+- **ASBench figures**: the brief/draft never mention [[TASK-0304]] (Finding
+  F generalises to ASBench: 26/117=22.2% below 1.5Å on 118 external
+  structures, "the strongest external support the register has produced for
+  its own central claim") or [[TASK-0305]] (our own CTQW P@5=0.0056 on
+  ASBench, *significantly worse than random*, p<1e-4 — "the cleanest
+  negative this register has produced"). The draft's own §3c ASBench
+  citation ("Amor et al. 2016; Wu et al. 2022 report 89.8%/98.1%") has been
+  flagged as unverified by the document's **own banner since 2026-08-13**;
+  TASK-0304 has since read the real paper and recomputed it directly
+  (99/118=83.9% at-least-1-of-6-measures without ligand; all-six, this
+  register's own honest reportable figure, is 17.8%) — "Amor et al. 2016"
+  and the CASBench "98.1%" figure remain wholly unverified by anyone.
+- **Attribution shares**: the draft's "median 29% unexplained" (TASK-0254)
+  is itself still current in number, and self-aware of its own earlier
+  superseded 9-target table. But five follow-on Shapley re-runs on the
+  identical frozen set since then are absent: SASA (27.2%), frustration
+  (unchanged, p=0.727), conservation+chemistry (**30.7%, up not down**,
+  [[TASK-0274]]) — P2Rank and PocketMiner already made it into the brief.
+  **[[TASK-0263]]'s own result (potential terms 0.751 vs CTQW 0.575,
+  p=0.019 — arguably the strongest single result in the register) is in the
+  brief but absent from the draft entirely.**
+
+**Two more stale items found beyond this task's own filing table**: the
+brief's §06c "two populations, discovered not imposed" (silhouette 0.737)
+is missing [[TASK-0288]] Finding B's own same-day correction ("the
+bimodality LRT is underpowered... p=0.137 must not be reported as evidence
+against two populations") — [[TASK-0288]]'s own header states it "corrects
+TASK-0284 Finding A as published in the collaborator brief," landing 7
+hours after the brief's last commit.
+
+**Deliverable**: `documentation/2026-08-31-submission-evidence-pack.md` —
+one committed table, checkable line by line, covering all of the above with
+exact line numbers, commit SHAs, and verdicts (`CURRENT`/`STALE`/`MISSING`/
+`UNVERIFIED`). Applying it (editing either document) is explicitly out of
+this task's own scope — a separate, deliberate step by whoever owns them.
+
+**Full detail:** `.ai/tasks/DONE/TASK-0307-submission-evidence-pack.md`.
