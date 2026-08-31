@@ -1,0 +1,12573 @@
+{
+ "sheets": [
+  [
+   "mmc3.xlsx",
+   "Scoring_SI_2",
+   "asbench_with_ligand"
+  ],
+  [
+   "mmc4.xlsx",
+   "Scoring_SI_3",
+   "asbench_without_ligand"
+  ],
+  [
+   "mmc5.xlsx",
+   "Scoring_SI_4",
+   "casbench_ortho_ligand"
+  ],
+  [
+   "mmc6.xlsx",
+   "Scoring_SI_5",
+   "casbench_ortho_residues"
+  ]
+ ],
+ "rows": {
+  "asbench_with_ligand": [
+   {
+    "protein": "Fructose-1,6-bisphosphatase class 1",
+    "pdb": "2Q8M_2",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Cytochrome P450 3A4",
+    "pdb": "1W0F",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Tryptophan 2,3-dioxygenase",
+    "pdb": "2NW8",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Parathion hydrolase",
+    "pdb": "1QW7",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Glutamate dehydrogenase 1, mitochondrial",
+    "pdb": "3ETG",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Lysine-sensitive aspartokinase 3",
+    "pdb": "2J0X",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Aspartate carbamoyltransferase regulatory chain",
+    "pdb": "2BE9",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Copper-containing nitrite reductase",
+    "pdb": "1ZDS",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Hemoglobin subunit beta",
+    "pdb": "1B86",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Androgen receptor",
+    "pdb": "2QPY",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Tyrosine-protein kinase ABL1",
+    "pdb": "3K5V",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Fructose-1,6-bisphosphatase isozyme 2",
+    "pdb": "3IFA",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Tyrosine-protein kinase ABL1",
+    "pdb": "3PYY",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Glutamate receptor 3",
+    "pdb": "3LSX",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "HD domain protein",
+    "pdb": "3IRH",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Isocitrate dehydrogenase kinase/phosphatase",
+    "pdb": "3EPS",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Pyruvate kinase PKM",
+    "pdb": "4G1N",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Serum albumin",
+    "pdb": "3LU6",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Toxin A",
+    "pdb": "3HO6",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Indole-3-pyruvate decarboxylase",
+    "pdb": "2Q5O",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Glycogen phosphorylase, muscle form",
+    "pdb": "1Z8D_1",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Glycogen phosphorylase, liver form",
+    "pdb": "1EM6",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Pyruvate dehydrogenase kinase isozyme 2",
+    "pdb": "2BU8",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Anthranilate synthase component 1",
+    "pdb": "1I7S",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Casein kinase II subunit alpha",
+    "pdb": "3H30",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Pyruvate kinase PKM",
+    "pdb": "3N25",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Carbamoyl-phosphate synthase large chain",
+    "pdb": "1CE8_1",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Fructose-1,6-bisphosphatase class 1",
+    "pdb": "2Q8M_1",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "ATP-dependent 6-phosphofructokinase",
+    "pdb": "4PFK",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "ATP phosphoribosyltransferase",
+    "pdb": "1NH8",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Glutamate dehydrogenase 1, mitochondrial",
+    "pdb": "3ETE_1",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Ribonucleoside-diphosphate reductase 1 subunit alpha",
+    "pdb": "2R1R",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Glycogen phosphorylase, liver form",
+    "pdb": "3CEH",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Acetyl-CoA carboxylase",
+    "pdb": "1W96",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Uridylate kinase",
+    "pdb": "2V4Y",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Uridylate kinase",
+    "pdb": "3EK5",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Seminal ribonuclease",
+    "pdb": "11BG",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Serum albumin",
+    "pdb": "2BXA",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Tyrosine-protein phosphatase non-receptor type 1",
+    "pdb": "1T49",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Glutamate racemase",
+    "pdb": "3HFR",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Leukotriene A-4 hydrolase",
+    "pdb": "3FUD",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "5'-AMP-activated protein kinase catalytic subunit alpha-2",
+    "pdb": "4CFE",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase",
+    "pdb": "3PG9",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Glucose-1-phosphate thymidylyltransferase 1",
+    "pdb": "1H5S",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Androgen receptor",
+    "pdb": "2YHD",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Androgen receptor",
+    "pdb": "2YLO",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Pyruvate kinase PKM",
+    "pdb": "4B2D",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Glucosamine-6-phosphate isomerase 1",
+    "pdb": "1NE7",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Uracil phosphoribosyltransferase",
+    "pdb": "1JLR",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Glucose-1-phosphate thymidylyltransferase",
+    "pdb": "1LVW",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Fructose-1,6-bisphosphatase 1",
+    "pdb": "1FRP",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Carbamoyl-phosphate synthase large chain",
+    "pdb": "1CE8_2",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Hemoglobin subunit beta",
+    "pdb": "2D60",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "L-asparaginase 1",
+    "pdb": "2HIM",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Response regulator PleD",
+    "pdb": "1W25",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Putative deoxycytidylate deaminase",
+    "pdb": "2HVW",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Prephenate dehydratase",
+    "pdb": "2QMX",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Glycogen phosphorylase, muscle form",
+    "pdb": "3E3N",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Mitogen-activated protein kinase 8",
+    "pdb": "3O2M",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Isocitrate dehydrogenase [NADP], mitochondrial",
+    "pdb": "4JA8",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Ribose-phosphate pyrophosphokinase",
+    "pdb": "1DKU",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase AroG",
+    "pdb": "3KGF_2",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Chorismate mutase",
+    "pdb": "3CSM",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Cytosolic purine 5'-nucleotidase",
+    "pdb": "2XJC",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Glucose-1-phosphate thymidylyltransferase",
+    "pdb": "1G3L",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Glutamate receptor 3",
+    "pdb": "3M3F",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Probable aspartokinase",
+    "pdb": "3C1N",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "ATP-dependent 6-phosphofructokinase isozyme 1",
+    "pdb": "1PFK",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Mitogen-activated protein kinase 14",
+    "pdb": "4E6C",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Anaerobic ribonucleoside-triphosphate reductase",
+    "pdb": "1H78",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Multifunctional 2-oxoglutarate metabolism enzyme",
+    "pdb": "2Y0P",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "UDP-glucose 6-dehydrogenase",
+    "pdb": "3PTZ",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Kinesin-like protein KIF11",
+    "pdb": "4BBG",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "HD domain protein",
+    "pdb": "4LRL",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Glycogen phosphorylase, muscle form",
+    "pdb": "2IEG",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Glucose-1-phosphate thymidylyltransferase",
+    "pdb": "1MP3",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Cyclin-dependent kinase 2",
+    "pdb": "3PXF",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Glucose-1-phosphate thymidylyltransferase",
+    "pdb": "4HO6",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Myosin-2 heavy chain",
+    "pdb": "2JHR",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Pyruvate kinase 1",
+    "pdb": "4HYW",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "N-acetylglutamate kinase / N-acetylglutamate synthase",
+    "pdb": "4KZT",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Myosin-2 heavy chain",
+    "pdb": "3BZ7",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Glutamate racemase",
+    "pdb": "2VVT",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Glutamine--fructose-6-phosphate aminotransferase",
+    "pdb": "2PUV",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase AroG",
+    "pdb": "3KGF_1",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Prostaglandin G/H synthase 2",
+    "pdb": "3QH0",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Hemoglobin subunit alpha",
+    "pdb": "1IWH",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Kinesin-like protein KIF11",
+    "pdb": "3ZCW",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "NAD(P)-dependent glyceraldehyde-3-phosphate dehydrogenase",
+    "pdb": "1UXV",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase, tyrosine-inhibited",
+    "pdb": "1OF6",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Pyruvate kinase 1",
+    "pdb": "1A3W",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase, Phe-sensitive",
+    "pdb": "1KFL",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Ornithine decarboxylase",
+    "pdb": "1NJJ",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Glutamate racemase",
+    "pdb": "4B1F",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Glutamate dehydrogenase 1, mitochondrial",
+    "pdb": "3MW9",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "NAD-dependent malic enzyme, mitochondrial",
+    "pdb": "1GZ3",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Glycogen phosphorylase, muscle form",
+    "pdb": "4MRA",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Glutamate receptor 3",
+    "pdb": "3LSW",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Glutaminase kidney isoform, mitochondrial",
+    "pdb": "4JKT",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Acetylglutamate kinase, chloroplastic",
+    "pdb": "2RD5",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Glutamate racemase",
+    "pdb": "2W4I",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Prephenate dehydratase",
+    "pdb": "3MWB",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Glutamate dehydrogenase 1, mitochondrial",
+    "pdb": "3ETE_2",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Pyruvate kinase PKLR",
+    "pdb": "2VGI",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "2-dehydro-3-deoxyphosphoheptonate aldolase",
+    "pdb": "4GRS",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "UDP-glucose 6-dehydrogenase",
+    "pdb": "3PJG",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Glutaminase kidney isoform, mitochondrial",
+    "pdb": "3UO9",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Pyruvate kinase PKM",
+    "pdb": "3H6O",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Pyruvate kinase",
+    "pdb": "3HQP",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Ribonucleoside-diphosphate reductase 1 subunit alpha",
+    "pdb": "3R1R",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Glycogen phosphorylase, muscle form",
+    "pdb": "3BCR",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Amino-acid acetyltransferase",
+    "pdb": "3D2P",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "D-3-phosphoglycerate dehydrogenase",
+    "pdb": "2PA3",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Sulfate adenylyltransferase",
+    "pdb": "1M8P",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "ATP phosphoribosyltransferase",
+    "pdb": "2VD3",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Glycogen phosphorylase, muscle form",
+    "pdb": "1Z8D_2",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "D-3-phosphoglycerate dehydrogenase",
+    "pdb": "3DC2",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "4-hydroxy-tetrahydrodipicolinate synthase",
+    "pdb": "2ATS",
+    "condition": "asbench_with_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   }
+  ],
+  "asbench_without_ligand": [
+   {
+    "protein": "Cytochrome P450 3A4",
+    "pdb": "1W0F",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Fructose-1,6-bisphosphatase class 1",
+    "pdb": "2Q8M_2",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Tryptophan 2,3-dioxygenase",
+    "pdb": "2NW8",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Parathion hydrolase",
+    "pdb": "1QW7",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Glutamate dehydrogenase 1, mitochondrial",
+    "pdb": "3ETG",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Copper-containing nitrite reductase",
+    "pdb": "1ZDS",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Aspartate carbamoyltransferase regulatory chain",
+    "pdb": "2BE9",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Androgen receptor",
+    "pdb": "2QPY",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Tyrosine-protein kinase ABL1",
+    "pdb": "3K5V",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Glutamate receptor 3",
+    "pdb": "3LSX",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Fructose-1,6-bisphosphatase isozyme 2",
+    "pdb": "3IFA",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Lysine-sensitive aspartokinase 3",
+    "pdb": "2J0X",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Isocitrate dehydrogenase kinase/phosphatase",
+    "pdb": "3EPS",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Pyruvate kinase PKM",
+    "pdb": "4G1N",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Serum albumin",
+    "pdb": "3LU6",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Pyruvate kinase PKM",
+    "pdb": "3N25",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Anthranilate synthase component 1",
+    "pdb": "1I7S",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Glutamate dehydrogenase 1, mitochondrial",
+    "pdb": "3ETE_1",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Pyruvate dehydrogenase kinase isozyme 2",
+    "pdb": "2BU8",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Glycogen phosphorylase, liver form",
+    "pdb": "1EM6",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "ATP phosphoribosyltransferase",
+    "pdb": "1NH8",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Casein kinase II subunit alpha",
+    "pdb": "3H30",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Glutamate racemase",
+    "pdb": "3HFR",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Fructose-1,6-bisphosphatase class 1",
+    "pdb": "2Q8M_1",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Indole-3-pyruvate decarboxylase",
+    "pdb": "2Q5O",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Carbamoyl-phosphate synthase large chain",
+    "pdb": "1CE8_1",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Acetyl-CoA carboxylase",
+    "pdb": "1W96",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Leukotriene A-4 hydrolase",
+    "pdb": "3FUD",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Serum albumin",
+    "pdb": "2BXA",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "ATP-dependent 6-phosphofructokinase",
+    "pdb": "4PFK",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Pyruvate kinase PKM",
+    "pdb": "4B2D",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Tyrosine-protein phosphatase non-receptor type 1",
+    "pdb": "1T49",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Androgen receptor",
+    "pdb": "2YLO",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Glycogen phosphorylase, muscle form",
+    "pdb": "1Z8D_1",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Carbamoyl-phosphate synthase large chain",
+    "pdb": "1CE8_2",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Ribonucleoside-diphosphate reductase 1 subunit alpha",
+    "pdb": "2R1R",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Glycogen phosphorylase, liver form",
+    "pdb": "3CEH",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Glucose-1-phosphate thymidylyltransferase 1",
+    "pdb": "1H5S",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Androgen receptor",
+    "pdb": "2YHD",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "L-asparaginase 1",
+    "pdb": "2HIM",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "5'-AMP-activated protein kinase catalytic subunit alpha-2",
+    "pdb": "4CFE",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Seminal ribonuclease",
+    "pdb": "11BG",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Tyrosine-protein kinase ABL1",
+    "pdb": "3PYY",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase",
+    "pdb": "3PG9",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Glucose-1-phosphate thymidylyltransferase",
+    "pdb": "1LVW",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Toxin A",
+    "pdb": "3HO6",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Prephenate dehydratase",
+    "pdb": "2QMX",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Isocitrate dehydrogenase [NADP], mitochondrial",
+    "pdb": "4JA8",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Hemoglobin subunit beta",
+    "pdb": "2D60",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Fructose-1,6-bisphosphatase 1",
+    "pdb": "1FRP",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Chorismate mutase",
+    "pdb": "3CSM",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Mitogen-activated protein kinase 8",
+    "pdb": "3O2M",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "Glutamate receptor 3",
+    "pdb": "3M3F",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Glycogen phosphorylase, muscle form",
+    "pdb": "3E3N",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase AroG",
+    "pdb": "3KGF_2",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Glucosamine-6-phosphate isomerase 1",
+    "pdb": "1NE7",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Uridylate kinase",
+    "pdb": "2V4Y",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "HD domain protein",
+    "pdb": "3IRH",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Uracil phosphoribosyltransferase",
+    "pdb": "1JLR",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Probable aspartokinase",
+    "pdb": "3C1N",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Glucose-1-phosphate thymidylyltransferase",
+    "pdb": "1MP3",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Uridylate kinase",
+    "pdb": "3EK5",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Kinesin-like protein KIF11",
+    "pdb": "4BBG",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Myosin-2 heavy chain",
+    "pdb": "2JHR",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Hemoglobin subunit alpha",
+    "pdb": "1IWH",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Anaerobic ribonucleoside-triphosphate reductase",
+    "pdb": "1H78",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Response regulator PleD",
+    "pdb": "1W25",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Glycogen phosphorylase, muscle form",
+    "pdb": "2IEG",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "N-acetylglutamate kinase / N-acetylglutamate synthase",
+    "pdb": "4KZT",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Glucose-1-phosphate thymidylyltransferase",
+    "pdb": "1G3L",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "ATP-dependent 6-phosphofructokinase isozyme 1",
+    "pdb": "1PFK",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase AroG",
+    "pdb": "3KGF_1",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Prostaglandin G/H synthase 2",
+    "pdb": "3QH0",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "NAD(P)-dependent glyceraldehyde-3-phosphate dehydrogenase",
+    "pdb": "1UXV",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Cytosolic purine 5'-nucleotidase",
+    "pdb": "2XJC",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Glutamate racemase",
+    "pdb": "2VVT",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Kinesin-like protein KIF11",
+    "pdb": "3ZCW",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Glutamine--fructose-6-phosphate aminotransferase",
+    "pdb": "2PUV",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Glutamate receptor 3",
+    "pdb": "3LSW",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase, Phe-sensitive",
+    "pdb": "1KFL",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase, tyrosine-inhibited",
+    "pdb": "1OF6",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "NAD-dependent malic enzyme, mitochondrial",
+    "pdb": "1GZ3",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Glucose-1-phosphate thymidylyltransferase",
+    "pdb": "4HO6",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Glutamate dehydrogenase 1, mitochondrial",
+    "pdb": "3MW9",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Pyruvate kinase 1",
+    "pdb": "1A3W",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Mitogen-activated protein kinase 14",
+    "pdb": "4E6C",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Glycogen phosphorylase, muscle form",
+    "pdb": "4MRA",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "UDP-glucose 6-dehydrogenase",
+    "pdb": "3PTZ",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Acetylglutamate kinase, chloroplastic",
+    "pdb": "2RD5",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Pyruvate kinase 1",
+    "pdb": "4HYW",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Myosin-2 heavy chain",
+    "pdb": "3BZ7",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "Multifunctional 2-oxoglutarate metabolism enzyme",
+    "pdb": "2Y0P",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Putative deoxycytidylate deaminase",
+    "pdb": "2HVW",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "HD domain protein",
+    "pdb": "4LRL",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Glutaminase kidney isoform, mitochondrial",
+    "pdb": "4JKT",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Ornithine decarboxylase",
+    "pdb": "1NJJ",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "Glutamate dehydrogenase 1, mitochondrial",
+    "pdb": "3ETE_2",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Ribose-phosphate pyrophosphokinase",
+    "pdb": "1DKU",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "Prephenate dehydratase",
+    "pdb": "3MWB",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Cyclin-dependent kinase 2",
+    "pdb": "3PXF",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Glutamate racemase",
+    "pdb": "4B1F",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Pyruvate kinase PKLR",
+    "pdb": "2VGI",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Glutaminase kidney isoform, mitochondrial",
+    "pdb": "3UO9",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "2-dehydro-3-deoxyphosphoheptonate aldolase",
+    "pdb": "4GRS",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Pyruvate kinase",
+    "pdb": "3HQP",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Pyruvate kinase PKM",
+    "pdb": "3H6O",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Amino-acid acetyltransferase",
+    "pdb": "3D2P",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Glycogen phosphorylase, muscle form",
+    "pdb": "3BCR",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "Glutamate racemase",
+    "pdb": "2W4I",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "UDP-glucose 6-dehydrogenase",
+    "pdb": "3PJG",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "D-3-phosphoglycerate dehydrogenase",
+    "pdb": "2PA3",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Ribonucleoside-diphosphate reductase 1 subunit alpha",
+    "pdb": "3R1R",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Sulfate adenylyltransferase",
+    "pdb": "1M8P",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "ATP phosphoribosyltransferase",
+    "pdb": "2VD3",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "D-3-phosphoglycerate dehydrogenase",
+    "pdb": "3DC2",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Glycogen phosphorylase, muscle form",
+    "pdb": "1Z8D_2",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "4-hydroxy-tetrahydrodipicolinate synthase",
+    "pdb": "2ATS",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "Hemoglobin subunit beta",
+    "pdb": "1B86",
+    "condition": "asbench_without_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   }
+  ],
+  "casbench_ortho_ligand": [
+   {
+    "protein": "cas0001",
+    "pdb": "1nxe",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0001",
+    "pdb": "1nxg",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0001",
+    "pdb": "1owc",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0001",
+    "pdb": "4g6b",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0001",
+    "pdb": "4jad",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0001",
+    "pdb": "4jae",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0001",
+    "pdb": "4jaf",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0001",
+    "pdb": "4jag",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "3i1y",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "3i28",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "3koo",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "3otq",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5ahx",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5ai4",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5ai5",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5aia",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5ak4",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5ak5",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5ake",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5akh",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5akx",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5aky",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5ald",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5alf",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5alh",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5alm",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5aln",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5alo",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5alt",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5alu",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5alv",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5alw",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5aly",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5am0",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5am4",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5am5",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0003",
+    "pdb": "3ion",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0003",
+    "pdb": "3iop",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0003",
+    "pdb": "3rwp",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0003",
+    "pdb": "4rqk",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0003",
+    "pdb": "4rqv",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0003",
+    "pdb": "4rrv",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0003",
+    "pdb": "4xx9",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0004",
+    "pdb": "4ey5",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0004",
+    "pdb": "5hf6",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0004",
+    "pdb": "5hf8",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0004",
+    "pdb": "5hf9",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0004",
+    "pdb": "5hfa",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0010",
+    "pdb": "1i2d",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0011",
+    "pdb": "2ewn",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "2ym4",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "2ym8",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4fst",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4fsy",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4ft3",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4ft7",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4fta",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4ftn",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4fto",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4ftr",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4ftu",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4gh2",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0016",
+    "pdb": "3csm",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0016",
+    "pdb": "4csm",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0021",
+    "pdb": "3l9h",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0021",
+    "pdb": "4zhi",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0024",
+    "pdb": "4ald",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0027",
+    "pdb": "1cza",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0027",
+    "pdb": "1dgk",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0028",
+    "pdb": "1lld",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0028",
+    "pdb": "1lth",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0029",
+    "pdb": "1ldn",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0030",
+    "pdb": "2him",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0030",
+    "pdb": "2p2d",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0039",
+    "pdb": "3ddn",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0040",
+    "pdb": "1psd",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0040",
+    "pdb": "1yba",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0040",
+    "pdb": "2p9c",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0040",
+    "pdb": "2p9e",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0040",
+    "pdb": "2p9g",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0040",
+    "pdb": "2pa3",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0047",
+    "pdb": "4r1r",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "cas0050",
+    "pdb": "1xtu",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0050",
+    "pdb": "1xtv",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "11ba",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "11bg",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "1bsr",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "1n3z",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "1r3m",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "1r5c",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "1tq9",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "3bcm",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "3djo",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "3djp",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "3djq",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "3djv",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "3djx",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "4n4c",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0052",
+    "pdb": "2z60",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0054",
+    "pdb": "2jfx",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0054",
+    "pdb": "2jfy",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0054",
+    "pdb": "2jfz",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0054",
+    "pdb": "4b1f",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0056",
+    "pdb": "3hmi",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1boz",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1dhf",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1dlr",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1dls",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1drf",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1hfp",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1hfq",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1hfr",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1kms",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1mvs",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1mvt",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1ohj",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1ohk",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1pd8",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1pd9",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1s3u",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1s3v",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1s3w",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1u71",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1u72",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "2c2s",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "2c2t",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "2dhf",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "2w3a",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "2w3m",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3f8y",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3f8z",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3fs6",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3ghc",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3ghw",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3gi2",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3gyf",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3l3r",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3n0h",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3ntz",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3nu0",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3nxr",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3nxt",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3nxv",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3nxx",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3nxy",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3nzd",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3oaf",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3s3v",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3s7a",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "4ddr",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "4g95",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "4kd7",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "4keb",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "4m6k",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "4m6l",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "4qjc",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5hpb",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5hqy",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5hqz",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5hsr",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5hsu",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5ht4",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5ht5",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5hui",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5hvb",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5hve",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1dre",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1ra2",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1ra3",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1ra8",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rb2",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rb3",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rc4",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rd7",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1re7",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rg7",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rh3",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rx4",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rx5",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rx6",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rx7",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "3dau",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4ej1",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4fhb",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4i13",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4i1n",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4kjj",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4kjl",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4p3r",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4qle",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4qlg",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4x5f",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4x5g",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4x5h",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4x5i",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4x5j",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "5cc9",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "5ccc",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "7dfr",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0067",
+    "pdb": "2psq",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0067",
+    "pdb": "3ri1",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "1ibc",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "1ice",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "1rwm",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "1rwn",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "1rwo",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "1rwv",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "2h4w",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "2h4y",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "2h51",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "2h54",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "2hbq",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "2hbr",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "2hby",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "2hbz",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "3d6f",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "3d6h",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "3d6m",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0071",
+    "pdb": "1i4o",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0074",
+    "pdb": "1ibv",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0074",
+    "pdb": "1ibw",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0074",
+    "pdb": "1pya",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1bzc",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1bzj",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1c83",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1c84",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1c85",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1c86",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1c87",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1c88",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1ecv",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1g1g",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1g7g",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1gfy",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1kak",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1kav",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1l8g",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1nwe",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1ptt",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1ptu",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1ptv",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1q1m",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1xbo",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2azr",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2b07",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2bge",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2cm7",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2cma",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2h4g",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2h4k",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2hb1",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2nt7",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2nta",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2qbp",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2qbq",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2qbr",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2qbs",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2veu",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2vey",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2zn7",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "4i8n",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0080",
+    "pdb": "1i00",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0080",
+    "pdb": "1juj",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0080",
+    "pdb": "3ob7",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0080",
+    "pdb": "5hs3",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0080",
+    "pdb": "5x5q",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0080",
+    "pdb": "5x67",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0085",
+    "pdb": "1fuo",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0085",
+    "pdb": "1fup",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0085",
+    "pdb": "1fuq",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "cas0085",
+    "pdb": "1kq7",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "1gos",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "1oj9",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "1oja",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "1ojc",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "1s2q",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "1s2y",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "1s3b",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "1s3e",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2bk3",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2bk4",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2bk5",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2byb",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2c64",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2c65",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2c66",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2c67",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2c70",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2c72",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2c73",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2c75",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2c76",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2v5z",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2v60",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2v61",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2vrl",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2vrm",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2vz2",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2xcg",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2xfn",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2xfo",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2xfp",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2xfq",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2xfu",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "3po7",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "3zyx",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "4a79",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "4a7a",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "4crt",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "5mrl",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0091",
+    "pdb": "1fin",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0091",
+    "pdb": "2b54",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0091",
+    "pdb": "2cch",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0091",
+    "pdb": "4ez7",
+    "condition": "casbench_ortho_ligand",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   }
+  ],
+  "casbench_ortho_residues": [
+   {
+    "protein": "cas0001",
+    "pdb": "1nxe",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0001",
+    "pdb": "1nxg",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0001",
+    "pdb": "1owc",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0001",
+    "pdb": "4g6b",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0001",
+    "pdb": "4jad",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0001",
+    "pdb": "4jae",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0001",
+    "pdb": "4jaf",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0001",
+    "pdb": "4jag",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "3i1y",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "3i28",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "3koo",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "3otq",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5ahx",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5ai4",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5ai5",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5aia",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5ak4",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5ak5",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5ake",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5akh",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5akx",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5aky",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5ald",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5alf",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5alh",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5alm",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5aln",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5alo",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5alt",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5alu",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5alv",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5alw",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5aly",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5am0",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5am4",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0002",
+    "pdb": "5am5",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0003",
+    "pdb": "3ion",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0003",
+    "pdb": "3iop",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0003",
+    "pdb": "3rwp",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0003",
+    "pdb": "4rqk",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0003",
+    "pdb": "4rqv",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0003",
+    "pdb": "4rrv",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0003",
+    "pdb": "4xx9",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0004",
+    "pdb": "4ey5",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0004",
+    "pdb": "5hf6",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0004",
+    "pdb": "5hf8",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0004",
+    "pdb": "5hf9",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0004",
+    "pdb": "5hfa",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0010",
+    "pdb": "1i2d",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0011",
+    "pdb": "2ewn",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "2ym4",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "2ym8",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4fst",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4fsy",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4ft3",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4ft7",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4fta",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4ftn",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4fto",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4ftr",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4ftu",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0015",
+    "pdb": "4gh2",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0016",
+    "pdb": "3csm",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0016",
+    "pdb": "4csm",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0021",
+    "pdb": "3l9h",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0021",
+    "pdb": "4zhi",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0024",
+    "pdb": "4ald",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0027",
+    "pdb": "1cza",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0027",
+    "pdb": "1dgk",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0028",
+    "pdb": "1lld",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0028",
+    "pdb": "1lth",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "cas0029",
+    "pdb": "1ldn",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0030",
+    "pdb": "2him",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0030",
+    "pdb": "2p2d",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0039",
+    "pdb": "3ddn",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0040",
+    "pdb": "1psd",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0040",
+    "pdb": "1yba",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0040",
+    "pdb": "2p9c",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0040",
+    "pdb": "2p9e",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0040",
+    "pdb": "2p9g",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0040",
+    "pdb": "2pa3",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0047",
+    "pdb": "4r1r",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     1,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0050",
+    "pdb": "1xtu",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0050",
+    "pdb": "1xtv",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "11ba",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "11bg",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "1bsr",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "1n3z",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "1r3m",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "1r5c",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "1tq9",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "3bcm",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "3djo",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "3djp",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "3djq",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "3djv",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "3djx",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0051",
+    "pdb": "4n4c",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0052",
+    "pdb": "2z60",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0054",
+    "pdb": "2jfx",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0054",
+    "pdb": "2jfy",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0054",
+    "pdb": "2jfz",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "cas0054",
+    "pdb": "4b1f",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "cas0056",
+    "pdb": "3hmi",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1boz",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1dhf",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1dlr",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1dls",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1drf",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1hfp",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1hfq",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1hfr",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1kms",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1mvs",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1mvt",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1ohj",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1ohk",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1pd8",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1pd9",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1s3u",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1s3v",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1s3w",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1u71",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "1u72",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "2c2s",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "2c2t",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "2dhf",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "2w3a",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "2w3m",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3f8y",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3f8z",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3fs6",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3ghc",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3ghw",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3gi2",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3gyf",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3l3r",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3n0h",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3ntz",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3nu0",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3nxr",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3nxt",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3nxv",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3nxx",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3nxy",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3nzd",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3oaf",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3s3v",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "3s7a",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "4ddr",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "4g95",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "4kd7",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "4keb",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "4m6k",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "4m6l",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "4qjc",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5hpb",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5hqy",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5hqz",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5hsr",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5hsu",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5ht4",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5ht5",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5hui",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5hvb",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0060",
+    "pdb": "5hve",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1dre",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1ra2",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1ra3",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1ra8",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rb2",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rb3",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rc4",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rd7",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1re7",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rg7",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rh3",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rx4",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rx5",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rx6",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "1rx7",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "3dau",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4ej1",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4fhb",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4i13",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4i1n",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4kjj",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4kjl",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4p3r",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4qle",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4qlg",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4x5f",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4x5g",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4x5h",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4x5i",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "4x5j",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     1,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "5cc9",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "5ccc",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0061",
+    "pdb": "7dfr",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     0,
+     1,
+     1,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0067",
+    "pdb": "2psq",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0067",
+    "pdb": "3ri1",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "1ibc",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "1ice",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "1rwm",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "1rwn",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "1rwo",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "1rwv",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "2h4w",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "2h4y",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "2h51",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "2h54",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "2hbq",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "2hbr",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "2hby",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "2hbz",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 4
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "3d6f",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "3d6h",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0070",
+    "pdb": "3d6m",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0071",
+    "pdb": "1i4o",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0074",
+    "pdb": "1ibv",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0074",
+    "pdb": "1ibw",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0074",
+    "pdb": "1pya",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1bzc",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1bzj",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1c83",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1c84",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1c85",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1c86",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1c87",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1c88",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1ecv",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1g1g",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1g7g",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1gfy",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1kak",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1kav",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1l8g",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1nwe",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1ptt",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1ptu",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1ptv",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1q1m",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "1xbo",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2azr",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2b07",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2bge",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2cm7",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2cma",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2h4g",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2h4k",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2hb1",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2nt7",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2nta",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2qbp",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2qbq",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2qbr",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2qbs",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2veu",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2vey",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "2zn7",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0079",
+    "pdb": "4i8n",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0080",
+    "pdb": "1i00",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0080",
+    "pdb": "1juj",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "cas0080",
+    "pdb": "3ob7",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0080",
+    "pdb": "5hs3",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 0
+   },
+   {
+    "protein": "cas0080",
+    "pdb": "5x5q",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0080",
+    "pdb": "5x67",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     1,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0085",
+    "pdb": "1fuo",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0085",
+    "pdb": "1fup",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0085",
+    "pdb": "1fuq",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0085",
+    "pdb": "1kq7",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     0,
+     0,
+     0,
+     1,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "1gos",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "1oj9",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "1oja",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "1ojc",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "1s2q",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "1s2y",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "1s3b",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "1s3e",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2bk3",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2bk4",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2bk5",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2byb",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2c64",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2c65",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2c66",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2c67",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2c70",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2c72",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2c73",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2c75",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2c76",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2v5z",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2v60",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2v61",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2vrl",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2vrm",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2vz2",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2xcg",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2xfn",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2xfo",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2xfp",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2xfq",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "2xfu",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     1,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "3po7",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "3zyx",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "4a79",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "4a7a",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "4crt",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     0,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 1
+   },
+   {
+    "protein": "cas0086",
+    "pdb": "5mrl",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "n_fired": 2
+   },
+   {
+    "protein": "cas0091",
+    "pdb": "1fin",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     0,
+     1
+    ],
+    "n_fired": 3
+   },
+   {
+    "protein": "cas0091",
+    "pdb": "2b54",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 5
+   },
+   {
+    "protein": "cas0091",
+    "pdb": "2cch",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     1,
+     1,
+     1,
+     1
+    ],
+    "n_fired": 6
+   },
+   {
+    "protein": "cas0091",
+    "pdb": "4ez7",
+    "condition": "casbench_ortho_residues",
+    "bits": [
+     1,
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "n_fired": 4
+   }
+  ]
+ },
+ "descriptive": {
+  "asbench_with_ligand": {
+   "n": 118,
+   "n_distinct_patterns": 37,
+   "max_possible_patterns": 64,
+   "top5_patterns": [
+    {
+     "bits": "111111",
+     "count": 27,
+     "frac": 0.2288135593220339
+    },
+    {
+     "bits": "000000",
+     "count": 13,
+     "frac": 0.11016949152542373
+    },
+    {
+     "bits": "111011",
+     "count": 9,
+     "frac": 0.07627118644067797
+    },
+    {
+     "bits": "110111",
+     "count": 8,
+     "frac": 0.06779661016949153
+    },
+    {
+     "bits": "000001",
+     "count": 8,
+     "frac": 0.06779661016949153
+    }
+   ],
+   "top3_coverage": 0.4152542372881356
+  },
+  "asbench_without_ligand": {
+   "n": 118,
+   "n_distinct_patterns": 36,
+   "max_possible_patterns": 64,
+   "top5_patterns": [
+    {
+     "bits": "111111",
+     "count": 21,
+     "frac": 0.17796610169491525
+    },
+    {
+     "bits": "000000",
+     "count": 19,
+     "frac": 0.16101694915254236
+    },
+    {
+     "bits": "000001",
+     "count": 10,
+     "frac": 0.0847457627118644
+    },
+    {
+     "bits": "110111",
+     "count": 7,
+     "frac": 0.059322033898305086
+    },
+    {
+     "bits": "111011",
+     "count": 4,
+     "frac": 0.03389830508474576
+    }
+   ],
+   "top3_coverage": 0.423728813559322
+  },
+  "casbench_ortho_ligand": {
+   "n": 314,
+   "n_distinct_patterns": 41,
+   "max_possible_patterns": 64,
+   "top5_patterns": [
+    {
+     "bits": "111111",
+     "count": 55,
+     "frac": 0.1751592356687898
+    },
+    {
+     "bits": "000011",
+     "count": 41,
+     "frac": 0.1305732484076433
+    },
+    {
+     "bits": "010111",
+     "count": 31,
+     "frac": 0.09872611464968153
+    },
+    {
+     "bits": "111011",
+     "count": 29,
+     "frac": 0.09235668789808917
+    },
+    {
+     "bits": "001011",
+     "count": 22,
+     "frac": 0.07006369426751592
+    }
+   ],
+   "top3_coverage": 0.40445859872611467
+  },
+  "casbench_ortho_residues": {
+   "n": 314,
+   "n_distinct_patterns": 48,
+   "max_possible_patterns": 64,
+   "top5_patterns": [
+    {
+     "bits": "111111",
+     "count": 58,
+     "frac": 0.18471337579617833
+    },
+    {
+     "bits": "100000",
+     "count": 29,
+     "frac": 0.09235668789808917
+    },
+    {
+     "bits": "010011",
+     "count": 22,
+     "frac": 0.07006369426751592
+    },
+    {
+     "bits": "101111",
+     "count": 18,
+     "frac": 0.05732484076433121
+    },
+    {
+     "bits": "011011",
+     "count": 16,
+     "frac": 0.050955414012738856
+    }
+   ],
+   "top3_coverage": 0.3471337579617834
+  }
+ },
+ "pairwise": {
+  "asbench_with_ligand": {
+   "matrix": [
+    [
+     1.0,
+     0.48770166057530473,
+     0.3245473705852106,
+     0.45564976420130804,
+     0.5351981017564945,
+     0.24463440067383987
+    ],
+    [
+     0.48770166057530473,
+     1.0,
+     0.3773275639275147,
+     0.4762896722078402,
+     0.44626155478473983,
+     0.467261595012991
+    ],
+    [
+     0.3245473705852106,
+     0.3773275639275147,
+     1.0,
+     0.35613687977442265,
+     0.3678231822954613,
+     0.27798583028252305
+    ],
+    [
+     0.45564976420130804,
+     0.4762896722078402,
+     0.35613687977442265,
+     1.0,
+     0.3525173791201727,
+     0.22454435656953592
+    ],
+    [
+     0.5351981017564945,
+     0.44626155478473983,
+     0.3678231822954613,
+     0.3525173791201727,
+     1.0,
+     0.36522758357005486
+    ],
+    [
+     0.24463440067383987,
+     0.467261595012991,
+     0.27798583028252305,
+     0.22454435656953592,
+     0.36522758357005486,
+     1.0
+    ]
+   ],
+   "measure_names": [
+    "surrCI_pR",
+    "surrCI_pb",
+    "highProp_pR",
+    "highProp_pb",
+    "refQ_pR",
+    "refQ_pb"
+   ],
+   "mean_abs_offdiag": 0.3839404596891608,
+   "mean_within_pR_block": 0.4091895515457222,
+   "mean_within_pb_block": 0.3893652079301224,
+   "mean_cross_pR_pb": 0.37371584632332006
+  },
+  "asbench_without_ligand": {
+   "matrix": [
+    [
+     1.0,
+     0.5748885729254682,
+     0.3369649403325721,
+     0.4234755393059755,
+     0.5856581912092367,
+     0.27089314450380514
+    ],
+    [
+     0.5748885729254682,
+     1.0,
+     0.3856186147058413,
+     0.5765312223282316,
+     0.5030055846926648,
+     0.4398041261482621
+    ],
+    [
+     0.3369649403325721,
+     0.3856186147058413,
+     1.0,
+     0.41465862640026363,
+     0.2698218748469309,
+     0.3661949823560576
+    ],
+    [
+     0.4234755393059755,
+     0.5765312223282316,
+     0.41465862640026363,
+     1.0,
+     0.43829664386803946,
+     0.33043937315976923
+    ],
+    [
+     0.5856581912092367,
+     0.5030055846926648,
+     0.2698218748469309,
+     0.43829664386803946,
+     1.0,
+     0.36188186586026505
+    ],
+    [
+     0.27089314450380514,
+     0.4398041261482621,
+     0.3661949823560576,
+     0.33043937315976923,
+     0.36188186586026505,
+     1.0
+    ]
+   ],
+   "measure_names": [
+    "surrCI_pR",
+    "surrCI_pb",
+    "highProp_pR",
+    "highProp_pb",
+    "refQ_pR",
+    "refQ_pb"
+   ],
+   "mean_abs_offdiag": 0.4185422201762255,
+   "mean_within_pR_block": 0.3974816687962465,
+   "mean_within_pb_block": 0.4489249072120876,
+   "mean_cross_pR_pb": 0.41543484162426453
+  },
+  "casbench_ortho_ligand": {
+   "matrix": [
+    [
+     1.0,
+     0.41267180989837865,
+     0.4912995558417457,
+     0.30425842332909064,
+     -0.04888047632676282,
+     -0.08331689808375493
+    ],
+    [
+     0.41267180989837865,
+     1.0,
+     0.13109492054502095,
+     0.48503539865180606,
+     0.003907684038020432,
+     0.09203857715204654
+    ],
+    [
+     0.4912995558417457,
+     0.13109492054502095,
+     1.0,
+     0.15700849627579885,
+     0.19146155065279163,
+     0.10616514555730112
+    ],
+    [
+     0.30425842332909064,
+     0.48503539865180606,
+     0.15700849627579885,
+     1.0,
+     0.011161684197206114,
+     -0.05659725096931745
+    ],
+    [
+     -0.04888047632676282,
+     0.003907684038020432,
+     0.19146155065279163,
+     0.011161684197206114,
+     1.0,
+     0.5752453486934798
+    ],
+    [
+     -0.08331689808375493,
+     0.09203857715204654,
+     0.10616514555730112,
+     -0.05659725096931745,
+     0.5752453486934798,
+     1.0
+    ]
+   ],
+   "measure_names": [
+    "surrCI_pR",
+    "surrCI_pb",
+    "highProp_pR",
+    "highProp_pb",
+    "refQ_pR",
+    "refQ_pb"
+   ],
+   "mean_abs_offdiag": 0.2100095480141681,
+   "mean_within_pR_block": 0.2112935433892582,
+   "mean_within_pb_block": 0.1734922416115117,
+   "mean_cross_pR_pb": 0.17979962382783798
+  },
+  "casbench_ortho_residues": {
+   "matrix": [
+    [
+     1.0,
+     0.02559394828245557,
+     0.32570086705332185,
+     0.32669273343082295,
+     -0.06676562836093033,
+     -0.027261881421045044
+    ],
+    [
+     0.02559394828245557,
+     1.0,
+     0.22241909604158275,
+     0.16654457872477849,
+     0.2783472497147841,
+     0.2105263175325748
+    ],
+    [
+     0.32570086705332185,
+     0.22241909604158275,
+     1.0,
+     0.4400621177517679,
+     0.43346577821188825,
+     0.3557086459124416
+    ],
+    [
+     0.32669273343082295,
+     0.16654457872477849,
+     0.4400621177517679,
+     1.0,
+     0.2853193363122574,
+     0.2833113834049604
+    ],
+    [
+     -0.06676562836093033,
+     0.2783472497147841,
+     0.43346577821188825,
+     0.2853193363122574,
+     1.0,
+     0.627533278481356
+    ],
+    [
+     -0.027261881421045044,
+     0.2105263175325748,
+     0.3557086459124416,
+     0.2833113834049604,
+     0.627533278481356,
+     1.0
+    ]
+   ],
+   "measure_names": [
+    "surrCI_pR",
+    "surrCI_pb",
+    "highProp_pR",
+    "highProp_pb",
+    "refQ_pR",
+    "refQ_pb"
+   ],
+   "mean_abs_offdiag": 0.2716835227091312,
+   "mean_within_pR_block": 0.23080033896809327,
+   "mean_within_pb_block": 0.22012742655410458,
+   "mean_cross_pR_pb": 0.281601613834047
+  }
+ },
+ "decision_gate": {
+  "threshold": 0.6,
+  "primary_phi": 0.4185422201762255,
+  "proceeded": true
+ },
+ "meta_classifier": {
+  "n_joined": 117,
+  "n_proteins": 79,
+  "rho_nfired": -0.21980004056445404,
+  "p_nfired": 0.017257677478795166,
+  "per_measure": {
+   "surrCI_pR": {
+    "lopo_auc": 0.33694379391100704,
+    "n_pos": 56,
+    "n": 117
+   },
+   "surrCI_pb": {
+    "lopo_auc": 0.3530791788856305,
+    "n_pos": 55,
+    "n": 117
+   },
+   "highProp_pR": {
+    "lopo_auc": 0.4339506172839507,
+    "n_pos": 45,
+    "n": 117
+   },
+   "highProp_pb": {
+    "lopo_auc": 0.3693746347165401,
+    "n_pos": 58,
+    "n": 117
+   },
+   "refQ_pR": {
+    "lopo_auc": 0.48333333333333334,
+    "n_pos": 72,
+    "n": 117
+   },
+   "refQ_pb": {
+    "lopo_auc": 0.6482577251808022,
+    "n_pos": 78,
+    "n": 117
+   }
+  },
+  "positive_control_auc": {
+   "surrCI_pR": 0.8354800936768151,
+   "surrCI_pb": 0.8774193548387097,
+   "highProp_pR": 0.7419753086419754,
+   "highProp_pb": 0.7958796025715957,
+   "refQ_pR": 0.8313271604938273,
+   "refQ_pb": 0.7465483234714004
+  }
+ }
+}
