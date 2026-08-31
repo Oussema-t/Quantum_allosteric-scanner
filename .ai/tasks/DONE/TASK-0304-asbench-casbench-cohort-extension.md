@@ -309,8 +309,16 @@ Structure-level (313 rows, descriptive only, not the number that counts):
 totaling 33 + 112 + 13 = 158 proteins, two of them from a field this
 register has no editorial control over.** The reframing this task's own
 Progress-2 section already stated stands, strengthened: this is not an
-artefact of this register's own 13-cluster benchmark, and if anything the
-Cleveland Clinic set is the *least* affected of the three.
+artefact of this register's own 13-cluster benchmark.
+
+> **Correction (Reviewer thread, 2026-08-31).** This section originally
+> read "if anything the Cleveland Clinic set is the *least* affected of
+> the three." **That is wrong on its own numbers.** Ranked: ASBench
+> **22.2%** < Cleveland Clinic **28.6%** < CASBench **42.4%**. Ours sits
+> in the *middle*, not the bottom. The defensible statement is that our
+> benchmark is unexceptional -- squarely within the range the field's own
+> two benchmarks span -- which is the point that matters and does not
+> need the stronger claim.
 
 ### On "ingest through `clean_from_config` and re-run TASK-0299/TASK-0300"
 
