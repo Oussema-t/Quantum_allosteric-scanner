@@ -11550,3 +11550,71 @@ or found exploratorily, and which test family it belongs to — so the next
 `results/tasks/0314_auc_metric_audit/{auc_metric_audit,
 multiplicity_audit}.json`. **Full detail**:
 `.ai/tasks/DONE/TASK-0314-auc-vs-p5-metric-switch-and-register-multiplicity.md`.
+
+## The ceiling of the whole input space is real, not ≈0.50 — and a robustness check rules out the obvious artifact before trusting it ([[TASK-0318]], 2026-09-01)
+
+[[TASK-0310]] found all 7 runnable observables lose their signal once
+residualised on proximity — including chiral circulation, the lead
+candidate with the strongest prior. [[TASK-0301]]'s lesson one level up:
+those 7 are all functionals of the *same* input (the contact graph +
+seed) — nine observables on one graph is not nine independent chances.
+This task asks the sharper question directly: can **any** function of
+that same input beat proximity, after residualising?
+
+**Method**: 19 reused-not-invented features (contact-graph baselines,
+`gnm_context`'s quantities, all five `V_B`/`V_T`/`V_R`/`V_C`/`V_M`
+potential terms, CTQW, and all 7 of [[TASK-0310]]'s own observables) on
+[[TASK-0310]]'s own 108-structure ASBench cohort (105 usable — 3
+structures hit a real, pre-existing disconnected-contact-graph
+diagnostic, not a script bug). `HistGradientBoostingClassifier`, **LOPO
+by protein** (74 distinct proteins, 74 folds, every number from
+out-of-fold predictions only — this register's sixth brush with
+pseudo-replication risk, taken seriously this time from the start).
+[[TASK-0310]]'s own residualisation harness reused, extended to a joint
+[hop, euclid] design per [[TASK-0315]]'s finding that the two proximity
+measures are not fully redundant — self-check confirms each residualised
+on the pair containing itself lands at exactly 0.5000, 105/105.
+
+**Headline**: RAW ceiling mean 0.6558 (vs. proximity's own 0.6147).
+**RESIDUALISED ceiling: mean 0.5949, median 0.6203, Wilcoxon
+p=3.3×10⁻⁶, cluster-robust by protein p=1×10⁻⁵.** Comfortably clears
+this task's own pre-registered "meaningfully > 0.50" bar.
+
+**The obvious objection, tested rather than waived**: the top feature by
+permutation importance was `euclid_prox` itself (+0.113, ~3× the next
+feature) — raising the real risk that a high-capacity model is just
+nonlinearly reconstructing proximity in a way linear rank-residualisation
+can't strip out (exactly the capacity-inflation risk this task's own
+Constraint names). **Tested directly**: refit the identical LOPO model
+with `hop_prox`/`euclid_prox` removed from the feature set entirely (17
+columns, zero proximity input). **The ceiling barely moves** — residualised
+mean **0.6017**, median 0.6321, p=2.3×10⁻⁷ — *higher*, not lower. The
+model does not need to see proximity to reach the same ceiling; the
+surviving signal is genuinely present in the non-proximity features.
+
+**What drives it** (permutation importance, proximity-excluded model):
+`V_C` (GNM dynamic cross-correlation) dominates at +0.135, then
+`chiral_circulation` (+0.053), `persistent_h2_void` (+0.042), `degree`
+(+0.032). Notable against [[TASK-0315]]'s own finding that `V_C` **alone**
+does not survive proximity control on the frozen-20 (residual p=0.31) —
+not a contradiction (a model combining `V_C` nonlinearly with other
+features is a different object), but the concrete lead for whoever
+builds next.
+
+**Verdict, held to this task's own pre-registered calibration**:
+meaningfully > 0.50, now backed by a targeted robustness check rather
+than the raw number alone. **Building [[TASK-0147]] (structured-bath /
+vibronic resonance) is rational**, with two concrete falsifiable targets
+now on record: residual AUC ≈0.60 to reach, and `V_C`/`chiral_circulation`
+as the specific quantities to check against first. **[[TASK-0157]] (two-
+boson HOM) recommendation is unaffected** — argued from propagator
+structure, not from this empirical result. Still honestly a **lead, not
+a result**, per the Constraint's own explicit framing: this answers "is
+there information," not "can we build a clean observable that reaches
+it" — exactly [[TASK-0147]]'s own job, gated by this number.
+
+**Script**: `scripts/task0318_input_space_ceiling.py` (Phase A ~7066s/118
+min, resumable per-structure cache; Phase B ~118s, independently
+re-runnable). **Data**: `results/tasks/0318_input_space_ceiling/
+{ceiling_result.json,no_proximity_feature_check.json}`. **Full detail**:
+`.ai/tasks/DONE/TASK-0318-ceiling-of-the-contact-graph-input-space.md`.
