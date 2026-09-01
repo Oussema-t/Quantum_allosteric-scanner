@@ -11335,3 +11335,70 @@ budget under heavy concurrent machine load this session).
 **Script**: `scripts/task0316_modality_powered_test.py`. **Data**:
 `results/tasks/0316_modality_powered_test/modality_powered_test.json`.
 **Full detail**: `.ai/tasks/DONE/TASK-0316-modality-re-run-with-a-powered-test.md`.
+
+## Discriminator B: applicability descriptors fail too — and a real tie-breaking artifact caught on the way ([[TASK-0317]], 2026-09-01)
+
+[[HYP-P14]]'s secondary route: every *global* predictor tried against
+Wu/Strömich/Yaliraki's six statistical measures has failed
+([[TASK-0306]]: N, chain count, site separation, fold class, all
+AUC 0.337–0.483). This task tests the paper's own stated applicability
+conditions instead — read from PMC8767309 directly, not recalled: the
+surrogate-CI test's own size/diameter-matched surrogate construction; the
+high-propensity test's uniform-`QS` assumption (not testable here, no raw
+propensity values in this repo); and an explicit caveat sentence naming
+site proximity, "large and complex multimeric proteins," and "structural
+water molecules."
+
+**Three descriptors, reusing existing machinery, none re-deriving
+TASK-0306's own failed globals**: `surrogate_spread` (std of mean GNM MSF
+across 50 same-size, spatially-compact random windows —
+`allostery.potentials.gnm_context`); `interface_frac` (fraction of the
+site's OWN residues in cross-chain contact — local, not raw chain count);
+`water_density` (crystallographic waters within 5Å of the site,
+size-normalised). ASBench, `asbench_without_ligand` (TASK-0306's own
+primary condition), 117/118 joined, 79 protein clusters, LOPO throughout.
+
+**Bonferroni gate (18 tests, α=0.00278): NONE survive.** Every per-measure
+AUC sits in the same null band TASK-0306's own global descriptors already
+occupied. Positive control passes (0.742–0.877, matching TASK-0306's own
+0.74–0.88 reference range) — the harness works; this is a real negative
+about the inputs.
+
+**A genuine methodological finding, caught and root-caused before
+trusting it**: the secondary `n_fired` (0–6) regression initially showed
+`interface_frac` rho=−0.612 (p=2.2×10⁻¹³) and `water_density` rho=−0.727
+(p=1.7×10⁻²⁰) — would have been the strongest results in this entire
+discriminator line. **Neither is real.** The raw/pooled Spearman
+correlation for both is ≈0 (+0.015, +0.057) — the opposite of what the
+LOPO number implied. Traced directly, not assumed: `interface_frac` has
+only 34 distinct values across 117 rows (71 exactly 0.0). Confirmed the
+per-fold OLS slope is **stable** (77/79 folds same sign) — this is not
+ordinary LOPO overfitting instability; it is **tie-breaking**: tiny
+per-fold intercept jitter arbitrarily reorders the many tied rows in the
+LOPO output, and Spearman — purely rank-based — is acutely sensitive to
+how ties resolve, inflating an arbitrary reordering into an apparently
+enormous, highly "significant" correlation. `surrogate_spread` (117/117
+distinct, genuinely no ties) shows a much smaller LOPO-vs-raw gap (both
+non-significant) — ties amplify ordinary regression noise into a false
+positive; they are not the sole source of divergence, but the difference
+between a harmless gap and a p<10⁻¹² false positive. **A real,
+disclosable risk in this register's own established `lopo_predict` +
+Spearman/AUC idiom whenever the input feature is low-cardinality** —
+carried forward to [[TASK-0314]]'s own standing metric-choice concern; the
+script now reports the raw correlation and an `n_distinct` diagnostic
+alongside every LOPO number, flagging the risk automatically on any future
+run rather than requiring a reader to rediscover it.
+
+**Corrected verdict: `n_fired` is null for all three descriptors**, once
+read via the raw/pooled correlation instead of the LOPO one.
+
+**Overall**: the hypothesis this task tested — "a feature can be useless
+as a ranker and informative as a selector" — does not survive either.
+Combined with [[TASK-0306]]'s own global-descriptor negative, every
+predictor tried against these six measures, of every kind tried so far,
+has failed.
+
+**Script:** `scripts/task0317_discriminator_b_applicability.py`. **Data:**
+`results/tasks/0317_discriminator_b_applicability/discriminator_b_applicability.json`.
+**Full detail:**
+`.ai/tasks/DONE/TASK-0317-discriminator-b-per-measure-applicability-features.md`.
