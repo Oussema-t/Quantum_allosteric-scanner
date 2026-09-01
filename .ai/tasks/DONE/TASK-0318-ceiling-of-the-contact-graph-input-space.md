@@ -65,6 +65,15 @@ anecdotes.
 
 ## What each outcome licenses — pre-registered
 
+> **CORRECTED 2026-09-01 by the Reviewer thread that wrote this table.** The
+> second row's licensing is **wrong**, and the error is mine, in the
+> pre-registration itself — not in [[TASK-0318]]'s execution, which honoured
+> the table as written. See "Correction to the outcome table" at the end of
+> this file **before acting on the verdict.** Short version: a high ceiling
+> **composed of existing features** is an argument *against* building
+> [[TASK-0147]], not for it.
+
+
 | ceiling (residual AUC) | consequence |
 |---|---|
 | **≈ 0.50** | **The whole observable class is closed**, with an argument rather than seven anecdotes. Do not build [[TASK-0147]] or [[TASK-0157]]; do not propose a tenth. The submission reports a measured limit of the representation, which is a stronger claim than any single negative. |
@@ -242,3 +251,68 @@ against the same cache (not re-paying Phase A), ~71s. **Data**:
 `results/tasks/0318_input_space_ceiling/{ceiling_result.json,
 no_proximity_feature_check.json}` (gitignored, not committed — every number
 above traced to this Done section and `RESULTS.md`).
+
+
+---
+
+## Correction to the outcome table (2026-09-01, Reviewer thread)
+
+**The execution of this task is not in question.** The proximity-excluded
+refit is exactly the right robustness check and it is convincing — removing
+`hop_prox`/`euclid_prox` entirely leaves the residualised ceiling essentially
+unchanged (0.5949 → **0.6017**, *higher*), which substantially rules out the
+nonlinear-reconstruction concern. The positive control (proximity residualised
+on itself → **0.5000 exactly, 105/105**) is as clean as this register gets.
+
+**What is wrong is the pre-registered licensing I wrote.** The table said
+ceiling > 0.50 is *"the only condition under which building the structured
+bath ([[TASK-0147]]) becomes rational."* That inference does not follow, and
+this task's own permutation-importance result is what refutes it:
+
+| feature | importance (proximity-excluded model) |
+|---|---|
+| `V_C` (GNM dynamic cross-correlation) | **+0.135** |
+| `chiral_circulation` | +0.053 |
+| `persistent_h2_void` | +0.042 |
+| `degree` | +0.032 |
+
+**Every one of these already exists.** A ceiling of 0.60 reached by a
+gradient-boosted combination of features we already compute says the
+information is **already in the current input space** — which licenses
+*building a better readout of what we have*, not building a new physical
+observable. The cheapest exploitation of this result is to fit that
+combination directly. Building a structured-bath master equation to reach a
+number that four existing features already reach is the **more** expensive
+route to the same place, not the newly-justified one.
+
+**Revised licensing:**
+
+| ceiling (residual AUC) | consequence |
+|---|---|
+| ≈ 0.50 | observable class closed; do not build [[TASK-0147]]/[[TASK-0157]] *(unchanged)* |
+| > 0.50, **composed of existing features** — **the measured case** | The information is reachable from what we already have. **Do not build [[TASK-0147]] or [[TASK-0157]].** Fit and validate the existing combination instead. |
+| > 0.50, **and not attributable to existing features** | *would* justify a new observable — **this case did not occur** |
+
+## Open item this task did not cover — the missing null control
+
+The positive control is excellent; there is **no negative control**. A LOPO
+gradient-boosting AUC of 0.5949 over 93,183 pooled residues needs a
+**permuted-label null**: permute the truth labels *within* each structure,
+refit the identical 74-fold LOPO pipeline, and confirm the residualised AUC
+returns to ~0.50.
+
+This is not pedantry here — [[TASK-0319]] documents that this register has
+systematically run positive controls and omitted negative ones, and that the
+omission has already invalidated one headline ([[TASK-0316]]). A
+high-capacity model on 105 structures is exactly the shape of thing that
+needs it.
+
+- [ ] Run the permuted-label null and report it beside the 0.5949.
+- [ ] Until then, treat the ceiling as **a lead, not a result** — which is
+      what this task's own Constraint said, and which the revised table above
+      now makes actionable.
+
+**Net: the constructive finding stands and is the strongest in the register
+right now** — individually no observable survives residualisation
+([[TASK-0310]]), jointly they reach ~0.60. What changes is what it licenses:
+exploit the combination, do not build a tenth observable.
