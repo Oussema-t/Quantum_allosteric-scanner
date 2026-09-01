@@ -11177,3 +11177,82 @@ dropped.
 `results/tasks/0315_terms_block_vs_proximity/terms_block_vs_proximity.json`.
 **Full detail:**
 `.ai/tasks/DONE/TASK-0315-terms-block-was-never-compared-to-proximity.md`.
+
+## The whole observable family, residualised on proximity — nothing survives, including the lead candidate ([[TASK-0310]], 2026-09-01)
+
+[[TASK-0308]] found CTQW occupation is ~80% proximity to the active site
+(within-structure ρ=+0.735; residualised, AUC 0.5921→0.5184, no longer
+significant). Every observable in `TASK-0140`-`0157` was scored raw
+against a floor, never conditioned on distance — a family evaluated on
+the wrong statistic. This re-scores each on [[TASK-0308]]'s own 108-
+structure ASBench cohort: raw AUC, within-structure ρ against proximity,
+and AUC after rank-residualising on proximity, exactly matching
+`ctqw_proximity_partial`'s own metric (no surviving script for that JSON
+— reconstructed from scratch, validated by reproducing its committed
+numbers to 4 decimal places before trusting the harness on anything new).
+
+**Runnable check first**: of the 9 named observables, 2 were never
+implemented past a literature proposal (checked directly against their
+own Done sections) — vibronic resonance ([[TASK-0147]]) and two-boson
+HOM interference ([[TASK-0157]]), both "no code, no synthetic falsifier,
+no real-target scoring." Excluded — building either now would be a new
+observable, not a re-scoring. **7 runnable**, all scored: chiral
+circulation, dephasing, persistent H2 void, transport, spectral
+coherence, entanglement entropy, low-mode PRS/DCC.
+
+**Chiral circulation — the lead candidate, reported first per this
+task's own Constraint**: entered with the strongest, most specific prior
+of the nine ([[TASK-0140]]'s own table: ρ with proximity roughly half
+CTQW's). Confirmed: ρ=0.365 vs CTQW's 0.735. **But raw AUC 0.5560
+collapses to residualised AUC 0.4960 — below chance.** Lower
+contamination did not translate into surviving signal.
+
+**Full family, ranked by residual share (not raw), all 7 reported
+including the ones that get worse**:
+
+| observable | raw AUC | ρ(proximity) | residual AUC | residual share | Bonferroni p | cluster-p (76 proteins) |
+|---|---|---|---|---|---|---|
+| persistent_h2_void | 0.593 | 0.489 | 0.560 | +12.0% | 0.856 | 0.101 |
+| spectral_coherence | 0.602 | 0.700 | 0.523 | +4.5% | 1.0 | 0.239 |
+| transport | 0.580 | 0.386 | 0.520 | +4.0% | 1.0 | 0.330 |
+| chiral_circulation | 0.556 | 0.365 | 0.496 | -0.8% | 1.0 | 0.799 |
+| entanglement_entropy | 0.593 | 0.895 | 0.490 | -1.9% | 1.0 | 0.623 |
+| prs_low | 0.453 | -0.185 | 0.468 | -6.4% | 1.0 | 0.185 |
+| dcc_low | 0.478 | 0.289 | 0.445 | -11.1% | 0.188 | 0.036 |
+
+**Nothing survives.** Best candidate (persistent H2 void, +12.0%) is not
+significant either way (p=0.107 uncorrected, p=0.856 Bonferroni,
+cluster-p=0.101) and has real missing data (`void_score` legitimately
+detects no H2 class on 63/108 structures — its own documented honest
+zero, n=45/108 usable). `dcc_low` is the only nominally-significant cell
+(uncorrected p=0.0235) and it is **negative** (anti-predictive once
+proximity is removed) — does not survive Bonferroni (p=0.188) either.
+
+**Dephasing, time-boxed** (N<=300 only, 11/108 — the documented ~N^2.75
+cost of `haken_strobl_time_averaged` makes the full cohort infeasible
+in-session, same treatment [[TASK-0256]] gave this identical function):
+raw AUC 0.431 (below chance), residualised 0.444 — not promising, n too
+small to weight, not chased further.
+
+**Cluster-robust by protein**: [[TASK-0261]]'s own `cluster_sign_flip_
+test` is hardcoded to its own 13-cluster/20-target set and returns an
+empty test on any ASBench PDB. Generalised locally (identical
+sum-of-cluster-sums sign-flip algorithm, arbitrary cluster map, exact up
+to 20 clusters else 100000-draw Monte Carlo) — 108 structures cluster
+into 76 distinct proteins, mostly singletons.
+
+**Verdict**: every one of the 7 runnable observables — including chiral
+circulation, the one with the strongest specific prior — loses its
+apparent signal once proximity is accounted for. None is distinguishable
+from chance after Bonferroni; none holds up cluster-robust by protein.
+With [[TASK-0308]]'s own CTQW result, that is 8 of 9 nameable observables
+(2 never built) tested against this confound, and none survives it. The
+register does not currently have an observable genuinely orthogonal to
+distance — the premise this task was filed to test.
+
+**Script:** `scripts/task0310_family_residualised_on_proximity.py`
+(total wall time ~111 min, dominated by chiral circulation's per-field-
+direction Peierls Hamiltonian construction at 4787s/108 structures).
+**Data:** `results/tasks/0310_family_residualised_on_proximity/
+family_residualised.json`. **Full detail:**
+`.ai/tasks/DONE/TASK-0310-observable-family-residualised-on-proximity.md`.
