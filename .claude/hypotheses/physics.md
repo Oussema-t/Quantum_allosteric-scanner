@@ -973,3 +973,121 @@ negative result — explicitly labelled as hypothesis, not finding, and now
 with one of its own sharpest sub-predictions checked and failed
 ([[TASK-0268]]) alongside a second independent route that could not
 actually test it ([[TASK-0271]]).**
+
+---
+
+## HYP-P14 · The discriminator is blocked by a single confound, and only a proximity-orthogonal observable can unblock it
+
+**Filed:** 2026-09-01, from the [[TASK-0287]]–[[TASK-0309]] arc. **Status:
+hypothesis, not finding.** Written for handover.
+
+**Claim:** Every scoring signal this register has tested collapses into
+**proximity to the active site** once conditioned on it. Proximity is not
+one predictor among many — it is the ceiling that the others turn out to
+be noisy copies of. Therefore a working discriminator cannot come from
+another function of distance, druggability or size, and can only come
+from an observable that is **structurally orthogonal to the radial
+proximity flow**. The register already contains such an observable, built
+for a different purpose and never tested this way.
+
+**Supporting evidence — the collapse is measured, not assumed:**
+
+| signal | raw | conditioned on its confound | source |
+|---|---|---|---|
+| proximity (nearest-to-seed) | AUC 0.6147 | — (it *is* the confound) | [[TASK-0308]] |
+| CTQW occupation | AUC 0.5921 | **0.5184, p=0.29 (n.s.)** — ρ=+0.735 | [[TASK-0308]] |
+| fpocket druggability | survives Bonferroni | dies on pocket size | [[TASK-0287]] |
+| ENM mode shift | p=0.005–0.013 claimed | did not reproduce (p=0.31) | [[TASK-0303]] |
+| sibling persistence | — | null both regimes (p=0.97/0.86) | [[TASK-0302]] |
+| conservation, fold class, domain, quaternary, dispersion | — | all null | [[TASK-0284]], [[TASK-0306]], external Exp. B |
+| bond-to-bond propensity (published SOTA) | AUC 0.5067 | +1.3% | [[TASK-0308]] |
+
+**Headroom: 77.1%** of available ranking signal is explained by nothing
+tested ([[TASK-0308]], n=108).
+
+**The lead candidate — and why it is not just another arm.** [[TASK-0140]]'s
+chiral circulation observable is the Helmholtz-Hodge **circulating**
+component of the chiral bond current. Its gradient component *is* the
+radial proximity flow and is subtracted off, so the scored quantity is
+**proximity-orthogonal by construction, not by tuning** (see [[HYP-P9]]).
+Measured on 7 real targets: ρ(observable, −distance) = **−0.325**, against
+occupation's **−0.636** — roughly **half the distance contamination at
+comparable raw AUC** (0.572 vs 0.596).
+
+**[[TASK-0140]] failed its own gate (0/7 clearing the floor) — but it was
+scored on RAW AUC against a distance floor, and never residualised.** At
+the time, nobody had established that proximity was the dominant
+confound; that only became measurable in [[TASK-0308]]. A crude ρ²-based
+projection suggests circulation would retain **more** independent signal
+than occupation despite the lower raw AUC (+0.064 vs +0.057 surviving
+excess). **That projection is arithmetic on 7 targets, not a result.**
+
+**The same omission applies to the whole observable family.** [[TASK-0141]]
+(engineered dephasing), [[TASK-0142]] (Hodge L1 / persistent H2),
+[[TASK-0145]] (transport conductance), [[TASK-0146]] (frequency-domain
+coherence), [[TASK-0147]] (vibronic resonance), [[TASK-0148]]
+(single-particle entanglement entropy), [[TASK-0157]] (two-boson HOM) were
+**all evaluated on raw AUC against floors, none residualised on
+proximity.** Whatever their verdicts, they were reached under the wrong
+null.
+
+**Secondary route — the six-measure meta-classifier.** [[TASK-0306]]'s
+redundancy gate **passed**: the six bond-to-bond statistical measures have
+mean pairwise |φ| = **0.419**, genuinely more independent than our own
+61-rule family ever was ([[TASK-0301]] showed those were one signal at 61
+settings). 78 of 118 ASBench structures sit between "one measure fires"
+and "all six fire" — the signature of different measures suiting different
+proteins. What fires is *not* predicted by protein size, chain count,
+site separation ([[TASK-0306]]) or fold class ([[TASK-0306]] addendum).
+
+**Counter-evidence / conditions under which this fails:**
+
+- ~~**The distribution is a continuum.**~~ **WITHDRAWN 2026-09-01
+  ([[TASK-0313]] + its Reviewer addendum).** The Silverman evidence does not
+  support this bullet in either direction:
+  - The implementation is **correct** (the suspected `bw_method`/std-tracking
+    bug is refuted algebraically: `covariance == h**2`). The identical
+    `h_crit` across subsets is real, not a bug.
+  - But the test has **zero power below 3 SD separation at n = 26/112/171**,
+    measured directly. The data sit at **1.88 SD** ([[TASK-0288]] Finding B).
+    Every "consistent with unimodal" verdict is therefore **uninformative,
+    not negative** — the same error [[TASK-0288]] correctly refused to make
+    with the bootstrap LRT.
+  - The pooled arm (n=171), run for the first time in [[TASK-0313]], is
+    **MULTIMODAL** (p=0.020 full, p=0.005 excluding the covalent floor) —
+    but the three cohorts differ significantly in location (Kruskal-Wallis
+    p=2.2e-03; medians 2.95 / 9.03 / 2.97), so this is plausibly a
+    cohort-mixture artifact and is not evidence for two populations either.
+
+  **Net: modality is UNDETERMINED.** Stratified two-rule designs are not
+  dead on this evidence. Regression on continuous position remains
+  well-motivated ([[TASK-0311]]) but is no longer justified by "there are no
+  classes". What *does* still close [[TASK-0300]]'s specific route is that
+  task's own direct measurement — the distance category does not determine
+  the winning rule — which is independent of any modality test.
+- **Cohort size was the binding constraint, and no longer is.**
+  [[TASK-0301]] closed this line at 13 clusters. ASBench + CASBench give
+  **171 proteins** with the field's own annotations ([[TASK-0304]]).
+  [[TASK-0140]] ran on **7**.
+- **Four selection procedures have died of pseudo-replication**
+  ([[TASK-0282]], [[TASK-0293]], [[TASK-0299]], [[TASK-0300]]). Anything
+  built on this hypothesis must be scored cluster-robust, held out by
+  **protein**, with a positive control — CASBench is 314 structures over
+  33 proteins.
+- **Single-particle chiral walks are classically simulable.** The
+  advantage claimed here is *modeling* (directional, loop-native,
+  proximity-orthogonal), not asymptotic quantum speedup — same caveat
+  [[HYP-P9]] already carries.
+
+**Decisive test (pre-registered):** re-score the observable family on the
+171-protein cohort using **residual AUC after conditioning on proximity**,
+not raw AUC against a floor. Chiral circulation first, on the prior above.
+A positive result is an observable whose *residual* beats chance
+cluster-robustly by protein; a negative result closes the quantum route
+with an argument, rather than leaving it open on an untested null.
+
+**Why this matters for the handover:** it is the only remaining line in
+this register with (i) a measured reason to expect signal, (ii) existing
+implemented code (`src/allostery/chiral.py`,
+`scripts/chiral_circulation_real_run.py`), and (iii) a cohort large enough
+to test it. Everything else has been measured and closed.
