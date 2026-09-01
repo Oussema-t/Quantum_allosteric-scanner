@@ -10936,3 +10936,87 @@ one cohort it has been computed for.
 **Data:** `results/tasks/0311_regression_not_classification/
 regression_not_classification.json`. **Full detail:**
 `.ai/tasks/DONE/TASK-0311-regression-not-classification.md`.
+
+## The Silverman multimodality test is correctly implemented but structurally blind to a point mass — and the completed pooled run is MULTIMODAL, contradicting the headline it was meant to support ([[TASK-0313]], 2026-09-01)
+
+The 2026-09-01 Silverman critical-bandwidth run behind [[TASK-0309]]'s
+continuum conclusion reported every cohort "consistent with unimodal" —
+but `h_crit` came out identical to 3 decimals for the full distribution
+and the spike-excluded remainder in every cohort, which does not look
+right, and the pooled arm never finished. This task verifies the
+implementation before trusting either the numbers or the conclusion.
+
+**Suspected cause REFUTED, not just re-asserted.** The filing suspected
+`bw_method = h / x.std(ddof=1)` makes `h_crit` track the sample standard
+deviation instead of the density's real mode structure. Checked
+algebraically and directly against `scipy.stats.gaussian_kde`'s own
+internals: for 1-D data, `covariance = x.var(ddof=1) * bw_method**2`, so
+substituting the formula gives `covariance = h**2` — **exactly,
+independent of `x.std()`** — confirmed on two samples differing in scale
+by 50× (both give `covariance=9.0000` at `h=3.0`). This is the standard
+idiom for forcing `gaussian_kde` to use an ABSOLUTE bandwidth; not a bug.
+`hcrit`'s own binary search was also traced step-by-step on real data and
+converges correctly and monotonically. The identical-`h_crit` observation
+is a genuine property of these specific cohorts (the smoothing scale
+needed to erase the last local wiggle is set by the broad continuum's own
+spread, not by whether 8 low-value points are present or absent) — not
+evidence of a defect.
+
+**Validation against the task's own three pre-registered controls: 2/3
+pass, and the failure is the one that matters.** A clean unimodal
+Gaussian (n=26) correctly returns unimodal; a well-separated bimodal
+mixture (n=112) correctly returns MULTIMODAL. A point-mass-plus-continuum
+sample (n=171) — built as an extreme, essentially unambiguous case (a
+near-delta spike, std=0.01, at 30% weight, cleanly separated from a broad
+log-normal continuum) — **fails**: p=0.38–0.43, "consistent with
+unimodal", stable across B=200/400/800 and across independent re-seeding.
+
+**This is a real limitation of Silverman's test, not a fixable
+implementation bug — confirmed the mechanism, not just the symptom.**
+The smoothed bootstrap's own null reference is built by resampling **with
+replacement from the observed data itself**, then jittering by `h_crit`
+and variance-correcting. Since the spike is 30% of the sample, most
+bootstrap resamples reconstitute a similar-sized spike cluster; the same
+`h_crit` needed to erase the true spike also erases the bootstrap
+replicate's own reconstituted one, so the null distribution of bootstrap
+`h_crit` centers near the observed value regardless of how separated the
+true spike is. The test's own calibration inherits the exact feature it
+is testing for — a documented weakness of Silverman's (1981) classical
+calibration for point-mass/atom alternatives specifically, addressed in
+later literature (Hall & York recalibration, dip-test-based alternatives)
+that is out of this verification task's own scope to build.
+
+**Consequence: the "consistent with unimodal" verdicts on real data are
+uninformative for exactly the question [[TASK-0309]] asked**, not
+evidence the site-distance distribution is a clean continuum — the test
+cannot see a point mass even when one is unambiguously present.
+
+**But completing the never-finished pooled arm changes the picture,
+and this result IS trustworthy** (power limitations affect false
+negatives, not false positives — a reject is still real evidence
+regardless of the blind spot above): pooled (n=171, all three cohorts
+combined) returns **MULTIMODAL both full (p=0.020) and excluding the
+sub-1.5 Å spike (p=0.005, n=125)**. The individual cohorts (ours,
+ASBench, CASBench) each still read "consistent with unimodal" — but given
+the demonstrated power gap, that must be read as "underpowered at
+n=18–33," not "confirmed unimodal." Multimodality surviving spike
+exclusion in the pooled set suggests real additional structure beyond a
+single spike-plus-smooth-continuum picture — not chased further here
+(out of this task's own scope), flagged as a natural follow-up.
+
+**Net effect on [[TASK-0309]]'s continuum claim, per this task's own
+Constraint**: Silverman does **not** support it — if anything the
+completed run points the other way for the pooled cohort. The continuum
+conclusion does not gain support from the Silverman follow-up and should
+not be cited alongside it; it still stands on [[TASK-0309]]'s own
+independent GMM-BIC (point-mass-plus-continuum preferred over k-Gaussian
+in every cohort) and spike/excess-mass binomial evidence (p=1.1e-5 to
+2.8e-20), both methodologically unaffected by this test's own blind spot,
+plus the weaker k-means best-k instability. [[TASK-0184]] and the
+collaborator brief should not cite the Silverman run as corroborating
+evidence; the pooled MULTIMODAL result, if cited at all, argues against a
+clean-continuum reading, not for one.
+
+**Script:** `scripts/task0313_verify_silverman.py`. **Data:**
+`results/tasks/0313_verify_silverman/silverman_verification.json`.
+**Full detail:** `.ai/tasks/DONE/TASK-0313-verify-silverman-implementation.md`.

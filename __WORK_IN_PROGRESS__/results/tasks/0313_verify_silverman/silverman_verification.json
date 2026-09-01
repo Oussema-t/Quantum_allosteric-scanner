@@ -1,0 +1,81 @@
+{
+ "std_tracking_bug": "refuted",
+ "control_validation": {
+  "unimodal": {
+   "n": 26,
+   "h_crit": 0.9758954703277648,
+   "p": 0.5461346633416458,
+   "verdict": "unimodal",
+   "expected": "unimodal",
+   "pass_": true
+  },
+  "bimodal": {
+   "n": 112,
+   "h_crit": 9.79136484522664,
+   "p": 0.0024937655860349127,
+   "verdict": "MULTIMODAL",
+   "expected": "MULTIMODAL",
+   "pass_": true
+  },
+  "point_mass": {
+   "n": 171,
+   "h_crit": 3.540529370379856,
+   "p": 0.38154613466334164,
+   "verdict": "unimodal",
+   "expected": "MULTIMODAL",
+   "pass_": false
+  }
+ },
+ "controls_all_pass": false,
+ "real_data": {
+  "ours|full": {
+   "n": 26,
+   "h_crit": 2.2063299675097285,
+   "p": 0.8059701492537313,
+   "verdict": "consistent with unimodal"
+  },
+  "ours|excluding <1.5 A": {
+   "n": 18,
+   "h_crit": 2.2063330639661864,
+   "p": 0.7960199004975125,
+   "verdict": "consistent with unimodal"
+  },
+  "asbench|full": {
+   "n": 112,
+   "h_crit": 3.8645624418311177,
+   "p": 0.13930348258706468,
+   "verdict": "consistent with unimodal"
+  },
+  "asbench|excluding <1.5 A": {
+   "n": 88,
+   "h_crit": 3.8643356362524615,
+   "p": 0.0945273631840796,
+   "verdict": "consistent with unimodal"
+  },
+  "casbench|full": {
+   "n": 33,
+   "h_crit": 11.939067620638916,
+   "p": 0.10945273631840796,
+   "verdict": "consistent with unimodal"
+  },
+  "casbench|excluding <1.5 A": {
+   "n": 19,
+   "h_crit": 11.939484558294287,
+   "p": 0.15422885572139303,
+   "verdict": "consistent with unimodal"
+  },
+  "pooled|full": {
+   "n": 171,
+   "h_crit": 10.447083398561313,
+   "p": 0.01990049751243781,
+   "verdict": "MULTIMODAL"
+  },
+  "pooled|excluding <1.5 A": {
+   "n": 125,
+   "h_crit": 10.446966600115108,
+   "p": 0.004975124378109453,
+   "verdict": "MULTIMODAL"
+  }
+ },
+ "verdict": "Silverman test correctly implemented but has no power for the point-mass-plus-continuum alternative; real-data unimodal verdicts are uninformative for TASK-0309's specific question."
+}
