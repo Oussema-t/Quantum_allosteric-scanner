@@ -125,3 +125,156 @@ edited here.
 `results/tasks/0313_verify_silverman/silverman_verification.json`.
 
 **Moved TODO/IN_PROGRESS -> DONE.**
+
+---
+
+## Addendum (2026-09-01, Reviewer thread) — the verification was right and did not go far enough; and the one significant result is a cohort artifact
+
+> ### Self-correction, same day, BEFORE this addendum was ever committed
+>
+> Two of this addendum's own claims are wrong or overstated. They are left in
+> place below (append-don't-silently-edit) and corrected here.
+>
+> **(1) The "1.88 SD" figure is in the wrong units, and I propagated it.**
+> [[TASK-0288]]'s `task0288_...py:123` computes
+> `sep = (srt[22:].mean() - srt[:22].mean()) / lo.std()` — the **overall
+> sample SD**. Every power curve in this register (mine below, and
+> [[TASK-0316]]'s) is parameterised as unit-variance components separated by
+> *k* — **component SD**. Same GMM, same `ours` cohort, recomputed directly:
+>
+> ```
+> separation, overall-sample SD : 1.84   <- TASK-0288's "1.88"
+> separation, component SD      : 4.10   <- TASK-0316's "4.24"
+> ```
+>
+> Reading a sample-SD observation against a component-SD power curve is what
+> made the data look underpowered. **[[TASK-0288]] Finding B made this error
+> first; I repeated it here, and it propagated into [[HYP-P14]],
+> `COMMON.md`'s TASK-0311 row, and [[TASK-0316]]'s own filing.**
+>
+> **(2) "Zero power" is therefore too strong.** At the correct 4.10
+> component-SD, the table below gives Silverman **~40% power at n=26 and
+> ~100% at n=112** — low, not absent. The consequence is *sharper*, not
+> softer: at `asbench` n=112 Silverman is **adequately powered and returns
+> unimodal (p=0.139)**, so it now genuinely **disagrees** with
+> [[TASK-0316]]'s LRT rather than being dismissable on power.
+>
+> **(3) And the test that disagrees with it is miscalibrated.** Measured
+> after [[TASK-0316]] landed, on strictly unimodal `N(0,1)` data, nominal
+> α=0.05, 25 reps:
+>
+> ```
+> task0309.lrt  (imported by TASK-0316)   n=26: 68% FP    n=100: 52% FP
+> task0288.lrt  (original)                n=26:  0% FP    n=100:  0% FP
+> ```
+>
+> [[TASK-0288]]'s original draws **two independent samples** for the null —
+> one for the k=2 fit, another for the k=1 fit (`task0288_...py:90-91`) —
+> which is not a likelihood ratio and makes it over-conservative.
+> [[TASK-0309]]'s generalisation fixed that and is anti-conservative instead.
+> **Both are miscalibrated, in opposite directions, and each produced one of
+> the register's two contradictory modality verdicts.**
+>
+> **This was already on record and was overlooked.** *This task's own
+> Constraint section* (lines 70–73, committed in `936d9e7`) states it
+> plainly: *"[[TASK-0309]]'s own LRT was compromised precisely because its
+> controls were not checked: on our cohort its positive control returned
+> p = 1.0 (failing to detect real bimodality) and on ASBench and pooled its
+> **negative control fired at p = 0.012 on a true single Gaussian**."*
+> [[TASK-0316]] imported that exact `lrt` from
+> `task0309_kmeans_extended_cohort.py` and ran no negative control of its
+> own. The measurement above is therefore an independent **confirmation** of
+> a known defect, not a new discovery — which makes the process failure the
+> more important finding: the defect was documented in the very task
+> [[TASK-0316]] cites as its motivation.
+>
+> **Net, superseding this addendum's own closing "Next" list: modality is
+> still undetermined, and [[TASK-0316]]'s "multimodal in every cohort" does
+> not settle it either.** Tracked for a null-calibrated re-run. The parts of
+> this addendum that stand unchanged: the implementation is correct (the
+> `bw_method` bug is genuinely refuted), Silverman's power *is* poor at small
+> n, and the pooled arm's significance is confounded by cohort
+> (Kruskal-Wallis p=2.15e-03).
+
+Reviewed by re-running this task's own script and adding two checks it did
+not make. **Both of this task's own conclusions stand** (implementation
+correct; low power for the point-mass alternative). Two things it missed:
+
+### 1. The bimodal positive control is far too easy, so "2/3 PASS" overstates the validation
+
+`build_controls`'s `bimodal` arm is `N(5,1)` vs `N(25,1)` — a **20 SD**
+separation. [[TASK-0288]] Finding B measured that the real distribution sits
+at **1.88 SD**. A control 10× beyond the alternative of interest cannot
+calibrate the test.
+
+Power measured directly — equal-weight 2-Gaussian mixtures, detection rate at
+α=0.05, 5 reps, B=99, this task's own `silverman()`:
+
+| n | 1.5 SD | 2.0 SD | 3.0 SD | 4.0 SD | 6.0 SD |
+|---|---|---|---|---|---|
+| 26 | 0% | 0% | 0% | 40% | 100% |
+| 112 | 0% | 0% | 0% | 100% | 100% |
+| 171 | 0% | 0% | **60%** | 100% | 100% |
+
+**Zero power below 3 SD at every cohort size this register has.** The failure
+is therefore not specific to the point-mass alternative as this task
+concluded — the test is blind to the *ordinary* two-Gaussian alternative too,
+at the separation the data actually exhibits.
+
+**Consequence, stronger than this task's own:** every "consistent with
+unimodal" verdict in [[TASK-0309]] and in [[HYP-P14]] is **uninformative, not
+negative** — a null produced by absent power. This is precisely the error
+[[TASK-0288]] Finding B correctly avoided for the bootstrap LRT ("p=0.137
+must not be reported as evidence against two populations"); the Silverman
+follow-up reintroduced it.
+
+### 2. The pooled arm IS significant — and it is very likely a cohort-mixture artifact
+
+This task's Part 3 completed the pooled arm for the first time:
+
+```
+pooled  full              171   h_crit=10.447  p=0.020  MULTIMODAL
+pooled  excluding <1.5 A  125   h_crit=10.447  p=0.005  MULTIMODAL
+```
+
+**That contradicts [[HYP-P14]]'s "no support for any k > 1 in any cohort".**
+Before treating it as evidence for two populations: the three pooled cohorts
+have significantly different locations.
+
+| cohort | n | median min_A | mean | std |
+|---|---|---|---|---|
+| ours | 26 | 2.95 | 5.72 | 5.55 |
+| asbench | 112 | **9.03** | 10.38 | 8.34 |
+| casbench | 33 | 2.97 | 8.47 | 14.35 |
+
+Kruskal-Wallis across cohorts **H=12.28, p=2.15e-03**; `ours` vs `asbench`
+p=0.013, `asbench` vs `casbench` p=0.004. **Pooling three distributions with
+significantly different locations is a standard way to manufacture
+multimodality.** The pooled p=0.020 should not be read as a biological
+finding until the cohort mixture is ruled out — the cohorts also use
+different label-scoping conventions ([[TASK-0311]]'s own disclosure: single
+functional chain vs whole ASU).
+
+### Net effect on [[HYP-P14]]
+
+Its counter-evidence bullet — *"no support for any k > 1 in any cohort... so
+stratified two-rule designs are dead and classification may be the wrong
+shape entirely"* — **is not supported by the Silverman evidence.** Neither
+direction is established: the unimodal verdicts have no power behind them,
+and the one multimodal verdict is confounded by cohort.
+
+**What is unaffected:** [[TASK-0300]]'s *direct* measurement that the
+category does not determine the winning rule (`HCV_NS5B_VRX` and
+`HCV_NS5B_POO` both "intermediate", scoring 1.000 and 0.000 under the same
+rule; category-stratified oracle 0.1899 vs per-target oracle 0.3307). That
+finding is independent of any modality test and still closes the specific
+"stratify by distance category" design.
+
+### Next
+
+- [ ] Re-run the modality question with a test that has power at ~2 SD — the
+      bootstrap LRT [[TASK-0288]] already calibrated, or a dip test — on each
+      cohort separately, never pooled.
+- [ ] If the pooled arm is kept, condition on cohort (or fit within-cohort
+      and combine) before any k>1 claim.
+- [ ] Correct [[HYP-P14]]'s counter-evidence bullet.
