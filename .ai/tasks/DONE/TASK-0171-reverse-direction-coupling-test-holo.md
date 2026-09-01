@@ -185,3 +185,12 @@ scope discipline and the precedent of `holo_diagnostic_transport_
 lowmode.py`/`holo_diagnostic_comparison.py` (neither carries its own
 dedicated unit test file either). Full suite (unaffected, no `src/`
 change): 1063 passed, 2 xfailed, 0 failed.
+
+**Note added 2026-09-01 by [[TASK-0312]]**: same note as on
+[[TASK-0162]]'s own Done section applies here — `M_ij = M_ji` exactly
+(confirmed on real holo topology, this task's own `build_H_new`), so
+`auc_forward`/`auc_reverse` and `background_spearman_rho` measure whether
+the active site and the pocket have similar *views* of the rest of the
+protein, not transport directionality. This task's own conclusions above
+(apo vs. holo sensitivity) are unaffected; no directionality reading may
+be sourced to the forward/reverse comparison. See [[TASK-0312]].

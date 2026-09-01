@@ -1,0 +1,40 @@
+{
+  "results": [
+    {
+      "target": "KRAS_G12C",
+      "N": 167,
+      "n_active": 18,
+      "n_pocket": 17,
+      "max_abs_M_minus_MT": 0.0,
+      "set_level_forward": 0.08682899086391006,
+      "set_level_reverse": 0.09193657856178712,
+      "ratio_observed": 0.9444444444444445,
+      "ratio_predicted_T_over_S": 0.9444444444444444,
+      "ratio_matches": true
+    },
+    {
+      "target": "BCR_ABL1",
+      "N": 429,
+      "n_active": 26,
+      "n_pocket": 16,
+      "max_abs_M_minus_MT": 0.0,
+      "set_level_forward": 0.03375474765716012,
+      "set_level_reverse": 0.054851464942885196,
+      "ratio_observed": 0.6153846153846154,
+      "ratio_predicted_T_over_S": 0.6153846153846154,
+      "ratio_matches": true
+    },
+    {
+      "target": "CARDIAC_MYOSIN",
+      "N": 709,
+      "n_active": 18,
+      "n_pocket": 13,
+      "max_abs_M_minus_MT": 0.0,
+      "set_level_forward": 0.019775553388628304,
+      "set_level_reverse": 0.02738153546117765,
+      "ratio_observed": 0.7222222222222223,
+      "ratio_predicted_T_over_S": 0.7222222222222222,
+      "ratio_matches": true
+    }
+  ]
+}

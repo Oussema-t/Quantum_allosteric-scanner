@@ -11020,3 +11020,81 @@ clean-continuum reading, not for one.
 **Script:** `scripts/task0313_verify_silverman.py`. **Data:**
 `results/tasks/0313_verify_silverman/silverman_verification.json`.
 **Full detail:** `.ai/tasks/DONE/TASK-0313-verify-silverman-implementation.md`.
+
+## The observed CTQW active→pocket vs pocket→active asymmetry is a category error, not a bug or a fixable normalisation ([[TASK-0312]], 2026-09-01)
+
+It has been observed in this project that the CTQW propagates
+differently seeded from the active site toward the pocket than from the
+pocket toward the active site ([[TASK-0162]], [[TASK-0171]]). For this
+Hamiltonian that should be impossible: `H_new` is real, symmetric, and
+seed-independent, so the converged/decoherent-limit transfer kernel
+`M_ij = Sum_B (P_B)_ij²` (`P_B` a real symmetric spectral projector) is
+exactly symmetric — `M_ij = M_ji` for all `i,j`, at any seed placement.
+Three hypotheses, now all closed:
+
+**H2 (implementation defect in the propagator/seeding): EXCLUDED.**
+Confirmed on a synthetic control (60-node random graph, `max|M-Mᵀ| =
+1.11e-16`) and now on real target topology, which a synthetic control
+does not guarantee — a real spectrum has the near-degenerate structure
+`degenerate_tol` grouping actually acts on. `M` built directly from
+`H_new`'s own spectral decomposition on KRAS_G12C (N=167), BCR_ABL1
+(N=429), CARDIAC_MYOSIN (N=709): `max|M-Mᵀ| = 0.000e+00` on every
+target, exactly.
+
+**H1 (normalisation artifact): CONFIRMED, exactly — but only for a
+statistic that was never reported.** The set-level transfer scalar
+(`Sum_{i in A, j in P} M_ij / |A|` forward, same sum `/|P|` reverse) has
+its forward/reverse ratio fixed by `M`'s own symmetry to be exactly
+`|pocket|/|active|` — confirmed to 1e-9 relative tolerance on all three
+real targets above. `background_spearman_rho` and the forward/reverse
+AUC pair that [[TASK-0162]]/[[TASK-0171]] actually report are **not**
+this scalar: they compare two different rows of a symmetric matrix
+against two different label vectors, a relationship `M`'s symmetry
+constrains not at all. The originally-proposed remedy ("divide both
+directions by the same quantity") is a no-op on the statistic that was
+actually reported — Spearman is invariant under positive rescaling.
+
+**H3 (category error): the live and correct explanation.** The
+forward/reverse gap is real, was correctly computed, and does not mean
+what it was read to mean. It measures whether the active site and the
+pocket have similar *views* of the rest of the protein — a genuine,
+substantive question about protein structure — not directionality of
+quantum transport. **[[TASK-0162]] and [[TASK-0171]]'s own Done sections
+each carry a dated note as of this task**: no directional claim may be
+sourced to `background_spearman_rho` or the forward/reverse AUC pair.
+Neither task's own original conclusions (which were never directionality
+claims) are retracted or edited.
+
+**`coherent=` default audited across every call site** of
+`time_averaged_ctqw_converged` in `src/` and `scripts/` (30+ production
+scripts, not a sample): the function's own default is `coherent=True`
+(a coherent equal-amplitude superposition over a multi-residue seed,
+under which cross-seed interference survives even matched normalisation
+and can look like directionality that is not there). Every production
+script found that seeds it with a genuinely multi-residue source passes
+`coherent=False` explicitly, matching [[TASK-0118]]'s panel-recommended
+convention — this is the dominant, established convention, not an
+exception. One undisclosed exception found:
+`scripts/hardware_feasibility_verdict.py:79` calls
+`time_averaged_ctqw_converged(H_full, source=active_idx_full)` with no
+`coherent=` kwarg on a multi-residue source; that script measures
+coarse-graining fidelity retention, not directionality, so this is
+unlikely to change its conclusion but is flagged, not fixed, here. Two
+library-level wrapper functions (`allostery.analysis`, `allostery.
+ceiling`) keep the same `True` default in their own signatures and pass
+it straight through to callers who don't override it — noted, not traced
+further (out of this task's own scope).
+
+**Why H3 matters more than H1**: the original two-hypothesis framing
+implied a corrected normalisation could still rescue a directional
+signal from the existing data. It cannot. No re-analysis of a real
+symmetric `H` can produce directionality, because the quantity is
+symmetric to machine precision, confirmed now on real topology as well
+as synthetic. Genuine directionality requires breaking time-reversal
+symmetry — complex hopping amplitudes, a chiral quantum walk / synthetic
+gauge phase — a different Hamiltonian, not a re-analysis of this one.
+Connects directly to [[TASK-0310]]'s lead candidate and to [[TASK-0140]].
+
+**Script:** `scripts/task0312_ctqw_seed_asymmetry.py`. **Data:**
+`results/tasks/0312_ctqw_seed_asymmetry/ctqw_seed_asymmetry.json`.
+**Full detail:** `.ai/tasks/DONE/TASK-0312-ctqw-seed-asymmetry-artifact-or-bug.md`.

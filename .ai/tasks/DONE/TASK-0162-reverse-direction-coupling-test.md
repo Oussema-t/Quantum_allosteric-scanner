@@ -169,3 +169,17 @@ no new unit tests were added; the full suite confirms nothing broke).
 Full detail: `RESULTS.md`'s "Reverse-direction coupling test" section,
 open-questions row 45,
 `RESULTS/results/tasks/0162_reverse_direction/reverse_direction_coupling_test.json`.
+
+**Note added 2026-09-01 by [[TASK-0312]]**: `H_new` is real, symmetric
+and seed-independent, so the pairwise transfer kernel underlying every
+observable here is exactly symmetric (`M_ij = M_ji`, confirmed to
+machine precision on real target topology, not just synthetic). Neither
+`auc_forward`/`auc_reverse` nor `background_spearman_rho` above are tests
+of transport directionality — they compare two different rows of a
+symmetric matrix against two different label vectors, which the
+matrix's own symmetry says nothing about. No claim in this task's Done
+section above is a directionality claim (it reports AUC/floor
+comparisons, correctly), so nothing here is retracted — but any FUTURE
+reading of these numbers, or `TASK-0171`'s, as evidence that the CTQW
+propagates differently active→pocket than pocket→active would be a
+category error. See [[TASK-0312]] for the full derivation.
