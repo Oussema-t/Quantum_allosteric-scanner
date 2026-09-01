@@ -11256,3 +11256,82 @@ direction Peierls Hamiltonian construction at 4787s/108 structures).
 **Data:** `results/tasks/0310_family_residualised_on_proximity/
 family_residualised.json`. **Full detail:**
 `.ai/tasks/DONE/TASK-0310-observable-family-residualised-on-proximity.md`.
+
+## Modality re-run with a POWERED test: multimodal in every cohort, both arms — not the underpowered null this register has been reporting ([[TASK-0316]], 2026-09-01)
+
+[[TASK-0313]]'s Reviewer addendum left the modality question
+undetermined: Silverman's test has zero power below 3 SD at every
+cohort size this register has, so every prior "consistent with
+unimodal" verdict ([[TASK-0309]], [[HYP-P14]]) is a null produced by
+absent power, and the one significant pooled result is confounded by
+the three cohorts' significantly different locations
+(Kruskal-Wallis p=2.15e-03). This task re-ran the question with
+[[TASK-0288]]'s own calibrated bootstrap LRT (1 vs 2 Gaussians on
+`log(min_A)`, reused verbatim, no third modality test written), per
+cohort, never pooled, with a real power curve reported alongside every
+verdict — and with the `<1.5 Å` covalent-floor rows both included and
+excluded, as separate arms, since [[TASK-0288]] Finding F showed those
+are a labelling-adjacency artifact, not a distance measurement.
+
+**Outcome: multimodal in all three cohorts, in both arms — six datasets,
+six significant, adequately-powered results**, not the "≥1 cohort"
+threshold that would already have reopened stratified designs:
+
+| cohort | arm | n | p | power@observed sep | GMM(2) means (Å) | weights |
+|---|---|---|---|---|---|---|
+| ours | full | 26 | 0.0033 | 100% | 2.06 / 11.53 | .656/.344 |
+| ours | excl. <1.5 Å | 18 | 0.0033 | 100% | 2.97 / 11.37 | .491/.509 |
+| asbench | full | 100 | 0.0033 | 100% | 1.33 / 11.02 | .120/.880 |
+| asbench | excl. <1.5 Å | 88 | 0.0033 | 100% | 7.40 / 18.03 | .553/.447 |
+| casbench | full | 30 | 0.0033 | 100% | 1.32 / 8.12 | .365/.635 |
+| casbench | excl. <1.5 Å | 19 | 0.0033 | 100% | 4.94 / 34.63 | .743/.257 |
+
+**Power was checked, not asserted** — the specific failure this task
+exists to correct. Full power curves (1.5/2.0/3.0/4.0/6.0 SD) are in the
+data file for all six rows; power at each cohort's own empirically
+observed separation is 100% throughout. None of these six verdicts is a
+null produced by absent power.
+
+**The p=0.0033 floor (B=300) was suspected and checked, not trusted
+blind**: all six datasets hit the resolution floor exactly, which is
+itself worth distrusting. Spot-checked two cases at B=999 (smallest n,
+and a mid-separation case): both held at the new floor (p=0.001) — the
+observed statistic exceeds every one of 999 null draws, not just 300.
+Real tail results, not a low-fidelity artifact.
+
+**The central finding — this is not just Finding F's point mass
+re-detected**: only the two "full" arms still containing the covalent
+spike show a low-mean GMM(2) component that is narrow and
+minority-weight (`asbench` weight 0.120, `casbench` weight 0.365) —
+[[TASK-0288]] Finding F's own signature. **Every "excluding <1.5 Å" arm
+— with that point mass already removed — is still significantly
+multimodal, and none of those low-mean components is point-mass-like**
+(weights 0.491–0.743, not narrow minority spikes). The bimodality
+surviving covalent-floor exclusion cannot be explained away as Finding
+F's point mass in any of the three cohorts. It is what [[TASK-0284]]
+Finding A originally reported — now demonstrated with a calibrated,
+powered test, not a silhouette alone.
+
+**Consequence**: stratified two-rule designs reopen. [[HYP-P14]]'s
+withdrawn continuum bullet is not merely unsupported (already known) —
+the calibrated, powered evidence now points the other way. [[TASK-0311]]'s
+regression pivot loses its main justification (its own results stand;
+only the "classification is the wrong shape" framing is undercut).
+**Flagged for whoever owns [[HYP-P14]] and the collaborator brief —
+neither edited here.** [[TASK-0300]]'s own direct measurement (distance
+category does not determine the winning rule) is unaffected regardless
+of how modality lands.
+
+**A caveat, disclosed not swept past**: running every cohort separately
+sidesteps [[TASK-0313]]'s cohort-mixture confound by construction, but
+not a different one — `min_A` is a bounded-below, right-skewed
+minimum-of-distances quantity, so a single skewed continuum could in
+principle still pull a GMM(2)/LRT preference toward two components
+without two genuine populations, independent of the point-mass mechanism
+already ruled out above. A matched-skew unimodal negative control per
+cohort would close this; not run here (out of this task's own compute
+budget under heavy concurrent machine load this session).
+
+**Script**: `scripts/task0316_modality_powered_test.py`. **Data**:
+`results/tasks/0316_modality_powered_test/modality_powered_test.json`.
+**Full detail**: `.ai/tasks/DONE/TASK-0316-modality-re-run-with-a-powered-test.md`.

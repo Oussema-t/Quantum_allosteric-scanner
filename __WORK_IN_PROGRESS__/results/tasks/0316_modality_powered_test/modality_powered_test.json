@@ -1,0 +1,199 @@
+{
+ "rows": [
+  {
+   "cohort": "ours",
+   "arm": "full (incl. <1.5A)",
+   "n": 26,
+   "observed_LR": 9.847715601847419,
+   "observed_p": 0.0033222591362126247,
+   "empirical_separation_sd": 4.23590811958809,
+   "gmm2_components": {
+    "means_A": [
+     2.0553979167611014,
+     11.525984953570848
+    ],
+    "weights": [
+     0.656172069281426,
+     0.343827930718574
+    ],
+    "log_sigmas": [
+     0.4492711819975871,
+     0.35986041602057456
+    ]
+   },
+   "power_curve": {
+    "1.5": 0.625,
+    "2.0": 1.0,
+    "3.0": 0.875,
+    "4.0": 1.0,
+    "6.0": 1.0
+   },
+   "power_at_observed_separation_interpolated": 1.0,
+   "verdict": "MULTIMODAL (adequately powered)"
+  },
+  {
+   "cohort": "ours",
+   "arm": "excluding <1.5A",
+   "n": 18,
+   "observed_LR": 10.71182383487551,
+   "observed_p": 0.0033222591362126247,
+   "empirical_separation_sd": 4.459757870288627,
+   "gmm2_components": {
+    "means_A": [
+     2.9736695405243943,
+     11.365313348580976
+    ],
+    "weights": [
+     0.4912088532678181,
+     0.508791146732182
+    ],
+    "log_sigmas": [
+     0.21277307315407504,
+     0.36809390234880973
+    ]
+   },
+   "power_curve": {
+    "1.5": 0.375,
+    "2.0": 0.875,
+    "3.0": 0.875,
+    "4.0": 1.0,
+    "6.0": 1.0
+   },
+   "power_at_observed_separation_interpolated": 1.0,
+   "verdict": "MULTIMODAL (adequately powered)"
+  },
+  {
+   "cohort": "asbench",
+   "arm": "full (incl. <1.5A)",
+   "n": 100,
+   "observed_LR": 126.73933104306158,
+   "observed_p": 0.0033222591362126247,
+   "empirical_separation_sd": 4.979854038172234,
+   "gmm2_components": {
+    "means_A": [
+     1.3293205318608523,
+     11.019433877777962
+    ],
+    "weights": [
+     0.1199680218977517,
+     0.8800319781022483
+    ],
+    "log_sigmas": [
+     0.0038907493751457814,
+     0.6006176677071845
+    ]
+   },
+   "power_curve": {
+    "1.5": 0.875,
+    "2.0": 1.0,
+    "3.0": 1.0,
+    "4.0": 1.0,
+    "6.0": 1.0
+   },
+   "power_at_observed_separation_interpolated": 1.0,
+   "verdict": "MULTIMODAL (adequately powered) -- but low-mean component is point-mass-like (narrow, minority weight), see TASK-0309"
+  },
+  {
+   "cohort": "asbench",
+   "arm": "excluding <1.5A",
+   "n": 88,
+   "observed_LR": 4.204525539287971,
+   "observed_p": 0.0033222591362126247,
+   "empirical_separation_sd": 2.2394821699184195,
+   "gmm2_components": {
+    "means_A": [
+     7.396914188435176,
+     18.032123509422583
+    ],
+    "weights": [
+     0.5526003428759261,
+     0.44739965712407387
+    ],
+    "log_sigmas": [
+     0.4635914126120649,
+     0.31895642438788485
+    ]
+   },
+   "power_curve": {
+    "1.5": 0.625,
+    "2.0": 1.0,
+    "3.0": 1.0,
+    "4.0": 1.0,
+    "6.0": 1.0
+   },
+   "power_at_observed_separation_interpolated": 1.0,
+   "verdict": "MULTIMODAL (adequately powered)"
+  },
+  {
+   "cohort": "casbench",
+   "arm": "full (incl. <1.5A)",
+   "n": 30,
+   "observed_LR": 93.64779316890854,
+   "observed_p": 0.0033222591362126247,
+   "empirical_separation_sd": 2.6053234163128476,
+   "gmm2_components": {
+    "means_A": [
+     1.321796617620301,
+     8.12104782994298
+    ],
+    "weights": [
+     0.36538479056351253,
+     0.6346152094364875
+    ],
+    "log_sigmas": [
+     0.0038956839558020174,
+     0.9854586212696748
+    ]
+   },
+   "power_curve": {
+    "1.5": 0.25,
+    "2.0": 1.0,
+    "3.0": 1.0,
+    "4.0": 1.0,
+    "6.0": 1.0
+   },
+   "power_at_observed_separation_interpolated": 1.0,
+   "verdict": "MULTIMODAL (adequately powered) -- but low-mean component is point-mass-like (narrow, minority weight), see TASK-0309"
+  },
+  {
+   "cohort": "casbench",
+   "arm": "excluding <1.5A",
+   "n": 19,
+   "observed_LR": 6.477538400065399,
+   "observed_p": 0.0033222591362126247,
+   "empirical_separation_sd": 4.1313101116556865,
+   "gmm2_components": {
+    "means_A": [
+     4.943582081654496,
+     34.63405296609921
+    ],
+    "weights": [
+     0.7431338156505208,
+     0.25686618434947905
+    ],
+    "log_sigmas": [
+     0.5148129751224162,
+     0.4231550374500419
+    ]
+   },
+   "power_curve": {
+    "1.5": 0.625,
+    "2.0": 0.5,
+    "3.0": 0.625,
+    "4.0": 1.0,
+    "6.0": 1.0
+   },
+   "power_at_observed_separation_interpolated": 1.0,
+   "verdict": "MULTIMODAL (adequately powered)"
+  }
+ ],
+ "seps": [
+  1.5,
+  2.0,
+  3.0,
+  4.0,
+  6.0
+ ],
+ "power_reps": 8,
+ "power_B": 100
+}
