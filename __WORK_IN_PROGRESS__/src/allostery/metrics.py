@@ -12,6 +12,18 @@ def auc(scores: np.ndarray, labels: np.ndarray) -> float:
     return float(roc_auc_score(labels, scores))
 
 
+# TASK-0314: this register also has `task0254_fpocket_variance_and_
+# crypticity.cv_auc`, which fits OLS per CV fold and scores the out-of-fold
+# PREDICTION -- for a single feature that measures |discriminative power|,
+# not "ranks the label class higher", since the fit is free to pick
+# whichever sign best separates the fold. `auc` above is signed/raw and has
+# been silently conflated with `cv_auc` in prose throughout the register
+# (an anti-correlated feature scores low here and high there). Additive
+# alias only -- every existing `auc` call site is unaffected -- so new code
+# can name the distinction explicitly rather than repeating the conflation.
+auc_directional = auc
+
+
 def precision_at_k(scores: np.ndarray, labels: np.ndarray, k: int) -> float:
     """Fraction of ground-truth positives in the top-k ranked residues."""
     idx = np.argsort(scores)[::-1][:k]

@@ -11402,3 +11402,151 @@ has failed.
 `results/tasks/0317_discriminator_b_applicability/discriminator_b_applicability.json`.
 **Full detail:**
 `.ai/tasks/DONE/TASK-0317-discriminator-b-per-measure-applicability-features.md`.
+
+## Part A — `V_C`'s "beats the whole walk by itself" is mostly the metric, not the signal: raw directional AUC is 0.5506, not 0.6365 ([[TASK-0314]], 2026-09-01)
+
+The register has been quoting two incompatible things as "AUC." `task0254`'s
+`cv_auc` (used by every Shapley/consolidated-sweep task, [[TASK-0263]],
+[[TASK-0275]], [[TASK-0277]] included) fits OLS **per CV fold** and scores
+the out-of-fold *prediction* — for a single feature, this measures
+**|discriminative power|**, not "ranks the label class higher," because
+OLS is free to pick whichever sign best separates the fold. `allostery.
+metrics.auc` (aliased here `auc_directional`, per this task's own naming
+request) scores the raw feature directly and is signed.
+
+**Mechanism reproduced fresh**: a synthetic feature built to anti-correlate
+with its label scores `auc_directional=0.065` / `cv_auc=0.933` — `1-raw
+=0.935` confirms `cv_auc` is tracking `max(raw, 1-raw)` for a single
+feature, silently discarding direction.
+
+**Audited the two headline single-column figures in the brief's own
+"Holds" table, per-target, not just at the median** (frozen 20,
+`cv_auc` vs `auc_directional`, identical z-scored/seed-excluded arrays
+[[TASK-0263]] itself scores):
+
+| arm | median cv_auc | median auc_directional |
+|---|---|---|
+| CTQW | 0.575 | 0.592 |
+| **`V_C` alone** | **0.6365** | **0.5506** |
+
+**CTQW is genuinely, consistently signed** — both metrics agree in
+direction and magnitude; the 0.575 headline is not a sign-flip artifact.
+
+**`V_C` alone is not.** Its `cv_auc=0.6365` (the brief's own "beats the
+whole walk by itself" figure, matching [[TASK-0315]]'s independently
+reproduced value exactly) drops to **0.5506 raw — barely above chance**.
+Per-target, `V_C` is **strongly anti-correlated** with the pocket label on
+several targets — `MKK7_IBRUTINIB` raw=**0.018**, `HCV_NS5B_VRX`
+raw=0.128, `HCV_NS5B_VR1` raw=0.117, `KSHV_PROTEASE_24Q/25G` raw=0.36/0.37
+— and `cv_auc`'s per-fold sign-fitting converts every one of these into an
+apparent positive contribution to the pooled median. **A reader using
+`V_C` operationally ("higher `V_C` = more likely pocket") would be wrong
+on at least 5 of 20 targets**, a fact the `cv_auc` figure alone cannot
+reveal. This is a materially stronger correction than [[TASK-0315]]'s own
+finding (which compared `V_C`'s magnitude against geometry/proximity, not
+whether its own sign is stable across targets).
+
+**Audited [[TASK-0277]]'s 8-feature apo battery** (the task's own named
+candidates plus the rest, frozen 20, identical arrays that produced the
+already-published `per_feature_auc_apo_holo.json`):
+
+| feature | cv_auc (published) | auc_directional (recomputed) | flag |
+|---|---|---|---|
+| degree | 0.541 | **0.479** | anti-correlated, median target |
+| euclid | 0.706 | 0.712 | consistent |
+| hop | 0.699 | 0.596 | consistent (cv inflated) |
+| dcc_low | 0.615 | 0.629 | consistent |
+| **prs_low** | 0.459 | **0.541** | **NOT anti-correlated — cv_auc understated it** |
+| ground_state_relaxation | 0.676 | 0.560 | consistent (cv inflated) |
+| frustration | 0.572 | **0.414** | anti-correlated, median target |
+| SASA | 0.449 (n=18, 2 fetch failures) | 0.469 (n=20) | both near chance |
+
+**Correction to the task's own filing**: it named `prs_low` (0.459) as an
+"obvious candidate" alongside `degree`/`SASA` for being anti-correlated.
+Checked, not assumed — **`prs_low` is not anti-correlated**; its raw AUC
+(0.541) is actually *higher* than its `cv_auc` (0.459), the opposite
+direction from the sign-flip mechanism. `degree` and `frustration` are the
+two genuinely mislabeled ones: both read as weak positive signal via
+`cv_auc` and are weak *negative* signal on the median target once scored
+directly. **`cv_auc` can move a single feature's apparent score in either
+direction relative to raw** — it is not simply "always flatters"; CV-fold
+noise degrades weakly-informative features unpredictably, on top of the
+sign-fitting effect the synthetic demo isolates cleanly.
+
+**Naming, per this task's own Scope**: `allostery.metrics.auc` is now also
+importable as `auc_directional` (additive alias, zero call-site breakage);
+`task0254.cv_auc` keeps its existing name (renaming it would touch ~15
+importing scripts for no functional gain) but this section is the
+documented cross-reference the task asked for.
+
+### The AUC/P@5 reconciliation
+
+[[TASK-0305]]'s mean P@5=0.0056 ("significantly WORSE than random,
+anti-correlated") and [[TASK-0308]]'s mean AUC=0.5921 (**+18.4%**) score
+the **identical 108 ASBench structures** and are **not in contradiction**:
+AUC integrates ranking quality across the *entire* list; P@5 asks only
+about the *extreme top*. [[TASK-0305]]'s own mechanism is the reconciling
+fact — "our operators rank extremes; an annotated allosteric site is an
+ordinary buried pocket that happens to be functionally coupled, not an
+extreme" — a score can hold AUC≈0.59 across a whole ranking while its
+top-5 scores worse than a random draw. **This reconciliation was in
+neither document before now.**
+
+**Why it matters beyond presentation**: the shipped deliverable is a
+top-5 hit list, not an AUC. [[TASK-0283]] established **P@5 = 0.000 on
+all three mandatory targets** under the deployed operator — that number
+belongs next to any AUC figure quoted as evidence of the method working,
+not in a separate document. **One headline metric for the submission,
+stated with reason**: P@5, because it is what §5's deliverable is scored
+on; AUC figures (0.575–0.6365, now further corrected above) describe a
+different, whole-ranking question and should be labelled as such
+wherever quoted, never presented as if they answered the P@5 question.
+
+## Part B — no family-wise error control across the register; the three strongest survivors do not clear even the narrowest bar
+
+**Counted, not estimated**: `wilcoxon(`/`mannwhitneyu(`/
+`cluster_sign_flip_test(`/`cluster_permutation_two_group(`/
+`cluster_permutation_correlation(` call sites (excluding definitions,
+imports, comments) across every `scripts/task02NN_*.py`–`task03NN_*.py`
+file from TASK-0259 through TASK-0311: **59 call sites across 21 files**
+(`scripts/task0314_multiplicity_audit.py`). This is a floor, not a
+ceiling — binomial, Shapiro, GMM-BIC and LRT tests elsewhere in the
+register are not counted, only the three families this task's own filing
+names as "the register's standard instrument."
+
+**The three claims the filing named as "still standing"**, re-verified
+live (one is stale — corrected, not silently used as filed):
+
+| claim | p | status |
+|---|---|---|
+| [[TASK-0263]]/[[TASK-0315]] terms-block vs CTQW | **0.049** (was 0.019 as filed — [[TASK-0315]] independently reproduced a corrected value the same day; same conclusion, closer margin) | pre-registered |
+| [[TASK-0275]] holo `V_C`+CTQW marginal vs `V_C` alone | 0.037 | pre-registered |
+| [[TASK-0261]] ENM valid-vs-invalid, two-sided | 0.042 | **exploratory — [[TASK-0261]]'s own filing labels this "not pre-registered"** |
+
+**Neither pre-registered survivor clears a family-wise bar, at any
+defensible family size.** Narrowest possible denominator — the 2
+pre-registered survivors checked against each other alone (n=2, bar=0.05/2
+=0.025): both fail (0.049, 0.037 > 0.025). Full counted family (n=59,
+bar=0.00085): both fail by two orders of magnitude. **The answer is "none
+survive at α=0.05 family-wise," exactly as the task predicted, and it does
+not depend on getting the pre-registered/exploratory split exactly
+right** — even the most generous possible reading fails.
+
+**This does not overturn any individual task's own conclusion** (per this
+task's own Constraint — no analysis re-run, no re-interpretation of a
+single finding in isolation). What it removes is the ability to cite these
+three p≈0.02–0.04 results together as *converging* evidence: they are the
+visible survivors of an unrecorded family of at least 59 tests, which is
+exactly the p-value band an uncorrected family that size would be expected
+to produce by chance alone.
+
+**Rule added to `.ai/COMMON.md`'s "Current Rules"**: any p-value quoted
+outside its own originating task must state whether it was pre-registered
+or found exploratorily, and which test family it belongs to — so the next
+50 tasks inherit this discipline rather than repeating the audit.
+
+**Scripts**: `scripts/task0314_auc_metric_audit.py` (Part A),
+`scripts/task0314_multiplicity_audit.py` (Part B). **Data**:
+`results/tasks/0314_auc_metric_audit/{auc_metric_audit,
+multiplicity_audit}.json`. **Full detail**:
+`.ai/tasks/DONE/TASK-0314-auc-vs-p5-metric-switch-and-register-multiplicity.md`.

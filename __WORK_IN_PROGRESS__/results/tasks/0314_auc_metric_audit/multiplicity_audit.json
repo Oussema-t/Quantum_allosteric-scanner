@@ -1,0 +1,48 @@
+{
+ "total_call_sites": 59,
+ "per_file": {
+  "task0259_ctqw_devils_advocate_profile.py": 2,
+  "task0261_cluster_robust_stats.py": 16,
+  "task0263_potential_terms_direct_predictors.py": 2,
+  "task0266_sasa_burial_control.py": 4,
+  "task0268_local_frustration_hyp_p13.py": 3,
+  "task0269_pocketminer_residual.py": 2,
+  "task0274_conservation_chemistry_residual.py": 5,
+  "task0275_term_decomposition_apo_holo.py": 2,
+  "task0277_apo_holo_ceiling_sweep.py": 2,
+  "task0279_ligand_selectivity_gate.py": 1,
+  "task0282_pocket_selection_sweep.py": 3,
+  "task0284_bimodality_and_nulls.py": 2,
+  "task0284_structural_property_probe.py": 1,
+  "task0287_local_structural_scale_probe.py": 1,
+  "task0288_contact_spike_and_label_free_prediction.py": 1,
+  "task0289_active_site_provenance_sweep.py": 1,
+  "task0292_fpocket_fragmentation_and_the_ceiling.py": 3,
+  "task0293_loto_druggability_per_size.py": 2,
+  "task0302_sibling_persistence.py": 3,
+  "task0303_enm_mode_shift.py": 2,
+  "task0310_family_residualised_on_proximity.py": 1
+ },
+ "claims": [
+  {
+   "claim": "TASK-0263/0315 terms-block vs CTQW",
+   "p": 0.049,
+   "status": "pre-registered (TASK-0263's own single headline comparison; number corrected by TASK-0315's independent re-run, same conclusion)"
+  },
+  {
+   "claim": "TASK-0275 holo V_C+CTQW vs V_C alone",
+   "p": 0.037,
+   "status": "pre-registered (single pre-declared comparison: 'does CTQW add anything once V_C is in the model')"
+  },
+  {
+   "claim": "TASK-0261 ENM valid-vs-invalid, two-sided",
+   "p": 0.042,
+   "status": "EXPLORATORY -- TASK-0261's own filing labels this 'not pre-registered'"
+  }
+ ],
+ "n_preregistered": 2,
+ "bar_smallest_family": 0.025,
+ "bar_total_family": 0.0008474576271186442,
+ "all_fail_narrow": true,
+ "all_fail_total": true
+}

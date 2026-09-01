@@ -67,7 +67,19 @@ def z(v):
 
 def cv_auc(X, y, n_rep: int = N_REP) -> float:
     """TASK-0245's own protocol verbatim: 5-fold stratified CV, N_REP
-    repeats, OLS via lstsq per fold, mean out-of-fold AUC."""
+    repeats, OLS via lstsq per fold, mean out-of-fold AUC.
+
+    TASK-0314: for a SINGLE feature, OLS is free to pick whichever sign
+    best separates each fold, so this measures |discriminative power|,
+    not "high X predicts label=1" -- an anti-correlated feature scores
+    HIGH here (see `allostery.metrics.auc_directional` for the signed
+    version, and TASK-0314's own Done section / RESULTS.md section for a
+    register-wide audit of where this was conflated in prose). Kept under
+    this existing name (not renamed to `cv_auc_fitted`) because ~15
+    scripts already import it by name; new code that needs the
+    distinction spelled out should say so at the call site, e.g.
+    `cv_auc_fitted = cv_auc  # TASK-0314 naming`.
+    """
     X = np.atleast_2d(X.T).T if X.ndim == 1 else X
     out = []
     for rep in range(n_rep):
@@ -79,6 +91,9 @@ def cv_auc(X, y, n_rep: int = N_REP) -> float:
             oof[te] = np.column_stack([X[te], np.ones(len(te))]) @ b
         out.append(float(auc(oof, y)))
     return float(np.mean(out))
+
+
+cv_auc_fitted = cv_auc  # TASK-0314: the explicit name, for new call sites
 
 
 def build_blocks(t: str, d: dict) -> dict:
