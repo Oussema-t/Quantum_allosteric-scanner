@@ -10835,3 +10835,104 @@ quote one with confidence.
 **Script**: `scripts/task0309_kmeans_extended_cohort.py`. **Data**:
 `results/tasks/0309_kmeans_extended_cohort/kmeans_extended_cohort.json`.
 **Full detail**: `.ai/tasks/DONE/TASK-0309-kmeans-rerun-on-extended-cohort.md`.
+
+## Regression, not classification: the floor is predictable, the continuum mostly isn't -- except for fpocket landscape spread ([[TASK-0311]], 2026-09-01)
+
+[[TASK-0309]] settled it on 171 proteins: there are **no discrete
+near/far populations** (Silverman critical-bandwidth p=0.81/0.14/0.11
+across cohorts, k-means best-k incoherent 3/4/2/5). Every discriminator
+attempt in this register up to now ([[TASK-0300]] stratified rules,
+[[TASK-0306]] meta-classifier, [[TASK-0288]] near/far probes) assumed
+classes the data does not support. This task tries the well-posed
+problem instead: **regression**, on the same pooled 171-protein cohort,
+leave-one-protein-out throughout, against a permuted-target null (not
+R² alone) -- never tried in this register before.
+
+**One Scope correction, found before building anything**: the task
+named "the landscape features from [[TASK-0300]]", which never computed
+any (it is the rule-selection-defect task) -- [[TASK-0288]]'s own
+fpocket landscape descriptors were used instead, clearly what was
+intended (TASK-0288 is in the task's own Related list and Why section).
+
+**Predictor scoping, checked not assumed**: N/Rg/compactness reuse each
+cohort's own already-established convention -- "ours" keeps
+[[TASK-0284]]'s `t0242.prep`-chain-scoped values, ASBench/CASBench keep
+[[TASK-0306]]'s whole-ASU `structure_descriptors()`. Restricting
+ASBench/CASBench to just the chains named in the site annotations was
+tried first and abandoned: CASBench's citrate synthase (1NXE) names
+allosteric-site chains 'C'/'F' that do not exist in the raw deposited
+file (symmetry-generated copies) -- that path would have silently
+undercounted N for exactly the multimeric proteins where site geometry
+matters most. The resulting cross-cohort scale mismatch is disclosed,
+not hidden, and tested for directly (per-cohort robustness re-fit,
+below). [[TASK-0309]]'s own literal-site-overlap rows (`min_A = 0.0`
+exactly, 15/171) are undefined on the log scale and excluded from those
+tests only, same convention TASK-0309 established.
+
+### The two-part model (pooled, N/Rg/compactness/n_chains/site_size)
+
+| test | n | metric | value | p (perm) |
+|---|---|---|---|---|
+| floor logistic (at/not at 1.5Å) | 171 | AUC | **0.657** | **0.004** |
+| continuum, non-floor subset | 125 | Spearman | 0.127 | 0.096 |
+| continuum, ALL log-defined rows (unsplit) | 156 | Spearman | 0.311 | 0.004 |
+
+**The floor half is predictable; the continuous half, pooled, is not.**
+The unsplit fit (row 3) looks strong, but it is a floor-vs-continuum
+artifact: floor cases cluster tightly near a fixed log-value, so a model
+that merely separates floor from non-floor scores well across the full
+range without saying anything about position *within* the continuum --
+exactly what row 2 tests directly, and row 2 is null. The two-part
+decomposition this task's own Scope required is what caught this; the
+unsplit number alone would have been reported as a positive result, and
+would have been wrong about why.
+
+### Per-cohort robustness check
+
+| cohort | n | Spearman | p |
+|---|---|---|---|
+| ours | 26 | 0.344 | 0.098 |
+| asbench | 100 | 0.085 | 0.258 |
+| casbench | 30 | 0.340 | 0.074 |
+
+None individually significant -- consistent with "no real standalone
+continuous signal from this predictor set," not with the pooled number
+being a scoping-mismatch false positive (that would predict the pooled
+fit staying strong while every cohort goes null, which is close to what
+happened, but "underpowered everywhere" is the honest reading, not
+"positive pooled, therefore real").
+
+### Two genuine positives, both narrow
+
+**Fold class** (ASBench-only, [[TASK-0306]] addendum's own Alpha-Beta vs
+Mainly-Alpha) moves the ASBench continuum fit from null to significant:
+rho 0.116 → 0.215, p 0.194 → **0.028** — the first descriptor in this
+register to do that, though modest and single-cohort.
+
+**Fpocket landscape spread** ("ours"-only, n=25, [[TASK-0288]]'s own 13
+features, univariate LOPO): 5 of 13 individually significant —
+`max_d` p=0.002, `median_d`/`n_cand_far`/`size_wtd_d` p=0.004,
+`frac_cand_far` p=0.012 — but pairwise-correlated 0.64–0.95 (checked,
+not assumed), confirming this is [[TASK-0288]]'s own "landscape spread"
+finding (in-sample rho=+0.568, p=0.0025) restated at five parameter
+settings, not five independent confirmations — and now validated under
+genuine held-out prediction with a permutation null, a strictly stronger
+test than TASK-0288's original in-sample correlation. `d_biggest` and
+`max_drug_all` run negative and non-significant: a large or highly
+druggable single top candidate does not itself predict distance; it is
+specifically the number/spread of candidates far from the seed that
+does. Extending this to ASBench/CASBench needs new fpocket runs on
+~145 more structures — ruled out by this task's own "No new descriptors"
+Constraint.
+
+**Net**: the cheapest, most-already-computed predictor family
+(N/Rg/compactness/chain-count/site-size) carries at most a small,
+cohort-specific continuous signal (fold class) beyond the
+floor/continuum split itself, which is real on its own. The fpocket
+landscape family is the one descriptor type that clearly works, on the
+one cohort it has been computed for.
+
+**Script:** `scripts/task0311_regression_not_classification.py`.
+**Data:** `results/tasks/0311_regression_not_classification/
+regression_not_classification.json`. **Full detail:**
+`.ai/tasks/DONE/TASK-0311-regression-not-classification.md`.
