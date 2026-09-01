@@ -11098,3 +11098,82 @@ Connects directly to [[TASK-0310]]'s lead candidate and to [[TASK-0140]].
 **Script:** `scripts/task0312_ctqw_seed_asymmetry.py`. **Data:**
 `results/tasks/0312_ctqw_seed_asymmetry/ctqw_seed_asymmetry.json`.
 **Full detail:** `.ai/tasks/DONE/TASK-0312-ctqw-seed-asymmetry-artifact-or-bug.md`.
+
+## The register's one surviving positive claim, checked against proximity for the first time -- partly holds, at a corrected size ([[TASK-0315]], 2026-09-01)
+
+[[TASK-0308]] conditioned CTQW on proximity (its own dominant confound)
+one task earlier and found the walk's apparent +18.4% collapses to +3.7%,
+not distinguishable from chance. The same check had never been run on
+the register's "strongest constructive number" in the submission brief:
+potential-terms-of-`H_new` AUC=0.751 vs CTQW 0.575, cluster-robust
+p=0.019 ([[TASK-0263]]). Filed (as TASK-0313, renumbered after a genuine
+id collision -- see [[TASK-0045]]) on exactly that gap.
+
+**Fresh recomputation, not a re-read of old JSONs**, on the frozen 20:
+every cited base AUC reproduces to 3-4 decimals (`terms_block=0.7513`,
+`geometry=0.7953`, `euclid=0.7057`, `ctqw=0.5751`, `V_C=0.6365`) — except
+`terms_block` vs `ctqw`'s own cluster-robust p, which reproduces at
+**0.049, not 0.019**. Traced to one target, `DHPS_GC7`, whose own values
+genuinely differ between this run and the original (0.596→0.363
+terms_block, 0.739→0.846 ctqw) — reproducible across two independent
+reruns of this script, so not noise; not chased further (disclosed, out
+of this task's own scope).
+
+**Positive control did not pass cleanly, and the harness was cleared
+before trusting anything downstream, not after**: the Constraint expected
+`euclid` residualised on `hop`-proximity to land at ~0.5; it lands at
+0.61. A synthetic self-check built into the committed script (a truly
+redundant predictor collapses to 0.509, an independent one is preserved:
+0.830→0.814) confirms the residualisation method itself is correct — this
+is a real cohort finding: hop-distance and Euclidean seed-distance are
+correlated but **not fully redundant** on this register's own 20 targets,
+which include several genuinely distal-labelled cases (unlike ASBench's
+more proximal-skewed population). Fixed by residualising jointly on both
+proximity measures for the main test, a more complete "closeness to seed"
+control than either alone.
+
+**The residualised headline**:
+
+| arm | raw mean AUC | residual mean AUC | vs chance |
+|---|---|---|---|
+| terms block (fitted, 5-column) | 0.740 | **0.660** | **p = 0.027 — survives** |
+| `V_C` alone | 0.650 | 0.566 | p = 0.31 — not distinguishable from chance |
+| CTQW | 0.548 | 0.476 | p = 0.68 — not distinguishable from chance |
+| terms, unfitted equal-weight sum | 0.582 | 0.572 | p = 0.31 — not distinguishable from chance |
+
+**Mixed, reported as measured.** The fitted potential-terms combination
+retains a real, cluster-robustly significant signal beyond geometry AND
+both proximity measures jointly controlled for — the constructive claim
+is not fabricated, and this is a materially stronger check than existed
+before. But three specific claims on the brief's own card do not survive:
+it does not beat the geometry baseline (0.751 < 0.795, p=0.29 either
+direction); `V_C` alone — the card's own "beats the whole walk by itself"
+line — does not survive the same proximity control that sank CTQW
+(residual p=0.31, no better than CTQW's own p=0.68, independently
+reproducing [[TASK-0308]]'s finding on this repo's own 20-target cohort
+and labels, not just ASBench); and the raw 0.751-vs-CTQW comparison is
+fitted-5-column vs unfitted-1-column — the matched unfitted-vs-unfitted
+comparison (terms-sum 0.599 vs ctqw 0.575) shows most of the raw margin
+is the fitting itself, confirming [[TASK-0263]]'s own "the propagator, not
+the physics, loses the signal" conclusion did not follow from the
+comparison made.
+
+Per-term ρ(term, proximity) re-measured on the frozen 20 (not
+`targets.yaml`'s 14): same signs throughout as the preliminary table,
+`V_R`/`V_M` close in magnitude, `V_C` weaker (−0.074 vs −0.237). Per-term
+cell distribution (n=100, 5 terms × 20 targets): median AUC 0.543 — the
+previously-cited "0.81–0.93 with zero fitting" range sits at the extreme
+max, not a typical cell.
+
+**`CTQW_CONTRIBUTION_BRIEF_V2.html` corrected in the same commit**: a new
+"Corrected" card added immediately after the original "Holds" card
+(original left in place, append-don't-silently-edit), carrying both
+tables above, the fitted-vs-unfitted defect explained, and the
+"Credit where it is due" bullet restated at the corrected size — residual
+gain over geometry-and-proximity, not raw 0.751; `V_C`-alone framing
+dropped.
+
+**Script:** `scripts/task0315_terms_block_vs_proximity.py`. **Data:**
+`results/tasks/0315_terms_block_vs_proximity/terms_block_vs_proximity.json`.
+**Full detail:**
+`.ai/tasks/DONE/TASK-0315-terms-block-was-never-compared-to-proximity.md`.

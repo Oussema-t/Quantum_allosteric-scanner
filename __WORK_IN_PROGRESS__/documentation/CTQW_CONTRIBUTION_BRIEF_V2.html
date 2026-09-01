@@ -270,11 +270,43 @@ a{color:var(--accent);}
     <p><strong>The physics encoded in the Hamiltonian is doing real work.</strong> What fails is the propagation step layered on top of it — not the model of the protein underneath.</p>
   </div>
 
+  <div class="card flag">
+    <span class="chip c-corr">Corrected</span>
+    <h3>This result was never checked against proximity — the same confound we conditioned CTQW on. Checked now: it partly survives, and two supporting claims on this card do not.</h3>
+    <p>This register conditions every apparent signal on its obvious confound before believing it — druggability on pocket size, mode shift on size, CTQW on proximity (above). This card was the one place that rule was skipped, on the one claim most load-bearing for the submission.</p>
+    <div class="tablewrap" style="margin:.4rem 0;">
+      <table>
+        <thead><tr><th>Arm</th><th>AUC</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Geometry (degree + distance-to-seed + hops-to-seed, fitted)</td><td class="num">0.795</td><td class="sub">the terms block does <strong>not</strong> beat this baseline (p = 0.29)</td></tr>
+          <tr><td>Potential terms of <code>H_new</code> (5-column, fitted)</td><td class="num big">0.751</td><td class="sub">vs CTQW, cluster-robust p = 0.049 on a fresh run &mdash; not 0.019 as stated above (one target's own values did not reproduce exactly; not chased further)</td></tr>
+          <tr><td>Distance to seed, single column (<code>euclid</code> / <code>hop</code>)</td><td class="num">0.706 / 0.707</td><td class="sub">beats the walk by a <em>larger</em> margin than <code>V_C</code> does</td></tr>
+          <tr><td><code>V_C</code> alone</td><td class="num">0.6365</td><td class="sub">"beats the walk by itself" &mdash; so does plain distance, more so</td></tr>
+          <tr><td>The five terms, <em>unfitted</em> equal-weight sum</td><td class="num">0.599</td><td class="sub">the fair comparison to CTQW's own single, unfitted column</td></tr>
+          <tr><td>CTQW</td><td class="num">0.575</td><td class="sub"></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>The "propagator, not the physics" conclusion does not follow from the comparison made.</strong> <code>terms_block_auc</code> is a five-column model <em>fitted</em> per cross-validation fold; <code>ctqw_auc</code> is one unfitted column. A fitted multivariate score beating an unfitted scalar is arithmetic, true of any scalar, and cannot localise a loss to the propagator specifically. The matched comparison — an unfitted equal-weight sum of the same five terms — scores <strong>0.599</strong>, barely above CTQW's 0.575 and far below the fitted 0.751.</p>
+    <p>Residualising each arm on <strong>both</strong> distance measures jointly (rank-wise, per structure, [[TASK-0308]]'s own method extended to a fitted multi-column score and to two proximity measures at once — hop and Euclidean distance are correlated but not fully redundant on this cohort, checked directly, so neither alone is a complete control):</p>
+    <div class="tablewrap" style="margin:.4rem 0;">
+      <table>
+        <thead><tr><th>Arm</th><th>raw AUC</th><th>residual AUC</th><th>vs chance</th></tr></thead>
+        <tbody>
+          <tr><td>Potential terms (fitted, 5-column)</td><td class="num">0.740</td><td class="num big">0.660</td><td class="sub"><strong>p = 0.027 — survives</strong></td></tr>
+          <tr><td><code>V_C</code> alone</td><td class="num">0.650</td><td class="num">0.566</td><td class="sub">p = 0.31 — not distinguishable from chance</td></tr>
+          <tr><td>CTQW</td><td class="num">0.548</td><td class="num">0.476</td><td class="sub">p = 0.68 — not distinguishable from chance, reproducing the CTQW card above on our own labels</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Net: narrower than stated, but a real result remains.</strong> The fitted potential-terms combination retains a statistically real signal beyond both geometry and proximity, jointly controlled for — that part holds. What does not hold: it does not beat the geometry baseline; its own strongest single term (<code>V_C</code>) does not survive the same proximity control that sank CTQW; and the 0.751-vs-CTQW comparison mixed a fitted model against an unfitted score, which the matched (unfitted-vs-unfitted) comparison shows accounts for most of the apparent margin. Report the fitted five-term combination's residual gain (+0.16 AUC over chance after controlling for size-independent proximity) as the constructive claim, not the raw 0.751, and drop the <code>V_C</code>-alone framing.</p>
+  </div>
+
   <p>Our variance attribution puts the quantum contribution at roughly <strong>5–10% on average</strong> (range 1–15% across targets), against <strong>20–60% for geometry</strong> and <strong>25–80% unexplained</strong>. Small, variable, but <em>not zero</em> — and it is that measured share, not a preference, that set our position.</p>
 
   <p>Two consequences we want stated explicitly in the submission:</p>
   <ul>
-    <li><strong>Credit where it is due.</strong> The two-stage design and the Hamiltonian work are yours, and the 0.751 result is the strongest constructive number either of us has. It should be reported as a positive finding, not as context for a negative.</li>
+    <li><strong>Credit where it is due, at the corrected size.</strong> The two-stage design and the Hamiltonian work are yours, and the potential-terms combination is still the strongest constructive result either of us has — but as the residual gain over geometry-and-proximity (above), not the raw 0.751, and without the <code>V_C</code>-alone framing, which does not survive the same confound check. Report it as a positive finding at that corrected size, not as context for a negative.</li>
     <li><strong>The negative is narrow and should stay narrow.</strong> It concerns the time-averaged occupation observable on one operator — as you noted first. It is not a claim about quantum walks as a class, and we will not write it as one.</li>
   </ul>
 </section>
