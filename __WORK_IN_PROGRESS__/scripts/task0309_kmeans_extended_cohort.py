@@ -190,10 +190,26 @@ def lrt(x, k1, k2, B=200, seed=0, seeds=3):
     """Parametric-bootstrap LRT, k1 vs k2 Gaussian components. Null
     resampled from the fitted k1-component model (generalises
     [[TASK-0288]]'s own 1-vs-2 version, which only ever needed k1=1, to
-    the 2-vs-3 test this task also requires)."""
+    the 2-vs-3 test this task also requires).
+
+    [[TASK-0319]] fix: `g1`'s `random_state` was a plain int (0). sklearn's
+    `GaussianMixture.sample()` re-derives a *fresh* RandomState from that
+    int on every call (`check_random_state`), so `g1.sample(n)` returned
+    the SAME draw every single bootstrap iteration (verified: identical up
+    to permutation). Since GMM log-likelihood is invariant to the order of
+    iid data, all B "null" replicates collapsed to one point (n=26, seed 0:
+    58/60 replicates bit-identical at LR=1.14326065). `obs` then landed
+    strictly above or below that single point, giving p in {1/(B+1),
+    ~1.0} -- never anywhere near a continuous 5% test. Passing a
+    `np.random.RandomState` INSTANCE (not an int) makes sklearn reuse and
+    advance that same instance across calls instead of reseeding, so each
+    `.sample()` call draws fresh data. This was the actual driver of the
+    68%/52% false-positive rate on N(0,1) at n=26/100 -- distinct from (but
+    compounding) the restart-asymmetry and reg_covar candidates originally
+    flagged; see TASK-0319 for the measured before/after."""
     x = np.asarray(x, float).reshape(-1, 1); n = len(x)
     obs = 2 * (_ll(x, k2, seeds) - _ll(x, k1, seeds))
-    g1 = GaussianMixture(k1, n_init=5, random_state=0).fit(x)
+    g1 = GaussianMixture(k1, n_init=5, random_state=np.random.RandomState(seed)).fit(x)
     r = np.random.default_rng(seed)
     null = []
     for i in range(B):

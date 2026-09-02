@@ -11618,3 +11618,90 @@ min, resumable per-structure cache; Phase B ~118s, independently
 re-runnable). **Data**: `results/tasks/0318_input_space_ceiling/
 {ceiling_result.json,no_proximity_feature_check.json}`. **Full detail**:
 `.ai/tasks/DONE/TASK-0318-ceiling-of-the-contact-graph-input-space.md`.
+
+## Both 1-vs-2 Gaussian LRT implementations were miscalibrated, in opposite directions — TASK-0316's "multimodal in every cohort" headline above does not survive ([[TASK-0319]], 2026-09-02)
+
+**Correction notice**: the TASK-0316 section above ("multimodal in every
+cohort, both arms") used `task0309.lrt`, which this task found rejects
+strictly unimodal N(0,1) data at **68% (n=26) / 52% (n=100)** — not a 5%
+test. That headline is superseded by the re-run below. Left in place
+rather than edited, per this register's own append-only convention.
+
+**Root cause, `task0309.lrt` (anti-conservative) — not any of the three
+candidates the filing task listed.** The null-generating model
+`g1 = GaussianMixture(k1, ..., random_state=0)` used a plain **int**
+`random_state`. sklearn's `GaussianMixture.sample()` calls
+`check_random_state(self.random_state)` fresh on every call, and an int is
+**re-seeded every call**, not advanced — every bootstrap-null replicate
+inside the `B`-iteration loop drew the **identical sample**. Verified
+directly: at n=26, seed 0, 58/60 null replicates were bit-identical
+(LR=1.14326065) — GMM log-likelihood is invariant to the order of iid data,
+so permuting the one fixed sample changed nothing. The null distribution
+collapsed to ~one point; `obs` then landed strictly above or below it
+almost every rep, giving p ∈ {≈0.01, ≈1.0}, never a continuous test. **Fix**:
+`random_state=np.random.RandomState(seed)` — an instance, which sklearn
+reuses and advances instead of reseeding. One line,
+`scripts/task0309_kmeans_extended_cohort.py`'s `lrt()`.
+
+**Root cause, `task0288.lrt` (over-conservative) — confirmed as filed**:
+two independent `r.normal(mu, sd, n)` draws per null replicate, one for the
+k=2 fit and a different one for the k=1 fit — a difference of
+log-likelihoods on unrelated datasets, not a likelihood ratio. **Retired,
+not fixed in place**, per this task's own Scope ("one implementation, not
+two"): `task0288_contact_spike_and_label_free_prediction.py` now imports
+the corrected `lrt` from `task0309_kmeans_extended_cohort`.
+
+**Calibration validated** — N(0,1), α=0.05, 200 reps/n, B=100, seeds=3:
+
+| n | FP rate | hits/reps |
+|---|---|---|
+| 26 | 4.0% | 8/200 |
+| 100 | 7.0% | 14/200 (95% CI [3.5%,10.5%], includes nominal 5%) |
+| 171 | 5.0% | 10/200 |
+
+All three at or statistically indistinguishable from nominal — down from
+68%/52%.
+
+**[[TASK-0316]] re-run, identical harness, corrected `lrt`, all six
+cohort-arms** (`results/tasks/0316_modality_powered_test/
+modality_powered_test.json` overwritten in place):
+
+| cohort | arm | n | p | power@sep | verdict |
+|---|---|---|---|---|---|
+| ours | full | 26 | 0.0831 | 32% | UNDETERMINED |
+| ours | excl <1.5Å | 18 | 0.1728 | 12% | UNDETERMINED |
+| asbench | full | 100 | 0.0033 | 100% | **MULTIMODAL, adequately powered** — point-mass-like |
+| asbench | excl <1.5Å | 88 | 0.1761 | 49% | UNDETERMINED |
+| casbench | full | 30 | 0.0033 | 12% | UNDETERMINED |
+| casbench | excl <1.5Å | 19 | 0.2525 | 15% | UNDETERMINED |
+
+Only **1/6** cells is both significant and adequately powered (asbench
+full, n=100) — and that cell already carries [[TASK-0309]]'s own
+point-mass-not-population caveat (low-mean component weight 0.12, narrow).
+The other 5/6 remain genuinely undetermined for lack of power.
+
+**`task0288`'s own stale controls replaced** with fresh ones at its n=28
+(B=300, 5 reps): negative control clean (0/5 FP), but positive controls now
+show essentially **no power up to 3.0 SD separation** (1/5 significant even
+at sep=3.0) — the old table's apparent power-like shape was itself an
+artifact of the two-sample bug's instability, not real power. Real-data
+observed p=0.1197 remains uninformative for lack of power.
+
+**Silverman reconciliation**: at asbench-full, Silverman (n=112, ~100%
+powered at the observed 4.10 component-SD, [[TASK-0313]]) says **unimodal,
+p=0.139**; the calibrated LRT (n=100, same cohort/arm, adequately powered)
+says **multimodal, p=0.0033**. Not a contradiction — the two tests do not
+share an alternative: Silverman's dip-type test asks whether the KDE has
+more than one mode; the LRT rejects on any departure from a single
+Gaussian, including a narrow point mass that need not produce a second KDE
+bump. The population-vs-point-mass question is answered by [[TASK-0309]]'s
+own component-weight/sigma decomposition, not by either modality test
+alone — stop asking Silverman and the LRT to arbitrate the same question.
+
+**Register position, now earned rather than asserted: modality remains
+UNDETERMINED.** The one adequately-powered significant result is consistent
+with a point mass + continuum ([[TASK-0309]] Finding F), not a second broad
+population, and not a clean unimodal verdict either.
+
+**Data**: `results/tasks/0319_lrt_calibration/lrt_calibration_fix.json`.
+**Full detail**: `.ai/tasks/DONE/TASK-0319-lrt-calibration-defect-both-implementations.md`.

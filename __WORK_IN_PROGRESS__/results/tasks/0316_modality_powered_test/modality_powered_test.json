@@ -5,7 +5,7 @@
    "arm": "full (incl. <1.5A)",
    "n": 26,
    "observed_LR": 9.847715601847419,
-   "observed_p": 0.0033222591362126247,
+   "observed_p": 0.08305647840531562,
    "empirical_separation_sd": 4.23590811958809,
    "gmm2_components": {
     "means_A": [
@@ -22,21 +22,21 @@
     ]
    },
    "power_curve": {
-    "1.5": 0.625,
-    "2.0": 1.0,
-    "3.0": 0.875,
-    "4.0": 1.0,
-    "6.0": 1.0
+    "1.5": 0.0,
+    "2.0": 0.25,
+    "3.0": 0.25,
+    "4.0": 0.25,
+    "6.0": 0.875
    },
-   "power_at_observed_separation_interpolated": 1.0,
-   "verdict": "MULTIMODAL (adequately powered)"
+   "power_at_observed_separation_interpolated": 0.3237212873712781,
+   "verdict": "UNDETERMINED -- underpowered at this n and this separation"
   },
   {
    "cohort": "ours",
    "arm": "excluding <1.5A",
    "n": 18,
    "observed_LR": 10.71182383487551,
-   "observed_p": 0.0033222591362126247,
+   "observed_p": 0.17275747508305647,
    "empirical_separation_sd": 4.459757870288627,
    "gmm2_components": {
     "means_A": [
@@ -53,14 +53,14 @@
     ]
    },
    "power_curve": {
-    "1.5": 0.375,
-    "2.0": 0.875,
-    "3.0": 0.875,
-    "4.0": 1.0,
-    "6.0": 1.0
+    "1.5": 0.125,
+    "2.0": 0.0,
+    "3.0": 0.0,
+    "4.0": 0.125,
+    "6.0": 0.125
    },
-   "power_at_observed_separation_interpolated": 1.0,
-   "verdict": "MULTIMODAL (adequately powered)"
+   "power_at_observed_separation_interpolated": 0.125,
+   "verdict": "UNDETERMINED -- underpowered at this n and this separation"
   },
   {
    "cohort": "asbench",
@@ -84,9 +84,9 @@
     ]
    },
    "power_curve": {
-    "1.5": 0.875,
-    "2.0": 1.0,
-    "3.0": 1.0,
+    "1.5": 0.125,
+    "2.0": 0.0,
+    "3.0": 0.875,
     "4.0": 1.0,
     "6.0": 1.0
    },
@@ -98,7 +98,7 @@
    "arm": "excluding <1.5A",
    "n": 88,
    "observed_LR": 4.204525539287971,
-   "observed_p": 0.0033222591362126247,
+   "observed_p": 0.1760797342192691,
    "empirical_separation_sd": 2.2394821699184195,
    "gmm2_components": {
     "means_A": [
@@ -115,14 +115,14 @@
     ]
    },
    "power_curve": {
-    "1.5": 0.625,
-    "2.0": 1.0,
-    "3.0": 1.0,
+    "1.5": 0.0,
+    "2.0": 0.375,
+    "3.0": 0.875,
     "4.0": 1.0,
     "6.0": 1.0
    },
-   "power_at_observed_separation_interpolated": 1.0,
-   "verdict": "MULTIMODAL (adequately powered)"
+   "power_at_observed_separation_interpolated": 0.49474108495920976,
+   "verdict": "UNDETERMINED -- underpowered at this n and this separation"
   },
   {
    "cohort": "casbench",
@@ -146,21 +146,21 @@
     ]
    },
    "power_curve": {
-    "1.5": 0.25,
-    "2.0": 1.0,
-    "3.0": 1.0,
-    "4.0": 1.0,
+    "1.5": 0.0,
+    "2.0": 0.125,
+    "3.0": 0.125,
+    "4.0": 0.625,
     "6.0": 1.0
    },
-   "power_at_observed_separation_interpolated": 1.0,
-   "verdict": "MULTIMODAL (adequately powered) -- but low-mean component is point-mass-like (narrow, minority weight), see TASK-0309"
+   "power_at_observed_separation_interpolated": 0.125,
+   "verdict": "UNDETERMINED -- underpowered at this n and this separation"
   },
   {
    "cohort": "casbench",
    "arm": "excluding <1.5A",
    "n": 19,
    "observed_LR": 6.477538400065399,
-   "observed_p": 0.0033222591362126247,
+   "observed_p": 0.25249169435215946,
    "empirical_separation_sd": 4.1313101116556865,
    "gmm2_components": {
     "means_A": [
@@ -177,14 +177,14 @@
     ]
    },
    "power_curve": {
-    "1.5": 0.625,
-    "2.0": 0.5,
-    "3.0": 0.625,
-    "4.0": 1.0,
-    "6.0": 1.0
+    "1.5": 0.125,
+    "2.0": 0.0,
+    "3.0": 0.0,
+    "4.0": 0.125,
+    "6.0": 0.5
    },
-   "power_at_observed_separation_interpolated": 1.0,
-   "verdict": "MULTIMODAL (adequately powered)"
+   "power_at_observed_separation_interpolated": 0.14962064593544122,
+   "verdict": "UNDETERMINED -- underpowered at this n and this separation"
   }
  ],
  "seps": [
