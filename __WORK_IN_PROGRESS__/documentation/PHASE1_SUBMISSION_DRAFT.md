@@ -1,3 +1,9 @@
+> **SUPERSEDED 2026-09-02 — do not edit or cite.** This draft is organised on the six
+> *assessment criteria*. Guidelines §4.3 mandates a different **seven-item ToC**, and this
+> file is also ~30 tasks stale (last substantive edit 2026-08-26). The current draft is
+> **`PHASE1_SUBMISSION_V1.md`** in this directory, with an HTML twin of identical content.
+> Kept for history — several sections below were carried into v1 largely intact.
+
 # Quantum Allosteric Scanner — Phase 1 Proposal (DRAFT v0.1)
 
 **Team AuraQu · Cleveland Clinic Global Quantum + AI Challenge 2026**
