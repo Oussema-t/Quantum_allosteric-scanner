@@ -11,9 +11,9 @@
 | **Date** | 2026-09-02 |
 | **Deadline** | 2026-09-15 · 13 days |
 | **Format** | 6pp + 3pp appendix + repo link |
-| **HTML twin** | https://claude.ai/code/artifact/c603f27a-ce03-47d5-b236-97719048263a |
+| **HTML twin** | `documentation/PHASE1_SUBMISSION_V1.html` — published at https://claude.ai/code/artifact/c603f27a-ce03-47d5-b236-97719048263a |
 
-> **Content parity**: `documentation/PHASE1_SUBMISSION_V1.md` and the HTML twin above carry the same
+> **Content parity**: `documentation/PHASE1_SUBMISSION_V1.html` and `documentation/PHASE1_SUBMISSION_V1.md` carry the same
 > content. Edit both, or regenerate one from the other — two drifting copies of
 > a submission is the failure mode that produced TASK-0307. Verified by
 > `.ai/tools/doc_parity.py`.

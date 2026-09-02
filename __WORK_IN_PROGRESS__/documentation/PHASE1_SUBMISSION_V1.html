@@ -1,0 +1,473 @@
+<title>Quantum Allosteric Scanner — Phase 1 Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root{
+    --paper:#F6F8F7; --surface:#FFFFFF; --surface-2:#EEF2F1;
+    --ink:#14201E; --ink-2:#3B4A47; --ink-3:#6B7B77;
+    --rule:#D8E0DE; --rule-strong:#B8C5C2;
+    --accent:#0E5A55; --accent-soft:#E3EFED;
+    --holds:#1C6B48; --holds-bg:#E4F0E9;
+    --qual:#8A6314; --qual-bg:#F6EEDD;
+    --dead:#9B2C2C; --dead-bg:#F7E6E4;
+    --undet:#475569; --undet-bg:#EAEDF1;
+    --shadow:0 1px 2px rgba(20,32,30,.06),0 8px 24px -12px rgba(20,32,30,.18);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#0D1312; --surface:#141C1B; --surface-2:#1B2422;
+      --ink:#E7EEEC; --ink-2:#B3C1BE; --ink-3:#839591;
+      --rule:#283432; --rule-strong:#3A4947;
+      --accent:#59C3B5; --accent-soft:#14322F;
+      --holds:#6DC79A; --holds-bg:#14301F;
+      --qual:#D7A94A; --qual-bg:#33280F;
+      --dead:#E38B84; --dead-bg:#341A18;
+      --undet:#9AA8B8; --undet-bg:#1D242C;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0D1312; --surface:#141C1B; --surface-2:#1B2422;
+    --ink:#E7EEEC; --ink-2:#B3C1BE; --ink-3:#839591;
+    --rule:#283432; --rule-strong:#3A4947;
+    --accent:#59C3B5; --accent-soft:#14322F;
+    --holds:#6DC79A; --holds-bg:#14301F;
+    --qual:#D7A94A; --qual-bg:#33280F;
+    --dead:#E38B84; --dead-bg:#341A18;
+    --undet:#9AA8B8; --undet-bg:#1D242C;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"Source Sans 3",ui-sans-serif,system-ui,sans-serif;
+    font-size:16.5px; line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:0 28px 96px}
+
+  /* ---------- masthead ---------- */
+  .mast{border-bottom:2px solid var(--ink);padding:56px 0 22px;margin-bottom:8px}
+  .eyebrow{
+    font-family:"JetBrains Mono",ui-monospace,monospace;
+    font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;
+  }
+  h1{
+    font-family:"Source Serif 4",Georgia,serif;
+    font-size:clamp(2.1rem,5vw,3.05rem); line-height:1.08; font-weight:700;
+    margin:.34em 0 .28em; letter-spacing:-.018em; text-wrap:balance;
+  }
+  .standfirst{
+    font-family:"Source Serif 4",Georgia,serif;
+    font-size:1.16rem;color:var(--ink-2);max-width:64ch;margin:0;
+  }
+  .meta{
+    display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:26px;
+    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;color:var(--ink-3);
+  }
+  .meta b{color:var(--ink-2);font-weight:600}
+
+  /* ---------- notice ---------- */
+  .notice{
+    background:var(--surface);border:1px solid var(--rule);
+    border-left:3px solid var(--accent);
+    border-radius:3px;padding:20px 24px;margin:30px 0 44px;box-shadow:var(--shadow);
+  }
+  .notice h4{
+    font-family:"JetBrains Mono",ui-monospace,monospace;
+    font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--accent);margin:0 0 9px;font-weight:600;
+  }
+  .notice p{margin:0 0 9px;color:var(--ink-2);font-size:15.4px}
+  .notice p:last-child{margin-bottom:0}
+
+  /* ---------- sections ---------- */
+  section{
+    display:grid;grid-template-columns:56px minmax(0,1fr);gap:0 24px;
+    padding-top:44px;margin-top:40px;border-top:1px solid var(--rule);
+  }
+  section.plain{grid-template-columns:minmax(0,1fr)}
+  .num{
+    font-family:"JetBrains Mono",ui-monospace,monospace;
+    font-size:13px;font-weight:600;color:var(--accent);
+    padding-top:.5em;letter-spacing:.02em;
+  }
+  .body{min-width:0}
+  h2{
+    font-family:"Source Serif 4",Georgia,serif;
+    font-size:1.72rem;line-height:1.16;font-weight:700;margin:0 0 .16em;
+    letter-spacing:-.012em;text-wrap:balance;
+  }
+  h2 .sub{display:block;font-size:.95rem;font-family:"Source Sans 3",sans-serif;
+    font-weight:400;color:var(--ink-3);letter-spacing:0;margin-top:.5em;font-style:italic}
+  h3{
+    font-family:"Source Sans 3",sans-serif;font-size:1.03rem;font-weight:700;
+    margin:2em 0 .5em;color:var(--ink);
+  }
+  p{margin:0 0 1.05em;max-width:68ch}
+  ul,ol{margin:0 0 1.05em;padding-left:1.25em;max-width:68ch}
+  li{margin-bottom:.5em}
+  strong{font-weight:700}
+  em{font-style:italic}
+  a{color:var(--accent);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+  a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+  code{
+    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.855em;
+    background:var(--surface-2);padding:.1em .34em;border-radius:2px;color:var(--ink-2);
+  }
+
+  /* ---------- claim / verdict chips ---------- */
+  .chip{
+    display:inline-block;font-family:"JetBrains Mono",ui-monospace,monospace;
+    font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;
+    padding:2px 7px;border-radius:2px;white-space:nowrap;
+  }
+  .c-holds{background:var(--holds-bg);color:var(--holds)}
+  .c-qual{background:var(--qual-bg);color:var(--qual)}
+  .c-dead{background:var(--dead-bg);color:var(--dead)}
+  .c-undet{background:var(--undet-bg);color:var(--undet)}
+
+  /* ---------- tables ---------- */
+  .tw{overflow-x:auto;margin:0 0 1.4em;border:1px solid var(--rule);border-radius:3px;background:var(--surface)}
+  table{border-collapse:collapse;width:100%;font-size:14.6px}
+  th{
+    text-align:left;font-family:"JetBrains Mono",ui-monospace,monospace;
+    font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+    color:var(--ink-3);padding:11px 14px;border-bottom:1px solid var(--rule-strong);
+    white-space:nowrap;background:var(--surface-2);
+  }
+  td{padding:11px 14px;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink-2)}
+  tr:last-child td{border-bottom:none}
+  td.n{font-family:"JetBrains Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink)}
+  td b{color:var(--ink)}
+  .ledger td:first-child{border-left:3px solid transparent}
+  .ledger tr.holds td:first-child{border-left-color:var(--holds)}
+  .ledger tr.qual td:first-child{border-left-color:var(--qual)}
+  .ledger tr.dead td:first-child{border-left-color:var(--dead)}
+  .ledger tr.undet td:first-child{border-left-color:var(--undet)}
+
+  /* ---------- callouts ---------- */
+  .open{
+    background:var(--qual-bg);border:1px dashed var(--qual);border-radius:3px;
+    padding:16px 20px;margin:0 0 1.3em;
+  }
+  .open .tag{
+    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10.5px;
+    letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--qual);
+    display:block;margin-bottom:6px;
+  }
+  .open p{margin:0;color:var(--ink-2);font-size:15.2px}
+
+  .attack{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:4px 0;box-shadow:var(--shadow)}
+  .attack ol{margin:0;padding:0;list-style:none;max-width:none}
+  .attack li{
+    display:grid;grid-template-columns:34px minmax(0,1fr);gap:0 14px;
+    padding:16px 22px;border-bottom:1px solid var(--rule);margin:0;
+  }
+  .attack li:last-child{border-bottom:none}
+  .attack .k{
+    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;
+    font-weight:600;color:var(--dead);padding-top:.15em;
+  }
+  .attack .q{display:block;font-weight:700;color:var(--ink);margin-bottom:4px;font-size:15.4px}
+  .attack .a{display:block;color:var(--ink-2);font-size:14.7px}
+
+  .legend{display:flex;flex-wrap:wrap;gap:9px 18px;margin:0 0 1.2em;align-items:center}
+  .legend span.lbl{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--ink-3);letter-spacing:.06em}
+
+  blockquote{
+    margin:0 0 1.2em;padding:2px 0 2px 20px;border-left:2px solid var(--rule-strong);
+    color:var(--ink-2);font-family:"Source Serif 4",Georgia,serif;font-style:italic;max-width:66ch;
+  }
+  hr.thin{border:none;border-top:1px solid var(--rule);margin:2.4em 0}
+  .foot{margin-top:56px;padding-top:22px;border-top:2px solid var(--ink);
+    font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--ink-3);line-height:1.8}
+  @media (max-width:700px){
+    section{grid-template-columns:minmax(0,1fr);gap:0}
+    .num{padding-top:0;margin-bottom:6px}
+    .wrap{padding:0 18px 64px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="eyebrow">Global Quantum + AI Challenge 2026 · Phase 1 Ideation · Team AuraQu</div>
+  <h1>Quantum Allosteric Scanner</h1>
+  <p class="standfirst">The benchmark cannot certify what the challenge asks. Here is the measurement that shows it, and the specification for one that could.</p>
+  <div class="meta">
+    <span><b>Draft</b> v1 — for adversarial review</span>
+    <span><b>Date</b> 2026-09-02</span>
+    <span><b>Deadline</b> 2026-09-15 · 13 days</span>
+    <span><b>Format</b> 6pp + 3pp appendix + repo link</span>
+    <span><b>Markdown twin</b> documentation/PHASE1_SUBMISSION_V1.md</span>
+  </div>
+</header>
+
+<div class="notice">
+  <h4>What this document is</h4>
+  <p>This is the first full draft, restructured onto the seven-item table of contents mandated by Guidelines §4.3 — <em>not</em> the six assessment criteria the previous draft was organised around. A reviewer following the Guidelines would have looked for item 4 in that version and not found it.</p>
+  <p><strong>Content parity:</strong> <code>documentation/PHASE1_SUBMISSION_V1.html</code> and <code>documentation/PHASE1_SUBMISSION_V1.md</code> carry the same content. Edit both, or regenerate one from the other — two drifting copies of a submission is the failure mode that produced TASK-0307. Verified by <code>.ai/tools/doc_parity.py</code>.</p>
+  <p>It is circulated for <strong>adversarial review</strong>. Section 8 lists the six places we believe this document is weakest and asks you to attack them specifically. What is still unfinished is marked as such — we would rather hand you a draft with visible holes than a draft with plausible filler.</p>
+</div>
+
+<!-- ============ 1 ============ -->
+<section>
+  <div class="num">01</div>
+  <div class="body">
+    <h2>Problem Framing<span class="sub">Guidelines §4.1 — "why quantum or quantum-AI methods offer a credible advantage <em>or novel insight</em>"</span></h2>
+
+    <p><strong>We claim the novel insight, not the advantage.</strong> §4.1's formulation is disjunctive, and answering it honestly requires saying which disjunct we are taking. We identified nine candidate quantum-advantage routes for this problem. We closed all nine by measurement, and we report that as our principal finding rather than working around it.</p>
+
+    <p>Cryptic allosteric pockets are the most valuable unexploited target class in small-molecule drug discovery: absent from the apo structure by definition, which is exactly why they are both underexploited and hard to validate. The challenge asks for a method that finds them from apo structure. We implemented that method in full — §4.1's own specification, a continuous-time quantum walk on the residue contact network seeded at the active site — and then did something we believe no competing submission will have done. <strong>We audited whether the benchmark can certify the answer.</strong></p>
+
+    <p>It cannot, for three diagnosable reasons.</p>
+
+    <h3>Finding 1 — two of the three mandated targets cannot express the contrast the challenge's own premise assumes</h3>
+    <p>A blind, pre-registered validity rule (apo pocket scores closed, holo pocket scores open, ligand stripped, fpocket druggability) applied to every target with a genuine small-molecule drug ligand:</p>
+    <div class="tw"><table>
+      <tr><th>Target set</th><th>Source</th><th>Valid</th></tr>
+      <tr><td>KRAS_G12C, BCR-ABL1, Cardiac Myosin</td><td>Table 1, mandated</td><td class="n"><b>1 of 3</b> — KRAS_G12C only</td></tr>
+      <tr><td>PTP1B, glucokinase, caspase-1, caspase-7</td><td>§6's own recommended database</td><td class="n"><b>1 of 4</b> — PTP1B only</td></tr>
+    </table></div>
+    <p>We stress provenance because it determines what the result means: <strong>we did not select the failing targets.</strong> Two of three came from Table 1; the extension followed §6's own instruction and its named source. The mandated gate has been operating at <strong>1/3 validated coverage</strong>, and the shortfall is systemic across two independent target sources.</p>
+
+    <h3>Finding 2 — two of the failures are previously unreported</h3>
+    <p>An unexplained ligand holds the "apo" pocket open. BCR-ABL1's <code>1OPL</code> carries <code>MYR</code> with <strong>75% overlap</strong> of the scored pocket window; GLUCOKINASE's <code>1V4S</code> carries <code>MRK</code> at <strong>88%</strong>; PKR's <code>7FS3</code> carries an allosteric modulator at <strong>92%</strong>. These are depositions the field uses as apo. They are not apo at the site of interest.</p>
+
+    <h3>Finding 3 — the quantum observable's apparent signal is geometry</h3>
+    <p>Our walk occupation scores AUC 0.5921 on 108 annotated structures — until it is conditioned on distance to the active site, which is what it is seeded on. Residualised, it falls to <strong>0.5184, not significantly above chance</strong>. Roughly four fifths of the signal was proximity the walk inherited from its own seeding. We published the unconditioned number first and retracted it four days later; the record is in the appendix.</p>
+  </div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section>
+  <div class="num">02</div>
+  <div class="body">
+    <h2>Technical Approach<span class="sub">Guidelines §4.3 item 2 — the <em>proposed</em> method, and the paradigm, stated in terms</span></h2>
+
+    <h3>Paradigm</h3>
+    <p><strong>Quantum-inspired, classically-simulable.</strong> Single-particle continuous-time quantum walks on a residue contact graph are efficiently simulable on classical hardware; no asymptotic speedup is claimed or available. We used the quantum formalism as a <em>modelling language</em> — a principled way to write down coherent, interference-carrying transport on a protein graph — and then measured what that language can and cannot express. Stating this plainly is not a hedge. It is the finding.</p>
+    <p>We are <strong>not</strong> proposing to run QAOA on a protein. Our own evidence says the instances are not hard: side-chain packing at pocket scale is a pairwise MRF with treewidth 2–5, solved exactly in 0.001–0.159 s against a naive 10<sup>14</sup> search space. A hard regime exists only at ~50–80 residues, which is most of a domain, not a pocket.</p>
+
+    <h3>What we propose to build</h3>
+    <p><strong>(a) A certifying cryptic-pocket benchmark.</strong> Blind validity rule + endogenous-ligand audit + positive control + measured limit of detection, applied at scale to establish which apo/holo pairs can support a cryptic-pocket claim at all. Our audit found 5 of 7 standard targets fail; the field is using them.</p>
+    <p><strong>(b) A screening criterion for the hard regime</strong> — which targets sit where a search-based, possibly quantum-amenable method could matter, decidable <em>from apo alone</em>. Our own data motivates this: coupled search succeeds on 20% of restarts for KRAS_G12C and 0/65 for PTP1B. The two valid targets disagree, and at n=2 we cannot adjudicate.</p>
+    <p><strong>(c) The apo vs stripped-holo delta.</strong> Published propensity methods report 89.8%/98.1% on ASBench/CASBench — but those benchmarks evaluate <em>ligand-removed holo</em> conformations, not apo. Measuring the same observable on both isolates precisely the quantity cryptic-pocket prediction depends on. To our knowledge that delta has never been reported.</p>
+    <p><strong>(d) A combined-readout ranker.</strong> Our newest result, and the one constructive lead we have. Individually, none of seven implemented observables survives conditioning on proximity. <em>Jointly</em>, under leave-one-protein-out cross-validation on 105 structures, they reach residualised AUC <strong>0.595</strong> — and the ceiling barely moves when both proximity features are removed from the model entirely (0.602). The information is in the representation; no single observable exposes it.</p>
+
+    <div class="notice" style="margin:0 0 1.3em">
+      <h4>Both controls, stated</h4>
+      <p>(d) clears a positive control — proximity residualised on itself lands at <strong>0.5000 exactly</strong>, 105/105 — and a negative one: a permuted-label null centres on <strong>0.4993 ± 0.0110</strong> with <strong>0 of 100</strong> replicates reaching the observed value (z = 8.69). We ran the negative control because we had found the same omission invalidate one of our own headlines a day earlier.</p>
+      <p>It remains an <em>upper bound</em> — a high-capacity model on one cohort — and the proximity-excluded variant (0.602) has not had its own separate null.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section>
+  <div class="num">03</div>
+  <div class="body">
+    <h2>Feasibility &amp; Resource Requirements</h2>
+    <p>At full resolution — one qubit per residue, the convention every number in this document uses — the register needs <strong>169–704 qubits and 3.3M–124.9M two-qubit gates</strong>. Louvain coarse-graining to a NISQ-plausible 10–15 qubits destroys most of the ranking signal (retention Jaccard 0.00–0.18) without reaching hardware-usable fidelity.</p>
+    <p>Against a real IBM device calibration snapshot, every mandatory target verdicts <strong><code>FAULT_TOLERANT_ONLY</code></strong>, at both resolutions. We checked both hardware routes named in the challenge's own bibliography; neither changes this picture.</p>
+    <p>This is why the proposal in §2 is classical-plus-quantum-inspired rather than hardware-targeted. The resource picture was measured before the framing was chosen, not after.</p>
+  </div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section>
+  <div class="num">04</div>
+  <div class="body">
+    <h2>Expected Impact<span class="sub">New section — absent from the previous draft, mandated by §4.3</span></h2>
+    <p><strong>What a successful PoC would demonstrate:</strong> that cryptic-pocket method claims in this field are currently uncertifiable, and that a validated instrument changes which published results survive.</p>
+    <div class="tw"><table>
+      <tr><th>Target</th><th>Quantitative goal</th><th>Baseline today</th></tr>
+      <tr><td>Certified apo/holo pairs</td><td class="n">≥ 40 pairs passing the blind validity rule</td><td class="n">7 audited, 2 pass</td></tr>
+      <tr><td>Apo vs stripped-holo delta</td><td class="n">Reported for ≥ 100 structures</td><td class="n">Never reported</td></tr>
+      <tr><td>Combined readout</td><td class="n">Residual AUC ≥ 0.60, LOPO, with a null</td><td class="n">0.595, no null yet</td></tr>
+      <tr><td>Re-audit of published claims</td><td class="n">The 84% headline decomposed</td><td class="n">Done: it is a six-way disjunction</td></tr>
+    </table></div>
+    <p>That last row is the shape of the impact. The field's leading reported figure — 84% recovery — is <strong>99/118 structures detected by <em>at least one</em> of six measures</strong>. Requiring three of six drops it to 57.6%; requiring all six drops it to 17.8%. The number is real and correctly computed. What it measures is not what a reader assumes.</p>
+  </div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section>
+  <div class="num">05</div>
+  <div class="body">
+    <h2>Validation Plan<span class="sub">Guidelines §8 calls this "one of the strongest differentiators"</span></h2>
+    <p>Already built and in use, not proposed:</p>
+    <ul>
+      <li><strong>Proximity floor</strong> — every score must beat the strongest trivial baseline (degree, hop, Euclidean distance from seed), not chance.</li>
+      <li><strong>Spatially-correct nulls</strong> — three generations, each fixing a measured defect in the last.</li>
+      <li><strong>Positive control with a measured limit of detection</strong> — a planted, confound-orthogonal coupling; under the corrected null no target reaches 80% power up to ~4× background conductance.</li>
+      <li><strong>Cluster-robust inference by structure</strong> — exact cluster-level permutation, after four selection procedures in our own register died of pseudo-replication.</li>
+      <li><strong>Program-level multiplicity budget</strong>, stated with its redundancy correction and its own limit.</li>
+      <li><strong>Firewall / frozen-context provenance</strong> — an unforgeable stamp preventing a claimed-frozen result from rendering unbannered.</li>
+    </ul>
+    <p><strong>Added because we found we had been running it asymmetrically:</strong> a mandatory <em>negative</em> control alongside every positive one. We had consistently verified that a test can detect signal and never that it refuses noise. That omission produced a false headline in our own register within the last week. It is now applied — the constructive result in §2(d) carries a permuted-label null, and running it is what let us promote that result from a lead to a finding.</p>
+  </div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section>
+  <div class="num">06</div>
+  <div class="body">
+    <h2>Hybrid / Cross-Domain Architecture</h2>
+    <p>Classical ENM ensemble generation → quantum-inspired transport subroutine → classical verification (fpocket druggability, proximity floor, null). One runner emits all three artefacts, so the connectivity matrix, the site-level hit list and this report cannot disagree.</p>
+    <div class="open">
+      <span class="tag">Open — diagram not yet drawn</span>
+      <p>The architecture figure is unbuilt. Also unresolved and more serious: the shipped demo reports P@5 with no floor, on an operator this register has since falsified. A judge who clicks the demo and then reads this document would find them in contradiction. This must be fixed before submission, not explained.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section>
+  <div class="num">07</div>
+  <div class="body">
+    <h2>Team Capability</h2>
+
+    <p>Three people, spanning the three disciplines this problem actually requires — and one methodological commitment that explains the rest of this document.</p>
+
+    <div class="tw"><table>
+      <tr><th>Member</th><th>Discipline</th><th>Role here</th></tr>
+      <tr><td><b>Oussema Turki</b></td><td>Quantum algorithms</td><td class="n">Operator design, propagator formulation</td></tr>
+      <tr><td><b>Berke Turkaydin</b></td><td>Molecular biology</td><td class="n">Target selection, structural validity, biological interpretation</td></tr>
+      <tr><td><b>Bartosz Chmura</b></td><td>PhD, molecular photophysics · 14 years software quality assurance</td><td class="n">Scope and narrative decisions, verification methodology</td></tr>
+    </table></div>
+
+    <h3>Why this team produced a falsification record instead of a results paper</h3>
+
+    <p>The appendices report five retractions in seven days, all self-found. That is not an accident of temperament — it is <strong>fourteen years of software quality assurance applied to a scientific register</strong>. QA practice supplies exactly the habits this document is built on: separation of the party that builds from the party that verifies; a negative control alongside every positive one; treating an unreproduced result as unverified rather than probably fine; and the discipline that finding your own defect before release is the cheap case.</p>
+
+    <p>Applied to computational science, that stance produced the audit in §1 — which is the submission. A team without it would have shipped the +18.4% quantum figure. We published it, tested the confound, and withdrew it the same day.</p>
+
+    <h3>Execution model — an explicit adversarial split</h3>
+
+    <p>The register's ~338 tasks were produced by a role-separated agent workflow, with the reviewing role deliberately assigned to a <em>different model</em> from the implementing one, so that a defect and its audit do not share a failure mode:</p>
+
+    <div class="tw"><table>
+      <tr><th>Layer</th><th>Model</th><th>Roles</th></tr>
+      <tr><td>Repository</td><td class="n">Claude Sonnet</td><td>Implementers, Toolsmith, Architect/Planner</td></tr>
+      <tr><td>Repository</td><td class="n">Claude Opus</td><td>Code Reviewer</td></tr>
+      <tr><td>Project</td><td class="n">Claude Opus</td><td><b>Adversarial Reviewer / Critic</b></td></tr>
+      <tr><td>Project</td><td class="n">Google Gemini 2.6 Pro</td><td>Critic / Reviewer / Researcher / Brainstormer</td></tr>
+    </table></div>
+
+    <p>The separation is the point, and it is measurable: <strong>four of the five retractions in Appendix B were produced by the adversarial reviewer role attacking work the implementing role had just completed and believed correct.</strong> A cross-model critic caught the proximity confound, the missing baseline comparison, the symmetry category error, and the miscalibrated test. This is the same independent-verification principle QA applies to software, transplanted onto a research register — and it is why we are able to hand you a document whose weakest points are listed in §8 rather than discovered by a referee.</p>
+
+    <h3>Why we disclose this, and open the register with it</h3>
+
+    <p>We could have described the outcome and omitted the method. We are doing the opposite, and publishing the working repository — including the <code>bartosz</code> branch, where the scientific register actually lives: <strong>338 task files</strong> (310 done), 549 commits, every retraction with its dated commit message stating the error against ourselves, and the internal disagreements and their resolutions left in rather than tidied out.</p>
+
+    <p>Three reasons. <strong>First</strong>, this is a Quantum <em>and AI</em> challenge that permits AI involvement; treating our own use of it as something to minimise would be incoherent. <strong>Second</strong>, the register is too large for one person to review unaided — reviewing it properly will itself likely require AI assistance, and we would rather say so than pretend to a reading nobody performs. <strong>Third</strong>, the traces that matter are visible in it: human-in-the-loop decisions, team disagreement, and how conflicts were resolved. That record is the evidence for every capability claim on this page.</p>
+
+    <p>Science is science, tools are tools, results are results — and the results here are the same results however they were reached. What should be judged is whether the verification was real. We have made that checkable rather than asked to be believed.</p>
+
+    <div class="tw"><table>
+      <tr><th>Artefact</th><th>What is in it</th></tr>
+      <tr><td><b>Repository</b><br><code>github.com/Oussema-t/Quantum_allosteric-scanner</code></td><td>The scanner, the pipeline, the analysis scripts behind every number in this document.</td></tr>
+      <tr><td><b>Branch <code>bartosz</code></b></td><td class="n">338 task files · 310 done · 549 commits · the full falsification record</td></tr>
+    </table></div>
+
+    <div class="open">
+      <span class="tag">Incomplete — awaiting detail</span>
+      <p>Oussema and Berke's specific backgrounds and prior work are placeholders above pending their own text. They are named with disciplines only; nothing has been attributed to them that they have not supplied.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APPENDIX ============ -->
+<section class="plain" id="appendix">
+  <div class="body">
+    <h2>Appendix A — Claims ledger</h2>
+    <p>Every load-bearing claim, with its current verdict as of 2026-09-02. This is the material the six-page limit cannot hold and the §4.4 appendix allowance exists for.</p>
+    <div class="legend">
+      <span class="lbl">VERDICT KEY</span>
+      <span class="chip c-holds">Holds</span>
+      <span class="chip c-qual">Qualified</span>
+      <span class="chip c-dead">Retracted</span>
+      <span class="chip c-undet">Undetermined</span>
+    </div>
+    <div class="tw"><table class="ledger">
+      <tr><th>Claim</th><th>Verdict</th><th>Evidence</th></tr>
+      <tr class="holds"><td>No single observable survives conditioning on proximity — 7 of 7 tested</td><td><span class="chip c-holds">Holds</span></td><td>Best residual is <code>persistent_h2_void</code> at +12.0% — <b>p = 0.107 uncorrected</b>, on 45 of 108 structures. Nothing positive reaches even an <em>uncorrected</em> 0.05. The one cell that does is <code>dcc_low</code>, and it is <b>negative</b> (0.4445). Chiral circulation, orthogonal <em>by construction</em>, went 0.5560 → 0.4960.</td></tr>
+      <tr class="holds"><td>Walk occupation is <b>80% proximity</b><br><span style="color:var(--ink-3);font-size:.92em">The single measurement behind the Appendix&nbsp;B retraction dated 2026-09-01 — not independent corroboration of it.</span></td><td><span class="chip c-holds">Holds</span></td><td>Share of ranking signal falls from <b>+18.4%</b> raw to <b>+3.7%</b> residualised: 1&nbsp;−&nbsp;3.7/18.4 = <b>80.0%</b>. Separately, ρ(occupation, proximity) = +0.735 — a <em>different</em> quantity (ρ² = 54%), reported here because the two do not agree and we no longer use ρ² to estimate shrinkage. Reproduced from scratch to 4 dp by an independent harness.</td></tr>
+      <tr class="holds"><td>P@5 = 0.000 on all three mandatory targets</td><td><span class="chip c-holds">Holds</span></td><td>Deployed operator, re-run after a stale-artifact fix</td></tr>
+      <tr class="holds"><td>On 108 annotated structures, nothing we have beats random at P@5</td><td><span class="chip c-holds">Holds</span></td><td>Design has power: their own propensity beats random at p = 5×10<sup>−9</sup></td></tr>
+      <tr class="holds"><td>The published 84% is a six-way disjunction</td><td><span class="chip c-holds">Holds</span></td><td>99/118; ≥3 of 6 → 57.6%; all 6 → 17.8%</td></tr>
+      <tr class="holds"><td>5 of 7 standard targets fail a blind validity audit</td><td><span class="chip c-holds">Holds</span></td><td>Pre-registered rule: <b>1 of 3</b> mandated targets valid, <b>1 of 4</b> from the challenge's own recommended database. A <em>separate</em> audit of 29 apo depositions supplies two of the mechanisms, both previously unreported.</td></tr>
+      <tr class="holds"><td>Instances are not computationally hard</td><td><span class="chip c-holds">Holds</span></td><td>Fixed backbone: treewidth 2–5, exact optimum in &lt; 0.16 s. Coupled backbone + rotamer: median 5, max 7 at realistic window size — still far below the ~50–80-residue regime where a hard instance appears.</td></tr>
+      <tr class="holds"><td>Hardware verdict is <code>FAULT_TOLERANT_ONLY</code></td><td><span class="chip c-holds">Holds</span></td><td>Both resolutions, real device calibration</td></tr>
+      <tr class="holds"><td>No structural descriptor predicts which method suits which protein</td><td><span class="chip c-holds">Holds</span></td><td>Size, chains, fold class, site separation all null against a working positive control</td></tr>
+      <tr class="qual"><td>Hamiltonian potential terms carry residual signal once geometry and proximity are controlled for<br><span style="color:var(--ink-3);font-size:.92em">Deliberately not worded as “beat geometry” — they do not.</span></td><td><span class="chip c-qual">Qualified</span></td><td>Two different questions, both answered. <b>Residualised:</b> retains signal, 0.740 → 0.660, p = 0.027. <b>Head-to-head:</b> <em>loses</em> to plain geometry, 0.751 vs 0.795, p = 0.29. And the published margin was a 5-column fitted model against a 1-column unfitted score — matched unfitted, it is 0.599 vs 0.575.</td></tr>
+      <tr class="holds"><td>Combined readout reaches residual AUC 0.595<br><span style="color:var(--ink-3);font-size:.92em">Our strongest constructive result, and the only one clearing both controls.</span></td><td><span class="chip c-holds">Holds</span></td><td>105 structures, 74 proteins, leave-one-protein-out; cluster-robust p = 1×10<sup>−5</sup>. <b>Positive control:</b> proximity residualised on itself → 0.5000 exactly, 105/105. <b>Negative control:</b> permuted-label null 0.4993 ± 0.0110, <b>0 of 100</b> reps reach the observed value, z = 8.69. Holds at 0.6017 with both proximity features removed. <em>Caveat: a high-capacity model, so this is an upper bound, on one cohort.</em></td></tr>
+      <tr class="dead"><td>The quantum contribution is larger than the 5–10% Shapley estimate</td><td><span class="chip c-dead">Retracted</span></td><td>Withdrawn 2026-09-01. The unconditioned AUC inflated it; the more rigorous earlier method had it right</td></tr>
+      <tr class="dead"><td>The site-distance distribution is a continuum with no discrete classes</td><td><span class="chip c-dead">Retracted</span></td><td>Rested on a test with too little power at the relevant separation (~40% at n = 26). A stronger “zero power” version of this was itself withdrawn — the original figure compared a separation in sample-SD units against a power curve in component-SD units.</td></tr>
+      <tr class="undet"><td>Whether that distribution is multimodal</td><td><span class="chip c-undet">Undetermined</span></td><td>Both available tests are miscalibrated, in opposite directions</td></tr>
+    </table></div>
+
+    <hr class="thin">
+
+    <h2>Appendix B — What we retracted, and how fast</h2>
+    <p>Offered as the team-capability evidence for §7. Each of these was found by our own adversarial review thread, not by a referee, and each is committed with a dated message stating the error against ourselves.</p>
+    <div class="tw"><table>
+      <tr><th>Date</th><th>Retraction</th><th>Found by</th></tr>
+      <tr><td class="n">2026-08-26</td><td>KRAS_G12C's "apo" structure was drug-bound; 8 of 10 candidates in the replacement pool were too. Headline re-run, and it got worse.</td><td>Live re-verification</td></tr>
+      <tr><td class="n">2026-09-01</td><td>The quantum arm’s +18.4% is 80% proximity (residualises to +3.7%, n.s.). Withdrawn the same day it was published. <span style="color:var(--ink-3)">Same measurement as the Appendix&nbsp;A row above.</span></td><td>Confound test</td></tr>
+      <tr><td class="n">2026-09-01</td><td>Our best constructive number was never compared against the strongest baseline. It loses to it.</td><td>Reviewer audit</td></tr>
+      <tr><td class="n">2026-09-01</td><td>A directional "quantum" effect was a category error: the operator is symmetric to machine precision, so the effect was arithmetically impossible.</td><td>Reviewer audit</td></tr>
+      <tr><td class="n">2026-09-02</td><td>A multimodality headline rested on a test that rejects unimodal data 52–68% of the time. Retracted the day after it landed.</td><td>Negative control</td></tr>
+    </table></div>
+
+    <hr class="thin">
+
+    <h2>Appendix C — Known defects, disclosed</h2>
+    <p>Phase-2 criteria explicitly score whether constraints are <em>"honestly assessed."</em> These are findable by any referee reading our repository, so we name them first.</p>
+    <ul>
+      <li><strong>No family-wise multiplicity control</strong> across roughly fifty analyses. No surviving claim sits below p = 0.019 — which is the signature of a large unrecorded family, not of a robust effect.</li>
+      <li><strong>Two incompatible definitions of "AUC"</strong> were in simultaneous use. One fits a model per fold and silently flips sign on anti-correlated features, so it measures magnitude of discrimination, not direction. Every solo figure computed that way needs its directional value reported beside it.</li>
+      <li><strong>Negative controls were omitted systematically</strong> until two days ago. We verified that tests detect signal and never that they refuse noise; this produced one false headline in the last week. Now applied to the §2(d) result, and being retrofitted to the rest — most existing verdicts in the register have still never faced one.</li>
+      <li><strong>Modality is undetermined.</strong> Two tests, miscalibrated in opposite directions, produced our two contradictory verdicts. Neither was earned.</li>
+      <li><strong>One external comparator has no number attached.</strong> ProteinLens was confirmed live but is browser-only with no API. Flagged, not skipped.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section class="plain">
+  <div class="body">
+    <h2>Attack these first</h2>
+    <p>The seven places we think this document is weakest, with our current answers. An adversarial review is more useful aimed than unaimed — if you break something not on this list, that is more valuable still.</p>
+    <div class="attack"><ol>
+      <li><span class="k">01</span><span><span class="q">"What is actually quantum about this?"</span><span class="a">Our single weakest point. We propose a benchmark and a classical readout, and we concede the formalism is classically simulable. Our defence is that §4.1 asks for advantage <em>or insight</em> and we take the second disjunct explicitly. Press on whether an ideation panel will accept that.</span></span></li>
+      <li><span class="k">02</span><span><span class="q">"Your one constructive result is a ceiling from a high-capacity model."</span><span class="a">It now clears both controls — the permuted-label null landed while this draft was being written (0.4993, 0/100 reps, z = 8.69). What remains arguable is that a gradient-boosted combination of features is an <em>upper bound</em>, on a single cohort, and that we have not shown any deployable ranker achieving it. Press there.</span></span></li>
+      <li><span class="k">03</span><span><span class="q">"You flip-flopped on multimodality twice in three days."</span><span class="a">True. Both reversals were self-caught, and the second found that both available tests are miscalibrated. Ask whether that reads as rigour or as instability — we genuinely do not know how it lands on a referee.</span></span></li>
+      <li><span class="k">04</span><span><span class="q">"How much of this is independently reproduced?"</span><span class="a">Honestly: one result. An independent from-scratch harness reproduced the proximity confound to four decimal places. Most of the rest is single-implementation.</span></span></li>
+      <li><span class="k">05</span><span><span class="q">"No multiplicity control across ~50 analyses."</span><span class="a">Conceded in Appendix C. No survivor below p = 0.019. Ask whether disclosing this helps us or simply hands a referee the weapon.</span></span></li>
+      <li><span class="k">06</span><span><span class="q">"Is a certifying benchmark a Phase-2 deliverable, or a paper?"</span><span class="a">Unresolved, and the most consequential strategic question here. If the panel wants a quantum PoC, our proposal may be well-argued and off-brief.</span></span></li>
+      <li><span class="k">07</span><span><span class="q">"Heavy AI involvement — won't a panel discount this as machine-generated?"</span><span class="a"><b>Decided: we disclose fully and open the register.</b> The counter-argument is that in a Quantum-and-AI challenge that permits AI use, hiding it would be incoherent — and that what should be judged is whether the verification was real, which we have made checkable. Challenge the decision if you disagree; it is deliberate, not an oversight. The narrower version worth pressing: does opening 338 task files help a reviewer, or simply give them 338 places to find something we missed?</span></span></li>
+    </ol></div>
+
+    <h3>What we specifically want from this round</h3>
+    <ul>
+      <li>A ruling on <strong>01</strong> and <strong>06</strong> — both are positioning calls, not technical ones, and they determine whether the rest of the document is the right document. <strong>07</strong> is decided; argue us out of it if you can.</li>
+      <li>Whether Appendix C should ship. It is unusual to volunteer this, and we may be wrong that honesty outscores exposure.</li>
+      <li>Anything in Appendix A you think we have graded too generously. The <span class="chip c-qual">Qualified</span> rows are where we are least confident of our own calibration.</li>
+    </ul>
+  </div>
+</section>
+
+<div class="foot">
+  Team AuraQu · Cleveland Clinic Quantum Allosteric Scanner<br>
+  Draft v1 · 2026-09-02 · restructured onto Guidelines §4.3's seven-item ToC<br>
+  Open: §6 architecture diagram · two team biographies · demo/report consistency · multiplicity budget across the register
+</div>
+
+</div>

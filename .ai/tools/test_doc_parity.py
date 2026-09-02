@@ -11,8 +11,6 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-import pytest
-
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from doc_parity import compare, html_to_text, md_to_text, numbers  # noqa: E402
 
@@ -147,13 +145,21 @@ def test_wrong_title_is_caught(tmp_path):
 # --------------------------------------------------------------- live pair
 
 def test_the_real_submission_pair_is_in_parity():
-    """Skips rather than fails when the HTML twin is not on this machine --
-    it lives outside the repo. Not a silent pass: the skip reason says so."""
-    md = Path(__file__).resolve().parents[2] / "__WORK_IN_PROGRESS__/documentation/PHASE1_SUBMISSION_V1.md"
-    if not md.is_file():
-        pytest.skip("PHASE1_SUBMISSION_V1.md not present")
-    html = next(Path("/private/tmp").glob("**/qas-phase1-v1.html"), None)
-    if html is None:
-        pytest.skip("HTML twin not on this machine (published artifact, not in repo)")
+    """Both halves of the submission are IN THE REPO, so this must FAIL when
+    either is missing -- never skip.
+
+    It skipped originally, because the HTML twin lived only in a session
+    scratch directory. That silent skip is precisely what let the omission go
+    unnoticed: the tool's most important case never ran. Same failure shape as
+    TASK-0319 (a control that cannot fire is not a control)."""
+    # parents: [0]=.ai/tools  [1]=.ai  [2]=repo root
+    doc = Path(__file__).resolve().parents[2] / "__WORK_IN_PROGRESS__/documentation"
+    md = doc / "PHASE1_SUBMISSION_V1.md"
+    html = doc / "PHASE1_SUBMISSION_V1.html"
+    assert md.is_file(), f"submission markdown missing: {md}"
+    assert html.is_file(), (
+        f"HTML twin missing from the repo: {html}. It must be committed "
+        "alongside the markdown -- a twin that exists only in a scratch "
+        "directory cannot be reviewed, published, or parity-checked by anyone else.")
     ok, report = compare(md, html)
     assert ok, report
