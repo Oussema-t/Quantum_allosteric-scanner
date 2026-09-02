@@ -11619,6 +11619,32 @@ re-runnable). **Data**: `results/tasks/0318_input_space_ceiling/
 {ceiling_result.json,no_proximity_feature_check.json}`. **Full detail**:
 `.ai/tasks/DONE/TASK-0318-ceiling-of-the-contact-graph-input-space.md`.
 
+### Addendum — the missing negative control, run (2026-09-02)
+
+[[TASK-0318]]'s own ceiling result (residualised AUC mean 0.5949) had a
+clean positive control (proximity residualised on itself → exactly
+0.5000) but no negative one — flagged in that task's own file and by
+[[TASK-0319]] as the same systemic omission found elsewhere in this
+register. Run now: permute the truth labels **within each structure**
+(preserving each structure's own positive count), refit the identical
+74-fold LOPO `HistGradientBoostingClassifier` pipeline against the same
+cached Phase-A features, 100 reps (~19s/rep once the cache is warm — the
+committed "~118s" figure included self-check/importance overhead not
+needed per null replicate).
+
+**Result**: null residual-AUC-mean **0.4993 ± 0.0110** — matches the
+~0.50 a correctly-calibrated harness should give. Observed **0.5949**
+sits **~8.7 null-standard-deviations** above it; permutation p = **0.0099**
+— the floor at 100 reps, with **zero** null replicates anywhere near the
+real value. The ceiling now clears both controls this register requires.
+**Reads as a result, not merely a lead.**
+
+**Script:** `scripts/task0318_negative_control.py`. **Data:**
+`results/tasks/0318_input_space_ceiling/negative_control.json`. **Full
+detail:**
+`.ai/tasks/DONE/TASK-0318-ceiling-of-the-contact-graph-input-space.md`'s
+own 2026-09-02 addendum.
+
 ## Both 1-vs-2 Gaussian LRT implementations were miscalibrated, in opposite directions — TASK-0316's "multimodal in every cohort" headline above does not survive ([[TASK-0319]], 2026-09-02)
 
 **Correction notice**: the TASK-0316 section above ("multimodal in every

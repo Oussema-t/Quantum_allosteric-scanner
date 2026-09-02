@@ -307,8 +307,8 @@ omission has already invalidated one headline ([[TASK-0316]]). A
 high-capacity model on 105 structures is exactly the shape of thing that
 needs it.
 
-- [ ] Run the permuted-label null and report it beside the 0.5949.
-- [ ] Until then, treat the ceiling as **a lead, not a result** — which is
+- [x] Run the permuted-label null and report it beside the 0.5949.
+- [x] Until then, treat the ceiling as **a lead, not a result** — which is
       what this task's own Constraint said, and which the revised table above
       now makes actionable.
 
@@ -316,3 +316,66 @@ needs it.
 right now** — individually no observable survives residualisation
 ([[TASK-0310]]), jointly they reach ~0.60. What changes is what it licenses:
 exploit the combination, do not build a tenth observable.
+
+## Addendum (2026-09-02, Implementer C) — the negative control, run
+
+**Design, matching this task's own open item exactly**: permute the truth
+labels *within* each structure (preserving each structure's own positive
+count — a between-structure shuffle would additionally scramble class
+balance, a second confound this control was not asking about), refit the
+IDENTICAL 74-protein LOPO `HistGradientBoostingClassifier` pipeline (same
+19 features, same `max_iter=150, max_depth=6, random_state=0`, same joint
+`[hop, euclid]` residualisation), reusing this task's own cached Phase-A
+features (`feature_cache/`, all 105 structures, unchanged) — no
+re-fetching, no re-deriving any structure.
+
+**Compute budget, disclosed**: one real (unpermuted) run costs ~19s once
+`load_cache()` is warm (the committed Done section's own "~118s" figure
+included the self-checks and permutation-importance overhead, stripped out
+here since neither is needed per null replicate). [[TASK-0319]]'s own
+≥200-rep bar is scoped to modality LRT false-positive rates specifically,
+not adopted here as a blanket rule — **100 reps** run instead (~1900s,
+~32 min), chosen for a decisive result within a reasonable wall-clock, not
+because 200 was infeasible; every per-rep value is written to
+`negative_control.json` so the p-value can be recomputed at a coarser or
+finer resolution directly rather than trusted as a single summary number.
+
+**Result — clean, and this time backed by a proper negative control, not
+just the positive one**:
+
+| | value |
+|---|---|
+| null residual-AUC-mean (100 reps) | **0.4993 ± 0.0110** (expect ~0.5000 under a true null — matches) |
+| null raw (non-residualised) mean | 0.4997 ± 0.0109 |
+| observed (real labels, committed) | **0.5949** |
+| permutation p (one-sided, 100 reps) | **0.0099** — the floor at this rep count: **all 100 null reps landed below the observed value**, none came close |
+| z-score (parametric, null's own mean/std) | **8.69** |
+
+**The null centres almost exactly on 0.50** — the harness is correctly
+calibrated, matching the already-clean positive control (proximity
+residualised on itself → exactly 0.5000, 105/105) from this task's own
+main run. The observed 0.5949 sits roughly **8.7 null-standard-deviations**
+above the null mean, and the permutation p is at its 100-rep floor with
+zero null replicates anywhere near the real value. **The ceiling is not a
+harness artifact.**
+
+**Verdict, upgraded per this task's own Constraint's own language**: the
+input-space ceiling (~0.60 residualised, composed of `V_C`,
+`chiral_circulation`, `persistent_h2_void`, `degree` — all pre-existing
+features, per the correction above) now clears **both** controls this
+register requires and can be read as **a result, not merely a lead**. The
+revised licensing table's "measured case" row stands, now on firmer
+ground: do not build [[TASK-0147]] or [[TASK-0157]]; fit and validate the
+existing feature combination instead.
+
+**Not done**: extending past 100 reps (the result is already at the
+permutation floor and a parametric z=8.69 leaves no real ambiguity to
+resolve); a negative control for the *proximity-excluded* refit
+specifically (0.6017) — the same conclusion is expected to hold there too
+by the same argument, not separately re-verified.
+
+**Script**: `scripts/task0318_negative_control.py` (imports `load_cache`/
+`resid_auc_joint`/`FEATURE_NAMES` from this task's own
+`task0318_input_space_ceiling.py` verbatim — same task, not a cross-task
+import). **Data**: `results/tasks/0318_input_space_ceiling/
+negative_control.json` (gitignored, all 100 per-rep values retained).
