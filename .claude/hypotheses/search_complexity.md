@@ -76,6 +76,15 @@ recovery still at 1–8 draws is another closure.
 the empirical half — alone it is the kind of argument this register exists to
 refuse.
 
+**Status update, 2026-08-12 ([[TASK-0210]]; dated line backfilled 2026-09-03
+via [[TASK-0323]]/[[TASK-0324]]): tentatively OPEN, weakly supported — not a
+Phase-2 handoff yet.** 0/2 legitimately-evaluable targets (KRAS_G12C, PTP1B;
+CASPASE1/GLUCOKINASE failed their own firewall/known-answer check) reached
+the known basin at an admittedly under-budgeted SA run. Directly answers
+this hypothesis's own open question ("does rarity return in the coupled
+space") with a real, if weak, data point — not strong enough to overturn
+the "open" framing above, but no longer literally unaddressed.
+
 ---
 
 ## HYP-S2 · The "noodle wiggle" — steric infeasibility is a *coupling detector*, not a cost function
@@ -133,6 +142,16 @@ measurement and [[TASK-0210]]'s search formulation. Not filed as a task
 pending the [[TASK-0208]] gate result — if the apo→holo change is
 side-chain-dominant, this is not needed.
 
+**Correction, 2026-09-03 ([[TASK-0323]]/[[TASK-0324]]): the precondition
+above did not hold.** [[TASK-0208]]'s own corrected verdict excludes BOTH
+the pure side-chain-dominant and pure-backbone closures (found genuinely
+coupled instead) — so the "not needed if side-chain-dominant" gate this
+hypothesis was waiting on already resolved, in the direction that means
+this instrument IS needed. TASK-0208's own follow-up #2 explicitly names
+this hypothesis's local-closure moves as the missing instrument for the
+regime it found. Still genuinely never built — this is a linking
+correction to the gating framing above, not a new research verdict.
+
 ---
 
 ## HYP-S3 · Overlap measures magnitude; hardness is set by coupling; they are orthogonal
@@ -162,6 +181,13 @@ away; a single φ/ψ flip can rearrange a pocket while barely moving a
 [[TASK-0208]] as amendments A1/A2 via
 `.ai/memory/questions/implementer/open/Q-0001-*`.
 
+**Status update, 2026-08-12 ([[TASK-0208]]; dated line backfilled
+2026-09-03 via [[TASK-0323]]/[[TASK-0324]]): used and confirmed.**
+RMSD/Cα overlap answered the backbone/side-chain split cleanly; only the
+separate coupling statistic could (and did, partially) test hardness —
+TASK-0208's own "Overlap ≠ coupling" section states plainly that no
+overlap/RMSD measure substitutes for the coupling statistic.
+
 ---
 
 ## HYP-S4 · Endpoint coupling ≠ path coupling
@@ -185,6 +211,13 @@ and closures in this register are load-bearing.
 
 **Status:** open. Limitation of [[TASK-0208]]; measurement would need
 HYP-S2's machinery.
+
+**Status confirmed, 2026-08-12 ([[TASK-0208]]; dated line backfilled
+2026-09-03 via [[TASK-0323]]/[[TASK-0324]]): genuinely never tested,
+textually confirmed.** TASK-0208's own "Not attempted" section states
+explicitly: "HYP-S4 (endpoint-vs-path coupling) and HYP-S5 (instance
+enrichment) — explicitly out of scope per Q-0001's Background, not folded
+in." Confirmed absence, not inferred.
 
 ---
 
@@ -210,6 +243,12 @@ or it becomes an unreported knob. (c) Instances drawn from one fold are not
 independent samples; the effective n is smaller than the count.
 
 **Status:** open, unowned. Natural extension of [[TASK-0208]]/[[TASK-0209]].
+
+**Status confirmed, 2026-08-12 ([[TASK-0208]]; dated line backfilled
+2026-09-03 via [[TASK-0323]]/[[TASK-0324]]): genuinely never tested,
+textually confirmed.** Same sentence as [[HYP-S4]]'s status update above —
+TASK-0208's own "Not attempted" section names this hypothesis explicitly
+as out of scope, not folded in.
 
 ---
 
@@ -253,6 +292,18 @@ rank against another.
 **Status:** open. Offered to [[TASK-0208]] as amendment A3 (Q-0001). The
 n-problem is why it is a hypothesis and not a plan.
 
+**Status update, 2026-08-12 ([[TASK-0208]]; dated line backfilled 2026-09-03
+via [[TASK-0323]]/[[TASK-0324]]): NOT EVALUABLE.** TASK-0208's own
+"TASK-0201 link: is PTP1B the most coupled?" section directly tests this
+hypothesis's own named prediction (PTP1B highest on both frustration rank
+and the apo-only correlation observable) and finds it not evaluable — the
+only frustration number that would have let PTP1B rank on this axis
+(side_chain_explained=0.078) was shown by the same task's own recompute to
+be vacuous (dominated by rigid-transplant clash energy, not real coupling).
+The frustration statistic needed to rank PTP1B does not work in the
+small-side_chain_explained regime all 3 real evaluable-for-this targets
+fall into.
+
 ---
 
 ## HYP-S7 · Conformational sampling is legal; only MD trajectories are forbidden
@@ -271,6 +322,13 @@ The Reviewer thread's earlier statement that "the no-MD constraint forbids
 it" was **wrong** and is retracted here.
 
 **Status:** settled. Cite this before any reviewer asks.
+
+**Status, 2026-08-02 ([[TASK-0185]]; dated line backfilled 2026-09-03 via
+[[TASK-0323]]/[[TASK-0324]]): settled** — established by TASK-0185's own
+closed-form ANM equipartition Gaussian draws (no integrator, no
+trajectory) as the working legality precedent, per the paragraph above.
+Trivial backfill (dated line only), not new research — the claim was
+already settled and already cited.
 
 ---
 

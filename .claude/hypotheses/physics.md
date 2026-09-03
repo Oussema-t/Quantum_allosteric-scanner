@@ -39,6 +39,15 @@ flexible targets but not rigid ones, the hypothesis is domain-restricted.
 **Implication for n_low:** If the hypothesis holds broadly, n_low should scale with N
 (see IMP-H1 in `../improvements/hamiltonian_code.md`).
 
+**Status, 2026-09-03 ([[TASK-0323]]/[[TASK-0324]]): NEVER TESTED — confirmed by
+thorough audit (312 files grepped, every plausible hit read), not merely absent.**
+This hypothesis's own "To test" (V_M AUC stratified rigid/multi-domain/IDP) has
+never been run. Adjacent, not decisive: [[TASK-0101]]/TASK-0067 (near-chance AUC
+broadly, no domain split), TASK-0263/TASK-0275 (real V_M per-target AUC, no domain
+split), TASK-0250 (GNM B-factor validity flags MYC_MAX/BCR_ABL1 as FAIL/MARGINAL —
+circumstantial, not a designed test). Matches the cross-cutting note below ("weakened,
+not yet formally falsified") — same conclusion, now dated and verdict-typed.
+
 ---
 
 ## HYP-P2 · A pairwise residue-type correction is the highest-value diagonal-only extension
@@ -76,6 +85,14 @@ diagonal sum, not the pre-fix one -- V_pair's marginal value over a
 properly-balanced 5-term diagonal may differ from its marginal value over
 one that was effectively V_R alone.
 
+**Status, 2026-09-03 ([[TASK-0323]]/[[TASK-0324]]): NEVER TESTED.** V_pair
+(the off-diagonal residue-pair term this hypothesis proposes) was never
+implemented or tested — TASK-0121 (above) only re-scaled the existing
+diagonal terms, it did not add an off-diagonal one. One thematic false
+positive checked and ruled out: TASK-0268's Miyazawa-Jernigan potential is
+a *frustration* statistic for [[HYP-P13]], not an off-diagonal H_new term
+for this hypothesis.
+
 ---
 
 ## HYP-P3 · V_C (currently structural centrality) would be more predictive as true dynamic covariance
@@ -111,6 +128,11 @@ mismatch here rather than silently rewriting this hypothesis's history,
 since confirming exactly when/why the DCC swap happened is outside this
 task's scope.
 
+**Status, 2026-09-03 ([[TASK-0323]]/[[TASK-0324]]): NEVER TESTED.** Zero
+corpus hits for the V_C-as-true-DCC ablation this hypothesis's own "To test"
+calls for. Confirmed independently by the note directly above: TASK-0121
+"did not touch V_C's formula, only its scale."
+
 ---
 
 ## HYP-P4 · The base Laplacian choice (normalised vs combinatorial, exp-decay vs binary) is load-bearing
@@ -127,6 +149,19 @@ choice.
 
 If AUC differences are within noise, the diagonal terms dominate and the base
 Laplacian choice is irrelevant. Run this ablation at ceiling (in-sample) before LOPO.
+
+**Status, 2026-09-03 ([[TASK-0323]]/[[TASK-0324]]): NOT A CLEAN TEST —
+confounded partial evidence exists, the isolated ablation itself was never
+run.** TASK-0101's 96-cell operator sweep shows `H10` (closest analog to
+variant 4: combinatorial Laplacian + binary contacts, no diagonal
+potentials) floor-clears via `ground_state_relaxation` on 2/3 targets vs.
+`H_new`'s 1/3 (variant 1: normalised + exp-decay + potentials) — but this
+comparison confounds Laplacian type, weight scheme, AND presence/absence of
+the 5 diagonal potential terms simultaneously, so it does not isolate what
+this hypothesis asks about. TASK-0113 separately confirms a weight-scheme
+knob was never added to `build_H_new` (cutoff-only sweep, by explicit scope
+decision). The clean 4-variant same-potential ablation this hypothesis's own
+"To test" prescribes remains genuinely untested.
 
 ---
 
@@ -497,6 +532,16 @@ it" framing the panel originally predicted. BCR_ABL1/CARDIAC_MYOSIN's
 programmatically). Full numbers: `RESULTS.md`'s learnability-gate
 section, `.ai/tasks/DONE/TASK-0139-kras-learnability-reclassification-decision.md`.
 
+**Status, 2026-07-24 (TASK-0120/TASK-0139/TASK-0150; dated line backfilled
+2026-09-03 via [[TASK-0323]]/[[TASK-0324]]): MIXED, target-dependent — not
+population-resolved on 3 targets.** Current per-target reading, most-recent
+verdict each: KRAS_G12C `AMBIGUOUS` (TASK-0139), BCR_ABL1 `LEARNABLE`
+(unaffected), CARDIAC_MYOSIN `UNLEARNABLE_FROM_APO` (TASK-0150). Mixed
+1-for/1-against/1-ambiguous across the only 3 mandatory targets — does not
+resolve this hypothesis's own population-level "for several targets" claim
+either way. The trail above already existed and is unchanged; this line
+only adds the top-level dated verdict summarizing it.
+
 ---
 
 ## HYP-P9 · A chiral (broken-time-reversal) walk yields a proximity-orthogonal, directional loop observable
@@ -661,6 +706,13 @@ optimum) — all for transfer to a fixed trap, not pocket ranking.
 **To test:** [[TASK-0141]] — γ-sweep on KRAS/ABL/PTP1B, scoring discrimination
 AUC vs floor (NOT transport), with the mandatory γ→∞ classical-limit sanity
 endpoint and localization-length-vs-γ as the mechanism covariate.
+
+**Status, 2026-07-20 ([[TASK-0141]]; dated line backfilled 2026-09-03 via
+[[TASK-0323]]/[[TASK-0324]]): CONFIRMED on real data — NEGATIVE on 3/3
+mandatory targets, matching the pre-registered synthetic prior.** No γ
+clears the proximity floor with non-overlapping CIs on any of
+KRAS_G12C/BCR_ABL1/PTP1B; best-of-8-γ permutation null p=0.649/0.211/1.000
+vs. Bonferroni α=0.0167.
 
 ---
 
@@ -998,6 +1050,21 @@ negative result — explicitly labelled as hypothesis, not finding, and now
 with one of its own sharpest sub-predictions checked and failed
 ([[TASK-0268]]) alongside a second independent route that could not
 actually test it ([[TASK-0271]]).**
+
+**Addendum, 2026-09-03 ([[TASK-0312]], TASK-0233; backfilled via
+[[TASK-0323]]/[[TASK-0324]]) — sharpens, does not resolve, the
+discriminating-experiment question above.** [[TASK-0312]] proves the CTQW
+pairwise transfer kernel is exactly symmetric (max|M−Mᵀ|=0.0) on real
+topology — directionality is mathematically impossible under the
+register's core operator at any seed placement, which directly undercuts
+the one counter-evidence point this hypothesis itself cites and discounts
+(TASK-0162's "partial read... weak evidence for directionality"):
+TASK-0312 shows that reading was a category error (comparing two different
+rows of a symmetric matrix against two different labels), not merely weak.
+TASK-0233 shows the population-shift-required conformer is thermodynamically
+plausible (ΔG 0.20–2.32 thermal units, Boltzmann weight 0.10–0.82 on all 3
+real targets) — decides only the premise-plausibility fragment, not the
+discriminating test itself.
 
 ---
 

@@ -11801,3 +11801,44 @@ constraint in spirit) — every status line above is a proposal for
 [[TASK-0324]] or a follow-up commit to apply.
 
 **Full detail**: `.ai/tasks/DONE/TASK-0323-audit-tasks-for-unlinked-hypothesis-verdicts.md`.
+
+## All 14 unjudged hypotheses now carry a dated status — TASK-0323's 5 genuinely-untested verdicts backfilled, its 9 orphaned linking edits applied ([[TASK-0324]], 2026-09-03)
+
+TASK-0323's own registry row still read TODO when this task was picked up
+(stale — TASK-0323 was already Done); once found, [[TASK-0324]] was
+unblocked and its own scope (the 5 hypotheses TASK-0323 reported as
+genuinely never tested or confounded: P1, P2, P3, P4, S2) was written
+directly into `.claude/hypotheses/physics.md`/`search_complexity.md` as
+dated `NEVER TESTED` / caveat / correction lines — no new experiments run,
+since TASK-0323's own audit already established the minimum evidence
+needed for each verdict.
+
+**A real gap between the two tasks' own contracts, disclosed and closed,
+not silently absorbed**: TASK-0324's Intent Contract explicitly excludes
+applying TASK-0323's 9 "ready to apply" linking edits (P8, P11, P13, S1,
+S3, S4, S5, S6, S7), saying that happens "as part of closing that task,
+not this one" — but TASK-0323's own Done section explicitly did **not**
+apply them, handing off to "TASK-0324 or a follow-up commit." With
+TASK-0323 Done and unreopenable, those 9 vetted verdicts had no other
+owner, so this task applied them too — pure transcription of TASK-0323's
+own already-spot-checked findings, no new judgment calls, no hypothesis
+claim/framing text touched.
+
+**Result: 14 dated lines added across 2 files** (`physics.md` +67 lines,
+`search_complexity.md` +58 lines, all additive — `git diff` confirms zero
+deletions). Header count unchanged (21) confirming no section was
+clobbered.
+
+**Validated against [[TASK-0322]]'s checker, which landed mid-task**
+(`ca5839a`, another thread): `python3 .ai/tools/hyp_register_check.py
+--verbose`, before/after via `git stash`. `uncited-claim` (4) and
+`index-drift` (1) unchanged — pre-existing, unrelated to this task.
+`staleness` went 3→6 (baseline P5/P10/P12 pre-existing; this task adds
+P8/P11/S7) — read individually, not just counted: all 3 new hits are the
+checker's own known false-positive shape (already present in the 3
+baseline hits), where a status line correctly preserving its *original
+event date* gets flagged stale merely because the *backfilling* task
+citing it is dated later — backwards for a backfill. Not fixed here
+(TASK-0322's own heuristic, out of this task's scope).
+
+**Full detail**: `.ai/tasks/DONE/TASK-0324-hypothesis-verdict-backfill.md`.
