@@ -533,6 +533,25 @@ The Hodge gradient/curl split maps exactly onto proximity-flow / loop-signal.
 **To test:** [[TASK-0140]] — gated benchmark eval vs the proximity floor with
 block-bootstrap CIs and distance-stratified AUC + permutation null.
 
+**Status, 2026-09-03 ([[TASK-0310]], [[TASK-0320]]): re-tested under a corrected
+statistic and still FAIL — this hypothesis is CLOSED.** [[TASK-0140]]'s original
+verdict was reached on raw AUC against a floor, before proximity was known to be
+the dominant confound. [[TASK-0310]] re-scored the observable **residualised on
+proximity** across 108 ASBench structures: raw AUC 0.5560 → **0.4960, below
+chance**, cluster-p 0.799. Its rho against proximity (0.365) is genuinely about
+half CTQW occupation's (0.735), exactly as this hypothesis predicts — but lower
+contamination did not translate into surviving signal. **The construction with
+the strongest available prior — circulating component orthogonal to the radial
+flow *by construction*, not by tuning — carried nothing.**
+
+**Do not re-propose complex hopping / a synthetic gauge phase as an open route.**
+It is implemented (`src/allostery/chiral.py`, Peierls substitution,
+`H[i,j] = -W[i,j]*exp(i*theta_ij)`, complex-Hermitian), it was run with a
+field-scale sensitivity sweep, and it has now failed under both the original and
+the corrected statistic. A draft of [[TASK-0320]]'s collaborator brief listed it
+as an open lead; that was written from inference rather than from this file, and
+was corrected on review.
+
 **Status, 2026-07-23 (TASK-0140): tested, claim not supported on real data — FAIL,
 consistent with HYP-P10's own FAIL.** Reference script confirmed absent (as flagged
 above); reconstructed independently from this hypothesis's own description + the cited

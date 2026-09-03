@@ -1,0 +1,248 @@
+<title>Reverse-Seeded CTQW</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --paper:#F4F6F8; --card:#FFFFFF; --sunk:#E9EDF1;
+    --ink:#151C24; --ink-2:#3E4A57; --ink-3:#71808F;
+    --rule:#D6DDE4; --rule-2:#B4C0CB;
+    --accent:#1B4D7E; --accent-2:#E6EEF6;
+    --pos:#16624A; --pos-bg:#E1EFE9;
+    --neg:#8C2F2F; --neg-bg:#F6E5E4;
+    --warn:#7D5A12; --warn-bg:#F5EEDC;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --paper:#0C1116; --card:#141C24; --sunk:#1B242E;
+    --ink:#E8EEF4; --ink-2:#B5C2CE; --ink-3:#84929F;
+    --rule:#26313C; --rule-2:#3A4854;
+    --accent:#7FB3E0; --accent-2:#152735;
+    --pos:#6BC5A2; --pos-bg:#123026;
+    --neg:#E39490; --neg-bg:#331A19;
+    --warn:#D9B25E; --warn-bg:#332811;
+  }}
+  :root[data-theme="dark"]{
+    --paper:#0C1116; --card:#141C24; --sunk:#1B242E;
+    --ink:#E8EEF4; --ink-2:#B5C2CE; --ink-3:#84929F;
+    --rule:#26313C; --rule-2:#3A4854;
+    --accent:#7FB3E0; --accent-2:#152735;
+    --pos:#6BC5A2; --pos-bg:#123026;
+    --neg:#E39490; --neg-bg:#331A19;
+    --warn:#D9B25E; --warn-bg:#332811;
+  }
+  *{box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);
+    font-family:"IBM Plex Sans",ui-sans-serif,system-ui,sans-serif;
+    font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 26px 90px}
+  .kicker{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:11.5px;
+    letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:600}
+  h1{font-family:Newsreader,Georgia,serif;font-size:clamp(2rem,4.6vw,2.9rem);
+    line-height:1.1;font-weight:700;letter-spacing:-.015em;margin:.3em 0 .3em;text-wrap:balance}
+  .dek{font-family:Newsreader,Georgia,serif;font-size:1.18rem;color:var(--ink-2);
+    max-width:62ch;margin:0}
+  header{padding:52px 0 24px;border-bottom:3px double var(--rule-2);margin-bottom:34px}
+  .meta{display:flex;flex-wrap:wrap;gap:6px 24px;margin-top:22px;
+    font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-3)}
+  .meta b{color:var(--ink-2);font-weight:600}
+
+  h2{font-family:Newsreader,Georgia,serif;font-size:1.6rem;font-weight:700;
+    line-height:1.2;margin:0 0 .5em;letter-spacing:-.01em;text-wrap:balance}
+  h3{font-size:1rem;font-weight:600;margin:1.9em 0 .5em;color:var(--ink)}
+  section{border-top:1px solid var(--rule);padding-top:34px;margin-top:34px}
+  p{margin:0 0 1.05em;max-width:68ch}
+  ul{margin:0 0 1.05em;padding-left:1.2em;max-width:68ch}
+  li{margin-bottom:.45em}
+  a{color:var(--accent)}
+  code{font-family:"IBM Plex Mono",monospace;font-size:.86em;background:var(--sunk);
+    padding:.1em .35em;border-radius:2px;color:var(--ink-2)}
+  strong{font-weight:600}
+
+  .verdict{background:var(--card);border:1px solid var(--rule);border-radius:4px;
+    padding:24px 26px;margin:0 0 30px;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+  .verdict .lbl{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--accent);font-weight:600;display:block;margin-bottom:10px}
+  .verdict p{font-family:Newsreader,Georgia,serif;font-size:1.2rem;color:var(--ink);margin:0 0 .7em}
+  .verdict p:last-child{margin-bottom:0;font-size:1rem;font-family:"IBM Plex Sans",sans-serif;color:var(--ink-2)}
+
+  .eq{background:var(--sunk);border-left:3px solid var(--accent);border-radius:3px;
+    padding:16px 20px;margin:0 0 1.3em;overflow-x:auto;
+    font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--ink);line-height:1.9}
+
+  .tw{overflow-x:auto;margin:0 0 1.3em;border:1px solid var(--rule);border-radius:4px;background:var(--card)}
+  table{border-collapse:collapse;width:100%;font-size:14.4px}
+  th{text-align:left;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;
+    text-transform:uppercase;font-weight:600;color:var(--ink-3);padding:11px 14px;
+    border-bottom:1px solid var(--rule-2);background:var(--sunk);white-space:nowrap}
+  td{padding:11px 14px;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink-2)}
+  tr:last-child td{border-bottom:none}
+  td.n{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
+    white-space:nowrap;color:var(--ink)}
+  td b{color:var(--ink);font-weight:600}
+  tr.hl td{background:var(--accent-2)}
+  .tag{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.07em;
+    text-transform:uppercase;font-weight:600;padding:2px 6px;border-radius:2px;white-space:nowrap}
+  .t-pos{background:var(--pos-bg);color:var(--pos)}
+  .t-neg{background:var(--neg-bg);color:var(--neg)}
+  .t-warn{background:var(--warn-bg);color:var(--warn)}
+
+  .note{background:var(--warn-bg);border:1px solid var(--warn);border-radius:4px;
+    padding:15px 19px;margin:0 0 1.3em}
+  .note .lbl{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;
+    text-transform:uppercase;font-weight:600;color:var(--warn);display:block;margin-bottom:6px}
+  .note p{margin:0;font-size:15.2px;color:var(--ink-2)}
+
+  .foot{margin-top:50px;padding-top:20px;border-top:3px double var(--rule-2);
+    font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-3);line-height:1.85}
+  @media (max-width:640px){.wrap{padding:0 17px 60px}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="kicker">Team AuraQu · Method brief · answering a collaborator question</div>
+  <h1>Reverse-seeded CTQW as a pocket-selection method</h1>
+  <p class="dek">Does seeding the quantum walk at candidate pockets and measuring transfer to the active site give us a new way to guess allosteric sites? No — and the reason is settled by algebra before any structure is touched.</p>
+  <div class="meta">
+    <span><b>Task</b> TASK-0320</span>
+    <span><b>Date</b> 2026-09-03</span>
+    <span><b>Cohort</b> ASBench, 105 structures / 75 proteins</span>
+    <span><b>Verdict</b> negative, and powered</span>
+  </div>
+</header>
+
+<div class="verdict">
+  <span class="lbl">Answer</span>
+  <p>The direction was never a free variable. Because our Hamiltonian is real, symmetric and seed-independent, transfer from a pocket to the active site is <em>algebraically identical</em> to the mean forward occupation over that pocket. Reverse seeding cannot produce information the forward walk does not already contain.</p>
+  <p>We ran it anyway at pocket level, where the register had only ever measured residues. On 105 ASBench structures it ranks candidate pockets no better than chance once distance to the active site is controlled for — median ρ <b>−0.015</b>, p = 0.36 — against a design that detects proximity at p = 0.00035 and fpocket at p = 4.5×10⁻⁷. The negative is measured, not an artefact of a blunt instrument.</p>
+</div>
+
+<section>
+  <h2>1 · Why the direction cannot matter</h2>
+  <p><code>H_new</code> is real and symmetric, and — this is the load-bearing part — it is built once from coordinates and does <strong>not</strong> depend on where the walk is seeded. For the converged (infinite-time-average) walk the transfer kernel is</p>
+  <div class="eq">M<sub>ij</sub> = Σ<sub>B</sub> (P<sub>B</sub>)²<sub>ij</sub>   where P<sub>B</sub> projects onto degenerate eigenvalue block B</div>
+  <p>Each <code>P<sub>B</sub></code> is a real symmetric projector, so <code>M</code> is symmetric — we measured <code>max|M − Mᵀ| = 1.11×10⁻¹⁶</code>, machine precision. Therefore, for a candidate pocket <code>P</code> and active site <code>A</code>:</p>
+  <div class="eq">transfer(P → A) = (|A|/|P|) · Σ<sub>i∈P</sub> p<sub>A</sub>(i) = |A| · mean<sub>i∈P</sub> p<sub>A</sub>(i)</div>
+  <p>where <code>p<sub>A</sub></code> is the ordinary forward occupation seeded at the active site. Verified numerically: the ratio came out <strong>20.0000, exactly |A|</strong>. Since <code>|A|</code> is fixed within a structure, <strong>ranking candidate pockets by reverse transfer is identically ranking them by mean forward occupation.</strong></p>
+  <p>So the useful version of your question is not about direction. It is: <em>does CTQW-derived amplitude, aggregated to whole pockets, select the allosteric site?</em> That had genuinely not been asked — every prior CTQW score in this register was per-residue — so it was worth the run.</p>
+</section>
+
+<section>
+  <h2>2 · What was run</h2>
+
+  <h3>Scripts</h3>
+  <ul>
+    <li><code>scripts/task0320b_reverse_seeded_asbench.py</code> — the ASBench result reported here.</li>
+    <li><code>scripts/task0320_reverse_seeded_pocket_ranking.py</code> — an earlier arm on our own 19-target frozen set, reported in §5 because it could <em>not</em> adjudicate.</li>
+  </ul>
+
+  <h3>Seed sites — the field's annotations, not ours</h3>
+  <p>The seed is <strong>ASBench's own <code>active_residues</code></strong> annotation, read from <code>results/tasks/0304_asbench_casbench/asbench_annotations.json</code> and matched to structure residues on a <code>(chain, resnum)</code> key. We deliberately did <em>not</em> use our own <code>detect_active_site</code>, so the seed choice is the benchmark's rather than a parameter we could have tuned. Median seed size 21 residues (range 4–43).</p>
+  <p>Truth is ASBench's own <code>allosteric_residues</code> (median 12 residues, range 1–23). The candidate that counts as correct is the one with the highest <em>recall</em> of that annotated set — the same oracle definition TASK-0282 established, reused rather than re-invented. Median best-candidate recall is 0.875, so in most structures fpocket does contain a good match to the annotated site; the question is purely whether any score can find it.</p>
+
+  <h3>Hamiltonian and propagator</h3>
+  <p><code>build_H_new(coords, bfactors, cutoff=8.0 Å)</code>, the operator this project uses throughout:</p>
+  <div class="eq">H_new = L_norm(α, r_c) + V_B + V_T + V_R + V_C + V_M</div>
+  <p>a normalised contact-graph Laplacian on Cα coordinates (α = 0.3 exponential edge decay, 8 Å cutoff) plus five z-scored diagonal potentials: B-factor (λ 0.08), terminal penalty (0.16), GNM rigidity (0.08), DCC coupling centrality (0.04) and low-mode participation (0.04). Propagation is <code>time_averaged_ctqw_converged(H, source=seed, coherent=False)</code> — the exact infinite-time average, computed from the spectral decomposition with no time-stepping and no <code>t_max</code> to choose, using an incoherent mixture over the seed residues.</p>
+
+  <h3>Structures</h3>
+  <p>The ASBench cohort as filtered by TASK-0305 — Cα only, first altloc, N ≤ 3000. <strong>105 structures over 75 proteins</strong>, median 819 residues (248–2970). Three were excluded and named rather than dropped silently: <code>2Q8M_1</code>, <code>3C1N</code>, <code>3DC2</code>, all because no fpocket candidate overlapped the annotated site at all, leaving nothing to select.</p>
+</section>
+
+<section>
+  <h2>3 · The two baselines, and exactly how they were computed</h2>
+
+  <h3>Proximity</h3>
+  <p>For every residue, the Euclidean <strong>Cα-space distance to the nearest seed residue</strong>; a candidate pocket's score is the minimum of that over its own residues, negated so that nearer means higher. No graph, no propagator — just distance.</p>
+  <div class="note">
+    <span class="lbl">A judgement call, stated because it is ours and not inherited</span>
+    <p>We used Cα distance rather than heavy-atom distance. The contact graph, <code>H_new</code> and the walk are all Cα-based, so a heavy-atom control would compare the score against a <em>finer-resolution</em> version of itself — mixing resolutions in exactly the place this test is trying to isolate. The frozen-set arm (§5) used heavy-atom distance, so the two arms are not perfectly comparable on that axis.</p>
+  </div>
+
+  <h3>fpocket druggability</h3>
+  <p>fpocket 4.x, the vendored binary at <code>tools/fpocket/bin/fpocket</code>, run as <code>fpocket -f &lt;structure&gt;</code> on the deposited coordinates through the project's existing <code>task0242.fpocket_candidates</code> wrapper — not a second parser written for this experiment. Candidate residues are read from each <code>pocket&lt;id&gt;_atm.pdb</code> and keyed on <code>(chain, resnum)</code>; the druggability score is fpocket's own, parsed from <code>&lt;stem&gt;_info.txt</code>. Median 55 candidates per structure (11–193). It is a purely geometric method from 2009 — no seed, no dynamics, no knowledge of the active site.</p>
+</section>
+
+<section>
+  <h2>4 · Results</h2>
+  <p>Per structure we rank all candidates by each arm, then measure Spearman ρ against recall of the annotated site. Structures are collapsed to <strong>one value per protein</strong> before testing, so the 105 structures do not inflate significance — 75 independent units.</p>
+
+  <div class="tw"><table>
+    <tr><th>Arm</th><th>Top-1 hit</th><th>Median rank of the right pocket</th><th>Recall @ top</th></tr>
+    <tr><td><b>n_res</b> — pocket size alone</td><td class="n">17.1%</td><td class="n">7</td><td class="n">0.1739</td></tr>
+    <tr><td><b>fpocket druggability</b></td><td class="n">16.2%</td><td class="n">6</td><td class="n">0.1793</td></tr>
+    <tr><td>ctqw_sum (size-weighted)</td><td class="n">8.6%</td><td class="n">7</td><td class="n">0.0944</td></tr>
+    <tr><td>proximity</td><td class="n">7.6%</td><td class="n">14</td><td class="n">0.0726</td></tr>
+    <tr class="hl"><td><b>ctqw_mean</b> — the reverse-transfer score</td><td class="n"><b>1.9%</b></td><td class="n">17</td><td class="n">0.0287</td></tr>
+    <tr><td>random</td><td class="n">—</td><td class="n">28</td><td class="n">0.0294</td></tr>
+  </table></div>
+
+  <p>The reverse-seeded score picks the right pocket in <strong>2 of 105 structures</strong>, and its recall-at-top is indistinguishable from random. Note the top row: the single best selector here is <em>raw cavity size</em>, which is also most of what fpocket's druggability score measures.</p>
+
+  <h3>What "residualised on proximity" actually means</h3>
+  <p>A worked description, because this is the step the result hinges on. Within a single structure we have ~55 candidate pockets, and for each one two numbers: its CTQW score, and its distance to the active site. Then:</p>
+  <ul>
+    <li>Replace both columns by <strong>ranks</strong> — 1st, 2nd, 3rd… by CTQW; 1st, 2nd, 3rd… by nearness. Ranks rather than raw values, because the two quantities are on incomparable scales and the correlation we ultimately report is rank-based anyway.</li>
+    <li>Fit one straight line through those ranks: <em>CTQW-rank ≈ a + b × proximity-rank</em>. This is the part of the walk's ordering that distance alone already predicts.</li>
+    <li>The <strong>residual</strong> is what is left over: actual CTQW-rank minus the rank distance predicted. In plain terms — <em>does this pocket score better or worse than its distance alone would have predicted?</em></li>
+    <li>Finally, correlate that residual with which candidate is really the annotated allosteric site.</li>
+  </ul>
+  <p>The everyday analogy: to ask whether exam scores reflect anything beyond hours studied, you predict score from hours and then check whether the over- and under-performance still tracks something. Here the walk's pocket ordering is largely predictable from distance (ρ = 0.808), and the leftover carries no information about where the allosteric site is.</p>
+  <div class="note">
+    <span class="lbl">The honest limit of this operation</span>
+    <p>Fitting a line removes only the part of the dependence that is <em>linear in the ranks</em>. A nonlinear dependence on distance could in principle survive it. That is exactly why a companion experiment (TASK-0318) ran the stronger version — delete the proximity features from the model entirely and refit — and found the same answer. One operation alone would not settle it.</p>
+  </div>
+
+  <h3>The decisive test</h3>
+  <div class="tw"><table>
+    <tr><th>Arm</th><th>Median ρ</th><th>Proteins positive</th><th>p (Wilcoxon)</th><th></th></tr>
+    <tr><td>proximity — <em>power check</em></td><td class="n">+0.1514</td><td class="n">55 / 75</td><td class="n">0.00035</td><td><span class="tag t-pos">detected</span></td></tr>
+    <tr><td>fpocket druggability</td><td class="n">+0.0986</td><td class="n">59 / 75</td><td class="n">4.5×10⁻⁷</td><td><span class="tag t-pos">detected</span></td></tr>
+    <tr><td>ctqw, raw</td><td class="n">+0.1091</td><td class="n">50 / 75</td><td class="n">0.0050</td><td><span class="tag t-pos">detected</span></td></tr>
+    <tr class="hl"><td><b>ctqw, residualised on proximity</b></td><td class="n"><b>−0.0150</b></td><td class="n">36 / 75</td><td class="n">0.36</td><td><span class="tag t-neg">vanishes</span></td></tr>
+  </table></div>
+
+  <p>Raw CTQW does carry signal. Remove distance-to-the-active-site — which is what the walk is seeded on — and it is gone, landing slightly <em>below</em> zero with fewer than half the proteins positive. Correlation between the CTQW ordering and proximity is <strong>ρ = +0.808</strong>; at pocket level the walk is an even purer distance proxy than the +0.735 we measured at residue level.</p>
+
+  <h3>How to read "detected at high significance"</h3>
+  <p>Each protein contributes exactly one number: the correlation, within that protein, between an arm's ranking of candidate pockets and how much each candidate overlaps the true site. Positive means the arm tends to rank the right pocket highly. That gives 75 numbers, one per protein.</p>
+  <p>The Wilcoxon signed-rank test then asks a single question: <em>are these 75 numbers systematically above zero, or is their spread just scatter around zero?</em> The p-value is the probability of seeing a tilt this consistent if the arm truly carried no information.</p>
+  <div class="tw"><table>
+    <tr><th>p</th><th>read as</th><th>arm</th></tr>
+    <tr><td class="n">4.5×10⁻⁷</td><td>about 1 in 2,200,000</td><td>fpocket druggability</td></tr>
+    <tr><td class="n">0.00035</td><td>about 1 in 2,900</td><td>proximity</td></tr>
+    <tr><td class="n">0.0050</td><td>about 1 in 200</td><td>CTQW, raw</td></tr>
+    <tr class="hl"><td class="n">0.36</td><td>about 1 in 3 — entirely ordinary</td><td>CTQW, residualised</td></tr>
+  </table></div>
+  <p><strong>A small p means the effect is real, not that it is large.</strong> Proximity's median correlation is only +0.15 — a weak effect measured confidently, because 75 proteins is enough to see a small consistent tilt. The residualised CTQW arm fails on both counts at once: the effect is near zero (−0.015) <em>and</em> fewer than half the proteins (36 of 75) even point the right way, which is what you would expect from a coin.</p>
+
+  <h3>Both controls</h3>
+  <p><strong>Positive:</strong> proximity and fpocket are both detected at high significance, so the design can find real effects. <strong>Negative:</strong> a permuted-label null (200 reps, shuffling which candidate carries the truth, rerunning the whole pipeline) centres on zero — <code>−0.0007 ± 0.0167</code> — and no null replicate reaches the raw observed value (0/200). The residualised observation sits at the 81st percentile of that null, i.e. unremarkable.</p>
+</section>
+
+<section>
+  <h2>5 · The first attempt, and why we did not report it</h2>
+  <p>We ran this first on our own 19-target frozen set. It produced an apparently significant residual signal — ρ = +0.146, <strong>p = 0.0070</strong>. It does not survive: the 19 targets are only 13 independent structures, and the duplicated rows are visible in the output (<code>HCV_NS5B_VRX</code>/<code>VR1</code> identical at +0.0354, <code>POO</code>/<code>CMF</code> at −0.0577). Cluster-robust, it is p = 0.067.</p>
+  <p>More importantly that arm could not have answered the question either way: <strong>proximity itself scored p = 0.36 there</strong>. A design that cannot detect the confound known to dominate every score in this register cannot rule anything out. That is why the answer above rests on ASBench, where proximity is detected at p = 0.00035 — and it is why we consider "underpowered" and "no effect" different findings.</p>
+</section>
+
+<section>
+  <h2>6 · What this does and does not close</h2>
+  <ul>
+    <li><strong>Closed:</strong> reverse seeding as a distinct method. It is algebraically the forward walk, and no implementation can change that while the Hamiltonian is real and symmetric.</li>
+    <li><strong>Closed:</strong> CTQW amplitude — at residue or pocket level, mean or sum — as an independent pocket selector. Its ranking is proximity.</li>
+    <li><strong>Closed, and this corrects an earlier draft of this brief:</strong> the obvious escape — that a genuinely directional walk needs <em>complex hopping amplitudes</em> (a chiral walk / synthetic gauge phase) — is not an open route. <strong>We have already built and tested exactly that.</strong> <code>src/allostery/chiral.py</code> applies a Peierls substitution, giving <code>H[i,j] = −W[i,j]·exp(iθ<sub>ij</sub>)</code> — complex-Hermitian, time-reversal broken by a synthetic gauge field — and scores the Helmholtz–Hodge <em>circulating</em> component, which is proximity-orthogonal by construction rather than by tuning. TASK-0140 ran it with a field-scale sensitivity sweep; it failed its own gate on 0 of 7 targets. TASK-0310 re-scored it residualised on 108 structures: raw AUC 0.5560 → <b>0.4960, below chance</b>, cluster-p 0.799. The construction with the strongest possible prior — orthogonal to distance <em>by construction</em> — carried nothing.</li>
+    <li><strong>Weakly open:</strong> only whether some <em>other</em> chiral construction (different field geometry, different scale, different topology) behaves differently. Given that by-construction orthogonality already failed, we treat that as a poor prior rather than a lead.</li>
+    <li><strong>Unaddressed here:</strong> the strongest selector we found is cavity size. Whether anything beats size at pocket selection is a separate open question, and not one CTQW answers.</li>
+  </ul>
+</section>
+
+<div class="foot">
+  Team AuraQu · TASK-0320 · 2026-09-03<br>
+  Scripts: <code>scripts/task0320b_reverse_seeded_asbench.py</code>, <code>scripts/task0320_reverse_seeded_pocket_ranking.py</code><br>
+  Data: <code>results/tasks/0320b_reverse_seeded_asbench/reverse_seeded_asbench.json</code><br>
+  Cohort: ASBench, 105 structures / 75 proteins · 3 excluded and named · clustered by protein throughout
+</div>
+
+</div>
