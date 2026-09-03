@@ -11731,3 +11731,73 @@ population, and not a clean unimodal verdict either.
 
 **Data**: `results/tasks/0319_lrt_calibration/lrt_calibration_fix.json`.
 **Full detail**: `.ai/tasks/DONE/TASK-0319-lrt-calibration-defect-both-implementations.md`.
+
+## Nine of 14 unjudged hypotheses already have a real, dated verdict sitting unlinked in a Done task ([[TASK-0323]], 2026-09-03)
+
+[[TASK-0321]] measured that 14 of this register's 21 hypotheses carry no
+dated status line, and its own filing worried that some of those 14 are
+not genuinely untested — a Done task may have already decided the claim
+and simply never been linked back. This task checked, rather than
+commissioning fresh research blind.
+
+**The 14-item list was re-derived, not copied** — [[TASK-0321]]'s own Done
+section states the count but never enumerates the IDs, and no saved
+query/script exists for it. Read all 21 hypothesis sections directly and
+classified each by whether it carries a stable, current, dated verdict;
+cross-checked against every one of [[TASK-0321]]'s own explicit examples
+(all 5 match). Result: **HYP-P1, P2, P3, P4, P8, P11, P13** (physics) and
+**HYP-S1–S7** (search/complexity, all seven).
+
+**Method**: two hypotheses (P1, P13) piloted via parallel Explore-agent
+corpus search before committing further, per this task's own gated
+design. The remaining 12 turned out not to need agent search at all —
+each names its own deciding/owning task directly in its own text
+(HYP-P11 → TASK-0141, HYP-S1 → TASK-0210, HYP-S2/S3/S4/S6 → TASK-0208) —
+reading those Done sections directly was both faster and more reliable.
+
+**Result: 9 of 14 get a proposed dated status line, ready for
+[[TASK-0324]] to apply as a linking edit, not new research**:
+
+| hypothesis | matched task | one-line finding |
+|---|---|---|
+| P8 | TASK-0120/0139/0150 | MIXED across 3 targets (AMBIGUOUS/LEARNABLE/UNLEARNABLE_FROM_APO) — already linked inline, never rolled into a top-level Status line |
+| P11 | TASK-0141 | Real-data γ-sweep NEGATIVE on 3/3 targets — hypothesis currently cites only its own synthetic prior |
+| P13 | TASK-0312, TASK-0233 | TASK-0312 proves directionality mathematically impossible on real topology (`max\|M-Mᵀ\|=0.0`), undercutting P13's own cited counter-evidence; TASK-0233 shows the required conformer is thermodynamically plausible |
+| S1 | TASK-0210 | Tentatively OPEN, weakly supported — 0/2 evaluable targets reached the known basin at an under-tuned budget |
+| S3 | TASK-0208 | "Established by construction" claim actually used and confirmed in practice |
+| S4, S5 | TASK-0208 | Confirmed genuinely never tested — TASK-0208's own text excludes both explicitly |
+| S6 | TASK-0208 | PTP1B's own named prediction is NOT EVALUABLE — the frustration statistic needed doesn't work in the regime all real targets fall into |
+| S7 | TASK-0185 | Already reads "settled" in its own text — needed only a dated citation |
+
+**Four (P1, P2, P3, S2) are confirmed — not assumed — genuinely never
+tested**, via thorough search rather than absence of evidence: P1's own
+domain-stratified ablation has never been run (Explore agent, 312 files
+grepped, every plausible hit read and ruled adjacent-not-decisive); P2's
+V_pair off-diagonal term was never implemented; P3 has zero corpus hits
+and the hypothesis's own text already confirms TASK-0121 never touched
+V_C's formula; S2's own precondition for staying unfiled ("not needed if
+side-chain-dominant") did not survive TASK-0208's corrected verdict.
+**P4** gets a caveat rather than a clean read either way: real evidence
+(TASK-0101, TASK-0113) exists but confounds three variables at once,
+so the isolated ablation the hypothesis asks for is still missing.
+
+**Tensions reported, not resolved to whichever side is convenient**
+(this task's own Constraint): P8's three linked tasks disagree by
+target; P4's confounded evidence points toward "the base choice
+matters" without isolating why.
+
+**A live correction caught before it became a wrong recommendation**: a
+draft note for HYP-P14 (citing [[TASK-0316]]'s original "multimodal in
+every cohort" headline as stronger evidence than the hypothesis already
+carries) was checked against the current `RESULTS.md` before being
+proposed — [[TASK-0319]] (above, same day) had already retracted that
+exact headline via a real calibration-bug fix. HYP-P14's existing
+UNDETERMINED reading turns out to already be current; no edit proposed
+there.
+
+**No hypothesis file edited in this task** (Out of Scope, matching
+[[TASK-0321]]'s own "do not close this by rewriting the hypotheses"
+constraint in spirit) — every status line above is a proposal for
+[[TASK-0324]] or a follow-up commit to apply.
+
+**Full detail**: `.ai/tasks/DONE/TASK-0323-audit-tasks-for-unlinked-hypothesis-verdicts.md`.
