@@ -165,6 +165,12 @@ def run_one(rec) -> dict | None:
     # retained for the permuted-label null: the null must be built from the
     # SAME candidate scores, permuting only which candidate carries the truth
     row["_recall"] = recall.tolist()
+    # TASK-0322: per-candidate predictor scores, so a seed-set FILTER can be
+    # simulated offline without re-running the walk (the walk is filter-invariant
+    # -- see this file's own symmetry identity above).
+    row["_prox"] = A["prox_min"].tolist()
+    row["_drug"] = A["fpocket_drug"].tolist()
+    row["_nres"] = A["n_res"].tolist()
     row["_ctqw"] = A["ctqw_mean"].tolist()
     row["_resid"] = rank_resid(A["ctqw_mean"], A["prox_min"]).tolist()
     return row
