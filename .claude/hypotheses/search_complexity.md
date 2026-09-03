@@ -10,6 +10,9 @@ claims, not implementation tasks; each names the task that owns it.
 (Opus), 2026-08-05/06, following [[TASK-0204]]'s reopening. Condensed here so
 the reasoning survives the conversation.
 
+**Before citing a hypothesis below, check [`INDEX.md`](INDEX.md)** for its
+current dated status (or "no verdict recorded") in one screen ([[TASK-0322]]).
+
 ---
 
 ## Where the register actually stands (the one-screen version)

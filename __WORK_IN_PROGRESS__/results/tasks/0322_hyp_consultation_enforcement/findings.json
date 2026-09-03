@@ -1,0 +1,49 @@
+{
+  "run_date": "2026-09-03",
+  "task": "TASK-0322",
+  "hypotheses_checked": 21,
+  "hypotheses_with_dated_status": 4,
+  "staleness_findings": [
+    {
+      "class": "staleness",
+      "id": "HYP-P10",
+      "status_date": "2026-07-22",
+      "citing_task": "TASK-0323",
+      "citing_date": "2026-09-03"
+    },
+    {
+      "class": "staleness",
+      "id": "HYP-P12",
+      "status_date": "2026-07-24",
+      "citing_task": "TASK-0321",
+      "citing_date": "2026-09-03"
+    }
+  ],
+  "uncited_claim_findings": [
+    {
+      "class": "uncited-claim",
+      "file": "__WORK_IN_PROGRESS__/documentation/2026-08-26-organiser-clarifications.md",
+      "pattern": "remains open",
+      "snippet": "ered (a)\u2013(f); the reply is numbered 2\u20135. Mapping, with what remains open:"
+    },
+    {
+      "class": "uncited-claim",
+      "file": "__WORK_IN_PROGRESS__/documentation/2026-08-26-organiser-clarifications.md",
+      "pattern": "remain open",
+      "snippet": "**On (e) and (f).** Both remain open and both gate real work. (f) in particular gates [[TASK-026"
+    },
+    {
+      "class": "uncited-claim",
+      "file": "__WORK_IN_PROGRESS__/documentation/CTQW_CONTRIBUTION_BRIEF.html",
+      "pattern": "is now closed",
+      "snippet": "a coin flip. The \"you never gave it a fair model\" objection is now closed for the improvement we could actually demonstrate. It remai"
+    },
+    {
+      "class": "uncited-claim",
+      "file": "__WORK_IN_PROGRESS__/documentation/REVERSE_CTQW_BRIEF.html",
+      "pattern": "open route",
+      "snippet": "litudes (a chiral walk / synthetic gauge phase) \u2014 is not an open route. We have already built and tested exactly that. src/alloste"
+    }
+  ],
+  "note": "Findings recorded, not fixed, per TASK-0322's own scope (cleanup belongs to TASK-0323/TASK-0324, or a future task for the uncited-claim class which neither currently owns)."
+}

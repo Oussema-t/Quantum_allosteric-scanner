@@ -5,6 +5,12 @@ These are testable claims, not implementation tasks.
 Cross-reference: concrete code changes in `../improvements/hamiltonian_code.md`;
 strategic framing in `ceiling.md`.
 
+**Before citing a hypothesis below, check [`INDEX.md`](INDEX.md)** for its
+current dated status (or "no verdict recorded") in one screen, rather than
+scanning this file for the most recent `**Status**` line by eye
+([[TASK-0322]] — filed because a correct, current verdict in this exact
+file was missed and contradicted in a collaborator brief).
+
 ---
 
 ## HYP-P1 · Low-frequency GNM modes are a reliable proxy for allosteric residues (in rigid globular proteins)
