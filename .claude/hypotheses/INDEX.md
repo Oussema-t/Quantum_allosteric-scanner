@@ -9,24 +9,24 @@ file did not silently fall behind its own source files.
 
 | id | claim | status | citing tasks |
 |---|---|---|---|
-| [[HYP-P13]] | Allostery is stabilisation of an otherwise-disfavoured conformation, not a signal propa... | no verdict recorded | 10 |
-| [[HYP-P9]] | A chiral (broken-time-reversal) walk yields a proximity-orthogonal, directional loop ob... | 2026-09-03 | 7 |
-| [[HYP-P14]] | The discriminator is blocked by a single confound, and only a proximity-orthogonal obse... | no verdict recorded | 7 |
-| [[HYP-P8]] | For several targets, the apo contact graph does not contain the allosteric pocket signa... | no verdict recorded | 6 |
-| [[HYP-P12]] | The coordinated multi-site closure is a topological void (persistent H2 / Hodge-L1), an... | 2026-07-24 | 4 |
-| [[HYP-P1]] | Low-frequency GNM modes are a reliable proxy for allosteric residues (in rigid globular... | no verdict recorded | 3 |
-| [[HYP-S4]] | Endpoint coupling ≠ path coupling | no verdict recorded | 3 |
-| [[HYP-S5]] | Instance enrichment — 4–7 targets is an anecdote, but each target contains many transit... | no verdict recorded | 3 |
-| [[HYP-S6]] | Coupling is protein-dependent, and an apo-only observable may predict it | no verdict recorded | 3 |
-| [[HYP-S7]] | Conformational sampling is legal; only MD trajectories are forbidden | no verdict recorded | 3 |
-| [[HYP-P2]] | A pairwise residue-type correction is the highest-value diagonal-only extension | no verdict recorded | 2 |
-| [[HYP-P3]] | V_C (currently structural centrality) would be more predictive as true dynamic covariance | no verdict recorded | 2 |
-| [[HYP-P10]] | Cryptic pockets carry a "near-in-3D / far-on-apo-graph" coordinated-closure signature | 2026-07-22 | 2 |
-| [[HYP-P11]] | Engineered dephasing (ENAQT) does not improve pocket discrimination — it relaxes the wa... | no verdict recorded | 2 |
-| [[HYP-S2]] | The "noodle wiggle" — steric infeasibility is a *coupling detector*, not a cost function | no verdict recorded | 2 |
-| [[HYP-P4]] | The base Laplacian choice (normalised vs combinatorial, exp-decay vs binary) is load-be... | no verdict recorded | 1 |
-| [[HYP-P5]] | H13 (full 3N ANM Hessian) sets a performance ceiling that H_new cannot reach | 2026-07-18 | 1 |
-| [[HYP-P6]] | Propagation time t in CTQW is currently unprincipled; a spectral choice would close a v... | no verdict recorded | 1 |
-| [[HYP-S1]] | The treewidth closure is objective-dependent, and a black-box detector breaks it | no verdict recorded | 1 |
-| [[HYP-S3]] | Overlap measures magnitude; hardness is set by coupling; they are orthogonal | no verdict recorded | 1 |
+| [[HYP-P13]] | Allostery is stabilisation of an otherwise-disfavoured conformation, not a signal propa... | no verdict recorded | 11 |
+| [[HYP-P9]] | A chiral (broken-time-reversal) walk yields a proximity-orthogonal, directional loop ob... | 2026-09-03 | 9 |
+| [[HYP-P8]] | For several targets, the apo contact graph does not contain the allosteric pocket signa... | 2026-07-24 | 8 |
+| [[HYP-P14]] | The discriminator is blocked by a single confound, and only a proximity-orthogonal obse... | no verdict recorded | 8 |
+| [[HYP-P12]] | The coordinated multi-site closure is a topological void (persistent H2 / Hodge-L1), an... | 2026-07-24 | 5 |
+| [[HYP-P1]] | Low-frequency GNM modes are a reliable proxy for allosteric residues (in rigid globular... | 2026-09-03 | 4 |
+| [[HYP-S4]] | Endpoint coupling ≠ path coupling | 2026-08-12 | 4 |
+| [[HYP-S5]] | Instance enrichment — 4–7 targets is an anecdote, but each target contains many transit... | 2026-08-12 | 4 |
+| [[HYP-S6]] | Coupling is protein-dependent, and an apo-only observable may predict it | 2026-08-12 | 4 |
+| [[HYP-S7]] | Conformational sampling is legal; only MD trajectories are forbidden | 2026-08-02 | 4 |
+| [[HYP-P2]] | A pairwise residue-type correction is the highest-value diagonal-only extension | 2026-09-03 | 3 |
+| [[HYP-P3]] | V_C (currently structural centrality) would be more predictive as true dynamic covariance | 2026-09-03 | 3 |
+| [[HYP-P10]] | Cryptic pockets carry a "near-in-3D / far-on-apo-graph" coordinated-closure signature | 2026-07-22 | 3 |
+| [[HYP-P11]] | Engineered dephasing (ENAQT) does not improve pocket discrimination — it relaxes the wa... | 2026-07-20 | 3 |
+| [[HYP-S1]] | The treewidth closure is objective-dependent, and a black-box detector breaks it | 2026-08-12 | 3 |
+| [[HYP-S2]] | The "noodle wiggle" — steric infeasibility is a *coupling detector*, not a cost function | 2026-09-03 | 3 |
+| [[HYP-P4]] | The base Laplacian choice (normalised vs combinatorial, exp-decay vs binary) is load-be... | 2026-09-03 | 2 |
+| [[HYP-P5]] | H13 (full 3N ANM Hessian) sets a performance ceiling that H_new cannot reach | 2026-07-18 | 2 |
+| [[HYP-S3]] | Overlap measures magnitude; hardness is set by coupling; they are orthogonal | 2026-08-12 | 2 |
+| [[HYP-P6]] | Propagation time t in CTQW is currently unprincipled; a spectral choice would close a v... | 2026-07-16 | 1 |
 | [[HYP-P7]] | Coherence adds no signal for allosteric pocket prediction on these proteins | no verdict recorded | 0 |

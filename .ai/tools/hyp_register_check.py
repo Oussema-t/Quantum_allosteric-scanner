@@ -75,7 +75,7 @@ HYP_SOURCE_FILES = ["physics.md", "search_complexity.md"]
 HYP_ID_RE = re.compile(r"HYP-[PS]\d+")
 HEADER_RE = re.compile(r"^## (HYP-[PS]\d+)\s*(?:·\s*(.*))?$", re.M)
 DATE_RE = re.compile(r"(\d{4}-\d{2}-\d{2})(?:/\d{2})?")
-STATUS_RE = re.compile(r"\*\*Status[,:][^*]*\*\*", re.S)
+STATUS_RE = re.compile(r"\*\*(?:Status\w*|Correction|Resolved)\b[^*]*\*\*", re.S)
 
 # --------------------------------------------------------------------------
 # hypothesis parsing

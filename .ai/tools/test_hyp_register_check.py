@@ -83,6 +83,61 @@ def test_picks_latest_of_multiple_dated_statuses_out_of_file_order():
     assert hyps["HYP-P9"].status_date == "2026-09-03"
 
 
+# Seeded-violation test for a real bug found 2026-09-03 (post-TASK-0322):
+# STATUS_RE originally matched only "**Status,"/"**Status:" -- missing every
+# dated verdict actually phrased "Status update,"/"Status confirmed,"/
+# "Correction,"/"Resolved ..." in the real register (HYP-S1/S2/S3/S4/S5/S6/P6
+# all use one of these). Undercounted 7 of 21 hypotheses as "no verdict
+# recorded" when they had one -- the same class of drift this checker exists
+# to catch, in the checker itself.
+VERDICT_PHRASING_SNIPPET = """# search_complexity.md
+
+## HYP-S1 · Some claim
+
+**Status update, 2026-08-12 (TASK-0210): re-tested, holds.**
+
+---
+
+## HYP-S2 · Another claim
+
+**Correction, 2026-09-03 (TASK-0323/TASK-0324): the precondition did not hold.**
+
+---
+
+## HYP-S3 · A third claim
+
+**Status confirmed, 2026-08-12 (TASK-0208): confirmed.**
+
+---
+
+## HYP-P6 · A fourth claim
+
+**Resolved 2026-07-16, TASK-0109/TASK-0119 -- alternative implemented and works.**
+"""
+
+
+def test_recognizes_status_update_confirmed_correction_resolved_phrasings():
+    hyps = parse_hypotheses_from_text(VERDICT_PHRASING_SNIPPET, "search_complexity.md")
+    assert hyps["HYP-S1"].status_date == "2026-08-12"
+    assert hyps["HYP-S2"].status_date == "2026-09-03"
+    assert hyps["HYP-S3"].status_date == "2026-08-12"
+    assert hyps["HYP-P6"].status_date == "2026-07-16"
+
+
+def test_negative_control_descriptive_bold_with_no_verdict_keyword_not_flagged():
+    # "**Status in the literature: ...**" (real HYP-P13 text) must not be
+    # mistaken for a dated verdict merely for starting with "Status" -- it
+    # is, and stays, undated here because it carries no date at all; this
+    # guards against a future over-broadening of STATUS_RE, not the parser
+    # picking up a date that isn't there.
+    snippet = """## HYP-P13 · Some claim
+
+**Status in the literature: this is mainstream, no date in this sentence.**
+"""
+    hyps = parse_hypotheses_from_text(snippet, "physics.md")
+    assert hyps["HYP-P13"].status_date is None
+
+
 # --------------------------------------------------------------------------
 # staleness class
 # --------------------------------------------------------------------------

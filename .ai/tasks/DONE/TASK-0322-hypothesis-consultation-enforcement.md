@@ -191,3 +191,23 @@ Files: `.ai/tools/hyp_register_check.py`,
 `__WORK_IN_PROGRESS__/results/tasks/0322_hyp_consultation_enforcement/findings.json`.
 Edited (pointer line only): `.claude/hypotheses/physics.md`,
 `.claude/hypotheses/search_complexity.md`.
+
+**Correction, 2026-09-03 (Architect, filing TASK-0326):** `STATUS_RE`
+matched only `**Status,`/`**Status:` — missing every verdict actually
+phrased `**Status update,`/`**Status confirmed,`/`**Correction,`/
+`**Resolved ...` in the real register (HYP-S1/S2/S3/S4/S5/S6/P6, several
+written by [[TASK-0323]]/[[TASK-0324]] themselves, using exactly the
+phrasing this checker didn't recognize). Undercounted 7 of 21 hypotheses
+as "no verdict recorded." This is the checker's own version of the
+problem it exists to catch — found while manually verifying TASK-0324's
+"21/21 now dated" claim against a freshly-rebuilt index for the repo
+owner, not by the checker's own tests (which only exercised the
+patterns the code already handled). Fixed
+(`\*\*(?:Status\w*|Correction|Resolved)\b[^*]*\*\*`), two regression
+tests added (positive: all four missed phrasings; negative: a
+descriptive "**Status in the literature:**" bold span with no date
+still correctly parses as undated). True count after the fix: **18/21
+dated**, not 21/21 (TASK-0324's claim) or 11/21 (this checker's own
+pre-fix output). Genuinely undated: HYP-P7, HYP-P13, HYP-P14 — the
+latter two are this week's newest hypotheses, plausibly still open
+rather than missed.
