@@ -19,6 +19,9 @@ negative and infrastructural work around it.
 | Green's function beats CTQW | **not established** — its two free parameters span AUC 0.350–0.691 (§5.3) |
 | Most benchmark pockets are distal | **false** — only **13%** are (§3.2). Most cannot test propagation at all |
 | Topology predicts pocket distance | only **algebraic connectivity**, ρ = −0.477 after size control (§3.3) |
+| Pocket-seeded CTQW at scale (138 proteins) | **+0.03 AUC over a permutation null**, signal in ~15 proteins only; P@5 gains nothing (§6b) |
+| fpocket ∩ PASSer as pocket selector | **3× the clearing rate** of fpocket alone, first P@5 = 1.0 proteins (§6b.3) |
+| The right pocket is often never proposed | **22–30% of proteins** — detector-limited, before physics (§6b.1) |
 
 ---
 
@@ -223,6 +226,93 @@ distance *improves* every method there. That is target-specific and does not gen
 
 ---
 
+---
+
+## 6b. Pocket-seeded sweep at scale — 138 distal proteins
+
+The §14 experiment run as a **benchmark** rather than per-target: seed the walk from detected
+pockets, walk to the active site, score with the full §14 battery, ask whether the drug pocket
+ranks first. Two seed selectors compared, each at `MIN_HOP` ∈ {1, 2}. 96 cells per protein
+(12 operators × 8 scores). Raw output and scripts: `results/pocket_seeded_sweep/`.
+
+### 6b.1 Coverage — what the selector costs before any walk runs
+
+| selector | testable | lost | why lost |
+|---|---|---|---|
+| fpocket top-10 by druggability | 106 / 138 | 32 | drug pocket not among the 10 |
+| **fpocket ∩ PASSer** (minrank, J ≥ 0.5) | **96 / 138** | 42 | 26 as above, **10 with no fpocket↔PASSer match at all**, 6 fpocket failures |
+
+**In 22–30% of proteins the right pocket was never on the ballot.** That is a property of the
+pocket detectors, not of the walk, and it caps any pocket-seeded method before physics enters.
+
+### 6b.2 Against a correlation-preserving null
+
+The per-protein "best of 96 cells" is a **maximum over correlated draws** and cannot be read as
+a score. The null permutes the labels against the *actual* score vectors (200 draws, rank-sum
+AUC), so it preserves the correlation between cells.
+
+| run | best-of-96 AUC | null | Δ | p | best-of-96 P@5 | Δ P@5 | proteins p<0.05 |
+|---|---|---|---|---|---|---|---|
+| fpocket, hop 2 | 0.799 | 0.765 | **+0.034** | 2.9e-05 | 0.468 | +0.001 | 19 / 106 |
+| consensus, hop 2 | 0.777 | 0.745 | **+0.032** | 1.3e-04 | 0.483 | +0.002 | 16 / 96 |
+| fpocket, hop 1 | 0.787 | 0.760 | +0.027 | 1.7e-04 | 0.407 | **−0.017** | 16 / 107 |
+| consensus, hop 1 | 0.764 | 0.733 | **+0.031** | 5.0e-04 | 0.463 | +0.006 | 18 / 99 |
+
+**There is a small real effect and it is ~10× smaller than the raw maximum suggests.**
+The naive reading ("mean winning AUC 0.798, 108/108 proteins above 0.6") is almost entirely
+selection over 96 cells. Against the null the gain is **+0.03 AUC**, concentrated in
+**16–19 proteins per run where ~5 are expected by chance** — i.e. roughly 15% of the cohort
+carries signal and the rest does not. **P@5 gains nothing** (+0.002), and P@5 is the measure
+that decides whether a pocket is actually picked.
+
+### 6b.3 Does the consensus selector help?
+
+| | fpocket hop2 | **consensus hop2** | fpocket hop1 | **consensus hop1** |
+|---|---|---|---|---|
+| cells clearing AUC > 0.6 **and** P@5 ≥ 0.8 | 24 / 10176 | **54 / 9216** | 9 / 10272 | **32 / 9504** |
+| clearing rate | 0.24 % | **0.59 %** | 0.09 % | **0.34 %** |
+| proteins reaching P@5 = 1.0 | 1 | **3** | 0 | **2** |
+
+**Yes, on the criterion that matters.** Requiring a pocket to be druggable *and* allosteric
+simultaneously roughly **triples the clearing rate** and yields the first P@5 = 1.0 proteins.
+Raw AUC falls (0.799 → 0.777) but so does the null (0.765 → 0.745): the candidate set is
+smaller and harder, and the *margin over chance* is unchanged. The consensus gain is also
+**stable across `MIN_HOP`**, where the fpocket-only selector degrades (P@5 goes negative at
+hop 1) — evidence that fpocket-only hits lean on seeds adjacent to the active site.
+
+### 6b.4 Marginals — no cell is good on its own
+
+Family-averaged over 86 clusters, the best of the 96 cells reaches **AUC 0.521**
+(`harm/comb` + `residLOG`, consensus hop 2); the full grid spans **0.34–0.54**. `p_avg` alone
+runs 0.383–0.435, i.e. *below* chance. Among clearing cells `green_lmax_0.05` is the most
+frequent score (14 / 54) and `adj` normalisation dominates the operators.
+
+### 6b.5 Consequence for `H_new`
+
+`H_new` is `L_norm(cutoff, α)` plus a diagonal, so it spans **`exp/sym` and `binary/sym` (α→0)
+only**. The `adj` and `comb` normalisations and the `gauss`/`harm` kernels are **outside its
+span**, and `adj` is exactly what dominates the cells that clear the bar. Expressing the
+observed winners requires the `weight × norm` generalisation (`build_H_general`), not a
+retuning of `H_new`'s nine dials.
+
+### 6b.6 Ceiling correction
+
+P@5 = 1.0 needs ≥ 5 truth residues among the seeds; only **69 / 138** proteins have that many,
+and P@5 = 0.8 needs ≥ 4 (77 / 138). The **best achievable mean P@5 on this cohort is 0.64,
+not 1.0**; observed is 0.58 of that ceiling (hop 2). Quoting P@5 against 1.0 on this benchmark
+understates performance for half the set.
+
+### 6b.7 Status
+
+| claim | status |
+|---|---|
+| Pocket-seeded CTQW finds allosteric sites at benchmark scale | **no** — marginals at chance |
+| fpocket ∩ PASSer beats fpocket alone | **yes** — 3× clearing rate, stable across `MIN_HOP` |
+| The per-protein "winning Hamiltonian" is meaningful | **only for ~15 proteins** — grouping all 108 would fit noise |
+| Green's `|G|²` is the strongest score | **suggestive only** — most frequent among clearing cells, `(E, η)` still unpinned (§5.3) |
+
+---
+
 ## 7. Limitations
 
 - **Multiplicity.** §14 evaluates ~250 score × operator cells per target. Only §14f is pre-registered.
@@ -235,6 +325,13 @@ distance *improves* every method there. That is target-specific and does not gen
 - **SQW is not validated** — window far too short for a steady-state or ENAQT claim.
 - **CryptoSite is 21/93**, second-hand provenance (`datasets/cryptosite_PROVENANCE.txt`).
 - The benchmark's own premise is weak: **87% of proteins have a non-distal target.**
+- **Best-of-N is not a score.** The pocket-seeded sweep's per-protein maximum (0.798) collapses to
+  +0.03 against a correlation-preserving null. Any "winning Hamiltonian" table built on maxima over
+  the 96-cell grid is selection unless it is null-corrected (§6b.2).
+- **P@5 = 1.0 is unreachable for half the cohort** — only 69/138 proteins have ≥5 truth residues
+  among the seeds (§6b.6).
+- **PASSer consensus shrinks coverage**: 10 proteins have no fpocket↔PASSer pocket match at
+  Jaccard ≥ 0.5 and drop out entirely (§6b.1).
 
 ## 8. Reproducing
 
@@ -245,3 +342,6 @@ initially unscored — a silent cause of empty seed sets.
 
 Compute: two Hetzner `ccx33` runs, **EUR 0.13 total** (topology over 1233 proteins, 296 s;
 site derivation over 809, 768 s). Both deleted after results were pulled.
+The pocket-seeded sweep (§6b) added three Hetzner `cx43` runs, **EUR 0.08**, all deleted
+(orphaned primary IPs must be deleted separately — they keep billing after the server is gone).
+Cumulative HPC spend: **EUR 0.21**.

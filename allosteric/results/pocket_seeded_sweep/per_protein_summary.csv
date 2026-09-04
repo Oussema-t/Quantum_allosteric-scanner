@@ -1,0 +1,553 @@
+base,best_auc,best_auc_cell,best_p5,best_p5_cell,cluster,n_drug,n_pockets,n_seeds,null_max_auc,perm_p,protein,reason,run,source,status,truth_type
+,,,,,,,,,,,ASB_1A3W,fpocket none,fpocket_hop1,,not_scored,
+0.0333,0.8879,gauss|adj|green_zero_0.01,0.2,binary|adj|green_zero_0.01,Anaerobic ribonucleoside-triphosphate reductase,2,10,60,0.8962,0.61,ASB_1H78,,fpocket_hop1,asbench,scored,curated_allosteric
+0.1379,0.7125,harm|comb|R,0.6,harm|comb|R,ATP-dependent 6-phosphofructokinase isozyme 1,8,10,58,0.7107,0.495,ASB_1PFK,,fpocket_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_1W25,seeds 75 drug 0,fpocket_hop1,,not_scored,
+0.1628,0.872,gauss|adj|green_lmax_0.05,0.8,exp|adj|green_lmax_0.05,Serum albumin,14,10,86,0.67,0.0,ASB_2BXA,,fpocket_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_2PA3,seeds 74 drug 0,fpocket_hop1,,not_scored,
+0.0141,0.9857,exp|adj|R,0.2,exp|adj|R,ATP phosphoribosyltransferase,1,10,71,0.9759,0.53,ASB_2VD3,,fpocket_hop1,asbench,scored,curated_allosteric
+0.0588,0.6649,exp|adj|R,0.4,gauss|comb|residLOG,"Glycogen phosphorylase, liver form",6,10,102,0.7474,0.96,ASB_3CEH,,fpocket_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_3ETG,seeds 84 drug 0,fpocket_hop1,,not_scored,
+0.1489,0.6902,binary|sym|residLOG,0.6,gauss|sym|residLOG,"Fructose-1,6-bisphosphatase isozyme 2",14,10,94,0.6782,0.39,ASB_3IFA,,fpocket_hop1,asbench,scored,curated_allosteric
+0.0656,0.7588,binary|adj|R,0.4,binary|adj|residLOG,Phospho-2-dehydro-3-deoxyheptonate aldolase,4,10,61,0.7949,0.715,ASB_3PG9,,fpocket_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_4GRS,seeds 58 drug 0,fpocket_hop1,,not_scored,
+0.1014,0.6797,exp|adj|residLOG,0.4,harm|adj|R,ATP-dependent 6-phosphofructokinase,7,10,69,0.7391,0.82,ASB_4PFK,,fpocket_hop1,asbench,scored,curated_allosteric
+0.0361,0.9,binary|adj|residLOG,0.2,binary|adj|green_zero_0.05,CAS0001,3,10,83,0.8402,0.235,CAS_1NXE,,fpocket_hop1,casbench,scored,curated_allosteric
+,,,,,,,,,,,CAS_1YBA,seeds 69 drug 0,fpocket_hop1,,not_scored,
+,,,,,,,,,,,CAS_2PA3,seeds 73 drug 0,fpocket_hop1,,not_scored,
+0.0811,0.723,harm|sym|R,0.4,binary|sym|R,CAS0002,6,10,74,0.7365,0.595,CAS_3KOO,,fpocket_hop1,casbench,scored,curated_allosteric
+0.15,0.6838,binary|adj|green_lmax_0.05,0.4,binary|adj|p_peak,CAS0001,12,10,80,0.68,0.465,CAS_4JAE,,fpocket_hop1,casbench,scored,curated_allosteric
+0.2283,0.6922,exp|adj|R,0.8,exp|adj|R,CAS0002,21,10,92,0.6451,0.13,CAS_5AI4,,fpocket_hop1,casbench,scored,curated_allosteric
+0.2927,0.62,gauss|comb|R,0.6,gauss|sym|residLOG,CAS0002,24,10,82,0.6376,0.645,CAS_5AK5,,fpocket_hop1,casbench,scored,curated_allosteric
+0.2381,0.632,gauss|adj|R,0.4,binary|adj|R,CAS0002,20,10,84,0.6502,0.635,CAS_5AKY,,fpocket_hop1,casbench,scored,curated_allosteric
+0.2167,0.7349,binary|adj|R,0.6,binary|adj|R,CAS0002,13,10,60,0.6732,0.095,CAS_5ALM,,fpocket_hop1,casbench,scored,curated_allosteric
+0.2099,0.636,exp|sym|R,0.4,binary|adj|R,CAS0002,17,10,81,0.6438,0.545,CAS_5ALU,,fpocket_hop1,casbench,scored,curated_allosteric
+0.1569,0.8983,gauss|adj|R,0.8,gauss|adj|R,CAS0002,8,10,51,0.7196,0.0,CAS_5AM0,,fpocket_hop1,casbench,scored,curated_allosteric
+0.0484,0.887,binary|comb|green_lmax_0.05,0.2,binary|comb|p_avg,P00590,3,10,62,0.8394,0.24,CB_1CUZ,,fpocket_hop1,cryptobench,scored,drug_contact
+0.0702,0.9057,exp|adj|green_zero_0.05,0.6,exp|adj|p_peak,Q93096,4,9,57,0.8,0.055,CB_1RXD,,fpocket_hop1,cryptobench,scored,drug_contact
+0.1111,0.7844,exp|comb|R,0.6,exp|comb|R,P25114,15,10,135,0.6574,0.0,CB_3BIF,,fpocket_hop1,cryptobench,scored,drug_contact
+0.1364,0.7251,gauss|comb|residLOG,0.4,binary|adj|residLOG,Q1EMV2,9,10,66,0.7158,0.39,CB_3P3I,,fpocket_hop1,cryptobench,scored,drug_contact
+0.2133,0.8072,binary|comb|green_lmax_0.05,0.8,binary|adj|green_lmax_0.05,Q9H7Z6,16,10,75,0.6699,0.005,CB_4DNC,,fpocket_hop1,cryptobench,scored,drug_contact
+0.1781,0.7231,binary|sym|residLOG,0.6,binary|adj|green_lmax_0.05,O28597,13,10,73,0.6757,0.15,CB_4TWI,,fpocket_hop1,cryptobench,scored,drug_contact
+0.0238,0.8537,gauss|comb|R,0.2,exp|adj|R,A0QUZ2,2,10,84,0.8959,0.785,CB_5GGC,,fpocket_hop1,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_6AQE,seeds 60 drug 0,fpocket_hop1,,not_scored,
+,,,,,,,,,,,CB_6PLF,seeds 61 drug 0,fpocket_hop1,,not_scored,
+0.0962,0.8213,gauss|adj|green_lmax_0.05,0.6,binary|sym|R,P30793,5,10,52,0.7835,0.29,CB_6Z89,,fpocket_hop1,cryptobench,scored,drug_contact
+0.2034,0.6436,binary|sym|R,0.4,binary|adj|R,2ZB1,12,10,59,0.692,0.81,CS_2ZB1,,fpocket_hop1,cryptosite,scored,drug_contact
+0.0268,0.9205,gauss|adj|residLOG,0.2,binary|adj|green_zero_0.01,"Glycogen phosphorylase, liver form",3,10,112,0.8495,0.13,ASB_1EM6,,fpocket_hop1,asbench,scored,curated_allosteric
+0.1121,0.7175,harm|adj|residRAW,0.6,binary|adj|R,Sulfate adenylyltransferase,12,10,107,0.6696,0.2,ASB_1M8P,,fpocket_hop1,asbench,scored,curated_allosteric
+0.0241,0.9444,binary|adj|p_peak,0.2,binary|adj|p_peak,Parathion hydrolase,2,10,83,0.909,0.305,ASB_1QW7,,fpocket_hop1,asbench,scored,curated_allosteric
+0.1333,0.686,exp|sym|residLOG,0.6,gauss|adj|p_peak,Acetyl-CoA carboxylase,14,10,105,0.6682,0.315,ASB_1W96,,fpocket_hop1,asbench,scored,curated_allosteric
+0.0909,0.7109,exp|comb|p_peak,0.2,binary|adj|p_peak,"Glycogen phosphorylase, muscle form",8,10,88,0.7248,0.605,ASB_2IEG,,fpocket_hop1,asbench,scored,curated_allosteric
+0.1628,0.6587,binary|comb|R,0.6,binary|comb|R,"Fructose-1,6-bisphosphatase class 1",14,10,86,0.6703,0.55,ASB_2Q8M_2,,fpocket_hop1,asbench,scored,curated_allosteric
+0.0548,0.8514,binary|adj|residLOG,0.4,gauss|comb|residLOG,Pyruvate kinase PKLR,4,10,73,0.8023,0.235,ASB_2VGI,,fpocket_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_3DC2,seeds 76 drug 0,fpocket_hop1,,not_scored,
+0.0227,0.9186,harm|sym|R,0.2,binary|comb|R,Leukotriene A-4 hydrolase,2,10,88,0.8869,0.42,ASB_3FUD,,fpocket_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_3LSX,seeds 81 drug 0,fpocket_hop1,,not_scored,
+0.0562,0.8786,exp|sym|residLOG,0.2,binary|comb|R,Ribonucleoside-diphosphate reductase 1 subunit alpha,5,10,89,0.7785,0.05,ASB_3R1R,,fpocket_hop1,asbench,scored,curated_allosteric
+0.1667,0.7378,exp|sym|residRAW,0.6,exp|comb|R,Pyruvate kinase 1,15,10,90,0.6668,0.06,ASB_4HYW,,fpocket_hop1,asbench,scored,curated_allosteric
+0.0235,0.9699,gauss|sym|residRAW,0.4,gauss|sym|residRAW,CAS0027,2,10,85,0.8664,0.09,CAS_1CZA,,fpocket_hop1,casbench,scored,curated_allosteric
+0.0435,0.8636,exp|comb|R,0.4,exp|comb|R,CAS0001,3,10,69,0.8505,0.485,CAS_1NXG,,fpocket_hop1,casbench,scored,curated_allosteric
+,,,,,,,,,,,CAS_2P9C,seeds 60 drug 0,fpocket_hop1,,not_scored,
+,,,,,,,,,,,CAS_3DDN,seeds 90 drug 0,fpocket_hop1,,not_scored,
+,,,,,,,,,,,CAS_3OTQ,seeds 65 drug 0,fpocket_hop1,,not_scored,
+0.1233,0.7378,binary|comb|green_lmax_0.05,0.4,binary|adj|green_zero_0.01,CAS0001,9,10,73,0.7108,0.28,CAS_4JAF,,fpocket_hop1,casbench,scored,curated_allosteric
+0.2771,0.6232,exp|adj|R,0.6,binary|adj|R,CAS0002,23,10,83,0.6418,0.655,CAS_5AI5,,fpocket_hop1,casbench,scored,curated_allosteric
+0.322,0.7079,exp|adj|R,0.6,exp|adj|R,CAS0002,19,10,59,0.6559,0.11,CAS_5AKE,,fpocket_hop1,casbench,scored,curated_allosteric
+0.2432,0.6776,gauss|adj|R,0.8,binary|comb|R,CAS0002,18,10,74,0.6524,0.25,CAS_5ALD,,fpocket_hop1,casbench,scored,curated_allosteric
+0.0204,0.9375,exp|comb|R,0.2,exp|comb|R,CAS0002,1,10,49,0.9515,0.745,CAS_5ALN,,fpocket_hop1,casbench,scored,curated_allosteric
+0.3125,0.7607,harm|sym|R,0.6,exp|adj|R,CAS0002,25,10,80,0.6344,0.01,CAS_5ALV,,fpocket_hop1,casbench,scored,curated_allosteric
+0.3188,0.6054,gauss|sym|residRAW,0.8,exp|adj|residLOG,CAS0002,22,10,69,0.647,0.85,CAS_5AM4,,fpocket_hop1,casbench,scored,curated_allosteric
+0.0667,0.7771,harm|sym|R,0.2,exp|adj|R,O00299,5,10,75,0.7725,0.47,CB_1K0N,,fpocket_hop1,cryptobench,scored,drug_contact
+0.0761,0.7193,binary|adj|green_lmax_0.05,0.4,binary|adj|green_zero_0.01,Q9RBY1,7,10,92,0.7225,0.51,CB_2ZJ7,,fpocket_hop1,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_3BRK,seeds 73 drug 0,fpocket_hop1,,not_scored,
+,,,,,,,,,,,CB_3U6K,fpocket none,fpocket_hop1,,not_scored,
+0.1077,0.8892,gauss|sym|green_lmax_0.05,0.4,binary|adj|p_avg,P45723,7,10,65,0.7392,0.005,CB_4I8Y,,fpocket_hop1,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_4ZOE,seeds 103 drug 0,fpocket_hop1,,not_scored,
+0.0678,0.8409,gauss|sym|p_peak,0.4,gauss|sym|p_peak,Q9H7B4,4,10,59,0.8102,0.325,CB_5HQ8,,fpocket_hop1,cryptobench,scored,drug_contact
+0.0103,0.9062,gauss|adj|R,0.0,binary|adj|p_avg,Q8RQE8-Q8RQE9,1,10,97,0.9337,0.71,CB_6KQF,,fpocket_hop1,cryptobench,scored,drug_contact
+0.05,0.9507,harm|sym|p_peak,0.4,exp|comb|p_peak,B7GTV0,4,10,80,0.7921,0.01,CB_6RXD,,fpocket_hop1,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_7GOS,seeds 50 drug 0,fpocket_hop1,,not_scored,
+0.1505,0.6844,gauss|comb|R,0.4,binary|adj|R,Novel cryptic pocket set,14,10,93,0.6783,0.4,PM_1J8F,,fpocket_hop1,pocketminer,scored,drug_contact
+0.1548,0.6771,binary|adj|green_zero_0.01,0.6,binary|adj|green_zero_0.01,"Fructose-1,6-bisphosphatase 1",13,10,84,0.6761,0.475,ASB_1FRP,,fpocket_hop1,asbench,scored,curated_allosteric
+0.0303,0.9219,exp|sym|R,0.2,binary|sym|residLOG,Glucosamine-6-phosphate isomerase 1,2,10,66,0.8963,0.425,ASB_1NE7,,fpocket_hop1,asbench,scored,curated_allosteric
+0.1169,0.8497,binary|comb|R,0.4,binary|adj|green_zero_0.05,Tyrosine-protein phosphatase non-receptor type 1,9,10,77,0.718,0.015,ASB_1T49,,fpocket_hop1,asbench,scored,curated_allosteric
+0.0463,0.8369,harm|comb|R,0.4,harm|comb|R,"Glycogen phosphorylase, muscle form",5,10,108,0.7801,0.165,ASB_1Z8D_1,,fpocket_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_2J0X,seeds 74 drug 0,fpocket_hop1,,not_scored,
+0.0694,0.7851,binary|sym|R,0.4,harm|comb|residLOG,Androgen receptor,5,10,72,0.7625,0.4,ASB_2QPY,,fpocket_hop1,asbench,scored,curated_allosteric
+0.1667,0.6793,gauss|adj|green_lmax_0.05,0.2,binary|adj|green_zero_0.01,Multifunctional 2-oxoglutarate metabolism enzyme,13,10,78,0.6666,0.375,ASB_2Y0P,,fpocket_hop1,asbench,scored,curated_allosteric
+0.0617,0.7026,binary|adj|R,0.2,binary|comb|R,"Glycogen phosphorylase, muscle form",5,10,81,0.7713,0.87,ASB_3E3N,,fpocket_hop1,asbench,scored,curated_allosteric
+0.1649,0.6628,binary|adj|green_zero_0.05,0.4,binary|comb|p_avg,Pyruvate kinase PKM,16,10,97,0.6651,0.475,ASB_3H6O,,fpocket_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_3LU6,seeds 120 drug 0,fpocket_hop1,,not_scored,
+0.0556,0.8272,exp|comb|R,0.4,exp|comb|R,Mitogen-activated protein kinase 14,4,10,72,0.7975,0.35,ASB_4E6C,,fpocket_hop1,asbench,scored,curated_allosteric
+0.0263,0.8514,harm|adj|R,0.2,gauss|adj|R,HD domain protein,2,10,76,0.8854,0.735,ASB_4LRL,,fpocket_hop1,asbench,scored,curated_allosteric
+0.1188,0.9064,binary|adj|residLOG,0.6,binary|adj|residLOG,CAS0027,12,10,101,0.664,0.0,CAS_1DGK,,fpocket_hop1,casbench,scored,curated_allosteric
+0.0244,0.9625,binary|comb|residLOG,0.2,binary|adj|green_zero_0.05,CAS0001,2,10,82,0.8995,0.195,CAS_1OWC,,fpocket_hop1,casbench,scored,curated_allosteric
+0.1053,0.7157,gauss|sym|R,0.4,binary|comb|R,CAS0040,6,10,57,0.7344,0.605,CAS_2P9E,,fpocket_hop1,casbench,scored,curated_allosteric
+0.0494,0.8279,gauss|sym|R,0.2,exp|sym|R,CAS0002,4,10,81,0.7778,0.25,CAS_3I1Y,,fpocket_hop1,casbench,scored,curated_allosteric
+0.1163,0.8,harm|sym|residLOG,0.4,binary|adj|residLOG,CAS0001,10,10,86,0.7025,0.03,CAS_4G6B,,fpocket_hop1,casbench,scored,curated_allosteric
+0.1,0.644,exp|adj|green_zero_0.01,0.2,binary|adj|green_zero_0.05,CAS0001,7,10,70,0.7357,0.95,CAS_4JAG,,fpocket_hop1,casbench,scored,curated_allosteric
+0.2619,0.5902,binary|sym|green_zero_0.01,0.4,gauss|adj|R,CAS0002,22,10,84,0.6409,0.905,CAS_5AIA,,fpocket_hop1,casbench,scored,curated_allosteric
+0.2125,0.634,gauss|adj|R,0.6,binary|sym|residRAW,CAS0002,17,10,80,0.6542,0.67,CAS_5AKH,,fpocket_hop1,casbench,scored,curated_allosteric
+0.0556,0.8562,exp|sym|R,0.2,binary|comb|residLOG,CAS0002,3,10,54,0.8315,0.365,CAS_5ALF,,fpocket_hop1,casbench,scored,curated_allosteric
+0.2588,0.6342,binary|adj|R,0.6,binary|adj|R,CAS0002,22,10,85,0.6344,0.44,CAS_5ALO,,fpocket_hop1,casbench,scored,curated_allosteric
+,,,,,,,,,,,CAS_5ALW,seeds 60 drug 0,fpocket_hop1,,not_scored,
+0.2069,0.7568,exp|adj|R,0.6,binary|adj|R,CAS0002,18,10,87,0.651,0.0,CAS_5AM5,,fpocket_hop1,casbench,scored,curated_allosteric
+0.1909,0.8133,binary|adj|green_lmax_0.05,0.8,binary|adj|green_lmax_0.05,P00489,21,10,110,0.6444,0.0,CB_1NOK,,fpocket_hop1,cryptobench,scored,drug_contact
+0.0299,0.9231,exp|adj|R,0.2,binary|adj|residLOG,Q5ZUA2,2,10,67,0.9,0.46,CB_3AAR,,fpocket_hop1,cryptobench,scored,drug_contact
+0.0417,0.9565,gauss|adj|green_zero_0.05,0.4,gauss|adj|green_zero_0.05,Q5S3I3,3,10,72,0.8428,0.045,CB_3GL0,,fpocket_hop1,cryptobench,scored,drug_contact
+0.0408,0.9681,binary|comb|green_lmax_0.05,0.4,binary|adj|green_lmax_0.05,Q72498,2,10,49,0.9099,0.185,CB_3VQ9,,fpocket_hop1,cryptobench,scored,drug_contact
+0.0758,0.8984,binary|sym|green_lmax_0.05,0.4,binary|sym|green_lmax_0.05,P33284,5,10,66,0.7726,0.02,CB_4JAX,,fpocket_hop1,cryptobench,scored,drug_contact
+0.0909,0.6367,harm|comb|residLOG,0.2,binary|sym|R,P53590,7,10,77,0.7198,0.95,CB_5CAE,,fpocket_hop1,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_5IWI,seeds 81 drug 0,fpocket_hop1,,not_scored,
+0.0274,0.8873,gauss|sym|R,0.2,binary|comb|R,P9WNV1,2,10,73,0.9079,0.685,CB_6KSC,,fpocket_hop1,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_6U9C,seeds 67 drug 0,fpocket_hop1,,not_scored,
+0.026,0.9133,binary|sym|residLOG,0.2,binary|adj|R,O23254,2,10,77,0.8941,0.43,CB_7Q00,,fpocket_hop1,cryptobench,scored,drug_contact
+0.0556,0.8071,exp|adj|R,0.4,binary|sym|R,"NAD-dependent malic enzyme, mitochondrial",5,10,90,0.7717,0.275,ASB_1GZ3,,fpocket_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_1NH8,seeds 76 drug 0,fpocket_hop1,,not_scored,
+0.0256,0.8618,binary|comb|R,0.2,binary|comb|R,NAD(P)-dependent glyceraldehyde-3-phosphate dehydrogenase,2,10,78,0.9026,0.77,ASB_1UXV,,fpocket_hop1,asbench,scored,curated_allosteric
+0.1071,0.7185,harm|sym|R,0.4,binary|adj|R,Pyruvate dehydrogenase kinase isozyme 2,9,10,84,0.6971,0.36,ASB_2BU8,,fpocket_hop1,asbench,scored,curated_allosteric
+0.0441,0.8,exp|adj|green_zero_0.01,0.4,exp|adj|green_zero_0.01,"Tryptophan 2,3-dioxygenase",3,10,68,0.8437,0.765,ASB_2NW8,,fpocket_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_2R1R,seeds 89 drug 0,fpocket_hop1,,not_scored,
+0.1562,0.7093,harm|adj|residLOG,0.4,binary|sym|residLOG,Androgen receptor,10,10,64,0.7011,0.45,ASB_2YLO,,fpocket_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_3ETE_1,seeds 82 drug 0,fpocket_hop1,,not_scored,
+0.1875,0.6749,binary|adj|R,0.6,gauss|comb|residLOG,Pyruvate kinase,15,10,80,0.6655,0.365,ASB_3HQP,,fpocket_hop1,asbench,scored,curated_allosteric
+0.1463,0.6774,gauss|comb|R,0.4,binary|comb|R,Mitogen-activated protein kinase 8,12,10,82,0.6962,0.615,ASB_3O2M,,fpocket_hop1,asbench,scored,curated_allosteric
+0.0189,0.8798,binary|adj|R,0.0,binary|adj|p_avg,Pyruvate kinase PKM,2,10,106,0.9014,0.725,ASB_4G1N,,fpocket_hop1,asbench,scored,curated_allosteric
+0.0928,0.6578,harm|sym|R,0.4,binary|comb|R,"Glycogen phosphorylase, muscle form",9,10,97,0.7112,0.85,ASB_4MRA,,fpocket_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,CAS_1I2D,seeds 80 drug 0,fpocket_hop1,,not_scored,
+,,,,,,,,,,,CAS_1PSD,seeds 56 drug 0,fpocket_hop1,,not_scored,
+,,,,,,,,,,,CAS_2P9G,seeds 61 drug 0,fpocket_hop1,,not_scored,
+0.1429,0.7859,gauss|comb|R,0.6,gauss|comb|R,CAS0002,12,10,84,0.6754,0.02,CAS_3I28,,fpocket_hop1,casbench,scored,curated_allosteric
+0.0326,0.8689,binary|adj|p_peak,0.0,binary|adj|p_avg,CAS0001,3,10,92,0.8356,0.34,CAS_4JAD,,fpocket_hop1,casbench,scored,curated_allosteric
+0.1852,0.7384,binary|adj|R,0.4,binary|adj|R,CAS0002,15,10,81,0.6573,0.05,CAS_5AHX,,fpocket_hop1,casbench,scored,curated_allosteric
+,,,,,,,,,,,CAS_5AK4,seeds 41 drug 0,fpocket_hop1,,not_scored,
+0.2619,0.6943,gauss|comb|R,0.8,binary|adj|R,CAS0002,22,10,84,0.6366,0.07,CAS_5AKX,,fpocket_hop1,casbench,scored,curated_allosteric
+0.2836,0.6721,exp|adj|R,0.6,harm|sym|R,CAS0002,19,10,67,0.6555,0.345,CAS_5ALH,,fpocket_hop1,casbench,scored,curated_allosteric
+0.0172,0.9825,gauss|adj|green_zero_0.01,0.2,gauss|adj|green_zero_0.01,CAS0002,1,10,58,0.966,0.615,CAS_5ALT,,fpocket_hop1,casbench,scored,curated_allosteric
+0.2588,0.6392,exp|comb|R,0.8,binary|adj|R,CAS0002,22,10,85,0.6433,0.505,CAS_5ALY,,fpocket_hop1,casbench,scored,curated_allosteric
+0.0405,0.8498,harm|sym|residRAW,0.2,binary|adj|green_zero_0.05,P18031,3,10,74,0.846,0.48,CB_1BZJ,,fpocket_hop1,cryptobench,scored,drug_contact
+0.0435,0.7273,gauss|adj|green_zero_0.01,0.0,binary|adj|p_avg,P02879,3,10,69,0.8433,0.94,CB_1RTC,,fpocket_hop1,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_3BGL,seeds 70 drug 0,fpocket_hop1,,not_scored,
+0.197,0.6502,gauss|comb|residLOG,0.4,binary|comb|residLOG,A7ASX7,13,10,66,0.6755,0.645,CB_3KJR,,fpocket_hop1,cryptobench,scored,drug_contact
+0.0198,0.9091,exp|sym|residLOG,0.2,binary|comb|p_peak,Q9WYL6,2,10,101,0.8928,0.445,CB_4CON,,fpocket_hop1,cryptobench,scored,drug_contact
+0.0685,0.7559,binary|adj|green_lmax_0.05,0.4,binary|adj|green_lmax_0.05,P07814,5,10,73,0.7676,0.53,CB_4K86,,fpocket_hop1,cryptobench,scored,drug_contact
+0.06,0.8794,binary|adj|green_lmax_0.05,0.8,binary|adj|green_lmax_0.05,Q89ZX5,6,10,100,0.7456,0.015,CB_5CK1,,fpocket_hop1,cryptobench,scored,drug_contact
+0.0549,0.6907,binary|adj|green_zero_0.01,0.2,binary|adj|green_zero_0.05,O32553,5,10,91,0.774,0.915,CB_5UXA,,fpocket_hop1,cryptobench,scored,drug_contact
+0.0909,0.9,gauss|adj|green_lmax_0.05,0.4,gauss|adj|green_lmax_0.05,Q9HY79,4,8,44,0.8171,0.08,CB_6NLF,,fpocket_hop1,cryptobench,scored,drug_contact
+0.0116,0.9765,gauss|adj|R,0.2,gauss|adj|p_peak,P08149,1,10,86,0.9772,0.76,CB_6XQX,,fpocket_hop1,cryptobench,scored,drug_contact
+0.0161,0.9836,harm|adj|R,0.2,harm|adj|R,G3XDA2,1,10,62,0.9793,0.705,CB_8CN8,,fpocket_hop1,cryptobench,scored,drug_contact
+0.1967,0.7534,binary|sym|residLOG,0.6,binary|sym|residRAW,Pyruvate kinase 1,12,10,61,0.6935,0.12,ASB_1A3W,,fpocket_hop2,asbench,scored,curated_allosteric
+0.0417,0.8696,gauss|adj|green_zero_0.01,0.2,binary|adj|green_zero_0.05,Anaerobic ribonucleoside-triphosphate reductase,2,10,48,0.8974,0.69,ASB_1H78,,fpocket_hop2,asbench,scored,curated_allosteric
+0.186,0.6964,binary|adj|green_zero_0.01,0.6,harm|comb|R,ATP-dependent 6-phosphofructokinase isozyme 1,8,10,43,0.7196,0.64,ASB_1PFK,,fpocket_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_1W25,seeds 75 drug 0,fpocket_hop2,,not_scored,
+0.175,0.9091,gauss|adj|green_lmax_0.05,0.8,exp|adj|green_lmax_0.05,Serum albumin,14,10,80,0.6762,0.0,ASB_2BXA,,fpocket_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_2PA3,seeds 63 drug 0,fpocket_hop2,,not_scored,
+0.027,1.0,binary|adj|R,0.2,binary|adj|R,ATP phosphoribosyltransferase,1,10,37,0.9796,0.55,ASB_2VD3,,fpocket_hop2,asbench,scored,curated_allosteric
+0.0659,0.6902,gauss|comb|green_lmax_0.05,0.4,gauss|comb|residLOG,"Glycogen phosphorylase, liver form",6,10,91,0.755,0.875,ASB_3CEH,,fpocket_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_3ETG,seeds 72 drug 0,fpocket_hop2,,not_scored,
+0.1818,0.6712,binary|sym|residLOG,0.6,gauss|sym|residLOG,"Fructose-1,6-bisphosphatase isozyme 2",14,10,77,0.686,0.635,ASB_3IFA,,fpocket_hop2,asbench,scored,curated_allosteric
+0.069,0.7685,binary|adj|R,0.4,binary|adj|residLOG,Phospho-2-dehydro-3-deoxyheptonate aldolase,4,10,58,0.7948,0.585,ASB_3PG9,,fpocket_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_4GRS,seeds 44 drug 0,fpocket_hop2,,not_scored,
+0.1667,0.7347,harm|sym|R,0.4,binary|sym|residLOG,ATP-dependent 6-phosphofructokinase,7,10,42,0.7478,0.58,ASB_4PFK,,fpocket_hop2,asbench,scored,curated_allosteric
+0.0566,0.94,binary|adj|p_avg,0.4,binary|adj|p_avg,CAS0001,3,10,53,0.8415,0.08,CAS_1NXE,,fpocket_hop2,casbench,scored,curated_allosteric
+,,,,,,,,,,,CAS_1YBA,seeds 59 drug 0,fpocket_hop2,,not_scored,
+,,,,,,,,,,,CAS_2PA3,seeds 49 drug 0,fpocket_hop2,,not_scored,
+0.3279,0.7037,binary|sym|green_zero_0.01,0.6,harm|sym|R,CAS0002,20,10,61,0.6621,0.175,CAS_3KOO,,fpocket_hop2,casbench,scored,curated_allosteric
+0.2308,0.7604,gauss|adj|green_lmax_0.05,0.6,binary|adj|p_avg,CAS0001,12,10,52,0.7055,0.135,CAS_4JAE,,fpocket_hop2,casbench,scored,curated_allosteric
+0.25,0.6674,exp|adj|R,0.8,exp|adj|R,CAS0002,21,10,84,0.6408,0.24,CAS_5AI4,,fpocket_hop2,casbench,scored,curated_allosteric
+0.3529,0.6619,binary|sym|green_zero_0.01,0.4,binary|adj|R,CAS0002,24,10,68,0.6529,0.385,CAS_5AK5,,fpocket_hop2,casbench,scored,curated_allosteric
+0.303,0.8261,binary|sym|green_zero_0.01,0.8,binary|sym|green_zero_0.01,CAS0002,20,10,66,0.6652,0.0,CAS_5AKY,,fpocket_hop2,casbench,scored,curated_allosteric
+0.3333,0.6775,gauss|sym|R,0.6,binary|adj|R,CAS0002,13,10,39,0.6908,0.555,CAS_5ALM,,fpocket_hop2,casbench,scored,curated_allosteric
+0.2297,0.6594,gauss|sym|R,0.6,exp|sym|R,CAS0002,17,10,74,0.6578,0.455,CAS_5ALU,,fpocket_hop2,casbench,scored,curated_allosteric
+0.2759,0.8631,gauss|adj|R,0.8,gauss|adj|R,CAS0002,8,10,29,0.7374,0.045,CAS_5AM0,,fpocket_hop2,casbench,scored,curated_allosteric
+0.0566,0.9267,binary|comb|green_lmax_0.05,0.4,binary|adj|green_lmax_0.05,P00590,3,10,53,0.8412,0.105,CB_1CUZ,,fpocket_hop2,cryptobench,scored,drug_contact
+0.08,0.9565,harm|adj|green_zero_0.01,0.6,exp|adj|p_peak,Q93096,4,9,50,0.8036,0.01,CB_1RXD,,fpocket_hop2,cryptobench,scored,drug_contact
+0.1531,0.7574,exp|comb|R,0.6,exp|comb|R,P25114,15,10,98,0.6637,0.025,CB_3BIF,,fpocket_hop2,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_3P3I,fpocket none,fpocket_hop2,,not_scored,
+0.2424,0.8787,binary|comb|green_lmax_0.05,0.8,binary|adj|green_lmax_0.05,Q9H7Z6,16,10,66,0.6722,0.0,CB_4DNC,,fpocket_hop2,cryptobench,scored,drug_contact
+0.2581,0.7731,binary|adj|green_lmax_0.05,0.8,binary|adj|green_lmax_0.05,O28597,16,10,62,0.6744,0.02,CB_4TWI,,fpocket_hop2,cryptobench,scored,drug_contact
+0.0253,0.8506,gauss|comb|R,0.2,exp|adj|R,A0QUZ2,2,10,79,0.9007,0.81,CB_5GGC,,fpocket_hop2,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_6AQE,seeds 38 drug 0,fpocket_hop2,,not_scored,
+,,,,,,,,,,,CB_6PLF,seeds 53 drug 0,fpocket_hop2,,not_scored,
+0.1,0.8178,gauss|adj|green_lmax_0.05,0.4,binary|adj|residLOG,P30793,5,10,50,0.7847,0.295,CB_6Z89,,fpocket_hop2,cryptobench,scored,drug_contact
+0.2353,0.656,binary|sym|R,0.4,binary|adj|R,2ZB1,12,10,51,0.6929,0.775,CS_2ZB1,,fpocket_hop2,cryptosite,scored,drug_contact
+0.0273,0.9252,gauss|adj|residLOG,0.2,binary|adj|green_zero_0.01,"Glycogen phosphorylase, liver form",3,10,110,0.8427,0.11,ASB_1EM6,,fpocket_hop2,asbench,scored,curated_allosteric
+0.1319,0.7184,binary|sym|residLOG,0.6,binary|adj|R,Sulfate adenylyltransferase,12,10,91,0.6741,0.16,ASB_1M8P,,fpocket_hop2,asbench,scored,curated_allosteric
+0.0274,0.9577,exp|comb|p_avg,0.2,binary|adj|p_peak,Parathion hydrolase,2,10,73,0.9111,0.235,ASB_1QW7,,fpocket_hop2,asbench,scored,curated_allosteric
+0.1458,0.7265,harm|sym|p_avg,0.6,gauss|adj|p_peak,Acetyl-CoA carboxylase,14,10,96,0.6784,0.13,ASB_1W96,,fpocket_hop2,asbench,scored,curated_allosteric
+0.0976,0.7078,exp|comb|residLOG,0.2,binary|adj|p_peak,"Glycogen phosphorylase, muscle form",8,10,82,0.721,0.56,ASB_2IEG,,fpocket_hop2,asbench,scored,curated_allosteric
+0.2692,0.6316,exp|sym|R,0.8,binary|comb|R,"Fructose-1,6-bisphosphatase class 1",14,10,52,0.6878,0.9,ASB_2Q8M_2,,fpocket_hop2,asbench,scored,curated_allosteric
+0.08,0.8696,binary|adj|residLOG,0.4,binary|adj|residLOG,Pyruvate kinase PKLR,4,10,50,0.8035,0.14,ASB_2VGI,,fpocket_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_3DC2,seeds 62 drug 0,fpocket_hop2,,not_scored,
+,,,,,,,,,,,ASB_3FUD,seeds 67 drug 0,fpocket_hop2,,not_scored,
+,,,,,,,,,,,ASB_3LSX,seeds 40 drug 0,fpocket_hop2,,not_scored,
+0.0625,0.872,exp|sym|residRAW,0.2,binary|comb|R,Ribonucleoside-diphosphate reductase 1 subunit alpha,5,10,80,0.7737,0.06,ASB_3R1R,,fpocket_hop2,asbench,scored,curated_allosteric
+0.2143,0.6752,exp|sym|residRAW,0.8,gauss|comb|p_avg,Pyruvate kinase 1,15,10,70,0.6743,0.475,ASB_4HYW,,fpocket_hop2,asbench,scored,curated_allosteric
+0.025,0.9744,exp|adj|residRAW,0.4,exp|adj|residRAW,CAS0027,2,10,80,0.8633,0.095,CAS_1CZA,,fpocket_hop2,casbench,scored,curated_allosteric
+0.0545,0.8974,binary|sym|green_zero_0.01,0.4,exp|comb|R,CAS0001,3,10,55,0.8508,0.28,CAS_1NXG,,fpocket_hop2,casbench,scored,curated_allosteric
+,,,,,,,,,,,CAS_2P9C,seeds 37 drug 0,fpocket_hop2,,not_scored,
+,,,,,,,,,,,CAS_3DDN,seeds 75 drug 0,fpocket_hop2,,not_scored,
+,,,,,,,,,,,CAS_3OTQ,seeds 46 drug 0,fpocket_hop2,,not_scored,
+0.1552,0.8571,exp|comb|green_zero_0.05,0.6,binary|comb|green_lmax_0.05,CAS0001,9,10,58,0.7085,0.0,CAS_4JAF,,fpocket_hop2,casbench,scored,curated_allosteric
+0.2875,0.6217,exp|adj|R,0.6,binary|adj|R,CAS0002,23,10,80,0.6434,0.675,CAS_5AI5,,fpocket_hop2,casbench,scored,curated_allosteric
+0.3878,0.6632,exp|adj|R,0.6,exp|adj|R,CAS0002,19,10,49,0.6779,0.61,CAS_5AKE,,fpocket_hop2,casbench,scored,curated_allosteric
+0.3103,0.65,exp|adj|R,0.8,binary|comb|R,CAS0002,18,10,58,0.6606,0.595,CAS_5ALD,,fpocket_hop2,casbench,scored,curated_allosteric
+0.0294,0.9091,exp|comb|R,0.2,binary|comb|residLOG,CAS0002,1,10,34,0.9582,0.945,CAS_5ALN,,fpocket_hop2,casbench,scored,curated_allosteric
+0.3623,0.7427,harm|sym|R,0.6,exp|adj|R,CAS0002,25,10,69,0.6437,0.02,CAS_5ALV,,fpocket_hop2,casbench,scored,curated_allosteric
+0.5116,0.6342,gauss|sym|residRAW,1.0,exp|adj|residLOG,CAS0002,22,10,43,0.6747,0.815,CAS_5AM4,,fpocket_hop2,casbench,scored,curated_allosteric
+0.0769,0.7667,exp|adj|green_zero_0.01,0.2,exp|adj|R,O00299,5,10,65,0.7818,0.6,CB_1K0N,,fpocket_hop2,cryptobench,scored,drug_contact
+0.1094,0.6792,binary|adj|green_lmax_0.05,0.4,binary|adj|green_zero_0.01,Q9RBY1,7,10,64,0.7359,0.845,CB_2ZJ7,,fpocket_hop2,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_3BRK,seeds 68 drug 0,fpocket_hop2,,not_scored,
+0.029,0.9104,harm|comb|R,0.2,binary|comb|R,P0CE47,2,10,69,0.8899,0.45,CB_3U6K,,fpocket_hop2,cryptobench,scored,drug_contact
+0.1167,0.9623,gauss|sym|green_lmax_0.05,0.6,binary|sym|green_lmax_0.05,P45723,7,10,60,0.7449,0.0,CB_4I8Y,,fpocket_hop2,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_4ZOE,seeds 92 drug 0,fpocket_hop2,,not_scored,
+0.0816,0.8778,gauss|sym|p_avg,0.4,gauss|sym|p_peak,Q9H7B4,4,10,49,0.8051,0.165,CB_5HQ8,,fpocket_hop2,cryptobench,scored,drug_contact
+0.0106,0.9032,gauss|adj|R,0.0,binary|adj|p_avg,Q8RQE8-Q8RQE9,1,10,94,0.9403,0.775,CB_6KQF,,fpocket_hop2,cryptobench,scored,drug_contact
+0.0556,0.9669,harm|sym|p_peak,0.4,binary|sym|p_avg,B7GTV0,4,10,72,0.7975,0.0,CB_6RXD,,fpocket_hop2,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_7GOS,seeds 38 drug 0,fpocket_hop2,,not_scored,
+0.1556,0.6805,gauss|comb|R,0.4,binary|adj|R,Novel cryptic pocket set,14,10,90,0.6736,0.41,PM_1J8F,,fpocket_hop2,pocketminer,scored,drug_contact
+0.2063,0.6908,exp|sym|R,0.6,binary|adj|green_zero_0.01,"Fructose-1,6-bisphosphatase 1",13,10,63,0.6905,0.49,ASB_1FRP,,fpocket_hop2,asbench,scored,curated_allosteric
+0.0426,0.9222,gauss|adj|p_peak,0.2,binary|sym|p_avg,Glucosamine-6-phosphate isomerase 1,2,10,47,0.9045,0.485,ASB_1NE7,,fpocket_hop2,asbench,scored,curated_allosteric
+0.1579,0.8287,binary|comb|R,0.6,harm|sym|residLOG,Tyrosine-protein phosphatase non-receptor type 1,9,10,57,0.72,0.035,ASB_1T49,,fpocket_hop2,asbench,scored,curated_allosteric
+0.0476,0.842,harm|comb|R,0.4,harm|comb|R,"Glycogen phosphorylase, muscle form",5,10,105,0.7765,0.135,ASB_1Z8D_1,,fpocket_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_2J0X,seeds 52 drug 0,fpocket_hop2,,not_scored,
+0.1163,0.8158,binary|adj|green_zero_0.01,0.6,exp|sym|p_peak,Androgen receptor,5,10,43,0.7991,0.37,ASB_2QPY,,fpocket_hop2,asbench,scored,curated_allosteric
+0.2131,0.7692,gauss|adj|green_lmax_0.05,0.8,binary|adj|green_lmax_0.05,Multifunctional 2-oxoglutarate metabolism enzyme,13,10,61,0.6764,0.03,ASB_2Y0P,,fpocket_hop2,asbench,scored,curated_allosteric
+0.0617,0.7026,binary|adj|R,0.2,binary|comb|R,"Glycogen phosphorylase, muscle form",5,10,81,0.7719,0.885,ASB_3E3N,,fpocket_hop2,asbench,scored,curated_allosteric
+0.1758,0.6825,binary|adj|green_zero_0.05,0.6,binary|comb|p_avg,Pyruvate kinase PKM,16,10,91,0.6665,0.345,ASB_3H6O,,fpocket_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_3LU6,seeds 103 drug 0,fpocket_hop2,,not_scored,
+0.0714,0.8317,exp|comb|R,0.4,exp|comb|R,Mitogen-activated protein kinase 14,4,10,56,0.7998,0.34,ASB_4E6C,,fpocket_hop2,asbench,scored,curated_allosteric
+0.0408,0.9574,harm|adj|p_peak,0.4,harm|adj|p_peak,HD domain protein,2,10,49,0.9048,0.235,ASB_4LRL,,fpocket_hop2,asbench,scored,curated_allosteric
+0.1188,0.9064,binary|adj|residLOG,0.6,binary|adj|residLOG,CAS0027,12,10,101,0.6677,0.0,CAS_1DGK,,fpocket_hop2,casbench,scored,curated_allosteric
+0.0476,0.925,binary|comb|residLOG,0.2,binary|adj|green_zero_0.05,CAS0001,2,10,42,0.903,0.505,CAS_1OWC,,fpocket_hop2,casbench,scored,curated_allosteric
+,,,,,,,,,,,CAS_2P9E,fpocket none,fpocket_hop2,,not_scored,
+0.0541,0.8321,gauss|sym|R,0.2,exp|sym|R,CAS0002,4,10,74,0.7738,0.22,CAS_3I1Y,,fpocket_hop2,casbench,scored,curated_allosteric
+0.1639,0.7882,harm|sym|residLOG,0.6,harm|sym|p_avg,CAS0001,10,10,61,0.7097,0.095,CAS_4G6B,,fpocket_hop2,casbench,scored,curated_allosteric
+0.1373,0.6851,exp|adj|green_zero_0.01,0.4,binary|comb|R,CAS0001,7,10,51,0.7486,0.88,CAS_4JAG,,fpocket_hop2,casbench,scored,curated_allosteric
+0.2857,0.6653,binary|sym|green_zero_0.01,0.4,gauss|adj|R,CAS0002,22,10,77,0.648,0.315,CAS_5AIA,,fpocket_hop2,casbench,scored,curated_allosteric
+0.2881,0.6723,gauss|sym|R,0.6,binary|sym|R,CAS0002,17,10,59,0.6663,0.435,CAS_5AKH,,fpocket_hop2,casbench,scored,curated_allosteric
+0.075,0.8829,exp|sym|R,0.4,exp|sym|R,CAS0002,3,10,40,0.8331,0.285,CAS_5ALF,,fpocket_hop2,casbench,scored,curated_allosteric
+0.2716,0.6271,binary|adj|R,0.6,binary|adj|R,CAS0002,22,10,81,0.6354,0.555,CAS_5ALO,,fpocket_hop2,casbench,scored,curated_allosteric
+,,,,,,,,,,,CAS_5ALW,seeds 36 drug 0,fpocket_hop2,,not_scored,
+0.2338,0.7524,exp|adj|R,0.8,exp|adj|R,CAS0002,18,10,77,0.6522,0.02,CAS_5AM5,,fpocket_hop2,casbench,scored,curated_allosteric
+0.1981,0.8095,binary|adj|green_lmax_0.05,0.8,binary|adj|green_lmax_0.05,P00489,21,10,106,0.6458,0.0,CB_1NOK,,fpocket_hop2,cryptobench,scored,drug_contact
+0.0426,0.9222,exp|adj|R,0.2,binary|adj|residLOG,Q5ZUA2,2,10,47,0.9066,0.45,CB_3AAR,,fpocket_hop2,cryptobench,scored,drug_contact
+0.0417,0.9565,gauss|adj|green_zero_0.05,0.4,gauss|adj|green_zero_0.05,Q5S3I3,3,10,72,0.8478,0.045,CB_3GL0,,fpocket_hop2,cryptobench,scored,drug_contact
+0.0408,0.9787,binary|comb|green_lmax_0.05,0.4,binary|adj|green_lmax_0.05,Q72498,2,10,49,0.9134,0.09,CB_3VQ9,,fpocket_hop2,cryptobench,scored,drug_contact
+0.0769,0.9133,binary|sym|green_lmax_0.05,0.4,binary|sym|green_lmax_0.05,P33284,5,10,65,0.7695,0.01,CB_4JAX,,fpocket_hop2,cryptobench,scored,drug_contact
+0.0909,0.6367,harm|comb|residLOG,0.2,binary|sym|R,P53590,7,10,77,0.718,0.94,CB_5CAE,,fpocket_hop2,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_5IWI,seeds 81 drug 0,fpocket_hop2,,not_scored,
+0.0444,0.907,gauss|sym|R,0.2,binary|comb|R,P9WNV1,2,10,45,0.909,0.535,CB_6KSC,,fpocket_hop2,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_6U9C,seeds 58 drug 0,fpocket_hop2,,not_scored,
+0.0323,0.9083,binary|sym|residLOG,0.2,binary|adj|R,O23254,2,10,62,0.9093,0.565,CB_7Q00,,fpocket_hop2,cryptobench,scored,drug_contact
+0.0602,0.8026,exp|adj|R,0.4,binary|sym|R,"NAD-dependent malic enzyme, mitochondrial",5,10,83,0.7761,0.32,ASB_1GZ3,,fpocket_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_1NH8,seeds 53 drug 0,fpocket_hop2,,not_scored,
+0.0328,0.8898,exp|comb|p_peak,0.2,binary|comb|p_peak,NAD(P)-dependent glyceraldehyde-3-phosphate dehydrogenase,2,10,61,0.9072,0.665,ASB_1UXV,,fpocket_hop2,asbench,scored,curated_allosteric
+0.1429,0.6934,harm|sym|R,0.6,binary|adj|p_peak,Pyruvate dehydrogenase kinase isozyme 2,9,10,63,0.7197,0.655,ASB_2BU8,,fpocket_hop2,asbench,scored,curated_allosteric
+0.0536,0.8239,exp|adj|green_zero_0.01,0.4,exp|adj|green_zero_0.01,"Tryptophan 2,3-dioxygenase",3,10,56,0.8481,0.66,ASB_2NW8,,fpocket_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_2R1R,seeds 71 drug 0,fpocket_hop2,,not_scored,
+0.3333,0.745,harm|adj|residLOG,0.6,exp|comb|R,Androgen receptor,10,10,30,0.7462,0.48,ASB_2YLO,,fpocket_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_3ETE_1,seeds 68 drug 0,fpocket_hop2,,not_scored,
+0.1948,0.6817,binary|adj|R,0.6,gauss|comb|residLOG,Pyruvate kinase,15,10,77,0.6738,0.43,ASB_3HQP,,fpocket_hop2,asbench,scored,curated_allosteric
+0.1739,0.6784,gauss|comb|R,0.4,binary|adj|green_zero_0.01,Mitogen-activated protein kinase 8,12,10,69,0.6869,0.535,ASB_3O2M,,fpocket_hop2,asbench,scored,curated_allosteric
+0.0202,0.8814,binary|adj|R,0.0,binary|adj|p_avg,Pyruvate kinase PKM,2,10,99,0.9008,0.665,ASB_4G1N,,fpocket_hop2,asbench,scored,curated_allosteric
+0.1011,0.6639,exp|comb|green_zero_0.01,0.6,gauss|sym|R,"Glycogen phosphorylase, muscle form",9,10,89,0.7141,0.855,ASB_4MRA,,fpocket_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,CAS_1I2D,seeds 65 drug 0,fpocket_hop2,,not_scored,
+,,,,,,,,,,,CAS_1PSD,seeds 29 drug 0,fpocket_hop2,,not_scored,
+,,,,,,,,,,,CAS_2P9G,seeds 38 drug 0,fpocket_hop2,,not_scored,
+0.1765,0.756,gauss|comb|R,0.8,gauss|comb|R,CAS0002,12,10,68,0.6774,0.055,CAS_3I28,,fpocket_hop2,casbench,scored,curated_allosteric
+0.0435,0.899,binary|adj|green_lmax_0.05,0.2,binary|adj|p_avg,CAS0001,3,10,69,0.8531,0.32,CAS_4JAD,,fpocket_hop2,casbench,scored,curated_allosteric
+0.2027,0.7254,binary|adj|R,0.4,binary|adj|R,CAS0002,15,10,74,0.663,0.095,CAS_5AHX,,fpocket_hop2,casbench,scored,curated_allosteric
+,,,,,,,,,,,CAS_5AK4,seeds 16 drug 0,fpocket_hop2,,not_scored,
+0.2821,0.6899,exp|sym|R,0.8,binary|adj|R,CAS0002,22,10,78,0.6397,0.105,CAS_5AKX,,fpocket_hop2,casbench,scored,curated_allosteric
+0.3276,0.6505,exp|adj|R,0.6,harm|sym|R,CAS0002,19,10,58,0.6672,0.63,CAS_5ALH,,fpocket_hop2,casbench,scored,curated_allosteric
+0.0238,1.0,gauss|adj|green_zero_0.01,0.2,binary|adj|green_zero_0.01,CAS0002,1,10,42,0.9643,0.42,CAS_5ALT,,fpocket_hop2,casbench,scored,curated_allosteric
+0.2716,0.6194,exp|comb|R,0.8,binary|adj|R,CAS0002,22,10,81,0.6397,0.7,CAS_5ALY,,fpocket_hop2,casbench,scored,curated_allosteric
+0.0441,0.841,harm|sym|residRAW,0.4,gauss|sym|residRAW,P18031,3,10,68,0.8421,0.51,CB_1BZJ,,fpocket_hop2,cryptobench,scored,drug_contact
+0.075,0.7568,gauss|adj|green_zero_0.05,0.2,binary|sym|R,P02879,3,10,40,0.8536,0.93,CB_1RTC,,fpocket_hop2,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_3BGL,seeds 61 drug 0,fpocket_hop2,,not_scored,
+0.2766,0.6787,gauss|adj|green_zero_0.01,0.8,gauss|adj|green_zero_0.01,A7ASX7,13,10,47,0.6911,0.57,CB_3KJR,,fpocket_hop2,cryptobench,scored,drug_contact
+0.0213,0.8859,exp|sym|residLOG,0.2,binary|comb|p_peak,Q9WYL6,2,10,94,0.8993,0.61,CB_4CON,,fpocket_hop2,cryptobench,scored,drug_contact
+0.0769,0.8167,exp|comb|green_lmax_0.05,0.4,binary|adj|green_lmax_0.05,P07814,5,10,65,0.7742,0.28,CB_4K86,,fpocket_hop2,cryptobench,scored,drug_contact
+0.0632,0.882,binary|adj|green_lmax_0.05,0.8,binary|adj|green_lmax_0.05,Q89ZX5,6,10,95,0.7541,0.03,CB_5CK1,,fpocket_hop2,cryptobench,scored,drug_contact
+0.0602,0.6923,binary|adj|green_zero_0.01,0.2,binary|adj|green_zero_0.05,O32553,5,10,83,0.7828,0.93,CB_5UXA,,fpocket_hop2,cryptobench,scored,drug_contact
+0.0976,0.9054,exp|adj|green_lmax_0.05,0.4,exp|adj|p_peak,Q9HY79,4,8,41,0.8272,0.14,CB_6NLF,,fpocket_hop2,cryptobench,scored,drug_contact
+0.0125,0.9873,harm|sym|p_peak,0.2,gauss|adj|p_peak,P08149,1,10,80,0.9799,0.605,CB_6XQX,,fpocket_hop2,cryptobench,scored,drug_contact
+0.0175,0.9821,harm|adj|R,0.2,harm|adj|R,G3XDA2,1,10,57,0.9746,0.66,CB_8CN8,,fpocket_hop2,cryptobench,scored,drug_contact
+0.1263,0.752,binary|sym|residLOG,0.4,binary|comb|residLOG,Pyruvate kinase 1,12,10,95,0.6809,0.04,ASB_1A3W,,consensus_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_1H78,seeds 77 drug 0,consensus_hop1,,not_scored,
+0.1481,0.6875,harm|comb|R,0.6,harm|comb|R,ATP-dependent 6-phosphofructokinase isozyme 1,8,10,54,0.7194,0.715,ASB_1PFK,,consensus_hop1,asbench,scored,curated_allosteric
+0.1489,0.908,binary|comb|green_lmax_0.05,1.0,gauss|adj|green_zero_0.05,Response regulator PleD,14,10,94,0.6659,0.0,ASB_1W25,,consensus_hop1,asbench,scored,curated_allosteric
+0.1687,0.913,binary|adj|green_lmax_0.05,1.0,binary|adj|green_lmax_0.05,Serum albumin,14,10,83,0.6635,0.0,ASB_2BXA,,consensus_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_2PA3,seeds 76 drug 0,consensus_hop1,,not_scored,
+,,,,,,,,,,,ASB_2VD3,seeds 71 drug 0,consensus_hop1,,not_scored,
+0.0561,0.6716,binary|adj|green_zero_0.01,0.4,gauss|comb|residLOG,"Glycogen phosphorylase, liver form",6,10,107,0.7519,0.925,ASB_3CEH,,consensus_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_3ETG,seeds 87 drug 0,consensus_hop1,,not_scored,
+0.1556,0.703,binary|adj|residLOG,0.6,harm|comb|residLOG,"Fructose-1,6-bisphosphatase isozyme 2",14,10,90,0.6767,0.24,ASB_3IFA,,consensus_hop1,asbench,scored,curated_allosteric
+0.0656,0.7588,binary|adj|R,0.4,binary|adj|residLOG,Phospho-2-dehydro-3-deoxyheptonate aldolase,4,10,61,0.801,0.715,ASB_3PG9,,consensus_hop1,asbench,scored,curated_allosteric
+0.0152,1.0,gauss|comb|R,0.2,gauss|comb|R,2-dehydro-3-deoxyphosphoheptonate aldolase,1,10,66,0.973,0.385,ASB_4GRS,,consensus_hop1,asbench,scored,curated_allosteric
+0.0972,0.6659,gauss|sym|R,0.4,harm|adj|R,ATP-dependent 6-phosphofructokinase,7,10,72,0.7346,0.89,ASB_4PFK,,consensus_hop1,asbench,scored,curated_allosteric
+0.0918,0.7591,binary|adj|residLOG,0.4,binary|sym|R,CAS0001,9,10,98,0.705,0.14,CAS_1NXE,,consensus_hop1,casbench,scored,curated_allosteric
+,,,,,,,,,,,CAS_1YBA,seeds 60 drug 0,consensus_hop1,,not_scored,
+,,,,,,,,,,,CAS_2PA3,seeds 74 drug 0,consensus_hop1,,not_scored,
+0.2353,0.59,binary|adj|R,0.4,harm|sym|R,CAS0002,20,10,85,0.6496,0.945,CAS_3KOO,,consensus_hop1,casbench,scored,curated_allosteric
+0.1628,0.6627,binary|adj|residRAW,0.6,binary|adj|p_peak,CAS0001,14,10,86,0.674,0.585,CAS_4JAE,,consensus_hop1,casbench,scored,curated_allosteric
+0.236,0.6982,exp|adj|R,0.8,exp|adj|R,CAS0002,21,10,89,0.642,0.1,CAS_5AI4,,consensus_hop1,casbench,scored,curated_allosteric
+0.2376,0.5563,harm|sym|R,0.4,exp|sym|R,CAS0002,24,10,101,0.6338,0.99,CAS_5AK5,,consensus_hop1,casbench,scored,curated_allosteric
+0.2299,0.641,gauss|adj|R,0.6,harm|sym|R,CAS0002,20,10,87,0.6487,0.585,CAS_5AKY,,consensus_hop1,casbench,scored,curated_allosteric
+0.0132,1.0,binary|adj|R,0.2,binary|adj|R,CAS0002,1,10,76,0.9593,0.36,CAS_5ALM,,consensus_hop1,casbench,scored,curated_allosteric
+0.2821,0.6518,exp|sym|R,0.6,binary|adj|R,CAS0002,22,10,78,0.6422,0.385,CAS_5ALU,,consensus_hop1,casbench,scored,curated_allosteric
+0.1972,0.8033,gauss|adj|R,0.8,gauss|adj|R,CAS0002,14,10,71,0.6705,0.0,CAS_5AM0,,consensus_hop1,casbench,scored,curated_allosteric
+0.0484,0.887,binary|comb|green_lmax_0.05,0.2,binary|comb|p_avg,P00590,3,10,62,0.8405,0.285,CB_1CUZ,,consensus_hop1,cryptobench,scored,drug_contact
+0.0702,0.9057,exp|adj|green_zero_0.05,0.6,exp|adj|p_peak,Q93096,4,9,57,0.8052,0.06,CB_1RXD,,consensus_hop1,cryptobench,scored,drug_contact
+0.1095,0.7831,exp|comb|R,0.6,exp|comb|R,P25114,15,10,137,0.6585,0.01,CB_3BIF,,consensus_hop1,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_3P3I,selector empty: {'reason': 'no PASSer entry'},consensus_hop1,,not_scored,
+0.2025,0.8363,binary|comb|green_lmax_0.05,0.8,binary|adj|green_lmax_0.05,Q9H7Z6,16,10,79,0.6694,0.0,CB_4DNC,,consensus_hop1,cryptobench,scored,drug_contact
+0.1757,0.7024,binary|sym|residLOG,0.6,binary|sym|residLOG,O28597,13,10,74,0.6819,0.305,CB_4TWI,,consensus_hop1,cryptobench,scored,drug_contact
+0.1071,0.7333,binary|adj|green_lmax_0.05,0.6,binary|adj|green_lmax_0.05,A0QUZ2,9,10,84,0.7074,0.26,CB_5GGC,,consensus_hop1,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_6AQE,fpocket none,consensus_hop1,,not_scored,
+,,,,,,,,,,,CB_6PLF,seeds 64 drug 0,consensus_hop1,,not_scored,
+,,,,,,,,,,,CB_6Z89,selector empty: {'reason': 'no PASSer entry'},consensus_hop1,,not_scored,
+0.1538,0.6414,binary|sym|R,0.4,binary|comb|R,2ZB1,12,10,78,0.6816,0.775,CS_2ZB1,,consensus_hop1,cryptosite,scored,drug_contact
+0.0222,0.8965,gauss|adj|residLOG,0.2,binary|adj|green_zero_0.01,"Glycogen phosphorylase, liver form",3,10,135,0.8486,0.235,ASB_1EM6,,consensus_hop1,asbench,scored,curated_allosteric
+0.1635,0.6728,harm|comb|residRAW,0.6,binary|adj|R,Sulfate adenylyltransferase,17,10,104,0.6521,0.3,ASB_1M8P,,consensus_hop1,asbench,scored,curated_allosteric
+0.0256,0.9539,binary|adj|p_peak,0.2,binary|adj|p_peak,Parathion hydrolase,2,10,78,0.9157,0.29,ASB_1QW7,,consensus_hop1,asbench,scored,curated_allosteric
+0.1273,0.8088,gauss|comb|green_lmax_0.05,0.8,harm|sym|residLOG,Acetyl-CoA carboxylase,14,10,110,0.6745,0.01,ASB_1W96,,consensus_hop1,asbench,scored,curated_allosteric
+0.0721,0.7039,exp|comb|p_peak,0.6,gauss|comb|residLOG,"Glycogen phosphorylase, muscle form",8,10,111,0.7167,0.585,ASB_2IEG,,consensus_hop1,asbench,scored,curated_allosteric
+0.1522,0.6731,exp|sym|R,0.4,binary|comb|R,"Fructose-1,6-bisphosphatase class 1",14,10,92,0.6744,0.46,ASB_2Q8M_2,,consensus_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_2VGI,seeds 103 drug 0,consensus_hop1,,not_scored,
+,,,,,,,,,,,ASB_3DC2,seeds 91 drug 0,consensus_hop1,,not_scored,
+,,,,,,,,,,,ASB_3FUD,seeds 92 drug 0,consensus_hop1,,not_scored,
+,,,,,,,,,,,ASB_3LSX,fpocket none,consensus_hop1,,not_scored,
+0.0348,0.9527,exp|sym|residRAW,0.4,exp|sym|residLOG,Ribonucleoside-diphosphate reductase 1 subunit alpha,4,10,115,0.7975,0.005,ASB_3R1R,,consensus_hop1,asbench,scored,curated_allosteric
+0.1667,0.6444,binary|adj|green_zero_0.01,0.6,exp|comb|R,Pyruvate kinase 1,15,10,90,0.6694,0.71,ASB_4HYW,,consensus_hop1,asbench,scored,curated_allosteric
+0.0696,0.9533,exp|adj|residRAW,0.6,binary|adj|residLOG,CAS0027,8,10,115,0.6979,0.0,CAS_1CZA,,consensus_hop1,casbench,scored,curated_allosteric
+0.125,0.7619,exp|adj|green_lmax_0.05,0.2,binary|adj|p_avg,CAS0001,12,10,96,0.6879,0.055,CAS_1NXG,,consensus_hop1,casbench,scored,curated_allosteric
+,,,,,,,,,,,CAS_2P9C,seeds 63 drug 0,consensus_hop1,,not_scored,
+,,,,,,,,,,,CAS_3DDN,seeds 104 drug 0,consensus_hop1,,not_scored,
+0.0857,0.7786,harm|sym|R,0.6,binary|adj|R,CAS0002,6,10,70,0.7338,0.225,CAS_3OTQ,,consensus_hop1,casbench,scored,curated_allosteric
+0.1047,0.7056,harm|adj|residLOG,0.4,exp|adj|R,CAS0001,9,10,86,0.7079,0.475,CAS_4JAF,,consensus_hop1,casbench,scored,curated_allosteric
+0.2268,0.6406,exp|adj|R,0.6,binary|adj|R,CAS0002,22,10,97,0.6358,0.39,CAS_5AI5,,consensus_hop1,casbench,scored,curated_allosteric
+0.2576,0.7671,exp|adj|R,0.8,exp|adj|R,CAS0002,17,10,66,0.6569,0.015,CAS_5AKE,,consensus_hop1,casbench,scored,curated_allosteric
+0.2571,0.6293,exp|adj|R,0.8,binary|comb|R,CAS0002,18,10,70,0.6494,0.66,CAS_5ALD,,consensus_hop1,casbench,scored,curated_allosteric
+0.0282,0.8696,gauss|comb|R,0.2,gauss|comb|residLOG,CAS0002,2,10,71,0.8604,0.535,CAS_5ALN,,consensus_hop1,casbench,scored,curated_allosteric
+0.3472,0.7889,harm|sym|R,0.8,harm|sym|R,CAS0002,25,10,72,0.6391,0.0,CAS_5ALV,,consensus_hop1,casbench,scored,curated_allosteric
+0.2895,0.5741,binary|adj|R,0.4,exp|sym|R,CAS0002,22,10,76,0.6428,0.99,CAS_5AM4,,consensus_hop1,casbench,scored,curated_allosteric
+0.0694,0.7612,exp|adj|green_zero_0.01,0.2,exp|adj|R,O00299,5,10,72,0.765,0.515,CB_1K0N,,consensus_hop1,cryptobench,scored,drug_contact
+0.0714,0.7268,gauss|adj|green_zero_0.01,0.4,binary|adj|green_zero_0.01,Q9RBY1,7,10,98,0.7262,0.48,CB_2ZJ7,,consensus_hop1,cryptobench,scored,drug_contact
+0.03,0.811,gauss|sym|residLOG,0.4,harm|sym|R,P39669,3,10,100,0.8373,0.695,CB_3BRK,,consensus_hop1,cryptobench,scored,drug_contact
+0.0235,0.8976,harm|comb|R,0.2,binary|comb|R,P0CE47,2,10,85,0.8859,0.47,CB_3U6K,,consensus_hop1,cryptobench,scored,drug_contact
+0.1094,0.8872,gauss|sym|green_lmax_0.05,0.4,binary|adj|p_avg,P45723,7,10,64,0.747,0.015,CB_4I8Y,,consensus_hop1,cryptobench,scored,drug_contact
+0.0092,0.963,exp|comb|R,0.2,exp|comb|R,Q92AS9,1,10,109,0.9591,0.585,CB_4ZOE,,consensus_hop1,cryptobench,scored,drug_contact
+0.0897,0.7827,gauss|sym|residLOG,0.4,exp|sym|R,Q9H7B4,7,10,78,0.7326,0.18,CB_5HQ8,,consensus_hop1,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_6KQF,selector empty: {'reason': 'no PASSer entry'},consensus_hop1,,not_scored,
+0.119,0.9446,exp|adj|green_lmax_0.05,0.8,binary|adj|green_lmax_0.05,B7GTV0,10,10,84,0.701,0.0,CB_6RXD,,consensus_hop1,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_7GOS,seeds 50 drug 0,consensus_hop1,,not_scored,
+0.1569,0.6141,harm|comb|R,0.4,gauss|comb|p_peak,Novel cryptic pocket set,16,10,102,0.6633,0.9,PM_1J8F,,consensus_hop1,pocketminer,scored,drug_contact
+0.1395,0.6689,binary|adj|green_zero_0.01,0.6,binary|adj|green_zero_0.01,"Fructose-1,6-bisphosphatase 1",12,10,86,0.6875,0.62,ASB_1FRP,,consensus_hop1,asbench,scored,curated_allosteric
+0.0141,0.9714,binary|sym|residLOG,0.2,binary|adj|residLOG,Glucosamine-6-phosphate isomerase 1,1,10,71,0.9701,0.625,ASB_1NE7,,consensus_hop1,asbench,scored,curated_allosteric
+0.1325,0.798,binary|comb|R,0.4,binary|adj|green_zero_0.05,Tyrosine-protein phosphatase non-receptor type 1,11,10,83,0.6971,0.01,ASB_1T49,,consensus_hop1,asbench,scored,curated_allosteric
+0.0594,0.7421,binary|adj|green_zero_0.01,0.4,harm|comb|R,"Glycogen phosphorylase, muscle form",6,10,101,0.7546,0.57,ASB_1Z8D_1,,consensus_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_2J0X,seeds 74 drug 0,consensus_hop1,,not_scored,
+0.025,0.9103,harm|adj|residLOG,0.2,gauss|adj|green_zero_0.01,Androgen receptor,2,10,80,0.8959,0.455,ASB_2QPY,,consensus_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_2Y0P,seeds 83 drug 0,consensus_hop1,,not_scored,
+0.051,0.7462,binary|adj|R,0.2,binary|comb|R,"Glycogen phosphorylase, muscle form",5,10,98,0.7738,0.67,ASB_3E3N,,consensus_hop1,asbench,scored,curated_allosteric
+0.1649,0.6952,binary|adj|green_zero_0.05,0.4,binary|adj|green_zero_0.01,Pyruvate kinase PKM,16,10,97,0.6649,0.22,ASB_3H6O,,consensus_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_3LU6,seeds 131 drug 0,consensus_hop1,,not_scored,
+,,,,,,,,,,,ASB_4E6C,fpocket none,consensus_hop1,,not_scored,
+,,,,,,,,,,,ASB_4LRL,seeds 83 drug 0,consensus_hop1,,not_scored,
+0.0855,0.9159,exp|sym|residLOG,0.8,binary|sym|residLOG,CAS0027,10,10,117,0.6844,0.0,CAS_1DGK,,consensus_hop1,casbench,scored,curated_allosteric
+0.08,0.8179,binary|comb|residLOG,0.4,gauss|comb|R,CAS0001,8,10,100,0.723,0.04,CAS_1OWC,,consensus_hop1,casbench,scored,curated_allosteric
+0.1449,0.6356,gauss|comb|R,0.4,gauss|adj|R,CAS0040,10,10,69,0.6916,0.815,CAS_2P9E,,consensus_hop1,casbench,scored,curated_allosteric
+0.0127,0.9872,gauss|sym|R,0.2,gauss|sym|R,CAS0002,1,10,79,0.9708,0.62,CAS_3I1Y,,consensus_hop1,casbench,scored,curated_allosteric
+0.1413,0.7332,harm|sym|residLOG,0.4,binary|adj|R,CAS0001,13,10,92,0.6856,0.16,CAS_4G6B,,consensus_hop1,casbench,scored,curated_allosteric
+0.0972,0.6769,harm|adj|residRAW,0.2,binary|comb|residLOG,CAS0001,7,10,72,0.7382,0.84,CAS_4JAG,,consensus_hop1,casbench,scored,curated_allosteric
+0.2558,0.6151,exp|adj|R,0.6,gauss|adj|R,CAS0002,22,10,86,0.6407,0.735,CAS_5AIA,,consensus_hop1,casbench,scored,curated_allosteric
+0.2785,0.6419,gauss|sym|R,0.8,gauss|adj|R,CAS0002,22,10,79,0.6465,0.525,CAS_5AKH,,consensus_hop1,casbench,scored,curated_allosteric
+0.322,0.6868,gauss|adj|R,0.6,exp|adj|R,CAS0002,19,10,59,0.6585,0.21,CAS_5ALF,,consensus_hop1,casbench,scored,curated_allosteric
+0.241,0.6571,binary|sym|green_zero_0.01,0.6,binary|adj|R,CAS0002,20,10,83,0.6518,0.41,CAS_5ALO,,consensus_hop1,casbench,scored,curated_allosteric
+0.16,0.6627,gauss|adj|R,0.4,binary|adj|residLOG,CAS0002,12,10,75,0.6754,0.585,CAS_5ALW,,consensus_hop1,casbench,scored,curated_allosteric
+0.2614,0.7258,exp|adj|R,0.8,exp|sym|R,CAS0002,23,10,88,0.6404,0.03,CAS_5AM5,,consensus_hop1,casbench,scored,curated_allosteric
+0.1538,0.7318,binary|adj|green_lmax_0.05,0.4,binary|adj|R,P00489,22,10,143,0.6381,0.005,CB_1NOK,,consensus_hop1,cryptobench,scored,drug_contact
+0.0286,0.9412,exp|adj|R,0.2,binary|adj|residLOG,Q5ZUA2,2,10,70,0.8955,0.33,CB_3AAR,,consensus_hop1,cryptobench,scored,drug_contact
+0.0423,0.8922,gauss|adj|green_zero_0.01,0.2,gauss|adj|green_zero_0.01,Q5S3I3,3,10,71,0.8187,0.205,CB_3GL0,,consensus_hop1,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_3VQ9,selector empty: {'reason': 'no PASSer entry'},consensus_hop1,,not_scored,
+,,,,,,,,,,,CB_4JAX,seeds 77 drug 0,consensus_hop1,,not_scored,
+0.1075,0.6747,harm|adj|R,0.4,harm|adj|R,P53590,10,10,93,0.6857,0.555,CB_5CAE,,consensus_hop1,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_5IWI,selector empty: {'reason': 'no PASSer entry'},consensus_hop1,,not_scored,
+0.1013,0.7641,harm|comb|R,0.4,gauss|comb|R,P9WNV1,8,10,79,0.7277,0.26,CB_6KSC,,consensus_hop1,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_6U9C,seeds 67 drug 0,consensus_hop1,,not_scored,
+,,,,,,,,,,,CB_7Q00,selector empty: {'reason': 'no PASSer entry'},consensus_hop1,,not_scored,
+0.0463,0.8447,harm|comb|R,0.2,binary|comb|p_avg,"NAD-dependent malic enzyme, mitochondrial",5,10,108,0.7704,0.165,ASB_1GZ3,,consensus_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_1NH8,seeds 71 drug 0,consensus_hop1,,not_scored,
+,,,,,,,,,,,ASB_1UXV,seeds 78 drug 0,consensus_hop1,,not_scored,
+0.1071,0.7185,harm|sym|R,0.4,binary|adj|R,Pyruvate dehydrogenase kinase isozyme 2,9,10,84,0.7059,0.355,ASB_2BU8,,consensus_hop1,asbench,scored,curated_allosteric
+0.0435,0.8333,gauss|sym|residLOG,0.4,exp|adj|green_zero_0.01,"Tryptophan 2,3-dioxygenase",3,10,69,0.8471,0.6,ASB_2NW8,,consensus_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_2R1R,seeds 86 drug 0,consensus_hop1,,not_scored,
+0.1613,0.7058,gauss|comb|R,0.8,gauss|sym|residLOG,Androgen receptor,10,10,62,0.7008,0.45,ASB_2YLO,,consensus_hop1,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_3ETE_1,seeds 82 drug 0,consensus_hop1,,not_scored,
+0.1546,0.6886,binary|adj|R,0.6,gauss|comb|residLOG,Pyruvate kinase,15,10,97,0.667,0.29,ASB_3HQP,,consensus_hop1,asbench,scored,curated_allosteric
+0.1379,0.6689,gauss|comb|R,0.4,binary|adj|green_zero_0.01,Mitogen-activated protein kinase 8,12,10,87,0.6885,0.65,ASB_3O2M,,consensus_hop1,asbench,scored,curated_allosteric
+0.0278,0.8984,binary|adj|R,0.2,binary|adj|p_peak,Pyruvate kinase PKM,3,10,108,0.8336,0.175,ASB_4G1N,,consensus_hop1,asbench,scored,curated_allosteric
+0.0789,0.6444,gauss|adj|R,0.4,binary|comb|R,"Glycogen phosphorylase, muscle form",9,10,114,0.7156,0.935,ASB_4MRA,,consensus_hop1,asbench,scored,curated_allosteric
+0.098,0.7174,exp|comb|R,0.4,exp|sym|residLOG,CAS0010,5,8,51,0.7641,0.795,CAS_1I2D,,consensus_hop1,casbench,scored,curated_allosteric
+,,,,,,,,,,,CAS_1PSD,seeds 57 drug 0,consensus_hop1,,not_scored,
+,,,,,,,,,,,CAS_2P9G,seeds 62 drug 0,consensus_hop1,,not_scored,
+0.2143,0.5777,binary|sym|R,0.6,gauss|comb|R,CAS0002,24,10,112,0.6267,0.915,CAS_3I28,,consensus_hop1,casbench,scored,curated_allosteric
+0.0745,0.7685,binary|adj|green_lmax_0.05,0.2,binary|adj|residLOG,CAS0001,7,10,94,0.7417,0.29,CAS_4JAD,,consensus_hop1,casbench,scored,curated_allosteric
+0.2593,0.681,harm|sym|R,0.6,binary|adj|R,CAS0002,21,10,81,0.6456,0.17,CAS_5AHX,,consensus_hop1,casbench,scored,curated_allosteric
+0.1667,0.6769,exp|adj|R,0.4,exp|adj|R,CAS0002,13,10,78,0.6675,0.385,CAS_5AK4,,consensus_hop1,casbench,scored,curated_allosteric
+0.2333,0.6584,binary|adj|R,0.6,binary|adj|R,CAS0002,21,10,90,0.6382,0.285,CAS_5AKX,,consensus_hop1,casbench,scored,curated_allosteric
+0.2857,0.7116,binary|sym|green_zero_0.01,0.6,harm|sym|R,CAS0002,22,10,77,0.6441,0.055,CAS_5ALH,,consensus_hop1,casbench,scored,curated_allosteric
+0.0172,0.9825,gauss|adj|green_zero_0.01,0.2,gauss|adj|green_zero_0.01,CAS0002,1,10,58,0.9665,0.625,CAS_5ALT,,consensus_hop1,casbench,scored,curated_allosteric
+0.2619,0.643,gauss|adj|R,0.6,binary|adj|R,CAS0002,22,10,84,0.6385,0.45,CAS_5ALY,,consensus_hop1,casbench,scored,curated_allosteric
+0.0405,0.8779,gauss|sym|residLOG,0.4,gauss|sym|residLOG,P18031,3,10,74,0.8391,0.315,CB_1BZJ,,consensus_hop1,cryptobench,scored,drug_contact
+0.0405,0.7183,gauss|adj|green_zero_0.01,0.0,binary|adj|p_avg,P02879,3,10,74,0.84,0.95,CB_1RTC,,consensus_hop1,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_3BGL,selector empty: {'reason': 'no PASSer entry'},consensus_hop1,,not_scored,
+,,,,,,,,,,,CB_3KJR,selector empty: {'reason': 'no PASSer entry'},consensus_hop1,,not_scored,
+,,,,,,,,,,,CB_4CON,selector empty: {'reason': 'no PASSer entry'},consensus_hop1,,not_scored,
+0.0556,0.7529,harm|sym|green_lmax_0.05,0.4,exp|adj|green_zero_0.01,P07814,5,10,90,0.7706,0.61,CB_4K86,,consensus_hop1,cryptobench,scored,drug_contact
+0.0594,0.8526,binary|adj|green_lmax_0.05,0.6,binary|adj|green_lmax_0.05,Q89ZX5,6,10,101,0.7484,0.05,CB_5CK1,,consensus_hop1,cryptobench,scored,drug_contact
+0.0549,0.714,binary|adj|green_zero_0.01,0.2,binary|adj|green_zero_0.05,O32553,5,10,91,0.7859,0.9,CB_5UXA,,consensus_hop1,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_6NLF,selector empty: {'reason': 'no PASSer entry'},consensus_hop1,,not_scored,
+,,,,,,,,,,,CB_6XQX,seeds 88 drug 0,consensus_hop1,,not_scored,
+0.029,0.9254,binary|sym|residLOG,0.2,binary|sym|p_avg,G3XDA2,2,10,69,0.9041,0.435,CB_8CN8,,consensus_hop1,cryptobench,scored,drug_contact
+0.1765,0.7202,binary|sym|residLOG,0.6,binary|sym|residRAW,Pyruvate kinase 1,12,10,68,0.6882,0.265,ASB_1A3W,,consensus_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_1H78,seeds 57 drug 0,consensus_hop2,,not_scored,
+0.2105,0.6792,harm|comb|R,0.6,harm|comb|R,ATP-dependent 6-phosphofructokinase isozyme 1,8,10,38,0.7319,0.835,ASB_1PFK,,consensus_hop2,asbench,scored,curated_allosteric
+0.1573,0.9438,binary|comb|green_lmax_0.05,1.0,binary|comb|p_avg,Response regulator PleD,14,10,89,0.6701,0.0,ASB_1W25,,consensus_hop2,asbench,scored,curated_allosteric
+0.2029,0.9286,binary|adj|green_lmax_0.05,1.0,binary|adj|green_lmax_0.05,Serum albumin,14,10,69,0.6816,0.0,ASB_2BXA,,consensus_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_2PA3,seeds 61 drug 0,consensus_hop2,,not_scored,
+,,,,,,,,,,,ASB_2VD3,seeds 55 drug 0,consensus_hop2,,not_scored,
+0.06,0.672,binary|adj|green_zero_0.01,0.4,gauss|comb|residLOG,"Glycogen phosphorylase, liver form",6,10,100,0.7593,0.965,ASB_3CEH,,consensus_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_3ETG,seeds 72 drug 0,consensus_hop2,,not_scored,
+0.1944,0.6946,binary|adj|residLOG,0.6,gauss|sym|R,"Fructose-1,6-bisphosphatase isozyme 2",14,10,72,0.6854,0.405,ASB_3IFA,,consensus_hop2,asbench,scored,curated_allosteric
+0.069,0.7685,binary|adj|R,0.4,binary|adj|residLOG,Phospho-2-dehydro-3-deoxyheptonate aldolase,4,10,58,0.7963,0.64,ASB_3PG9,,consensus_hop2,asbench,scored,curated_allosteric
+0.0175,1.0,gauss|comb|R,0.2,gauss|comb|R,2-dehydro-3-deoxyphosphoheptonate aldolase,1,10,57,0.9828,0.545,ASB_4GRS,,consensus_hop2,asbench,scored,curated_allosteric
+0.1296,0.6596,harm|sym|R,0.4,exp|sym|R,ATP-dependent 6-phosphofructokinase,7,10,54,0.7325,0.915,ASB_4PFK,,consensus_hop2,asbench,scored,curated_allosteric
+0.1216,0.7385,binary|adj|p_avg,0.4,binary|adj|green_zero_0.01,CAS0001,9,10,74,0.7114,0.32,CAS_1NXE,,consensus_hop2,casbench,scored,curated_allosteric
+,,,,,,,,,,,CAS_1YBA,seeds 45 drug 0,consensus_hop2,,not_scored,
+,,,,,,,,,,,CAS_2PA3,seeds 52 drug 0,consensus_hop2,,not_scored,
+0.2778,0.7154,binary|sym|green_zero_0.01,0.4,binary|sym|R,CAS0002,20,10,72,0.6558,0.075,CAS_3KOO,,consensus_hop2,casbench,scored,curated_allosteric
+0.2059,0.7183,binary|adj|p_avg,0.8,binary|adj|p_peak,CAS0001,14,10,68,0.6796,0.165,CAS_4JAE,,consensus_hop2,casbench,scored,curated_allosteric
+0.2593,0.673,exp|adj|R,0.8,exp|adj|R,CAS0002,21,10,81,0.6478,0.23,CAS_5AI4,,consensus_hop2,casbench,scored,curated_allosteric
+0.2474,0.5502,binary|sym|residLOG,0.4,exp|sym|R,CAS0002,24,10,97,0.641,1.0,CAS_5AK5,,consensus_hop2,casbench,scored,curated_allosteric
+0.274,0.717,binary|sym|green_zero_0.01,0.6,harm|sym|R,CAS0002,20,10,73,0.6554,0.085,CAS_5AKY,,consensus_hop2,casbench,scored,curated_allosteric
+0.0164,1.0,binary|adj|R,0.2,binary|adj|R,CAS0002,1,10,61,0.9573,0.285,CAS_5ALM,,consensus_hop2,casbench,scored,curated_allosteric
+0.3385,0.6617,exp|sym|R,0.8,exp|sym|R,CAS0002,22,10,65,0.6505,0.37,CAS_5ALU,,consensus_hop2,casbench,scored,curated_allosteric
+0.2188,0.7843,gauss|adj|R,0.8,gauss|adj|R,CAS0002,14,10,64,0.6733,0.01,CAS_5AM0,,consensus_hop2,casbench,scored,curated_allosteric
+0.0566,0.9267,binary|comb|green_lmax_0.05,0.4,binary|adj|green_lmax_0.05,P00590,3,10,53,0.8411,0.135,CB_1CUZ,,consensus_hop2,cryptobench,scored,drug_contact
+0.08,0.9565,harm|adj|green_zero_0.01,0.6,exp|adj|p_peak,Q93096,4,9,50,0.8164,0.02,CB_1RXD,,consensus_hop2,cryptobench,scored,drug_contact
+0.1415,0.7553,exp|comb|R,0.6,exp|comb|R,P25114,15,10,106,0.6606,0.02,CB_3BIF,,consensus_hop2,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_3P3I,selector empty: {'reason': 'no PASSer entry'},consensus_hop2,,not_scored,
+0.2254,0.892,binary|comb|green_lmax_0.05,1.0,binary|comb|green_lmax_0.05,Q9H7Z6,16,10,71,0.67,0.0,CB_4DNC,,consensus_hop2,cryptobench,scored,drug_contact
+0.1781,0.7077,binary|sym|residLOG,0.6,binary|sym|p_peak,O28597,13,10,73,0.6843,0.29,CB_4TWI,,consensus_hop2,cryptobench,scored,drug_contact
+0.1139,0.7381,gauss|adj|green_lmax_0.05,0.6,binary|adj|green_lmax_0.05,A0QUZ2,9,10,79,0.7131,0.305,CB_5GGC,,consensus_hop2,cryptobench,scored,drug_contact
+0.0256,1.0,binary|adj|green_zero_0.05,0.2,binary|adj|p_avg,Q9RY20,1,10,39,0.9861,0.67,CB_6AQE,,consensus_hop2,cryptobench,scored,drug_contact
+0.0769,0.7396,binary|sym|R,0.4,exp|sym|residLOG,O43175,4,8,52,0.7991,0.825,CB_6PLF,,consensus_hop2,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_6Z89,selector empty: {'reason': 'no PASSer entry'},consensus_hop2,,not_scored,
+0.2034,0.6454,binary|sym|R,0.4,binary|adj|R,2ZB1,12,10,59,0.6924,0.795,CS_2ZB1,,consensus_hop2,cryptosite,scored,drug_contact
+,,,,,,,,,,,ASB_1EM6,fpocket none,consensus_hop2,,not_scored,
+0.2048,0.6533,harm|comb|residRAW,0.6,binary|adj|R,Sulfate adenylyltransferase,17,10,83,0.6534,0.52,ASB_1M8P,,consensus_hop2,asbench,scored,curated_allosteric
+0.029,0.9701,harm|comb|green_lmax_0.05,0.4,harm|comb|green_lmax_0.05,Parathion hydrolase,2,10,69,0.9137,0.2,ASB_1QW7,,consensus_hop2,asbench,scored,curated_allosteric
+0.1296,0.8245,gauss|comb|green_lmax_0.05,0.8,harm|sym|residLOG,Acetyl-CoA carboxylase,14,10,108,0.6722,0.0,ASB_1W96,,consensus_hop2,asbench,scored,curated_allosteric
+0.0762,0.701,exp|comb|p_peak,0.6,gauss|comb|residLOG,"Glycogen phosphorylase, muscle form",8,10,105,0.7225,0.59,ASB_2IEG,,consensus_hop2,asbench,scored,curated_allosteric
+0.2456,0.6777,exp|sym|R,0.6,binary|comb|R,"Fructose-1,6-bisphosphatase class 1",14,10,57,0.6874,0.555,ASB_2Q8M_2,,consensus_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_2VGI,seeds 79 drug 0,consensus_hop2,,not_scored,
+,,,,,,,,,,,ASB_3DC2,seeds 71 drug 0,consensus_hop2,,not_scored,
+,,,,,,,,,,,ASB_3FUD,seeds 72 drug 0,consensus_hop2,,not_scored,
+0.0189,0.9423,gauss|adj|green_zero_0.01,0.2,gauss|adj|R,Glutamate receptor 3,1,10,53,0.9792,0.93,ASB_3LSX,,consensus_hop2,asbench,scored,curated_allosteric
+0.0444,0.9331,exp|sym|residRAW,0.2,binary|comb|R,Ribonucleoside-diphosphate reductase 1 subunit alpha,4,10,90,0.8079,0.03,ASB_3R1R,,consensus_hop2,asbench,scored,curated_allosteric
+0.1974,0.6557,binary|adj|green_zero_0.01,0.6,exp|comb|R,Pyruvate kinase 1,15,10,76,0.671,0.6,ASB_4HYW,,consensus_hop2,asbench,scored,curated_allosteric
+0.0708,0.9488,exp|adj|residRAW,0.6,binary|adj|residLOG,CAS0027,8,10,113,0.7,0.0,CAS_1CZA,,consensus_hop2,casbench,scored,curated_allosteric
+0.1364,0.7708,gauss|adj|green_lmax_0.05,0.2,binary|adj|p_avg,CAS0001,12,10,88,0.6899,0.05,CAS_1NXG,,consensus_hop2,casbench,scored,curated_allosteric
+,,,,,,,,,,,CAS_2P9C,seeds 41 drug 0,consensus_hop2,,not_scored,
+,,,,,,,,,,,CAS_3DDN,seeds 89 drug 0,consensus_hop2,,not_scored,
+0.0896,0.7705,harm|sym|R,0.6,binary|adj|R,CAS0002,6,10,67,0.7407,0.3,CAS_3OTQ,,consensus_hop2,casbench,scored,curated_allosteric
+0.1406,0.7697,binary|comb|green_lmax_0.05,0.4,binary|adj|green_zero_0.01,CAS0001,9,10,64,0.716,0.16,CAS_4JAF,,consensus_hop2,casbench,scored,curated_allosteric
+0.2619,0.61,exp|adj|R,0.6,binary|adj|R,CAS0002,22,10,84,0.6428,0.82,CAS_5AI5,,consensus_hop2,casbench,scored,curated_allosteric
+0.2881,0.7451,exp|adj|R,0.8,exp|adj|R,CAS0002,17,10,59,0.6614,0.055,CAS_5AKE,,consensus_hop2,casbench,scored,curated_allosteric
+0.2812,0.6171,exp|adj|R,0.8,binary|comb|R,CAS0002,18,10,64,0.6572,0.82,CAS_5ALD,,consensus_hop2,casbench,scored,curated_allosteric
+0.0299,0.8615,gauss|comb|R,0.0,binary|adj|p_avg,CAS0002,2,10,67,0.8676,0.585,CAS_5ALN,,consensus_hop2,casbench,scored,curated_allosteric
+0.4167,0.7817,harm|sym|R,0.8,harm|sym|R,CAS0002,25,10,60,0.6572,0.01,CAS_5ALV,,consensus_hop2,casbench,scored,curated_allosteric
+0.3607,0.648,binary|sym|green_zero_0.01,0.6,binary|adj|green_zero_0.01,CAS0002,22,10,61,0.6629,0.645,CAS_5AM4,,consensus_hop2,casbench,scored,curated_allosteric
+0.0746,0.7645,exp|adj|green_zero_0.01,0.2,exp|adj|R,O00299,5,10,67,0.7781,0.61,CB_1K0N,,consensus_hop2,cryptobench,scored,drug_contact
+0.1186,0.7363,harm|comb|residLOG,0.4,binary|adj|green_zero_0.01,Q9RBY1,7,10,59,0.7336,0.485,CB_2ZJ7,,consensus_hop2,cryptobench,scored,drug_contact
+0.0345,0.8175,gauss|sym|residLOG,0.4,harm|sym|R,P39669,3,10,87,0.8355,0.63,CB_3BRK,,consensus_hop2,cryptobench,scored,drug_contact
+0.0241,0.8951,harm|comb|R,0.2,binary|comb|R,P0CE47,2,10,83,0.886,0.535,CB_3U6K,,consensus_hop2,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_4I8Y,fpocket none,consensus_hop2,,not_scored,
+0.0106,0.957,exp|adj|R,0.2,exp|adj|R,Q92AS9,1,10,94,0.9654,0.755,CB_4ZOE,,consensus_hop2,cryptobench,scored,drug_contact
+0.1094,0.8446,gauss|sym|p_avg,0.6,gauss|sym|p_peak,Q9H7B4,7,10,64,0.741,0.065,CB_5HQ8,,consensus_hop2,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_6KQF,selector empty: {'reason': 'no PASSer entry'},consensus_hop2,,not_scored,
+0.119,0.9446,exp|adj|green_lmax_0.05,0.8,binary|adj|green_lmax_0.05,B7GTV0,10,10,84,0.7014,0.0,CB_6RXD,,consensus_hop2,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_7GOS,seeds 38 drug 0,consensus_hop2,,not_scored,
+,,,,,,,,,,,PM_1J8F,fpocket none,consensus_hop2,,not_scored,
+,,,,,,,,,,,ASB_1FRP,fpocket none,consensus_hop2,,not_scored,
+0.0196,0.98,gauss|adj|p_peak,0.2,binary|sym|p_avg,Glucosamine-6-phosphate isomerase 1,1,10,51,0.9745,0.74,ASB_1NE7,,consensus_hop2,asbench,scored,curated_allosteric
+0.1549,0.7894,binary|comb|R,0.4,binary|adj|green_zero_0.05,Tyrosine-protein phosphatase non-receptor type 1,11,10,71,0.7,0.01,ASB_1T49,,consensus_hop2,asbench,scored,curated_allosteric
+0.0612,0.7482,binary|adj|green_zero_0.01,0.4,harm|comb|R,"Glycogen phosphorylase, muscle form",6,10,98,0.7524,0.485,ASB_1Z8D_1,,consensus_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_2J0X,seeds 46 drug 0,consensus_hop2,,not_scored,
+0.0435,0.9318,harm|adj|residLOG,0.2,exp|comb|p_avg,Androgen receptor,2,10,46,0.9066,0.42,ASB_2QPY,,consensus_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_2Y0P,seeds 70 drug 0,consensus_hop2,,not_scored,
+0.0532,0.7393,binary|adj|R,0.2,binary|comb|R,"Glycogen phosphorylase, muscle form",5,10,94,0.7715,0.695,ASB_3E3N,,consensus_hop2,asbench,scored,curated_allosteric
+0.1739,0.7204,binary|adj|green_zero_0.05,0.4,binary|adj|green_zero_0.05,Pyruvate kinase PKM,16,10,92,0.66,0.08,ASB_3H6O,,consensus_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_3LU6,seeds 110 drug 0,consensus_hop2,,not_scored,
+0.0625,0.8333,exp|comb|R,0.4,exp|comb|R,Mitogen-activated protein kinase 14,4,10,64,0.8035,0.355,ASB_4E6C,,consensus_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_4LRL,seeds 62 drug 0,consensus_hop2,,not_scored,
+,,,,,,,,,,,CAS_1DGK,fpocket none,consensus_hop2,,not_scored,
+0.127,0.8091,binary|comb|p_avg,0.4,binary|comb|p_avg,CAS0001,8,10,63,0.7331,0.08,CAS_1OWC,,consensus_hop2,casbench,scored,curated_allosteric
+0.1887,0.6814,gauss|comb|R,0.4,exp|comb|R,CAS0040,10,10,53,0.696,0.6,CAS_2P9E,,consensus_hop2,casbench,scored,curated_allosteric
+0.0143,0.9855,gauss|sym|R,0.2,gauss|sym|R,CAS0002,1,10,70,0.9714,0.64,CAS_3I1Y,,consensus_hop2,casbench,scored,curated_allosteric
+0.1912,0.7273,exp|sym|residLOG,0.6,harm|sym|p_avg,CAS0001,13,10,68,0.6899,0.225,CAS_4G6B,,consensus_hop2,casbench,scored,curated_allosteric
+0.1458,0.6794,exp|sym|residRAW,0.4,gauss|comb|p_peak,CAS0001,7,10,48,0.7505,0.895,CAS_4JAG,,consensus_hop2,casbench,scored,curated_allosteric
+0.2821,0.6964,binary|sym|green_zero_0.01,0.6,gauss|adj|R,CAS0002,22,10,78,0.6373,0.055,CAS_5AIA,,consensus_hop2,casbench,scored,curated_allosteric
+0.3143,0.6799,gauss|sym|R,0.8,gauss|adj|R,CAS0002,22,10,70,0.654,0.23,CAS_5AKH,,consensus_hop2,casbench,scored,curated_allosteric
+0.4872,0.8263,binary|sym|green_zero_0.01,0.8,gauss|adj|R,CAS0002,19,10,39,0.6882,0.005,CAS_5ALF,,consensus_hop2,casbench,scored,curated_allosteric
+0.241,0.6571,binary|sym|green_zero_0.01,0.6,binary|adj|R,CAS0002,20,10,83,0.6537,0.475,CAS_5ALO,,consensus_hop2,casbench,scored,curated_allosteric
+0.2222,0.7024,binary|sym|R,0.8,binary|sym|R,CAS0002,12,10,54,0.6858,0.37,CAS_5ALW,,consensus_hop2,casbench,scored,curated_allosteric
+0.2706,0.7181,exp|adj|R,0.8,exp|sym|R,CAS0002,23,10,85,0.6365,0.02,CAS_5AM5,,consensus_hop2,casbench,scored,curated_allosteric
+0.1618,0.7193,binary|adj|green_lmax_0.05,0.4,binary|adj|R,P00489,22,10,136,0.6433,0.015,CB_1NOK,,consensus_hop2,cryptobench,scored,drug_contact
+0.0408,0.9468,exp|adj|R,0.2,binary|adj|residLOG,Q5ZUA2,2,10,49,0.9078,0.33,CB_3AAR,,consensus_hop2,cryptobench,scored,drug_contact
+0.0448,0.8958,gauss|adj|green_zero_0.01,0.2,gauss|adj|green_zero_0.05,Q5S3I3,3,10,67,0.828,0.215,CB_3GL0,,consensus_hop2,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_3VQ9,selector empty: {'reason': 'no PASSer entry'},consensus_hop2,,not_scored,
+,,,,,,,,,,,CB_4JAX,seeds 77 drug 0,consensus_hop2,,not_scored,
+0.1099,0.6741,harm|adj|R,0.4,harm|adj|R,P53590,10,10,91,0.6875,0.555,CB_5CAE,,consensus_hop2,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_5IWI,selector empty: {'reason': 'no PASSer entry'},consensus_hop2,,not_scored,
+0.1455,0.7261,harm|comb|R,0.4,exp|comb|residLOG,P9WNV1,8,10,55,0.7346,0.545,CB_6KSC,,consensus_hop2,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_6U9C,seeds 58 drug 0,consensus_hop2,,not_scored,
+,,,,,,,,,,,CB_7Q00,selector empty: {'reason': 'no PASSer entry'},consensus_hop2,,not_scored,
+0.0556,0.8353,harm|comb|R,0.2,binary|adj|green_zero_0.01,"NAD-dependent malic enzyme, mitochondrial",5,10,90,0.7719,0.155,ASB_1GZ3,,consensus_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_1NH8,seeds 49 drug 0,consensus_hop2,,not_scored,
+,,,,,,,,,,,ASB_1UXV,seeds 63 drug 0,consensus_hop2,,not_scored,
+0.1429,0.6934,harm|sym|R,0.6,binary|adj|p_peak,Pyruvate dehydrogenase kinase isozyme 2,9,10,63,0.7203,0.715,ASB_2BU8,,consensus_hop2,asbench,scored,curated_allosteric
+0.0476,0.8278,exp|adj|green_zero_0.01,0.4,exp|adj|green_zero_0.01,"Tryptophan 2,3-dioxygenase",3,10,63,0.8421,0.585,ASB_2NW8,,consensus_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,ASB_2R1R,seeds 75 drug 0,consensus_hop2,,not_scored,
+,,,,,,,,,,,ASB_2YLO,fpocket none,consensus_hop2,,not_scored,
+,,,,,,,,,,,ASB_3ETE_1,seeds 68 drug 0,consensus_hop2,,not_scored,
+0.1579,0.705,binary|adj|R,0.6,gauss|comb|residLOG,Pyruvate kinase,15,10,95,0.6702,0.2,ASB_3HQP,,consensus_hop2,asbench,scored,curated_allosteric
+0.1622,0.668,gauss|comb|R,0.4,binary|adj|green_zero_0.05,Mitogen-activated protein kinase 8,12,10,74,0.6913,0.66,ASB_3O2M,,consensus_hop2,asbench,scored,curated_allosteric
+0.0326,0.9026,binary|adj|R,0.2,binary|adj|p_peak,Pyruvate kinase PKM,3,10,92,0.8408,0.2,ASB_4G1N,,consensus_hop2,asbench,scored,curated_allosteric
+0.0818,0.6447,gauss|adj|R,0.4,binary|comb|R,"Glycogen phosphorylase, muscle form",9,10,110,0.7075,0.91,ASB_4MRA,,consensus_hop2,asbench,scored,curated_allosteric
+,,,,,,,,,,,CAS_1I2D,seeds 63 drug 0,consensus_hop2,,not_scored,
+,,,,,,,,,,,CAS_1PSD,seeds 26 drug 0,consensus_hop2,,not_scored,
+,,,,,,,,,,,CAS_2P9G,seeds 35 drug 0,consensus_hop2,,not_scored,
+0.2264,0.5798,binary|sym|R,0.6,gauss|comb|R,CAS0002,24,10,106,0.6264,0.93,CAS_3I28,,consensus_hop2,casbench,scored,curated_allosteric
+0.0886,0.7996,binary|adj|green_lmax_0.05,0.2,binary|adj|p_avg,CAS0001,7,10,79,0.7488,0.19,CAS_4JAD,,consensus_hop2,casbench,scored,curated_allosteric
+0.28,0.6825,exp|sym|R,0.6,binary|adj|R,CAS0002,21,10,75,0.6407,0.135,CAS_5AHX,,consensus_hop2,casbench,scored,curated_allosteric
+0.1831,0.691,exp|sym|R,0.4,exp|adj|R,CAS0002,13,10,71,0.6784,0.34,CAS_5AK4,,consensus_hop2,casbench,scored,curated_allosteric
+0.2658,0.6732,binary|sym|R,0.6,binary|adj|R,CAS0002,21,10,79,0.6406,0.185,CAS_5AKX,,consensus_hop2,casbench,scored,curated_allosteric
+0.2857,0.7116,binary|sym|green_zero_0.01,0.6,harm|sym|R,CAS0002,22,10,77,0.6491,0.09,CAS_5ALH,,consensus_hop2,casbench,scored,curated_allosteric
+0.0217,0.9778,gauss|adj|green_zero_0.01,0.2,gauss|adj|green_zero_0.01,CAS0002,1,10,46,0.9646,0.675,CAS_5ALT,,consensus_hop2,casbench,scored,curated_allosteric
+0.2895,0.6288,gauss|adj|R,0.8,binary|adj|R,CAS0002,22,10,76,0.6451,0.62,CAS_5ALY,,consensus_hop2,casbench,scored,curated_allosteric
+0.0484,0.8588,harm|sym|residRAW,0.4,gauss|sym|residLOG,P18031,3,10,62,0.8541,0.545,CB_1BZJ,,consensus_hop2,cryptobench,scored,drug_contact
+0.0732,0.7456,gauss|adj|green_zero_0.05,0.2,binary|sym|R,P02879,3,10,41,0.8559,0.96,CB_1RTC,,consensus_hop2,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_3BGL,selector empty: {'reason': 'no PASSer entry'},consensus_hop2,,not_scored,
+,,,,,,,,,,,CB_3KJR,selector empty: {'reason': 'no PASSer entry'},consensus_hop2,,not_scored,
+,,,,,,,,,,,CB_4CON,selector empty: {'reason': 'no PASSer entry'},consensus_hop2,,not_scored,
+0.0575,0.7805,harm|sym|green_lmax_0.05,0.4,exp|adj|green_zero_0.01,P07814,5,10,87,0.7672,0.405,CB_4K86,,consensus_hop2,cryptobench,scored,drug_contact
+0.0625,0.8537,binary|adj|green_lmax_0.05,0.6,binary|adj|green_lmax_0.05,Q89ZX5,6,10,96,0.7487,0.045,CB_5CK1,,consensus_hop2,cryptobench,scored,drug_contact
+0.0602,0.7179,binary|adj|green_zero_0.01,0.2,binary|adj|green_zero_0.05,O32553,5,10,83,0.7758,0.845,CB_5UXA,,consensus_hop2,cryptobench,scored,drug_contact
+,,,,,,,,,,,CB_6NLF,selector empty: {'reason': 'no PASSer entry'},consensus_hop2,,not_scored,
+,,,,,,,,,,,CB_6XQX,seeds 82 drug 0,consensus_hop2,,not_scored,
+0.0312,0.9435,binary|sym|residLOG,0.2,binary|sym|p_avg,G3XDA2,2,10,64,0.9044,0.315,CB_8CN8,,consensus_hop2,cryptobench,scored,drug_contact
