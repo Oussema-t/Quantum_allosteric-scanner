@@ -1,0 +1,15 @@
+CryptoSite pairs -- PARTIAL SUBSET (21 of the paper's 93).
+
+The full 93-pair list is Table S1 of Cimermancic et al. 2016, J Mol Biol 428:709-719
+(PMID 26854760, PMC4794384). That article is NOT open access: Europe PMC returns
+'Article with id PMC4794384 is not open access one' for both supplementaryFiles and
+fullTextXML, and the salilab/cryptosite repo ships the METHOD, not the dataset
+(its web server at modbase.compbio.ucsf.edu/cryptosite exposes no dataset file either).
+
+These 21 pairs are the rows explicitly tagged source='CryptoSite SI' in
+github.com/Nyanko-sama/criptic_binding_sites_generation -> data_prep/proteins_list.csv.
+Second-hand provenance, so treat as indicative, not as the canonical CryptoSite set.
+
+TO COMPLETE: get Table S1 from the publisher and overwrite cryptosite_pairs.json with
+a list of {"apo","chain","holo","holo_chain","drug_code"} -- the loader picks it up
+automatically and partial_subset can then be dropped.

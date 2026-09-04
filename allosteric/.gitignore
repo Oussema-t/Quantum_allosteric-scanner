@@ -1,0 +1,8 @@
+# third-party payloads and build products -- recipes are versioned, downloads are not
+tools/pocketminer/gvp/
+tools/pocketminer/.venv*/
+tools/pocketminer/input/
+tools/pocketminer/output/
+datasets/cryptobench_dataset.json
+pdb_cache/
+*.bak-*

@@ -1,0 +1,776 @@
+[
+ {
+  "name": "Adenylosuccinate synthetase",
+  "apo": "1ADE",
+  "chain": "A",
+  "holo": "1CIB",
+  "holo_chain": "A",
+  "drug_code": "IMP",
+  "split": "train"
+ },
+ {
+  "name": "Adipocyte lipid-binding protein",
+  "apo": "1ALB",
+  "chain": "A",
+  "holo": "1LIC",
+  "holo_chain": "A",
+  "drug_code": "HDS",
+  "split": "train"
+ },
+ {
+  "name": "Bovine \u03b2-lactoglobulin",
+  "apo": "1BSQ",
+  "chain": "A",
+  "holo": "1GX8",
+  "holo_chain": "A",
+  "drug_code": "RTL",
+  "split": "train"
+ },
+ {
+  "name": "Guanylate kinase",
+  "apo": "1EX6",
+  "chain": "A",
+  "holo": "1GKY",
+  "holo_chain": "A",
+  "drug_code": "5GP",
+  "split": "train"
+ },
+ {
+  "name": "Elongation factor TU",
+  "apo": "1EXM",
+  "chain": "A",
+  "holo": "1HA3",
+  "holo_chain": "B",
+  "drug_code": "MAU",
+  "split": "train"
+ },
+ {
+  "name": "AMPA receptor GluR2 subunit",
+  "apo": "1MY0",
+  "chain": "B",
+  "holo": "1N0T",
+  "holo_chain": "D",
+  "drug_code": "AT1",
+  "split": "train"
+ },
+ {
+  "name": "Niemann-Pick C2 Protein",
+  "apo": "1NEP",
+  "chain": "A",
+  "holo": "2HKA",
+  "holo_chain": "C",
+  "drug_code": "C3S",
+  "split": "train"
+ },
+ {
+  "name": "Heme oxygenase-1",
+  "apo": "1NI6",
+  "chain": "D",
+  "holo": "3HOK",
+  "holo_chain": "B",
+  "drug_code": "Q80",
+  "split": "train"
+ },
+ {
+  "name": "AmpC \u03b2-lactamase",
+  "apo": "2BLS",
+  "chain": "B",
+  "holo": "3GQZ",
+  "holo_chain": "A",
+  "drug_code": "GF7",
+  "split": "train"
+ },
+ {
+  "name": "Heat shock protein 90",
+  "apo": "2QFO",
+  "chain": "B",
+  "holo": "2WI7",
+  "holo_chain": "A",
+  "drug_code": "2KL",
+  "split": "train"
+ },
+ {
+  "name": "LFA1 I domain",
+  "apo": "3F74",
+  "chain": "C",
+  "holo": "3BQM",
+  "holo_chain": "C",
+  "drug_code": "BQM",
+  "split": "train"
+ },
+ {
+  "name": "Adenylate kinase",
+  "apo": "4AKE",
+  "chain": "B",
+  "holo": "1ANK",
+  "holo_chain": "B",
+  "drug_code": "ANP",
+  "split": "train"
+ },
+ {
+  "name": "Ribonuclease A",
+  "apo": "1RHB",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "Ricin A chain",
+  "apo": "1RTC",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "Protein Tyrosine Phosphatase 1B",
+  "apo": "2CM2",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "TEM-1 \u03b2-lactamase",
+  "apo": "1JWP",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "Flavodoxin",
+  "apo": "1OFV",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "Top7",
+  "apo": "1QYS",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "designed TIM-barrel",
+  "apo": "5BVL",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "human-nsp16",
+  "apo": "4N49",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "MERS-nsp16",
+  "apo": "5YNF",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "SARS-1-nsp16",
+  "apo": "3R24",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "ACE2",
+  "apo": "6LZG",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "IL6-R",
+  "apo": "1N26",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "IL6",
+  "apo": "1ALU",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "SARS-2-nsp10",
+  "apo": "6W4H",
+  "chain": "B",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "SARS-2-nsp12",
+  "apo": "6NUR",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "SARS-2-nsp13",
+  "apo": "6JYT",
+  "chain": "A or B",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "SARS-2-nsp14",
+  "apo": "5C8S",
+  "chain": "A or C",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "SARS-2-nsp15",
+  "apo": "6VWW",
+  "chain": "A or B",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "SARS-2-nsp16",
+  "apo": "6W4H",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "SARS-2-nsp3-mac",
+  "apo": "6W02",
+  "chain": "A or B",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "SARS-2-nsp5-monomer-2",
+  "apo": "6Y2E",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "SARS-2-nsp7",
+  "apo": "5F22",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "SARS-2-nsp8",
+  "apo": "2AHM",
+  "chain": "G or H",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "SARS-2-nucleoprotein RBD",
+  "apo": "2OFZ",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "VP35",
+  "apo": "3FKE",
+  "chain": "A or B",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "train"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "3PPN",
+  "chain": "A",
+  "holo": "3PPR",
+  "holo_chain": "B",
+  "drug_code": "4CS",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "4W51",
+  "chain": "A",
+  "holo": "4W58",
+  "holo_chain": "A",
+  "drug_code": "3H2",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "4I92",
+  "chain": "A",
+  "holo": "4I94",
+  "holo_chain": "B",
+  "drug_code": "ANP",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "6E5D",
+  "chain": "A",
+  "holo": "6E5F",
+  "holo_chain": "A",
+  "drug_code": "L6T",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "5H9A",
+  "chain": "A",
+  "holo": "6E5L",
+  "holo_chain": "A",
+  "drug_code": "HVD",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "4IC4",
+  "chain": "A",
+  "holo": "4INQ",
+  "holo_chain": "A",
+  "drug_code": "PIF",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "1EZM",
+  "chain": "A",
+  "holo": "3DBK",
+  "holo_chain": "A",
+  "drug_code": "RDF",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "1S2O",
+  "chain": "A",
+  "holo": "1U2S",
+  "holo_chain": "A",
+  "drug_code": "GLC",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "1TVQ",
+  "chain": "A",
+  "holo": "1TW4",
+  "holo_chain": "A",
+  "drug_code": "2xCHD",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "2OY4",
+  "chain": "A",
+  "holo": "3DPF",
+  "holo_chain": "A",
+  "drug_code": "AXB",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "5NIA",
+  "chain": "A",
+  "holo": "5NI6",
+  "holo_chain": "A",
+  "drug_code": "DJ3",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "1Y1A",
+  "chain": "A",
+  "holo": "1Y1A",
+  "holo_chain": "B",
+  "drug_code": "GSH",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "3NX1",
+  "chain": "A",
+  "holo": "3NX2",
+  "holo_chain": "A",
+  "drug_code": "FER",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "1KX9",
+  "chain": "B",
+  "holo": "1N8V",
+  "holo_chain": "B",
+  "drug_code": "3xBDD",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "5NZM",
+  "chain": "A",
+  "holo": "2OEG",
+  "holo_chain": "A",
+  "drug_code": "UPG",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "6YPK",
+  "chain": "A",
+  "holo": "5OSZ",
+  "holo_chain": "A",
+  "drug_code": "AHK:403",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "2CEY",
+  "chain": "A",
+  "holo": "6H76",
+  "holo_chain": "A",
+  "drug_code": "SLB",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "1URP",
+  "chain": "A",
+  "holo": "2DRI",
+  "holo_chain": "A",
+  "drug_code": "RIP",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "3FVJ",
+  "chain": "A",
+  "holo": "2B03",
+  "holo_chain": "A",
+  "drug_code": "TUD",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "3UGK",
+  "chain": "A",
+  "holo": "3UH1",
+  "holo_chain": "A",
+  "drug_code": "NAI,SHR",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "2ZKU",
+  "chain": "B",
+  "holo": "3VQS",
+  "holo_chain": "A",
+  "drug_code": "JT1",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "5ZA4",
+  "chain": "A",
+  "holo": "5YYB",
+  "holo_chain": "A",
+  "drug_code": "NGE",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "4V38",
+  "chain": "A",
+  "holo": "4V3B",
+  "holo_chain": "A",
+  "drug_code": "C",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "3P53",
+  "chain": "A",
+  "holo": "6I11",
+  "holo_chain": "A",
+  "drug_code": "H0H",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "2HQ8",
+  "chain": "B",
+  "holo": "2HPS",
+  "holo_chain": "A",
+  "drug_code": "CTZ",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "2W9T",
+  "chain": "A",
+  "holo": "2W9S",
+  "holo_chain": "C",
+  "drug_code": "NDP,TOP",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "4R72",
+  "chain": "A",
+  "holo": "4R74",
+  "holo_chain": "D",
+  "drug_code": "F6P",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "3QXW",
+  "chain": "B",
+  "holo": "3QXV",
+  "holo_chain": "A",
+  "drug_code": "MTX",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "3KJE",
+  "chain": "A",
+  "holo": "3KJG",
+  "holo_chain": "A",
+  "drug_code": "ADP",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "2LAO",
+  "chain": "A",
+  "holo": "1LAH",
+  "holo_chain": "E",
+  "drug_code": "ORN",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "4P0I",
+  "chain": "B",
+  "holo": "5OTA",
+  "holo_chain": "A",
+  "drug_code": "AQQ",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "1KMO",
+  "chain": "A",
+  "holo": "1KMP",
+  "holo_chain": "A",
+  "drug_code": "2xCIT-2xFe",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "1J8F",
+  "chain": "C",
+  "holo": "6QCN",
+  "holo_chain": "B",
+  "drug_code": "AR6",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "5UXA",
+  "chain": "A",
+  "holo": "5IGY",
+  "holo_chain": "A",
+  "drug_code": "GDP-Ca,ERY",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "6HB0",
+  "chain": "A",
+  "holo": "6HBD",
+  "holo_chain": "A",
+  "drug_code": "GZL",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "2FJY",
+  "chain": "A",
+  "holo": "2P70",
+  "holo_chain": "A",
+  "drug_code": "2xPRZ",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "5G1M",
+  "chain": "A",
+  "holo": "5G3R",
+  "holo_chain": "A",
+  "drug_code": "89A,NAG",
+  "split": "val/test"
+ },
+ {
+  "name": "Novel cryptic pocket set",
+  "apo": "6RVM",
+  "chain": "C",
+  "holo": "5XDT",
+  "holo_chain": "A",
+  "drug_code": "ZI7-Ca",
+  "split": "val/test"
+ },
+ {
+  "name": "Cryptosite proteins used in validation, with a different structure used for human glycolipid transfer protein (3rwv)",
+  "apo": "1K3F",
+  "chain": "B",
+  "holo": "1U1D",
+  "holo_chain": "F",
+  "drug_code": "181",
+  "split": "val/test"
+ },
+ {
+  "name": "Cryptosite proteins used in validation, with a different structure used for human glycolipid transfer protein (3rwv)",
+  "apo": "1OK8",
+  "chain": "A",
+  "holo": "1OKE",
+  "holo_chain": "B",
+  "drug_code": "BOG",
+  "split": "val/test"
+ },
+ {
+  "name": "Cryptosite proteins used in validation, with a different structure used for human glycolipid transfer protein (3rwv)",
+  "apo": "2OHG",
+  "chain": "A",
+  "holo": "2OHV",
+  "holo_chain": "A",
+  "drug_code": "NHL",
+  "split": "val/test"
+ },
+ {
+  "name": "Cryptosite proteins used in validation, with a different structure used for human glycolipid transfer protein (3rwv)",
+  "apo": "2WGB",
+  "chain": "A",
+  "holo": "2V57",
+  "holo_chain": "A",
+  "drug_code": "PRL,IPA",
+  "split": "val/test"
+ },
+ {
+  "name": "Cryptosite proteins used in validation, with a different structure used for human glycolipid transfer protein (3rwv)",
+  "apo": "3RWV",
+  "chain": "A",
+  "holo": "3S0K",
+  "holo_chain": "A",
+  "drug_code": "03F",
+  "split": "val/test"
+ },
+ {
+  "name": "Highly rigid proteins; see eponymous tab for details",
+  "apo": "2FD7",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "val/test"
+ },
+ {
+  "name": "Highly rigid proteins; see eponymous tab for details",
+  "apo": "4HJK",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "val/test"
+ },
+ {
+  "name": "Highly rigid proteins; see eponymous tab for details",
+  "apo": "1IGD",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "val/test"
+ },
+ {
+  "name": "Highly rigid proteins; see eponymous tab for details",
+  "apo": "4TQL",
+  "chain": "B",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "val/test"
+ },
+ {
+  "name": "Highly rigid proteins; see eponymous tab for details",
+  "apo": "2ALP",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "val/test"
+ },
+ {
+  "name": "Highly rigid proteins; see eponymous tab for details",
+  "apo": "1AMM",
+  "chain": "A",
+  "holo": null,
+  "holo_chain": null,
+  "drug_code": null,
+  "split": "val/test"
+ }
+]

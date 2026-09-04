@@ -1,0 +1,1021 @@
+name,source,truth_type,cluster,pdb,chain,n_active,n_true,n_components,same_component,unreachable,min_euclid,median_euclid,min_hop,median_hop,n_true_unreachable,is_distal
+ASB_11BG,asbench,curated_allosteric,Seminal ribonuclease,11BG,A,18,6,1,True,False,8.683877187063395,11.287796993621953,2.0,2.5,0,False
+ASB_1A3W,asbench,curated_allosteric,Pyruvate kinase 1,1A3W,A,23,15,1,True,False,18.914826856199348,26.5364741629328,4.0,5.0,0,True
+ASB_1CE8_1,asbench,curated_allosteric,Carbamoyl-phosphate synthase large chain,1CE8,A,29,11,1,True,False,3.685714856035392,6.97458507726445,1.0,1.0,0,False
+ASB_1CE8_2,asbench,curated_allosteric,Carbamoyl-phosphate synthase large chain,1CE8,A,29,19,1,True,False,10.789502537188637,16.97410068309953,2.0,4.0,0,False
+ASB_1DKU,asbench,curated_allosteric,Ribose-phosphate pyrophosphokinase,1DKU,A,11,7,1,True,False,10.283460604290756,18.163336395056945,2.0,3.0,0,False
+ASB_1EM6,asbench,curated_allosteric,"Glycogen phosphorylase, liver form",1EM6,A,4,12,1,True,False,21.39713328929836,27.1736887388427,4.0,5.0,0,True
+ASB_1FRP,asbench,curated_allosteric,"Fructose-1,6-bisphosphatase 1",1FRP,A,20,15,1,True,False,15.574187201905595,22.99634818835374,3.0,5.0,0,True
+ASB_1G3L,asbench,curated_allosteric,Glucose-1-phosphate thymidylyltransferase,1G3L,A,29,14,1,True,False,10.24272712708877,16.556823847842608,2.0,3.0,0,False
+ASB_1GZ3,asbench,curated_allosteric,"NAD-dependent malic enzyme, mitochondrial",1GZ3,A,12,5,1,True,False,15.550171285230268,19.694326010300532,3.0,4.0,0,True
+ASB_1H5S,asbench,curated_allosteric,Glucose-1-phosphate thymidylyltransferase 1,1H5S,A,29,11,1,True,False,8.492254412109899,15.02538299012707,2.0,3.0,0,False
+ASB_1H78,asbench,curated_allosteric,Anaerobic ribonucleoside-triphosphate reductase,1H78,A,20,11,1,True,False,22.52051202792689,29.900111588420533,4.0,6.0,0,True
+ASB_1IWH,asbench,curated_allosteric,Hemoglobin subunit alpha,1IWH,A,6,6,1,True,False,3.7653082211155007,5.237619781056208,1.0,1.0,0,False
+ASB_1KFL,asbench,curated_allosteric,"Phospho-2-dehydro-3-deoxyheptonate aldolase, Phe-sensitive",1KFL,A,20,10,1,True,False,9.27379329077374,12.854521731213097,2.0,3.0,0,False
+ASB_1LVW,asbench,curated_allosteric,Glucose-1-phosphate thymidylyltransferase,1LVW,A,29,12,1,True,False,3.7675786654030206,10.793437144275398,1.0,2.0,0,False
+ASB_1M8P,asbench,curated_allosteric,Sulfate adenylyltransferase,1M8P,A,24,18,1,True,False,39.35652258520816,49.200470403190096,9.0,10.0,0,True
+ASB_1MP3,asbench,curated_allosteric,Glucose-1-phosphate thymidylyltransferase,1MP3,A,29,11,1,True,False,8.631120668835544,14.276595707660844,2.0,3.0,0,False
+ASB_1NE7,asbench,curated_allosteric,Glucosamine-6-phosphate isomerase 1,1NE7,A,25,4,1,True,False,14.790119269295973,16.984153281122317,3.0,3.5,0,True
+ASB_1NH8,asbench,curated_allosteric,ATP phosphoribosyltransferase,1NH8,A,16,6,1,True,False,28.933828643993863,34.19789479537098,6.0,6.5,0,True
+ASB_1NJJ,asbench,curated_allosteric,Ornithine decarboxylase,1NJJ,A,23,8,1,True,False,9.856199825490554,18.22546755065197,2.0,3.0,0,False
+ASB_1OF6,asbench,curated_allosteric,"Phospho-2-dehydro-3-deoxyheptonate aldolase, tyrosine-inhibited",1OF6,A,20,9,1,True,False,0.0,6.4097471088959495,0.0,1.0,0,False
+ASB_1PFK,asbench,curated_allosteric,ATP-dependent 6-phosphofructokinase isozyme 1,1PFK,A,27,10,1,True,False,21.74783711084852,28.19432774471056,4.0,4.5,0,True
+ASB_1QW7,asbench,curated_allosteric,Parathion hydrolase,1QW7,A,9,2,1,True,False,12.108114882177158,12.502980858993308,2.0,2.0,0,True
+ASB_1T49,asbench,curated_allosteric,Tyrosine-protein phosphatase non-receptor type 1,1T49,A,21,12,1,True,False,12.70101578614876,15.901257444204434,3.0,3.0,0,True
+ASB_1UXV,asbench,curated_allosteric,NAD(P)-dependent glyceraldehyde-3-phosphate dehydrogenase,1UXV,A,6,12,1,True,False,16.20166346397801,24.142594978423844,3.0,4.0,0,True
+ASB_1W0F,asbench,curated_allosteric,Cytochrome P450 3A4,1W0F,A,43,6,1,True,False,10.419613284570593,14.11533815764635,2.0,3.0,0,False
+ASB_1W25,asbench,curated_allosteric,Response regulator PleD,1W25,A,16,17,1,True,False,13.393005114611134,17.748834384263102,2.0,4.0,0,True
+ASB_1W96,asbench,curated_allosteric,Acetyl-CoA carboxylase,1W96,A,11,15,1,True,False,13.516139167676545,18.43095363783437,3.0,3.0,0,True
+ASB_1Z8D_1,asbench,curated_allosteric,"Glycogen phosphorylase, muscle form",1Z8D,A,4,9,1,True,False,27.362993129407464,32.99924535500774,5.0,6.0,0,True
+ASB_1Z8D_2,asbench,curated_allosteric,"Glycogen phosphorylase, muscle form",1Z8D,A,4,5,1,True,False,9.361539777194773,12.051815381924833,2.0,2.0,0,False
+ASB_1ZDS,asbench,curated_allosteric,Copper-containing nitrite reductase,1ZDS,A,6,9,1,True,False,5.52447870843938,10.079311980487557,1.0,2.0,0,False
+ASB_2BU8,asbench,curated_allosteric,Pyruvate dehydrogenase kinase isozyme 2,2BU8,A,26,9,1,True,False,14.083633657547336,20.06038728439708,3.0,5.0,0,True
+ASB_2BXA,asbench,curated_allosteric,Serum albumin,2BXA,A,24,14,1,True,False,13.028464529636638,19.742202910618182,2.0,4.0,0,True
+ASB_2D60,asbench,curated_allosteric,Hemoglobin subunit beta,2D60,A,6,4,1,True,False,3.768795165566842,5.463765193797165,1.0,1.0,0,False
+ASB_2HIM,asbench,curated_allosteric,L-asparaginase 1,2HIM,A,15,8,1,True,False,3.8006382358756534,12.494541870825003,1.0,3.0,0,False
+ASB_2HVW,asbench,curated_allosteric,Putative deoxycytidylate deaminase,2HVW,A,27,10,1,True,False,0.0,3.822030003458232,0.0,1.0,0,False
+ASB_2IEG,asbench,curated_allosteric,"Glycogen phosphorylase, muscle form",2IEG,A,4,9,1,True,False,21.67007351164273,26.03908804086656,5.0,5.0,0,True
+ASB_2J0X,asbench,curated_allosteric,Lysine-sensitive aspartokinase 3,2J0X,A,30,8,1,True,False,22.914505864190048,29.5871876180856,5.0,6.0,0,True
+ASB_2JHR,asbench,curated_allosteric,Myosin-2 heavy chain,2JHR,A,15,13,1,True,False,11.024108898228464,20.189889301331004,3.0,4.0,0,False
+ASB_2NW8,asbench,curated_allosteric,"Tryptophan 2,3-dioxygenase",2NW8,A,12,7,1,True,False,19.078519911146145,28.008264387498198,4.0,6.0,0,True
+ASB_2PA3,asbench,curated_allosteric,D-3-phosphoglycerate dehydrogenase,2PA3,A,37,8,1,True,False,24.622265574069335,32.011062502001906,5.0,6.0,0,True
+ASB_2Q5O,asbench,curated_allosteric,Indole-3-pyruvate decarboxylase,2Q5O,A,6,12,1,True,False,7.272137581206779,15.152100344947131,1.0,3.0,0,False
+ASB_2Q8M_1,asbench,curated_allosteric,"Fructose-1,6-bisphosphatase class 1",2Q8M,A,20,5,1,True,False,5.775089523115637,10.160025639731424,1.0,2.0,0,False
+ASB_2Q8M_2,asbench,curated_allosteric,"Fructose-1,6-bisphosphatase class 1",2Q8M,A,20,14,1,True,False,12.667712382273288,21.59939964738593,3.0,5.0,0,True
+ASB_2QMX,asbench,curated_allosteric,Prephenate dehydratase,2QMX,A,16,5,1,True,False,11.32580014833389,13.338286584115668,5.0,5.0,0,False
+ASB_2QPY,asbench,curated_allosteric,Androgen receptor,2QPY,A,25,10,1,True,False,17.659448009493392,19.942804889776834,3.0,4.0,0,True
+ASB_2R1R,asbench,curated_allosteric,Ribonucleoside-diphosphate reductase 1 subunit alpha,2R1R,A,27,8,1,True,False,18.944885800658707,23.202683605612236,3.0,4.5,0,True
+ASB_2RD5,asbench,curated_allosteric,"Acetylglutamate kinase, chloroplastic",2RD5,A,21,12,1,True,False,11.111892098108227,15.51488425943838,2.0,4.0,0,False
+ASB_2V4Y,asbench,curated_allosteric,Uridylate kinase,2V4Y,A,35,7,1,True,False,11.206011154732982,14.243933094479207,2.0,3.0,0,False
+ASB_2VD3,asbench,curated_allosteric,ATP phosphoribosyltransferase,2VD3,A,16,8,1,True,False,20.119333140042194,24.583812058653955,4.0,5.0,0,True
+ASB_2VGI,asbench,curated_allosteric,Pyruvate kinase PKLR,2VGI,A,21,17,1,True,False,20.07192090956917,27.729951244097062,4.0,5.0,0,True
+ASB_2VVT,asbench,curated_allosteric,Glutamate racemase,2VVT,A,23,12,1,True,False,0.0,8.630469679260047,0.0,2.0,0,False
+ASB_2W4I,asbench,curated_allosteric,Glutamate racemase,2W4I,A,23,7,1,True,False,0.0,0.0,0.0,0.0,0,False
+ASB_2XJC,asbench,curated_allosteric,Cytosolic purine 5'-nucleotidase,2XJC,A,29,10,1,True,False,3.7991663559259994,9.695203270754707,1.0,2.0,0,False
+ASB_2Y0P,asbench,curated_allosteric,Multifunctional 2-oxoglutarate metabolism enzyme,2Y0P,A,27,18,1,True,False,17.537540192398705,28.089453274594526,3.0,5.0,0,True
+ASB_2YHD,asbench,curated_allosteric,Androgen receptor,2YHD,A,25,8,1,True,False,3.8050536132885155,9.771891520466653,1.0,2.0,0,False
+ASB_2YLO,asbench,curated_allosteric,Androgen receptor,2YLO,A,25,10,1,True,False,15.403325192957524,18.288223483400614,3.0,4.0,0,True
+ASB_3BZ7,asbench,curated_allosteric,Myosin-2 heavy chain,3BZ7,A,15,16,1,True,False,0.0,8.813006990084874,0.0,2.0,0,False
+ASB_3C1N,asbench,curated_allosteric,Probable aspartokinase,3C1N,A,34,8,1,True,False,11.523481678728874,13.986390175062354,2.0,3.0,0,False
+ASB_3CEH,asbench,curated_allosteric,"Glycogen phosphorylase, liver form",3CEH,A,4,8,1,True,False,22.46897803639498,28.67414934460301,5.0,6.0,0,True
+ASB_3CSM,asbench,curated_allosteric,Chorismate mutase,3CSM,A,20,8,1,True,False,9.419258410299609,18.262690853878418,2.0,4.0,0,False
+ASB_3D2P,asbench,curated_allosteric,Amino-acid acetyltransferase,3D2P,A,27,17,1,True,False,10.886458744697467,17.630886818308372,3.0,5.0,0,False
+ASB_3DC2,asbench,curated_allosteric,D-3-phosphoglycerate dehydrogenase,3DC2,A,37,8,1,True,False,24.691880730312956,30.303360134285153,7.0,9.0,0,True
+ASB_3E3N,asbench,curated_allosteric,"Glycogen phosphorylase, muscle form",3E3N,A,4,9,1,True,False,27.492553337222063,33.16400135689299,5.0,6.0,0,True
+ASB_3EPS,asbench,curated_allosteric,Isocitrate dehydrogenase kinase/phosphatase,3EPS,A,33,13,1,True,False,10.136836636742254,14.3638083390165,2.0,3.0,0,False
+ASB_3ETE_1,asbench,curated_allosteric,"Glutamate dehydrogenase 1, mitochondrial",3ETE,A,10,3,1,True,False,20.66024051166878,21.330331924280976,4.0,4.0,0,True
+ASB_3ETE_2,asbench,curated_allosteric,"Glutamate dehydrogenase 1, mitochondrial",3ETE,A,10,11,1,True,False,3.750496767096331,11.102096828977855,1.0,2.0,0,False
+ASB_3ETG,asbench,curated_allosteric,"Glutamate dehydrogenase 1, mitochondrial",3ETG,A,10,6,1,True,False,14.342153569112277,15.715388906962302,2.0,3.0,0,True
+ASB_3FUD,asbench,curated_allosteric,Leukotriene A-4 hydrolase,3FUD,A,25,9,1,True,False,17.102623658374757,18.979629659189875,4.0,4.0,0,True
+ASB_3H30,asbench,curated_allosteric,Casein kinase II subunit alpha,3H30,A,20,9,1,True,False,3.7986963553303386,9.995257975660257,1.0,2.0,0,False
+ASB_3H6O,asbench,curated_allosteric,Pyruvate kinase PKM,3H6O,A,20,16,1,True,False,20.446724652129497,28.837194629485026,4.0,5.0,0,True
+ASB_3HFR,asbench,curated_allosteric,Glutamate racemase,3HFR,A,23,5,1,True,False,5.034514177157514,8.753188504767849,1.0,2.0,0,False
+ASB_3HO6,asbench,curated_allosteric,Toxin A,3HO6,A,23,14,1,True,False,0.0,9.92871806544454,0.0,2.0,0,False
+ASB_3HQP,asbench,curated_allosteric,Pyruvate kinase,3HQP,A,34,15,1,True,False,21.220129170200636,30.006840603435744,4.0,5.0,0,True
+ASB_3IFA,asbench,curated_allosteric,"Fructose-1,6-bisphosphatase isozyme 2",3IFA,A,20,14,1,True,False,17.01249720058758,23.17123183019186,3.0,5.0,0,True
+ASB_3IRH,asbench,curated_allosteric,HD domain protein,3IRH,B,26,8,1,True,False,3.8059743824676486,12.546369043904784,1.0,3.0,0,False
+ASB_3K5V,asbench,curated_allosteric,Tyrosine-protein kinase ABL1,3K5V,A,32,17,1,True,False,10.778023473717246,18.428837782128316,2.0,4.0,0,False
+ASB_3KGF_1,asbench,curated_allosteric,Phospho-2-dehydro-3-deoxyheptonate aldolase AroG,3KGF,A,18,6,1,True,False,10.294239019956741,12.911234617091202,2.0,2.5,0,False
+ASB_3KGF_2,asbench,curated_allosteric,Phospho-2-dehydro-3-deoxyheptonate aldolase AroG,3KGF,A,18,10,1,True,False,10.078965472706011,16.48604884847289,2.0,3.5,0,False
+ASB_3LSW,asbench,curated_allosteric,Glutamate receptor 3,3LSW,A,21,7,1,True,False,3.804563706918313,6.035155258980502,1.0,1.0,0,False
+ASB_3LSX,asbench,curated_allosteric,Glutamate receptor 3,3LSX,A,21,2,1,True,False,13.581589045468869,13.88754724845343,3.0,3.0,0,True
+ASB_3LU6,asbench,curated_allosteric,Serum albumin,3LU6,A,24,12,1,True,False,12.390514678575704,20.856707738350796,2.0,4.0,0,True
+ASB_3M3F,asbench,curated_allosteric,Glutamate receptor 3,3M3F,A,21,12,1,True,False,3.794903029064115,6.974054044151339,1.0,1.0,0,False
+ASB_3MW9,asbench,curated_allosteric,"Glutamate dehydrogenase 1, mitochondrial",3MW9,A,10,8,1,True,False,11.203393414497233,14.416179598591096,2.0,3.0,0,False
+ASB_3MWB,asbench,curated_allosteric,Prephenate dehydratase,3MWB,A,16,5,1,True,False,10.367848233842935,12.335866973990923,3.0,3.0,0,False
+ASB_3N25,asbench,curated_allosteric,Pyruvate kinase PKM,3N25,A,20,10,1,True,False,11.43344593724919,17.81792199889027,2.0,3.0,0,False
+ASB_3O2M,asbench,curated_allosteric,Mitogen-activated protein kinase 8,3O2M,A,16,12,1,True,False,22.674631816194946,26.291174186776317,5.0,6.0,0,True
+ASB_3PG9,asbench,curated_allosteric,Phospho-2-dehydro-3-deoxyheptonate aldolase,3PG9,A,8,6,1,True,False,39.266231535506435,44.18314233014257,8.0,9.0,0,True
+ASB_3PJG,asbench,curated_allosteric,UDP-glucose 6-dehydrogenase,3PJG,A,10,11,1,True,False,6.331715249440708,13.400317906676694,1.0,3.0,0,False
+ASB_3PTZ,asbench,curated_allosteric,UDP-glucose 6-dehydrogenase,3PTZ,A,10,21,1,True,False,0.0,6.983788441812939,0.0,1.0,0,False
+ASB_3PXF,asbench,curated_allosteric,Cyclin-dependent kinase 2,3PXF,A,30,18,1,True,False,0.0,5.749101174450257,0.0,1.0,0,False
+ASB_3PYY,asbench,curated_allosteric,Tyrosine-protein kinase ABL1,3PYY,A,32,12,1,True,False,10.845602518993585,17.20153300112886,2.0,3.5,0,False
+ASB_3R1R,asbench,curated_allosteric,Ribonucleoside-diphosphate reductase 1 subunit alpha,3R1R,A,27,11,1,True,False,17.70260435642169,28.006504298109032,4.0,6.0,0,True
+ASB_3UO9,asbench,curated_allosteric,"Glutaminase kidney isoform, mitochondrial",3UO9,A,18,8,1,True,False,8.573439799753654,11.019785298495616,2.0,3.0,0,False
+ASB_3ZCW,asbench,curated_allosteric,Kinesin-like protein KIF11,3ZCW,A,23,19,1,True,False,3.8151975047171542,12.641032948299756,1.0,3.0,0,False
+ASB_4B1F,asbench,curated_allosteric,Glutamate racemase,4B1F,A,23,14,1,True,False,0.0,4.57096104119839,0.0,1.0,0,False
+ASB_4B2D,asbench,curated_allosteric,Pyruvate kinase PKM,4B2D,A,20,11,1,True,False,8.335430162865022,14.67869452642162,2.0,3.0,0,False
+ASB_4BBG,asbench,curated_allosteric,Kinesin-like protein KIF11,4BBG,A,23,14,1,True,False,0.0,5.403878987200494,0.0,1.0,0,False
+ASB_4CFE,asbench,curated_allosteric,5'-AMP-activated protein kinase catalytic subunit alpha-2,4CFE,A,27,10,1,True,False,0.0,4.809681768828389,0.0,1.0,0,False
+ASB_4E6C,asbench,curated_allosteric,Mitogen-activated protein kinase 14,4E6C,A,30,4,1,True,False,20.817008838927844,22.018804822379217,4.0,4.0,0,True
+ASB_4G1N,asbench,curated_allosteric,Pyruvate kinase PKM,4G1N,A,20,9,1,True,False,12.314450211032565,22.78769145832899,3.0,4.0,0,True
+ASB_4GRS,asbench,curated_allosteric,2-dehydro-3-deoxyphosphoheptonate aldolase,4GRS,A,8,7,1,True,False,27.749879206944307,35.31713847411763,5.0,7.0,0,True
+ASB_4HO6,asbench,curated_allosteric,Glucose-1-phosphate thymidylyltransferase,4HO6,A,29,12,1,True,False,3.766727757616682,10.476050258179264,1.0,2.0,0,False
+ASB_4HYW,asbench,curated_allosteric,Pyruvate kinase 1,4HYW,A,21,15,1,True,False,19.378072891802223,28.95348367640758,4.0,5.0,0,True
+ASB_4JA8,asbench,curated_allosteric,"Isocitrate dehydrogenase [NADP], mitochondrial",4JA8,A,32,11,1,True,False,9.349786414672796,16.740323085293184,2.0,3.0,0,False
+ASB_4JKT,asbench,curated_allosteric,"Glutaminase kidney isoform, mitochondrial",4JKT,A,18,8,1,True,False,5.766627003717162,9.108729759035139,1.0,2.0,0,False
+ASB_4KZT,asbench,curated_allosteric,N-acetylglutamate kinase / N-acetylglutamate synthase,4KZT,A,27,14,1,True,False,0.0,8.065235418731799,0.0,1.5,0,False
+ASB_4LRL,asbench,curated_allosteric,HD domain protein,4LRL,B,26,3,1,True,False,12.737986065308755,12.922271085223372,3.0,3.0,0,True
+ASB_4MRA,asbench,curated_allosteric,"Glycogen phosphorylase, muscle form",4MRA,A,4,9,1,True,False,15.563593993676395,23.067164628536382,3.0,5.0,0,True
+ASB_4PFK,asbench,curated_allosteric,ATP-dependent 6-phosphofructokinase,4PFK,A,27,8,1,True,False,21.369069493078072,28.902538704121504,4.0,4.5,0,True
+CAS_11BA,casbench,curated_allosteric,CAS0051,11BA,A,29,8,1,True,False,6.677476394567036,10.023052589701482,1.0,2.0,0,False
+CAS_11BG,casbench,curated_allosteric,CAS0051,11BG,A,29,8,1,True,False,6.696890248466077,9.957960903423713,1.0,2.0,0,False
+CAS_1BOZ,casbench,curated_allosteric,CAS0060,1BOZ,A,20,30,1,True,False,3.796638644906833,6.088172976350982,1.0,1.0,0,False
+CAS_1BSR,casbench,curated_allosteric,CAS0051,1BSR,A,29,8,1,True,False,6.905222009465012,10.001851598385908,1.0,2.0,0,False
+CAS_1BZC,casbench,curated_allosteric,CAS0079,1BZC,A,41,18,1,True,False,11.309352501359216,15.789248636125556,2.0,3.0,0,False
+CAS_1BZJ,casbench,curated_allosteric,CAS0079,1BZJ,A,41,18,1,True,False,11.333526767957094,15.862015362379553,2.0,3.0,0,False
+CAS_1C83,casbench,curated_allosteric,CAS0079,1C83,A,41,18,1,True,False,11.373469171717131,15.87964103350472,2.0,3.0,0,False
+CAS_1C84,casbench,curated_allosteric,CAS0079,1C84,A,41,18,1,True,False,11.460949393483947,15.857135922171096,2.0,3.0,0,False
+CAS_1C85,casbench,curated_allosteric,CAS0079,1C85,A,41,18,1,True,False,11.340782953570711,15.876963490798339,2.0,3.0,0,False
+CAS_1C86,casbench,curated_allosteric,CAS0079,1C86,A,41,18,1,True,False,11.370883167107118,15.850600160112279,2.0,3.0,0,False
+CAS_1C87,casbench,curated_allosteric,CAS0079,1C87,A,41,18,1,True,False,11.301808395119782,15.864023756772834,2.0,3.0,0,False
+CAS_1C88,casbench,curated_allosteric,CAS0079,1C88,A,41,18,1,True,False,11.363249271225198,15.939585179337193,2.0,3.0,0,False
+CAS_1CZA,casbench,curated_allosteric,CAS0027,1CZA,N,19,15,1,True,False,71.94709090018858,77.25157127851834,13.0,15.0,0,True
+CAS_1DGK,casbench,curated_allosteric,CAS0027,1DGK,N,19,15,1,True,False,72.12234051942575,77.39275051967077,13.0,15.0,0,True
+CAS_1DHF,casbench,curated_allosteric,CAS0060,1DHF,A,20,30,1,True,False,3.7912627184092615,6.165993156216852,1.0,1.0,0,False
+CAS_1DLR,casbench,curated_allosteric,CAS0060,1DLR,A,20,30,1,True,False,3.7974515138445146,6.015752320466756,1.0,1.0,0,False
+CAS_1DLS,casbench,curated_allosteric,CAS0060,1DLS,A,20,30,1,True,False,3.8314771302984454,5.916907232354227,1.0,1.0,0,False
+CAS_1DRE,casbench,curated_allosteric,CAS0061,1DRE,A,20,37,1,True,False,2.9356644903667024,7.1627135919286875,1.0,1.0,0,False
+CAS_1DRF,casbench,curated_allosteric,CAS0060,1DRF,A,20,30,1,True,False,3.7844526684845716,5.928334050673609,1.0,1.0,0,False
+CAS_1ECV,casbench,curated_allosteric,CAS0079,1ECV,A,41,18,1,True,False,11.417505244141555,15.87323629811609,2.0,3.0,0,False
+CAS_1FIN,casbench,curated_allosteric,CAS0091,1FIN,A,41,26,1,True,False,3.771714994534985,6.623694990017931,1.0,1.0,0,False
+CAS_1FUO,casbench,curated_allosteric,CAS0085,1FUO,A,12,9,1,True,False,4.878384773672522,8.63285230963672,1.0,2.0,0,False
+CAS_1FUP,casbench,curated_allosteric,CAS0085,1FUP,A,12,9,1,True,False,4.907679390506262,8.67148113069502,1.0,2.0,0,False
+CAS_1FUQ,casbench,curated_allosteric,CAS0085,1FUQ,A,12,9,1,True,False,4.897686596751575,8.506274977920718,1.0,2.0,0,False
+CAS_1G1G,casbench,curated_allosteric,CAS0079,1G1G,A,41,18,1,True,False,11.591255755956729,16.13677433178078,2.0,3.0,0,False
+CAS_1G7G,casbench,curated_allosteric,CAS0079,1G7G,A,41,18,1,True,False,11.282034346694749,16.040276044977958,2.0,3.0,0,False
+CAS_1GFY,casbench,curated_allosteric,CAS0079,1GFY,A,41,18,1,True,False,11.429349981516884,15.917754207380248,2.0,3.0,0,False
+CAS_1GOS,casbench,curated_allosteric,CAS0086,1GOS,A,46,17,1,True,False,4.918307432440557,11.972244609930087,1.0,2.0,0,False
+CAS_1HFP,casbench,curated_allosteric,CAS0060,1HFP,A,20,30,1,True,False,3.747402567112319,6.100394622619938,1.0,1.0,0,False
+CAS_1HFQ,casbench,curated_allosteric,CAS0060,1HFQ,A,20,30,1,True,False,3.7755664475678334,6.124824210881847,1.0,1.0,0,False
+CAS_1HFR,casbench,curated_allosteric,CAS0060,1HFR,A,20,30,1,True,False,3.7927706231724585,5.923306758858715,1.0,1.0,0,False
+CAS_1I00,casbench,curated_allosteric,CAS0080,1I00,A,18,8,1,True,False,3.76650992299237,9.15466243779121,1.0,2.0,0,False
+CAS_1I2D,casbench,curated_allosteric,CAS0010,1I2D,A,22,21,1,True,False,34.456398085116206,43.073424416918606,9.0,10.0,0,True
+CAS_1I4O,casbench,curated_allosteric,CAS0071,1I4O,A,27,20,1,True,False,3.7800747347109454,11.423072137944082,1.0,2.0,0,False
+CAS_1IBC,casbench,curated_allosteric,CAS0070,1IBC,B,14,5,1,True,False,5.698613427843652,9.741668029654878,1.0,2.0,0,False
+CAS_1IBW,casbench,curated_allosteric,CAS0074,1IBW,B,12,1,1,True,False,11.319549593512987,11.319549593512987,2.0,2.0,0,False
+CAS_1ICE,casbench,curated_allosteric,CAS0070,1ICE,B,14,5,1,True,False,5.282922108076173,9.543213609680965,1.0,2.0,0,False
+CAS_1JUJ,casbench,curated_allosteric,CAS0080,1JUJ,A,18,8,1,True,False,3.7925988451192625,9.392623646088067,1.0,2.0,0,False
+CAS_1KAK,casbench,curated_allosteric,CAS0079,1KAK,A,41,18,1,True,False,11.037539626202934,15.642802453254376,2.0,3.0,0,False
+CAS_1KAV,casbench,curated_allosteric,CAS0079,1KAV,A,41,18,1,True,False,11.382628387152067,15.820283193064647,2.0,3.0,0,False
+CAS_1KMS,casbench,curated_allosteric,CAS0060,1KMS,A,20,30,1,True,False,3.7878216695087437,6.118416278480497,1.0,1.0,0,False
+CAS_1KQ7,casbench,curated_allosteric,CAS0085,1KQ7,A,12,9,1,True,False,4.698622564113859,8.567713522288182,1.0,2.0,0,False
+CAS_1L8G,casbench,curated_allosteric,CAS0079,1L8G,A,41,18,1,True,False,11.274089497604672,15.825696795146385,2.0,3.0,0,False
+CAS_1LDN,casbench,curated_allosteric,CAS0029,1LDN,A,38,10,1,True,False,5.249149550165245,10.878835592188665,1.0,2.0,0,False
+CAS_1LLD,casbench,curated_allosteric,CAS0028,1LLD,A,32,8,1,True,False,9.947453241910717,14.20345440698567,2.0,3.0,0,False
+CAS_1LTH,casbench,curated_allosteric,CAS0028,1LTH,T,32,8,1,True,False,10.15766680886905,14.318848806093413,2.0,3.0,0,False
+CAS_1MVS,casbench,curated_allosteric,CAS0060,1MVS,A,20,30,1,True,False,3.7655923836761733,6.003778647377665,1.0,1.0,0,False
+CAS_1MVT,casbench,curated_allosteric,CAS0060,1MVT,A,20,30,1,True,False,3.777632194907282,5.940094419968848,1.0,1.0,0,False
+CAS_1N3Z,casbench,curated_allosteric,CAS0051,1N3Z,A,29,7,1,True,False,6.685560634681282,9.732598573865051,1.0,2.0,0,False
+CAS_1NWE,casbench,curated_allosteric,CAS0079,1NWE,A,41,18,1,True,False,11.492551587876386,15.853875725430882,2.0,3.0,0,False
+CAS_1NXE,casbench,curated_allosteric,CAS0001,1NXE,A,17,18,1,True,False,13.290649382178435,19.347303274483213,3.0,4.0,0,True
+CAS_1NXG,casbench,curated_allosteric,CAS0001,1NXG,A,17,18,1,True,False,13.291973743579245,19.0722128657816,3.0,4.0,0,True
+CAS_1OHJ,casbench,curated_allosteric,CAS0060,1OHJ,A,20,30,1,True,False,3.7414613455172847,6.351646215999236,1.0,1.0,0,False
+CAS_1OHK,casbench,curated_allosteric,CAS0060,1OHK,A,20,30,1,True,False,3.736569683546663,5.909594125326533,1.0,1.0,0,False
+CAS_1OJ9,casbench,curated_allosteric,CAS0086,1OJ9,A,46,17,1,True,False,4.9223364370997595,11.842354748950909,1.0,2.0,0,False
+CAS_1OJA,casbench,curated_allosteric,CAS0086,1OJA,A,46,17,1,True,False,4.852371791196546,11.741497732401942,1.0,2.0,0,False
+CAS_1OJC,casbench,curated_allosteric,CAS0086,1OJC,A,46,17,1,True,False,4.92726800570052,11.797086504726497,1.0,2.0,0,False
+CAS_1OWC,casbench,curated_allosteric,CAS0001,1OWC,A,17,18,1,True,False,13.34883024837757,19.32809568896583,3.0,4.0,0,True
+CAS_1PD8,casbench,curated_allosteric,CAS0060,1PD8,A,20,30,1,True,False,3.7903005157902716,5.976491476728342,1.0,1.0,0,False
+CAS_1PD9,casbench,curated_allosteric,CAS0060,1PD9,A,20,30,1,True,False,3.8042179222541908,5.989057259650266,1.0,1.0,0,False
+CAS_1PSD,casbench,curated_allosteric,CAS0040,1PSD,A,45,11,1,True,False,22.372123904537986,27.612486070616676,4.0,5.0,0,True
+CAS_1PTT,casbench,curated_allosteric,CAS0079,1PTT,A,41,18,1,True,False,11.338301548291968,16.000352151728542,2.0,3.0,0,False
+CAS_1PTU,casbench,curated_allosteric,CAS0079,1PTU,A,41,18,1,True,False,11.3902662831033,15.893031418464346,2.0,3.0,0,False
+CAS_1PTV,casbench,curated_allosteric,CAS0079,1PTV,A,41,18,1,True,False,11.275940093845835,15.817788120043499,2.0,3.0,0,False
+CAS_1PYA,casbench,curated_allosteric,CAS0074,1PYA,B,12,1,1,True,False,10.706124508896771,10.706124508896771,2.0,2.0,0,False
+CAS_1Q1M,casbench,curated_allosteric,CAS0079,1Q1M,A,41,18,1,True,False,11.183978674872373,15.744934148990424,2.0,3.0,0,False
+CAS_1R3M,casbench,curated_allosteric,CAS0051,1R3M,A,29,8,1,True,False,6.587613907933583,9.79793012140044,1.0,2.0,0,False
+CAS_1R5C,casbench,curated_allosteric,CAS0051,1R5C,A,29,8,1,True,False,6.731740785264983,9.890526283934872,1.0,2.0,0,False
+CAS_1RA2,casbench,curated_allosteric,CAS0061,1RA2,A,20,37,1,True,False,3.0042246919962565,7.303532090707893,1.0,1.0,0,False
+CAS_1RA3,casbench,curated_allosteric,CAS0061,1RA3,A,20,37,1,True,False,2.867698728946259,7.576390499439688,1.0,1.0,0,False
+CAS_1RA8,casbench,curated_allosteric,CAS0061,1RA8,A,20,37,1,True,False,2.9794895535980674,7.41516628269387,1.0,1.0,0,False
+CAS_1RB2,casbench,curated_allosteric,CAS0061,1RB2,A,20,37,1,True,False,2.892025760604493,7.60282460668402,1.0,1.0,0,False
+CAS_1RB3,casbench,curated_allosteric,CAS0061,1RB3,A,20,37,1,True,False,2.924455675848072,7.697174806381885,1.0,1.0,0,False
+CAS_1RC4,casbench,curated_allosteric,CAS0061,1RC4,A,20,37,1,True,False,2.8656831646223564,6.608714625401825,1.0,1.0,0,False
+CAS_1RD7,casbench,curated_allosteric,CAS0061,1RD7,A,20,37,1,True,False,2.8185402250100986,7.45116890158853,1.0,1.0,0,False
+CAS_1RE7,casbench,curated_allosteric,CAS0061,1RE7,A,20,37,1,True,False,2.864540102704101,7.458265884238779,1.0,1.0,0,False
+CAS_1RG7,casbench,curated_allosteric,CAS0061,1RG7,A,20,37,1,True,False,2.938970568073115,6.704452326625942,1.0,1.0,0,False
+CAS_1RH3,casbench,curated_allosteric,CAS0061,1RH3,A,20,37,1,True,False,2.8788436914844833,7.1752591590826915,1.0,1.0,0,False
+CAS_1RWM,casbench,curated_allosteric,CAS0070,1RWM,B,14,5,1,True,False,5.513014601830835,9.503985532396396,1.0,2.0,0,False
+CAS_1RWN,casbench,curated_allosteric,CAS0070,1RWN,B,14,5,1,True,False,5.360103543775997,9.534172696149366,1.0,2.0,0,False
+CAS_1RWO,casbench,curated_allosteric,CAS0070,1RWO,B,14,5,1,True,False,5.344773428312934,9.48949808999401,1.0,2.0,0,False
+CAS_1RWV,casbench,curated_allosteric,CAS0070,1RWV,B,14,5,1,True,False,5.369651105984451,9.522631149004988,1.0,2.0,0,False
+CAS_1RX4,casbench,curated_allosteric,CAS0061,1RX4,A,20,37,1,True,False,2.874717551343088,6.610702005082365,1.0,1.0,0,False
+CAS_1RX5,casbench,curated_allosteric,CAS0061,1RX5,A,20,37,1,True,False,2.7587812526548765,6.78430814453471,1.0,1.0,0,False
+CAS_1RX6,casbench,curated_allosteric,CAS0061,1RX6,A,20,37,1,True,False,2.917243047810727,6.8530350210691315,1.0,1.0,0,False
+CAS_1RX7,casbench,curated_allosteric,CAS0061,1RX7,A,20,37,1,True,False,2.813903516469602,6.919850720933219,1.0,1.0,0,False
+CAS_1S2Q,casbench,curated_allosteric,CAS0086,1S2Q,A,46,17,1,True,False,4.909814864126751,11.778622542555643,1.0,2.0,0,False
+CAS_1S2Y,casbench,curated_allosteric,CAS0086,1S2Y,A,46,17,1,True,False,4.788162173527541,11.46252860410825,1.0,2.0,0,False
+CAS_1S3B,casbench,curated_allosteric,CAS0086,1S3B,A,46,17,1,True,False,4.847797644291687,11.69332548935503,1.0,2.0,0,False
+CAS_1S3E,casbench,curated_allosteric,CAS0086,1S3E,A,46,17,1,True,False,4.874790764740579,11.839960388447242,1.0,2.0,0,False
+CAS_1S3U,casbench,curated_allosteric,CAS0060,1S3U,A,20,30,1,True,False,3.778468075821205,5.861544169608621,1.0,1.0,0,False
+CAS_1S3V,casbench,curated_allosteric,CAS0060,1S3V,A,20,30,1,True,False,3.780083200142559,5.993217415514007,1.0,1.0,0,False
+CAS_1S3W,casbench,curated_allosteric,CAS0060,1S3W,A,20,30,1,True,False,3.796582278839747,5.9733665982202115,1.0,1.0,0,False
+CAS_1TQ9,casbench,curated_allosteric,CAS0051,1TQ9,A,29,7,1,True,False,6.79502855034473,9.572504008878765,1.0,2.0,0,False
+CAS_1U71,casbench,curated_allosteric,CAS0060,1U71,A,20,30,1,True,False,3.7755296317205618,6.07648659970855,1.0,1.0,0,False
+CAS_1U72,casbench,curated_allosteric,CAS0060,1U72,A,20,30,1,True,False,3.706355352634175,5.838708356771287,1.0,1.0,0,False
+CAS_1XBO,casbench,curated_allosteric,CAS0079,1XBO,A,41,18,1,True,False,11.238997909066448,15.758468273053806,2.0,3.0,0,False
+CAS_1XTU,casbench,curated_allosteric,CAS0050,1XTU,A,27,25,1,True,False,0.0,10.660006660410676,0.0,2.0,0,False
+CAS_1XTV,casbench,curated_allosteric,CAS0050,1XTV,A,27,25,1,True,False,0.0,10.595992874667289,0.0,2.0,0,False
+CAS_1YBA,casbench,curated_allosteric,CAS0040,1YBA,A,45,15,1,True,False,22.66274641344248,32.98268932334051,4.0,6.0,0,True
+CAS_2AZR,casbench,curated_allosteric,CAS0079,2AZR,A,41,18,1,True,False,11.377195700171459,15.872606204788578,2.0,3.0,0,False
+CAS_2B07,casbench,curated_allosteric,CAS0079,2B07,A,41,18,1,True,False,11.377598208760935,15.83908935641227,2.0,3.0,0,False
+CAS_2B54,casbench,curated_allosteric,CAS0091,2B54,A,41,26,1,True,False,3.727704655682905,6.892008068666308,1.0,1.0,0,False
+CAS_2BGE,casbench,curated_allosteric,CAS0079,2BGE,A,41,18,1,True,False,11.37033530728096,15.952986388884588,2.0,3.0,0,False
+CAS_2BK3,casbench,curated_allosteric,CAS0086,2BK3,A,46,17,1,True,False,4.908906802945027,11.974494603113733,1.0,2.0,0,False
+CAS_2BK4,casbench,curated_allosteric,CAS0086,2BK4,A,46,17,1,True,False,4.846126391253119,11.917223711922164,1.0,2.0,0,False
+CAS_2BK5,casbench,curated_allosteric,CAS0086,2BK5,A,46,17,1,True,False,4.864600703038228,11.931972301342308,1.0,2.0,0,False
+CAS_2BYB,casbench,curated_allosteric,CAS0086,2BYB,A,46,17,1,True,False,4.798089828254572,11.813616423432752,1.0,2.0,0,False
+CAS_2C2S,casbench,curated_allosteric,CAS0060,2C2S,A,20,30,1,True,False,3.7720923901728614,6.085350675358741,1.0,1.0,0,False
+CAS_2C2T,casbench,curated_allosteric,CAS0060,2C2T,A,20,30,1,True,False,3.81106533662177,6.0815376684358196,1.0,1.0,0,False
+CAS_2C64,casbench,curated_allosteric,CAS0086,2C64,A,46,17,1,True,False,4.872887542309998,11.853523948598571,1.0,2.0,0,False
+CAS_2C65,casbench,curated_allosteric,CAS0086,2C65,A,46,17,1,True,False,4.823486291055467,11.722472861986072,1.0,2.0,0,False
+CAS_2C66,casbench,curated_allosteric,CAS0086,2C66,A,46,17,1,True,False,4.826303554481431,11.619617248429488,1.0,2.0,0,False
+CAS_2C67,casbench,curated_allosteric,CAS0086,2C67,A,46,17,1,True,False,4.84686795776407,11.766063870300897,1.0,2.0,0,False
+CAS_2C70,casbench,curated_allosteric,CAS0086,2C70,A,46,17,1,True,False,4.854819976065025,11.862762831650974,1.0,2.0,0,False
+CAS_2C72,casbench,curated_allosteric,CAS0086,2C72,A,46,17,1,True,False,4.820218459779597,11.287600187816718,1.0,2.0,0,False
+CAS_2C73,casbench,curated_allosteric,CAS0086,2C73,A,46,17,1,True,False,4.889240636336082,11.96626491433313,1.0,2.0,0,False
+CAS_2C75,casbench,curated_allosteric,CAS0086,2C75,A,46,17,1,True,False,4.863198227504198,11.729911849626149,1.0,2.0,0,False
+CAS_2C76,casbench,curated_allosteric,CAS0086,2C76,A,46,17,1,True,False,4.848468005463168,11.527100936488756,1.0,2.0,0,False
+CAS_2CCH,casbench,curated_allosteric,CAS0091,2CCH,A,41,26,1,True,False,3.7716810575657105,6.6883962529828125,1.0,1.0,0,False
+CAS_2CM7,casbench,curated_allosteric,CAS0079,2CM7,A,41,18,1,True,False,11.450230958369357,15.89075298550512,2.0,3.0,0,False
+CAS_2CMA,casbench,curated_allosteric,CAS0079,2CMA,A,41,18,1,True,False,11.307715109605475,15.734684101456482,2.0,3.0,0,False
+CAS_2DHF,casbench,curated_allosteric,CAS0060,2DHF,A,20,30,1,True,False,3.778563748304371,6.1822720815645855,1.0,1.0,0,False
+CAS_2EWN,casbench,curated_allosteric,CAS0011,2EWN,A,33,5,1,True,False,3.7826616290649078,3.828300667398003,1.0,1.0,0,False
+CAS_2H4G,casbench,curated_allosteric,CAS0079,2H4G,A,41,18,1,True,False,11.242505459193692,15.853499417368091,2.0,3.0,0,False
+CAS_2H4K,casbench,curated_allosteric,CAS0079,2H4K,A,41,18,1,True,False,11.49544735971593,15.982007603563153,2.0,3.0,0,False
+CAS_2H4W,casbench,curated_allosteric,CAS0070,2H4W,B,14,5,1,True,False,5.365103913252755,9.636009339970565,1.0,2.0,0,False
+CAS_2H4Y,casbench,curated_allosteric,CAS0070,2H4Y,B,14,5,1,True,False,5.572856897498804,9.659832762527516,1.0,2.0,0,False
+CAS_2H51,casbench,curated_allosteric,CAS0070,2H51,B,14,5,1,True,False,5.492484410537727,9.67665097024792,1.0,2.0,0,False
+CAS_2H54,casbench,curated_allosteric,CAS0070,2H54,B,14,5,1,True,False,5.372031831625722,9.649556932833757,1.0,2.0,0,False
+CAS_2HB1,casbench,curated_allosteric,CAS0079,2HB1,A,41,18,1,True,False,11.337347573396523,15.946178976196947,2.0,3.0,0,False
+CAS_2HBQ,casbench,curated_allosteric,CAS0070,2HBQ,B,14,5,1,True,False,5.300665335597033,9.506856788655227,1.0,2.0,0,False
+CAS_2HBR,casbench,curated_allosteric,CAS0070,2HBR,B,14,5,1,True,False,5.389294016844878,9.57662591939353,1.0,2.0,0,False
+CAS_2HBY,casbench,curated_allosteric,CAS0070,2HBY,B,14,5,1,True,False,5.372779634416435,9.577524366975009,1.0,2.0,0,False
+CAS_2HBZ,casbench,curated_allosteric,CAS0070,2HBZ,B,14,5,1,True,False,5.5557582740792455,9.724248608504418,1.0,2.0,0,False
+CAS_2HIM,casbench,curated_allosteric,CAS0030,2HIM,A,14,12,1,True,False,5.257272486755846,10.335653634608718,1.0,2.0,0,False
+CAS_2JFX,casbench,curated_allosteric,CAS0054,2JFX,A,17,15,1,True,False,4.740355788334878,9.87530095743922,1.0,2.0,0,False
+CAS_2JFY,casbench,curated_allosteric,CAS0054,2JFY,A,17,15,1,True,False,4.8816817798787335,9.709503025387034,1.0,2.0,0,False
+CAS_2JFZ,casbench,curated_allosteric,CAS0054,2JFZ,A,17,15,1,True,False,5.056017998385685,10.640348772479218,1.0,2.0,0,False
+CAS_2NT7,casbench,curated_allosteric,CAS0079,2NT7,A,41,18,1,True,False,11.386660045860683,15.936847632212665,2.0,3.0,0,False
+CAS_2NTA,casbench,curated_allosteric,CAS0079,2NTA,A,41,18,1,True,False,11.248839984638419,15.85668406901701,2.0,3.0,0,False
+CAS_2P2D,casbench,curated_allosteric,CAS0030,2P2D,A,14,12,1,True,False,5.275058483088125,10.311402635824859,1.0,2.0,0,False
+CAS_2P9C,casbench,curated_allosteric,CAS0040,2P9C,A,45,11,2,True,False,22.452989311002664,27.490171188990438,4.0,5.0,0,True
+CAS_2P9E,casbench,curated_allosteric,CAS0040,2P9E,A,45,15,1,True,False,22.47785572513535,33.09923736281548,4.0,6.0,0,True
+CAS_2P9G,casbench,curated_allosteric,CAS0040,2P9G,A,45,11,1,True,False,22.72317867288817,27.392727246479126,4.0,5.0,0,True
+CAS_2PA3,casbench,curated_allosteric,CAS0040,2PA3,A,45,11,1,True,False,22.657664597217426,27.713440078777662,4.0,5.0,0,True
+CAS_2PSQ,casbench,curated_allosteric,CAS0067,2PSQ,A,9,28,1,True,False,5.492286682248113,16.849060872046323,1.0,4.0,0,False
+CAS_2QBP,casbench,curated_allosteric,CAS0079,2QBP,A,41,18,1,True,False,11.354859136070338,15.90222304661561,2.0,3.0,0,False
+CAS_2QBQ,casbench,curated_allosteric,CAS0079,2QBQ,A,41,18,1,True,False,11.374814372111748,15.995389043053471,2.0,3.0,0,False
+CAS_2QBR,casbench,curated_allosteric,CAS0079,2QBR,A,41,18,1,True,False,11.389393706427045,15.89095711404445,2.0,3.0,0,False
+CAS_2QBS,casbench,curated_allosteric,CAS0079,2QBS,A,41,18,1,True,False,11.376629070159579,15.95515954014172,2.0,3.0,0,False
+CAS_2V5Z,casbench,curated_allosteric,CAS0086,2V5Z,A,46,17,1,True,False,4.930186000548048,11.981839508189049,1.0,2.0,0,False
+CAS_2V60,casbench,curated_allosteric,CAS0086,2V60,A,46,17,1,True,False,4.920819139127148,11.891073710981694,1.0,2.0,0,False
+CAS_2V61,casbench,curated_allosteric,CAS0086,2V61,A,46,17,1,True,False,4.8307695039196386,11.872171410487642,1.0,2.0,0,False
+CAS_2VEU,casbench,curated_allosteric,CAS0079,2VEU,A,41,18,1,True,False,11.307712854507757,15.959718829474362,2.0,3.0,0,False
+CAS_2VEY,casbench,curated_allosteric,CAS0079,2VEY,A,41,18,1,True,False,11.365504212308398,15.866323001899922,2.0,3.0,0,False
+CAS_2VRL,casbench,curated_allosteric,CAS0086,2VRL,A,46,17,1,True,False,4.9469337978186045,11.700593617419592,1.0,2.0,0,False
+CAS_2VRM,casbench,curated_allosteric,CAS0086,2VRM,A,46,17,1,True,False,4.875773682196501,11.636606764860623,1.0,2.0,0,False
+CAS_2VZ2,casbench,curated_allosteric,CAS0086,2VZ2,A,46,17,1,True,False,4.884603771034044,11.783262578759748,1.0,2.0,0,False
+CAS_2W3A,casbench,curated_allosteric,CAS0060,2W3A,A,20,30,1,True,False,3.8006253432823405,5.965637560678699,1.0,1.0,0,False
+CAS_2W3M,casbench,curated_allosteric,CAS0060,2W3M,A,20,30,1,True,False,3.8123803587784892,6.09342346001978,1.0,1.0,0,False
+CAS_2XCG,casbench,curated_allosteric,CAS0086,2XCG,A,46,17,1,True,False,4.904924056496691,11.657525723754592,1.0,2.0,0,False
+CAS_2XFN,casbench,curated_allosteric,CAS0086,2XFN,A,46,17,1,True,False,4.891493841353575,11.81764096594578,1.0,2.0,0,False
+CAS_2XFO,casbench,curated_allosteric,CAS0086,2XFO,A,46,17,1,True,False,4.765747055814013,11.72650625719357,1.0,2.0,0,False
+CAS_2XFP,casbench,curated_allosteric,CAS0086,2XFP,A,46,17,1,True,False,4.873856481268195,11.851391521673733,1.0,2.0,0,False
+CAS_2XFQ,casbench,curated_allosteric,CAS0086,2XFQ,A,46,17,1,True,False,4.845780329317468,11.797081418723868,1.0,2.0,0,False
+CAS_2XFU,casbench,curated_allosteric,CAS0086,2XFU,A,46,17,1,True,False,4.925017867987895,11.606832212106793,1.0,2.0,0,False
+CAS_2YM4,casbench,curated_allosteric,CAS0015,2YM4,A,5,21,1,True,False,0.0,10.96267654361835,0.0,2.0,0,False
+CAS_2YM8,casbench,curated_allosteric,CAS0015,2YM8,A,5,21,1,True,False,0.0,10.90074887335728,0.0,2.0,0,False
+CAS_2Z60,casbench,curated_allosteric,CAS0052,2Z60,A,7,62,1,True,False,3.777007413283696,11.139570304784003,1.0,2.0,0,False
+CAS_2ZN7,casbench,curated_allosteric,CAS0079,2ZN7,A,41,18,1,True,False,11.383480882401482,15.941083081042297,2.0,3.0,0,False
+CAS_3BCM,casbench,curated_allosteric,CAS0051,3BCM,A,29,8,1,True,False,6.713390797503151,9.6661782907318,1.0,2.0,0,False
+CAS_3CSM,casbench,curated_allosteric,CAS0016,3CSM,A,18,18,1,True,False,8.50650504026183,20.15228692928348,2.0,4.0,0,False
+CAS_3D6F,casbench,curated_allosteric,CAS0070,3D6F,B,14,5,1,True,False,5.39685788213846,9.578435415035164,1.0,2.0,0,False
+CAS_3D6H,casbench,curated_allosteric,CAS0070,3D6H,B,14,5,1,True,False,5.474365168674809,9.594379344178545,1.0,2.0,0,False
+CAS_3D6M,casbench,curated_allosteric,CAS0070,3D6M,B,14,5,1,True,False,5.2980090600148975,9.548344202006962,1.0,2.0,0,False
+CAS_3DAU,casbench,curated_allosteric,CAS0061,3DAU,A,20,37,1,True,False,2.971907468276898,7.118290946568566,1.0,1.0,0,False
+CAS_3DDN,casbench,curated_allosteric,CAS0039,3DDN,A,14,11,1,True,False,42.3091169134975,47.01810193957216,9.0,10.0,0,True
+CAS_3DJO,casbench,curated_allosteric,CAS0051,3DJO,A,29,8,1,True,False,6.702969565796938,9.802777348983252,1.0,2.0,0,False
+CAS_3DJP,casbench,curated_allosteric,CAS0051,3DJP,A,29,8,1,True,False,6.723066934071086,9.849334795683454,1.0,2.0,0,False
+CAS_3DJQ,casbench,curated_allosteric,CAS0051,3DJQ,A,29,8,1,True,False,6.793805119371617,9.900806308251832,1.0,2.0,0,False
+CAS_3DJV,casbench,curated_allosteric,CAS0051,3DJV,A,29,8,1,True,False,6.763562818515106,9.873952737716909,1.0,2.0,0,False
+CAS_3DJX,casbench,curated_allosteric,CAS0051,3DJX,A,29,8,1,True,False,6.793333644095511,9.927533946542809,1.0,2.0,0,False
+CAS_3F8Y,casbench,curated_allosteric,CAS0060,3F8Y,A,20,30,1,True,False,3.787751443798814,6.029590693482931,1.0,1.0,0,False
+CAS_3F8Z,casbench,curated_allosteric,CAS0060,3F8Z,A,20,30,1,True,False,3.8222188582026537,5.98011749492682,1.0,1.0,0,False
+CAS_3FS6,casbench,curated_allosteric,CAS0060,3FS6,A,20,30,1,True,False,3.7972345200158495,6.01038766260791,1.0,1.0,0,False
+CAS_3GHC,casbench,curated_allosteric,CAS0060,3GHC,A,20,30,1,True,False,3.7542153640940734,5.950078889085434,1.0,1.0,0,False
+CAS_3GHW,casbench,curated_allosteric,CAS0060,3GHW,A,20,30,1,True,False,3.8130579591713523,5.940464163309812,1.0,1.0,0,False
+CAS_3GI2,casbench,curated_allosteric,CAS0060,3GI2,A,20,30,1,True,False,3.8107891571169348,5.938287506183445,1.0,1.0,0,False
+CAS_3GYF,casbench,curated_allosteric,CAS0060,3GYF,A,20,30,1,True,False,3.8051484859332363,5.926975131669932,1.0,1.0,0,False
+CAS_3HMI,casbench,curated_allosteric,CAS0056,3HMI,A,22,17,1,True,False,9.099423992759101,18.288170739579176,2.0,3.0,0,False
+CAS_3I1Y,casbench,curated_allosteric,CAS0002,3I1Y,A,55,30,1,True,False,36.978440921704625,45.627608444837605,7.0,9.0,0,True
+CAS_3I28,casbench,curated_allosteric,CAS0002,3I28,A,55,30,1,True,False,37.00872748420297,45.65713682890372,8.0,9.0,0,True
+CAS_3ION,casbench,curated_allosteric,CAS0003,3ION,A,32,17,1,True,False,0.0,6.221905978074567,0.0,1.0,0,False
+CAS_3IOP,casbench,curated_allosteric,CAS0003,3IOP,A,32,17,1,True,False,0.0,6.261438253308901,0.0,1.0,0,False
+CAS_3KOO,casbench,curated_allosteric,CAS0002,3KOO,A,55,30,1,True,False,36.74607785873208,45.459937897313175,7.0,9.0,0,True
+CAS_3L3R,casbench,curated_allosteric,CAS0060,3L3R,A,20,30,1,True,False,3.8278320234827445,5.97220785074525,1.0,1.0,0,False
+CAS_3L9H,casbench,curated_allosteric,CAS0021,3L9H,A,33,30,1,True,False,3.7999169727771687,9.665683294365968,1.0,2.0,0,False
+CAS_3N0H,casbench,curated_allosteric,CAS0060,3N0H,A,20,30,1,True,False,3.7809456489084847,6.132602856426102,1.0,1.0,0,False
+CAS_3NTZ,casbench,curated_allosteric,CAS0060,3NTZ,A,20,30,1,True,False,3.7646584174397564,5.882726443536598,1.0,1.0,0,False
+CAS_3NU0,casbench,curated_allosteric,CAS0060,3NU0,A,20,30,1,True,False,3.7803823880660543,5.9244042056719675,1.0,1.0,0,False
+CAS_3NXR,casbench,curated_allosteric,CAS0060,3NXR,A,20,30,1,True,False,3.75450635903044,5.968473669255973,1.0,1.0,0,False
+CAS_3NXT,casbench,curated_allosteric,CAS0060,3NXT,A,20,30,1,True,False,3.8012342732328395,6.1468499027398735,1.0,1.0,0,False
+CAS_3NXV,casbench,curated_allosteric,CAS0060,3NXV,A,20,30,1,True,False,3.798990787038052,6.031579385881283,1.0,1.0,0,False
+CAS_3NXX,casbench,curated_allosteric,CAS0060,3NXX,A,20,30,1,True,False,3.7634353986749924,5.935653575237815,1.0,1.0,0,False
+CAS_3NXY,casbench,curated_allosteric,CAS0060,3NXY,A,20,30,1,True,False,3.798792702951821,6.1035919938458125,1.0,1.0,0,False
+CAS_3NZD,casbench,curated_allosteric,CAS0060,3NZD,A,20,30,1,True,False,3.8079024409771844,6.005802223226353,1.0,1.0,0,False
+CAS_3OAF,casbench,curated_allosteric,CAS0060,3OAF,A,20,30,1,True,False,3.7734341123173203,6.141783120716334,1.0,1.0,0,False
+CAS_3OB7,casbench,curated_allosteric,CAS0080,3OB7,A,18,8,1,True,False,3.776243768614522,9.271689737652075,1.0,2.0,0,False
+CAS_3OTQ,casbench,curated_allosteric,CAS0002,3OTQ,A,55,30,1,True,False,36.5013314962619,45.79304175691848,8.0,9.0,0,True
+CAS_3PO7,casbench,curated_allosteric,CAS0086,3PO7,A,46,17,1,True,False,4.851877677765587,11.837371076383468,1.0,2.0,0,False
+CAS_3RI1,casbench,curated_allosteric,CAS0067,3RI1,A,9,28,1,True,False,5.567155377749034,16.904019145927933,1.0,4.0,0,False
+CAS_3RWP,casbench,curated_allosteric,CAS0003,3RWP,A,32,17,1,True,False,0.0,6.265093774238337,0.0,1.0,0,False
+CAS_3S3V,casbench,curated_allosteric,CAS0060,3S3V,A,20,30,1,True,False,3.8069142359659223,6.20304037360108,1.0,1.0,0,False
+CAS_3S7A,casbench,curated_allosteric,CAS0060,3S7A,A,20,30,1,True,False,3.769920556192132,5.995526409178152,1.0,1.0,0,False
+CAS_3ZYX,casbench,curated_allosteric,CAS0086,3ZYX,A,46,17,1,True,False,4.8102783703232745,11.952951560179608,1.0,2.0,0,False
+CAS_4A79,casbench,curated_allosteric,CAS0086,4A79,A,46,17,1,True,False,4.8885907989931106,11.989799914927692,1.0,2.0,0,False
+CAS_4A7A,casbench,curated_allosteric,CAS0086,4A7A,A,46,17,1,True,False,4.9005165033902305,11.943506562144972,1.0,2.0,0,False
+CAS_4ALD,casbench,curated_allosteric,CAS0024,4ALD,A,32,1,1,True,False,11.6800535101514,11.6800535101514,2.0,2.0,0,False
+CAS_4B1F,casbench,curated_allosteric,CAS0054,4B1F,A,17,15,1,True,False,5.111995402971328,10.764942545132323,1.0,2.0,0,False
+CAS_4CRT,casbench,curated_allosteric,CAS0086,4CRT,A,46,17,1,True,False,4.778881982221372,11.803737458957647,1.0,2.0,0,False
+CAS_4CSM,casbench,curated_allosteric,CAS0016,4CSM,A,18,18,1,True,False,8.454162347624981,19.577853233100207,2.0,4.0,0,False
+CAS_4DDR,casbench,curated_allosteric,CAS0060,4DDR,A,20,30,1,True,False,3.7933054187607937,6.013400811320329,1.0,1.0,0,False
+CAS_4EJ1,casbench,curated_allosteric,CAS0061,4EJ1,A,20,37,1,True,False,2.7410293686861498,6.68276177938433,1.0,1.0,0,False
+CAS_4EY5,casbench,curated_allosteric,CAS0004,4EY5,A,14,12,1,True,False,3.7845637793542353,7.100758193464292,1.0,1.0,0,False
+CAS_4EZ7,casbench,curated_allosteric,CAS0091,4EZ7,A,41,26,1,True,False,3.7851063393252242,6.717898616663142,1.0,1.0,0,False
+CAS_4FHB,casbench,curated_allosteric,CAS0061,4FHB,A,20,37,1,True,False,2.763783095686056,7.274419083335796,1.0,1.0,0,False
+CAS_4FST,casbench,curated_allosteric,CAS0015,4FST,A,5,21,1,True,False,0.0,10.79402455064838,0.0,2.0,0,False
+CAS_4FSY,casbench,curated_allosteric,CAS0015,4FSY,A,5,21,1,True,False,0.0,10.84175673034587,0.0,2.0,0,False
+CAS_4FT3,casbench,curated_allosteric,CAS0015,4FT3,A,5,21,1,True,False,0.0,10.84792588470257,0.0,2.0,0,False
+CAS_4FT7,casbench,curated_allosteric,CAS0015,4FT7,A,5,21,1,True,False,0.0,10.812789001918055,0.0,2.0,0,False
+CAS_4FTA,casbench,curated_allosteric,CAS0015,4FTA,A,5,21,1,True,False,0.0,10.846075050450276,0.0,2.0,0,False
+CAS_4FTN,casbench,curated_allosteric,CAS0015,4FTN,A,5,21,1,True,False,0.0,10.801149614740089,0.0,2.0,0,False
+CAS_4FTO,casbench,curated_allosteric,CAS0015,4FTO,A,5,21,1,True,False,0.0,10.847663573323057,0.0,2.0,0,False
+CAS_4FTR,casbench,curated_allosteric,CAS0015,4FTR,A,5,21,1,True,False,0.0,10.79247853831547,0.0,2.0,0,False
+CAS_4FTU,casbench,curated_allosteric,CAS0015,4FTU,A,5,21,1,True,False,0.0,10.787435561800589,0.0,2.0,0,False
+CAS_4G6B,casbench,curated_allosteric,CAS0001,4G6B,A,17,18,1,True,False,13.374747735938797,19.365195602619103,3.0,4.0,0,True
+CAS_4G95,casbench,curated_allosteric,CAS0060,4G95,A,20,30,1,True,False,3.7497402576711893,6.0675970001411805,1.0,1.0,0,False
+CAS_4GH2,casbench,curated_allosteric,CAS0015,4GH2,A,5,21,1,True,False,0.0,10.778405865432978,0.0,2.0,0,False
+CAS_4I13,casbench,curated_allosteric,CAS0061,4I13,A,20,37,1,True,False,2.8724165784231226,6.891409434941449,1.0,1.0,0,False
+CAS_4I1N,casbench,curated_allosteric,CAS0061,4I1N,A,20,37,1,True,False,2.832440996737619,6.827725096985084,1.0,1.0,0,False
+CAS_4I8N,casbench,curated_allosteric,CAS0079,4I8N,A,41,18,1,True,False,11.419853457903915,15.982296921075068,2.0,3.0,0,False
+CAS_4JAD,casbench,curated_allosteric,CAS0001,4JAD,A,17,18,1,True,False,13.389170661396474,19.540933231320487,3.0,4.0,0,True
+CAS_4JAE,casbench,curated_allosteric,CAS0001,4JAE,A,17,18,1,True,False,13.264530485471395,19.213590351349957,3.0,4.0,0,True
+CAS_4JAF,casbench,curated_allosteric,CAS0001,4JAF,A,17,18,1,True,False,13.377533517057623,19.518837336315478,3.0,4.0,0,True
+CAS_4JAG,casbench,curated_allosteric,CAS0001,4JAG,A,17,18,1,True,False,13.358425131728668,19.578228286419456,3.0,4.0,0,True
+CAS_4KD7,casbench,curated_allosteric,CAS0060,4KD7,A,20,30,1,True,False,3.789266287818792,5.850328933594321,1.0,1.0,0,False
+CAS_4KEB,casbench,curated_allosteric,CAS0060,4KEB,A,20,30,1,True,False,3.8086782484216224,5.930263743402454,1.0,1.0,0,False
+CAS_4KJJ,casbench,curated_allosteric,CAS0061,4KJJ,A,20,37,1,True,False,2.9389613811685242,7.155142276712602,1.0,1.0,0,False
+CAS_4KJL,casbench,curated_allosteric,CAS0061,4KJL,A,20,37,1,True,False,3.777626106432451,8.2044533029325,1.0,2.0,0,False
+CAS_4M6K,casbench,curated_allosteric,CAS0060,4M6K,A,20,30,1,True,False,3.7715168036215876,6.035456027026932,1.0,1.0,0,False
+CAS_4M6L,casbench,curated_allosteric,CAS0060,4M6L,A,20,30,1,True,False,3.7904313738676225,5.996290853745927,1.0,1.0,0,False
+CAS_4N4C,casbench,curated_allosteric,CAS0051,4N4C,A,29,7,1,True,False,6.796936442251023,9.966482278115986,1.0,2.0,0,False
+CAS_4P3R,casbench,curated_allosteric,CAS0061,4P3R,A,20,37,1,True,False,2.892806595678321,6.982392569886056,1.0,1.0,0,False
+CAS_4QJC,casbench,curated_allosteric,CAS0060,4QJC,A,20,30,1,True,False,3.7966951418305896,6.0135613919728135,1.0,1.0,0,False
+CAS_4QLE,casbench,curated_allosteric,CAS0061,4QLE,A,20,37,1,True,False,2.881365127851723,7.285826377288987,1.0,1.0,0,False
+CAS_4QLG,casbench,curated_allosteric,CAS0061,4QLG,A,20,37,1,True,False,2.9028761599489554,7.35780198157031,1.0,1.0,0,False
+CAS_4R1R,casbench,curated_allosteric,CAS0047,4R1R,A,29,25,1,True,False,3.8125808843878946,18.952511337551016,1.0,4.0,0,False
+CAS_4RQK,casbench,curated_allosteric,CAS0003,4RQK,A,32,17,1,True,False,0.0,6.32201273329942,0.0,1.0,0,False
+CAS_4RQV,casbench,curated_allosteric,CAS0003,4RQV,A,32,17,1,True,False,0.0,6.250710279640228,0.0,1.0,0,False
+CAS_4RRV,casbench,curated_allosteric,CAS0003,4RRV,A,32,17,1,True,False,0.0,6.296767186421935,0.0,1.0,0,False
+CAS_4X5F,casbench,curated_allosteric,CAS0061,4X5F,A,20,37,1,True,False,2.906927759680313,7.4336204503592995,1.0,1.0,0,False
+CAS_4X5G,casbench,curated_allosteric,CAS0061,4X5G,A,20,37,1,True,False,2.845461122559927,7.33381551445085,1.0,1.0,0,False
+CAS_4X5H,casbench,curated_allosteric,CAS0061,4X5H,A,20,37,1,True,False,2.8066955659636483,7.347504678460575,1.0,1.0,0,False
+CAS_4X5I,casbench,curated_allosteric,CAS0061,4X5I,A,20,37,1,True,False,2.912341154466625,7.305792907001949,1.0,1.0,0,False
+CAS_4X5J,casbench,curated_allosteric,CAS0061,4X5J,A,20,37,1,True,False,2.911235133066378,7.193518471513087,1.0,1.0,0,False
+CAS_4XX9,casbench,curated_allosteric,CAS0003,4XX9,A,32,17,1,True,False,0.0,6.336090434960661,0.0,1.0,0,False
+CAS_4ZHI,casbench,curated_allosteric,CAS0021,4ZHI,A,33,30,1,True,False,3.7757497268754467,9.916187881878393,1.0,2.0,0,False
+CAS_5AHX,casbench,curated_allosteric,CAS0002,5AHX,A,55,30,1,True,False,37.33393540734755,45.69123337239218,8.0,9.0,0,True
+CAS_5AI4,casbench,curated_allosteric,CAS0002,5AI4,A,55,30,1,True,False,36.9001980888992,45.511088666255844,8.0,9.5,0,True
+CAS_5AI5,casbench,curated_allosteric,CAS0002,5AI5,A,55,30,1,True,False,37.048566436503314,45.93554350636332,8.0,9.5,0,True
+CAS_5AIA,casbench,curated_allosteric,CAS0002,5AIA,A,55,30,1,True,False,36.699718336793815,45.591584174776926,8.0,9.0,0,True
+CAS_5AK4,casbench,curated_allosteric,CAS0002,5AK4,A,55,30,1,True,False,37.10346126711092,46.189469023679216,8.0,9.0,0,True
+CAS_5AK5,casbench,curated_allosteric,CAS0002,5AK5,A,55,30,1,True,False,36.93713586622547,45.70180813097553,7.0,9.0,0,True
+CAS_5AKE,casbench,curated_allosteric,CAS0002,5AKE,A,55,30,1,True,False,36.8657866049268,45.727113218810196,7.0,9.0,0,True
+CAS_5AKH,casbench,curated_allosteric,CAS0002,5AKH,A,55,30,1,True,False,36.859089109743344,45.691437007281635,8.0,9.0,0,True
+CAS_5AKX,casbench,curated_allosteric,CAS0002,5AKX,A,55,30,1,True,False,37.25281017587801,46.22314701565568,8.0,9.0,0,True
+CAS_5AKY,casbench,curated_allosteric,CAS0002,5AKY,A,55,30,1,True,False,36.848586119415764,45.50435427810579,7.0,9.0,0,True
+CAS_5ALD,casbench,curated_allosteric,CAS0002,5ALD,A,55,30,1,True,False,36.851225013559585,45.729020887105406,7.0,9.0,0,True
+CAS_5ALF,casbench,curated_allosteric,CAS0002,5ALF,A,55,30,1,True,False,37.39133478494716,45.966892423605465,8.0,9.5,0,True
+CAS_5ALH,casbench,curated_allosteric,CAS0002,5ALH,A,55,30,1,True,False,36.94590951648098,45.64567538793878,8.0,9.0,0,True
+CAS_5ALM,casbench,curated_allosteric,CAS0002,5ALM,A,55,30,1,True,False,37.098403860543655,45.675961432158154,7.0,9.0,0,True
+CAS_5ALN,casbench,curated_allosteric,CAS0002,5ALN,A,55,30,1,True,False,36.94024064621128,45.852718250872925,7.0,9.0,0,True
+CAS_5ALO,casbench,curated_allosteric,CAS0002,5ALO,A,55,30,1,True,False,37.02329757058385,45.80405539139871,7.0,9.0,0,True
+CAS_5ALT,casbench,curated_allosteric,CAS0002,5ALT,A,55,30,1,True,False,36.85529738043094,45.45734057603956,7.0,9.0,0,True
+CAS_5ALU,casbench,curated_allosteric,CAS0002,5ALU,A,55,30,1,True,False,37.2114591087208,45.41972571677587,8.0,9.0,0,True
+CAS_5ALV,casbench,curated_allosteric,CAS0002,5ALV,A,55,30,1,True,False,37.01236011118448,45.99299772571398,7.0,9.0,0,True
+CAS_5ALW,casbench,curated_allosteric,CAS0002,5ALW,A,55,30,1,True,False,36.78439692315207,45.59187605638165,7.0,9.0,0,True
+CAS_5ALY,casbench,curated_allosteric,CAS0002,5ALY,A,55,30,1,True,False,36.91201485966325,45.68367330903574,8.0,9.0,0,True
+CAS_5AM0,casbench,curated_allosteric,CAS0002,5AM0,A,55,30,1,True,False,36.96752085277021,45.759787505006855,8.0,9.0,0,True
+CAS_5AM4,casbench,curated_allosteric,CAS0002,5AM4,A,55,30,1,True,False,36.67727649376382,45.3675591590697,7.0,9.0,0,True
+CAS_5AM5,casbench,curated_allosteric,CAS0002,5AM5,A,55,30,1,True,False,36.87025193838523,45.686641010573524,8.0,9.0,0,True
+CAS_5CC9,casbench,curated_allosteric,CAS0061,5CC9,A,20,37,1,True,False,2.8965265405309157,6.636595889460198,1.0,1.0,0,False
+CAS_5CCC,casbench,curated_allosteric,CAS0061,5CCC,A,20,37,1,True,False,2.844022151812463,6.633199831152383,1.0,1.0,0,False
+CAS_5HF6,casbench,curated_allosteric,CAS0004,5HF6,A,14,12,1,True,False,3.800982241473901,6.72611110513989,1.0,1.0,0,False
+CAS_5HF8,casbench,curated_allosteric,CAS0004,5HF8,A,14,12,1,True,False,3.760783030168054,6.318391397823842,1.0,1.0,0,False
+CAS_5HF9,casbench,curated_allosteric,CAS0004,5HF9,A,14,12,1,True,False,3.765897237047236,6.974126445592415,1.0,1.0,0,False
+CAS_5HFA,casbench,curated_allosteric,CAS0004,5HFA,A,14,12,1,True,False,3.7728217556624646,6.8526637756132045,1.0,1.0,0,False
+CAS_5HPB,casbench,curated_allosteric,CAS0060,5HPB,A,20,30,1,True,False,3.73272688526766,5.923701705679649,1.0,1.0,0,False
+CAS_5HQY,casbench,curated_allosteric,CAS0060,5HQY,A,20,30,1,True,False,3.7925955492248318,5.956969791955695,1.0,1.0,0,False
+CAS_5HQZ,casbench,curated_allosteric,CAS0060,5HQZ,A,20,30,1,True,False,3.8167652534574357,5.9360958188930635,1.0,1.0,0,False
+CAS_5HS3,casbench,curated_allosteric,CAS0080,5HS3,A,18,8,1,True,False,3.7318975066311766,8.871782122416647,1.0,2.0,0,False
+CAS_5HSR,casbench,curated_allosteric,CAS0060,5HSR,A,20,30,1,True,False,3.7645245383713464,6.0156915877452235,1.0,1.0,0,False
+CAS_5HSU,casbench,curated_allosteric,CAS0060,5HSU,A,20,30,1,True,False,3.785086788965347,5.906720200888742,1.0,1.0,0,False
+CAS_5HT4,casbench,curated_allosteric,CAS0060,5HT4,A,20,30,1,True,False,3.801141275985411,5.978507014912113,1.0,1.0,0,False
+CAS_5HT5,casbench,curated_allosteric,CAS0060,5HT5,A,20,30,1,True,False,3.8270022210602392,6.0177355088491815,1.0,1.0,0,False
+CAS_5HUI,casbench,curated_allosteric,CAS0060,5HUI,A,20,30,1,True,False,3.7607852903349848,5.927892146706412,1.0,1.0,0,False
+CAS_5HVB,casbench,curated_allosteric,CAS0060,5HVB,A,20,30,1,True,False,3.801361335100887,5.979664090003892,1.0,1.0,0,False
+CAS_5HVE,casbench,curated_allosteric,CAS0060,5HVE,A,20,30,1,True,False,3.773403370963671,6.0514806388423725,1.0,1.0,0,False
+CAS_5MRL,casbench,curated_allosteric,CAS0086,5MRL,A,46,17,1,True,False,4.8496861754138205,11.813227713034234,1.0,2.0,0,False
+CAS_5X5Q,casbench,curated_allosteric,CAS0080,5X5Q,A,18,8,1,True,False,3.7842225093141626,9.18202177249755,1.0,2.0,0,False
+CAS_5X67,casbench,curated_allosteric,CAS0080,5X67,A,18,8,1,True,False,3.7490566813533253,8.834658669798884,1.0,2.0,0,False
+CAS_7DFR,casbench,curated_allosteric,CAS0061,7DFR,A,20,37,1,True,False,2.8834762006994263,7.176484585087605,1.0,1.0,0,False
+CB_1A4U,cryptobench,drug_contact,P10807,1A4U,B,26,30,1,True,False,0.0,5.674822385443357,0.0,1.0,0,False
+CB_1AD1,cryptobench,drug_contact,O05701,1AD1,A,9,19,1,True,False,0.0,4.842012907872097,0.0,1.0,0,False
+CB_1AK1,cryptobench,drug_contact,P32396,1AK1,A,15,17,1,True,False,0.0,5.681602766825572,0.0,1.0,0,False
+CB_1ARL,cryptobench,drug_contact,P00730,1ARL,A,12,12,1,True,False,0.0,1.8619610629656036,0.0,0.5,0,False
+CB_1AYL,cryptobench,drug_contact,P22259,1AYL,A,21,9,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1BHS,cryptobench,drug_contact,P14061,1BHS,A,33,31,1,True,False,0.0,4.484642683648274,0.0,1.0,0,False
+CB_1BYI,cryptobench,drug_contact,P13000,1BYI,A,20,22,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1BZJ,cryptobench,drug_contact,P18031,1BZJ,A,14,11,1,True,False,13.684256099620468,18.27706294785899,3.0,4.0,0,True
+CB_1CUZ,cryptobench,drug_contact,P00590,1CUZ,A,3,5,1,True,False,14.330561014838185,17.810641987306354,3.0,3.0,0,True
+CB_1D7K,cryptobench,drug_contact,P11926,1D7K,A,19,16,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1DC6,cryptobench,drug_contact,P0A9B2,1DC6,A,25,10,1,True,False,9.783668739281795,14.81358500596276,2.0,3.0,0,False
+CB_1DKL,cryptobench,drug_contact,P07102,1DKL,A,12,15,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1DPJ,cryptobench,drug_contact,P07267,1DPJ,A,2,26,1,True,False,0.0,10.81304198562616,0.0,2.0,0,False
+CB_1DTE,cryptobench,drug_contact,O59952,1DTE,A,3,17,1,True,False,3.841009502721909,12.764004583201935,1.0,2.0,0,False
+CB_1E3G,cryptobench,drug_contact,P10275,1E3G,A,20,6,1,True,False,9.964054345496116,15.447257939592497,2.0,3.0,0,False
+CB_1E6K,cryptobench,drug_contact,P0AE67,1E6K,A,4,9,1,True,False,0.0,4.777717551299993,0.0,1.0,0,False
+CB_1EFH,cryptobench,drug_contact,Q06520,1EFH,B,19,17,1,True,False,5.874193136082609,11.586481994117113,1.0,2.0,0,False
+CB_1EVY,cryptobench,drug_contact,P90551,1EVY,A,14,33,1,True,False,0.0,3.8063822719217284,0.0,1.0,0,False
+CB_1EZL,cryptobench,drug_contact,P00282,1EZL,C,6,5,1,True,False,10.820010027721786,14.891306591431118,2.0,2.0,0,False
+CB_1FDP,cryptobench,drug_contact,P00746,1FDP,A,3,10,1,True,False,3.811582873295555,11.865072758772182,1.0,2.0,0,False
+CB_1FFH,cryptobench,drug_contact,O07347,1FFH,A,17,10,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1FL1,cryptobench,drug_contact,Q2HRB6,1FL1,B,3,13,1,True,False,5.356530313551861,14.55753203671556,1.0,3.0,0,False
+CB_1FVR,cryptobench,drug_contact,Q02763,1FVR,A,11,23,1,True,False,0.0,7.551581357570082,0.0,1.0,0,False
+CB_1FWK,cryptobench,drug_contact,Q58504,1FWK,C,19,12,1,True,False,5.81562154889742,9.5428244694608,1.0,2.0,0,False
+CB_1G1O,cryptobench,drug_contact,P02766,1G1O,D,3,10,1,True,False,0.0,5.242150961626794,0.0,1.0,0,False
+CB_1G24,cryptobench,drug_contact,P15879,1G24,C,18,21,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1G59,cryptobench,drug_contact,P27000,1G59,A,18,15,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1GQN,cryptobench,drug_contact,P24670,1GQN,A,10,14,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1GQZ,cryptobench,drug_contact,P44859,1GQZ,A,13,18,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1HAV,cryptobench,drug_contact,P08617,1HAV,A,3,11,1,True,False,0.0,5.575097667305927,0.0,1.0,0,False
+CB_1HBQ,cryptobench,drug_contact,P18902,1HBQ,A,1,20,1,True,False,0.0,11.168334339023893,0.0,2.0,0,False
+CB_1HP1,cryptobench,drug_contact,P07024,1HP1,A,8,10,1,True,False,5.059256961254291,12.622659922563473,1.0,2.5,0,False
+CB_1JFL,cryptobench,drug_contact,O58403,1JFL,A,9,21,1,True,False,0.0,3.8119531738991763,0.0,1.0,0,False
+CB_1JLH,cryptobench,drug_contact,P06744,1JLH,A,12,16,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1K0N,cryptobench,drug_contact,O00299,1K0N,A,8,5,1,True,False,14.37255234813914,18.28782723562315,3.0,4.0,0,True
+CB_1K47,cryptobench,drug_contact,Q8DR49,1K47,D,1,14,1,True,False,0.0,13.496735858196153,0.0,3.0,0,False
+CB_1K7K,cryptobench,drug_contact,P52061,1K7K,A,16,24,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1KG5,cryptobench,drug_contact,P17802,1KG5,A,14,13,1,True,False,3.8150031454770774,12.903350611372225,1.0,2.0,0,False
+CB_1KN9,cryptobench,drug_contact,P00803,1KN9,D,2,17,1,True,False,0.0,9.866457672336102,0.0,2.0,0,False
+CB_1KS9,cryptobench,drug_contact,P0A9J4,1KS9,A,16,30,1,True,False,0.0,3.809793664041429,0.0,1.0,0,False
+CB_1KXR,cryptobench,drug_contact,P97571,1KXR,A,3,19,1,True,False,0.0,6.905406215422812,0.0,1.0,0,False
+CB_1L0W,cryptobench,drug_contact,P36419,1L0W,B,12,28,1,True,False,0.0,4.345394572334239,0.0,1.0,0,False
+CB_1LJU,cryptobench,drug_contact,P0A006,1LJU,A,6,10,1,True,False,5.649376160249909,10.951948319303593,1.0,2.0,0,False
+CB_1LUG,cryptobench,drug_contact,P00918,1LUG,A,16,26,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1M5W,cryptobench,drug_contact,P0A794,1M5W,D,13,16,1,True,False,0.0,1.879469273491853,0.0,0.5,0,False
+CB_1MUF,cryptobench,drug_contact,Q8WTS6,1MUF,A,5,15,1,True,False,6.3010245198697605,12.496910138110142,1.0,3.0,0,False
+CB_1N05,cryptobench,drug_contact,O74866,1N05,A,2,20,1,True,False,0.0,7.862426327371477,0.0,1.5,0,False
+CB_1NAW,cryptobench,drug_contact,P33038,1NAW,B,15,12,1,True,False,0.0,6.221486323508826,0.0,1.0,0,False
+CB_1NBF,cryptobench,drug_contact,Q93009,1NBF,B,2,18,1,True,False,3.800116182434426,12.293515678678524,1.0,2.5,0,False
+CB_1NKO,cryptobench,drug_contact,Q9Y286,1NKO,A,6,7,1,True,False,0.0,7.838865223997666,0.0,1.0,0,False
+CB_1NN6,cryptobench,drug_contact,P23946,1NN6,A,3,20,1,True,False,0.0,7.193499735573349,0.0,1.0,0,False
+CB_1NOK,cryptobench,drug_contact,P00489,1NOK,A,12,36,1,True,False,12.428979925963354,25.35489847255858,2.0,5.0,0,True
+CB_1NUL,cryptobench,drug_contact,P0A9M5,1NUL,B,3,8,1,True,False,3.795184975729111,10.861718584251012,1.0,3.5,0,False
+CB_1NWH,cryptobench,drug_contact,P44801,1NWH,B,15,23,1,True,False,0.0,12.82914237195925,0.0,2.0,0,False
+CB_1O24,cryptobench,drug_contact,Q9WYT0,1O24,C,19,10,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1O62,cryptobench,drug_contact,Q9S5Y7,1O62,A,7,17,1,True,False,0.0,5.120117772082979,0.0,1.0,0,False
+CB_1OMX,cryptobench,drug_contact,Q9ES89,1OMX,A,11,19,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1OS2,cryptobench,drug_contact,P39900,1OS2,B,22,11,1,True,False,8.473966839680221,19.26311555797763,3.0,4.0,0,False
+CB_1OSJ,cryptobench,drug_contact,Q5SIY4,1OSJ,A,33,10,1,True,False,0.0,2.6677632484911378,0.0,0.5,0,False
+CB_1P4O,cryptobench,drug_contact,P08069,1P4O,B,11,17,1,True,False,0.0,6.55632732556879,0.0,1.0,0,False
+CB_1P4V,cryptobench,drug_contact,Q47898,1P4V,A,9,16,1,True,False,0.0,1.9020305596914038,0.0,0.5,0,False
+CB_1P74,cryptobench,drug_contact,P43876,1P74,A,22,14,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1PFZ,cryptobench,drug_contact,P46925,1PFZ,C,2,38,1,True,False,0.0,13.689843349473328,0.0,2.5,0,False
+CB_1PTA,cryptobench,drug_contact,P0A434,1PTA,A,6,14,1,True,False,0.0,6.071594541585592,0.0,1.0,0,False
+CB_1PX5,cryptobench,drug_contact,Q29599,1PX5,B,7,15,1,True,False,0.0,3.7913295820859463,0.0,1.0,0,False
+CB_1QRZ,cryptobench,drug_contact,P00747,1QRZ,C,3,20,1,True,False,0.0,7.987358685328299,0.0,1.5,0,False
+CB_1R3M,cryptobench,drug_contact,P00669,1R3M,A,6,24,1,True,False,0.0,8.415336892582788,0.0,2.0,0,False
+CB_1RF5,cryptobench,drug_contact,Q9S400,1RF5,D,12,15,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1RJB,cryptobench,drug_contact,P36888,1RJB,A,11,16,1,True,False,0.0,9.73394699757178,0.0,2.0,0,False
+CB_1RTC,cryptobench,drug_contact,P02879,1RTC,A,21,6,1,True,False,12.718909465830786,14.338280929673719,2.0,3.0,0,True
+CB_1RXD,cryptobench,drug_contact,Q93096,1RXD,C,7,7,1,True,False,15.142657527660065,19.589406882292277,3.0,4.0,0,True
+CB_1S2L,cryptobench,drug_contact,Q8RLY5,1S2L,C,3,6,1,True,False,0.0,5.092845534082273,0.0,1.0,0,False
+CB_1S8C,cryptobench,drug_contact,P09601,1S8C,C,4,15,1,True,False,0.0,5.849981452962051,0.0,1.0,0,False
+CB_1SH0,cryptobench,drug_contact,Q70ET3,1SH0,A,14,15,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1SND,cryptobench,drug_contact,P00644,1SND,B,6,13,1,True,False,0.0,4.802685186434774,0.0,1.0,0,False
+CB_1SUL,cryptobench,drug_contact,P38424,1SUL,A,21,15,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1T9R,cryptobench,drug_contact,O76074,1T9R,A,9,11,1,True,False,3.8455686185530475,11.318235639886632,1.0,3.0,0,False
+CB_1TJV,cryptobench,drug_contact,P24058,1TJV,C,9,11,1,True,False,0.0,3.787043833915842,0.0,1.0,0,False
+CB_1TQD,cryptobench,drug_contact,Q9QZ85,1TQD,A,11,21,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1TQN,cryptobench,drug_contact,P08684,1TQN,A,29,26,1,True,False,0.0,8.33004661890763,0.0,1.5,0,False
+CB_1UKA,cryptobench,drug_contact,P96965,1UKA,A,12,24,1,True,False,0.0,5.023157276782784,0.0,1.0,0,False
+CB_1UMF,cryptobench,drug_contact,P56122,1UMF,A,13,20,1,True,False,0.0,3.7962947392034363,0.0,1.0,0,False
+CB_1VJU,cryptobench,drug_contact,P84155,1VJU,B,8,25,1,True,False,0.0,5.61757857087909,0.0,1.0,0,False
+CB_1VR2,cryptobench,drug_contact,P35968,1VR2,A,11,24,1,True,False,0.0,10.148390338289786,0.0,2.0,0,False
+CB_1VSN,cryptobench,drug_contact,P43235,1VSN,A,20,20,1,True,False,3.80575432733118,12.760562116405058,1.0,2.5,0,False
+CB_1WJG,cryptobench,drug_contact,Q5SJV7,1WJG,A,11,24,1,True,False,0.0,3.785197450420159,0.0,1.0,0,False
+CB_1WXE,cryptobench,drug_contact,P18843,1WXE,A,24,14,1,True,False,5.303120213610096,13.148745942141854,1.0,2.5,0,False
+CB_1X0M,cryptobench,drug_contact,O57946,1X0M,A,14,10,1,True,False,0.0,5.389920364234536,0.0,1.0,0,False
+CB_1X2G,cryptobench,drug_contact,P32099,1X2G,C,6,22,1,True,False,0.0,7.363729817950338,0.0,1.0,0,False
+CB_1XGD,cryptobench,drug_contact,P15121,1XGD,A,19,14,1,True,False,0.0,3.7987458329771693,0.0,1.0,0,False
+CB_1XHX,cryptobench,drug_contact,P03680,1XHX,B,9,15,1,True,False,0.0,3.8035053569043367,0.0,1.0,0,False
+CB_1XJF,cryptobench,drug_contact,O33839,1XJF,A,16,28,1,True,False,0.0,18.649286858936776,0.0,3.5,0,False
+CB_1XQZ,cryptobench,drug_contact,P11309,1XQZ,A,13,21,1,True,False,0.0,3.7860069994652665,0.0,1.0,0,False
+CB_1XTC,cryptobench,drug_contact,P01555,1XTC,A,8,18,1,True,False,0.0,3.79862518422295,0.0,1.0,0,False
+CB_1XXO,cryptobench,drug_contact,O06553,1XXO,A,12,17,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1YHV,cryptobench,drug_contact,Q13153,1YHV,A,14,18,1,True,False,3.782901135372162,11.191480868153299,1.0,2.0,0,False
+CB_1YS0,cryptobench,drug_contact,P30305,1YS0,A,1,7,1,True,False,0.0,6.72690969167864,0.0,1.0,0,False
+CB_1Z7G,cryptobench,drug_contact,P00492,1Z7G,D,15,13,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_1Z90,cryptobench,drug_contact,Q9M9P3,1Z90,B,12,22,1,True,False,0.0,1.9283555818365024,0.0,0.5,0,False
+CB_2AKA,cryptobench,drug_contact,P08799,2AKA,A,8,19,1,True,False,0.0,5.805984929363832,0.0,1.0,0,False
+CB_2AQZ,cryptobench,drug_contact,P05230,2AQZ,B,1,7,1,True,False,3.796327830944001,6.1577288020827945,1.0,1.0,0,False
+CB_2B23,cryptobench,drug_contact,P03372,2B23,B,3,21,1,True,False,0.0,7.489269657316391,0.0,1.0,0,False
+CB_2BVA,cryptobench,drug_contact,O96013,2BVA,A,12,9,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_2BYP,cryptobench,drug_contact,Q8WSF8,2BYP,B,7,13,1,True,False,3.781841086032041,8.789133404380664,1.0,2.0,0,False
+CB_2CAM,cryptobench,drug_contact,P02701,2CAM,A,1,16,1,True,False,0.0,12.024109096376357,0.0,2.5,0,False
+CB_2CI4,cryptobench,drug_contact,P56965,2CI4,A,9,15,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_2CZD,cryptobench,drug_contact,O58462,2CZD,B,26,19,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_2D0T,cryptobench,drug_contact,P14902,2D0T,B,25,5,1,True,False,3.7913191635629926,3.834263423396989,1.0,1.0,0,False
+CB_2DFP,cryptobench,drug_contact,P04058,2DFP,A,17,23,1,True,False,0.0,4.711238053845296,0.0,1.0,0,False
+CB_2DH4,cryptobench,drug_contact,Q12051,2DH4,B,4,8,1,True,False,4.874866664843254,12.401184751302466,1.0,3.0,0,False
+CB_2E2O,cryptobench,drug_contact,Q96Y14,2E2O,A,10,18,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_2E3M,cryptobench,drug_contact,Q9Y5P4,2E3M,A,4,22,1,True,False,0.0,6.584985591225196,0.0,1.0,0,False
+CB_2E64,cryptobench,drug_contact,O57883,2E64,B,19,15,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_2FFY,cryptobench,drug_contact,P00811,2FFY,A,14,15,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_2FRS,cryptobench,drug_contact,P29373,2FRS,B,3,11,1,True,False,0.0,10.86195088370409,0.0,2.0,0,False
+CB_2G5L,cryptobench,drug_contact,P22629,2G5L,A,5,19,1,True,False,0.0,8.112094304185568,0.0,2.0,0,False
+CB_2GCB,cryptobench,drug_contact,P15925,2GCB,A,16,9,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_2GLL,cryptobench,drug_contact,O25928,2GLL,A,4,6,1,True,False,2.897635932963289,7.077185515527022,1.0,1.0,0,False
+CB_2H6D,cryptobench,drug_contact,P54646,2H6D,A,11,20,1,True,False,0.0,9.845226736970982,0.0,2.0,0,False
+CB_2H7G,cryptobench,drug_contact,P32989,2H7G,X,1,5,1,True,False,0.0,11.322116454091079,0.0,2.0,0,False
+CB_2H7S,cryptobench,drug_contact,P00183,2H7S,A,30,8,1,True,False,4.764191851720499,9.260192612068199,1.0,2.0,0,False
+CB_2H98,cryptobench,drug_contact,P07774,2H98,B,2,13,1,True,False,0.0,5.711030029688165,0.0,1.0,0,False
+CB_2HF0,cryptobench,drug_contact,Q9KK62,2HF0,A,3,21,1,True,False,0.0,8.118292061757819,0.0,2.0,0,False
+CB_2HIG,cryptobench,drug_contact,O15648,2HIG,A,22,16,1,True,False,0.0,3.795531899531631,0.0,1.0,0,False
+CB_2HYY,cryptobench,drug_contact,P00519,2HYY,A,25,38,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_2I1W,cryptobench,drug_contact,Q8Y8D7,2I1W,B,14,18,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_2I3R,cryptobench,drug_contact,P23467,2I3R,A,9,15,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_2IDJ,cryptobench,drug_contact,P13255,2IDJ,D,20,21,1,True,False,0.0,4.907670526838573,0.0,1.0,0,False
+CB_2J5I,cryptobench,drug_contact,O69762,2J5I,J,10,17,1,True,False,0.0,3.7867862363751135,0.0,1.0,0,False
+CB_2JFP,cryptobench,drug_contact,Q836J0,2JFP,A,17,15,1,True,False,0.0,6.0213508451177296,0.0,1.0,0,False
+CB_2JFY,cryptobench,drug_contact,Q9ZLT0,2JFY,B,15,16,1,True,False,0.0,7.467625030466126,0.0,1.0,0,False
+CB_2JLQ,cryptobench,drug_contact,Q2YHF0,2JLQ,A,8,18,1,True,False,0.0,5.241465232520824,0.0,1.0,0,False
+CB_2O8Y,cryptobench,drug_contact,Q9NWZ3,2O8Y,A,16,24,1,True,False,0.0,7.571523639695721,0.0,1.0,0,False
+CB_2OFM,cryptobench,drug_contact,Q94734,2OFM,X,1,22,1,True,False,0.0,12.81886119850503,0.0,2.0,0,False
+CB_2OQU,cryptobench,drug_contact,P00772,2OQU,A,7,18,1,True,False,5.452910232160437,26.083156104323216,1.0,5.0,0,False
+CB_2PO4,cryptobench,drug_contact,Q859P9,2PO4,A,13,23,1,True,False,0.0,3.8096657333682193,0.0,1.0,0,False
+CB_2PRY,cryptobench,drug_contact,P13298,2PRY,A,14,9,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_2PSF,cryptobench,drug_contact,P27652,2PSF,B,2,14,1,True,False,0.0,6.184437983519526,0.0,1.0,0,False
+CB_2PWZ,cryptobench,drug_contact,P61889,2PWZ,G,17,31,1,True,False,0.0,3.8506574763279056,0.0,1.0,0,False
+CB_2QG5,cryptobench,drug_contact,Q5CYL9,2QG5,D,2,15,1,True,False,3.7687666417542993,11.071747468218376,1.0,2.0,0,False
+CB_2QLR,cryptobench,drug_contact,Q8N5Z0,2QLR,A,18,11,1,True,False,0.0,13.493688191150705,0.0,2.0,0,False
+CB_2QSU,cryptobench,drug_contact,Q9T0I8,2QSU,A,7,17,1,True,False,0.0,5.0531632667073,0.0,1.0,0,False
+CB_2V6M,cryptobench,drug_contact,Q5SJA1,2V6M,D,4,31,1,True,False,5.178856051291636,18.492947223198364,1.0,4.0,0,False
+CB_2VL2,cryptobench,drug_contact,P30044,2VL2,C,1,10,1,True,False,0.0,11.397310964264403,0.0,2.5,0,False
+CB_2W6R,cryptobench,drug_contact,Q9X0C6,2W6R,A,1,17,1,True,False,0.0,10.695046002706112,0.0,2.0,0,False
+CB_2W8N,cryptobench,drug_contact,P51649,2W8N,A,21,11,1,True,False,0.0,3.7812351156731827,0.0,1.0,0,False
+CB_2W9T,cryptobench,drug_contact,P13955,2W9T,A,26,28,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_2WVH,cryptobench,drug_contact,P06672,2WVH,X,7,17,1,True,False,0.0,5.307682074126143,0.0,1.0,0,False
+CB_2X36,cryptobench,drug_contact,P36776,2X36,D,2,16,1,True,False,0.0,6.343527959407638,0.0,1.0,0,False
+CB_2X47,cryptobench,drug_contact,Q9BQ69,2X47,A,20,25,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_2X87,cryptobench,drug_contact,P07788,2X87,A,16,13,1,True,False,10.7730341594186,14.52803981960402,2.0,3.0,0,False
+CB_2XDO,cryptobench,drug_contact,Q93L51,2XDO,A,32,23,1,True,False,0.0,9.460290376093116,0.0,2.0,0,False
+CB_2XE6,cryptobench,drug_contact,P00558,2XE6,A,11,25,1,True,False,7.033093416129208,20.591815995681387,1.0,4.0,0,False
+CB_2XQ0,cryptobench,drug_contact,Q10740,2XQ0,A,15,10,1,True,False,9.268837359669226,15.624567384463326,2.0,3.0,0,False
+CB_2XSA,cryptobench,drug_contact,Q2CEE3,2XSA,A,10,15,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_2XTP,cryptobench,drug_contact,Q9UG22,2XTP,A,14,20,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_2YD5,cryptobench,drug_contact,P10586,2YD5,A,10,6,1,True,False,0.0,1.913901839175666,0.0,0.5,0,False
+CB_2YJR,cryptobench,drug_contact,Q9UM73,2YJR,A,7,22,1,True,False,0.0,5.214632375353753,0.0,1.0,0,False
+CB_2YWB,cryptobench,drug_contact,Q5SI28,2YWB,A,10,12,1,True,False,6.525210571314922,14.47286367278264,1.0,2.5,0,False
+CB_2YYG,cryptobench,drug_contact,Q5SJP8,2YYG,A,19,20,1,True,False,0.0,1.897231140372727,0.0,0.5,0,False
+CB_2YZG,cryptobench,drug_contact,Q5SHZ3,2YZG,C,55,8,1,True,False,0.0,4.833356129583915,0.0,1.0,0,False
+CB_2ZCG,cryptobench,drug_contact,Q8T6J6,2ZCG,A,11,13,1,True,False,0.0,3.7772775910700562,0.0,1.0,0,False
+CB_2ZCO,cryptobench,drug_contact,A9JQL9,2ZCO,A,13,9,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_2ZJ7,cryptobench,drug_contact,Q9RBY1,2ZJ7,A,67,8,1,True,False,13.01370746559181,20.007978316365964,3.0,4.0,0,True
+CB_2ZSU,cryptobench,drug_contact,O57950,2ZSU,B,11,22,1,True,False,0.0,3.8092825096673604,0.0,1.0,0,False
+CB_3A0X,cryptobench,drug_contact,Q9X180,3A0X,A,8,21,1,True,False,0.0,3.802549276472296,0.0,1.0,0,False
+CB_3A7G,cryptobench,drug_contact,Q9Y6E0,3A7G,A,1,16,1,True,False,4.459457366092872,10.539160341014153,1.0,2.0,0,False
+CB_3AAR,cryptobench,drug_contact,Q5ZUA2,3AAR,A,18,8,1,True,False,13.570991304985796,21.245503629144608,3.0,5.0,0,True
+CB_3ASY,cryptobench,drug_contact,Q5SKR5,3ASY,A,8,17,1,True,False,0.0,10.338810231356415,0.0,2.0,0,False
+CB_3B1O,cryptobench,drug_contact,Q2SZE4,3B1O,A,20,19,1,True,False,0.0,3.7772562793646935,0.0,1.0,0,False
+CB_3B7W,cryptobench,drug_contact,Q08AH3,3B7W,A,13,24,1,True,False,6.4111077046014415,11.37763536026417,1.0,2.0,0,False
+CB_3BGL,cryptobench,drug_contact,P04035,3BGL,A,10,8,1,True,False,19.86133384241854,28.46323026177597,5.0,5.5,0,True
+CB_3BIF,cryptobench,drug_contact,P25114,3BIF,A,12,22,1,True,False,21.126795828994034,30.206402831766958,4.0,6.0,0,True
+CB_3BJP,cryptobench,drug_contact,Q00511,3BJP,A,8,15,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_3BL7,cryptobench,drug_contact,Q96C86,3BL7,B,16,27,1,True,False,0.0,5.126564249085347,0.0,1.0,0,False
+CB_3BN9,cryptobench,drug_contact,Q9Y5Y6,3BN9,A,3,9,1,True,False,4.8217028112483264,8.409087703193494,1.0,2.0,0,False
+CB_3BRK,cryptobench,drug_contact,P39669,3BRK,X,5,8,1,True,False,26.062271389884646,37.317335831068334,5.0,7.0,0,True
+CB_3BV9,cryptobench,drug_contact,P00734,3BV9,B,3,20,1,True,False,0.0,10.803596681592463,0.0,2.0,0,False
+CB_3CBJ,cryptobench,drug_contact,P07858,3CBJ,A,3,18,1,True,False,0.0,7.105734025906457,0.0,1.0,0,False
+CB_3CHF,cryptobench,drug_contact,Q873X9,3CHF,B,15,18,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_3CJ1,cryptobench,drug_contact,O35795,3CJ1,A,13,19,1,True,False,0.0,3.853596891217344,0.0,1.0,0,False
+CB_3D0R,cryptobench,drug_contact,Q8KND7,3D0R,B,7,27,1,True,False,0.0,10.002844095556023,0.0,2.0,0,False
+CB_3DFA,cryptobench,drug_contact,A3FQ16,3DFA,A,9,18,1,True,False,0.0,4.994499222625893,0.0,1.0,0,False
+CB_3DFJ,cryptobench,drug_contact,Q16651,3DFJ,A,3,18,1,True,False,0.0,7.605400325035644,0.0,1.0,0,False
+CB_3DPC,cryptobench,drug_contact,P00634,3DPC,B,10,11,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_3F0F,cryptobench,drug_contact,Q3JRA0,3F0F,B,3,9,1,True,False,8.501449641090627,12.827012863484622,2.0,2.0,0,False
+CB_3F4K,cryptobench,drug_contact,Q8A3I2,3F4K,A,5,19,1,True,False,0.0,4.93573267104287,0.0,1.0,0,False
+CB_3F99,cryptobench,drug_contact,P15273,3F99,A,1,14,1,True,False,0.0,8.703467248631517,0.0,1.5,0,False
+CB_3FIX,cryptobench,drug_contact,Q9HL57,3FIX,B,13,23,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_3FUT,cryptobench,drug_contact,Q5SM60,3FUT,A,6,20,1,True,False,0.0,3.80094264849508,0.0,1.0,0,False
+CB_3FZO,cryptobench,drug_contact,Q14289,3FZO,A,18,20,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_3G8A,cryptobench,drug_contact,Q9LCY2,3G8A,A,18,4,1,True,False,6.518399343397118,10.860365776547248,1.0,2.0,0,False
+CB_3GAR,cryptobench,drug_contact,P08179,3GAR,A,6,21,1,True,False,3.7914691084063854,13.258731387278335,1.0,3.0,0,False
+CB_3GDG,cryptobench,drug_contact,P0C0Y5,3GDG,B,7,29,1,True,False,0.0,6.081355605455086,0.0,1.0,0,False
+CB_3GDR,cryptobench,drug_contact,P03962,3GDR,A,16,19,1,True,False,0.0,5.299971886717895,0.0,1.0,0,False
+CB_3GL0,cryptobench,drug_contact,Q5S3I3,3GL0,C,10,12,1,True,False,32.718156992715834,41.23813626856381,6.0,7.5,0,True
+CB_3H11,cryptobench,drug_contact,Q14790,3H11,B,2,16,1,True,False,0.0,9.130880016674755,0.0,2.0,0,False
+CB_3H8A,cryptobench,drug_contact,P0A6P9,3H8A,B,13,18,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_3HI6,cryptobench,drug_contact,P20701,3HI6,A,5,21,1,True,False,8.564575062430125,16.818278270976492,2.0,3.0,0,False
+CB_3I8S,cryptobench,drug_contact,P33650,3I8S,B,24,16,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_3IDH,cryptobench,drug_contact,P35557,3IDH,A,15,14,1,True,False,8.669977508621345,12.884431694193907,2.0,3.0,0,False
+CB_3IEC,cryptobench,drug_contact,Q7KZI7,3IEC,B,9,20,1,True,False,0.0,9.804248216692514,0.0,2.0,0,False
+CB_3ITY,cryptobench,drug_contact,Q75WH8,3ITY,C,8,13,1,True,False,0.0,4.692437000109853,0.0,1.0,0,False
+CB_3IUN,cryptobench,drug_contact,Q9X6R4,3IUN,A,1,10,1,True,False,0.0,8.618797009803261,0.0,2.0,0,False
+CB_3KJE,cryptobench,drug_contact,Q3ACS5,3KJE,A,14,18,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_3KJR,cryptobench,drug_contact,A7ASX7,3KJR,A,30,15,1,True,False,32.48430447154441,39.71441488930687,6.0,7.0,0,True
+CB_3LCK,cryptobench,drug_contact,P06239,3LCK,A,11,25,1,True,False,0.0,10.14909143716816,0.0,2.0,0,False
+CB_3MWK,cryptobench,drug_contact,Q72GF3,3MWK,A,6,27,1,True,False,0.0,9.869309043697033,0.0,2.0,0,False
+CB_3N2W,cryptobench,drug_contact,Q52VH2,3N2W,B,3,9,1,True,False,9.405855782436813,19.135065116168278,2.0,4.0,0,False
+CB_3NAG,cryptobench,drug_contact,Q97CA5,3NAG,B,17,7,1,True,False,0.0,6.355112744869283,0.0,1.0,0,False
+CB_3NAQ,cryptobench,drug_contact,Q9S7E4,3NAQ,A,16,32,1,True,False,0.0,3.772187357857253,0.0,1.0,0,False
+CB_3NAX,cryptobench,drug_contact,O15530,3NAX,A,28,14,1,True,False,3.819842012439782,8.659875839354173,1.0,2.0,0,False
+CB_3NSH,cryptobench,drug_contact,P56817,3NSH,B,23,10,1,True,False,5.411204209785477,11.012762977821145,1.0,2.0,0,False
+CB_3OFJ,cryptobench,drug_contact,Q9AQ22,3OFJ,A,6,21,1,True,False,0.0,5.374877300925112,0.0,1.0,0,False
+CB_3OIC,cryptobench,drug_contact,P71079,3OIC,D,15,34,1,True,False,0.0,3.770667823946418,0.0,1.0,0,False
+CB_3OY6,cryptobench,drug_contact,P00749,3OY6,U,3,19,1,True,False,0.0,8.212485799074482,0.0,2.0,0,False
+CB_3P08,cryptobench,drug_contact,Q06187,3P08,B,16,19,1,True,False,0.0,5.038131201149885,0.0,1.0,0,False
+CB_3P3I,cryptobench,drug_contact,Q1EMV2,3P3I,A,5,10,1,True,False,12.45114079110826,18.128124104964172,2.0,3.5,0,True
+CB_3P6E,cryptobench,drug_contact,P15090,3P6E,A,13,20,1,True,False,0.0,5.810661936698253,0.0,1.0,0,False
+CB_3PBF,cryptobench,drug_contact,P08427,3PBF,A,6,24,1,True,False,0.0,11.26393227902222,0.0,2.0,0,False
+CB_3PHZ,cryptobench,drug_contact,Q75WT9,3PHZ,A,10,11,1,True,False,0.0,7.414613543536848,0.0,1.0,0,False
+CB_3PKQ,cryptobench,drug_contact,P26393,3PKQ,B,4,34,1,True,False,0.0,13.205177081993508,0.0,3.0,0,False
+CB_3PSG,cryptobench,drug_contact,P00791,3PSG,A,2,21,1,True,False,0.0,8.490576305528382,0.0,2.0,0,False
+CB_3Q6U,cryptobench,drug_contact,P08581,3Q6U,A,11,23,1,True,False,0.0,10.084080027449208,0.0,2.0,0,False
+CB_3QAS,cryptobench,drug_contact,P60472,3QAS,A,20,8,1,True,False,7.194611942280139,11.365317119451333,1.0,2.0,0,False
+CB_3QWA,cryptobench,drug_contact,P38230,3QWA,B,12,32,1,True,False,0.0,3.8180200462270477,0.0,1.0,0,False
+CB_3QWD,cryptobench,drug_contact,Q2G036,3QWD,J,2,17,1,True,False,0.0,9.103838750768817,0.0,2.0,0,False
+CB_3RMY,cryptobench,drug_contact,P19321,3RMY,D,4,8,1,True,False,0.0,1.9113213361441903,0.0,0.5,0,False
+CB_3RPP,cryptobench,drug_contact,Q9Y2Q3,3RPP,B,7,20,1,True,False,0.0,5.234999967532494,0.0,1.0,0,False
+CB_3RWO,cryptobench,drug_contact,P51996,3RWO,B,21,30,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_3RWV,cryptobench,drug_contact,Q9NZD2,3RWV,A,10,18,1,True,False,0.0,10.001120872905098,0.0,2.0,0,False
+CB_3SR3,cryptobench,drug_contact,A0A6L8PEJ7,3SR3,A,6,11,1,True,False,0.0,3.789289247339136,0.0,1.0,0,False
+CB_3TPE,cryptobench,drug_contact,P23874,3TPE,A,9,25,1,True,False,0.0,6.692171097633414,0.0,1.0,0,False
+CB_3U49,cryptobench,drug_contact,P39644,3U49,A,18,30,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_3U6K,cryptobench,drug_contact,P0CE47,3U6K,A,16,8,1,True,False,26.314757589611194,27.372839563045382,5.0,5.5,0,True
+CB_3UGK,cryptobench,drug_contact,P38998,3UGK,A,20,26,1,True,False,0.0,1.9093487109483172,0.0,0.5,0,False
+CB_3UYI,cryptobench,drug_contact,Q3L181,3UYI,A,12,18,1,True,False,0.0,8.041888075658418,0.0,1.5,0,False
+CB_3VC7,cryptobench,drug_contact,Q92N93,3VC7,B,16,29,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_3VE9,cryptobench,drug_contact,A4YI54,3VE9,A,8,18,1,True,False,0.0,3.803846236963018,0.0,1.0,0,False
+CB_3VGM,cryptobench,drug_contact,B1VZT1,3VGM,A,5,19,1,True,False,9.019942183850183,15.253796216024389,2.0,3.0,0,False
+CB_3VIA,cryptobench,drug_contact,Q96CS7,3VIA,B,1,9,1,True,False,0.0,9.649731654300028,0.0,2.0,0,False
+CB_3VJB,cryptobench,drug_contact,P37268,3VJB,D,8,23,1,True,False,3.7955797976066865,11.997738495233179,1.0,3.0,0,False
+CB_3VQ9,cryptobench,drug_contact,Q72498,3VQ9,C,2,10,1,True,False,14.263342560564126,20.593313831156532,3.0,4.0,0,True
+CB_3W59,cryptobench,drug_contact,P09382,3W59,D,11,14,1,True,False,0.0,2.1058094049557288,0.0,0.5,0,False
+CB_3W90,cryptobench,drug_contact,Q5SL35,3W90,A,9,18,1,True,False,0.0,8.964960178205729,0.0,2.0,0,False
+CB_3WB9,cryptobench,drug_contact,Q67PI3,3WB9,C,26,28,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_3WMG,cryptobench,drug_contact,M1VAN7,3WMG,A,23,14,1,True,False,0.0,1.898688099715169,0.0,0.5,0,False
+CB_3ZO8,cryptobench,drug_contact,P19080,3ZO8,A,8,7,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_4A6P,cryptobench,drug_contact,O74036,4A6P,A,7,14,1,True,False,11.39765989139876,15.954093693200363,2.0,3.0,0,False
+CB_4AAL,cryptobench,drug_contact,Q74FY6,4AAL,A,59,18,1,True,False,3.7423155933191943,6.934947398721452,1.0,1.0,0,False
+CB_4AMV,cryptobench,drug_contact,P17169,4AMV,B,19,15,1,True,False,5.6401066479278565,12.028778990404643,1.0,3.0,0,False
+CB_4BA4,cryptobench,drug_contact,Q7NWG4,4BA4,A,3,18,1,True,False,0.0,7.790181406495181,0.0,1.5,0,False
+CB_4BG8,cryptobench,drug_contact,Q8TX37,4BG8,A,6,16,1,True,False,6.7346883372580795,13.680045949433902,1.0,2.5,0,False
+CB_4BRR,cryptobench,drug_contact,P0ABN1,4BRR,E,20,12,1,True,False,0.0,5.833399047201455,0.0,1.0,0,False
+CB_4BY5,cryptobench,drug_contact,Q9VWX8,4BY5,B,18,13,1,True,False,3.756123799876676,12.479984054476992,1.0,2.0,0,False
+CB_4C6B,cryptobench,drug_contact,P27708,4C6B,A,13,14,2,True,False,0.0,0.0,0.0,0.0,0,False
+CB_4CON,cryptobench,drug_contact,Q9WYL6,4CON,B,9,7,1,True,False,21.924943375069407,29.629812048003274,5.0,6.0,0,True
+CB_4D1N,cryptobench,drug_contact,P29475,4D1N,A,21,18,1,True,False,0.0,1.8742621881689905,0.0,0.5,0,False
+CB_4D2O,cryptobench,drug_contact,A2RP81,4D2O,B,1,14,1,True,False,8.984997774067615,15.642012940084133,2.0,3.0,0,False
+CB_4D8L,cryptobench,drug_contact,O87170,4D8L,A,11,17,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_4DNC,cryptobench,drug_contact,Q9H7Z6,4DNC,B,4,22,1,True,False,17.180236581607364,23.89395970091438,3.0,5.0,0,True
+CB_4E00,cryptobench,drug_contact,Q00972,4E00,A,20,23,1,True,False,8.571123030268554,18.999657207434034,2.0,4.0,0,False
+CB_4EI8,cryptobench,drug_contact,Q74P24,4EI8,A,9,24,1,True,False,0.0,3.793647629070012,0.0,1.0,0,False
+CB_4EIZ,cryptobench,drug_contact,P0ABQ4,4EIZ,A,26,30,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_4EKF,cryptobench,drug_contact,P03252,4EKF,A,12,11,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_4ESH,cryptobench,drug_contact,Q9HZN8,4ESH,A,8,14,1,True,False,0.0,1.9071746773696427,0.0,0.5,0,False
+CB_4F0I,cryptobench,drug_contact,P04629,4F0I,A,11,21,1,True,False,0.0,9.459644496491402,0.0,2.0,0,False
+CB_4F4I,cryptobench,drug_contact,P65248,4F4I,B,8,14,1,True,False,0.0,10.106958683886152,0.0,2.0,0,False
+CB_4F5H,cryptobench,drug_contact,P00509,4F5H,B,21,8,1,True,False,0.0,7.885459908341474,0.0,1.5,0,False
+CB_4F7D,cryptobench,drug_contact,Q2T230,4F7D,B,8,22,1,True,False,0.0,3.8246269378429076,0.0,1.0,0,False
+CB_4FAF,cryptobench,drug_contact,Q000H7,4FAF,A,1,9,1,True,False,0.0,6.143883625199943,0.0,1.0,0,False
+CB_4GF1,cryptobench,drug_contact,Q4MV79,4GF1,B,23,13,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_4GI3,cryptobench,drug_contact,Q9FDF2,4GI3,A,14,9,1,True,False,9.822207389380456,13.098920069990502,2.0,2.0,0,False
+CB_4GOJ,cryptobench,drug_contact,Q13432,4GOJ,C,1,21,1,True,False,0.0,13.65958202142364,0.0,4.0,0,False
+CB_4GV9,cryptobench,drug_contact,P13699,4GV9,A,7,5,1,True,False,7.506205765897976,9.99774384548834,1.0,2.0,0,False
+CB_4HC4,cryptobench,drug_contact,Q96LA8,4HC4,A,22,27,1,True,False,3.793886266086531,12.500692140837641,1.0,3.0,0,False
+CB_4HON,cryptobench,drug_contact,Q6B0I6,4HON,B,12,22,1,True,False,5.924741766524513,13.186471633769997,1.0,3.0,0,False
+CB_4HR7,cryptobench,drug_contact,P24182,4HR7,A,28,15,1,True,False,4.5052841197864595,12.452696936808513,1.0,2.0,0,False
+CB_4HYE,cryptobench,drug_contact,Q8DNC2,4HYE,A,4,3,1,True,False,8.515106164928302,10.515402655153059,2.0,2.0,0,False
+CB_4HZR,cryptobench,drug_contact,Q07912,4HZR,A,8,26,1,True,False,0.0,10.47883788065355,0.0,2.0,0,False
+CB_4I36,cryptobench,drug_contact,P00512,4I36,D,34,28,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_4I8Y,cryptobench,drug_contact,P45723,4I8Y,A,2,9,1,True,False,14.363509773032499,16.36269824937195,3.0,3.0,0,True
+CB_4IAN,cryptobench,drug_contact,Q13523,4IAN,B,11,27,1,True,False,0.0,10.308491499729723,0.0,2.0,0,False
+CB_4IWS,cryptobench,drug_contact,Q9I6N5,4IWS,A,11,29,1,True,False,0.0,3.799197415244429,0.0,1.0,0,False
+CB_4JAX,cryptobench,drug_contact,P33284,4JAX,F,1,15,1,True,False,17.137646775447326,21.65299254144794,3.0,4.0,0,True
+CB_4JF0,cryptobench,drug_contact,P40732,4JF0,B,22,12,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_4JFR,cryptobench,drug_contact,Q8DCF5,4JFR,C,5,13,1,True,False,3.7989897341266925,11.974933193968143,1.0,2.0,0,False
+CB_4JYC,cryptobench,drug_contact,C5AP93,4JYC,C,13,15,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_4K6G,cryptobench,drug_contact,P41365,4K6G,B,3,15,1,True,False,3.8199930628209287,13.014332214908299,1.0,3.0,0,False
+CB_4K86,cryptobench,drug_contact,P07814,4K86,A,4,18,1,True,False,20.524901583198883,26.781151160718018,4.0,6.0,0,True
+CB_4KC0,cryptobench,drug_contact,Q3TBT3,4KC0,A,7,11,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_4KMY,cryptobench,drug_contact,P14207,4KMY,A,14,20,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_4KU8,cryptobench,drug_contact,Q13976,4KU8,A,8,17,1,True,False,0.0,3.772041489697589,0.0,1.0,0,False
+CB_4LA5,cryptobench,drug_contact,Q9F1Y6,4LA5,A,5,20,1,True,False,0.0,7.914676505033401,0.0,1.5,0,False
+CB_4LG4,cryptobench,drug_contact,Q13188,4LG4,D,11,22,1,True,False,0.0,8.844607312192661,0.0,2.0,0,False
+CB_4LJP,cryptobench,drug_contact,Q96EP0,4LJP,A,20,10,1,True,False,3.815457115471224,7.107851054067402,1.0,1.5,0,False
+CB_4M23,cryptobench,drug_contact,G9MBV2,4M23,B,8,12,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_4M66,cryptobench,drug_contact,Q9QZL0,4M66,A,11,23,1,True,False,0.0,10.035363371597464,0.0,2.0,0,False
+CB_4MOW,cryptobench,drug_contact,B4E6Z1,4MOW,A,1,35,1,True,False,8.846893579104476,22.28583319061686,2.0,5.0,0,False
+CB_4MQE,cryptobench,drug_contact,Q9UBS5,4MQE,A,5,16,1,True,False,0.0,3.853643207742712,0.0,1.0,0,False
+CB_4MZI,cryptobench,drug_contact,P04637,4MZI,A,5,17,1,True,False,7.707019787181035,18.71224008503525,1.0,3.0,0,False
+CB_4N4A,cryptobench,drug_contact,Q8N1G2,4N4A,A,23,14,1,True,False,0.0,1.8960011207802594,0.0,0.5,0,False
+CB_4NI8,cryptobench,drug_contact,Q8RJ47,4NI8,D,5,22,1,True,False,0.0,15.826543707744072,0.0,3.0,0,False
+CB_4NOG,cryptobench,drug_contact,S8EY38,4NOG,A,13,7,1,True,False,9.592016315665855,14.014281965195364,2.0,3.0,0,False
+CB_4NZV,cryptobench,drug_contact,Q9X1X0,4NZV,B,7,12,1,True,False,4.367540955732422,10.76780410163082,1.0,2.0,0,False
+CB_4O7D,cryptobench,drug_contact,O94925,4O7D,A,12,8,1,True,False,5.586444575935576,10.14022886041602,1.0,2.0,0,False
+CB_4OMG,cryptobench,drug_contact,C9K1X5,4OMG,A,4,23,1,True,False,0.0,10.481358022699155,0.0,2.0,0,False
+CB_4OQO,cryptobench,drug_contact,P24627,4OQO,B,8,9,1,True,False,3.7901064628846504,6.302480940074314,1.0,1.0,0,False
+CB_4OS8,cryptobench,drug_contact,P41222,4OS8,B,1,18,1,True,False,0.0,15.6633016141299,0.0,3.5,0,False
+CB_4OYZ,cryptobench,drug_contact,Q96PN6,4OYZ,A,8,9,1,True,False,8.809102678479803,13.125722761052053,2.0,2.0,0,False
+CB_4P32,cryptobench,drug_contact,P0A9V1,4P32,A,12,11,1,True,False,3.7907202481850355,13.733651007652696,1.0,3.0,0,False
+CB_4PFS,cryptobench,drug_contact,A0QTQ5,4PFS,B,8,15,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_4PNT,cryptobench,drug_contact,Q9H2K2,4PNT,D,4,16,1,True,False,9.8695455822444,16.637373289783415,2.0,3.0,0,False
+CB_4PUN,cryptobench,drug_contact,P28720,4PUN,A,4,19,1,True,False,11.93506317536694,26.1456661992002,3.0,5.0,0,False
+CB_4PWN,cryptobench,drug_contact,Q9H4A3,4PWN,A,11,19,1,True,False,0.0,5.161345076624891,0.0,1.0,0,False
+CB_4QVK,cryptobench,drug_contact,Q9HGR1,4QVK,B,12,24,1,True,False,0.0,3.795005979219561,0.0,1.0,0,False
+CB_4R7T,cryptobench,drug_contact,Q9KKS5,4R7T,C,4,19,1,True,False,0.0,7.730788510882962,0.0,1.0,0,False
+CB_4RF5,cryptobench,drug_contact,Q6WVP7,4RF5,A,4,8,1,True,False,7.751880868537651,13.433990155286214,1.0,2.5,0,False
+CB_4RIE,cryptobench,drug_contact,Q9ZGC0,4RIE,B,8,21,1,True,False,0.0,3.8039370394369056,0.0,1.0,0,False
+CB_4RVS,cryptobench,drug_contact,O53146,4RVS,A,14,33,1,True,False,0.0,3.787918953726438,0.0,1.0,0,False
+CB_4TRM,cryptobench,drug_contact,P9WGR1,4TRM,E,9,17,1,True,False,0.0,5.834559880573688,0.0,1.0,0,False
+CB_4TTP,cryptobench,drug_contact,Q5ZVH3,4TTP,A,6,16,1,True,False,0.0,5.479747305092802,0.0,1.0,0,False
+CB_4TWI,cryptobench,drug_contact,O28597,4TWI,A,5,25,1,True,False,16.680455269566234,29.548891045181378,4.0,6.0,0,True
+CB_4UD4,cryptobench,drug_contact,O13833,4UD4,B,12,15,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_4UUM,cryptobench,drug_contact,O96445,4UUM,A,17,28,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_4WBH,cryptobench,drug_contact,Q6P988,4WBH,A,3,23,1,True,False,0.0,11.826863447254306,0.0,2.0,0,False
+CB_4WJX,cryptobench,drug_contact,Q13231,4WJX,A,13,19,1,True,False,0.0,6.38839471228884,0.0,1.0,0,False
+CB_4X1O,cryptobench,drug_contact,C7Q5P8,4X1O,A,8,24,1,True,False,0.0,4.370685171469093,0.0,1.0,0,False
+CB_4XBX,cryptobench,drug_contact,Q9ZAG3,4XBX,B,2,10,1,True,False,0.0,9.033379273496069,0.0,2.0,0,False
+CB_4XG2,cryptobench,drug_contact,P43405,4XG2,A,7,26,1,True,False,0.0,10.483992372217243,0.0,2.0,0,False
+CB_4XV1,cryptobench,drug_contact,P15056,4XV1,B,6,28,1,True,False,0.0,9.0858125972375,0.0,2.0,0,False
+CB_4YAJ,cryptobench,drug_contact,B1L7P8,4YAJ,A,17,8,1,True,False,0.0,4.417464460235588,0.0,1.0,0,False
+CB_4YBO,cryptobench,drug_contact,P21553,4YBO,D,3,23,1,True,False,0.0,5.999953999823654,0.0,1.0,0,False
+CB_4YDR,cryptobench,drug_contact,F9VNG5,4YDR,A,16,30,1,True,False,0.0,3.796062696863602,0.0,1.0,0,False
+CB_4Z49,cryptobench,drug_contact,P49327,4Z49,A,2,19,1,True,False,0.0,14.251878823509552,0.0,3.0,0,False
+CB_4Z7C,cryptobench,drug_contact,Q97UL5,4Z7C,A,11,17,1,True,False,3.7865273008391216,12.87030916489577,1.0,3.0,0,False
+CB_4ZCS,cryptobench,drug_contact,Q8IEE9,4ZCS,A,21,19,1,True,False,0.0,9.808648071982192,0.0,2.0,0,False
+CB_4ZOE,cryptobench,drug_contact,Q92AS9,4ZOE,B,8,15,1,True,False,29.73496388092644,36.51047971473397,5.0,7.0,0,True
+CB_4ZXG,cryptobench,drug_contact,Q8ILQ7,4ZXG,A,7,15,1,True,False,0.0,6.310519233787342,0.0,1.0,0,False
+CB_5ACV,cryptobench,drug_contact,Q9K2N0,5ACV,B,12,12,1,True,False,0.0,4.852466709133404,0.0,1.0,0,False
+CB_5AE0,cryptobench,drug_contact,P16330,5AE0,A,4,13,1,True,False,0.0,6.902884324686315,0.0,1.0,0,False
+CB_5AJO,cryptobench,drug_contact,Q10471,5AJO,A,94,8,1,True,False,4.725751368830146,7.477527569468243,1.0,1.5,0,False
+CB_5AR2,cryptobench,drug_contact,O43353,5AR2,B,8,26,1,True,False,0.0,10.550697533382847,0.0,2.0,0,False
+CB_5AZQ,cryptobench,drug_contact,P68082,5AZQ,A,18,31,1,True,False,0.0,3.772417394721851,0.0,1.0,0,False
+CB_5B0E,cryptobench,drug_contact,I6WU39,5B0E,B,6,13,1,True,False,0.0,7.8671883160376925,0.0,1.0,0,False
+CB_5BSI,cryptobench,drug_contact,P14174,5BSI,A,2,4,1,True,False,6.839189791196026,8.709046069058449,1.0,2.0,0,False
+CB_5CAA,cryptobench,drug_contact,Q9U1E1,5CAA,A,8,12,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_5CAE,cryptobench,drug_contact,P53590,5CAE,B,8,22,1,True,False,30.148798665950192,43.969607768893326,6.0,9.0,0,True
+CB_5CK1,cryptobench,drug_contact,Q89ZX5,5CK1,A,6,7,1,True,False,16.788727289464205,22.479278458171205,4.0,5.0,0,True
+CB_5D5T,cryptobench,drug_contact,Q57913,5D5T,A,9,6,1,True,False,0.0,2.6740273465318225,0.0,0.5,0,False
+CB_5DCW,cryptobench,drug_contact,K7WDL7,5DCW,A,17,33,1,True,False,0.0,3.801116283409391,0.0,1.0,0,False
+CB_5DOV,cryptobench,drug_contact,Q6E7K0,5DOV,B,13,34,1,True,False,0.0,3.8117307702182517,0.0,1.0,0,False
+CB_5DZP,cryptobench,drug_contact,I6Y9J2,5DZP,B,9,10,1,True,False,0.0,3.810734985650851,0.0,1.0,0,False
+CB_5ED0,cryptobench,drug_contact,O06662,5ED0,C,2,9,1,True,False,0.0,6.02354762577669,0.0,1.0,0,False
+CB_5EO7,cryptobench,drug_contact,Q2UNX8,5EO7,A,49,63,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_5F3K,cryptobench,drug_contact,Q12931,5F3K,B,4,15,1,True,False,0.0,5.15526488165254,0.0,1.0,0,False
+CB_5FSU,cryptobench,drug_contact,C9ZP98,5FSU,B,7,17,1,True,False,0.0,3.8004870740472194,0.0,1.0,0,False
+CB_5FTK,cryptobench,drug_contact,P55072,5FTK,A,35,22,1,True,False,11.681886363083667,19.14174220034302,2.0,3.5,0,False
+CB_5GGC,cryptobench,drug_contact,A0QUZ2,5GGC,A,7,17,1,True,False,25.109821365354236,34.25329492180278,5.0,7.0,0,True
+CB_5GIZ,cryptobench,drug_contact,B4EKB3,5GIZ,B,10,21,1,True,False,0.0,3.7572513889810475,0.0,1.0,0,False
+CB_5GMO,cryptobench,drug_contact,A3LWG4,5GMO,A,11,25,1,True,False,0.0,3.8000719730026176,0.0,1.0,0,False
+CB_5GW7,cryptobench,drug_contact,P42592,5GW7,B,8,32,1,True,False,11.771279879435372,24.50010155317041,3.0,5.0,0,False
+CB_5H8K,cryptobench,drug_contact,G7ITU5,5H8K,C,3,11,1,True,False,0.0,7.851875317400295,0.0,1.0,0,False
+CB_5H9K,cryptobench,drug_contact,Q7YT09,5H9K,A,1,21,1,True,False,0.0,16.179731425459448,0.0,4.0,0,False
+CB_5HGX,cryptobench,drug_contact,P34736,5HGX,A,14,14,1,True,False,0.0,6.212973062552633,0.0,1.0,0,False
+CB_5HIJ,cryptobench,drug_contact,F6KV61,5HIJ,A,6,21,1,True,False,4.815447850408101,15.455050889595931,1.0,3.0,0,False
+CB_5HQ8,cryptobench,drug_contact,Q9H7B4,5HQ8,A,16,8,1,True,False,15.068538283456691,17.142438641509898,3.0,3.5,0,True
+CB_5HSI,cryptobench,drug_contact,J7GQ11,5HSI,A,7,15,1,True,False,0.0,4.7092476044480795,0.0,1.0,0,False
+CB_5HSM,cryptobench,drug_contact,P9WME9,5HSM,A,2,9,1,True,False,0.0,7.176238081334817,0.0,1.0,0,False
+CB_5HXQ,cryptobench,drug_contact,B8XA40,5HXQ,C,1,11,1,True,False,0.0,9.188226433866332,0.0,2.0,0,False
+CB_5ICS,cryptobench,drug_contact,Q9BPX1,5ICS,C,12,25,2,True,False,0.0,6.24108812628054,0.0,1.0,0,False
+CB_5IGH,cryptobench,drug_contact,Q47396,5IGH,A,11,20,1,True,False,5.153395094498383,13.350081830853803,1.0,3.5,0,False
+CB_5ILK,cryptobench,drug_contact,Q40577,5ILK,A,8,14,1,True,False,0.0,10.493337240206268,0.0,2.0,0,False
+CB_5IOX,cryptobench,drug_contact,Q8P9V9,5IOX,A,1,6,1,True,False,7.426591546597942,13.882304618176327,1.0,2.5,0,False
+CB_5IWI,cryptobench,drug_contact,P66937-Q99XG5,5IWI,A,1,10,1,True,False,33.18210846224212,36.9596523343966,6.0,7.0,0,True
+CB_5JHT,cryptobench,drug_contact,P03433,5JHT,A,9,13,1,True,False,3.797173290751951,12.39085118141607,1.0,2.0,0,False
+CB_5K3A,cryptobench,drug_contact,Q6NAM1,5K3A,A,13,15,1,True,False,0.0,3.8059981607982922,0.0,1.0,0,False
+CB_5K7K,cryptobench,drug_contact,P11712,5K7K,A,30,26,1,True,False,0.0,11.90880909440438,0.0,2.0,0,False
+CB_5L45,cryptobench,drug_contact,G9VYV4,5L45,A,10,20,1,True,False,0.0,8.939532509575468,0.0,2.0,0,False
+CB_5LCC,cryptobench,drug_contact,Q8EP31,5LCC,A,8,24,1,True,False,0.0,3.8499111923929457,0.0,1.0,0,False
+CB_5LOC,cryptobench,drug_contact,P04964,5LOC,A,26,22,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_5LOR,cryptobench,drug_contact,Q9BRQ3,5LOR,B,12,9,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_5LQJ,cryptobench,drug_contact,P22734,5LQJ,C,14,13,1,True,False,0.0,3.808566396953059,0.0,1.0,0,False
+CB_5M7R,cryptobench,drug_contact,O60502,5M7R,B,7,16,1,True,False,0.0,3.818483882640541,0.0,1.0,0,False
+CB_5MBT,cryptobench,drug_contact,Q0P8Q4,5MBT,C,7,13,1,True,False,0.0,9.575538000551196,0.0,2.0,0,False
+CB_5NR9,cryptobench,drug_contact,P14769,5NR9,B,10,18,1,True,False,6.363961973487898,13.83290635768177,1.0,3.0,0,False
+CB_5NY2,cryptobench,drug_contact,D0VWZ1,5NY2,A,3,16,1,True,False,0.0,7.610572516934471,0.0,1.0,0,False
+CB_5NZM,cryptobench,drug_contact,Q4QDU3,5NZM,A,15,26,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_5O1M,cryptobench,drug_contact,Q3L8N0,5O1M,A,24,12,1,True,False,3.8973434542005667,9.83676458334392,1.0,2.0,0,False
+CB_5OP0,cryptobench,drug_contact,A0R5T1,5OP0,B,4,14,1,True,False,0.0,8.876920318927459,0.0,2.0,0,False
+CB_5T2V,cryptobench,drug_contact,A0R723,5T2V,A,17,34,1,True,False,0.0,1.8868388245952536,0.0,0.5,0,False
+CB_5TC0,cryptobench,drug_contact,Q12866,5TC0,B,5,24,1,True,False,0.0,9.012333082277639,0.0,2.0,0,False
+CB_5U95,cryptobench,drug_contact,O24146,5U95,B,22,26,1,True,False,0.0,1.8873715188059814,0.0,0.5,0,False
+CB_5UXA,cryptobench,drug_contact,O32553,5UXA,A,5,19,1,True,False,13.81047352555299,20.885881188017905,2.0,4.0,0,True
+CB_5W5D,cryptobench,drug_contact,P21707,5W5D,F,5,6,1,True,False,0.0,1.9036210888724647,0.0,0.5,0,False
+CB_5WBM,cryptobench,drug_contact,P50053,5WBM,B,23,12,1,True,False,3.8085600953641214,11.044050693637363,1.0,2.5,0,False
+CB_5WM0,cryptobench,drug_contact,P14925,5WM0,A,6,10,1,True,False,0.0,4.587942757866754,0.0,1.0,0,False
+CB_5X1O,cryptobench,drug_contact,P09038,5X1O,B,1,6,1,True,False,0.0,5.125986853047232,0.0,1.0,0,False
+CB_5XCW,cryptobench,drug_contact,P45040,5XCW,X,25,12,1,True,False,0.0,3.8119950741010933,0.0,1.0,0,False
+CB_5Z18,cryptobench,drug_contact,Q6W7J7,5Z18,C,10,13,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_5Z43,cryptobench,drug_contact,V5TDZ4,5Z43,A,5,11,1,True,False,3.8161353487527143,10.084190150924368,1.0,2.0,0,False
+CB_5Z67,cryptobench,drug_contact,Q8RDL3,5Z67,A,8,19,1,True,False,0.0,6.17586285469488,0.0,1.0,0,False
+CB_5ZIC,cryptobench,drug_contact,Q09328,5ZIC,B,4,16,1,True,False,0.0,12.735269069262735,0.0,3.0,0,False
+CB_5ZJ4,cryptobench,drug_contact,Q9L1E4,5ZJ4,D,15,11,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_5ZV0,cryptobench,drug_contact,P25081,5ZV0,A,5,15,1,True,False,0.0,6.68572576464216,0.0,1.0,0,False
+CB_6A45,cryptobench,drug_contact,Q9R1A9,6A45,B,6,13,1,True,False,0.0,3.789052388130837,0.0,1.0,0,False
+CB_6AA3,cryptobench,drug_contact,P36639,6AA3,A,16,22,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_6AIB,cryptobench,drug_contact,Q6GEZ3,6AIB,A,8,17,1,True,False,0.0,7.296781345223386,0.0,1.0,0,False
+CB_6AQE,cryptobench,drug_contact,Q9RY20,6AQE,B,24,7,1,True,False,14.899915838688484,18.766504309540444,3.0,4.0,0,True
+CB_6BKX,cryptobench,drug_contact,O75874,6BKX,C,10,21,1,True,False,5.184643092827123,12.420772157961837,1.0,2.0,0,False
+CB_6BN5,cryptobench,drug_contact,Q06124,6BN5,B,9,13,1,True,False,8.765674303782905,16.36526571736616,2.0,3.0,0,False
+CB_6BZI,cryptobench,drug_contact,Q4KCZ3,6BZI,C,15,12,1,True,False,0.0,5.039458602332312,0.0,1.0,0,False
+CB_6CFS,cryptobench,drug_contact,Q92871,6CFS,A,15,14,1,True,False,3.836900963016898,15.65480762086107,1.0,4.0,0,False
+CB_6CQE,cryptobench,drug_contact,Q92918,6CQE,B,8,21,1,True,False,0.0,9.587920003838164,0.0,2.0,0,False
+CB_6CSW,cryptobench,drug_contact,Q99986,6CSW,C,9,15,1,True,False,0.0,8.050926716844467,0.0,2.0,0,False
+CB_6CZX,cryptobench,drug_contact,Q96255,6CZX,A,21,8,1,True,False,0.0,1.8926237079778931,0.0,0.5,0,False
+CB_6DDL,cryptobench,drug_contact,P49902,6DDL,B,16,12,2,True,False,3.8158193091392576,12.681520642100153,1.0,3.0,0,False
+CB_6EIF,cryptobench,drug_contact,Q13627,6EIF,B,16,19,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_6EZR,cryptobench,drug_contact,D9ISE0,6EZR,A,5,14,1,True,False,0.0,4.673070265609442,0.0,1.0,0,False
+CB_6F4M,cryptobench,drug_contact,Q8N371,6F4M,A,10,12,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_6F52,cryptobench,drug_contact,P56463,6F52,A,13,12,1,True,False,0.0,3.773593788426015,0.0,1.0,0,False
+CB_6FGJ,cryptobench,drug_contact,W8U368,6FGJ,B,7,14,1,True,False,3.799950525993722,10.279871900784318,1.0,2.0,0,False
+CB_6FP0,cryptobench,drug_contact,Q84HF5,6FP0,A,36,18,1,True,False,10.391974451469752,20.1854797300271,2.0,4.5,0,False
+CB_6G6Y,cryptobench,drug_contact,P52732,6G6Y,A,12,42,1,True,False,4.581279624733683,13.461027404831096,1.0,3.0,0,False
+CB_6G9Z,cryptobench,drug_contact,P49773,6G9Z,A,9,6,1,True,False,0.0,8.76520043266445,0.0,1.5,0,False
+CB_6GSO,cryptobench,drug_contact,O54288,6GSO,C,8,8,1,True,False,0.0,3.1066110957118536,0.0,0.5,0,False
+CB_6H6K,cryptobench,drug_contact,Q980A5,6H6K,A,24,14,1,True,False,3.7875107920638342,21.447223824287153,1.0,4.5,0,False
+CB_6HEI,cryptobench,drug_contact,Q96RU2,6HEI,A,2,34,1,True,False,3.804111854296611,18.4582797593119,1.0,4.0,0,False
+CB_6HL0,cryptobench,drug_contact,Q96RI1,6HL0,A,4,29,1,True,False,0.0,10.509859894403924,0.0,2.0,0,False
+CB_6HR4,cryptobench,drug_contact,G3XD46,6HR4,A,1,18,1,True,False,0.0,7.614689830734557,0.0,1.0,0,False
+CB_6HRV,cryptobench,drug_contact,Q6P4V5,6HRV,A,4,18,1,True,False,0.0,5.962905500052004,0.0,1.0,0,False
+CB_6I1S,cryptobench,drug_contact,Q04771,6I1S,A,19,21,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_6I5G,cryptobench,drug_contact,P34913,6I5G,B,14,29,1,True,False,0.0,6.239174624900314,0.0,1.0,0,False
+CB_6INF,cryptobench,drug_contact,Q6VAB4,6INF,A,20,30,1,True,False,3.773895335061639,16.41863514572584,1.0,3.0,0,False
+CB_6ISU,cryptobench,drug_contact,P15374,6ISU,A,2,16,1,True,False,5.540475250373382,12.447261642635102,1.0,2.0,0,False
+CB_6IU0,cryptobench,drug_contact,Q5JF30,6IU0,B,2,4,1,True,False,7.60856497639338,10.846784112169473,1.0,1.5,0,False
+CB_6IZ9,cryptobench,drug_contact,A3EYF7,6IZ9,A,6,13,1,True,False,0.0,5.357362597398097,0.0,1.0,0,False
+CB_6J1H,cryptobench,drug_contact,O67224,6J1H,A,23,29,1,True,False,0.0,3.7943049429375044,0.0,1.0,0,False
+CB_6JNJ,cryptobench,drug_contact,Q53TZ2,6JNJ,A,7,26,1,True,False,0.0,7.549744959144748,0.0,1.0,0,False
+CB_6JP2,cryptobench,drug_contact,M9SC49,6JP2,A,4,15,1,True,False,0.0,9.25556103107748,0.0,2.0,0,False
+CB_6JTI,cryptobench,drug_contact,Q5FA94,6JTI,B,7,14,1,True,False,0.0,5.163483688332281,0.0,1.0,0,False
+CB_6KQF,cryptobench,drug_contact,Q8RQE8-Q8RQE9,6KQF,D,14,7,1,True,False,29.484089607786775,38.2402735084361,5.0,7.0,0,True
+CB_6KSC,cryptobench,drug_contact,P9WNV1,6KSC,A,13,9,1,True,False,25.911074717193806,27.35893316633527,5.0,6.0,0,True
+CB_6KX4,cryptobench,drug_contact,P97784,6KX4,A,6,20,1,True,False,0.0,6.465461527984048,0.0,1.0,0,False
+CB_6KYQ,cryptobench,drug_contact,O15075,6KYQ,A,11,18,1,True,False,0.0,7.253083693263919,0.0,1.0,0,False
+CB_6L61,cryptobench,drug_contact,M1HE54,6L61,A,5,22,1,True,False,0.0,5.4790616834111905,0.0,1.0,0,False
+CB_6LIO,cryptobench,drug_contact,Q15119,6LIO,B,28,16,1,True,False,8.331757257625789,12.97894542611191,2.0,2.5,0,False
+CB_6N5J,cryptobench,drug_contact,P10121,6N5J,B,17,18,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_6NEI,cryptobench,drug_contact,Q5C9L2,6NEI,B,7,21,1,True,False,0.0,3.8214817806709473,0.0,1.0,0,False
+CB_6NFL,cryptobench,drug_contact,Q9UH17,6NFL,A,9,4,1,True,False,5.306967778308061,9.26022641280398,1.0,2.0,0,False
+CB_6NLF,cryptobench,drug_contact,Q9HY79,6NLF,A,2,11,1,True,False,18.931233134690412,29.147779280761686,4.0,5.0,0,True
+CB_6O4F,cryptobench,drug_contact,P49419,6O4F,H,12,11,1,True,False,0.0,6.4878152717228215,0.0,1.0,0,False
+CB_6OAH,cryptobench,drug_contact,P14324,6OAH,F,7,13,1,True,False,3.883278769287623,11.519861500903561,1.0,2.0,0,False
+CB_6OPB,cryptobench,drug_contact,Q1HRL7,6OPB,D,2,24,1,True,False,0.0,13.533046558861624,0.0,3.0,0,False
+CB_6P5B,cryptobench,drug_contact,P61088,6P5B,C,1,10,1,True,False,0.0,7.607209406071407,0.0,1.5,0,False
+CB_6PK5,cryptobench,drug_contact,P43408,6PK5,A,11,30,1,True,False,0.0,9.226980314244011,0.0,2.0,0,False
+CB_6PLF,cryptobench,drug_contact,O43175,6PLF,B,17,5,1,True,False,18.658322566618896,26.04262578927094,4.0,5.0,0,True
+CB_6PNT,cryptobench,drug_contact,T1KUK4,6PNT,A,16,16,1,True,False,0.0,10.022543578282718,0.0,2.0,0,False
+CB_6PUV,cryptobench,drug_contact,Q8IUN9,6PUV,A,5,11,1,True,False,11.346330243739601,16.449244450733897,2.0,3.0,0,False
+CB_6PVG,cryptobench,drug_contact,L0E4H0,6PVG,A,34,19,1,True,False,3.801065771596171,11.477772301278677,1.0,2.0,0,False
+CB_6PXO,cryptobench,drug_contact,P48730,6PXO,B,11,23,1,True,False,0.0,7.7476487401017335,0.0,1.0,0,False
+CB_6Q7Q,cryptobench,drug_contact,O58216,6Q7Q,A,2,8,1,True,False,10.299234631757837,18.40725485558947,2.0,3.5,0,False
+CB_6Q8Z,cryptobench,drug_contact,P51570,6Q8Z,D,10,14,1,True,False,8.426967188734036,17.19635699925682,2.0,3.0,0,False
+CB_6QFL,cryptobench,drug_contact,O14733,6QFL,A,11,14,1,True,False,0.0,9.406898428620213,0.0,2.0,0,False
+CB_6QLB,cryptobench,drug_contact,P04632,6QLB,C,28,19,1,True,False,3.818539118563513,8.61352622333038,1.0,2.0,0,False
+CB_6RXD,cryptobench,drug_contact,B7GTV0,6RXD,A,5,21,1,True,False,12.81841901327929,21.161102830429233,3.0,4.0,0,True
+CB_6S3P,cryptobench,drug_contact,K7RJ88,6S3P,A,13,16,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_6TN3,cryptobench,drug_contact,Q4WAR0,6TN3,A,19,29,1,True,False,0.0,3.7789863720315258,0.0,1.0,0,False
+CB_6U9C,cryptobench,drug_contact,Q9KMN1,6U9C,A,3,8,1,True,False,14.066573498901572,18.47132449422722,3.0,4.0,0,True
+CB_6UR2,cryptobench,drug_contact,D9N168,6UR2,A,12,15,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_6UW3,cryptobench,drug_contact,A0QTG2,6UW3,A,1,18,1,True,False,0.0,11.550456855045464,0.0,3.0,0,False
+CB_6VTG,cryptobench,drug_contact,D2W2Z5,6VTG,C,18,19,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_6W10,cryptobench,drug_contact,Q91XB0,6W10,A,6,12,1,True,False,0.0,4.793048262049709,0.0,1.0,0,False
+CB_6W3C,cryptobench,drug_contact,O75460,6W3C,C,19,23,1,True,False,0.0,6.432578409937962,0.0,1.0,0,False
+CB_6X41,cryptobench,drug_contact,F5B5W8,6X41,B,3,14,1,True,False,0.0,4.110898447421747,0.0,1.0,0,False
+CB_6X84,cryptobench,drug_contact,P0AG80,6X84,A,7,14,1,True,False,0.0,1.883309321380849,0.0,0.5,0,False
+CB_6XL4,cryptobench,drug_contact,P00533,6XL4,C,14,21,1,True,False,0.0,5.321169890165132,0.0,1.0,0,False
+CB_6XQX,cryptobench,drug_contact,P08149,6XQX,B,1,5,1,True,False,24.548620348198796,26.143535988844352,5.0,6.0,0,True
+CB_6XUE,cryptobench,drug_contact,P21589,6XUE,A,9,16,1,True,False,0.0,11.069836678740586,0.0,2.0,0,False
+CB_6XXH,cryptobench,drug_contact,P49366,6XXH,B,28,20,1,True,False,0.0,6.157865416434349,0.0,1.0,0,False
+CB_6YDK,cryptobench,drug_contact,P71447,6YDK,A,5,17,1,True,False,0.0,13.707743140283888,0.0,3.0,0,False
+CB_6Z6Z,cryptobench,drug_contact,P80188,6Z6Z,A,7,21,1,True,False,0.0,5.239739020218469,0.0,1.0,0,False
+CB_6Z89,cryptobench,drug_contact,P30793,6Z89,A,3,13,1,True,False,16.38212989815427,29.825198507302513,3.0,5.0,0,True
+CB_7AQB,cryptobench,drug_contact,Q16659,7AQB,B,8,16,1,True,False,0.0,7.990509751494601,0.0,1.5,0,False
+CB_7AUT,cryptobench,drug_contact,Q99321,7AUT,A,4,22,1,True,False,0.0,11.340207374431099,0.0,2.0,0,False
+CB_7B6Q,cryptobench,drug_contact,P22188,7B6Q,A,22,20,1,True,False,0.0,8.214806723511405,0.0,1.5,0,False
+CB_7BHJ,cryptobench,drug_contact,O33877,7BHJ,A,1,21,1,True,False,0.0,23.098871530877865,0.0,5.0,0,False
+CB_7BTC,cryptobench,drug_contact,Q15382,7BTC,B,21,12,1,True,False,4.441899030820038,8.612628542427208,1.0,1.5,0,False
+CB_7C48,cryptobench,drug_contact,P96356,7C48,A,6,21,1,True,False,0.0,6.66235056117584,0.0,1.0,0,False
+CB_7CEH,cryptobench,drug_contact,W0TJ64,7CEH,A,7,10,1,True,False,8.544103171193568,12.455277015252133,2.0,2.5,0,False
+CB_7CIU,cryptobench,drug_contact,Q9W469,7CIU,A,11,28,1,True,False,0.0,3.789276074514915,0.0,1.0,0,False
+CB_7CLU,cryptobench,drug_contact,Q5W249,7CLU,A,7,23,1,True,False,0.0,3.81360787181902,0.0,1.0,0,False
+CB_7CRM,cryptobench,drug_contact,P94968,7CRM,C,9,17,1,True,False,9.15016273079337,15.199519729254606,2.0,4.0,0,False
+CB_7CTD,cryptobench,drug_contact,Q9WZL1,7CTD,A,16,12,1,True,False,0.0,2.573781750654082,0.0,0.5,0,False
+CB_7CYR,cryptobench,drug_contact,A0QTT2,7CYR,A,7,18,1,True,False,0.0,3.805724070918094,0.0,1.0,0,False
+CB_7D48,cryptobench,drug_contact,P0DSP4,7D48,A,7,23,1,True,False,6.16394751762214,15.514227341379266,1.0,3.0,0,False
+CB_7DJN,cryptobench,drug_contact,P02768,7DJN,A,10,15,1,True,False,5.5126616076084325,13.50465704858883,1.0,3.0,0,False
+CB_7DL7,cryptobench,drug_contact,B0VJ11,7DL7,C,16,28,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_7EGU,cryptobench,drug_contact,P40261,7EGU,A,11,24,1,True,False,0.0,3.8208407737438232,0.0,1.0,0,False
+CB_7ERY,cryptobench,drug_contact,Q0DPB7,7ERY,A,9,16,1,True,False,3.899709476358466,14.121645569872348,1.0,3.0,0,False
+CB_7F2M,cryptobench,drug_contact,Q08499,7F2M,B,24,28,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_7FT3,cryptobench,drug_contact,O00560,7FT3,A,3,14,1,True,False,3.8636788168790654,14.391127453079015,1.0,3.0,0,False
+CB_7GOS,cryptobench,drug_contact,Q68T42,7GOS,B,3,4,1,True,False,17.582624548115678,18.469993827501227,3.0,3.5,0,True
+CB_7K4W,cryptobench,drug_contact,P23360,7K4W,A,2,15,1,True,False,0.0,9.763338824398142,0.0,2.0,0,False
+CB_7KQL,cryptobench,drug_contact,Q8TDQ0,7KQL,T,4,13,1,True,False,11.86488348025382,18.20471394996362,2.0,3.0,0,False
+CB_7LPU,cryptobench,drug_contact,P06873,7LPU,A,9,7,1,True,False,11.99255418999639,17.62605656407581,2.0,4.0,0,False
+CB_7MOI,cryptobench,drug_contact,Q9ZVN4,7MOI,B,9,6,1,True,False,7.906016253461663,10.530025745513461,1.0,2.0,0,False
+CB_7NC8,cryptobench,drug_contact,B0Y813,7NC8,D,4,11,1,True,False,0.0,3.825234110482651,0.0,1.0,0,False
+CB_7NLX,cryptobench,drug_contact,P9WQ01,7NLX,A,4,14,1,True,False,0.0,4.3575323627079054,0.0,1.0,0,False
+CB_7NP0,cryptobench,drug_contact,P9WIT9,7NP0,C,6,13,1,True,False,0.0,14.672209036133586,0.0,3.0,0,False
+CB_7O1I,cryptobench,drug_contact,O53872,7O1I,A,18,30,1,True,False,0.0,14.777639317327296,0.0,3.0,0,False
+CB_7OPP,cryptobench,drug_contact,P51159,7OPP,C,27,10,1,True,False,11.483118783675454,15.799158906018505,2.0,3.0,0,False
+CB_7OUE,cryptobench,drug_contact,Q9UZY0,7OUE,A,9,14,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_7P2T,cryptobench,drug_contact,A5H660,7P2T,C,5,22,1,True,False,0.0,8.264828943291105,0.0,1.5,0,False
+CB_7PLD,cryptobench,drug_contact,Q9A9Z1,7PLD,B,31,22,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_7PSJ,cryptobench,drug_contact,C1F2K5,7PSJ,A,8,21,1,True,False,0.0,15.134143814567112,0.0,3.0,0,False
+CB_7Q00,cryptobench,drug_contact,O23254,7Q00,B,20,3,1,True,False,13.585068604905903,20.761368090759337,3.0,4.0,0,True
+CB_7QLU,cryptobench,drug_contact,P11838,7QLU,A,2,20,1,True,False,0.0,11.660374545676227,0.0,2.0,0,False
+CB_7QOQ,cryptobench,drug_contact,K5B7Z4,7QOQ,A,12,18,1,True,False,0.0,4.127813646471942,0.0,1.0,0,False
+CB_7R51,cryptobench,drug_contact,B2RID1,7R51,B,3,8,1,True,False,11.265578058848112,15.474130815718198,2.0,3.0,0,False
+CB_7S2N,cryptobench,drug_contact,Q4E4E1,7S2N,A,3,14,1,True,False,0.0,7.935644131594534,0.0,1.5,0,False
+CB_7SE6,cryptobench,drug_contact,P22087,7SE6,A,10,13,1,True,False,0.0,3.814807203516319,0.0,1.0,0,False
+CB_7SO5,cryptobench,drug_contact,P18177,7SO5,A,16,28,1,True,False,0.0,23.658748017528545,0.0,5.0,0,False
+CB_7UJR,cryptobench,drug_contact,Q9UQM7,7UJR,A,11,17,1,True,False,0.0,8.484936181256757,0.0,2.0,0,False
+CB_7VDA,cryptobench,drug_contact,P00366,7VDA,A,16,28,1,True,False,5.631268684763682,13.279947158184097,1.0,2.5,0,False
+CB_7W19,cryptobench,drug_contact,A5Y459,7W19,A,4,23,1,True,False,11.308302701997324,18.402726401270005,2.0,4.0,0,False
+CB_7WMY,cryptobench,drug_contact,A0R6S0,7WMY,A,7,22,1,True,False,0.0,5.5369608928944825,0.0,1.0,0,False
+CB_7WYO,cryptobench,drug_contact,E7E815,7WYO,B,3,11,1,True,False,0.0,10.083895427859215,0.0,2.0,0,False
+CB_7Y4C,cryptobench,drug_contact,Q9Y6W6,7Y4C,A,1,13,1,True,False,7.907320279336103,13.630651855285569,1.0,2.0,0,False
+CB_7YMF,cryptobench,drug_contact,O00571,7YMF,A,16,19,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_7YV0,cryptobench,drug_contact,G8HX37,7YV0,A,20,20,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_7YYE,cryptobench,drug_contact,Q9BYJ9,7YYE,C,8,9,1,True,False,0.0,3.796027002011448,0.0,1.0,0,False
+CB_8AEQ,cryptobench,drug_contact,A9WIU3,8AEQ,A,20,8,1,True,False,0.0,5.581498312043074,0.0,1.0,0,False
+CB_8BBC,cryptobench,drug_contact,P05326,8BBC,A,20,3,1,True,False,7.552245891124043,11.10737907879262,1.0,2.0,0,False
+CB_8BRE,cryptobench,drug_contact,Q9I5Q5,8BRE,B,8,17,1,True,False,0.0,8.689685955199993,0.0,2.0,0,False
+CB_8CFB,cryptobench,drug_contact,Q9I685,8CFB,C,29,35,1,True,False,3.816326243915736,16.459444522826402,1.0,3.0,0,False
+CB_8CN8,cryptobench,drug_contact,G3XDA2,8CN8,C,4,12,1,True,False,15.873149088948923,24.994162043060058,3.0,4.5,0,True
+CB_8DEN,cryptobench,drug_contact,P0ABE7,8DEN,A,2,20,1,True,False,0.0,7.273115470891056,0.0,1.5,0,False
+CB_8DFN,cryptobench,drug_contact,P0DTD1,8DFN,A,2,19,1,True,False,0.0,7.785633564457039,0.0,1.0,0,False
+CB_8E1J,cryptobench,drug_contact,O74429,8E1J,B,24,21,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_8ELM,cryptobench,drug_contact,P30043,8ELM,A,4,18,1,True,False,10.790984107114607,19.486821986479576,3.0,4.0,0,False
+CB_8EVV,cryptobench,drug_contact,Q9HWI0,8EVV,A,57,24,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_8GHC,cryptobench,drug_contact,P18054,8GHC,B,6,15,1,True,False,10.011964692306897,20.24810662753432,2.0,4.0,0,False
+CB_8H0N,cryptobench,drug_contact,Q9UBP6,8H0N,B,10,17,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_8HS6,cryptobench,drug_contact,Q8YIN7,8HS6,H,14,26,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_8IAS,cryptobench,drug_contact,Q8DQ84,8IAS,B,23,19,1,True,False,0.0,0.0,0.0,0.0,0,False
+CB_8IXP,cryptobench,drug_contact,A9Y8T1,8IXP,A,9,22,1,True,False,0.0,3.784586574560162,0.0,1.0,0,False
+CB_8J11,cryptobench,drug_contact,P02791,8J11,X,5,3,1,True,False,0.0,6.100982625774312,0.0,1.0,0,False
+CB_8J1K,cryptobench,drug_contact,Q9GZT9,8J1K,A,15,29,1,True,False,0.0,6.437606465139042,0.0,1.0,0,False
+CB_8JQK,cryptobench,drug_contact,Q9UUN9,8JQK,A,1,11,1,True,False,6.6743846158278854,16.276510252508057,1.0,4.0,0,False
+CB_8JZI,cryptobench,drug_contact,Q9K5E4,8JZI,A,11,12,1,True,False,9.807689789139948,15.333485218696495,2.0,3.0,0,False
+CB_8ONN,cryptobench,drug_contact,D5EHC5,8ONN,E,7,22,1,True,False,0.0,3.8737890318575565,0.0,1.0,0,False
+CB_8PFP,cryptobench,drug_contact,Q14191,8PFP,A,18,22,1,True,False,3.772676105896184,10.854661037232876,1.0,2.0,0,False
+CB_8PQS,cryptobench,drug_contact,K9TVX3,8PQS,B,3,11,1,True,False,3.804256169082202,12.496411324856428,1.0,3.0,0,False
+CB_8SXW,cryptobench,drug_contact,Q72KY0,8SXW,A,12,32,1,True,False,0.0,10.460896187376584,0.0,2.0,0,False
+CB_9ATC,cryptobench,drug_contact,P0A786,9ATC,A,10,16,1,True,False,0.0,0.0,0.0,0.0,0,False
+CS_1ALB,cryptosite,drug_contact,1ALB,1ALB,A,3,17,1,True,False,0.0,13.610376519406064,0.0,4.0,0,False
+CS_1B6B,cryptosite,drug_contact,1B6B,1B6B,A,13,31,1,True,False,0.0,3.8222413581562344,0.0,1.0,0,False
+CS_1BP5,cryptosite,drug_contact,1BP5,1BP5,A,8,9,1,True,False,0.0,0.0,0.0,0.0,0,False
+CS_1PKL,cryptosite,drug_contact,1PKL,1PKL,B,12,21,1,True,False,0.0,5.9690095493306075,0.0,1.0,0,False
+CS_1PZT,cryptosite,drug_contact,1PZT,1PZT,A,19,15,1,True,False,0.0,0.0,0.0,0.0,0,False
+CS_1RTC,cryptosite,drug_contact,1RTC,1RTC,A,21,14,1,True,False,0.0,1.8696107883728097,0.0,0.5,0,False
+CS_1TQO,cryptosite,drug_contact,1TQO,1TQO,A,6,13,1,True,False,0.0,5.2217225127346625,0.0,1.0,0,False
+CS_2AX9,cryptosite,drug_contact,2AX9,2AX9,A,18,9,1,True,False,3.8171023041045156,9.788380713887259,1.0,2.0,0,False
+CS_2CM2,cryptosite,drug_contact,2CM2,2CM2,A,9,16,1,True,False,0.0,1.898733525274149,0.0,0.5,0,False
+CS_2H4E,cryptosite,drug_contact,2H4E,2H4E,B,3,7,1,True,False,0.0,6.8307224361702765,0.0,1.0,0,False
+CS_2ZB1,cryptosite,drug_contact,2ZB1,2ZB1,A,21,21,1,True,False,14.305322296264421,22.90941520423426,2.0,4.0,0,True
+CS_3CHE,cryptosite,drug_contact,3CHE,3CHE,A,15,14,1,True,False,0.0,0.0,0.0,0.0,0,False
+CS_3L7U,cryptosite,drug_contact,3L7U,3L7U,C,12,13,1,True,False,0.0,0.0,0.0,0.0,0,False
+CS_4AKE,cryptosite,drug_contact,4AKE,4AKE,B,23,23,1,True,False,0.0,0.0,0.0,0.0,0,False
+PM_1ADE,pocketminer,drug_contact,Adenylosuccinate synthetase,1ADE,A,29,21,1,True,False,0.0,3.792285063124872,0.0,1.0,0,False
+PM_1ALB,pocketminer,drug_contact,Adipocyte lipid-binding protein,1ALB,A,3,17,1,True,False,0.0,13.610376519406064,0.0,4.0,0,False
+PM_1EX6,pocketminer,drug_contact,Guanylate kinase,1EX6,A,19,14,1,True,False,0.0,0.0,0.0,0.0,0,False
+PM_1EXM,pocketminer,drug_contact,Elongation factor TU,1EXM,A,23,28,1,True,False,8.444682350449899,16.163458576976026,2.0,3.0,0,False
+PM_1EZM,pocketminer,drug_contact,Novel cryptic pocket set,1EZM,A,6,18,1,True,False,3.8400393227153327,12.56264056139944,1.0,3.0,0,False
+PM_1J8F,pocketminer,drug_contact,Novel cryptic pocket set,1J8F,C,5,24,1,True,False,16.93047530342843,31.62565443942197,3.0,6.0,0,True
+PM_1MY0,pocketminer,drug_contact,AMPA receptor GluR2 subunit,1MY0,B,3,16,1,True,False,0.0,7.12937576036379,0.0,1.0,0,False
+PM_1NI6,pocketminer,drug_contact,Heme oxygenase-1,1NI6,D,4,16,1,True,False,5.472778636122605,13.153420798914922,1.0,2.5,0,False
+PM_1S2O,pocketminer,drug_contact,Novel cryptic pocket set,1S2O,A,7,11,1,True,False,3.7972407087252185,17.634019876363983,1.0,3.0,0,False
+PM_2BLS,pocketminer,drug_contact,AmpC β-lactamase,2BLS,B,6,9,1,True,False,0.0,7.206764738771484,0.0,1.0,0,False
+PM_2CEY,pocketminer,drug_contact,Novel cryptic pocket set,2CEY,A,6,17,1,True,False,0.0,3.8525999013653096,0.0,1.0,0,False
+PM_2LAO,pocketminer,drug_contact,Novel cryptic pocket set,2LAO,A,7,13,1,True,False,0.0,0.0,0.0,0.0,0,False
+PM_2OHG,pocketminer,drug_contact,"Cryptosite proteins used in validation, with a different structure used for human glycolipid transfer protein (3rwv)",2OHG,A,10,15,1,True,False,0.0,5.715737135313346,0.0,1.0,0,False
+PM_2OY4,pocketminer,drug_contact,Novel cryptic pocket set,2OY4,A,14,23,1,True,False,0.0,13.928080700512902,0.0,4.0,0,False
+PM_2QFO,pocketminer,drug_contact,Heat shock protein 90,2QFO,B,4,16,1,True,False,0.0,7.222667662426689,0.0,1.5,0,False
+PM_3F74,pocketminer,drug_contact,LFA1 I domain,3F74,C,6,20,1,True,False,8.361366933701689,16.30465029283321,2.0,3.0,0,False
+PM_3FVJ,pocketminer,drug_contact,Novel cryptic pocket set,3FVJ,A,10,21,1,True,False,0.0,9.726011361292974,0.0,2.0,0,False
+PM_3KJE,pocketminer,drug_contact,Novel cryptic pocket set,3KJE,A,14,18,1,True,False,0.0,0.0,0.0,0.0,0,False
+PM_3RWV,pocketminer,drug_contact,"Cryptosite proteins used in validation, with a different structure used for human glycolipid transfer protein (3rwv)",3RWV,A,10,29,1,True,False,0.0,9.95087860442484,0.0,2.0,0,False
+PM_4AKE,pocketminer,drug_contact,Adenylate kinase,4AKE,B,23,23,1,True,False,0.0,0.0,0.0,0.0,0,False
+PM_4I92,pocketminer,drug_contact,Novel cryptic pocket set,4I92,A,17,19,1,True,False,0.0,3.8013654125853242,0.0,1.0,0,False
+PM_4IC4,pocketminer,drug_contact,Novel cryptic pocket set,4IC4,A,12,23,1,True,False,0.0,3.8209487041832944,0.0,1.0,0,False
+PM_4R72,pocketminer,drug_contact,Novel cryptic pocket set,4R72,A,22,22,1,True,False,0.0,7.2091665988500715,0.0,1.0,0,False
+PM_4W51,pocketminer,drug_contact,Novel cryptic pocket set,4W51,A,10,19,1,True,False,0.0,7.629680465130894,0.0,1.0,0,False
+PM_5H9A,pocketminer,drug_contact,Novel cryptic pocket set,5H9A,A,3,20,1,True,False,4.650482770637905,12.89649454516122,1.0,2.5,0,False
+PM_5NIA,pocketminer,drug_contact,Novel cryptic pocket set,5NIA,A,4,28,1,True,False,0.0,9.814374224445535,0.0,2.0,0,False
+PM_5NZM,pocketminer,drug_contact,Novel cryptic pocket set,5NZM,A,15,26,1,True,False,0.0,0.0,0.0,0.0,0,False
+PM_6HB0,pocketminer,drug_contact,Novel cryptic pocket set,6HB0,A,26,11,1,True,False,0.0,5.603310896246968,0.0,1.0,0,False

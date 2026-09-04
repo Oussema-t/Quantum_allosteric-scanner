@@ -1,0 +1,191 @@
+[
+ {
+  "apo": "1ALB",
+  "chain": "A",
+  "holo": "1LIC",
+  "holo_chain": "A",
+  "drug_code": "HDS",
+  "name": "Side chains protruding into the site",
+  "partial_subset": true
+ },
+ {
+  "apo": "1BSQ",
+  "chain": "A",
+  "holo": "1GX8",
+  "holo_chain": "A",
+  "drug_code": "RTL",
+  "name": "Loops protruding into the site",
+  "partial_subset": true
+ },
+ {
+  "apo": "1NEP",
+  "chain": "A",
+  "holo": "2HKA",
+  "holo_chain": "C",
+  "drug_code": "C3S",
+  "name": "Loops protruding into the site",
+  "partial_subset": true
+ },
+ {
+  "apo": "4AKE",
+  "chain": "B",
+  "holo": "1ANK",
+  "holo_chain": "B",
+  "drug_code": "ANP",
+  "name": "Secondary structure elements too open",
+  "partial_subset": true
+ },
+ {
+  "apo": "3CHE",
+  "chain": "A",
+  "holo": "2IUZ",
+  "holo_chain": "B",
+  "drug_code": "D1H",
+  "name": "Side chains protruding into the site",
+  "partial_subset": true
+ },
+ {
+  "apo": "1TQO",
+  "chain": "A",
+  "holo": "1TR5",
+  "holo_chain": "A",
+  "drug_code": "THP",
+  "name": "Loops protruding into the site",
+  "partial_subset": true
+ },
+ {
+  "apo": "3L7U",
+  "chain": "C",
+  "holo": "2HVD",
+  "holo_chain": "C",
+  "drug_code": "ADP",
+  "name": "Loops too open in the apo state",
+  "partial_subset": true
+ },
+ {
+  "apo": "1PZT",
+  "chain": "A",
+  "holo": "1PZY",
+  "holo_chain": "D",
+  "drug_code": "UDP",
+  "name": "Loops too open in the apo state",
+  "partial_subset": true
+ },
+ {
+  "apo": "2AX9",
+  "chain": "A",
+  "holo": "2PIQ",
+  "holo_chain": "A",
+  "drug_code": "RB1",
+  "name": "Side chains protruding into the site",
+  "partial_subset": true
+ },
+ {
+  "apo": "1BP5",
+  "chain": "A",
+  "holo": "1RYO",
+  "holo_chain": "A",
+  "drug_code": "OXL",
+  "name": "Loops protruding into the site",
+  "partial_subset": true
+ },
+ {
+  "apo": "2IYT",
+  "chain": "A",
+  "holo": "2IYQ",
+  "holo_chain": "A",
+  "drug_code": "ADP",
+  "name": "Loops too open in the apo state",
+  "partial_subset": true
+ },
+ {
+  "apo": "1RRG",
+  "chain": "A",
+  "holo": "1S9D",
+  "holo_chain": "A",
+  "drug_code": "AFB",
+  "name": "Loops missing in the unbound structure",
+  "partial_subset": true
+ },
+ {
+  "apo": "2CM2",
+  "chain": "A",
+  "holo": "2H4K",
+  "holo_chain": "A",
+  "drug_code": "509",
+  "name": "Loops too open in the apo state",
+  "partial_subset": true
+ },
+ {
+  "apo": "1PKL",
+  "chain": "B",
+  "holo": "3HQP",
+  "holo_chain": "P",
+  "drug_code": "ATP",
+  "name": "Interdomain motions (e.g., hinge)",
+  "partial_subset": true
+ },
+ {
+  "apo": "2ZB1",
+  "chain": "A",
+  "holo": "2NPQ",
+  "holo_chain": "A",
+  "drug_code": "BOG",
+  "name": "Secondary structure elements too close",
+  "partial_subset": true
+ },
+ {
+  "apo": "2H4E",
+  "chain": "B",
+  "holo": "3CFN",
+  "holo_chain": "B",
+  "drug_code": "2AN",
+  "name": "Side chains protruding into the site",
+  "partial_subset": true
+ },
+ {
+  "apo": "1XCG",
+  "chain": "B",
+  "holo": "1OW3",
+  "holo_chain": "B",
+  "drug_code": "GDP",
+  "name": "Loops too open in the apo state",
+  "partial_subset": true
+ },
+ {
+  "apo": "2AIR",
+  "chain": "H",
+  "holo": "1ZA1",
+  "holo_chain": "D",
+  "drug_code": "CTP",
+  "name": "Unstructured regions in the apo state (C or N termini)",
+  "partial_subset": true
+ },
+ {
+  "apo": "3FDL",
+  "chain": "A",
+  "holo": "2YXJ",
+  "holo_chain": "A",
+  "drug_code": "N3C",
+  "name": "Secondary structure elements too open",
+  "partial_subset": true
+ },
+ {
+  "apo": "1B6B",
+  "chain": "A",
+  "holo": "1KUV",
+  "holo_chain": "A",
+  "drug_code": "CA5",
+  "name": "Loops protruding into the site",
+  "partial_subset": true
+ },
+ {
+  "apo": "1RTC",
+  "chain": "A",
+  "holo": "1BR6",
+  "holo_chain": "A",
+  "drug_code": "PT1",
+  "name": "Side chains protruding into the site",
+  "partial_subset": true
+ }
+]
