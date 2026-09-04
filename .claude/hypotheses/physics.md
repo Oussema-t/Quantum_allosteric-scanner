@@ -542,6 +542,41 @@ resolve this hypothesis's own population-level "for several targets" claim
 either way. The trail above already existed and is unchanged; this line
 only adds the top-level dated verdict summarizing it.
 
+**Status update, 2026-09-04 ([[TASK-0326]]'s full corpus sweep) — six
+more independent lines of evidence folded in, none changing the
+mixed/target-dependent verdict above, all pointing the same direction.**
+- **Foundational baseline** ([[TASK-0094]], 2026-07-13): zero of the 3
+  mandatory targets clear their own apo-only proximity floor — the
+  measurement [[TASK-0093]]/[[TASK-0102]]/[[TASK-0104]]'s own citations
+  above are built on, not itself previously cited.
+- **Dynamical extension — perturbing apo does not create what it
+  lacks** ([[TASK-0015]], 2026-07-28; [[TASK-0187]], 2026-08-01):
+  letting the apo structure move along its own low-frequency ANM modes
+  (not held rigid) never creates a graph-topology shortcut between
+  active site and pocket, 7/7 targets, 60 candidate perturbations
+  tried per target; an independent matched-decoy specificity gate on
+  the same question also FAILS on PTP1B (real shortcut rate 1.7% vs.
+  decoy median 12.9%, wrong-signed). Absence of the signal in static
+  apo topology is not an artifact of holding the structure rigid.
+- **Seed-cardinality gauge fix collapses the pipeline's one surviving
+  positive** ([[TASK-0118]], 2026-07-16; [[TASK-0129]], 2026-07-17):
+  CTQW seed cardinality (single-residue vs. full active-site array),
+  not coherence, dominates AUC variance (spread up to 0.326);
+  correcting it alongside the clock fix (see [[HYP-P6]]) reverses
+  CARDIAC_MYOSIN's only surviving positive result — under the fully
+  corrected gauge, no mandatory target's shipped result clears its own
+  floor.
+- **Generalization-set corroboration** ([[TASK-0081]], 2026-07-15;
+  [[TASK-0127]], 2026-07-18; [[TASK-0170]], 2026-07-28; [[TASK-0186]],
+  2026-08-01): the pattern replicates on 4 further real ASD targets
+  never used in any prior review cycle (all land in
+  `BEATS_CHANCE_NOT_FLOOR`, overlapping CIs), sharpens under a
+  literature-curated (not drug-contact) PTP1B ground truth (2/3
+  observables score significantly *below* floor), and the underlying
+  static topology shows min hop-distance=1 on 6/7 targets with wide
+  per-target variance in how much of the pocket sits that close
+  (0%-83%).
+
 ---
 
 ## HYP-P9 · A chiral (broken-time-reversal) walk yields a proximity-orthogonal, directional loop observable
@@ -602,6 +637,24 @@ field-scale sensitivity sweep, and it has now failed under both the original and
 the corrected statistic. A draft of [[TASK-0320]]'s collaborator brief listed it
 as an open lead; that was written from inference rather than from this file, and
 was corrected on review.
+
+**Status update, 2026-09-03 ([[TASK-0320]], extended 2026-09-03 by
+[[TASK-0325]] "reverse-CTQW v2", via [[TASK-0326]]'s sweep) — the
+reverse-seeded-CTQW pocket-selection construction this hypothesis's own
+chiral-walk idea inspired is also closed, for a distinct reason.**
+[[TASK-0320]] tested reverse-seeded CTQW directly as a pocket-selection
+method (separately from the chiral-circulation observable above) and
+found it does not select allosteric pockets. [[TASK-0325]] isolated why:
+when a predictor-consensus gate restricts the candidate pocket pool
+before ranking, essentially all of the resulting improvement comes from
+the restriction itself (random-within-gate top-1 hit rate rises from
+2.5% to 11.4% at a top-3 gate — a 4.5x gain, at the cost of discarding
+the true pocket in 65.7% of structures); CTQW-based ranking within the
+gated pool never beats random-within-the-same-gate at any gate width
+tested (McNemar vs. fpocket druggability: p=0.63/0.50/0.0005/0.0003,
+worse where the gate is loose), and raw cavity size remains the best
+available within-gate selector. The predictor gate does the
+discriminating work; the walk adds nothing.
 
 **Status, 2026-07-23 (TASK-0140): tested, claim not supported on real data — FAIL,
 consistent with HYP-P10's own FAIL.** Reference script confirmed absent (as flagged
@@ -830,7 +883,7 @@ compatible. See [[TASK-0221]] organiser question (d).
 | Every seed-referencing observable is a proximity detector ([[TASK-0226]]: classical 0.861/0.899, CTQW 0.697) | With nothing propagating, a seed-referencing observable on a static graph has only geometry left to measure. Distance is the default, not the defect. |
 | Coherence adds nothing — flat γ-sweeps, phase-free converged limit, coherent ≥ ENAQT under noise | There is no interference to exploit in a quantity that is not propagating. |
 | 28 observables collapse to effective rank ~3 ([[TASK-0199]]; externally reproduced at 3.65/11) | All of them measure the geometry of a single static structure, because that is all a single static structure contains. |
-| fpocket — 2009, purely geometric, no propagator — beats every observable here on 2/3 targets | Geometry *is* the signal. A geometric detector should win. |
+| fpocket — 2009, purely geometric, no propagator — beats every observable here on 2/3 targets ([[TASK-0163]], 2026-07-28; corroborated by a published classical GNM transfer-entropy baseline scoring 0/3 floor-clears, [[TASK-0132]], 2026-07-19, and by a within-fpocket-ambiguous-population test showing dynamics never resolves what static geometry cannot, [[TASK-0200]], 2026-08-04) | Geometry *is* the signal. A geometric detector should win. |
 | CTQW's own non-distance signal, isolated by within-shell AUC, duplicates two simpler baselines (degree/euclid) rather than adding orthogonal information ([[TASK-0247]]); the ensemble-based EAM/COREX coupling metric ([[TASK-0229.006]]) is, on a decisive random-reference-site control, nearly as strongly explained by a candidate's own intrinsic κ_f as by the real active site (ρ≈-0.83 to -0.99 either way, [[TASK-0252]]) | Graph observables collapse to geometry; the ensemble-level observable collapses to intrinsic per-residue instability — the same signature (a seed/site-referencing quantity reduces to a site-independent property) recurring in a completely different observable class, not merely the graph-based ones. |
 
 Five findings, one mechanism. That is a materially stronger claim than nine
@@ -862,6 +915,26 @@ Under a propagation model that is a benchmark defect ([[TASK-0209]]'s reading).
 Under HYP-P13 it is the mechanism showing through — the "apo" pocket is open
 because the protein is already in the stabilised state. The same rereading
 plausibly covers CASPASE1's "intrinsically open" pocket, and possibly much of the
+
+**Status update, 2026-08-26 ([[TASK-0278]], via [[TASK-0326]]'s sweep) —
+decisive structural evidence for the claim two paragraphs above, and a
+sharper mechanistic point the original prose didn't yet carry: occupancy
+alone is not sufficient for allosteric *effect*.** A pocket being open
+and ligand-occupied in a crystal structure only shows the pocket exists
+in that conformation — it says nothing about whether the bound
+molecule produces the allosteric outcome. Direct evidence: computationally
+stripping `MYR`'s atoms from `1OPL` does **not** close the pocket
+(fpocket AUC and window-druggability classification are bit-identical
+before/after) — the confound is the crystallised backbone conformation
+itself, which stripping the ligand's coordinates cannot relax back,
+not merely "an atom happens to be present in the file." A register-wide
+pocket-window-overlap classification rule (applied to all 29 apo
+structures in `config/targets.yaml`) found a second, worse, previously
+unflagged instance of the same defect: `PKR_MITAPIVAT`/`PKR_AG946`'s
+shared apo (`7FS3`) has 91-92% window overlap with a named allosteric
+modulator (`O9I`) — not remediated (non-mandatory target), flagged for
+whoever curates that pair next. Full detail:
+`.ai/tasks/DONE/TASK-0278-our-apo-structures-are-not-apo.md`.
 5-of-7 failure rate: [[TASK-0209]] may have been measuring **conformational
 state**, not data quality.
 
@@ -1093,9 +1166,17 @@ for a different purpose and never tested this way.
 | sibling persistence | — | null both regimes (p=0.97/0.86) | [[TASK-0302]] |
 | conservation, fold class, domain, quaternary, dispersion | — | all null | [[TASK-0284]], [[TASK-0306]], external Exp. B |
 | bond-to-bond propensity (published SOTA) | AUC 0.5067 | +1.3% | [[TASK-0308]] |
+| register-wide distance-stratified AUC (16 operators × 2 propagators × 3 targets) | 40/96 cells naively &gt;0.65 | 0/9 tested cells survive Bonferroni | [[TASK-0123]] |
+| PCA of the 28-observable register | PC1 46.5-60.6% of variance | PC1 *is* the occupancy/proximity axis, loads with -hop/-euclid | [[TASK-0207]] |
+| ensemble contact-degree covariance (multi-graph `dcc_low` analogue) | — | raises effective rank *less* than a matched-variance noise column, 5/5 targets | [[TASK-0211]] |
+| GNM low-mode conformational entropy | — | null on 7/7 targets, correlates with the proximity confound (ρ 0.39-0.76) | [[TASK-0166]] |
+| conservation (Pfam entropy) + residue chemistry | — | both null (p=0.69/0.65); unexplained residual moves the wrong way when added | [[TASK-0274]] |
 
 **Headroom: 77.1%** of available ranking signal is explained by nothing
-tested ([[TASK-0308]], n=108).
+tested ([[TASK-0308]], n=108) — corroborated by an independent,
+earlier-dated measurement lineage below (2026-08-24/25, `TASK-0243`-`TASK-0266`
+arc) reaching essentially the same number from the opposite direction:
+a ceiling, not a floor.
 
 **The lead candidate — and why it is not just another arm.** [[TASK-0140]]'s
 chiral circulation observable is the Helmholtz-Hodge **circulating**
@@ -1118,10 +1199,15 @@ excess). **That projection is arithmetic on 7 targets, not a result.**
 (engineered dephasing), [[TASK-0142]] (Hodge L1 / persistent H2),
 [[TASK-0145]] (transport conductance), [[TASK-0146]] (frequency-domain
 coherence), [[TASK-0147]] (vibronic resonance), [[TASK-0148]]
-(single-particle entanglement entropy), [[TASK-0157]] (two-boson HOM) were
-**all evaluated on raw AUC against floors, none residualised on
-proximity.** Whatever their verdicts, they were reached under the wrong
-null.
+(single-particle entanglement entropy), [[TASK-0157]] (two-boson HOM),
+[[TASK-0122]] (slow-mode co-participation, mostly fails to decorrelate
+from distance, floor-clears 1/3 targets), [[TASK-0168]] (mechanism-plant:
+the channel-family observable family replicates 2/2, the ensemble-family
+candidate `dcc_low_from_L` does not generalize), [[TASK-0203]] (the
+register's own PTP1B `dcc_low` positive: the mechanism-plant test rules
+out its named ensemble/mode-coupling reading outright) were **all
+evaluated on raw AUC against floors, none residualised on proximity.**
+Whatever their verdicts, they were reached under the wrong null.
 
 **Secondary route — the six-measure meta-classifier.** [[TASK-0306]]'s
 redundancy gate **passed**: the six bond-to-bond statistical measures have
@@ -1171,6 +1257,59 @@ site separation ([[TASK-0306]]) or fold class ([[TASK-0306]] addendum).
   proximity-orthogonal), not asymptotic quantum speedup — same caveat
   [[HYP-P9]] already carries.
 
+**Status update, 2026-09-04 — an independent, earlier measurement
+lineage (2026-08-24/25, predates this hypothesis's own 2026-09-01
+filing by about a week) converges on the identical claim from the
+opposite direction, via [[TASK-0326]]'s full corpus sweep.** On an
+untuned, frozen, properly-powered 22-target set: a cheap classical
+composite (fpocket druggability + hop + degree + euclid) and fpocket
+druggability alone both substantially outperform CTQW (per-residue AUC
+0.710/0.756 vs 0.592; two-stage MRR 0.304/0.344 vs 0.161,
+[[TASK-0249]]); CTQW's advantage over a trivial hop-distance ranker is
+statistically indistinguishable from proximity-to-seed — a seed-free
+control collapses its ranking ([[TASK-0244]]); `H_new`'s own
+potential-terms, scored directly as predictors, beat CTQW itself (AUC
+0.751 vs 0.575, p=0.019) and CTQW retains no residual contribution
+once its own ingredients are modeled directly (p=0.973,
+[[TASK-0263]]). Cross-validated variance attribution originally
+credited CTQW a median +1% (often negative) with 67% "unexplained"
+([[TASK-0245]]) — but most of that unexplained share (67%→29%) is
+static cavity geometry (fpocket) the original decomposition never
+measured, and 45% of the frozen set is already pocket-open in apo
+([[TASK-0254]]). Hop-distance alone is the strongest single baseline
+on 5/9 targets ([[TASK-0246]]). The `MIN_HOP≥2` "distality" criterion
+does not guarantee genuine 3D separation — hop-2 candidates can sit as
+close as 2.09 Å, and even the ground-truth answer key fails a 15-20 Å
+genuine-separation bar on 16-20 of 20 targets ([[TASK-0255]]). Two ENM
+model-quality improvements (heavy-atom weighting, SASA burial) neither
+fix `FAIL` targets nor move CTQW's downstream marginal off zero
+([[TASK-0257]]); a pre-registered ENM-validity subgroup test (does
+CTQW do better where its own dynamical model is valid) failed in the
+**reverse** direction ([[TASK-0259]]). CTQW's only surviving lean
+(toward cryptic over already-open targets) was never significant
+(p=0.074) and weakens further once real SASA burial is controlled for
+(p=0.239, [[TASK-0266]]).
+
+**A separate, later measurement puts a number on how much of this
+gap is closeable with the register's existing feature vocabulary.**
+[[TASK-0318]] (2026-09-01/02) found the full span of features already
+derivable from the apo contact graph, B-factors, and seed (19 columns
+spanning every existing potential term, geometry feature, and quantum
+observable) reaches a residualised-on-proximity ranking ceiling of
+**≈0.60 AUC** on 105 ASBench structures — meaningfully above chance
+(both a positive control, proximity-on-itself → exactly 0.5000, and a
+negative permutation-null control, observed value 8.7 null-SDs above
+it), but attributable to already-existing features (V_C, chiral
+circulation, persistent-H2 void, degree) rather than information
+unreachable in the current representation. Read together with the
+77.1% headroom figure above and the independent 0.60-ceiling figure
+here: **the discriminator's own achievable ceiling, given everything
+currently measured, is bounded and roughly consistent across two
+independent measurement designs** — arguing for exploiting the
+existing feature combination rather than building further new
+observables in the same representational class (structured-bath/
+vibronic resonance, two-boson HOM) before that combination is tried.
+
 **Decisive test (pre-registered):** re-score the observable family on the
 171-protein cohort using **residual AUC after conditioning on proximity**,
 not raw AUC against a floor. Chiral circulation first, on the prior above.
@@ -1183,3 +1322,257 @@ this register with (i) a measured reason to expect signal, (ii) existing
 implemented code (`src/allostery/chiral.py`,
 `scripts/chiral_circulation_real_run.py`), and (iii) a cohort large enough
 to test it. Everything else has been measured and closed.
+
+---
+
+**The ten entries below (HYP-P15–HYP-P24) were surfaced, not
+re-derived, by [[TASK-0326]]'s full corpus sweep (2026-09-03/04) — real,
+decided claims that existed only as prose inside individual task files,
+never named as hypotheses. Landed 2026-09-04 after the repo owner's own
+sign-off (`.ai/tasks/DONE/TASK-0326-...md`) authorized the sweep and set
+the standing rule applied throughout this file's other updates above: a
+finding earns its own id only if it is a genuinely different claim or
+mechanism, not a sharper version of one already stated. These ten
+cleared that bar; roughly three times as many did not and were folded
+into HYP-P8/HYP-P9/HYP-P13/HYP-P14 as dated updates instead — see this
+file's own status-update trail above and `.claude/hypotheses/
+TASK_CLASSIFICATION_LEDGER.md`'s disposition table for the full
+accounting.**
+
+## HYP-P15 · `dcc_low`'s cryptic-pocket signal generalizes across targets; the transport observable's does not
+
+**Claim.** `dcc_low` (a low-mode PRS/DCC predictor), first found positive
+on CARDIAC_MYOSIN, generalizes cleanly to a second, independent target
+(PTP1B) under this register's own strict correction. The transport
+(effective-conductance) observable's BCR_ABL1 positive does not
+generalize to either PTP1B or CASPASE7 under the same correction
+(CASPASE7 shows an uncorrected-significant hint in the same direction,
+not a clean replication).
+
+**Status, 2026-07-24 ([[TASK-0151]], extending [[TASK-0145]]/
+[[TASK-0149]]/[[TASK-0168]]): TESTED — mixed, real, and informative.**
+At the time this ran, `dcc_low` was arguably the single strongest,
+most robust positive result in the register. **Later superseded, not
+retracted, by two independent findings**: [[TASK-0158]] (2026-07-25)
+found the permutation null this generalization was scored against was
+itself anti-conservative and removed `dcc_low`'s Bonferroni survival on
+re-run; [[TASK-0216]]/[[TASK-0217]] (2026-08-13, see [[HYP-S6]]'s own
+correction in `search_complexity.md`) later found the *original*
+PTP1B `dcc_low` positive this generalization traces back to
+([[TASK-0201]]) was itself a seed-construction artifact. Kept as its
+own entry because the generalization methodology and the
+CARDIAC_MYOSIN/BCR_ABL1 findings are independent of that specific
+defect — but read alongside both corrections, not as a standing
+positive.
+
+---
+
+## HYP-P16 · The pipeline's own statistical test lacks power to detect a real signal at realistic strengths, independent of whether one exists
+
+**Claim.** Through the full, unmodified verdict pipeline (floor → CI →
+matched permutation null → Bonferroni), no target reaches 80% power to
+certify a planted active-site→distal-patch coupling at any strength
+tested, up to ~4× background conductance — a measured limit on this
+project's own detection sensitivity, distinct from [[HYP-P14]]'s later
+claim that scoring signals collapse onto a *representational* confound
+(proximity). This hypothesis is about the test's *power*, not what it's
+testing for; [[HYP-P14]] didn't exist yet when the deciding task ran, so
+this is not a sharpening of it — cross-referenced because both explain
+the same observed symptom ("the pipeline can't detect what it's looking
+for") via different mechanisms.
+
+**Status, 2026-07-31 ([[TASK-0167]]/[[TASK-0167.002]], compact-null
+geometric validity separately confirmed by [[TASK-0167.003]]/
+[[TASK-0190]]): TESTED.** Under the (now superseded) scattered null, LOD
+≈2× background on 2/3 targets — the gap between the two null conventions
+is itself the measured cost of [[TASK-0158]]'s correction. The compact
+nulls themselves are not anti-conservative (false-positive rate
+≤0.2%-3.4% against 5% nominal), but real pockets sit systematically more
+dispersed than any compact-null draw (97th-100th percentile of the
+null's own Rg distribution on all 7 targets), and for 2 targets
+(CARDIAC_MYOSIN, PTP1B) the real pocket's Rg is structurally unreachable
+by any k-NN-ball construction at that pocket size — recommended as a
+4th `INVARIANCE_PROTOCOL.md` class (CALIBRATION), not yet formally
+adopted.
+
+---
+
+## HYP-P17 · Purpose-built cryptic/allosteric-pocket predictors do not close this register's own residual
+
+**Claim.** External, purpose-built ML predictors (PocketMiner, CryptoSite,
+P2Rank, FTMap/FTSite) do not significantly close this register's own
+residual gap when run on real targets; PocketMiner specifically,
+unblocked and run for real (not merely cited from its paper), does not
+close it either.
+
+**Status, 2026-08-25/26 ([[TASK-0260]], [[TASK-0269]]): TESTED —
+negative.** Cited elsewhere in this register (see [[HYP-P13]]'s own
+evidence table) only for crypticity-stratification methodology reuse,
+never for this, its own actual headline finding — genuinely uncaptured
+until now.
+
+---
+
+## HYP-P18 · On real, field-annotated ground truth, this register's observables do not beat random at top-k retrieval — and neither does the field's own SOTA, once measured the same way
+
+**Claim.** On real ASBench ground truth (both active and allosteric
+sites field-annotated, bypassing every labelling defect this register
+has found in its own benchmark construction), none of this project's
+observables beat random at top-5 residue retrieval, and CTQW is
+significantly *worse* than random (anti-correlated, not merely
+uninformative). The field's own widely-cited "84% accuracy" SOTA number
+is a set-level *enrichment* statistic, not a top-k *retrieval*
+statistic — under the identical retrieval metric, the SOTA method
+itself retrieves a true-site residue in its top 5 on only 1 structure
+in 11 (9.3%).
+
+**Status, 2026-08-31 ([[TASK-0305]]): TESTED — decisive negative +
+reinterpretation.** Flagged by its own filing as "the cleanest negative
+this register has produced." Feeds [[TASK-0306]]'s meta-classifier
+directly (see [[HYP-P14]]'s own "Secondary route").
+
+---
+
+## HYP-P19 · The apo contact graph's connectivity between active site and pocket is broad and redundant, not a narrow bottleneck
+
+**Claim.** Purely topological (no propagator, no clock, no seed
+coherence) percolation/edge-connectivity analysis tests whether
+allosteric communication on these targets is carried by a narrow,
+fragile bottleneck or a broad, redundant subnetwork — the distinction
+the allostery literature (Chennubhotla & Bahar; Nussinov & Tsai) draws
+between pathway-based and network-based signal propagation models.
+
+**Status, 2026-07-18 ([[TASK-0136]]): TESTED — decisive.** All 3
+mandatory targets show 68-76 edge-disjoint routes connecting the active
+site to the pocket (Menger's-theorem edge connectivity) — decisively
+distributed, not a chokepoint, on every target tested. A derived blind
+baseline (`connectivity_robustness`, edge-connectivity from seed to
+every residue) beats the proximity floor on only 1/3 targets, and its
+signal is mostly explained by the same distance/degree confound this
+register finds pervasive elsewhere ([[TASK-0123]]).
+
+---
+
+## HYP-P20 · This register's pocket labels cannot express ligand-dependent allostery; BCR-ABL1's own mechanism is ligand-chemotype-agnostic
+
+**Claim.** Across every same-apo-structure, different-ligand pair in the
+frozen benchmark set, the pocket label (drug-contact geometry) is nearly
+identical regardless of which ligand is bound (Jaccard overlap
+0.40-1.00, median ≈0.77-0.83) — meaning the register's construct cannot
+represent or test whether the *same* pocket is allosteric with one
+ligand and inert with another, even if that were biologically true (a
+distinct construct-validity gap from H9's negative-class question in
+`reference_register.md`). Separately: live literature verification
+establishes BCR-ABL1's myristoyl-pocket allosteric mechanism (pocket
+occupancy → αI-helix bend → SH2 docking) is ligand-chemotype-agnostic —
+non-covalent, non-tethered small molecules (GNF-2, GNF-5, asciminib)
+trigger the identical local structural consequence as the native
+myristoylated tail.
+
+**Status, 2026-08-25 ([[TASK-0265]]): TESTED.** Consistent with, and
+explaining, the near-identical pocket labels observed. Data reused (not
+its own headline finding) by [[TASK-0280]] deciding `reference_register.md`'s
+H6.2.
+
+---
+
+## HYP-P21 · Finding F — a covalent/peptide-bond-adjacency confound recurs across distal-allostery benchmarks, this project's own included
+
+**Claim.** A substantial fraction of curated "allosteric" pocket-vs-
+active-site pairs across structural-biology benchmarks are not distal at
+all — the annotated allosteric and active/catalytic residue sets are
+covalently/peptide-bond adjacent (sequence gap = 1) or literally share
+residues, so no distance-, walk-, or dynamics-based method can score
+these cases as allosteric by construction: there is no distal signal
+present to find.
+
+**Status, 2026-08-28 to 2026-08-31 ([[TASK-0288]], [[TASK-0291]],
+[[TASK-0304]]; count corrected by [[TASK-0297]]'s chain-aware matching
+fix): TESTED — independently reproduced on 3 largely-disjoint cohorts.**
+This register's own frozen set: 8/26 proteins ≈30.8% (corrected from an
+initial 9/28). The field's own ASBench: 24/112 ≈21.4%. CASBench: 14/33
+≈42.4% — this register's own benchmark sits mid-range between the two
+external ones, not an outlier. fpocket's "multi-pocket" splitting of one
+drug's own contact set is mostly an alpha-sphere-clustering artifact,
+not biology (11/33 provably single cavities still split); ~9/33 sites
+are genuinely spatially disjoint (>14 Å). The single strongest
+external-validity result this register has produced.
+
+**Related, not the same defect**: [[TASK-0273]] (2026-08-26) measured
+crystallographic replicate label noise directly for the first time
+(same-drug Jaccard 42-88% depending on target) — real, but *not* the
+cause of the unexplained residual (a majority-consensus label makes
+cross-validated AUC *worse*, not better). Two distinct benchmark-quality
+findings, kept together here because both bear on how much of this
+register's "difficulty" is measurement artifact vs. genuine biology.
+
+---
+
+## HYP-P22 · The population structure of allosteric-site distance is undetermined; a floor/continuum decomposition is partially predictable
+
+**Claim.** The distribution of allosteric-to-active-site distance across
+proteins is not cleanly described as two comparable-breadth populations
+(the original bimodality reading). On a continuous-position regression
+framing instead, the covalent-floor/continuum decomposition (see
+[[HYP-P21]]) is real and the floor-membership half is predictable from
+cheap structural descriptors (LOPO AUC 0.657, p=0.004); the continuous
+remainder is largely unpredictable from standard descriptors (size,
+shape, chain count) except via one construct — fpocket candidate-pocket
+landscape spread — validated out-of-sample (Spearman up to 0.65,
+p=0.002).
+
+**Status, 2026-09-01/02 ([[TASK-0309]], [[TASK-0311]]): PARTIAL.**
+**Retraction folded in directly**: [[TASK-0316]]'s own "multimodal in
+every cohort, adequately powered" headline (2026-09-01) was retracted
+2026-09-02 by [[TASK-0319]] after a real `random_state` re-seeding bug
+was found and fixed in the shared bootstrap LRT (every bootstrap
+replicate inside the loop was drawing an identical sample) — do not cite
+that headline as standing. The regression/predictability results above
+do not depend on the modality question and are unaffected; formal
+modality itself remains UNDETERMINED (see [[TASK-0313]]'s own power
+analysis, cited in [[HYP-P14]]). Cross-reference [[HYP-P14]]: a
+different specific claim (site-distance population structure vs.
+scoring-signal confound), adjacent theme.
+
+---
+
+## HYP-P23 · Discriminator B — per-measure applicability descriptors do not predict which of the six bond-to-bond measures fires
+
+**Claim.** Three descriptors grounded directly in the bond-to-bond
+propensity paper's own stated applicability preconditions (local
+structural surrogate spread, oligomeric-interface fraction,
+crystallographic water density near the site) predict which of six
+independent statistical allostery-detection measures fires for a given
+protein, and how many.
+
+**Status, 2026-09-01 ([[TASK-0317]]): TESTED — negative.** Bonferroni
+gate 0/18; a positive control (predicting one measure from the other
+five, AUC 0.74-0.88) confirms this is a real negative about the inputs,
+not a broken harness. A large apparent LOPO correlation (rho up to
+−0.73) was found and root-caused to a rank-tie artifact in
+low-cardinality features before being reported, not left in. Feeds
+[[TASK-0306]]'s meta-classifier (see [[HYP-P14]]'s "Secondary route") —
+the per-protein selector this hypothesis's own negative result argues
+cannot be built from these three descriptors.
+
+---
+
+## HYP-P24 · V_C separates allosteric from orthosteric holo sites, but tracks occupancy/coupling-capacity, not functional efficacy
+
+**Claim.** V_C (GNM dynamic cross-correlation centrality), computed on
+ligand-stripped holo structures, significantly separates allosteric from
+orthosteric binding sites within the same structure, in two independent
+protein families — a real, holo-side structural pattern. It does not
+track allosteric functional *efficacy*: on BCR-ABL1's controlled
+inert-(myristate)-vs-efficacious-(asciminib) pair (see [[HYP-P13]]'s own
+MYR status update), V_C is significantly *higher* on the inert pocket,
+the opposite of the efficacy-required direction; a post-hoc "capacity to
+couple" rescue hypothesis this prompted then fails a pre-registered,
+independently-designed two-site KRAS test.
+
+**Status, 2026-08-28/29 ([[TASK-0276]], [[TASK-0279]], [[TASK-0281]]):
+TESTED.** KRAS_G12C: 4/5 features significant at n=10. HCV_NS5B:
+AUC=1.000 in all 4 structures. Both the efficacy-specific and
+capacity-to-couple readings are rejected on independent data — V_C
+discriminates occupancy/coupling-capacity, a real but more limited claim
+than "predicts allosteric effect."

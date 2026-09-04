@@ -35,11 +35,33 @@ point at the same gap.
 objective, over an ensemble rather than one structure. That is where every
 hypothesis below lives.
 
-**The one surviving positive:** PTP1B `dcc_low` k=10, p=0.0027 vs bar
+**Correction, 2026-09-04 ([[TASK-0216]]/[[TASK-0217]], via [[TASK-0326]]'s
+sweep) — the "one surviving positive" below does not survive.** Keeping
+the original claim struck through rather than deleted, per this
+register's own no-silent-overwrite convention:
+
+~~**The one surviving positive:** PTP1B `dcc_low` k=10, p=0.0027 vs bar
 0.003125, CI [0.0020, 0.0035] ([[TASK-0201]]) — under a null built
 specifically because the previous one structurally could not reach real
 pocket geometry. Its mechanism is unreplicated ([[TASK-0168]]: `dcc_low`'s
-signature holds on KRAS_G12C, fails on BCR_ABL1, PTP1B untested).
+signature holds on KRAS_G12C, fails on BCR_ABL1, PTP1B untested).~~
+
+`labels.functional_indices` silently fell back to the 5 highest-degree
+contact-graph residues (the same construction as the `degree_centrality`
+proximity-floor baseline itself) on 9 of 13 register targets —
+**including PTP1B, the one target carrying this exact positive**
+([[TASK-0216]], 2026-08-13). Re-running the identical statistic under
+PTP1B's real, UniProt-derived active-site seed collapses it completely:
+AUC 1.000→0.598, p 0.00275→0.567, no `k` in the sweep survives its own
+bar. [[TASK-0217]] (parent, same date) states the consequence directly:
+**"the register's honest surviving-positive count is therefore zero,
+not one."** This was a seed-construction artifact, not a real finding —
+the positive was measuring "does this statistic correlate with degree
+centrality," which the seed itself was silently built from, not a
+genuine ensemble/mode-coupling signal. `HYP-S6`'s own "predictive half"
+discussion (citing [[TASK-0201]]) and this file's cross-references to
+"the register's one surviving positive" elsewhere should be read
+against this correction, not the struck-through claim above.
 
 ---
 
@@ -84,6 +106,26 @@ the known basin at an admittedly under-budgeted SA run. Directly answers
 this hypothesis's own open question ("does rarity return in the coupled
 space") with a real, if weak, data point — not strong enough to overturn
 the "open" framing above, but no longer literally unaddressed.
+
+**Status update, 2026-08-25 ([[TASK-0264]], via [[TASK-0326]]'s sweep) —
+a second, independent, structural (not sampling-rarity) answer to the
+same open question.** Measuring the actual object a Phase-2 QUBO would
+be built over — the joint backbone-choice/rotamer-choice interaction
+graph for cryptic-pocket-opening, not [[TASK-0204]]'s pure fixed-backbone
+case — treewidth stays modest: median union treewidth 5 (mandatory
+targets) to 6 (11 genuinely-cryptic targets) at a realistic window size
+(m=12), never crossing 9 at this project's own primary 8 Å interaction
+cutoff. Coupling the backbone in is a real, measured increase over the
+fixed-backbone case, but a shift in the constant, not a change in
+growth regime — the exact-solve practical boundary only moves down
+modestly (m≈7-8 vs. m≈12). Against the pre-registered rule this
+hypothesis's own text implies (≤6 ⇒ formulation exercise only; ≥12 ⇒
+real quantum target): **formulation-exercise-only**, the same
+conclusion [[TASK-0204]] already reached for pure rotamer packing, now
+confirmed for the coupled cryptic-opening case specifically. Read
+together with [[TASK-0210]]'s own weak-rarity data point above:
+neither the sampling-rarity axis nor the structural-hardness axis has
+yet produced a real quantum target in the coupled space.
 
 ---
 
@@ -278,10 +320,13 @@ coupling? Directional hypothesis, to be fixed before measurement:
 > correlation-observable rank (`dcc_low`, mode co-participation,
 > conformational entropy), and **PTP1B is highest on both**.
 
-If it fires, `dcc_low` is plausibly *detecting coupling* — which gives the
-register's only surviving positive ([[TASK-0201]]) a mechanism, and gives an
-apo-only screen for the hard regime. Both quantities are already computed;
-the correlation is free.
+If it fires, `dcc_low` is plausibly *detecting coupling* — which would give
+[[TASK-0201]]'s once-reported positive a mechanism, and give an apo-only
+screen for the hard regime. Both quantities are already computed; the
+correlation is free. (Moot regardless of this section's own `NOT
+EVALUABLE` verdict below: see the "Correction" near this file's own top —
+[[TASK-0216]]/[[TASK-0217]] found TASK-0201's positive was itself a
+seed-construction artifact, not a real effect to explain.)
 
 **Honest weakness, stated up front:** n=4–7 makes any rank correlation thin,
 and it hangs on the frustration statistic being stable enough to *rank*
@@ -398,6 +443,33 @@ in them", and the candidate hardness is the **three-way conjunction** (druggable
 says finding *a* pocket is not rare. The conjunction is unmeasured. Measurable
 via [[TASK-0228]] §6.2's progress-probability statistic; if it lands in the
 0.24–0.69 band, the complexity claim closes.
+
+**Status update, 2026-08-19 to 2026-08-24 ([[TASK-0227]], [[TASK-0228]],
+[[TASK-0230]], [[TASK-0234]], [[TASK-0235]]; QA-audited by [[TASK-0241]];
+surfaced via [[TASK-0326]]'s sweep) — measured, and the conjunction
+closes on the collective-layer half.** The collective (soft-mode)
+component of real apo→holo transitions is well-captured by a static apo
+ANM subspace (k=50 overlap 0.51-0.90 on 3 real targets), thermodynamically
+cheap under the harmonic approximation, and reached by classical
+incremental search with progress probability **0.24-0.69** — exactly the
+band this section named, confirmed rather than merely predicted. On the
+druggability leg specifically: a heuristic oracle-supervised repacking
+ceiling (EvoEF2 SideChainRepack) fails to open a druggable pocket on any
+of 3 targets under a naive rigid-per-residue backbone placement; a
+local-sliding-window Kabsch backbone-placement fix substantially improves
+the geometry and partially/fully flips the ceiling for 2 of 3 targets
+(real but statistically unproven at n=4/arm, per [[TASK-0241]]'s own
+audit of [[TASK-0235]]'s original "decisive" claim). **Consequence for a
+quantum-sampling angle**: because the collective layer is both plausible
+and common (not rare), and this register's own closed-form Gaussian
+ensemble sampler has no mixing-time bottleneck to accelerate in the
+first place, a proposed quantum-Gibbs/Boltzmann-sampling algorithm over
+collective conformer space was named, evaluated on these grounds, and
+retired without being built ([[TASK-0234]]) — not a route left open on
+an untested null, a route closed on a measured absence of a speedup
+motivation. The three-way conjunction's other two legs
+(active-site-compromised, and their joint co-occurrence) remain
+unmeasured; this closes only the "thermodynamically accessible" leg.
 
 Full record: `physics.md` § HYP-P13.
 
