@@ -317,7 +317,7 @@ understates performance for half the set.
 | Winners form a structural class usable for prediction | **no** — only labelled-pocket size separates them (§6b.9) |
 | Defensible positives at benchmark scale | **6 distinct proteins of 138** after null + family de-duplication (§6b.9) |
 | §14 consensus block generalises | **no** — elects the true pocket ≤ chance (1–6 % vs 9.4 %) while operators agree 100 %; median-rank aggregation is size-biased (§6b.11) |
-| Seeding the walk from the WHOLE pocket ranks the drug pocket first | **no** — top-1 11 % vs 16 % chance (strict truth); coherent > incoherent but both below chance; 2 proteins work (§6c.1) |
+| Seeding the walk from the WHOLE pocket ranks the drug pocket first | **no** — top-1 8–11 % vs 12–16 % chance under both truth rules and both hops; coherent > incoherent by ~5 points but below chance; only `ASB_1W25` and `CB_6RXD` work (§6c) |
 
 
 ### 6b.8 Protein-level correction, and `H_new` head-to-head
@@ -510,7 +510,38 @@ label-permutation null, i.e. it is meaningless with 208 cells and ~9 pockets.
 
 ### 6c.2 Results — relaxed truth (the pocket with the most drug residues, `drug_frac ≥ 0.25`)
 
-_(pending — `pocketwalk_relaxed_hop{1,2}.json`, filled from the second HPC run)_
+Second run with the gate relaxed so that **every** protein with ≥ 3 pockets and ≥ 1 drug residue is scored
+(99–100 / 138; the 26 proteins whose selected pockets contain *no* drug residue at all cannot be scored
+under any rule). The truth rule is then applied offline. "argmax" = the single pocket with the most drug
+residues, accepted if its `drug_frac` ≥ 0.25 — 83–85 proteins usable, vs 58–59 under the strict rule.
+
+| rule | hop | usable proteins | chance top-1 | **coherent** top-1 / top-3 | incoherent top-1 / top-3 |
+|---|---|---|---|---|---|
+| strict (> 0.5) | 2 | 58 | 16.4 % | **11.2 %** / 38.4 % | 6.1 % / 26.5 % |
+| strict (> 0.5) | 1 | 59 | 14.1 % | **9.0 %** / 26.8 % | 6.1 % / 19.5 % |
+| argmax (≥ 0.25) | 2 | 85 | 13.0 % | **10.7 %** / 33.5 % | 5.6 % / 24.7 % |
+| argmax (≥ 0.25) | 1 | 83 | 11.7 % | **8.4 %** / 25.4 % | 5.2 % / 18.9 % |
+
+**Relaxing the truth rule changes nothing.** Under every rule and both hop settings the whole-pocket walk
+ranks the drug pocket first *less* often than a random draw; coherent seeding stays ~5 points above the
+incoherent baseline and ~3–5 points below chance. Per protein, exactly **two** exceed chance by more than
+0.25 in all four runs — **`ASB_1W25`** (0.41–0.54 vs 0.11) and **`CB_6RXD`** (0.42 vs 0.11) — the same two
+proteins that pass every other test in this report. Under the argmax rule `CB_1RXD` (0.25–0.31 vs 0.12)
+is a weak third. The strict-run and relaxed-run numbers agree to within 0.3 points on the shared
+proteins, so the two HPC runs reproduce each other.
+
+### 6c.3 What §6c settles
+
+- **Seeding from the whole pocket is not the fix.** The size-biased aggregation of §6b.11 was a real
+  defect, but removing it does not make the drug pocket rank first: the walk's pocket-to-active-site
+  coupling is simply not what distinguishes the drug pocket in ~97 % of these proteins.
+- **Coherence is measurable but small.** Coherent > incoherent by a consistent 3–5 points (top-1) and
+  6–12 points (top-3) in all four runs — pocket-level interference carries some information — but it
+  never reaches the chance line.
+- **Two proteins are real.** `ASB_1W25` (Response regulator PleD) and `CB_6RXD` are the only targets on
+  which residue-level P@5, the permutation null, the §14 pocket vote at both hops, and the whole-pocket
+  walk under both truth rules all agree. Understanding *why* those two work is the productive next
+  question; converting winners into `H_new` is not, because there is no consistent winner to convert.
 
 ## 7. Limitations
 
@@ -543,4 +574,4 @@ Compute: two Hetzner `ccx33` runs, **EUR 0.13 total** (topology over 1233 protei
 site derivation over 809, 768 s). Both deleted after results were pulled.
 The pocket-seeded sweep (§6b) added three Hetzner `cx43` runs, **EUR 0.08**, all deleted
 (orphaned primary IPs must be deleted separately — they keep billing after the server is gone).
-Three further `cx43` runs for §6b.8–6b.11 (H_new, pocket votes; one aborted half-provisioned run) added ≈ EUR 0.03. Cumulative HPC spend: **≈ EUR 0.24**.
+Three further `cx43` runs for §6b.8–6b.11 (H_new, pocket votes; one aborted half-provisioned run) added ≈ EUR 0.03. The §6c pocket-seeded runs (two `cx43` nodes, ~15 min each) added ≈ EUR 0.02. Cumulative HPC spend: **≈ EUR 0.26**.
