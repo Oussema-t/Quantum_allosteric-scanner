@@ -1,0 +1,13 @@
+{
+ "config": "PASSer-only top-K, MIN_HOP=2, 13 Hamiltonians x 14 scores, PocketMiner veto (apo-ligand protected)",
+ "top10_noveto_P0.8_families": 11,
+ "top10_veto_P0.8_families": 19,
+ "top10_noveto_P0.6_families": 31,
+ "top10_veto_P0.6_families": 34,
+ "top10_families_tested": 65,
+ "top15_noveto_P0.8_families": 8,
+ "top15_veto_P0.8_families": 16,
+ "top15_noveto_P0.6_families": 28,
+ "top15_veto_P0.6_families": 32,
+ "top15_families_tested": 68
+}

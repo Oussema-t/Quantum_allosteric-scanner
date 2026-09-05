@@ -1,0 +1,5571 @@
+{
+ "ASB_11BG": {
+  "pdb": "11BG",
+  "chain": "A",
+  "drug_like": [
+   "U2G"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_1A3W": {
+  "pdb": "1A3W",
+  "chain": "A",
+  "drug_like": [
+   "FBP",
+   "PGA"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_1CE8_1": {
+  "pdb": "1CE8",
+  "chain": "A",
+  "drug_like": [
+   "IMP",
+   "NET",
+   "ORN"
+  ],
+  "cofactor": [
+   "ADP"
+  ],
+  "is_distal": false
+ },
+ "ASB_1CE8_2": {
+  "pdb": "1CE8",
+  "chain": "A",
+  "drug_like": [
+   "IMP",
+   "NET",
+   "ORN"
+  ],
+  "cofactor": [
+   "ADP"
+  ],
+  "is_distal": false
+ },
+ "ASB_1DKU": {
+  "pdb": "1DKU",
+  "chain": "A",
+  "drug_like": [
+   "ABM",
+   "AP2"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_1EM6": {
+  "pdb": "1EM6",
+  "chain": "A",
+  "drug_like": [
+   "CP4",
+   "NBG"
+  ],
+  "cofactor": [
+   "PLP"
+  ],
+  "is_distal": true
+ },
+ "ASB_1FRP": {
+  "pdb": "1FRP",
+  "chain": "A",
+  "drug_like": [
+   "FDP"
+  ],
+  "cofactor": [
+   "AMP"
+  ],
+  "is_distal": true
+ },
+ "ASB_1G3L": {
+  "pdb": "1G3L",
+  "chain": "A",
+  "drug_like": [
+   "TRH"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_1GZ3": {
+  "pdb": "1GZ3",
+  "chain": "A",
+  "drug_like": [
+   "FUM",
+   "OXL"
+  ],
+  "cofactor": [
+   "ATP"
+  ],
+  "is_distal": true
+ },
+ "ASB_1H5S": {
+  "pdb": "1H5S",
+  "chain": "A",
+  "drug_like": [
+   "TMP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_1H78": {
+  "pdb": "1H78",
+  "chain": "A",
+  "drug_like": [
+   "DCP"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_1IWH": {
+  "pdb": "1IWH",
+  "chain": "A",
+  "drug_like": [
+   "CMO",
+   "PEM"
+  ],
+  "cofactor": [
+   "HEM"
+  ],
+  "is_distal": false
+ },
+ "ASB_1KFL": {
+  "pdb": "1KFL",
+  "chain": "A",
+  "drug_like": [
+   "PEP",
+   "PHE"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_1LVW": {
+  "pdb": "1LVW",
+  "chain": "A",
+  "drug_like": [
+   "TYD"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_1M8P": {
+  "pdb": "1M8P",
+  "chain": "A",
+  "drug_like": [
+   "PPS"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_1MP3": {
+  "pdb": "1MP3",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "TTP"
+  ],
+  "is_distal": false
+ },
+ "ASB_1NE7": {
+  "pdb": "1NE7",
+  "chain": "A",
+  "drug_like": [
+   "16G",
+   "AGP"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_1NH8": {
+  "pdb": "1NH8",
+  "chain": "A",
+  "drug_like": [
+   "HIS"
+  ],
+  "cofactor": [
+   "AMP"
+  ],
+  "is_distal": true
+ },
+ "ASB_1NJJ": {
+  "pdb": "1NJJ",
+  "chain": "A",
+  "drug_like": [
+   "GET",
+   "ORX"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_1OF6": {
+  "pdb": "1OF6",
+  "chain": "A",
+  "drug_like": [
+   "DTY"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_1PFK": {
+  "pdb": "1PFK",
+  "chain": "A",
+  "drug_like": [
+   "FBP"
+  ],
+  "cofactor": [
+   "ADP"
+  ],
+  "is_distal": true
+ },
+ "ASB_1QW7": {
+  "pdb": "1QW7",
+  "chain": "A",
+  "drug_like": [
+   "EBP"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_1T49": {
+  "pdb": "1T49",
+  "chain": "A",
+  "drug_like": [
+   "892"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_1UXV": {
+  "pdb": "1UXV",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "AMP",
+   "NAP"
+  ],
+  "is_distal": true
+ },
+ "ASB_1W0F": {
+  "pdb": "1W0F",
+  "chain": "A",
+  "drug_like": [
+   "STR"
+  ],
+  "cofactor": [
+   "HEM"
+  ],
+  "is_distal": false
+ },
+ "ASB_1W25": {
+  "pdb": "1W25",
+  "chain": "A",
+  "drug_like": [
+   "C2E"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_1W96": {
+  "pdb": "1W96",
+  "chain": "A",
+  "drug_like": [
+   "S1A"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_1Z8D_1": {
+  "pdb": "1Z8D",
+  "chain": "A",
+  "drug_like": [
+   "ADE",
+   "GLC"
+  ],
+  "cofactor": [
+   "AMP"
+  ],
+  "is_distal": true
+ },
+ "ASB_1Z8D_2": {
+  "pdb": "1Z8D",
+  "chain": "A",
+  "drug_like": [
+   "ADE",
+   "GLC"
+  ],
+  "cofactor": [
+   "AMP"
+  ],
+  "is_distal": false
+ },
+ "ASB_1ZDS": {
+  "pdb": "1ZDS",
+  "chain": "A",
+  "drug_like": [
+   "ACM"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_2BU8": {
+  "pdb": "2BU8",
+  "chain": "A",
+  "drug_like": [
+   "TF4"
+  ],
+  "cofactor": [
+   "ADP"
+  ],
+  "is_distal": true
+ },
+ "ASB_2BXA": {
+  "pdb": "2BXA",
+  "chain": "A",
+  "drug_like": [
+   "C1F"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_2D60": {
+  "pdb": "2D60",
+  "chain": "A",
+  "drug_like": [
+   "L35"
+  ],
+  "cofactor": [
+   "HEM"
+  ],
+  "is_distal": false
+ },
+ "ASB_2HIM": {
+  "pdb": "2HIM",
+  "chain": "A",
+  "drug_like": [
+   "ASN",
+   "ASP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_2HVW": {
+  "pdb": "2HVW",
+  "chain": "A",
+  "drug_like": [
+   "DCP",
+   "DDN",
+   "DIO"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_2IEG": {
+  "pdb": "2IEG",
+  "chain": "A",
+  "drug_like": [
+   "FRY",
+   "PLR"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_2J0X": {
+  "pdb": "2J0X",
+  "chain": "A",
+  "drug_like": [
+   "ASP",
+   "LYS"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_2JHR": {
+  "pdb": "2JHR",
+  "chain": "A",
+  "drug_like": [
+   "AD9",
+   "PBQ"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_2NW8": {
+  "pdb": "2NW8",
+  "chain": "A",
+  "drug_like": [
+   "TRP"
+  ],
+  "cofactor": [
+   "HEM"
+  ],
+  "is_distal": true
+ },
+ "ASB_2PA3": {
+  "pdb": "2PA3",
+  "chain": "A",
+  "drug_like": [
+   "NAI",
+   "SER"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_2Q5O": {
+  "pdb": "2Q5O",
+  "chain": "A",
+  "drug_like": [
+   "PPY",
+   "TPW"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_2Q8M_1": {
+  "pdb": "2Q8M",
+  "chain": "A",
+  "drug_like": [
+   "BG6",
+   "FBP"
+  ],
+  "cofactor": [
+   "AMP"
+  ],
+  "is_distal": false
+ },
+ "ASB_2Q8M_2": {
+  "pdb": "2Q8M",
+  "chain": "A",
+  "drug_like": [
+   "BG6",
+   "FBP"
+  ],
+  "cofactor": [
+   "AMP"
+  ],
+  "is_distal": true
+ },
+ "ASB_2QMX": {
+  "pdb": "2QMX",
+  "chain": "A",
+  "drug_like": [
+   "PHE"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_2QPY": {
+  "pdb": "2QPY",
+  "chain": "A",
+  "drug_like": [
+   "4HY",
+   "DHT"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_2R1R": {
+  "pdb": "2R1R",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "TTP"
+  ],
+  "is_distal": true
+ },
+ "ASB_2RD5": {
+  "pdb": "2RD5",
+  "chain": "A",
+  "drug_like": [
+   "ARG",
+   "NLG"
+  ],
+  "cofactor": [
+   "ADP",
+   "ATP"
+  ],
+  "is_distal": false
+ },
+ "ASB_2V4Y": {
+  "pdb": "2V4Y",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "GTP"
+  ],
+  "is_distal": false
+ },
+ "ASB_2VD3": {
+  "pdb": "2VD3",
+  "chain": "A",
+  "drug_like": [
+   "HIS",
+   "MRD"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_2VGI": {
+  "pdb": "2VGI",
+  "chain": "A",
+  "drug_like": [
+   "FBP",
+   "PGA"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_2VVT": {
+  "pdb": "2VVT",
+  "chain": "A",
+  "drug_like": [
+   "DGL",
+   "I24"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_2W4I": {
+  "pdb": "2W4I",
+  "chain": "A",
+  "drug_like": [
+   "DGL",
+   "VGA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_2XJC": {
+  "pdb": "2XJC",
+  "chain": "A",
+  "drug_like": [
+   "5GP",
+   "B4P"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_2Y0P": {
+  "pdb": "2Y0P",
+  "chain": "A",
+  "drug_like": [
+   "TD7"
+  ],
+  "cofactor": [
+   "ACO"
+  ],
+  "is_distal": true
+ },
+ "ASB_2YHD": {
+  "pdb": "2YHD",
+  "chain": "A",
+  "drug_like": [
+   "AV6",
+   "TES"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_2YLO": {
+  "pdb": "2YLO",
+  "chain": "A",
+  "drug_like": [
+   "TES",
+   "YLO"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_3BCR": {
+  "pdb": "3BCR",
+  "chain": "A",
+  "drug_like": [
+   "AZZ"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_3BZ7": {
+  "pdb": "3BZ7",
+  "chain": "A",
+  "drug_like": [
+   "BL4",
+   "VO4"
+  ],
+  "cofactor": [
+   "ADP"
+  ],
+  "is_distal": false
+ },
+ "ASB_3C1N": {
+  "pdb": "3C1N",
+  "chain": "A",
+  "drug_like": [
+   "THR"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_3CEH": {
+  "pdb": "3CEH",
+  "chain": "A",
+  "drug_like": [
+   "AVE",
+   "NBG"
+  ],
+  "cofactor": [
+   "PLP"
+  ],
+  "is_distal": true
+ },
+ "ASB_3CSM": {
+  "pdb": "3CSM",
+  "chain": "A",
+  "drug_like": [
+   "TRP",
+   "TSA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_3D2P": {
+  "pdb": "3D2P",
+  "chain": "A",
+  "drug_like": [
+   "ARG"
+  ],
+  "cofactor": [
+   "COA"
+  ],
+  "is_distal": false
+ },
+ "ASB_3DC2": {
+  "pdb": "3DC2",
+  "chain": "A",
+  "drug_like": [
+   "SER"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_3E3N": {
+  "pdb": "3E3N",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "AMP"
+  ],
+  "is_distal": true
+ },
+ "ASB_3EPS": {
+  "pdb": "3EPS",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "AMP",
+   "ATP"
+  ],
+  "is_distal": false
+ },
+ "ASB_3ETE_1": {
+  "pdb": "3ETE",
+  "chain": "A",
+  "drug_like": [
+   "GLU",
+   "H3P"
+  ],
+  "cofactor": [
+   "GTP",
+   "NDP"
+  ],
+  "is_distal": true
+ },
+ "ASB_3ETE_2": {
+  "pdb": "3ETE",
+  "chain": "A",
+  "drug_like": [
+   "GLU",
+   "H3P"
+  ],
+  "cofactor": [
+   "GTP",
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "ASB_3ETG": {
+  "pdb": "3ETG",
+  "chain": "A",
+  "drug_like": [
+   "GLU",
+   "GWD"
+  ],
+  "cofactor": [
+   "GTP",
+   "NDP"
+  ],
+  "is_distal": true
+ },
+ "ASB_3FUD": {
+  "pdb": "3FUD",
+  "chain": "A",
+  "drug_like": [
+   "692",
+   "YB"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_3H30": {
+  "pdb": "3H30",
+  "chain": "A",
+  "drug_like": [
+   "RFZ"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_3H6O": {
+  "pdb": "3H6O",
+  "chain": "A",
+  "drug_like": [
+   "D8G",
+   "FBP"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_3HFR": {
+  "pdb": "3HFR",
+  "chain": "A",
+  "drug_like": [
+   "JEF"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_3HO6": {
+  "pdb": "3HO6",
+  "chain": "A",
+  "drug_like": [
+   "IHP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_3HQP": {
+  "pdb": "3HQP",
+  "chain": "A",
+  "drug_like": [
+   "FDP",
+   "OXL"
+  ],
+  "cofactor": [
+   "ATP"
+  ],
+  "is_distal": true
+ },
+ "ASB_3IFA": {
+  "pdb": "3IFA",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "AMP"
+  ],
+  "is_distal": true
+ },
+ "ASB_3IRH": {
+  "pdb": "3IRH",
+  "chain": "B",
+  "drug_like": [
+   "DGT",
+   "DTP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_3K5V": {
+  "pdb": "3K5V",
+  "chain": "A",
+  "drug_like": [
+   "STI",
+   "STJ"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_3KGF_1": {
+  "pdb": "3KGF",
+  "chain": "A",
+  "drug_like": [
+   "PHE",
+   "TRP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_3KGF_2": {
+  "pdb": "3KGF",
+  "chain": "A",
+  "drug_like": [
+   "PHE",
+   "TRP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_3LSW": {
+  "pdb": "3LSW",
+  "chain": "A",
+  "drug_like": [
+   "4MP",
+   "GLU"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_3LSX": {
+  "pdb": "3LSX",
+  "chain": "A",
+  "drug_like": [
+   "GLU",
+   "PZI"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_3LU6": {
+  "pdb": "3LU6",
+  "chain": "A",
+  "drug_like": [
+   "IMX"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_3M3F": {
+  "pdb": "3M3F",
+  "chain": "A",
+  "drug_like": [
+   "GLU",
+   "P99"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_3MWB": {
+  "pdb": "3MWB",
+  "chain": "A",
+  "drug_like": [
+   "PHE"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_3N25": {
+  "pdb": "3N25",
+  "chain": "A",
+  "drug_like": [
+   "PRO",
+   "PYR"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_3O2M": {
+  "pdb": "3O2M",
+  "chain": "A",
+  "drug_like": [
+   "46A"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_3PG9": {
+  "pdb": "3PG9",
+  "chain": "A",
+  "drug_like": [
+   "TYR"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_3PJG": {
+  "pdb": "3PJG",
+  "chain": "A",
+  "drug_like": [
+   "CXS",
+   "UGA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_3PTZ": {
+  "pdb": "3PTZ",
+  "chain": "A",
+  "drug_like": [
+   "UDX"
+  ],
+  "cofactor": [
+   "NAD"
+  ],
+  "is_distal": false
+ },
+ "ASB_3PXF": {
+  "pdb": "3PXF",
+  "chain": "A",
+  "drug_like": [
+   "2AN"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_3PYY": {
+  "pdb": "3PYY",
+  "chain": "A",
+  "drug_like": [
+   "2PE",
+   "3YY",
+   "STI"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_3R1R": {
+  "pdb": "3R1R",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "ATP"
+  ],
+  "is_distal": true
+ },
+ "ASB_3UO9": {
+  "pdb": "3UO9",
+  "chain": "A",
+  "drug_like": [
+   "04A"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_3ZCW": {
+  "pdb": "3ZCW",
+  "chain": "A",
+  "drug_like": [
+   "4A2"
+  ],
+  "cofactor": [
+   "ADP"
+  ],
+  "is_distal": false
+ },
+ "ASB_4B1F": {
+  "pdb": "4B1F",
+  "chain": "A",
+  "drug_like": [
+   "DGL",
+   "KRH"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_4B2D": {
+  "pdb": "4B2D",
+  "chain": "A",
+  "drug_like": [
+   "FBP",
+   "SER"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_4BBG": {
+  "pdb": "4BBG",
+  "chain": "A",
+  "drug_like": [
+   "V02"
+  ],
+  "cofactor": [
+   "ADP"
+  ],
+  "is_distal": false
+ },
+ "ASB_4CFE": {
+  "pdb": "4CFE",
+  "chain": "A",
+  "drug_like": [
+   "992",
+   "STU"
+  ],
+  "cofactor": [
+   "AMP"
+  ],
+  "is_distal": false
+ },
+ "ASB_4E6C": {
+  "pdb": "4E6C",
+  "chain": "A",
+  "drug_like": [
+   "0O8"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_4G1N": {
+  "pdb": "4G1N",
+  "chain": "A",
+  "drug_like": [
+   "NZT",
+   "OXL"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_4GRS": {
+  "pdb": "4GRS",
+  "chain": "A",
+  "drug_like": [
+   "TYR"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_4HO6": {
+  "pdb": "4HO6",
+  "chain": "A",
+  "drug_like": [
+   "UPG"
+  ],
+  "cofactor": [
+   "UTP"
+  ],
+  "is_distal": false
+ },
+ "ASB_4HYW": {
+  "pdb": "4HYW",
+  "chain": "A",
+  "drug_like": [
+   "FDP"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_4JA8": {
+  "pdb": "4JA8",
+  "chain": "A",
+  "drug_like": [
+   "1K9"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "ASB_4JKT": {
+  "pdb": "4JKT",
+  "chain": "A",
+  "drug_like": [
+   "04A"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_4KZT": {
+  "pdb": "4KZT",
+  "chain": "A",
+  "drug_like": [
+   "ARG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "ASB_4LRL": {
+  "pdb": "4LRL",
+  "chain": "B",
+  "drug_like": [
+   "DGT"
+  ],
+  "cofactor": [
+   "TTP"
+  ],
+  "is_distal": true
+ },
+ "ASB_4MRA": {
+  "pdb": "4MRA",
+  "chain": "A",
+  "drug_like": [
+   "QUE"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "ASB_4PFK": {
+  "pdb": "4PFK",
+  "chain": "A",
+  "drug_like": [
+   "F6P"
+  ],
+  "cofactor": [
+   "ADP"
+  ],
+  "is_distal": true
+ },
+ "CAS_11BA": {
+  "pdb": "11BA",
+  "chain": "A",
+  "drug_like": [
+   "UPA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_11BG": {
+  "pdb": "11BG",
+  "chain": "A",
+  "drug_like": [
+   "U2G"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1BOZ": {
+  "pdb": "1BOZ",
+  "chain": "A",
+  "drug_like": [
+   "PRD"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1BZC": {
+  "pdb": "1BZC",
+  "chain": "A",
+  "drug_like": [
+   "TPI"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1BZJ": {
+  "pdb": "1BZJ",
+  "chain": "A",
+  "drug_like": [
+   "PIC"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1C83": {
+  "pdb": "1C83",
+  "chain": "A",
+  "drug_like": [
+   "OAI"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1C84": {
+  "pdb": "1C84",
+  "chain": "A",
+  "drug_like": [
+   "761"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1C85": {
+  "pdb": "1C85",
+  "chain": "A",
+  "drug_like": [
+   "OBA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1C86": {
+  "pdb": "1C86",
+  "chain": "A",
+  "drug_like": [
+   "OPA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1C87": {
+  "pdb": "1C87",
+  "chain": "A",
+  "drug_like": [
+   "OPA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1C88": {
+  "pdb": "1C88",
+  "chain": "A",
+  "drug_like": [
+   "OTA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1CZA": {
+  "pdb": "1CZA",
+  "chain": "N",
+  "drug_like": [
+   "G6P",
+   "GLC"
+  ],
+  "cofactor": [
+   "ADP"
+  ],
+  "is_distal": true
+ },
+ "CAS_1DGK": {
+  "pdb": "1DGK",
+  "chain": "N",
+  "drug_like": [
+   "GLC"
+  ],
+  "cofactor": [
+   "ADP"
+  ],
+  "is_distal": true
+ },
+ "CAS_1DHF": {
+  "pdb": "1DHF",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1DLR": {
+  "pdb": "1DLR",
+  "chain": "A",
+  "drug_like": [
+   "MXA"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1DLS": {
+  "pdb": "1DLS",
+  "chain": "A",
+  "drug_like": [
+   "MTX"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1DRE": {
+  "pdb": "1DRE",
+  "chain": "A",
+  "drug_like": [
+   "MTX"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1DRF": {
+  "pdb": "1DRF",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1ECV": {
+  "pdb": "1ECV",
+  "chain": "A",
+  "drug_like": [
+   "878"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1FIN": {
+  "pdb": "1FIN",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "ATP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1FUO": {
+  "pdb": "1FUO",
+  "chain": "A",
+  "drug_like": [
+   "MLT"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1FUP": {
+  "pdb": "1FUP",
+  "chain": "A",
+  "drug_like": [
+   "MLT",
+   "PMA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1FUQ": {
+  "pdb": "1FUQ",
+  "chain": "A",
+  "drug_like": [
+   "SIF"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1G7G": {
+  "pdb": "1G7G",
+  "chain": "A",
+  "drug_like": [
+   "INX"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1GFY": {
+  "pdb": "1GFY",
+  "chain": "A",
+  "drug_like": [
+   "COL"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1GOS": {
+  "pdb": "1GOS",
+  "chain": "A",
+  "drug_like": [
+   "NYP"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_1HFP": {
+  "pdb": "1HFP",
+  "chain": "A",
+  "drug_like": [
+   "MOT"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1HFQ": {
+  "pdb": "1HFQ",
+  "chain": "A",
+  "drug_like": [
+   "MOT"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1HFR": {
+  "pdb": "1HFR",
+  "chain": "A",
+  "drug_like": [
+   "MOT"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1I00": {
+  "pdb": "1I00",
+  "chain": "A",
+  "drug_like": [
+   "D16",
+   "UMP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1I2D": {
+  "pdb": "1I2D",
+  "chain": "A",
+  "drug_like": [
+   "ADX"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_1IBV": {
+  "pdb": "1IBV",
+  "chain": "B",
+  "drug_like": [
+   "PVH"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1IBW": {
+  "pdb": "1IBW",
+  "chain": "B",
+  "drug_like": [
+   "PVH"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1JUJ": {
+  "pdb": "1JUJ",
+  "chain": "A",
+  "drug_like": [
+   "LYA",
+   "UMP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1KAK": {
+  "pdb": "1KAK",
+  "chain": "A",
+  "drug_like": [
+   "FNP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1KAV": {
+  "pdb": "1KAV",
+  "chain": "A",
+  "drug_like": [
+   "FEP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1KMS": {
+  "pdb": "1KMS",
+  "chain": "A",
+  "drug_like": [
+   "LIH"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1KQ7": {
+  "pdb": "1KQ7",
+  "chain": "A",
+  "drug_like": [
+   "MLT"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1L8G": {
+  "pdb": "1L8G",
+  "chain": "A",
+  "drug_like": [
+   "DBD"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1LDN": {
+  "pdb": "1LDN",
+  "chain": "A",
+  "drug_like": [
+   "FBP",
+   "OXM"
+  ],
+  "cofactor": [
+   "NAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_1LLD": {
+  "pdb": "1LLD",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "NAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_1LTH": {
+  "pdb": "1LTH",
+  "chain": "T",
+  "drug_like": [
+   "FBP",
+   "OXM"
+  ],
+  "cofactor": [
+   "NAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_1MVS": {
+  "pdb": "1MVS",
+  "chain": "A",
+  "drug_like": [
+   "DTM"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1MVT": {
+  "pdb": "1MVT",
+  "chain": "A",
+  "drug_like": [
+   "DTM"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1N3Z": {
+  "pdb": "1N3Z",
+  "chain": "A",
+  "drug_like": [
+   "ADN",
+   "U3P"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1NWE": {
+  "pdb": "1NWE",
+  "chain": "A",
+  "drug_like": [
+   "FG1"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1NXG": {
+  "pdb": "1NXG",
+  "chain": "A",
+  "drug_like": [
+   "NAI"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_1OHJ": {
+  "pdb": "1OHJ",
+  "chain": "A",
+  "drug_like": [
+   "COP"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1OHK": {
+  "pdb": "1OHK",
+  "chain": "A",
+  "drug_like": [
+   "COP"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1OJ9": {
+  "pdb": "1OJ9",
+  "chain": "A",
+  "drug_like": [
+   "1PB"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_1OJA": {
+  "pdb": "1OJA",
+  "chain": "A",
+  "drug_like": [
+   "ISN"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_1OJC": {
+  "pdb": "1OJC",
+  "chain": "A",
+  "drug_like": [
+   "LAZ"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_1PD8": {
+  "pdb": "1PD8",
+  "chain": "A",
+  "drug_like": [
+   "CO4"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1PD9": {
+  "pdb": "1PD9",
+  "chain": "A",
+  "drug_like": [
+   "CO4"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1PSD": {
+  "pdb": "1PSD",
+  "chain": "A",
+  "drug_like": [
+   "SER"
+  ],
+  "cofactor": [
+   "NAD"
+  ],
+  "is_distal": true
+ },
+ "CAS_1PTV": {
+  "pdb": "1PTV",
+  "chain": "A",
+  "drug_like": [
+   "PTR"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1Q1M": {
+  "pdb": "1Q1M",
+  "chain": "A",
+  "drug_like": [
+   "234"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1R5C": {
+  "pdb": "1R5C",
+  "chain": "A",
+  "drug_like": [
+   "CPA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1RA2": {
+  "pdb": "1RA2",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1RA3": {
+  "pdb": "1RA3",
+  "chain": "A",
+  "drug_like": [
+   "MTX"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1RA8": {
+  "pdb": "1RA8",
+  "chain": "A",
+  "drug_like": [
+   "ATR",
+   "FOL"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1RB2": {
+  "pdb": "1RB2",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1RB3": {
+  "pdb": "1RB3",
+  "chain": "A",
+  "drug_like": [
+   "MTX"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1RC4": {
+  "pdb": "1RC4",
+  "chain": "A",
+  "drug_like": [
+   "DDF"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1RD7": {
+  "pdb": "1RD7",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1RE7": {
+  "pdb": "1RE7",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1RG7": {
+  "pdb": "1RG7",
+  "chain": "A",
+  "drug_like": [
+   "MTX"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1RH3": {
+  "pdb": "1RH3",
+  "chain": "A",
+  "drug_like": [
+   "MTX"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1RWM": {
+  "pdb": "1RWM",
+  "chain": "B",
+  "drug_like": [
+   "Q2Y"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1RWN": {
+  "pdb": "1RWN",
+  "chain": "B",
+  "drug_like": [
+   "4QB"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1RWO": {
+  "pdb": "1RWO",
+  "chain": "B",
+  "drug_like": [
+   "BTH"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1RWV": {
+  "pdb": "1RWV",
+  "chain": "B",
+  "drug_like": [
+   "5PH"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1RX4": {
+  "pdb": "1RX4",
+  "chain": "A",
+  "drug_like": [
+   "DDF"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1RX5": {
+  "pdb": "1RX5",
+  "chain": "A",
+  "drug_like": [
+   "DDF"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1RX6": {
+  "pdb": "1RX6",
+  "chain": "A",
+  "drug_like": [
+   "DDF"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1RX7": {
+  "pdb": "1RX7",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1S2Q": {
+  "pdb": "1S2Q",
+  "chain": "A",
+  "drug_like": [
+   "RAS"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_1S2Y": {
+  "pdb": "1S2Y",
+  "chain": "A",
+  "drug_like": [
+   "RSA"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_1S3B": {
+  "pdb": "1S3B",
+  "chain": "A",
+  "drug_like": [
+   "RMA"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_1S3E": {
+  "pdb": "1S3E",
+  "chain": "A",
+  "drug_like": [
+   "RHP"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_1S3U": {
+  "pdb": "1S3U",
+  "chain": "A",
+  "drug_like": [
+   "TQD"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1S3V": {
+  "pdb": "1S3V",
+  "chain": "A",
+  "drug_like": [
+   "TQD"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1S3W": {
+  "pdb": "1S3W",
+  "chain": "A",
+  "drug_like": [
+   "TQT"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1TQ9": {
+  "pdb": "1TQ9",
+  "chain": "A",
+  "drug_like": [
+   "CPA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1U71": {
+  "pdb": "1U71",
+  "chain": "A",
+  "drug_like": [
+   "MXA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1U72": {
+  "pdb": "1U72",
+  "chain": "A",
+  "drug_like": [
+   "MTX"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1XBO": {
+  "pdb": "1XBO",
+  "chain": "A",
+  "drug_like": [
+   "IX1"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1XTU": {
+  "pdb": "1XTU",
+  "chain": "A",
+  "drug_like": [
+   "U5P"
+  ],
+  "cofactor": [
+   "CTP"
+  ],
+  "is_distal": false
+ },
+ "CAS_1XTV": {
+  "pdb": "1XTV",
+  "chain": "A",
+  "drug_like": [
+   "U5P"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_1YBA": {
+  "pdb": "1YBA",
+  "chain": "A",
+  "drug_like": [
+   "AKG"
+  ],
+  "cofactor": [
+   "NAD"
+  ],
+  "is_distal": true
+ },
+ "CAS_2AZR": {
+  "pdb": "2AZR",
+  "chain": "A",
+  "drug_like": [
+   "982"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2B07": {
+  "pdb": "2B07",
+  "chain": "A",
+  "drug_like": [
+   "598"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2B54": {
+  "pdb": "2B54",
+  "chain": "A",
+  "drug_like": [
+   "D05"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2BGE": {
+  "pdb": "2BGE",
+  "chain": "A",
+  "drug_like": [
+   "T2D"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2BK3": {
+  "pdb": "2BK3",
+  "chain": "A",
+  "drug_like": [
+   "FOF"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2BK4": {
+  "pdb": "2BK4",
+  "chain": "A",
+  "drug_like": [
+   "RAS"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2BK5": {
+  "pdb": "2BK5",
+  "chain": "A",
+  "drug_like": [
+   "ISN"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2BYB": {
+  "pdb": "2BYB",
+  "chain": "A",
+  "drug_like": [
+   "DPK"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2C2S": {
+  "pdb": "2C2S",
+  "chain": "A",
+  "drug_like": [
+   "34B"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_2C2T": {
+  "pdb": "2C2T",
+  "chain": "A",
+  "drug_like": [
+   "39B"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_2C64": {
+  "pdb": "2C64",
+  "chain": "A",
+  "drug_like": [
+   "MA0"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2C65": {
+  "pdb": "2C65",
+  "chain": "A",
+  "drug_like": [
+   "4CR"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2C66": {
+  "pdb": "2C66",
+  "chain": "A",
+  "drug_like": [
+   "RM2"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2C67": {
+  "pdb": "2C67",
+  "chain": "A",
+  "drug_like": [
+   "RM1"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2C70": {
+  "pdb": "2C70",
+  "chain": "A",
+  "drug_like": [
+   "PNZ"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2C72": {
+  "pdb": "2C72",
+  "chain": "A",
+  "drug_like": [
+   "RSA"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2C73": {
+  "pdb": "2C73",
+  "chain": "A",
+  "drug_like": [
+   "RSA"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2C75": {
+  "pdb": "2C75",
+  "chain": "A",
+  "drug_like": [
+   "RSA"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2C76": {
+  "pdb": "2C76",
+  "chain": "A",
+  "drug_like": [
+   "RSA"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2CCH": {
+  "pdb": "2CCH",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "ATP"
+  ],
+  "is_distal": false
+ },
+ "CAS_2CM7": {
+  "pdb": "2CM7",
+  "chain": "A",
+  "drug_like": [
+   "IZD"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2CMA": {
+  "pdb": "2CMA",
+  "chain": "A",
+  "drug_like": [
+   "F20"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2DHF": {
+  "pdb": "2DHF",
+  "chain": "A",
+  "drug_like": [
+   "DZF"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2EWN": {
+  "pdb": "2EWN",
+  "chain": "A",
+  "drug_like": [
+   "BTX"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2H4G": {
+  "pdb": "2H4G",
+  "chain": "A",
+  "drug_like": [
+   "694"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2H4K": {
+  "pdb": "2H4K",
+  "chain": "A",
+  "drug_like": [
+   "509"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2HB1": {
+  "pdb": "2HB1",
+  "chain": "A",
+  "drug_like": [
+   "512"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2HIM": {
+  "pdb": "2HIM",
+  "chain": "A",
+  "drug_like": [
+   "ASN",
+   "ASP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2JFX": {
+  "pdb": "2JFX",
+  "chain": "A",
+  "drug_like": [
+   "DGL"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2JFY": {
+  "pdb": "2JFY",
+  "chain": "A",
+  "drug_like": [
+   "DGL"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2JFZ": {
+  "pdb": "2JFZ",
+  "chain": "A",
+  "drug_like": [
+   "003",
+   "DGL"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2NT7": {
+  "pdb": "2NT7",
+  "chain": "A",
+  "drug_like": [
+   "902"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2NTA": {
+  "pdb": "2NTA",
+  "chain": "A",
+  "drug_like": [
+   "521"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2P9C": {
+  "pdb": "2P9C",
+  "chain": "A",
+  "drug_like": [
+   "NAI",
+   "SER"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_2P9E": {
+  "pdb": "2P9E",
+  "chain": "A",
+  "drug_like": [
+   "NAI"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_2P9G": {
+  "pdb": "2P9G",
+  "chain": "A",
+  "drug_like": [
+   "NAI",
+   "SER"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_2PA3": {
+  "pdb": "2PA3",
+  "chain": "A",
+  "drug_like": [
+   "NAI",
+   "SER"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_2QBP": {
+  "pdb": "2QBP",
+  "chain": "A",
+  "drug_like": [
+   "527"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2QBQ": {
+  "pdb": "2QBQ",
+  "chain": "A",
+  "drug_like": [
+   "4B3"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2QBR": {
+  "pdb": "2QBR",
+  "chain": "A",
+  "drug_like": [
+   "910"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2QBS": {
+  "pdb": "2QBS",
+  "chain": "A",
+  "drug_like": [
+   "024"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2V5Z": {
+  "pdb": "2V5Z",
+  "chain": "A",
+  "drug_like": [
+   "SAG"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2V60": {
+  "pdb": "2V60",
+  "chain": "A",
+  "drug_like": [
+   "C17"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2V61": {
+  "pdb": "2V61",
+  "chain": "A",
+  "drug_like": [
+   "C18"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2VEU": {
+  "pdb": "2VEU",
+  "chain": "A",
+  "drug_like": [
+   "IZ1"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2VEY": {
+  "pdb": "2VEY",
+  "chain": "A",
+  "drug_like": [
+   "IZ5"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2VRL": {
+  "pdb": "2VRL",
+  "chain": "A",
+  "drug_like": [
+   "MBN"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2VRM": {
+  "pdb": "2VRM",
+  "chain": "A",
+  "drug_like": [
+   "PYJ"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2VZ2": {
+  "pdb": "2VZ2",
+  "chain": "A",
+  "drug_like": [
+   "C15",
+   "MFG"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2W3A": {
+  "pdb": "2W3A",
+  "chain": "A",
+  "drug_like": [
+   "TOP"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_2W3M": {
+  "pdb": "2W3M",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_2XCG": {
+  "pdb": "2XCG",
+  "chain": "A",
+  "drug_like": [
+   "3PL",
+   "C15",
+   "FA8",
+   "XCG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2XFN": {
+  "pdb": "2XFN",
+  "chain": "A",
+  "drug_like": [
+   "C15",
+   "XCG"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2XFO": {
+  "pdb": "2XFO",
+  "chain": "A",
+  "drug_like": [
+   "3PL",
+   "FA8",
+   "XCG"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2XFP": {
+  "pdb": "2XFP",
+  "chain": "A",
+  "drug_like": [
+   "C15",
+   "ISN",
+   "XCG"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2XFQ": {
+  "pdb": "2XFQ",
+  "chain": "A",
+  "drug_like": [
+   "C15",
+   "RAS",
+   "XCG"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_2XFU": {
+  "pdb": "2XFU",
+  "chain": "A",
+  "drug_like": [
+   "3PL",
+   "FA8"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2YM4": {
+  "pdb": "2YM4",
+  "chain": "A",
+  "drug_like": [
+   "4YM"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2YM8": {
+  "pdb": "2YM8",
+  "chain": "A",
+  "drug_like": [
+   "YM8"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2Z60": {
+  "pdb": "2Z60",
+  "chain": "A",
+  "drug_like": [
+   "P3Y"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_2ZN7": {
+  "pdb": "2ZN7",
+  "chain": "A",
+  "drug_like": [
+   "410"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_3CSM": {
+  "pdb": "3CSM",
+  "chain": "A",
+  "drug_like": [
+   "TRP",
+   "TSA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_3DAU": {
+  "pdb": "3DAU",
+  "chain": "A",
+  "drug_like": [
+   "MTX"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3DDN": {
+  "pdb": "3DDN",
+  "chain": "A",
+  "drug_like": [
+   "HPV"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_3DJO": {
+  "pdb": "3DJO",
+  "chain": "A",
+  "drug_like": [
+   "U2P"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_3DJP": {
+  "pdb": "3DJP",
+  "chain": "A",
+  "drug_like": [
+   "UA3"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_3DJQ": {
+  "pdb": "3DJQ",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "UDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3DJV": {
+  "pdb": "3DJV",
+  "chain": "A",
+  "drug_like": [
+   "C3P"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_3DJX": {
+  "pdb": "3DJX",
+  "chain": "A",
+  "drug_like": [
+   "C5P"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_3F8Y": {
+  "pdb": "3F8Y",
+  "chain": "A",
+  "drug_like": [
+   "DH1"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3F8Z": {
+  "pdb": "3F8Z",
+  "chain": "A",
+  "drug_like": [
+   "DH1"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3FS6": {
+  "pdb": "3FS6",
+  "chain": "A",
+  "drug_like": [
+   "DH1"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3GHC": {
+  "pdb": "3GHC",
+  "chain": "A",
+  "drug_like": [
+   "GHC"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3GHW": {
+  "pdb": "3GHW",
+  "chain": "A",
+  "drug_like": [
+   "GHW"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3GI2": {
+  "pdb": "3GI2",
+  "chain": "A",
+  "drug_like": [
+   "GHW"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3GYF": {
+  "pdb": "3GYF",
+  "chain": "A",
+  "drug_like": [
+   "51P"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3HMI": {
+  "pdb": "3HMI",
+  "chain": "A",
+  "drug_like": [
+   "DKI"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_3I1Y": {
+  "pdb": "3I1Y",
+  "chain": "A",
+  "drug_like": [
+   "33N"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_3I28": {
+  "pdb": "3I28",
+  "chain": "A",
+  "drug_like": [
+   "34N"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_3ION": {
+  "pdb": "3ION",
+  "chain": "A",
+  "drug_like": [
+   "8H1"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_3IOP": {
+  "pdb": "3IOP",
+  "chain": "A",
+  "drug_like": [
+   "8I1"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_3KOO": {
+  "pdb": "3KOO",
+  "chain": "A",
+  "drug_like": [
+   "24D"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_3L3R": {
+  "pdb": "3L3R",
+  "chain": "A",
+  "drug_like": [
+   "OAG"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3L9H": {
+  "pdb": "3L9H",
+  "chain": "A",
+  "drug_like": [
+   "EMQ"
+  ],
+  "cofactor": [
+   "ADP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3N0H": {
+  "pdb": "3N0H",
+  "chain": "A",
+  "drug_like": [
+   "TOP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_3NTZ": {
+  "pdb": "3NTZ",
+  "chain": "A",
+  "drug_like": [
+   "3TZ"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3NU0": {
+  "pdb": "3NU0",
+  "chain": "A",
+  "drug_like": [
+   "3TU"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3NXR": {
+  "pdb": "3NXR",
+  "chain": "A",
+  "drug_like": [
+   "D2D"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3NXT": {
+  "pdb": "3NXT",
+  "chain": "A",
+  "drug_like": [
+   "D2E"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3NXV": {
+  "pdb": "3NXV",
+  "chain": "A",
+  "drug_like": [
+   "D2F"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3NXX": {
+  "pdb": "3NXX",
+  "chain": "A",
+  "drug_like": [
+   "D2D"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3NXY": {
+  "pdb": "3NXY",
+  "chain": "A",
+  "drug_like": [
+   "D2H"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3NZD": {
+  "pdb": "3NZD",
+  "chain": "A",
+  "drug_like": [
+   "D2Q"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_3OAF": {
+  "pdb": "3OAF",
+  "chain": "A",
+  "drug_like": [
+   "OAG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_3OB7": {
+  "pdb": "3OB7",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "GSH"
+  ],
+  "is_distal": false
+ },
+ "CAS_3OTQ": {
+  "pdb": "3OTQ",
+  "chain": "A",
+  "drug_like": [
+   "MZL"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_3PO7": {
+  "pdb": "3PO7",
+  "chain": "A",
+  "drug_like": [
+   "ZON"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_3RI1": {
+  "pdb": "3RI1",
+  "chain": "A",
+  "drug_like": [
+   "3RH"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_3RWP": {
+  "pdb": "3RWP",
+  "chain": "A",
+  "drug_like": [
+   "ABQ"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_3S3V": {
+  "pdb": "3S3V",
+  "chain": "A",
+  "drug_like": [
+   "TOP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_3S7A": {
+  "pdb": "3S7A",
+  "chain": "A",
+  "drug_like": [
+   "684"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_3ZYX": {
+  "pdb": "3ZYX",
+  "chain": "A",
+  "drug_like": [
+   "MBT"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_4A79": {
+  "pdb": "4A79",
+  "chain": "A",
+  "drug_like": [
+   "P1B"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_4A7A": {
+  "pdb": "4A7A",
+  "chain": "A",
+  "drug_like": [
+   "RGZ"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_4ALD": {
+  "pdb": "4ALD",
+  "chain": "A",
+  "drug_like": [
+   "2FP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4B1F": {
+  "pdb": "4B1F",
+  "chain": "A",
+  "drug_like": [
+   "DGL",
+   "KRH"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4CRT": {
+  "pdb": "4CRT",
+  "chain": "A",
+  "drug_like": [
+   "ASS"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_4CSM": {
+  "pdb": "4CSM",
+  "chain": "A",
+  "drug_like": [
+   "TSA",
+   "TYR"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4DDR": {
+  "pdb": "4DDR",
+  "chain": "A",
+  "drug_like": [
+   "MMV"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4EJ1": {
+  "pdb": "4EJ1",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4EY5": {
+  "pdb": "4EY5",
+  "chain": "A",
+  "drug_like": [
+   "HUP",
+   "NAG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4EZ7": {
+  "pdb": "4EZ7",
+  "chain": "A",
+  "drug_like": [
+   "2AN",
+   "STU"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4FHB": {
+  "pdb": "4FHB",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4FST": {
+  "pdb": "4FST",
+  "chain": "A",
+  "drug_like": [
+   "HK4",
+   "IPA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4FSY": {
+  "pdb": "4FSY",
+  "chain": "A",
+  "drug_like": [
+   "HK7",
+   "IPA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4FT3": {
+  "pdb": "4FT3",
+  "chain": "A",
+  "drug_like": [
+   "H1K",
+   "IPA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4FT7": {
+  "pdb": "4FT7",
+  "chain": "A",
+  "drug_like": [
+   "H3K",
+   "IPA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4FTA": {
+  "pdb": "4FTA",
+  "chain": "A",
+  "drug_like": [
+   "H5K",
+   "IPA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4FTN": {
+  "pdb": "4FTN",
+  "chain": "A",
+  "drug_like": [
+   "2HK",
+   "IPA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4FTO": {
+  "pdb": "4FTO",
+  "chain": "A",
+  "drug_like": [
+   "3HK",
+   "IPA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4FTR": {
+  "pdb": "4FTR",
+  "chain": "A",
+  "drug_like": [
+   "5HK",
+   "IPA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4FTU": {
+  "pdb": "4FTU",
+  "chain": "A",
+  "drug_like": [
+   "7HK",
+   "IPA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4G95": {
+  "pdb": "4G95",
+  "chain": "A",
+  "drug_like": [
+   "OAG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4GH2": {
+  "pdb": "4GH2",
+  "chain": "A",
+  "drug_like": [
+   "HK0",
+   "IPA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4I13": {
+  "pdb": "4I13",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4I1N": {
+  "pdb": "4I1N",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4I8N": {
+  "pdb": "4I8N",
+  "chain": "A",
+  "drug_like": [
+   "1CG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_4JAE": {
+  "pdb": "4JAE",
+  "chain": "A",
+  "drug_like": [
+   "CMC"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_4JAF": {
+  "pdb": "4JAF",
+  "chain": "A",
+  "drug_like": [
+   "NAI"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_4JAG": {
+  "pdb": "4JAG",
+  "chain": "A",
+  "drug_like": [
+   "OAA"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_4KD7": {
+  "pdb": "4KD7",
+  "chain": "A",
+  "drug_like": [
+   "9DR"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4KEB": {
+  "pdb": "4KEB",
+  "chain": "A",
+  "drug_like": [
+   "1QZ",
+   "FOL"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4KJJ": {
+  "pdb": "4KJJ",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4KJL": {
+  "pdb": "4KJL",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4M6K": {
+  "pdb": "4M6K",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4M6L": {
+  "pdb": "4M6L",
+  "chain": "A",
+  "drug_like": [
+   "21V",
+   "DTT"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4P3R": {
+  "pdb": "4P3R",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4QJC": {
+  "pdb": "4QJC",
+  "chain": "A",
+  "drug_like": [
+   "IXE"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4QLE": {
+  "pdb": "4QLE",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4QLG": {
+  "pdb": "4QLG",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4R1R": {
+  "pdb": "4R1R",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "GDP",
+   "TTP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4RQK": {
+  "pdb": "4RQK",
+  "chain": "A",
+  "drug_like": [
+   "R1S"
+  ],
+  "cofactor": [
+   "ATP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4RQV": {
+  "pdb": "4RQV",
+  "chain": "A",
+  "drug_like": [
+   "R2S"
+  ],
+  "cofactor": [
+   "ATP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4RRV": {
+  "pdb": "4RRV",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "ATP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4X5F": {
+  "pdb": "4X5F",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4X5G": {
+  "pdb": "4X5G",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4X5H": {
+  "pdb": "4X5H",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4X5I": {
+  "pdb": "4X5I",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4X5J": {
+  "pdb": "4X5J",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4XX9": {
+  "pdb": "4XX9",
+  "chain": "A",
+  "drug_like": [
+   "RF4"
+  ],
+  "cofactor": [
+   "ATP"
+  ],
+  "is_distal": false
+ },
+ "CAS_4ZHI": {
+  "pdb": "4ZHI",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "ADP"
+  ],
+  "is_distal": false
+ },
+ "CAS_5AI4": {
+  "pdb": "5AI4",
+  "chain": "A",
+  "drug_like": [
+   "4VY"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5AI5": {
+  "pdb": "5AI5",
+  "chain": "A",
+  "drug_like": [
+   "BSU"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5AIA": {
+  "pdb": "5AIA",
+  "chain": "A",
+  "drug_like": [
+   "KWB"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5AK4": {
+  "pdb": "5AK4",
+  "chain": "A",
+  "drug_like": [
+   "GVG"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5AK5": {
+  "pdb": "5AK5",
+  "chain": "A",
+  "drug_like": [
+   "V2Z"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5AKE": {
+  "pdb": "5AKE",
+  "chain": "A",
+  "drug_like": [
+   "6N0"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5AKH": {
+  "pdb": "5AKH",
+  "chain": "A",
+  "drug_like": [
+   "6NM"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5AKX": {
+  "pdb": "5AKX",
+  "chain": "A",
+  "drug_like": [
+   "8NY"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5AKY": {
+  "pdb": "5AKY",
+  "chain": "A",
+  "drug_like": [
+   "6NJ"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5ALD": {
+  "pdb": "5ALD",
+  "chain": "A",
+  "drug_like": [
+   "FCW"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5ALF": {
+  "pdb": "5ALF",
+  "chain": "A",
+  "drug_like": [
+   "OE1"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5ALH": {
+  "pdb": "5ALH",
+  "chain": "A",
+  "drug_like": [
+   "4UA"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5ALM": {
+  "pdb": "5ALM",
+  "chain": "A",
+  "drug_like": [
+   "7GM"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5ALN": {
+  "pdb": "5ALN",
+  "chain": "A",
+  "drug_like": [
+   "5ZM"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5ALO": {
+  "pdb": "5ALO",
+  "chain": "A",
+  "drug_like": [
+   "A0J"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5ALT": {
+  "pdb": "5ALT",
+  "chain": "A",
+  "drug_like": [
+   "9XZ"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5ALU": {
+  "pdb": "5ALU",
+  "chain": "A",
+  "drug_like": [
+   "HD2"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5ALV": {
+  "pdb": "5ALV",
+  "chain": "A",
+  "drug_like": [
+   "6TZ"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5ALW": {
+  "pdb": "5ALW",
+  "chain": "A",
+  "drug_like": [
+   "JQN"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5ALY": {
+  "pdb": "5ALY",
+  "chain": "A",
+  "drug_like": [
+   "B7H"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5AM0": {
+  "pdb": "5AM0",
+  "chain": "A",
+  "drug_like": [
+   "LWS"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5AM4": {
+  "pdb": "5AM4",
+  "chain": "A",
+  "drug_like": [
+   "MVJ"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5AM5": {
+  "pdb": "5AM5",
+  "chain": "A",
+  "drug_like": [
+   "6NZ"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CAS_5CC9": {
+  "pdb": "5CC9",
+  "chain": "A",
+  "drug_like": [
+   "DDF"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_5CCC": {
+  "pdb": "5CCC",
+  "chain": "A",
+  "drug_like": [
+   "DDF"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CAS_5HF6": {
+  "pdb": "5HF6",
+  "chain": "A",
+  "drug_like": [
+   "EFS",
+   "NAG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_5HF8": {
+  "pdb": "5HF8",
+  "chain": "A",
+  "drug_like": [
+   "DEP",
+   "EFS",
+   "NAG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_5HF9": {
+  "pdb": "5HF9",
+  "chain": "A",
+  "drug_like": [
+   "DEP",
+   "HI6",
+   "NAG",
+   "PE8"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_5HFA": {
+  "pdb": "5HFA",
+  "chain": "A",
+  "drug_like": [
+   "DEP",
+   "FP1",
+   "NAG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_5HPB": {
+  "pdb": "5HPB",
+  "chain": "A",
+  "drug_like": [
+   "63W"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_5HQY": {
+  "pdb": "5HQY",
+  "chain": "A",
+  "drug_like": [
+   "63Y"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_5HQZ": {
+  "pdb": "5HQZ",
+  "chain": "A",
+  "drug_like": [
+   "64J"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_5HS3": {
+  "pdb": "5HS3",
+  "chain": "A",
+  "drug_like": [
+   "KI3",
+   "UMP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_5HSR": {
+  "pdb": "5HSR",
+  "chain": "A",
+  "drug_like": [
+   "63Y"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_5HSU": {
+  "pdb": "5HSU",
+  "chain": "A",
+  "drug_like": [
+   "63Y"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_5HT4": {
+  "pdb": "5HT4",
+  "chain": "A",
+  "drug_like": [
+   "65J"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_5HT5": {
+  "pdb": "5HT5",
+  "chain": "A",
+  "drug_like": [
+   "65H"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_5HUI": {
+  "pdb": "5HUI",
+  "chain": "A",
+  "drug_like": [
+   "65N"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_5HVB": {
+  "pdb": "5HVB",
+  "chain": "A",
+  "drug_like": [
+   "65O"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_5HVE": {
+  "pdb": "5HVE",
+  "chain": "A",
+  "drug_like": [
+   "65Q"
+  ],
+  "cofactor": [
+   "NDP"
+  ],
+  "is_distal": false
+ },
+ "CAS_5MRL": {
+  "pdb": "5MRL",
+  "chain": "A",
+  "drug_like": [
+   "F2M"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CAS_5X5Q": {
+  "pdb": "5X5Q",
+  "chain": "A",
+  "drug_like": [
+   "D16",
+   "UMP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_5X67": {
+  "pdb": "5X67",
+  "chain": "A",
+  "drug_like": [
+   "7Z9",
+   "UMP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CAS_7DFR": {
+  "pdb": "7DFR",
+  "chain": "A",
+  "drug_like": [
+   "FOL"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": false
+ },
+ "CB_1AYL": {
+  "pdb": "1AYL",
+  "chain": "A",
+  "drug_like": [
+   "OXL"
+  ],
+  "cofactor": [
+   "ATP"
+  ],
+  "is_distal": false
+ },
+ "CB_1BZJ": {
+  "pdb": "1BZJ",
+  "chain": "A",
+  "drug_like": [
+   "PIC"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CB_1DC6": {
+  "pdb": "1DC6",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "NAD"
+  ],
+  "is_distal": false
+ },
+ "CB_1DPJ": {
+  "pdb": "1DPJ",
+  "chain": "A",
+  "drug_like": [
+   "NAG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_1E3G": {
+  "pdb": "1E3G",
+  "chain": "A",
+  "drug_like": [
+   "R18"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_1EFH": {
+  "pdb": "1EFH",
+  "chain": "B",
+  "drug_like": [
+   "A3P"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_1EVY": {
+  "pdb": "1EVY",
+  "chain": "A",
+  "drug_like": [
+   "MYS"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_1FWK": {
+  "pdb": "1FWK",
+  "chain": "C",
+  "drug_like": [],
+  "cofactor": [
+   "ADP"
+  ],
+  "is_distal": false
+ },
+ "CB_1HP1": {
+  "pdb": "1HP1",
+  "chain": "A",
+  "drug_like": [
+   "CO3"
+  ],
+  "cofactor": [
+   "ATP"
+  ],
+  "is_distal": false
+ },
+ "CB_1K0N": {
+  "pdb": "1K0N",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "GSH"
+  ],
+  "is_distal": true
+ },
+ "CB_1KG5": {
+  "pdb": "1KG5",
+  "chain": "A",
+  "drug_like": [
+   "SF4"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_1LUG": {
+  "pdb": "1LUG",
+  "chain": "A",
+  "drug_like": [
+   "HG",
+   "MBO",
+   "SUA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_1M5W": {
+  "pdb": "1M5W",
+  "chain": "D",
+  "drug_like": [
+   "DXP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_1NAW": {
+  "pdb": "1NAW",
+  "chain": "B",
+  "drug_like": [
+   "HAI"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_1NN6": {
+  "pdb": "1NN6",
+  "chain": "A",
+  "drug_like": [
+   "NAG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_1NOK": {
+  "pdb": "1NOK",
+  "chain": "A",
+  "drug_like": [
+   "NTZ"
+  ],
+  "cofactor": [
+   "PLP"
+  ],
+  "is_distal": true
+ },
+ "CB_1OS2": {
+  "pdb": "1OS2",
+  "chain": "B",
+  "drug_like": [
+   "HAE"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_1P4V": {
+  "pdb": "1P4V",
+  "chain": "A",
+  "drug_like": [
+   "GLY"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_1S8C": {
+  "pdb": "1S8C",
+  "chain": "C",
+  "drug_like": [
+   "BLA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_1TQN": {
+  "pdb": "1TQN",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "HEM"
+  ],
+  "is_distal": false
+ },
+ "CB_1UKA": {
+  "pdb": "1UKA",
+  "chain": "A",
+  "drug_like": [
+   "SMB"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_1VSN": {
+  "pdb": "1VSN",
+  "chain": "A",
+  "drug_like": [
+   "NFT"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_1WXE": {
+  "pdb": "1WXE",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "AMP"
+  ],
+  "is_distal": false
+ },
+ "CB_1XJF": {
+  "pdb": "1XJF",
+  "chain": "A",
+  "drug_like": [
+   "DTP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_2BYP": {
+  "pdb": "2BYP",
+  "chain": "D-E",
+  "drug_like": [
+   "NAG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_2CZD": {
+  "pdb": "2CZD",
+  "chain": "A-B",
+  "drug_like": [
+   "DTT"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_2D0T": {
+  "pdb": "2D0T",
+  "chain": "B",
+  "drug_like": [
+   "NHE",
+   "PIM"
+  ],
+  "cofactor": [
+   "HEM"
+  ],
+  "is_distal": false
+ },
+ "CB_2DFP": {
+  "pdb": "2DFP",
+  "chain": "A",
+  "drug_like": [
+   "NAG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_2E2O": {
+  "pdb": "2E2O",
+  "chain": "A",
+  "drug_like": [
+   "BGC"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_2FFY": {
+  "pdb": "2FFY",
+  "chain": "A",
+  "drug_like": [
+   "SM3"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_2GLL": {
+  "pdb": "2GLL",
+  "chain": "C-D",
+  "drug_like": [
+   "BEN"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_2H7S": {
+  "pdb": "2H7S",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "HEC"
+  ],
+  "is_distal": false
+ },
+ "CB_2HYY": {
+  "pdb": "2HYY",
+  "chain": "A",
+  "drug_like": [
+   "STI"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_2JFP": {
+  "pdb": "2JFP",
+  "chain": "A",
+  "drug_like": [
+   "DGL"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_2JFY": {
+  "pdb": "2JFY",
+  "chain": "B",
+  "drug_like": [
+   "DGL"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_2OQU": {
+  "pdb": "2OQU",
+  "chain": "A",
+  "drug_like": [
+   "XE"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_2VL2": {
+  "pdb": "2VL2",
+  "chain": "C",
+  "drug_like": [
+   "BEZ"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_2X87": {
+  "pdb": "2X87",
+  "chain": "A",
+  "drug_like": [
+   "OH"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_2XDO": {
+  "pdb": "2XDO",
+  "chain": "A-C",
+  "drug_like": [],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CB_2XE6": {
+  "pdb": "2XE6",
+  "chain": "A",
+  "drug_like": [
+   "3PG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_2XQ0": {
+  "pdb": "2XQ0",
+  "chain": "A",
+  "drug_like": [
+   "BES"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_2ZSU": {
+  "pdb": "2ZSU",
+  "chain": "B",
+  "drug_like": [
+   "AG3"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_3AAR": {
+  "pdb": "3AAR",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "ANP"
+  ],
+  "is_distal": true
+ },
+ "CB_3BGL": {
+  "pdb": "3BGL",
+  "chain": "C-D",
+  "drug_like": [
+   "RID"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CB_3BJP": {
+  "pdb": "3BJP",
+  "chain": "A",
+  "drug_like": [
+   "ACE",
+   "CYN",
+   "URC"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_3BL7": {
+  "pdb": "3BL7",
+  "chain": "B",
+  "drug_like": [
+   "DD1"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_3F0F": {
+  "pdb": "3F0F",
+  "chain": "B",
+  "drug_like": [
+   "C5P"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_3G8A": {
+  "pdb": "3G8A",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "SAH"
+  ],
+  "is_distal": false
+ },
+ "CB_3GL0": {
+  "pdb": "3GL0",
+  "chain": "C",
+  "drug_like": [
+   "FES",
+   "HXX",
+   "OXY"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CB_3IDH": {
+  "pdb": "3IDH",
+  "chain": "A",
+  "drug_like": [
+   "GLC"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_3KJR": {
+  "pdb": "3KJR",
+  "chain": "A-B",
+  "drug_like": [
+   "NHE"
+  ],
+  "cofactor": [
+   "NAP"
+  ],
+  "is_distal": true
+ },
+ "CB_3MWK": {
+  "pdb": "3MWK",
+  "chain": "A",
+  "drug_like": [
+   "8OP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_3NAG": {
+  "pdb": "3NAG",
+  "chain": "A-B",
+  "drug_like": [],
+  "cofactor": [
+   "ADP"
+  ],
+  "is_distal": false
+ },
+ "CB_3NAX": {
+  "pdb": "3NAX",
+  "chain": "A",
+  "drug_like": [
+   "MP7"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_3NSH": {
+  "pdb": "3NSH",
+  "chain": "B",
+  "drug_like": [
+   "957"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_3P3I": {
+  "pdb": "3P3I",
+  "chain": "E-F",
+  "drug_like": [
+   "FAH"
+  ],
+  "cofactor": [
+   "COA"
+  ],
+  "is_distal": true
+ },
+ "CB_3P6E": {
+  "pdb": "3P6E",
+  "chain": "A",
+  "drug_like": [
+   "ZGC"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_3PHZ": {
+  "pdb": "3PHZ",
+  "chain": "A-B",
+  "drug_like": [
+   "SIA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_3PKQ": {
+  "pdb": "3PKQ",
+  "chain": "B-C",
+  "drug_like": [
+   "DGT"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_3RWO": {
+  "pdb": "3RWO",
+  "chain": "B",
+  "drug_like": [],
+  "cofactor": [
+   "GDP"
+  ],
+  "is_distal": false
+ },
+ "CB_3U6K": {
+  "pdb": "3U6K",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "GDP"
+  ],
+  "is_distal": true
+ },
+ "CB_3VGM": {
+  "pdb": "3VGM",
+  "chain": "A",
+  "drug_like": [
+   "BGC"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_3VQ9": {
+  "pdb": "3VQ9",
+  "chain": "A-B",
+  "drug_like": [
+   "FBB"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CB_3WMG": {
+  "pdb": "3WMG",
+  "chain": "A",
+  "drug_like": [
+   "DMU"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_4AAL": {
+  "pdb": "4AAL",
+  "chain": "A",
+  "drug_like": [
+   "EOH"
+  ],
+  "cofactor": [
+   "HEC"
+  ],
+  "is_distal": false
+ },
+ "CB_4AMV": {
+  "pdb": "4AMV",
+  "chain": "B",
+  "drug_like": [
+   "F6R"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_4BRR": {
+  "pdb": "4BRR",
+  "chain": "E",
+  "drug_like": [
+   "79M",
+   "FLC"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_4D1N": {
+  "pdb": "4D1N",
+  "chain": "A",
+  "drug_like": [
+   "ARG",
+   "H4B"
+  ],
+  "cofactor": [
+   "HEM"
+  ],
+  "is_distal": false
+ },
+ "CB_4E00": {
+  "pdb": "4E00",
+  "chain": "A",
+  "drug_like": [
+   "0F1"
+  ],
+  "cofactor": [
+   "ADP"
+  ],
+  "is_distal": false
+ },
+ "CB_4ESH": {
+  "pdb": "4ESH",
+  "chain": "A",
+  "drug_like": [
+   "THM"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_4GOJ": {
+  "pdb": "4GOJ",
+  "chain": "C",
+  "drug_like": [],
+  "cofactor": [
+   "GNP"
+  ],
+  "is_distal": false
+ },
+ "CB_4HC4": {
+  "pdb": "4HC4",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "SAH"
+  ],
+  "is_distal": false
+ },
+ "CB_4HON": {
+  "pdb": "4HON",
+  "chain": "B",
+  "drug_like": [
+   "AKG",
+   "PDO"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_4JFR": {
+  "pdb": "4JFR",
+  "chain": "C",
+  "drug_like": [
+   "CP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_4JYC": {
+  "pdb": "4JYC",
+  "chain": "C",
+  "drug_like": [],
+  "cofactor": [
+   "GDP"
+  ],
+  "is_distal": false
+ },
+ "CB_4KMY": {
+  "pdb": "4KMY",
+  "chain": "A",
+  "drug_like": [
+   "NAG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_4KU8": {
+  "pdb": "4KU8",
+  "chain": "A",
+  "drug_like": [
+   "GLY"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_4MQE": {
+  "pdb": "4MQE",
+  "chain": "A",
+  "drug_like": [
+   "NAG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_4NI8": {
+  "pdb": "4NI8",
+  "chain": "D",
+  "drug_like": [
+   "1WB"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_4NOG": {
+  "pdb": "4NOG",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "PLP"
+  ],
+  "is_distal": false
+ },
+ "CB_4O7D": {
+  "pdb": "4O7D",
+  "chain": "A",
+  "drug_like": [
+   "ONL"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_4OMG": {
+  "pdb": "4OMG",
+  "chain": "A",
+  "drug_like": [
+   "CXS"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_4OQO": {
+  "pdb": "4OQO",
+  "chain": "B",
+  "drug_like": [
+   "NAG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_4OYZ": {
+  "pdb": "4OYZ",
+  "chain": "A",
+  "drug_like": [
+   "BCT"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_4P32": {
+  "pdb": "4P32",
+  "chain": "A-B",
+  "drug_like": [],
+  "cofactor": [
+   "ADP"
+  ],
+  "is_distal": false
+ },
+ "CB_4PNT": {
+  "pdb": "4PNT",
+  "chain": "D",
+  "drug_like": [
+   "IQD"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_4WBH": {
+  "pdb": "4WBH",
+  "chain": "A",
+  "drug_like": [
+   "NAG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_4XV1": {
+  "pdb": "4XV1",
+  "chain": "B",
+  "drug_like": [
+   "904"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_4YBO": {
+  "pdb": "4YBO",
+  "chain": "A-B",
+  "drug_like": [
+   "BCT"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_4ZCS": {
+  "pdb": "4ZCS",
+  "chain": "A",
+  "drug_like": [
+   "CDC",
+   "P33"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_5ACV": {
+  "pdb": "5ACV",
+  "chain": "B",
+  "drug_like": [
+   "OH"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_5AJO": {
+  "pdb": "5AJO",
+  "chain": "A",
+  "drug_like": [
+   "A2G"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_5AZQ": {
+  "pdb": "5AZQ",
+  "chain": "A",
+  "drug_like": [
+   "CYN",
+   "J1R",
+   "J1S"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_5CAE": {
+  "pdb": "5CAE",
+  "chain": "B",
+  "drug_like": [],
+  "cofactor": [
+   "COA"
+  ],
+  "is_distal": true
+ },
+ "CB_5DZP": {
+  "pdb": "5DZP",
+  "chain": "B",
+  "drug_like": [
+   "6B7"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_5EO7": {
+  "pdb": "5EO7",
+  "chain": "A",
+  "drug_like": [
+   "SFU"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_5FTK": {
+  "pdb": "5FTK",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "ADP"
+  ],
+  "is_distal": false
+ },
+ "CB_5GW7": {
+  "pdb": "5GW7",
+  "chain": "B",
+  "drug_like": [
+   "BGC"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_5HIJ": {
+  "pdb": "5HIJ",
+  "chain": "A",
+  "drug_like": [
+   "BET"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_5HQ8": {
+  "pdb": "5HQ8",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "SAH"
+  ],
+  "is_distal": true
+ },
+ "CB_5HXQ": {
+  "pdb": "5HXQ",
+  "chain": "A-C",
+  "drug_like": [
+   "DST",
+   "O4B"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_5IWI": {
+  "pdb": "5IWI",
+  "chain": "A-B",
+  "drug_like": [
+   "6EJ"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CB_5K7K": {
+  "pdb": "5K7K",
+  "chain": "A",
+  "drug_like": [
+   "6RJ"
+  ],
+  "cofactor": [
+   "HEM"
+  ],
+  "is_distal": false
+ },
+ "CB_5L45": {
+  "pdb": "5L45",
+  "chain": "A",
+  "drug_like": [
+   "PG4"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_5LOR": {
+  "pdb": "5LOR",
+  "chain": "B",
+  "drug_like": [
+   "UPG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_5LQJ": {
+  "pdb": "5LQJ",
+  "chain": "C",
+  "drug_like": [
+   "72N"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_5NZM": {
+  "pdb": "5NZM",
+  "chain": "A",
+  "drug_like": [
+   "9ET"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_5O1M": {
+  "pdb": "5O1M",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "HEM"
+  ],
+  "is_distal": false
+ },
+ "CB_5TC0": {
+  "pdb": "5TC0",
+  "chain": "B",
+  "drug_like": [
+   "79Y"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_5WBM": {
+  "pdb": "5WBM",
+  "chain": "B",
+  "drug_like": [
+   "A4G"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_5X1O": {
+  "pdb": "5X1O",
+  "chain": "B",
+  "drug_like": [
+   "I3P"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6AQE": {
+  "pdb": "6AQE",
+  "chain": "B",
+  "drug_like": [],
+  "cofactor": [
+   "ATP"
+  ],
+  "is_distal": true
+ },
+ "CB_6BKX": {
+  "pdb": "6BKX",
+  "chain": "A-B",
+  "drug_like": [
+   "DWP",
+   "ICT"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6BN5": {
+  "pdb": "6BN5",
+  "chain": "B",
+  "drug_like": [
+   "DZJ"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6BZI": {
+  "pdb": "6BZI",
+  "chain": "C",
+  "drug_like": [
+   "EMC",
+   "HG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6CSW": {
+  "pdb": "6CSW",
+  "chain": "C",
+  "drug_like": [
+   "FBY",
+   "PG4"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6CZX": {
+  "pdb": "6CZX",
+  "chain": "A-B",
+  "drug_like": [
+   "MRD"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6EIF": {
+  "pdb": "6EIF",
+  "chain": "B",
+  "drug_like": [
+   "B5T"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6FP0": {
+  "pdb": "6FP0",
+  "chain": "A",
+  "drug_like": [
+   "E0N"
+  ],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CB_6G6Y": {
+  "pdb": "6G6Y",
+  "chain": "A",
+  "drug_like": [
+   "EOK"
+  ],
+  "cofactor": [
+   "ADP"
+  ],
+  "is_distal": false
+ },
+ "CB_6G9Z": {
+  "pdb": "6G9Z",
+  "chain": "A",
+  "drug_like": [
+   "LMR"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6H6K": {
+  "pdb": "6H6K",
+  "chain": "A",
+  "drug_like": [
+   "GCP"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6I1S": {
+  "pdb": "6I1S",
+  "chain": "A",
+  "drug_like": [
+   "E26"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6I5G": {
+  "pdb": "6I5G",
+  "chain": "B",
+  "drug_like": [
+   "PTG"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6INF": {
+  "pdb": "6INF",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "UDP"
+  ],
+  "is_distal": false
+ },
+ "CB_6KSC": {
+  "pdb": "6KSC",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "AMP"
+  ],
+  "is_distal": true
+ },
+ "CB_6LIO": {
+  "pdb": "6LIO",
+  "chain": "B",
+  "drug_like": [
+   "EH3"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6NFL": {
+  "pdb": "6NFL",
+  "chain": "A",
+  "drug_like": [
+   "71O",
+   "L60"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6O4F": {
+  "pdb": "6O4F",
+  "chain": "H",
+  "drug_like": [
+   "UN1"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6OAH": {
+  "pdb": "6OAH",
+  "chain": "F",
+  "drug_like": [
+   "M2V"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6OPB": {
+  "pdb": "6OPB",
+  "chain": "D",
+  "drug_like": [
+   "DCR"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6PLF": {
+  "pdb": "6PLF",
+  "chain": "B",
+  "drug_like": [
+   "ONV"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CB_6PVG": {
+  "pdb": "6PVG",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "FAD"
+  ],
+  "is_distal": false
+ },
+ "CB_6Q8Z": {
+  "pdb": "6Q8Z",
+  "chain": "D",
+  "drug_like": [
+   "GAL",
+   "HFK",
+   "HR5"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6QLB": {
+  "pdb": "6QLB",
+  "chain": "C",
+  "drug_like": [
+   "GUN",
+   "P4G"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6TN3": {
+  "pdb": "6TN3",
+  "chain": "A",
+  "drug_like": [
+   "GN1"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6U9C": {
+  "pdb": "6U9C",
+  "chain": "A",
+  "drug_like": [
+   "IPA"
+  ],
+  "cofactor": [
+   "ACO"
+  ],
+  "is_distal": true
+ },
+ "CB_6UW3": {
+  "pdb": "6UW3",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "GDP"
+  ],
+  "is_distal": false
+ },
+ "CB_6XL4": {
+  "pdb": "6XL4",
+  "chain": "C",
+  "drug_like": [
+   "NQ1",
+   "Q6K"
+  ],
+  "cofactor": [
+   "ANP"
+  ],
+  "is_distal": false
+ },
+ "CB_6XUE": {
+  "pdb": "6XUE",
+  "chain": "A",
+  "drug_like": [
+   "O1H"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6XXH": {
+  "pdb": "6XXH",
+  "chain": "A-B",
+  "drug_like": [
+   "MRD",
+   "OXM"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_6Z89": {
+  "pdb": "6Z89",
+  "chain": "C-D",
+  "drug_like": [
+   "QBK"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CB_7B6Q": {
+  "pdb": "7B6Q",
+  "chain": "A",
+  "drug_like": [
+   "IPA",
+   "WZD"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_7BHJ": {
+  "pdb": "7BHJ",
+  "chain": "A",
+  "drug_like": [
+   "TQH"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_7BTC": {
+  "pdb": "7BTC",
+  "chain": "B",
+  "drug_like": [],
+  "cofactor": [
+   "GDP"
+  ],
+  "is_distal": false
+ },
+ "CB_7F2M": {
+  "pdb": "7F2M",
+  "chain": "B",
+  "drug_like": [
+   "1GF"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_7FT3": {
+  "pdb": "7FT3",
+  "chain": "A",
+  "drug_like": [
+   "ALA",
+   "DGL",
+   "GLY",
+   "LV4"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_7GOS": {
+  "pdb": "7GOS",
+  "chain": "B",
+  "drug_like": [
+   "JFS"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "CB_7MOI": {
+  "pdb": "7MOI",
+  "chain": "B",
+  "drug_like": [
+   "HPS"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_7NLX": {
+  "pdb": "7NLX",
+  "chain": "A",
+  "drug_like": [
+   "97W"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_7NP0": {
+  "pdb": "7NP0",
+  "chain": "A-B",
+  "drug_like": [
+   "UKH"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_7O1I": {
+  "pdb": "7O1I",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "COA"
+  ],
+  "is_distal": false
+ },
+ "CB_7OPP": {
+  "pdb": "7OPP",
+  "chain": "C",
+  "drug_like": [],
+  "cofactor": [
+   "GNP"
+  ],
+  "is_distal": false
+ },
+ "CB_7P2T": {
+  "pdb": "7P2T",
+  "chain": "C-D",
+  "drug_like": [
+   "144",
+   "4VX"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_7PLD": {
+  "pdb": "7PLD",
+  "chain": "B",
+  "drug_like": [
+   "7UK",
+   "FE2"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_7QLU": {
+  "pdb": "7QLU",
+  "chain": "A",
+  "drug_like": [
+   "PG5"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_7QOQ": {
+  "pdb": "7QOQ",
+  "chain": "A",
+  "drug_like": [
+   "U5P"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_7WYO": {
+  "pdb": "7WYO",
+  "chain": "B",
+  "drug_like": [
+   "G7F"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_7YYE": {
+  "pdb": "7YYE",
+  "chain": "A-B",
+  "drug_like": [
+   "MLA"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_8BBC": {
+  "pdb": "8BBC",
+  "chain": "A",
+  "drug_like": [
+   "ACV"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_8CFB": {
+  "pdb": "8CFB",
+  "chain": "C",
+  "drug_like": [
+   "ADE",
+   "SY4"
+  ],
+  "cofactor": [
+   "NAD"
+  ],
+  "is_distal": false
+ },
+ "CB_8E1J": {
+  "pdb": "8E1J",
+  "chain": "B",
+  "drug_like": [
+   "I8P"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_8GHC": {
+  "pdb": "8GHC",
+  "chain": "B",
+  "drug_like": [
+   "FE2"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_8J1K": {
+  "pdb": "8J1K",
+  "chain": "A",
+  "drug_like": [
+   "SY6"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_8ONN": {
+  "pdb": "8ONN",
+  "chain": "E",
+  "drug_like": [
+   "OCF"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CB_8PFP": {
+  "pdb": "8PFP",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "AGS"
+  ],
+  "is_distal": false
+ },
+ "CS_2AX9": {
+  "pdb": "2AX9",
+  "chain": "A",
+  "drug_like": [
+   "BHM"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "CS_2ZB1": {
+  "pdb": "2ZB1",
+  "chain": "A",
+  "drug_like": [
+   "GK4"
+  ],
+  "cofactor": [],
+  "is_distal": true
+ },
+ "PM_1EXM": {
+  "pdb": "1EXM",
+  "chain": "A",
+  "drug_like": [],
+  "cofactor": [
+   "GNP"
+  ],
+  "is_distal": false
+ },
+ "PM_2QFO": {
+  "pdb": "2QFO",
+  "chain": "B",
+  "drug_like": [
+   "A13",
+   "A51"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ },
+ "PM_5NZM": {
+  "pdb": "5NZM",
+  "chain": "A",
+  "drug_like": [
+   "9ET"
+  ],
+  "cofactor": [],
+  "is_distal": false
+ }
+}

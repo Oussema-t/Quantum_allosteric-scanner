@@ -1,0 +1,20 @@
+family,n_win,best_hamiltonian,best_score,best_auc
+CAS0001,2,binary/adj,neg_dD_mean,0.974
+Ribonucleoside-diphosphate reductase 1 subunit alpha,1,binary/sym,residRAW,0.948
+Androgen receptor,1,hnew/full,green_zero_0.01,0.94
+Q9H7B4,1,gauss/sym,p_avg,0.929
+CAS0002,21,binary/comb,neg_dD_mean,0.926
+Q9RY20,1,harm/adj,p_peak,0.912
+P33284,1,binary/adj,green_lmax_0.05,0.89
+Acetyl-CoA carboxylase,1,harm/sym,residLOG_dX,0.873
+Response regulator PleD,1,harm/adj,neg_ED_final,0.868
+P00489,1,binary/adj,green_lmax_0.05,0.855
+Q9H7Z6,1,binary/comb,green_lmax_0.05,0.844
+B7GTV0,1,binary/sym,residRAW_dX,0.836
+O28597,1,exp/adj,residLOG_dX,0.822
+Serum albumin,1,hnew/full,p_avg,0.781
+O32553,1,hnew/full,p_peak,0.773
+P25114,1,exp/comb,R,0.769
+Pyruvate kinase PKM,1,hnew/full,residLOG_dX,0.764
+Pyruvate kinase PKLR,1,hnew/full,residLOG_dX,0.716
+A0QUZ2,1,binary/adj,green_lmax_0.05,0.681

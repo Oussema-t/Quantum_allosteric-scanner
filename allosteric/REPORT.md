@@ -581,6 +581,33 @@ this benchmark** — the §7b comment anticipated exactly this.
 
 ---
 
+## 6d. Two-round veto pipeline (PASSer + CTQW + PocketMiner)
+
+Full method, results and caveats: `results/veto_pipeline/`. Summary:
+
+Pipeline: **PASSer** selects pockets (best selector: ~90% inclusion, adding fpocket/PocketMiner as a gate
+only loses coverage) → **CTQW** residue-by-residue to the active site, 13 Hamiltonians × **14 scores**
+(the 8 base + 6 section-14 diagnostics: `neg_dD_mean`, `neg_ED_final`, `residLOG_dX`, `residRAW_dX`,
+`pavg_over_dX`, `QMI`) → **PocketMiner veto** (drop likely-closed pockets, protect apo-ligand pockets) →
+**CTQW again** on survivors → rank pockets.
+
+Distinct FAMILIES clearing AUC≥0.6 & P@5≥0.8 (full, honest denominator):
+
+| | top-15 | top-10 |
+|---|---|---|
+| no veto | 8 / 68 | 11 / 65 |
+| **veto** | **16 / 68** | **19 / 65** |
+
+Both the new scores and the veto roughly double the count. **Chance-corrected (family-level null): +~4
+families over chance, p≈0.06** — a real but modest effect; ~15 genuine families.
+
+No universal Hamiltonian — three consistent groups: `binary/comb`+`neg_dD_mean` → CAS0002;
+**`H_new`** → regulated enzymes (androgen receptor, serum albumin, both pyruvate kinases);
+`binary/adj`+`Green(λmax)` → small CryptoBench proteins. `H_new` reproduces only `exp/sym` / `binary/sym`
+(λ=0); the `adj`/`comb`/gauss/harm winners need a `weight × norm` switch (`build_H_general`).
+
+---
+
 ## 7. Limitations
 
 - **Multiplicity.** §14 evaluates ~250 score × operator cells per target. Only §14f is pre-registered.
