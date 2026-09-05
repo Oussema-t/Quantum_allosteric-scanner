@@ -20,8 +20,11 @@ negative and infrastructural work around it.
 | Most benchmark pockets are distal | **false** — only **13%** are (§3.2). Most cannot test propagation at all |
 | Topology predicts pocket distance | only **algebraic connectivity**, ρ = −0.477 after size control (§3.3) |
 | Pocket-seeded CTQW at scale (138 proteins) | **+0.03 AUC over a permutation null**, signal in ~15 proteins only; P@5 gains nothing (§6b) |
-| fpocket ∩ PASSer as pocket selector | **3× the clearing rate** of fpocket alone, first P@5 = 1.0 proteins (§6b.3) |
+| `H_new` vs its own base `exp/sym` (λ=0) | **+0.04–0.05 AUC, p = 0.003–0.026, n≈100** — the diagonal site potential is load-bearing (HYP-P4) (§6b.8) |
+| Winners are a structural class | **no** — the only separating feature is a 2.5× larger annotated pocket; no topology feature separates them (§6b.9) |
+| fpocket ∩ PASSer as pocket selector | **same protein count as fpocket alone (13 vs 13)** but stable across `MIN_HOP` where fpocket-only halves; the earlier "3×" was a cell-count artefact (§6b.3, §6b.8) |
 | The right pocket is often never proposed | **22–30% of proteins** — detector-limited, before physics (§6b.1) |
+| §14 operator-consensus on one protein is evidence | **no** — at scale the 13 operators agree in 100 % of proteins and elect the drug pocket in ≤ 6 %, below the 9.4 % chance rate (§6b.11) |
 
 ---
 
@@ -273,8 +276,8 @@ that decides whether a pocket is actually picked.
 | clearing rate | 0.24 % | **0.59 %** | 0.09 % | **0.34 %** |
 | proteins reaching P@5 = 1.0 | 1 | **3** | 0 | **2** |
 
-**Yes, on the criterion that matters.** Requiring a pocket to be druggable *and* allosteric
-simultaneously roughly **triples the clearing rate** and yields the first P@5 = 1.0 proteins.
+**At the cell level, yes; at the protein level it is a tie (13 vs 13) — see §6b.8.** The cell
+count is inflated by one protein (`ASB_1W25`, 25 cells). Consensus does yield the first P@5 = 1.0 proteins.
 Raw AUC falls (0.799 → 0.777) but so does the null (0.765 → 0.745): the candidate set is
 smaller and harder, and the *margin over chance* is unchanged. The consensus gain is also
 **stable across `MIN_HOP`**, where the fpocket-only selector degrades (P@5 goes negative at
@@ -310,6 +313,128 @@ understates performance for half the set.
 | fpocket ∩ PASSer beats fpocket alone | **yes** — 3× clearing rate, stable across `MIN_HOP` |
 | The per-protein "winning Hamiltonian" is meaningful | **only for ~15 proteins** — grouping all 108 would fit noise |
 | Green's `|G|²` is the strongest score | **suggestive only** — most frequent among clearing cells, `(E, η)` still unpinned (§5.3) |
+| `H_new`'s site potential earns its place | **yes** — beats its own λ=0 base on ~100 proteins, p ≤ 0.026 (§6b.8) |
+| Winners form a structural class usable for prediction | **no** — only labelled-pocket size separates them (§6b.9) |
+| Defensible positives at benchmark scale | **6 distinct proteins of 138** after null + family de-duplication (§6b.9) |
+| §14 consensus block generalises | **no** — elects the true pocket ≤ chance (1–6 % vs 9.4 %) while operators agree 100 %; median-rank aggregation is size-biased (§6b.11) |
+
+
+### 6b.8 Protein-level correction, and `H_new` head-to-head
+
+**Cells are not proteins.** §6b.3 counts cells; one protein (`ASB_1W25`) alone contributes 25 of the
+54 consensus cells. Counted per **protein** (any of the 96 cells clearing AUC > 0.6 **and** P@5 ≥ 0.8):
+
+| selector | tested | clear | rate | P@5 = 1.0 | clear **and** beat own null |
+|---|---|---|---|---|---|
+| fpocket only, hop 2 | 106 | 13 | 12.3 % | 1 | 9 |
+| fpocket ∩ PASSer, hop 2 | 96 | 13 | 13.5 % | 3 | 7 |
+| fpocket only, hop 1 | 107 | 7 | 6.5 % | 0 | 5 |
+| fpocket ∩ PASSer, hop 1 | 99 | 12 | 12.1 % | 2 | 9 |
+
+The two selectors tie at hop 2 and find **different** proteins (4 shared, 9 each unique). The consensus
+advantage is **robustness to `MIN_HOP`**, not volume: fpocket-only halves when seeds adjacent to the active
+site are excluded, consensus does not. Union over both hops: **15 proteins in 9 families**, of which
+**10 clear at both hop settings**.
+
+**`H_new` added as a 13th operator**, ported verbatim from cell 39 and verified against it
+(max |Δ| = 0.000e+00 on the operator and on `V_B, V_T, V_R, V_C, V_M`; the sweep's parser had to be
+extended to read B-factors). Consensus seeds, 13 × 8 = 104 cells/protein:
+
+| paired on the same protein, best score each | H_new | exp/sym (its λ=0 base) | Δ | Wilcoxon p | wins |
+|---|---|---|---|---|---|
+| MIN_HOP = 2 (n = 101) | 0.659 | 0.622 | **+0.037** | 0.026 | 53/101 |
+| MIN_HOP = 1 (n = 99) | 0.658 | 0.610 | **+0.049** | 0.0027 | 56/99 |
+
+`H_new` is the **best single operator of 13** on best-cell AUC (0.537 vs 0.517 for `exp/sym`) and the
+per-protein winner most often (19/101 at hop 2, 23/99 at hop 1). Its family-averaged AUC is still
+**0.439** — best of a set that does not work on average. With `H_new` in the grid the strict-bar set
+becomes **18 proteins / 10 families**; `H_new` is the winner in 6 and clears the bar in 7. Of the 12
+non-`H_new` winners only 2 (`exp/sym`, `binary/sym`) are reachable by `H_new`'s dials; the other 10
+use `adj`/`comb` normalisation or `gauss`/`harm` kernels that are structurally outside it.
+
+### 6b.9 Are the winners a class? — no; they have bigger labelled pockets
+
+18 features compared, winners vs rest, protein- and family-level (Mann–Whitney):
+
+| feature | winners | rest | p (family level) |
+|---|---|---|---|
+| truth residues among seeds | **14** | **5.5** | **0.001** |
+| base rate | **0.157** | **0.072** | **0.006** |
+| n_residues / diameter / algebraic connectivity / clustering / degree / spectral radius / min_hop / min_euclid | — | — | all ≥ 0.07 |
+| truth type, source dataset | — | — | 0.44, 0.37 |
+
+**The only thing that separates winners is a ~2.5× larger annotated allosteric site.** No topology,
+size, connectivity or distance feature does. The random-null P@5 tracks base rate at ρ = 0.99, so
+"P@5 ≥ 0.8" largely selects proteins with big labelled pockets. After the per-protein permutation null,
+**8 of 15 winners survive** (0.8 expected by chance) — real, but **7 of the 15 are the same protein**
+(CAS0002, 7 PDB entries), so the defensible count is **6 distinct proteins of 138 (4 %)**.
+
+**Pseudo-replication in the cohort itself:** CAS0002 is **28 of the 138** distal proteins (20 %);
+72 of the 86 families have a single structure. Family-level aggregation is mandatory for every number
+in this section.
+
+**Winning Hamiltonian per significant protein** (identical at hop 1 and hop 2 for 12/13):
+`ASB_1W25` binary/comb, `CB_6RXD` exp/adj, `ASB_2BXA` binary/adj, `CB_4DNC` binary/comb, `ASB_1W96`
+gauss/comb — **all five with Green `|G|²` at (E = λmax, η = 0.05)**; `CAS_1DGK` exp/sym + residLOG.
+Nine different operators win across 15 proteins; the **score** is far more consistent than the
+Hamiltonian. `(E, η)` was one of three settings in the grid, so this is a hypothesis for a
+confirmatory run, not a claim.
+
+### 6b.10 Threshold ladder (consensus selector, both hops)
+
+| bar | proteins | families |
+|---|---|---|
+| AUC > 0.6 anywhere | 101 | 61 |
+| AUC > 0.8 anywhere | 38 | 32 |
+| P@5 ≥ 0.6 anywhere | 52 | 27 |
+| P@5 ≥ 0.8 anywhere | 19 | 9 |
+| AUC > 0.6 **and** P@5 ≥ 0.8 | 15 | 9 |
+| …and beats own permutation null | **9** | **7** |
+
+"P@5 ≥ 0.6 anywhere in 104 cells" is reached by the **random null in 33 proteins**, and observed beats
+null in 50/101 — exactly chance. Only the ≥ 0.8 bar separates from noise.
+
+### 6b.11 Section-14 consensus block at scale — the operators agree, on the wrong pocket
+
+The notebook's §14 CONSENSUS machinery, applied verbatim to all 101 consensus-seeded proteins
+(`sec14_consensus.py` on `consensus13_hop2_ranks.json`): per score, each of the 13 operators ranks the
+seed residues; a pocket's score is the **median rank of its residues**; each operator votes for its best
+pocket; Kendall's W + Friedman p test whether the operators agree; TRUE drug pocket = `drug_frac > 0.5`.
+
+| score | consensus elects a TRUE pocket | operators AGREE (W, p<0.05) | operator votes to TRUE |
+|---|---|---|---|
+| p_avg | 2 / 101 | 101 / 101 | 3.4 % |
+| p_peak | 3 / 101 | 101 / 101 | 3.4 % |
+| R | 6 / 101 | 35 / 101 | 7.8 % |
+| residLOG | 4 / 101 | 101 / 101 | 5.3 % |
+| residRAW | 4 / 101 | 101 / 101 | 4.5 % |
+| green (0, 0.05) | 2 / 101 | 101 / 101 | 1.9 % |
+| green (0, 0.01) | 2 / 101 | 101 / 101 | 3.0 % |
+| green (λmax, 0.05) | 1 / 101 | 101 / 101 | 2.4 % |
+| **chance** (random pocket) | **9.4 %** | — | — |
+| **ceiling** (proteins with a TRUE pocket among seeds) | **61 / 101** | — | — |
+
+**Every score elects the true pocket at or below the 9.4 % chance rate**, while the 13 Hamiltonians agree
+with each other in **100 % of proteins** for 7 of the 8 scores (Kendall's W 0.4–0.9). That is the
+failure mode §14's own comment warns about: *operator agreement within a score is agreement on that
+score's shared bias, not on the answer.* Per protein, **91 of 101 have 0 of 8 scores electing the true
+pocket**; 4 proteins are unanimous across all 8 scores and in **none** of the 4 is the unanimous pocket the
+drug pocket. Only **`ASB_1W25` (6/8 scores) and `CB_6RXD` (5/8)** behave the way a single-protein §14
+printout suggests every protein does.
+
+**What gets elected instead** (464 wrong elections): the elected pocket is *smaller* (median 8 vs 15
+seed residues; larger than the true pocket in only 16 % of cases), *less* druggable (fpocket rank 10 vs
+8) and *less* allosteric (PASSer rank 11 vs 4). Under `p_avg`, operator votes anti-correlate with pocket
+size (Spearman ρ = −0.29, p = 2e-17): **median-rank pocket scoring favours small pockets**, because a
+few well-ranked residues dominate a short median. The consensus block therefore carries a
+size bias that works *against* the (typically large) true pocket — a scoring artefact to fix before
+any pocket-level consensus is quoted, and independent of which Hamiltonian is used.
+
+**Consequence.** The single-protein §14 view — a SCORE × HAMILTONIAN matrix with agreeing operators
+electing one pocket — looks like evidence and is not: at scale it elects the true pocket less often than
+a random draw. The ~6 proteins that genuinely work (§6b.9) are the ones where the residue-level ranking
+is strong enough to survive the pocket aggregation.
+
 
 ---
 
@@ -344,4 +469,4 @@ Compute: two Hetzner `ccx33` runs, **EUR 0.13 total** (topology over 1233 protei
 site derivation over 809, 768 s). Both deleted after results were pulled.
 The pocket-seeded sweep (§6b) added three Hetzner `cx43` runs, **EUR 0.08**, all deleted
 (orphaned primary IPs must be deleted separately — they keep billing after the server is gone).
-Cumulative HPC spend: **EUR 0.21**.
+Three further `cx43` runs for §6b.8–6b.11 (H_new, pocket votes; one aborted half-provisioned run) added ≈ EUR 0.03. Cumulative HPC spend: **≈ EUR 0.24**.

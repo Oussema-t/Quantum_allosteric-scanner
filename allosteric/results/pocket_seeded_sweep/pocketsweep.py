@@ -53,11 +53,13 @@ def ca(path,chain):
             except ValueError: continue
             if k in seen: continue
             seen.add(k)
-            try: ch.setdefault(c,[]).append((int(l[22:26]),[float(l[30:38]),float(l[38:46]),float(l[46:54])]))
+            try: ch.setdefault(c,[]).append((int(l[22:26]),[float(l[30:38]),float(l[38:46]),float(l[46:54])],float(l[60:66] or 0.0)))
             except ValueError: pass
     if not ch: return None,None,None
     c=chain if chain in ch else max(ch,key=lambda k:len(ch[k]))
-    return np.array([x for _,x in ch[c]],float),{r:i for i,r in enumerate([r for r,_ in ch[c]])},c
+    return (np.array([x for _,x,_ in ch[c]],float),
+            {r:i for i,r in enumerate([r for r,_,_ in ch[c]])},c,
+            np.array([b for _,_,b in ch[c]],float))
 
 def run_fpocket(pdb,chain,tmp=None):
     tmp=tmp or ("/tmp/fp%d"%SHARD)
@@ -141,7 +143,7 @@ def select_pockets(pk,pdb,chain,n):
             if j>=JACCARD and (best is None or rk_pa<best[0]): best=(rk_pa,prob,j)
         if best is None: continue
         dbg["matched"]+=1
-        sel.append((max(rk_fp,best[0]),rk_fp,best[0],best[2],q))   # minrank
+        q=dict(q,rk_fp=rk_fp,rk_pa=best[0],jaccard=round(best[2],3)); sel.append((max(rk_fp,best[0]),rk_fp,best[0],best[2],q))   # minrank
     sel.sort(key=lambda t:t[0])
     dbg["selected"]=len(sel[:n])
     return [t[4] for t in sel[:n]],dbg
@@ -158,11 +160,52 @@ def build(X,weight,norm):
     dg=W.sum(1); s=1.0/np.sqrt(np.where(dg>0,dg,1.0))
     return np.eye(len(W))-(W*s[:,None])*s[None,:]
 
+# ---- H_new, ported verbatim from notebook cell 39 (build_H_new + V_B..V_M) ----
+ALPHA=0.3; LAMBDAS=dict(B=0.08,T=0.16,R=0.08,C=0.04,M=0.04)
+TERM_FRAC=0.05; N_LOW_MODES=10
+
+def _zscore(x): return (x-x.mean())/(x.std()+1e-9)
+def _contact(X,cut,weight="binary",sigma=6.0,alpha=ALPHA):
+    d=np.sqrt(((X[:,None,:]-X[None,:,:])**2).sum(2)); m=(d<cut)&(d>0)
+    if weight=="binary": return m.astype(float)
+    if weight=="gaussian": return np.exp(-(d**2)/(2*sigma**2))*m
+    return np.exp(-alpha*d)*m
+def _lap(W,normalised=False):
+    L=np.diag(W.sum(1))-W
+    if not normalised: return L
+    dg=W.sum(1); dis=np.where(dg>0,1.0/np.sqrt(dg),0.0)
+    return (L*dis[:,None])*dis[None,:]
+def _kirch(X,cut):
+    A=_contact(X,cut,"binary"); w,U=np.linalg.eigh(_lap(A))
+    nz=w>1e-9; winv=np.where(nz,1.0/np.where(nz,w,1.0),0.0)
+    return A,w,U,nz,winv
+def V_B(bf): return _zscore(bf.astype(float))
+def V_T(n,tf=TERM_FRAC):
+    k=max(1,int(n*tf)); m=np.zeros(n); m[:k]=1.0; m[-k:]=1.0; return _zscore(m)
+def V_R(X,cut):
+    A=_contact(X,cut,"binary"); deg=A.sum(1); tri=np.diag(A@(A@A))
+    clust=tri/np.maximum(deg*(deg-1),1.0)
+    _A,_w,U,_nz,winv=_kirch(X,cut); msf=np.diag((U*winv)@U.T)
+    return _zscore(-(_zscore(deg)+_zscore(clust)-_zscore(msf)))
+def V_C(X,cut):
+    _A,_w,U,_nz,winv=_kirch(X,cut); Cov=(U*winv)@U.T
+    d=np.sqrt(np.clip(np.diag(Cov),1e-12,None)); nD=Cov/np.outer(d,d)
+    np.fill_diagonal(nD,0.0); return -_zscore(np.abs(nD).sum(1))
+def V_M(X,cut,nm=N_LOW_MODES):
+    _A,w,v,_nz,_wi=_kirch(X,cut); i0=max(1,int(np.searchsorted(w,1e-8)))
+    return -_zscore((v[:,i0:i0+nm]**2).mean(1))
+def build_H_new(X,bf,cut=10.0,alpha=ALPHA,lam=LAMBDAS):
+    L=_lap(_contact(X,cut,"exponential",alpha=alpha),normalised=True)
+    diag=(lam["B"]*V_B(bf)+lam["T"]*V_T(len(X),TERM_FRAC)+lam["R"]*V_R(X,cut)
+          +lam["C"]*V_C(X,cut)+lam["M"]*V_M(X,cut))
+    return L+np.diag(diag)
+
 def rz(r):
     r=np.asarray(r,float); m=np.median(r)
     return (r-m)/(1.4826*np.median(np.abs(r-m))+1e-12)
 
 def main():
+    if not FP: sys.exit("fpocket binary not found -- refusing to run a pocket-seeded sweep without pockets")
     work=[w for w in json.load(open("operator_worklist.json")) if w["is_distal"]]
     work=[w for i,w in enumerate(work) if i%NSHARD==SHARD]
     os.makedirs(CACHE,exist_ok=True)
@@ -177,7 +220,7 @@ def main():
         if w["name"] in res: continue
         try:
             p=fetch(w["pdb"])
-            X,idx,ch=ca(p,w["chain"]) if p else (None,None,None)
+            X,idx,ch,BF=ca(p,w["chain"]) if p else (None,None,None,None)
             if X is None or len(X)<30: res[w["name"]]={"error":"no CA"}; continue
             A=[idx[r] for r in w["active"] if r in idx]
             T=set(idx[r] for r in w["truth"] if r in idx)
@@ -193,15 +236,37 @@ def main():
             seeds=sorted({idx[r] for q in pk if q["id"]!=act_pk for r in q["residues"]
                           if r in idx and idx[r] not in set(A) and hop[idx[r]]>=MIN_HOP})
             y=np.array([1.0 if s in T else 0.0 for s in seeds])
+            # --- pocket bookkeeping: which seeds belong to which pocket, how "drug" each pocket is
+            sidx={r:i for i,r in enumerate(seeds)}
+            POCK=[]
+            for q in pk:
+                if q["id"]==act_pk: continue
+                mem=[sidx[idx[r]] for r in q["residues"] if r in idx and idx[r] in sidx]
+                if not mem: continue
+                nd=int(y[mem].sum())
+                POCK.append(dict(id=q["id"],n=len(mem),n_drug=nd,drug_frac=round(nd/len(mem),3),
+                                 rk_fp=q.get("rk_fp"),rk_pa=q.get("rk_pa"),drug=q["drug"],mem=mem))
+            def top_pocket(v):
+                """pocket ranking for one score vector: pocket score = mean residue score."""
+                sc=[(float(np.mean(v[p["mem"]])),p["id"]) for p in POCK]
+                sc.sort(reverse=True)
+                return [pid for _,pid in sc[:3]]
+            INV={i:r for r,i in idx.items()}
+            SEED2P={}
+            for p in POCK:
+                for k in p["mem"]: SEED2P.setdefault(k,p["id"])
+            RANKS={}
             if len(seeds)<8 or not (0<y.sum()<len(y)):
                 res[w["name"]]={"error":"seeds %d drug %d"%(len(seeds),int(y.sum()))}; continue
             hp=hop[seeds]; f=np.isfinite(hp); hp=np.where(f,hp,(np.nanmax(hp[f]) if f.any() else 1)+1)
             deg=np.asarray(((D2<CUTOFF**2)&(D2>0)).sum(1),float)[seeds]
             Xd=np.column_stack([np.ones(len(seeds)),hp,deg])
             cells={}; VEC=[]
-            for wt in WEIGHTS:
-                for nm in NORMS:
-                    ev,V=np.linalg.eigh(build(X,wt,nm))
+            OPS=[(wt,nm) for wt in WEIGHTS for nm in NORMS]+[("hnew","full")]
+            for wt,nm in OPS:
+                if True:
+                    H=build_H_new(X,BF) if wt=="hnew" else build(X,wt,nm)
+                    ev,V=np.linalg.eigh(H)
                     Vs=V[seeds,:]; Va=V[A,:]; sq=V*V
                     pa=(sq@sq.T)[np.ix_(seeds,A)].sum(1)
                     gaps=np.diff(np.sort(ev)); gap=max(float(gaps[gaps>1e-9].min()) if (gaps>1e-9).any() else 1e-4,1e-4)
@@ -216,6 +281,8 @@ def main():
                             cells["%s|%s|%s"%(wt,nm,tag)]=[float(roc_auc_score(y,v)),
                                                            float(y[o[:5]].sum())/5.0]
                             VEC.append(np.asarray(v,float))
+                            od=np.argsort(-np.asarray(v,float)); rr=np.empty(len(od),int); rr[od]=np.arange(1,len(od)+1)
+                            RANKS["%s|%s|%s"%(wt,nm,tag)]=rr.tolist()
                         except Exception: pass
                     put("p_avg",pa); put("p_peak",pk_w)
                     put("R",pk_w/np.clip(pa,1e-300,None))
@@ -240,7 +307,7 @@ def main():
                 nma[bb]=((RK[:,pos].sum(1)-off)/denom).max()
                 nmp[bb]=(np.isin(TOP5,pos).sum(1)/5.0).max()
             obs_a=max(c[0] for c in cells.values()); obs_p=max(c[1] for c in cells.values())
-            res[w["name"]]=dict(cells=cells,n_seeds=len(seeds),n_drug=int(y.sum()),
+            res[w["name"]]=dict(cells=cells,pockets=[{k:v for k,v in p.items() if k!="mem"} for p in POCK],ranks=RANKS,seed_pocket=[SEED2P.get(k) for k in range(len(seeds))],seed_resnum=[int(INV[k]) for k in seeds],y=y.astype(int).tolist(),n_seeds=len(seeds),n_drug=int(y.sum()),
                                 base=float(y.mean()),n_pockets=len(pk),n_pockets_all=len(pk_all),selector=SELECTOR,seldbg=seldbg,
                                 cluster=w["cluster"],source=w["source"],truth_type=w["truth_type"],
                                 obs_max_auc=float(obs_a),obs_max_p5=float(obs_p),

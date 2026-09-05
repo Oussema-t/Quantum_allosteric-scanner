@@ -25,6 +25,10 @@ the full §14 battery, and ask whether the drug pocket ranks first.
 |---|---|
 | `fpocket_hop1.json`, `fpocket_hop2.json` | fpocket-only selector, per protein: all 96 cells, observed vs null max, permutation p |
 | `consensus_hop1.json`, `consensus_hop2.json` | fpocket ∩ PASSer selector, same fields |
+| `consensus13_hop1.json`, `consensus13_hop2.json` | fpocket ∩ PASSer with **`H_new` as a 13th operator** (13 × 8 = 104 cells), same fields |
+| `consensus13_hop2_ranks.json` | same run with **per-cell residue rank vectors**, seed→pocket map and labels — input to the §14 consensus analysis |
+| `sec14_consensus_per_protein.json` | per protein: how many of the 8 scores elected the TRUE pocket, unanimity, pocket counts |
+| `sec14_consensus.py` | the notebook §14 CONSENSUS block (median-rank pocket votes, Kendall's W, "do the scores agree?") applied to every protein |
 | `per_protein_summary.csv` | one row per (run, protein): best AUC cell, best P@5 cell, null, permutation p, or why it was not scored |
 | `pocketsweep.py` | the sweep (sharded, checkpointed every 10 proteins, resumable) |
 | `passerfetch.py` | PASSer API fetch/cache for the cohort |
