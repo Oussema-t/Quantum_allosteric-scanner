@@ -27,6 +27,10 @@ the full §14 battery, and ask whether the drug pocket ranks first.
 | `consensus_hop1.json`, `consensus_hop2.json` | fpocket ∩ PASSer selector, same fields |
 | `consensus13_hop1.json`, `consensus13_hop2.json` | fpocket ∩ PASSer with **`H_new` as a 13th operator** (13 × 8 = 104 cells), same fields |
 | `consensus13_hop2_ranks.json` | same run with **per-cell residue rank vectors**, seed→pocket map and labels — input to the §14 consensus analysis |
+| `consensus13_hop1_ranks.json`, `sec14_consensus_per_protein_hop1.json` | same as above at MIN_HOP = 1 |
+| `pocketwalk.py`, `pocketwalk_analyze.py` | **pocket-seeded walk** (§6c): initial state = whole pocket, one score per pocket, coherent + incoherent, both truth rules |
+| `pocketwalk_strict_hop1.json`, `pocketwalk_strict_hop2.json` | pocket-seeded walk, strict gate (only proteins with a `drug_frac > 0.5` pocket scored): per-cell pocket score vectors + pocket metadata |
+| `pocketwalk_relaxed_hop1.json`, `pocketwalk_relaxed_hop2.json` | same, relaxed gate (every protein with ≥ 3 pockets and ≥ 1 drug residue scored) — apply either truth rule offline |
 | `sec14_consensus_per_protein.json` | per protein: how many of the 8 scores elected the TRUE pocket, unanimity, pocket counts |
 | `sec14_consensus.py` | the notebook §14 CONSENSUS block (median-rank pocket votes, Kendall's W, "do the scores agree?") applied to every protein |
 | `per_protein_summary.csv` | one row per (run, protein): best AUC cell, best P@5 cell, null, permutation p, or why it was not scored |

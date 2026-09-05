@@ -317,6 +317,7 @@ understates performance for half the set.
 | Winners form a structural class usable for prediction | **no** — only labelled-pocket size separates them (§6b.9) |
 | Defensible positives at benchmark scale | **6 distinct proteins of 138** after null + family de-duplication (§6b.9) |
 | §14 consensus block generalises | **no** — elects the true pocket ≤ chance (1–6 % vs 9.4 %) while operators agree 100 %; median-rank aggregation is size-biased (§6b.11) |
+| Seeding the walk from the WHOLE pocket ranks the drug pocket first | **no** — top-1 11 % vs 16 % chance (strict truth); coherent > incoherent but both below chance; 2 proteins work (§6c.1) |
 
 
 ### 6b.8 Protein-level correction, and `H_new` head-to-head
@@ -430,6 +431,11 @@ few well-ranked residues dominate a short median. The consensus block therefore 
 size bias that works *against* the (typically large) true pocket — a scoring artefact to fix before
 any pocket-level consensus is quoted, and independent of which Hamiltonian is used.
 
+**MIN_HOP = 1 (`consensus13_hop1_ranks.json`, 100 proteins):** the same picture — operators agree in
+100 % of proteins for 7/8 scores, the consensus elects the true pocket in **0–5 %** per score (chance
+9.4 %), **91/100** proteins have 0/8 scores electing it, the 2 unanimous proteins are unanimous on a
+non-drug pocket, and `ASB_1W25` (5/8) is the only protein where most scores elect the drug pocket.
+
 **Consequence.** The single-protein §14 view — a SCORE × HAMILTONIAN matrix with agreeing operators
 electing one pocket — looks like evidence and is not: at scale it elects the true pocket less often than
 a random draw. The ~6 proteins that genuinely work (§6b.9) are the ones where the residue-level ranking
@@ -437,6 +443,74 @@ is strong enough to survive the pocket aggregation.
 
 
 ---
+
+---
+
+## 6c. Pocket-seeded walk — the initial state is the whole pocket
+
+§6b seeds the walk at **one residue at a time** and then has to aggregate residues back into pockets
+(§6b.11 shows that aggregation is size-biased). This experiment removes the aggregation: for each
+selected pocket P the initial state is the **uniform superposition over its residues**,
+
+    |ψ₀⟩ = |P|^(−1/2) Σ_{i∈P} |i⟩ ,
+
+the walk runs to the active site A, and every score is evaluated **once per pocket**, so the ~10 pockets
+of a protein are ranked directly. Everything else is held fixed: same selection (fpocket ∩ PASSer,
+minrank, Jaccard ≥ 0.5, top 10, active-site pocket removed), same `MIN_HOP` residue filter applied to
+pocket members (pocket dropped if < 2 remain), same 13 Hamiltonians, same 8 scores.
+
+| score | pocket-level definition |
+|---|---|
+| `p_avg` | Σ_k \|⟨k\|ψ₀⟩\|² Σ_{a∈A} \|v_k(a)\|²  — the T→∞ average of Σ_a \|⟨a\|e^{−iHt}\|ψ₀⟩\|² (non-degenerate approximation, same as §6b) |
+| `p_peak`, `R` | max over 48 t ∈ [0, 1/gap] of Σ_a \|⟨a\|e^{−iHt}\|ψ₀⟩\|²; `R` = peak / average |
+| Green ×3 | Σ_a \|⟨a\|(E + iη − H)^{−1}\|ψ₀⟩\|² at (0, 0.05), (0, 0.01), (λmax, 0.05) |
+| `residLOG`, `residRAW` | `p_avg` regressed on [1, mean hop of members, log pocket size] **across the protein's pockets**, robust z-score of the residual |
+
+Every score is computed twice: **coherent** (ψ₀ as above — the new physics, with interference between
+pocket residues) and **incoherent** (the mean of the individual residue walks — i.e. what a mean-aggregation
+of §6b would give). Comparing the two isolates whatever pocket-level coherence contributes.
+
+**Truth and metric.** A pocket is the drug pocket if `drug_frac > 0.5` (§14's rule). The metric is the
+**rank of the (best) true pocket** among the protein's pockets — top-1 = "the method put the drug pocket
+first". The chance rate is exact per protein, k/n (true pockets / pockets), and is reported alongside.
+Best-of-all-cells is compared to a label-permutation null on the same cells. The per-cell score vectors
+are stored (`pocketwalk_hop{1,2}.json`) so any other pocket metric can be computed offline.
+Scripts: `pocketwalk.py` (sweep), `pocketwalk_analyze.py`. Self-tests: closed-form coherent `p_avg`
+matches the long-time numerical average (0.02750 vs 0.02731); incoherent `p_avg` equals the member
+mean exactly; a planted-signal analysis test recovers 100 % top-1 for the planted mode and ~chance
+(0.18 vs 0.20) for the null mode.
+
+### 6c.1 Results — strict truth (`drug_frac > 0.5`)
+
+**Coverage.** Under the strict rule only **57 / 138** proteins can be scored at all: in **67** proteins
+no selected pocket has more than half its residues in the drug site (their most drug-like pocket has
+median `drug_frac` 0.23), plus the usual 14 selector/fpocket losses. Median 8–9 pockets per protein,
+1 true pocket → **chance top-1 rate 15–16 %**.
+
+| MIN_HOP = 2, 57 proteins, 13 × 8 cells | top-1 rate (all cells) | top-3 rate | chance top-1 |
+|---|---|---|---|
+| **coherent** pocket superposition | **11.1 %** | 37.9 % | 15.9 % |
+| **incoherent** (mean of residue walks) | 6.2 % | 26.6 % | 15.9 % |
+
+| MIN_HOP = 1, 57 proteins | top-1 | top-3 | chance |
+|---|---|---|---|
+| coherent | 9.1 % | 27.8 % | 14.5 % |
+| incoherent | 6.5 % | 20.7 % | 14.5 % |
+
+**The pocket-seeded walk does not put the drug pocket first: its average top-1 rate is *below* the
+chance rate at both hop settings.** Coherent seeding is consistently better than the incoherent
+mean-of-residues baseline (+5 points top-1, +11 top-3) — pocket-level interference is doing *something*
+— but not enough to reach a random draw. No cell exceeds 0.42 top-1 over proteins (best cell:
+`binary/comb` + Green (0, 0.01), 0.42, and `gauss/comb` + Green (0, 0.01), 0.40 — the `comb` Green cells
+are the only ones clearly above chance, and they are 2 of 104). Per protein, no protein has the true pocket
+first in ≥ 75 % of cells; only **2 exceed chance by > 0.25 at both hops — `ASB_1W25` (0.54 / 0.41) and
+`CB_6RXD` (0.42 / 0.42)** — the same two proteins that survive every other test in this report.
+"Some cell puts the true pocket first" is true for 57/57 proteins and for 99 % of proteins under the
+label-permutation null, i.e. it is meaningless with 208 cells and ~9 pockets.
+
+### 6c.2 Results — relaxed truth (the pocket with the most drug residues, `drug_frac ≥ 0.25`)
+
+_(pending — `pocketwalk_relaxed_hop{1,2}.json`, filled from the second HPC run)_
 
 ## 7. Limitations
 
