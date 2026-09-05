@@ -315,9 +315,9 @@ understates performance for half the set.
 | Green's `|G|²` is the strongest score | **suggestive only** — most frequent among clearing cells, `(E, η)` still unpinned (§5.3) |
 | `H_new`'s site potential earns its place | **yes** — beats its own λ=0 base on ~100 proteins, p ≤ 0.026 (§6b.8) |
 | Winners form a structural class usable for prediction | **no** — only labelled-pocket size separates them (§6b.9) |
-| Defensible positives at benchmark scale | **6 distinct proteins of 138** after null + family de-duplication (§6b.9) |
+| Defensible positives at benchmark scale | **6 distinct proteins at the residue level** (§6b.9); **none at the pocket level** — the two pocket-level candidates are within chance (§6c.3) |
 | §14 consensus block generalises | **no** — elects the true pocket ≤ chance (1–6 % vs 9.4 %) while operators agree 100 %; median-rank aggregation is size-biased (§6b.11) |
-| Seeding the walk from the WHOLE pocket ranks the drug pocket first | **no** — top-1 8–11 % vs 12–16 % chance under both truth rules and both hops; coherent > incoherent by ~5 points but below chance; only `ASB_1W25` and `CB_6RXD` work (§6c) |
+| Seeding the walk from the WHOLE pocket ranks the drug pocket first | **no** — top-1 8–11 % vs 12–16 % chance; PASSer #1 alone gets 43.5 %, largest pocket 40 %. The two apparent successes are consistent with the favourite-pocket null (8 observed vs 11 expected) (§6c.3) |
 
 
 ### 6b.8 Protein-level correction, and `H_new` head-to-head
@@ -530,18 +530,56 @@ proteins that pass every other test in this report. Under the argmax rule `CB_1R
 is a weak third. The strict-run and relaxed-run numbers agree to within 0.3 points on the shared
 proteins, so the two HPC runs reproduce each other.
 
-### 6c.3 What §6c settles
+### 6c.3 Reviewer pass — the two "successes" are consistent with chance
 
-- **Seeding from the whole pocket is not the fix.** The size-biased aggregation of §6b.11 was a real
-  defect, but removing it does not make the drug pocket rank first: the walk's pocket-to-active-site
-  coupling is simply not what distinguishes the drug pocket in ~97 % of these proteins.
-- **Coherence is measurable but small.** Coherent > incoherent by a consistent 3–5 points (top-1) and
-  6–12 points (top-3) in all four runs — pocket-level interference carries some information — but it
-  never reaches the chance line.
-- **Two proteins are real.** `ASB_1W25` (Response regulator PleD) and `CB_6RXD` are the only targets on
-  which residue-level P@5, the permutation null, the §14 pocket vote at both hops, and the whole-pocket
-  walk under both truth rules all agree. Understanding *why* those two work is the productive next
-  question; converting winners into `H_new` is not, because there is no consistent winner to convert.
+Three checks that should have preceded any claim about `ASB_1W25` and `CB_6RXD`:
+
+**(i) Favourite-pocket null.** The walk concentrates its 104 coherent cells on one pocket per protein
+(the favourite gets 41 % of cells on average, median 35 %). If that favourite were unrelated to the drug
+pocket it would coincide with it in Σ 1/n_pockets proteins by luck:
+
+| rule | proteins | favourite = drug pocket, observed | expected by chance | P(≤ observed) |
+|---|---|---|---|---|
+| argmax | 85 | **8** | 11.1 | 0.21 |
+| strict | 58 | **4** | 7.8 | 0.10 |
+
+Fewer proteins than chance have the drug pocket as the walk's favourite. `CB_6RXD` (0.46) and
+`ASB_1W25` (0.44) sit **below the median favourite-share of proteins whose favourite is a non-drug pocket**
+(0.34–0.38; 90th percentile 0.71–0.76). They are not outliers; they are the expected lucky draws.
+**The earlier statement that "two proteins are real" is withdrawn.**
+
+**(ii) Trivial baselines** (argmax rule, hop 2, 85 proteins; top-1 = drug pocket ranked first):
+
+| ranker | top-1 |
+|---|---|
+| **PASSer #1 (most allosteric)** | **43.5 %** |
+| **largest pocket** | **40.0 %** |
+| fpocket #1 (most druggable) | 21.2 % |
+| chance | 13.0 % |
+| **CTQW, whole-pocket, coherent** | **10.7 %** |
+| closest pocket to the active site | 0.0 % |
+
+Two one-line heuristics beat the walk by 4×. `ASB_1W25`'s drug pocket is PASSer rank 1 — the detector
+alone finds it. `CB_6RXD`'s is fpocket rank 14 / PASSer rank 10, so there the walk does find something the
+detectors miss — a single case, consistent with (i). "Closest pocket" scores 0 % because the cohort is
+distal by construction (§3.2).
+
+**(iii) Integrity.** No ties at the top in either protein (0/104 cells). Strict-run and relaxed-run
+shares agree exactly (`CB_6RXD` 0.46 / 0.46 / 0.46 across strict-hop2, relaxed-hop2, relaxed-hop1;
+`ASB_1W25` 0.44 / 0.44 / 0.31). Truth enters `pocketwalk.py` only as labels and as the scoring gate
+(which proteins are evaluated), never in pocket selection, `MIN_HOP` filtering, the initial state,
+the operators, or the regression covariates — reviewed by reading, not by an ablation.
+
+**What §6c settles.** Seeding from the whole pocket removes the §6b.11 aggregation defect and still ranks
+the drug pocket first below chance, below the largest-pocket heuristic, and far below PASSer alone.
+Coherent seeding beats the incoherent mean by a stable 3–5 points in all four runs — a measurable but
+practically irrelevant effect. No protein can be held up as a demonstrated success of the pocket-seeded
+walk; the §6b.9 list of "6 defensible proteins" (residue level, permutation null) stands only at the
+residue level and does not translate into ranking the pocket. The one substantive lesson is that
+**pocket appearance (PASSer, size) predicts the drug pocket far better than active-site coupling does on
+this benchmark** — the §7b comment anticipated exactly this.
+
+---
 
 ## 7. Limitations
 
