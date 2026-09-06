@@ -23,6 +23,18 @@ reviewer, no repo write access); relocated here from `.ai/reviews/
 hardcoded the reviewer's own sandbox path -- replaced with this repo's
 standard relative convention (see `learnability_gate_patch_control.py`)
 so the script actually runs here. No other line changed.
+
+Citation added later (2026-09-06), not part of the original drop above --
+the general principle this file's `compact_patch()` implements (a null
+for spatially/serially correlated data must draw contiguous blocks, not
+i.i.d. points, or it understates the true null variance) is Kunsch 1989
+(Ann Stat 17:1217-1241, doi:10.1214/aos/1176347265) and, in the
+cluster-permutation-testing form, Maris & Oostenveld 2007 (J Neurosci
+Methods 164:177-190, doi:10.1016/j.jneumeth.2007.03.024) -- see
+`documentation/REFERENCES.md`. Cited as the source of the general method
+this file already applies, not the source of any number in it (this
+project's own citation protocol) -- reused again in [[TASK-0328]]'s
+pocket-block null.
 """
 import sys
 from pathlib import Path

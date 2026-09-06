@@ -12017,6 +12017,14 @@ stored `p_auc` values before trusting it further, e.g. 0.141 vs stored
 | BH-FDR 5% survivors, uniform | 45/110 | 33/80 |
 | **BH-FDR 5% survivors, pocket-block** | **0/110** | **1/80** |
 
+The block-null principle (a null for spatially/serially correlated data
+must draw contiguous blocks, not i.i.d. points) is Künsch 1989 (Ann Stat
+17:1217-1241) and, in cluster-permutation form, Maris & Oostenveld 2007
+(J Neurosci Methods 164:177-190); BH-FDR is Benjamini & Hochberg 1995
+(J R Stat Soc Series B 57:289-300) — all three added to
+`documentation/REFERENCES.md`, DOI-verified before adding, cited as the
+source of the general method, not of this task's own numbers.
+
 More extreme than this task's own cited external estimate (a
 circular-shift null: 11/55, 4/40) — flagged, not glossed over: a
 whole-pocket-block null also captures pocket-level *score* correlation

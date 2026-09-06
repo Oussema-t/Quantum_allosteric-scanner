@@ -26,8 +26,17 @@ correctly-shaped null can be recomputed byte-for-byte in the same rank-sum
 arithmetic pocketsweep.py already uses, with zero new physics.
 
 DEFECT 2's FIX, MADE FROM WHAT THIS PIPELINE ALREADY COMPUTED, NOT
-REDERIVED FROM SCRATCH. [[TASK-0158]]/[[TASK-0190]]/[[TASK-0201]]'s
-`compact_patch()` (see `null_audit.py`) draws a null positive set as the
+REDERIVED FROM SCRATCH. The general principle -- a null for spatially/
+serially correlated data must draw contiguous BLOCKS, not i.i.d. points,
+or it understates the true null variance -- is Kunsch 1989 (Ann Stat
+17:1217-1241, doi:10.1214/aos/1176347265) and, in the cluster-permutation
+form, Maris & Oostenveld 2007 (J Neurosci Methods 164:177-190,
+doi:10.1016/j.jneumeth.2007.03.024); see `documentation/REFERENCES.md`.
+Cited as the source of the general method this task applies, not the
+source of any of the numbers below (this project's own citation
+protocol). [[TASK-0158]]/[[TASK-0190]]/[[TASK-0201]]'s
+`compact_patch()` (see `null_audit.py`) already applies it in this
+register and draws a null positive set as the
 `size` nearest-by-3D-distance residues to a random center -- the general
 form of "a spatially compact block, not a scattered sample." This pipeline
 already contains its own compact spatial units for free: each fpocket/
@@ -174,7 +183,9 @@ def null_stats_for_protein(v, rng, draw_fn) -> tuple:
 
 
 def bh_survivors(pvals: list, alpha: float = ALPHA) -> int:
-    """Standard Benjamini-Hochberg step-up, matching this task's own cited
+    """Standard Benjamini-Hochberg step-up (Benjamini & Hochberg 1995, J R
+    Stat Soc Series B 57:289-300, doi:10.1111/j.2517-6161.1995.tb02031.x --
+    see documentation/REFERENCES.md), matching this task's own cited
     'BH-FDR 5% survivors' table."""
     p = np.sort(np.asarray(pvals))
     m = len(p)

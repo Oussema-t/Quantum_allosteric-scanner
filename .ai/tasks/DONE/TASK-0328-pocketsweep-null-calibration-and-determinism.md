@@ -140,6 +140,21 @@ eyeballed, asserted, per this task's own Planned Validation.
 ### Defect 2 (null shape) — reused this register's own compactness-null
 machinery, in the form this dataset already provides for free
 
+**Literature anchor added** (2026-09-06, on request, before critic review
+— see `documentation/REFERENCES.md`'s method/tool table): the general
+principle — a null for spatially/serially correlated data must draw
+contiguous *blocks*, not i.i.d. points, or it understates the true null
+variance — is Kunsch 1989 (Ann Stat 17:1217-1241,
+doi:10.1214/aos/1176347265) and, in cluster-permutation form, Maris &
+Oostenveld 2007 (J Neurosci Methods 164:177-190,
+doi:10.1016/j.jneumeth.2007.03.024), both DOI-verified via Crossref
+before adding. Cited as the source of the general method this task (and
+[[TASK-0158]]/[[TASK-0190]]/[[TASK-0201]] before it) applies, not the
+source of any number below, per this project's own citation protocol
+(`.ai/reference/PAPER_CITATION_PROTOCOL.md`) — `compact_patch()` and this
+task's pocket-block null were both built and verified independently
+before either citation was found and added.
+
 [[TASK-0158]]/[[TASK-0190]]/[[TASK-0201]]'s `compact_patch()` draws a null
 positive set as the nearest-by-3D-distance residues to a random center.
 This pipeline already contains its own compact spatial units without
@@ -169,6 +184,11 @@ same kpos, deterministic seeds
 | mean null max-AUC, **pocket-block (compact)** | 0.821 | 0.846 |
 | BH-FDR 5% survivors, uniform | 45/110 | 33/80 |
 | BH-FDR 5% survivors, **pocket-block (compact)** | **0/110** | **1/80** |
+
+(BH-FDR: Benjamini & Hochberg 1995, J R Stat Soc Series B 57:289-300,
+doi:10.1111/j.2517-6161.1995.tb02031.x — added to
+`documentation/REFERENCES.md`, this register cited it by acronym in
+several other places before now without a traced source.)
 
 **More extreme than this task's own cited motivating measurement** (11/55,
 4/40 from an external circular-shift-null re-run, not independently
