@@ -32,6 +32,46 @@ Two questions settled: (1) which selector at stage 1, (2) which veto at stage 3.
 families). Aggressive pruning is the point — fpocket promotes druggable-but-not-allosteric pockets that
 then outrank the true one. Loose bar (P@5>=0.6) barely benefits from any veto (31 no-veto vs 34).
 
+## Score ablation — spectral (energy) variance `dE`  [17 scores]
+
+Added three scores mirroring the `dX` family, from the seed's energy distribution
+`|c_k|² = |⟨E_k|seed⟩|²` (**time-independent** — energy is conserved in the closed walk, so no `C_T`):
+`dE = sqrt(⟨E²⟩ − ⟨E⟩²)` → `neg_dE`, `residLOG_dE` (= residLOG + focus(dE)), `pavg_over_dE` (= p_avg / dE).
+Validated to 0.0 against direct recomputation.
+
+| stage (top-10, hop 2) | 14 scores | +dE (17) | families dE ADDS |
+|---|---|---|---|
+| round 1, P@5≥0.8 | 11 | 12 | CAS0027 |
+| round 1, P@5≥0.6 | 31 | 32 | +1 |
+| **round 2 (veto), P@5≥0.8** | **19** | **19** | **none** |
+| round 2 (veto), P@5≥0.6 | 34 | 35 | Sulfate adenylyltransferase |
+
+Proteins, round 2: P@5≥0.8 = 40 (unchanged); P@5≥0.6 = 57 → 58.
+
+**Verdict: dE is real but redundant.** On its own it clears 9 families at P@5≥0.8 (round 2) — genuine
+signal, spectrally-localized seeds do mark allosteric residues — but it adds **zero** new families to the
+best pipeline at the strict bar. `dE` (spread in energy) and `dD` (spread in graph-distance to the active
+site) are two windows on the same coherence-vs-diffusion property, so the second is largely redundant.
+Kept in the score pool (cheap, parameter-free) but it does not improve the result.
+
+Per-axis spatial variance (`dy`, `dz`) was considered and REJECTED: `dX` is already the full 3D radius of
+gyration and is rotation-invariant; per-axis components depend on how the structure is oriented in the
+PDB file (frame-dependent) and would not survive review.
+
+## Coverage on the full worklist (1022 proteins), PASSer only top-10
+| stage | proteins |
+|---|---|
+| worklist | 1022 |
+| − PASSer returns no pockets for the chain | 78 |
+| − fewer than 4 pockets | 6 |
+| − drug pocket not in PASSer's top-10 | 90 |
+| **TESTABLE** | **848 (83 %) — 548 families** |
+
+Split: distal (hop≥3) 110/138 · near (hop<3) 738/884. Report the two separately — the 738 near proteins
+have the allosteric site adjacent to the active site, where proximity alone scores well.
+**Blocker for the full run: PocketMiner scores exist only for the 138**; the veto needs them for the rest
+(~710 structures, one forward pass each on the native arm64 setup).
+
 ## Final pipeline (unchanged by these ablations)
 PASSer-only top-10 selection -> CTQW round 1 (13 Ham x 14 scores) -> PocketMiner veto with apo-ligand
 protection -> CTQW round 2 -> rank. See PIPELINE_CURRENT.md.

@@ -343,6 +343,11 @@ def main():
                     _dXt,_EDt,_dDt=operator_diagnostics(ev,V,np.array(seeds),_ts_d,X,hop_vec)
                     _dX=_dXt.mean(0); _ED_f=_EDt[-1]; _dD_m=_dDt.mean(0); _focus=-rz(_dX)
                     _qmi=qmi_score(ev,V,A,np.array(seeds),float(ts[-1]))
+                    # spectral (energy) variance per seed -- time-independent (energy is conserved)
+                    _w2=(V[seeds,:]**2)                          # (n_seeds, N) mode weights |c_k|^2
+                    _Emean=_w2@ev; _E2=_w2@(ev*ev)
+                    _dE=np.sqrt(np.clip(_E2-_Emean**2,0,None))
+                    _focusE=-rz(_dE)
 
                     def put(tag,v):
                         try:
@@ -364,6 +369,9 @@ def main():
                     put("neg_ED_final",-_ED_f)
                     put("neg_dD_mean",-_dD_m)
                     put("QMI",_qmi)
+                    put("neg_dE",-_dE)
+                    put("residLOG_dE",rz(lg-Xd@b1)+_focusE)
+                    put("pavg_over_dE",pa/np.clip(_dE,1e-12,None))
                     for em,eta in GREEN:
                         E={"zero":0.0,"lmax":float(ev.max())}[em]
                         Gm=(Va/((E+1j*eta)-ev))@Vs.T
