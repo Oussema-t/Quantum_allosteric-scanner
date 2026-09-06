@@ -11842,3 +11842,77 @@ citing it is dated later — backwards for a backfill. Not fixed here
 (TASK-0322's own heuristic, out of this task's scope).
 
 **Full detail**: `.ai/tasks/DONE/TASK-0324-hypothesis-verdict-backfill.md`.
+
+## The distal-subset re-run cannot even detect its own dominant confound — the CTQW negative there is undetermined, not sharper ([[TASK-0331]], 2026-09-06)
+
+[[TASK-0320]] and [[TASK-0325]] ran on the unfiltered ASBench cohort (105
+structures). The collaborator's unified 1233-protein benchmark
+(`origin/allosteric`, `allosteric/README.md`) measured that only **23%** of
+curated-allosteric sites and **7%** of drug-contact pockets are genuinely
+**distal** (hop ≥ 2, > 12 Å) — most of both cohorts sit essentially at the
+active site. A propagation method evaluated where there is nothing to
+propagate across is being tested off-target; this task re-opens the question
+on the subset where it is not.
+
+**Distal set vendored, not re-derived**: `origin/allosteric`@`f257789`,
+`allosteric/datasets/pocket_distance.csv`, filtered to
+`source=='asbench' & truth_type=='curated_allosteric' & is_distal==True` — 49
+distinct PDBs, 44.95% of ASBench's 109 curated_allosteric rows, matching the
+filing's own "ASBench-led at 45% distal" to the second decimal. The
+register's own ASBench truth has only ever been `curated_allosteric` — never
+scored against the collaborator's `drug_contact` cohort — so the Constraint's
+truth-type separation is satisfied by construction.
+
+**No re-run of fpocket or the walk**: both are filter-invariant
+([[TASK-0320]]'s own symmetry identity), so this is a post-filter of the
+per-structure/per-candidate dumps `task0320b_reverse_seeded_asbench.py`
+already wrote — same reuse pattern [[TASK-0325]] itself used. 45/49 distal
+PDBs (43 distinct — 2 carry a second annotated site) already have rows in
+the existing 105-structure dump; the other 6 were never in that run at all
+(not in the TASK-0305 KEEP set, `N>MAXN`, or the same exclusion reasons as
+the rest of that 105/118 run — not re-diagnosed here). `is_distal` written
+onto every row of the full set, not just the retained subset, for
+auditability.
+
+**Power first — and this is the finding, not a caveat on it.** On the
+n=45 structures / 35 proteins distal subset, proximity itself — the one
+signal this register reliably detects everywhere else — does **not** clear
+significance: median rho **+0.0643**, 19/35 proteins positive, Wilcoxon
+**p=0.89**. Full cohort, same statistic: median +0.1514, p=0.00035. **A
+design that cannot detect its own dominant confound cannot rule anything in
+or out.**
+
+Reported anyway, explicitly flagged uninterpretable rather than omitted:
+CTQW raw median −0.0049 (p=0.45, vs +0.109/p=0.005 full-cohort), CTQW |
+proximity median −0.0511 (p=0.15, vs −0.015/p=0.36 full-cohort). The
+permuted-label null still centres on zero for both, as a null must — that is
+not evidence of power, only that the null machinery itself works. **This is
+not a sharper negative than the full-cohort one** — it is a null result from
+an underpowered design, indistinguishable at this n from "nothing to
+detect."
+
+**[[TASK-0325]]'s gate ablation, same subset**: qualitatively unchanged.
+True-pocket retention at top-3/5/half is 26.7%/46.7%/84.4% (full cohort:
+34.3%/46.7%/82.9%) — the gate still does essentially all of the work, CTQW
+still does not beat random-within-gate or fpocket druggability at any width,
+and `n_res`/`fpocket_drug` remain the strongest selectors throughout.
+
+**Ligand-contamination caveat carried forward, not resolved**
+([[TASK-0329]], still open): every row here, distal or not, was scored by
+running fpocket on the deposited, ligand-bound structure. Subset and
+full-cohort numbers share the defect equally, so the *comparison* between
+them is not confounded by it, but neither number is a clean distality-only
+measurement.
+
+**For the submission**: report both numbers together, not the full-cohort
+negative alone. *"On the ~45-structure genuinely-distal subset of ASBench,
+this register's design cannot detect proximity itself, so the CTQW result
+there is undetermined — distinct from the well-powered full-cohort negative,
+which stands."* CASBench's own 46 distal structures are untouched here
+(`task0320b`/`task0325` never scored CASBench; extending to it is a new run,
+not a filter — out of this task's scope, a Phase-2 hook).
+
+**Script**: `scripts/task0331_distal_subset_rerun.py` (post-filter only, no
+propagator call — runs in seconds). **Data**:
+`results/tasks/0331_distal_subset_rerun/distal_subset_rerun.json`. **Full
+detail**: `.ai/tasks/DONE/TASK-0331-rerun-ctqw-negatives-on-the-distal-subset.md`.
