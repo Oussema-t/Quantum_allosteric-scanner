@@ -1,0 +1,70 @@
+family,family_size,structures_cleared,best_AUC,winning_hamiltonians,winning_scores
+CAS0061,33,20,1.0,binary/adj;binary/comb;binary/sym;exp/adj;exp/comb;exp/sym;gauss/adj;gauss/comb;gauss/sym;harm/adj;harm/comb;harm/sym;hnew/full,QMI;R;green_lmax_0.05;green_zero_0.01;green_zero_0.05;neg_ED_final;neg_dD_mean;neg_dE;p_avg;p_peak;pavg_over_dE;pavg_over_dX;residLOG;residLOG_dE;residLOG_dX;residRAW;residRAW_dX
+CAS0050,2,2,1.0,binary/adj;binary/comb;binary/sym;exp/adj;exp/comb;exp/sym;gauss/adj;gauss/comb;gauss/sym;harm/adj;harm/comb;harm/sym;hnew/full,QMI;R;green_lmax_0.05;green_zero_0.05;neg_ED_final;neg_dD_mean;neg_dE;p_avg;p_peak;pavg_over_dE;pavg_over_dX;residLOG;residLOG_dE;residLOG_dX;residRAW;residRAW_dX
+CAS0015,12,9,1.0,binary/adj;binary/comb;binary/sym;exp/adj;exp/comb;exp/sym;gauss/adj;gauss/comb;gauss/sym;harm/adj;harm/comb;harm/sym;hnew/full,green_lmax_0.05;green_zero_0.01;green_zero_0.05;neg_ED_final;neg_dD_mean;neg_dE;p_avg;pavg_over_dE;pavg_over_dX;residLOG_dE;residLOG_dX;residRAW_dX
+CAS0060,62,1,1.0,binary/adj;binary/comb;hnew/full,green_lmax_0.05;green_zero_0.01
+P00803,1,1,1.0,harm/adj,p_peak
+P06239,1,1,1.0,binary/sym;exp/comb;exp/sym;gauss/comb;gauss/sym;harm/comb;hnew/full,QMI;green_lmax_0.05;green_zero_0.01;neg_ED_final;p_peak
+P08427,1,1,1.0,binary/adj;binary/comb;binary/sym;exp/adj;exp/comb;exp/sym;gauss/adj;gauss/comb;gauss/sym;harm/adj;harm/comb;harm/sym;hnew/full,QMI;R;green_lmax_0.05;green_zero_0.01;green_zero_0.05;neg_ED_final;neg_dD_mean;neg_dE;p_avg;p_peak;pavg_over_dE;pavg_over_dX;residLOG;residLOG_dE;residLOG_dX;residRAW;residRAW_dX
+B1VZT1,1,1,1.0,binary/adj;binary/comb;binary/sym;exp/comb;exp/sym;gauss/adj;gauss/comb;gauss/sym;harm/adj;harm/comb;harm/sym;hnew/full,QMI;green_lmax_0.05;green_zero_0.01;green_zero_0.05;neg_ED_final;neg_dD_mean;p_avg;pavg_over_dE;pavg_over_dX;residLOG_dX;residRAW_dX
+W0TJ64,1,1,1.0,binary/adj;binary/comb;binary/sym;exp/adj;exp/comb;gauss/adj;gauss/comb;harm/adj;harm/comb;hnew/full,green_lmax_0.05;green_zero_0.01;green_zero_0.05;p_peak;pavg_over_dE;residLOG_dX;residRAW_dX
+P15273,1,1,0.993,gauss/sym,green_lmax_0.05
+CAS0079,39,6,0.988,exp/adj;exp/sym;gauss/sym;harm/sym;hnew/full,neg_dD_mean;neg_dE;residLOG_dE;residLOG_dX;residRAW;residRAW_dX
+O58216,1,1,0.988,gauss/sym,pavg_over_dE;residLOG_dE
+Novel cryptic pocket set,16,3,0.98,binary/adj;binary/comb;binary/sym;exp/adj;exp/comb;exp/sym;gauss/adj;gauss/comb;gauss/sym;harm/adj;harm/comb;harm/sym;hnew/full,QMI;R;green_lmax_0.05;green_zero_0.01;green_zero_0.05;neg_ED_final;neg_dD_mean;neg_dE;p_avg;p_peak;pavg_over_dE;pavg_over_dX;residLOG;residLOG_dE;residLOG_dX;residRAW;residRAW_dX
+CAS0002,28,21,0.979,binary/adj;binary/comb;binary/sym;exp/adj;exp/comb;exp/sym;gauss/adj;gauss/comb;gauss/sym;harm/adj;harm/comb;harm/sym;hnew/full,R;neg_dD_mean;neg_dE;pavg_over_dE;residLOG;residLOG_dE;residLOG_dX;residRAW_dX
+CAS0001,8,2,0.974,binary/adj;binary/sym;exp/adj;harm/adj,neg_dD_mean;p_peak
+P15374,1,1,0.964,binary/comb;exp/comb;gauss/comb;harm/comb,green_zero_0.01;green_zero_0.05
+CAS0028,2,1,0.962,hnew/full,neg_ED_final
+Kinesin-like protein KIF11,2,1,0.961,binary/adj;binary/comb;binary/sym;exp/adj;exp/comb;exp/sym;gauss/adj;gauss/comb;gauss/sym;harm/adj;harm/comb;hnew/full,R;green_lmax_0.05;green_zero_0.01;neg_ED_final;neg_dD_mean;p_avg;p_peak;pavg_over_dE;pavg_over_dX;residLOG;residLOG_dE;residLOG_dX;residRAW;residRAW_dX
+"Glutaminase kidney isoform, mitochondrial",2,1,0.956,harm/sym,neg_ED_final
+CAS0029,1,1,0.955,harm/comb;hnew/full,green_lmax_0.05
+Q12866,1,1,0.952,hnew/full,p_peak
+P51570,1,1,0.949,binary/sym;exp/comb;gauss/adj;gauss/comb,QMI;green_zero_0.01;green_zero_0.05;neg_ED_final;neg_dD_mean;p_avg;pavg_over_dE;residLOG;residRAW
+Ribonucleoside-diphosphate reductase 1 subunit alpha,2,1,0.948,binary/adj;binary/sym;exp/adj;gauss/sym;harm/adj,green_zero_0.01;p_peak;residLOG;residLOG_dE;residLOG_dX;residRAW;residRAW_dX
+Androgen receptor,3,1,0.94,exp/sym;gauss/sym;hnew/full,green_zero_0.01;residLOG_dX;residRAW;residRAW_dX
+Q9H7B4,1,1,0.929,gauss/sym,p_avg;pavg_over_dX
+Q5SJA1,1,1,0.914,binary/adj;binary/comb;binary/sym;exp/adj;exp/comb;exp/sym;gauss/adj;gauss/comb;gauss/sym;harm/adj;harm/comb;harm/sym;hnew/full,QMI;R;green_lmax_0.05;neg_dE;p_avg;p_peak;pavg_over_dE;pavg_over_dX;residLOG_dE;residLOG_dX;residRAW;residRAW_dX
+Q9RY20,1,1,0.912,harm/adj,p_peak
+CAS0021,2,1,0.908,binary/sym;exp/adj;exp/sym;gauss/adj;gauss/comb;gauss/sym;hnew/full,R;green_lmax_0.05;green_zero_0.01;green_zero_0.05;neg_dD_mean;p_peak;pavg_over_dE
+B7GTV0,1,1,0.905,binary/adj;binary/sym;exp/sym;gauss/adj;gauss/sym;harm/sym;hnew/full,green_lmax_0.05;neg_ED_final;neg_dE;pavg_over_dE;residLOG_dE;residLOG_dX;residRAW;residRAW_dX
+Glucose-1-phosphate thymidylyltransferase,4,3,0.905,binary/adj;binary/comb;binary/sym;exp/adj;exp/comb;exp/sym;gauss/adj;gauss/comb;gauss/sym;harm/adj;harm/comb;hnew/full,QMI;R;green_lmax_0.05;green_zero_0.01;green_zero_0.05;neg_ED_final;neg_dD_mean;p_avg;p_peak;pavg_over_dE;pavg_over_dX;residLOG;residLOG_dE;residLOG_dX;residRAW;residRAW_dX
+P17169,1,1,0.892,exp/sym;harm/sym;hnew/full,green_lmax_0.05
+P33284,1,1,0.89,binary/adj;binary/comb;binary/sym;exp/adj;exp/sym;gauss/adj;gauss/comb;gauss/sym;harm/adj;harm/comb;harm/sym;hnew/full,R;green_lmax_0.05;green_zero_0.01;neg_ED_final;neg_dD_mean;neg_dE;residLOG_dX;residRAW_dX
+P00772,1,1,0.887,binary/adj;binary/comb;hnew/full,neg_dD_mean;p_avg;pavg_over_dE;residLOG_dE
+P42592,1,1,0.884,binary/comb;binary/sym;exp/comb;exp/sym;gauss/comb;harm/adj;harm/comb;harm/sym;hnew/full,green_lmax_0.05;neg_ED_final;pavg_over_dE;pavg_over_dX
+P00366,1,1,0.881,gauss/adj;gauss/comb;gauss/sym;harm/adj;hnew/full,QMI;R;green_lmax_0.05;green_zero_0.01;green_zero_0.05;neg_ED_final;p_peak
+CAS0071,1,1,0.877,binary/adj;exp/adj;gauss/sym;harm/adj,QMI;R;green_zero_0.01;green_zero_0.05;neg_ED_final
+F6KV61,1,1,0.876,binary/adj;binary/comb;binary/sym;exp/adj;exp/comb;exp/sym;gauss/adj;gauss/comb;harm/adj;harm/comb;hnew/full,R;green_lmax_0.05;green_zero_0.05;neg_dE;residLOG;residLOG_dX;residRAW_dX
+Acetyl-CoA carboxylase,1,1,0.873,harm/sym,residLOG;residLOG_dE;residLOG_dX;residRAW;residRAW_dX
+Response regulator PleD,1,1,0.868,binary/comb;gauss/adj;harm/adj;harm/sym,QMI;green_zero_0.05;neg_ED_final;p_avg;pavg_over_dX
+O00560,1,1,0.857,hnew/full,residLOG_dX
+P00489,1,1,0.855,binary/adj;gauss/sym,green_lmax_0.05;pavg_over_dE
+CAS0052,1,1,0.853,binary/adj;binary/comb;binary/sym;exp/adj;exp/comb;exp/sym;gauss/adj;gauss/comb;gauss/sym;harm/adj;harm/comb;harm/sym;hnew/full,QMI;R;green_lmax_0.05;green_zero_0.01;green_zero_0.05;neg_ED_final;neg_dE;p_avg;p_peak;pavg_over_dE;pavg_over_dX;residLOG;residLOG_dE;residLOG_dX;residRAW;residRAW_dX
+CAS0086,39,6,0.853,binary/adj;binary/sym;gauss/adj,QMI;neg_dE;p_avg;p_peak;pavg_over_dE;pavg_over_dX;residLOG;residLOG_dX;residRAW;residRAW_dX
+Q08AH3,1,1,0.844,binary/comb;binary/sym;exp/adj;exp/sym;gauss/adj;gauss/sym;harm/adj;harm/comb;harm/sym;hnew/full,QMI;green_lmax_0.05;green_zero_0.01;green_zero_0.05;neg_ED_final;p_avg;p_peak;pavg_over_dE;pavg_over_dX;residLOG;residLOG_dE;residLOG_dX;residRAW;residRAW_dX
+Q9H7Z6,1,1,0.844,binary/adj;binary/comb;binary/sym;exp/adj;exp/sym;gauss/adj;gauss/sym;harm/sym;hnew/full,green_lmax_0.05;neg_dD_mean;neg_dE;residLOG_dE;residLOG_dX;residRAW_dX
+P00558,1,1,0.835,binary/comb;binary/sym;exp/sym;gauss/adj;gauss/sym;harm/sym;hnew/full,QMI;green_lmax_0.05;neg_dE;p_avg;p_peak;pavg_over_dE;pavg_over_dX;residLOG_dE;residRAW_dX
+Q72GF3,1,1,0.826,binary/adj;exp/adj;gauss/adj;gauss/sym,green_lmax_0.05;neg_dD_mean;neg_dE
+Q97UL5,1,1,0.824,gauss/comb;gauss/sym;hnew/full,R;green_lmax_0.05;neg_dD_mean
+O28597,1,1,0.822,binary/adj;binary/comb;binary/sym;exp/adj;exp/comb;gauss/adj;gauss/comb;harm/comb,green_lmax_0.05;neg_dD_mean;residLOG_dE;residLOG_dX;residRAW_dX
+Glucose-1-phosphate thymidylyltransferase 1,1,1,0.819,hnew/full,green_zero_0.01;green_zero_0.05
+P11712,1,1,0.816,binary/adj;harm/sym,p_peak;pavg_over_dX
+Myosin-2 heavy chain,2,1,0.808,binary/adj;binary/sym;exp/sym;gauss/adj;gauss/sym;harm/sym;hnew/full,neg_ED_final;neg_dD_mean;neg_dE;p_avg;pavg_over_dX;residLOG;residLOG_dE;residLOG_dX;residRAW;residRAW_dX
+P94968,1,1,0.793,binary/sym;exp/comb;gauss/adj;gauss/sym;harm/sym,R;green_lmax_0.05;green_zero_0.01;neg_dD_mean;p_peak
+Serum albumin,2,1,0.781,binary/comb;hnew/full,p_avg;residLOG
+O32553,1,1,0.773,hnew/full,QMI;p_avg;p_peak;pavg_over_dE;pavg_over_dX;residLOG;residLOG_dE;residRAW
+A5Y459,1,1,0.769,binary/comb;exp/adj;exp/comb;exp/sym;gauss/sym;harm/sym;hnew/full,QMI;green_lmax_0.05;neg_dE;residLOG_dX;residRAW_dX
+P25114,1,1,0.769,binary/adj;exp/comb,R;residLOG_dX;residRAW_dX
+O33839,1,1,0.765,binary/sym;hnew/full,R;neg_dE
+Pyruvate kinase PKM,4,1,0.764,hnew/full,neg_dD_mean;residLOG_dX;residRAW_dX
+Elongation factor TU,1,1,0.76,binary/sym;gauss/comb;gauss/sym;hnew/full,green_lmax_0.05;green_zero_0.01;pavg_over_dE
+Q72KY0,1,1,0.73,hnew/full,neg_dD_mean;residLOG_dX
+Pyruvate kinase PKLR,1,1,0.716,exp/sym;hnew/full,R;neg_dD_mean;residLOG_dX;residRAW_dX
+P03433,1,1,0.714,binary/adj,green_zero_0.01
+Q84HF5,1,1,0.696,hnew/full,residLOG_dE
+A0QUZ2,1,1,0.681,binary/adj;gauss/adj,green_lmax_0.05
+B4E6Z1,1,1,0.667,exp/comb,neg_dD_mean
+P44801,1,1,0.652,binary/sym;gauss/comb;hnew/full,neg_dD_mean;neg_dE;residRAW_dX
+Q00972,1,1,0.618,gauss/sym,QMI
+CAS0067,2,1,0.616,hnew/full,residRAW_dX
