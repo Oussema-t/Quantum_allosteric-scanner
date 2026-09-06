@@ -12051,3 +12051,42 @@ numbers kept alongside per this task's own Constraint.
 
 **Data**: `results/tasks/0328_pocketsweep_null_recalibration/{result.json,upstream_artifacts/}`.
 **Full detail**: `.ai/tasks/DONE/TASK-0328-pocketsweep-null-calibration-and-determinism.md`.
+
+## The standing CTQW negatives were stated wider than they were measured — scope-corrected, not weakened ([[TASK-0335]], 2026-09-06)
+
+Four independent findings converge on one cohort defect: [[TASK-0320]]/
+[[TASK-0325]]'s reverse-seeded/gate-ablation results ran on the unfiltered
+ASBench cohort (105 structures/75 proteins), which is since found (a)
+predominantly non-distal — only ~45% of ASBench's curated-allosteric pairs
+are genuinely distal at all ([[TASK-0331]]) — and (b) ligand-open, not
+apo — all 40 sampled structures carry a bound ligand ([[TASK-0329]]). The
+measurements are sound; the conclusions were written broader than the
+regime they were measured in.
+
+**Corrected, this task**: [[TASK-0320]]'s "raw cavity size wins at 17.1%" /
+"reverse-seeded CTQW does not select allosteric pockets" and [[TASK-0325]]'s
+"raw cavity size is still the best selector" / "the gate is the entire
+effect" now each carry a dated scope-correction stating the true cohort.
+**Not weakened, per this task's own Constraint** — every number, McNemar
+test, and retention percentage stands exactly as measured; only the stated
+generality is corrected. Corrected sentence for the submission: *on the
+unfiltered, predominantly non-distal, ligand-open ASBench cohort, at pocket
+selection, reverse-seeded CTQW loses to raw cavity size and does not beat a
+druggability gate — not "CTQW cannot select allosteric pockets" in
+general.* `documentation/REVERSE_CTQW_BRIEF.html` (the collaborator-facing
+twin of [[TASK-0320]]) carries the matching correction.
+
+**Checked, already handled elsewhere**: [[TASK-0327]] and [[HYP-P18]] were
+already corrected by another thread before this task started (ASBench/
+CASBench-leakage analysis, held-out re-derivation) — no edit needed.
+`PHASE1_SUBMISSION_V1.{md,html}` does not currently cite this specific
+finding family at all (checked directly, zero hits) — nothing to correct
+there, `doc_parity.py` not run since nothing was touched.
+
+**Flagged, not fixed**: the submission's own Appendix A claims ledger
+carries other ASBench-cohort negatives from a different task lineage
+(TASK-0304/0305/0308/0310) that may share the same non-distal/ligand-open
+exposure — outside this task's own named scope, a full appendix audit
+would be its own task.
+
+**Full detail**: `.ai/tasks/DONE/TASK-0335-scope-correct-the-standing-negatives.md`.

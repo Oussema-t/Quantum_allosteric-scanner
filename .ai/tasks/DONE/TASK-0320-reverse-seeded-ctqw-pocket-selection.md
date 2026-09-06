@@ -127,6 +127,28 @@ candidate-ranking signal is proximity to the seed it was launched from. The
 strongest selector in the whole table is raw cavity size — [[TASK-0287]]'s size
 confound again.
 
+**Scope correction, 2026-09-06 ([[TASK-0335]]), added before critic review —
+this Arm B measurement is narrower than "reverse-seeded CTQW does not select
+allosteric pockets" reads.** The 105-structure / 75-protein cohort above is
+the unfiltered ASBench cohort, since found to be (a) predominantly
+non-distal — only ~45% of ASBench's own curated-allosteric pairs are
+genuinely distal at all ([[TASK-0331]]), and (b) scored on the deposited,
+ligand-bound structures, not ligand-free ones — **all 40 sampled structures
+carry a bound ligand** ([[TASK-0329]]). Neither defect is unique to this
+task (both are shared by every ASBench result in this register, [[TASK-0329]]
+itself says so) and neither *creates* this arm's negative — a propagation
+score losing to raw cavity size does not become a propagation score winning
+once the cohort is fixed. But it does mean **the "raw cavity size at 17.1%"
+row specifically is measured on ligand-open pockets, a regime that favours
+a purely geometric selector by construction** (the cavity is already open in
+the input), and should not be read as cavity size's ceiling on genuinely
+apo, closed pockets. The corrected sentence for the submission: *on the
+unfiltered, ligand-open ASBench cohort, at pocket selection, reverse-seeded
+CTQW loses to raw cavity size — not "CTQW cannot select allosteric pockets"
+in general.* Not weakened as a negative (per [[TASK-0335]]'s own
+Constraint) — this measurement stands exactly as run; only its stated scope
+is corrected.
+
 ## A process finding, worth more than the result
 
 The collaborator brief's first draft listed *complex hopping amplitudes / a

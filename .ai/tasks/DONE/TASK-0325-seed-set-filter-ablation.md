@@ -96,6 +96,36 @@ The untested residue: PocketMiner on a cohort where it *has* coverage, gating a
 CTQW that is run there. Given rows 2–5 that is a low-prior run, and it needs
 PocketMiner extended to ASBench (Docker recipe exists, `tools/pocketminer/`).
 
+## Scope correction, 2026-09-06 ([[TASK-0335]]), added before critic review
+
+This task's entire cohort (n=105 ASBench structures/75 proteins, same dump
+[[TASK-0320]] built) is, since found: predominantly non-distal (~45% of
+ASBench's curated-allosteric pairs are genuinely distal, [[TASK-0331]]) and
+scored on ligand-bound, not ligand-free, input (all 40 sampled structures
+carry a bound ligand, [[TASK-0329]]). Two specific lines above need the
+caveat attached wherever quoted:
+
+- **"Raw cavity size is still the best selector at every gate" (row 4)** —
+  measured on ligand-open pockets, a regime a purely geometric selector wins
+  by construction (the cavity is already open in the deposited structure).
+  Caveat, not retract: the *comparison* (size beats CTQW at every gate width)
+  is not invalidated by ligand-openness, since it affects every arm's input
+  identically ([[TASK-0329]]'s own point — contamination inflates positions
+  in the geometric arms without correcting the CTQW arm, so if anything this
+  understates how far behind CTQW is on genuinely closed pockets, not
+  overstates it) — but "cavity size wins" should not be read as a clean,
+  apo-only measurement.
+- **"The gate is the entire effect" / "CTQW does not beat random-within-the-
+  same-gate" (rows 1–2, the task's own headline)** — stands as a measurement
+  of this exact cohort; the corrected sentence for the submission is *on the
+  unfiltered, predominantly-non-distal, ligand-open ASBench cohort, a
+  druggability-consensus gate does the retention work and CTQW does not add
+  to it*, not an unqualified claim about gating in general.
+
+**Not weakened** (per [[TASK-0335]]'s own Constraint) — the McNemar tests,
+retention percentages, and the top-1 hit-rate table all stand exactly as
+measured; only the stated scope of what they generalize to is corrected.
+
 ## Artifacts
 
 - `scripts/task0325_seed_filter_ablation.py`

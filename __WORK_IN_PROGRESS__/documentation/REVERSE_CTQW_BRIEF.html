@@ -180,6 +180,11 @@
 
   <p>The reverse-seeded score picks the right pocket in <strong>2 of 105 structures</strong>, and its recall-at-top is indistinguishable from random. Note the top row: the single best selector here is <em>raw cavity size</em>, which is also most of what fpocket's druggability score measures.</p>
 
+  <div class="note">
+    <span class="lbl">Scope correction, added 2026-09-06, before critic review</span>
+    <p>This 105-structure ASBench cohort is, since found: predominantly <strong>non-distal</strong> (only ~45% of ASBench's own curated-allosteric pairs are genuinely distal at all) and scored on the <strong>deposited, ligand-bound</strong> structures, not ligand-free ones (all 40 sampled structures carry a bound ligand). Neither defect creates this table's result — a propagation score losing to cavity size does not become a win once the cohort is fixed — but the cavity-size row specifically is measured on already-open pockets, a regime a purely geometric selector wins by construction. Read this section as: <em>on the unfiltered, ligand-open ASBench cohort, at pocket selection, reverse-seeded CTQW loses to raw cavity size</em> — not as a general statement that CTQW cannot select allosteric pockets. Nothing in the table above is retracted; only its stated scope is.</p>
+  </div>
+
   <h3>What "residualised on proximity" actually means</h3>
   <p>A worked description, because this is the step the result hinges on. Within a single structure we have ~55 candidate pockets, and for each one two numbers: its CTQW score, and its distance to the active site. Then:</p>
   <ul>
@@ -231,10 +236,10 @@
   <h2>6 · What this does and does not close</h2>
   <ul>
     <li><strong>Closed:</strong> reverse seeding as a distinct method. It is algebraically the forward walk, and no implementation can change that while the Hamiltonian is real and symmetric.</li>
-    <li><strong>Closed:</strong> CTQW amplitude — at residue or pocket level, mean or sum — as an independent pocket selector. Its ranking is proximity.</li>
+    <li><strong>Closed, on this cohort:</strong> CTQW amplitude — at residue or pocket level, mean or sum — as an independent pocket selector. Its ranking is proximity. <em>Cohort caveat added 2026-09-06:</em> measured on the unfiltered, predominantly non-distal, ligand-open ASBench set — see the scope-correction note in §4.</li>
     <li><strong>Closed, and this corrects an earlier draft of this brief:</strong> the obvious escape — that a genuinely directional walk needs <em>complex hopping amplitudes</em> (a chiral walk / synthetic gauge phase) — is not an open route. <strong>We have already built and tested exactly that.</strong> <code>src/allostery/chiral.py</code> applies a Peierls substitution, giving <code>H[i,j] = −W[i,j]·exp(iθ<sub>ij</sub>)</code> — complex-Hermitian, time-reversal broken by a synthetic gauge field — and scores the Helmholtz–Hodge <em>circulating</em> component, which is proximity-orthogonal by construction rather than by tuning. TASK-0140 ran it with a field-scale sensitivity sweep; it failed its own gate on 0 of 7 targets. TASK-0310 re-scored it residualised on 108 structures: raw AUC 0.5560 → <b>0.4960, below chance</b>, cluster-p 0.799. The construction with the strongest possible prior — orthogonal to distance <em>by construction</em> — carried nothing.</li>
     <li><strong>Weakly open:</strong> only whether some <em>other</em> chiral construction (different field geometry, different scale, different topology) behaves differently. Given that by-construction orthogonality already failed, we treat that as a poor prior rather than a lead.</li>
-    <li><strong>Unaddressed here:</strong> the strongest selector we found is cavity size. Whether anything beats size at pocket selection is a separate open question, and not one CTQW answers.</li>
+    <li><strong>Unaddressed here:</strong> the strongest selector we found is cavity size, measured on ligand-open pockets (see the §4 scope-correction note). Whether anything beats size at pocket selection <em>on genuinely apo structures</em> is a separate open question, and not one CTQW answers.</li>
   </ul>
 </section>
 
