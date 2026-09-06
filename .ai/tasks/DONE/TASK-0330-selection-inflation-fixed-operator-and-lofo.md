@@ -1,6 +1,6 @@
 # TASK-0330 — Measure the selection inflation: one fixed operator, and leave-one-family-out
 
-- Status: TODO
+- Status: Done
 - Owner: **Oussema** — Reviewer thread to review the design before the run
 - Priority: High — decides whether the per-family Hamiltonian table can be shown at all
 - Filed: 2026-09-06 by Reviewer thread (id via `claim.py reserve-next`)
@@ -62,3 +62,35 @@ If the fixed-operator number survives a matched null **and** beats PASSer-only
 the submission. If it does not, the defensible instrument is still there:
 PASSer top-10 at ~90% coverage plus a crypticity-aware veto, which is the same
 crypticity split [[TASK-0254]] measured at 0.854 (open) vs 0.515 (cryptic).
+
+## Closed without running — 2026-09-06, Reviewer thread
+
+**Reason: the deliverable's target no longer exists.** This task's outcome was
+a fixed-operator and leave-one-family-out number to sit *beside* the per-family
+Hamiltonian table (`per_family_winners.csv`), so the selection inflation in
+that table could be read off. Two results landed after filing and removed the
+table from consideration entirely:
+
+- [[TASK-0328]] — under a pocket-block (compactness-matched) null, BH-FDR 5%
+  survivors fall from 45/110 to **0/110** (round 1) and 33/80 to **1/80**
+  (round 2, veto). Essentially nothing in the sweep clears a null that respects
+  the same spatial clustering the real positives show. There is no surviving
+  per-family signal for a LOFO number to qualify.
+- [[TASK-0327]] — on properly-defined held-out data (ASBench excluded as
+  PASSer's training set), PASSer alone scores 28.1% pre-veto / 40.9% post-veto
+  against the pipeline's 8.9% / 15.7%, with the pipeline below its own
+  random-order null in both rounds. The pipeline is not a candidate for
+  per-family operator attribution.
+
+Running LOFO now would measure the selection inflation of a table that must not
+be shown on independent grounds. That is effort spent qualifying a retracted
+claim.
+
+**What survives from this task, and where it went**: the constraint that the
+per-family table "should not be shown externally until the LOFO number sits
+beside it" is superseded by the stronger instruction — do not show it at all
+pending [[TASK-0334]]/[[TASK-0335]]. Carried into [[TASK-0335]]'s sweep.
+
+**Not closed by this**: the register-wide multiplicity concern ([[TASK-0314]]
+Part B) is untouched and remains open on its own task. This closure is scoped
+to the per-family Hamiltonian table only.
