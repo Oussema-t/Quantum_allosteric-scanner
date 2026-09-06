@@ -9,9 +9,9 @@ file did not silently fall behind its own source files.
 
 | id | claim | status | citing tasks |
 |---|---|---|---|
-| [[HYP-P13]] | Allostery is stabilisation of an otherwise-disfavoured conformation, not a signal propa... | no verdict recorded | 13 |
-| [[HYP-P8]] | For several targets, the apo contact graph does not contain the allosteric pocket signa... | 2026-09-04 | 9 |
-| [[HYP-P9]] | A chiral (broken-time-reversal) walk yields a proximity-orthogonal, directional loop ob... | 2026-09-03 | 9 |
+| [[HYP-P13]] | Allostery is stabilisation of an otherwise-disfavoured conformation, not a signal propa... | no verdict recorded | 14 |
+| [[HYP-P8]] | For several targets, the apo contact graph does not contain the allosteric pocket signa... | 2026-09-04 | 10 |
+| [[HYP-P9]] | A chiral (broken-time-reversal) walk yields a proximity-orthogonal, directional loop ob... | 2026-09-03 | 10 |
 | [[HYP-P14]] | The discriminator is blocked by a single confound, and only a proximity-orthogonal obse... | 2026-09-04 | 9 |
 | [[HYP-P12]] | The coordinated multi-site closure is a topological void (persistent H2 / Hodge-L1), an... | 2026-07-24 | 5 |
 | [[HYP-P1]] | Low-frequency GNM modes are a reliable proxy for allosteric residues (in rigid globular... | 2026-09-03 | 4 |
@@ -32,6 +32,7 @@ file did not silently fall behind its own source files.
 | [[HYP-P7]] | Coherence adds no signal for allosteric pocket prediction on these proteins | no verdict recorded | 1 |
 | [[HYP-P15]] | `dcc_low`'s cryptic-pocket signal generalizes across targets; the transport observable'... | 2026-07-24 | 1 |
 | [[HYP-P19]] | The apo contact graph's connectivity between active site and pocket is broad and redund... | 2026-07-18 | 1 |
+| [[HYP-P24]] | V_C separates allosteric from orthosteric holo sites, but tracks occupancy/coupling-cap... | 2026-08-28 | 1 |
 | [[HYP-P16]] | The pipeline's own statistical test lacks power to detect a real signal at realistic st... | 2026-07-31 | 0 |
 | [[HYP-P17]] | Purpose-built cryptic/allosteric-pocket predictors do not close this register's own res... | 2026-08-25 | 0 |
 | [[HYP-P18]] | On real, field-annotated ground truth, this register's observables do not beat random a... | 2026-08-31 | 0 |
@@ -39,4 +40,3 @@ file did not silently fall behind its own source files.
 | [[HYP-P21]] | Finding F — a covalent/peptide-bond-adjacency confound recurs across distal-allostery b... | 2026-08-28 | 0 |
 | [[HYP-P22]] | The population structure of allosteric-site distance is undetermined; a floor/continuum... | 2026-09-01 | 0 |
 | [[HYP-P23]] | Discriminator B — per-measure applicability descriptors do not predict which of the six... | 2026-09-01 | 0 |
-| [[HYP-P24]] | V_C separates allosteric from orthosteric holo sites, but tracks occupancy/coupling-cap... | 2026-08-28 | 0 |

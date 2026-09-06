@@ -1506,6 +1506,29 @@ cross-validated AUC *worse*, not better). Two distinct benchmark-quality
 findings, kept together here because both bear on how much of this
 register's "difficulty" is measurement artifact vs. genuine biology.
 
+**Fold-in, 2026-09-06 ([[TASK-0331]]): independently triangulated by a
+fourth, external cohort, and the practical consequence measured for the
+first time.** A collaborator's separate 1233-protein unified benchmark
+(`origin/allosteric` branch, `allosteric/README.md`) reached the same
+qualitative conclusion via an independent hop/Ångström pipeline: only
+**23%** of curated-allosteric pairs and **7%** of drug-contact pairs
+clear a stricter distal bar (hop≥2 AND >12 Å) — a fourth largely-disjoint
+measurement, now converging with this hypothesis's own three. [[TASK-0331]]
+went one step further and asked what happens when [[TASK-0320]]/
+[[TASK-0325]]'s reverse-seeded-CTQW and gate-ablation experiments are
+re-run on ONLY the genuinely-distal ~45-structure ASBench subset (vendored
+from the collaborator's own `is_distal` flag, not re-derived): **the
+subset is too small to detect proximity itself**, this register's own
+everywhere-else-significant confound (median rho +0.064, Wilcoxon
+p=0.89, vs. +0.151/p=0.00035 on the full non-distal-inflated cohort).
+Practical corollary of the claim above, stated for the first time: **a
+non-distal-majority cohort doesn't just risk false "allosteric" credit
+on non-distal pairs (the original claim) — restricting to the distal
+minority to fix that removes the statistical power needed to conclude
+anything at all**, at least at ASBench's current scale. Both failure
+modes now have a task and a number attached; neither is fixed by the
+other.
+
 ---
 
 ## HYP-P22 · The population structure of allosteric-site distance is undetermined; a floor/continuum decomposition is partially predictable
