@@ -1,6 +1,6 @@
 # TASK-0332 — Submission v2: Berke's structural corrections, promote TASK-0318, team §7
 
-- Status: TODO
+- Status: TODO — brief updated 2026-09-06, read the update section before starting
 - Owner: **Reviewer thread** (drafting) → **Berke** (structural sign-off) → repo owner
 - Priority: High — 9 days to 15 September; one item is a factual error a structural biologist will catch on sight
 - Filed: 2026-09-06 by Reviewer thread (id via `claim.py reserve-next`)
@@ -118,3 +118,72 @@ who catches the overclaim will discount the surrounding negatives too.
   distal-denominator caveat ([[TASK-0331]]).
 - **Do not** put the per-family Hamiltonian table or the "40 proteins / 19
   families" counts in the draft until [[TASK-0327]] and [[TASK-0330]] report.
+
+## Brief update, 2026-09-06 — nine dependencies landed after filing
+
+Read this section together with the items above; where they conflict, this wins.
+
+### The v2 pipeline results must NOT go in the draft. [[TASK-0336]] settled it.
+
+The filing said "not until [[TASK-0327]] and [[TASK-0330]] report". 0330 was
+closed unrun; **[[TASK-0336]] answered it decisively.** Once every arm is put on
+one object (round-2's own veto-survivor pockets) with matched multiplicity and a
+chance correction:
+
+| arm | ALL (n≈276 fam) | distal (n=48 fam) |
+|---|---|---|
+| CTQW `hnew\|full\|p_avg` | obs 4, chance 1.25, **excess +2.75** | obs **0**, chance 0.52, **excess −0.52** |
+| fpocket_drug / passer_rank / pocket_size | obs 5, **excess +3.75** | obs 0, excess −0.52 |
+
+**Three plain classical descriptors beat the CTQW on ALL, and the CTQW clears
+zero distal families.** The README's headline distal margin (19 vs 1) does not
+survive matching — 0.52 is less than one family clearing by luck. Do not quote
+226/131, 40/19, the per-family Hamiltonian table, or the distal margin.
+
+### The strongest NEW result is [[TASK-0334]] / `HYP-P25` — put it in §2
+
+Pipeline hit-rate vs. drug-pocket distance from the active site, Spearman ρ:
+
+| | pre-veto held-out (n=64) | post-veto held-out (n=44) |
+|---|---|---|
+| **pipeline** | **−0.408** (p=8.1e-4) | **−0.614** (p=9.3e-6) |
+| PASSer (specificity control) | +0.111 (p=0.38) | +0.207 (p=0.18) |
+| random arm | +0.307 | +0.306 |
+
+The walk degrades monotonically with distance; the ML baseline on identical
+pockets does not. **This is a measured mechanism, not a null** — and it is the
+answer to "why does the quantum method fail", which is a far stronger §2 claim
+than the failure itself. Note the cohort is entirely `is_distal` (S5's own
+restriction), so this is a within-distal dose-response over 2–13 hops, not a
+distal-vs-proximal contrast. State that scope.
+
+**Supersedes item 1's open question**: "actively subtracting value" is now
+explained and should be replaced by the mechanism, not repeated.
+
+### §2 should carry four positives, in this order
+
+1. **[[TASK-0318]]** — residual AUC 0.5949/0.6203, p=3.3×10⁻⁶, 74 clusters,
+   0.6017 with proximity deleted. Retitle in the same edit (item 4 above).
+2. **[[TASK-0334]]/`HYP-P25`** — the mechanism, with its specificity control.
+3. **[[TASK-0331]]/[[HYP-P21]]** — the cohort defect, measured three independent
+   ways: distal subset cannot detect proximity itself (p=0.89), ~30% of pairs
+   covalently adjacent, 40/40 ASBench structures ligand-open.
+4. **[[TASK-0328]]** — methodological: a pocket-block null takes BH-FDR
+   survivors from 45/110 to **0/110**. A reusable contribution in its own right.
+
+### Appendix C additions (disclosed defects)
+
+- **[[TASK-0329]]**: the apo-ligand veto exception leaks — the true pocket is
+  **4.2×** more likely than an arbitrary candidate to survive *only* via that
+  exception (13.5% vs 3.2%, paired within-protein).
+- **[[TASK-0327]]**: ASBench is PASSer's training data; CASBench is held out.
+  Any ASBench-based comparison against PASSer is contaminated.
+- **[[TASK-0328]]**: the upstream null seed was non-reproducible
+  (`hash()` with `PYTHONHASHSEED` unset); patch written, not yet landed upstream.
+
+### Already done — inherit, do not redo
+
+[[TASK-0335]] has landed scope corrections on [[TASK-0320]] and [[TASK-0325]];
+copy those caveats forward rather than re-deriving them. [[TASK-0333]]'s
+container reproduces the §2 headline number byte-for-byte from a cold clone —
+state that in the reproducibility section, it is a direct criterion-2 asset.
