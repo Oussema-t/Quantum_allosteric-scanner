@@ -1431,6 +1431,42 @@ reinterpretation.** Flagged by its own filing as "the cleanest negative
 this register has produced." Feeds [[TASK-0306]]'s meta-classifier
 directly (see [[HYP-P14]]'s own "Secondary route").
 
+**Status, 2026-09-06 ([[TASK-0327]]) — a DIFFERENT external SOTA tool,
+measured a different way, gives the opposite-flavoured verdict; both
+belong here, not silently reconciled into one story.** This hypothesis's
+own claim above is specifically about the bond-to-bond *propensity
+score* (Wu/Strömich/Yaliraki 2022) at *residue-level top-5 retrieval*,
+where it also fails once measured honestly (9.3%). [[TASK-0327]] tested
+a categorically different, actively-maintained SOTA tool — **PASSer**,
+a trained ML pocket ranker (Xiao, Tian & Tao 2022, *Front. Mol. Biosci.*
+9:879251; Tian, Xiao, Jiang & Tao 2023, *Nucleic Acids Res.* 51(W1):
+W427–W431; Tian, Xiao, Jiang & Tao 2023, *J. Comput. Chem.*,
+DOI:10.1002/jcc.27193) — at a *pocket-level rank-1* task on the
+`allosteric` branch's own veto pipeline, using ASBench-leakage-correct
+held-out data (CASBench, n=44–64; ASBench is PASSer's own training
+data per all three papers' stated Methods, live-verified before
+citing). **Result: PASSer alone (no walk) beats chance and the
+random-order-through-the-same-veto null decisively (28.1–40.9% vs.
+12.8–18.4% pre/post-veto) — this register's own CTQW-based pipeline
+does not clear either (8.9–15.7%, below its own random-order null in
+both rounds).** Read together with this hypothesis's own claim above:
+it is not that "no external tool works here" — a real, external,
+independently-trained tool works fine on this exact problem shape. It
+is this project's own walk stage that is actively subtracting value at
+the pocket-selection task, not merely failing to add any. **Caveat
+carried forward, not resolved here**: [[TASK-0327]]'s own numbers went
+through one real correction (a first over-corrected pass on the
+leakage definition) before landing, and its own Done section flags
+Oussema/Reviewer-thread cross-check as still outstanding — read this
+addendum as a strong, live-cited, but not yet independently re-verified
+data point, not a closed verdict on the same footing as this
+hypothesis's own TESTED status above. Not minted as its own hypothesis
+id here — the standing rule ("new only if genuinely different claim or
+mechanism, not a second instance of the same one") reads this as the
+same "does the field's own real tooling also fail here" question this
+hypothesis already asks, now answered once with "no" using a second,
+better tool — extending, not duplicating.
+
 ---
 
 ## HYP-P19 · The apo contact graph's connectivity between active site and pocket is broad and redundant, not a narrow bottleneck

@@ -35,7 +35,7 @@ file did not silently fall behind its own source files.
 | [[HYP-P24]] | V_C separates allosteric from orthosteric holo sites, but tracks occupancy/coupling-cap... | 2026-08-28 | 1 |
 | [[HYP-P16]] | The pipeline's own statistical test lacks power to detect a real signal at realistic st... | 2026-07-31 | 0 |
 | [[HYP-P17]] | Purpose-built cryptic/allosteric-pocket predictors do not close this register's own res... | 2026-08-25 | 0 |
-| [[HYP-P18]] | On real, field-annotated ground truth, this register's observables do not beat random a... | 2026-08-31 | 0 |
+| [[HYP-P18]] | On real, field-annotated ground truth, this register's observables do not beat random a... | 2026-09-06 | 0 |
 | [[HYP-P20]] | This register's pocket labels cannot express ligand-dependent allostery; BCR-ABL1's own... | 2026-08-25 | 0 |
 | [[HYP-P21]] | Finding F — a covalent/peptide-bond-adjacency confound recurs across distal-allostery b... | 2026-08-28 | 0 |
 | [[HYP-P22]] | The population structure of allosteric-site distance is undetermined; a floor/continuum... | 2026-09-01 | 0 |

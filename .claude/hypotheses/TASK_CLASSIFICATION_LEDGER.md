@@ -479,6 +479,10 @@ finding about external SOTA predictors).
 | TASK-0322 | `ENG` | Builds the register status index + staleness/uncited-claim checker. |
 | TASK-0323 | `ENG` | Audits Done tasks for unwritten verdicts. |
 | TASK-0325 | `NO-HYP` (new candidate) | Predictor-consensus gate does the pocket-selection work; CTQW adds nothing within-gate. |
+| TASK-0327 | `HYP-P18` | **Landed directly** (2026-09-06, per the repo owner's own reminder to check for missing hypotheses before Critic review) — PASSer (external, actively-maintained SOTA pocket ranker) decisively beats both chance and this project's own veto pipeline on leakage-correct held-out data; extends HYP-P18's "does the field's own SOTA also fail here" question with an opposite-flavoured answer for a different tool. See HYP-P18's own 2026-09-06 addendum for the full caveat (Oussema/Reviewer-thread cross-check still pending). |
+| TASK-0328 | `ENG` | pocketsweep.py seed/null-shape fixes; explicitly self-checked against this same reminder and correctly found no new hypothesis needed (reuses TASK-0158/190/201's existing compactness-null principle). |
+| TASK-0331 | `NO-HYP` (fold candidate — extends HYP-P14) | Distal-only ASBench subset (n=45) cannot detect proximity, its own dominant confound (p=0.89 vs. full-cohort p=0.00035) — the CTQW result there is UNDETERMINED for lack of power, not a sharper negative. Not landed (incremental caveat on an already-well-evidenced claim, not a new mechanism). |
+| TASK-0333 | `ENG` | Reproducibility artifact pack (container, pinned env, seeding convention, structured logs) — pure packaging, no scientific claim. |
 
 ## Disposition — applying the standing rule to every `NO-HYP` draft
 
@@ -574,3 +578,28 @@ existing text); TASK-0091/TASK-0092 (superseded by TASK-0102);
 TASK-0155 (superseded by TASK-0270); TASK-0156/TASK-0181/TASK-0182/
 TASK-0185 (already in existing framing tables); TASK-0214 (process/
 data-curation, not a hypothesis).
+
+## Follow-up landing, 2026-09-06 — TASK-0327 (post-sweep, not in the original 344)
+
+Four tasks postdate this sweep (TASK-0327, 0328, 0331, 0333 — added to
+the main classification table above). Per the repo owner's own explicit
+reminder to check for missing hypotheses/references before Critic
+review, TASK-0327's finding (PASSer, an external SOTA pocket ranker,
+decisively beats this project's own veto pipeline on leakage-correct
+held-out data) was landed directly as a dated addendum inside
+**`HYP-P18`** (extends, not a new id — same "does the field's own SOTA
+also fail here" question HYP-P18 already asks, answered oppositely for
+a different tool; see that hypothesis's own text for the full citation
+list and the explicit caveat that Oussema/Reviewer-thread's own
+cross-check of TASK-0327's numbers is still outstanding). TASK-0331's
+smaller finding (the ASBench distal-only subset cannot detect its own
+proximity confound, so CTQW there is underpowered rather than negative)
+was left ledger-tracked only, not landed — an incremental caveat on an
+already-extensively-evidenced claim, not a new mechanism, per the
+standing rule. TASK-0328/0333 are process/engineering, no register
+change. No missing or unclear paper references were found in any of
+the four — TASK-0327's own PASSer citations (Xiao/Tian/Tao, 2 papers +
+1 preprint-published pair) were already live-verified against the
+publisher/PMC before that task's own Done section was written, and
+HYP-P11's existing ENAQT citations (Mohseni/Rebentrost/Caruso/Viciani)
+were already in place, checked, not found missing.
