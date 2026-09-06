@@ -1,0 +1,132 @@
+{
+  "round1_pre_veto": {
+    "n_proteins": 96,
+    "coverage_valid_drug_pocket": 96,
+    "chance_mean": 0.12421048280423282,
+    "random_mean": 0.17542917931616575,
+    "passer_hit_rate": 0.40625,
+    "pipeline_pooled_cell_rate": 0.09306318681318682,
+    "pipeline_protein_majority_rate": 0.0,
+    "n_families": 55,
+    "pipeline_family_majority_rate": 0.0,
+    "passer_family_majority_rate": 0.38181818181818183,
+    "n_raw_records": 138,
+    "n_with_cells": 110,
+    "n_valid_drug_pocket": 96,
+    "coverage_frac": 0.8727272727272727
+  },
+  "round1_random_closed_form_check": {
+    "n_checked": 15,
+    "max_abs_error": 0.01899999999999999,
+    "samples": [
+      [
+        0.17857142857142858,
+        0.185,
+        0.006428571428571422
+      ],
+      [
+        0.3492063492063492,
+        0.3625,
+        0.013293650793650802
+      ],
+      [
+        0.07547169811320754,
+        0.071,
+        0.004471698113207551
+      ],
+      [
+        0.1276595744680851,
+        0.1385,
+        0.010840425531914916
+      ],
+      [
+        0.13580246913580246,
+        0.1275,
+        0.00830246913580246
+      ]
+    ]
+  },
+  "round1_source_counts": {
+    "asbench": 32,
+    "casbench": 39,
+    "cryptobench": 24,
+    "pocketminer": 1
+  },
+  "round1_held_out_only": {
+    "n_proteins": 64,
+    "coverage_valid_drug_pocket": 64,
+    "chance_mean": 0.1283110119047619,
+    "random_mean": 0.18448392579358483,
+    "passer_hit_rate": 0.28125,
+    "pipeline_pooled_cell_rate": 0.0885989010989011,
+    "pipeline_protein_majority_rate": 0.0,
+    "n_families": 30,
+    "pipeline_family_majority_rate": 0.0,
+    "passer_family_majority_rate": 0.2
+  },
+  "round2_post_veto": {
+    "n_proteins": 67,
+    "coverage_valid_drug_pocket": 67,
+    "chance_mean": 0.2532693674484719,
+    "random_mean": 0.32363387028750895,
+    "passer_hit_rate": 0.5522388059701493,
+    "pipeline_pooled_cell_rate": 0.1618008856814827,
+    "pipeline_protein_majority_rate": 0.014925373134328358,
+    "n_families": 40,
+    "pipeline_family_majority_rate": 0.0,
+    "passer_family_majority_rate": 0.55,
+    "n_raw_records": 138,
+    "n_with_cells": 80,
+    "n_valid_drug_pocket": 67,
+    "coverage_frac": 0.8375
+  },
+  "round2_random_closed_form_check": {
+    "n_checked": 15,
+    "max_abs_error": 0.016192307692307728,
+    "samples": [
+      [
+        0.32608695652173914,
+        0.3215,
+        0.004586956521739127
+      ],
+      [
+        0.17142857142857143,
+        0.178,
+        0.006571428571428561
+      ],
+      [
+        0.18333333333333332,
+        0.183,
+        0.0003333333333333244
+      ],
+      [
+        0.14772727272727273,
+        0.141,
+        0.006727272727272748
+      ],
+      [
+        0.11594202898550725,
+        0.121,
+        0.005057971014492749
+      ]
+    ]
+  },
+  "round2_source_counts": {
+    "asbench": 23,
+    "casbench": 26,
+    "cryptobench": 17,
+    "pocketminer": 1
+  },
+  "round2_held_out_only": {
+    "n_proteins": 44,
+    "coverage_valid_drug_pocket": 44,
+    "chance_mean": 0.27278138528138524,
+    "random_mean": 0.363018858411019,
+    "passer_hit_rate": 0.4090909090909091,
+    "pipeline_pooled_cell_rate": 0.15684315684315683,
+    "pipeline_protein_majority_rate": 0.0,
+    "n_families": 22,
+    "pipeline_family_majority_rate": 0.0,
+    "passer_family_majority_rate": 0.3181818181818182
+  }
+}

@@ -206,6 +206,43 @@ browser session per target.**
 Additional external server baselines for the comparison table. Cheap to run, good for
 reviewer-legible breadth; lower priority than the three above.
 
+**Stale as of 2026-09-06 for PASSer specifically — [[TASK-0327]], NOT YET
+CRITIC-REVIEWED, cite only the held-out numbers below, and even those
+pending review.** PASSer has an API (`https://passer.smu.edu/api`,
+ensemble model), has been run at scale on the `allosteric` branch
+(`allosteric/datasets/passer_cache.json`, 399 KB cached), and used as
+the primary S1 pocket selector for that branch's veto pipeline
+(`allosteric/results/veto_pipeline/`). Not a "cheap breadth" baseline
+any more.
+
+**A real train/test-leakage confound, precisely characterized**: three
+papers in the PASSer lineage — Xiao, Tian & Tao, *Front. Mol. Biosci.*
+2022, 9:879251, doi:10.3389/fmolb.2022.879251; Tian, Xiao, Jiang & Tao
+(the "ensemble" model this cache is keyed on), *Nucleic Acids Res.*
+2023, 51(W1):W427–W431, doi:10.1093/nar/gkad303; Tian, Xiao, Jiang &
+Tao, *J. Comput. Chem.* 2023, doi:10.1002/jcc.27193 — consistently use
+**ASBench's core-diversity set (138 proteins) as training data**, and
+consistently use **CASBench as the authors' own external test set, not
+training data**. TASK-0327's evaluation cohort is 37.5%
+`asbench`-sourced (the genuine leakage risk) and 35% `casbench`-sourced
+(a legitimate external comparator by PASSer's own methodology, not a
+leak).
+
+On the citation-correct held-out set (`casbench` + `cryptobench` +
+`pocketminer`, n=44–64 — properly powered, not the n=18-25 an earlier,
+over-corrected pass of this same task reported): **PASSer alone ranks
+the drug pocket #1 at 28.1% (pre-veto) / 40.9% (post-veto)**, clearing
+both chance (12.8%/27.3%) and the random-order-through-veto null
+(18.4%/36.3%) — **the CTQW pipeline clears neither** (8.9%/15.7%
+pooled over cells, below its own random null both rounds). Smaller
+than the leaky full-cohort headline (40.6%/55.2%) but the same
+direction, decisively: **on data ASBench-leakage cannot explain,
+PASSer alone still beats the CTQW pipeline by a wide margin.** Full
+detail, including the two-step correction (first over-corrected by
+also excluding CASBench, then fixed against the live-verified
+citations above): `.ai/tasks/DONE/TASK-0327-passer-only-reference-arm.md`.
+AlloPred/DeepAllo remain unbuilt and still fit the original "3" rating.
+
 ---
 
 ## G. Conceptual grounding (probably not building)

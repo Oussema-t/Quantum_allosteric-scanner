@@ -225,7 +225,9 @@ on a `[have]` tag once new module work lands.
 - [ ] distance-bias **quantile correction** on scores (fair long-range ranking).
 - [ ] **current-flow / edge-propensity pathway extraction** (model-derived
       pathway, replaces the sequence-range "green tube").
-- [ ] external baseline column: ProteinLens, AlloPred, PASSer, DeepAllo servers.
+- [x] PASSer specifically — run at scale on the `allosteric` branch, see
+      `ALGORITHM_REGISTER.md`'s own entry and [[TASK-0327]]. ProteinLens,
+      AlloPred, DeepAllo servers: still open.
 - [ ] (ablation only, labeled outside topology-only) atomistic energy-weighted
       graph arm — keep optional; it fights the ENM assumption and the qubit budget.
 
