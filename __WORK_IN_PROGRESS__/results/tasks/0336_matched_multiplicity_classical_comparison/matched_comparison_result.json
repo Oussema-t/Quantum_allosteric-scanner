@@ -1,0 +1,176 @@
+{
+  "validation_cell_reproduction": {
+    "n_structures_checked": 5,
+    "cells_checked": [
+      "hnew|full|p_avg",
+      "binary|adj|p_avg"
+    ],
+    "all_exact_match": true
+  },
+  "validation_family_aggregation": {
+    "CAS0061": {
+      "mine": 20,
+      "csv": 20,
+      "match": true,
+      "n_structures_mine": 22
+    },
+    "CAS0050": {
+      "mine": 2,
+      "csv": 2,
+      "match": true,
+      "n_structures_mine": 2
+    },
+    "CAS0015": {
+      "mine": 9,
+      "csv": 9,
+      "match": true,
+      "n_structures_mine": 9
+    }
+  },
+  "n_testable": 435,
+  "n_distal_refetched": 80,
+  "n_distal_refetch_failed": 0,
+  "b_null": 500,
+  "family_table": {
+    "ctqw:binary|adj|p_avg": {
+      "ALL": {
+        "n_families": 276,
+        "observed_clearing": 4,
+        "chance_expected_clearing": 1.25,
+        "real_excess": 2.75
+      },
+      "near": {
+        "n_families": 232,
+        "observed_clearing": 4,
+        "chance_expected_clearing": 0.73,
+        "real_excess": 3.27
+      },
+      "distal": {
+        "n_families": 48,
+        "observed_clearing": 0,
+        "chance_expected_clearing": 0.52,
+        "real_excess": -0.52
+      }
+    },
+    "ctqw:hnew|full|p_avg": {
+      "ALL": {
+        "n_families": 276,
+        "observed_clearing": 4,
+        "chance_expected_clearing": 1.25,
+        "real_excess": 2.75
+      },
+      "near": {
+        "n_families": 232,
+        "observed_clearing": 4,
+        "chance_expected_clearing": 0.73,
+        "real_excess": 3.27
+      },
+      "distal": {
+        "n_families": 48,
+        "observed_clearing": 0,
+        "chance_expected_clearing": 0.52,
+        "real_excess": -0.52
+      }
+    },
+    "degree": {
+      "ALL": {
+        "n_families": 48,
+        "observed_clearing": 0,
+        "chance_expected_clearing": 0.52,
+        "real_excess": -0.52
+      },
+      "near": {
+        "n_families": 0,
+        "observed_clearing": 0,
+        "chance_expected_clearing": 0.0,
+        "real_excess": 0.0
+      },
+      "distal": {
+        "n_families": 48,
+        "observed_clearing": 0,
+        "chance_expected_clearing": 0.52,
+        "real_excess": -0.52
+      }
+    },
+    "fpocket_drug": {
+      "ALL": {
+        "n_families": 276,
+        "observed_clearing": 5,
+        "chance_expected_clearing": 1.25,
+        "real_excess": 3.75
+      },
+      "near": {
+        "n_families": 232,
+        "observed_clearing": 5,
+        "chance_expected_clearing": 0.73,
+        "real_excess": 4.27
+      },
+      "distal": {
+        "n_families": 48,
+        "observed_clearing": 0,
+        "chance_expected_clearing": 0.52,
+        "real_excess": -0.52
+      }
+    },
+    "passer_rank": {
+      "ALL": {
+        "n_families": 276,
+        "observed_clearing": 5,
+        "chance_expected_clearing": 1.25,
+        "real_excess": 3.75
+      },
+      "near": {
+        "n_families": 232,
+        "observed_clearing": 5,
+        "chance_expected_clearing": 0.73,
+        "real_excess": 4.27
+      },
+      "distal": {
+        "n_families": 48,
+        "observed_clearing": 0,
+        "chance_expected_clearing": 0.52,
+        "real_excess": -0.52
+      }
+    },
+    "pocket_size": {
+      "ALL": {
+        "n_families": 276,
+        "observed_clearing": 5,
+        "chance_expected_clearing": 1.25,
+        "real_excess": 3.75
+      },
+      "near": {
+        "n_families": 232,
+        "observed_clearing": 5,
+        "chance_expected_clearing": 0.73,
+        "real_excess": 4.27
+      },
+      "distal": {
+        "n_families": 48,
+        "observed_clearing": 0,
+        "chance_expected_clearing": 0.52,
+        "real_excess": -0.52
+      }
+    },
+    "proximity(-hop)": {
+      "ALL": {
+        "n_families": 48,
+        "observed_clearing": 0,
+        "chance_expected_clearing": 0.52,
+        "real_excess": -0.52
+      },
+      "near": {
+        "n_families": 0,
+        "observed_clearing": 0,
+        "chance_expected_clearing": 0.0,
+        "real_excess": 0.0
+      },
+      "distal": {
+        "n_families": 48,
+        "observed_clearing": 0,
+        "chance_expected_clearing": 0.52,
+        "real_excess": -0.52
+      }
+    }
+  }
+}
