@@ -70,6 +70,18 @@ than an omission.
 Full results: `results/tasks/0331_distal_subset_rerun/distal_subset_rerun.json`.
 Script: `scripts/task0331_distal_subset_rerun.py`.
 
+**References** (both live-verified via Crossref, not re-derived from memory
+— [[TASK-0304]]'s own original sourcing, restated here directly since this
+task's entire denominator rests on them and a standalone reader should not
+have to chase an internal link for it):
+- **ASBench** — Wu, N., Strömich, L., Yaliraki, S.N. (2022). "Prediction of
+  allosteric sites and signaling: Insights from benchmarking datasets."
+  *Patterns* 3(1):100408. DOI: 10.1016/j.patter.2021.100408.
+- **CASBench** — Zlobin, A.S., Suplatov, D.A., Kopylov, K.E., Švedas, V.K.
+  (2019). "CASBench: A Benchmarking Set of Proteins with Annotated Catalytic
+  and Allosteric Sites in Their Structures." *Acta Naturae* 11(1):74-80.
+  DOI: 10.32607/20758251-2019-11-1-74-80.
+
 **Distal set, vendored not re-derived**: `origin/allosteric` branch @ `f257789`,
 `allosteric/datasets/pocket_distance.csv`, filtered to `source=='asbench' &
 truth_type=='curated_allosteric' & is_distal==True` — 49 distinct PDBs, 44.95%
@@ -78,6 +90,14 @@ led at 45% distal" to the second decimal. `truth_type` separation (Constraint)
 is satisfied by construction: this register's ASBench truth (`allosteric_
 residues`) has only ever been `curated_allosteric` — it has never scored
 against the collaborator's `drug_contact` cohort, so there is nothing to pool.
+The `hop≥2 AND >12 Å` distal threshold itself is the collaborator's own
+operational definition, not drawn from either paper above — neither ASBench
+nor CASBench's own publications specify a distality cutoff in Ångströms; this
+register's independent calibration ([[TASK-0255]]) landed on a similar but
+not identical bar (external suggestion 15–20 Å). Stated plainly rather than
+implied: the 12 Å figure is a working definition, not a literature constant,
+and the two independent calibrations agree on order of magnitude, not on
+the exact number.
 
 **No re-run of fpocket or the walk** — both are filter-invariant (TASK-0320's
 own symmetry identity), so this is a post-filter of the per-structure/per-

@@ -1526,9 +1526,12 @@ present to find.
 [[TASK-0304]]; count corrected by [[TASK-0297]]'s chain-aware matching
 fix): TESTED — independently reproduced on 3 largely-disjoint cohorts.**
 This register's own frozen set: 8/26 proteins ≈30.8% (corrected from an
-initial 9/28). The field's own ASBench: 24/112 ≈21.4%. CASBench: 14/33
-≈42.4% — this register's own benchmark sits mid-range between the two
-external ones, not an outlier. fpocket's "multi-pocket" splitting of one
+initial 9/28). The field's own **ASBench** (Wu, Strömich & Yaliraki 2022,
+*Patterns* 3(1):100408, DOI 10.1016/j.patter.2021.100408): 24/112 ≈21.4%.
+**CASBench** (Zlobin, Suplatov, Kopylov & Švedas 2019, *Acta Naturae*
+11(1):74-80, DOI 10.32607/20758251-2019-11-1-74-80): 14/33 ≈42.4% — this
+register's own benchmark sits mid-range between the two external ones,
+not an outlier. fpocket's "multi-pocket" splitting of one
 drug's own contact set is mostly an alpha-sphere-clustering artifact,
 not biology (11/33 provably single cavities still split); ~9/33 sites
 are genuinely spatially disjoint (>14 Å). The single strongest

@@ -11854,6 +11854,16 @@ active site. A propagation method evaluated where there is nothing to
 propagate across is being tested off-target; this task re-opens the question
 on the subset where it is not.
 
+**References**: **ASBench** — Wu, N., Strömich, L., Yaliraki, S.N. (2022),
+"Prediction of allosteric sites and signaling: Insights from benchmarking
+datasets," *Patterns* 3(1):100408, DOI 10.1016/j.patter.2021.100408.
+**CASBench** — Zlobin, A.S., Suplatov, D.A., Kopylov, K.E., Švedas, V.K.
+(2019), "CASBench: A Benchmarking Set of Proteins with Annotated Catalytic
+and Allosteric Sites in Their Structures," *Acta Naturae* 11(1):74-80, DOI
+10.32607/20758251-2019-11-1-74-80. Both live-verified via Crossref
+([[TASK-0304]]'s original sourcing, restated here since this task's whole
+denominator rests on them).
+
 **Distal set vendored, not re-derived**: `origin/allosteric`@`f257789`,
 `allosteric/datasets/pocket_distance.csv`, filtered to
 `source=='asbench' & truth_type=='curated_allosteric' & is_distal==True` — 49
@@ -11861,7 +11871,12 @@ distinct PDBs, 44.95% of ASBench's 109 curated_allosteric rows, matching the
 filing's own "ASBench-led at 45% distal" to the second decimal. The
 register's own ASBench truth has only ever been `curated_allosteric` — never
 scored against the collaborator's `drug_contact` cohort — so the Constraint's
-truth-type separation is satisfied by construction.
+truth-type separation is satisfied by construction. The `hop≥2 AND >12 Å`
+distal threshold is the collaborator's own operational definition, not drawn
+from either paper above — neither publication specifies a distality cutoff
+in Ångströms. This register's own independent calibration ([[TASK-0255]])
+landed on a similar but not identical bar (15–20 Å) — agreement on order of
+magnitude, not on the exact number; stated plainly rather than implied.
 
 **No re-run of fpocket or the walk**: both are filter-invariant
 ([[TASK-0320]]'s own symmetry identity), so this is a post-filter of the
