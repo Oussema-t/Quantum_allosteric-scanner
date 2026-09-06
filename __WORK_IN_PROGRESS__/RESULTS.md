@@ -11973,3 +11973,58 @@ If Phase A itself does not reproduce, that is a finding for
 `scripts/run_reproducible_headline.py`. **New root files**:
 `Dockerfile.pipeline`, `docker-compose.yml`, `REPRODUCIBILITY.md`.
 **Full detail**: `.ai/tasks/DONE/TASK-0333-reproducibility-artifact-pack.md`.
+
+## pocketsweep.py's null was both non-reproducible and too soft; a compact null collapses its BH-FDR survivors from 45/110 and 33/80 to 0/110 and 1/80 ([[TASK-0328]], 2026-09-06)
+
+Owner note: `pocketsweep.py` and its stored artifacts belong to Oussema's
+`allosteric` branch (commit `f257789`). Nothing pushed upstream — read-only
+re-analysis, same convention as [[TASK-0327]].
+
+**Defect 1, fixed in a proposed patch, not applied upstream**:
+`rng=np.random.default_rng(abs(hash(w["name"]))%(2**32))` — `hash()` on a
+`str` is process-salted, `PYTHONHASHSEED` unset anywhere in the branch
+(confirmed, `git grep` = 0 hits). No stored p-value could be regenerated.
+Fix: `hashlib.sha256(name.encode())`-derived seed — proven to matter, not
+just asserted: a negative-control test runs the *original* scheme in 3
+separate subprocesses and confirms they disagree, before asserting the
+fixed scheme reproduces byte-identical across runs.
+
+**Defect 2**: the null scatters `y=1` labels uniformly across all seeds
+(`rng.permutation(n)[:kpos]`), but the real positive sets are themselves
+spatially concentrated — checked directly from already-stored data, not
+assumed: 52/110 (round 1) land in a single detected pocket, 37 span 2, 20
+span 3. A smooth CTQW score beats scattered labels more easily than
+clustered ones, so the null is softer than the alternative it excludes —
+exactly the failure mode [[TASK-0158]]/[[TASK-0190]]/[[TASK-0201]] built
+`compact_patch()` to avoid. Reused that principle in the unit this specific
+pipeline already computes for free: each fpocket/PASSer pocket is by
+construction a spatially compact cluster, and `seed_pocket[k]` (already
+stored) names which pocket every seed belongs to — no PDB refetch, no
+fpocket re-run, no eigendecomposition needed, since the null only ever
+touches the already-stored `ranks`/`y`. **Pocket-block null**: accumulate
+whole pockets in random order until `kpos` seeds are covered, trimming
+only the last pocket added.
+
+**Result** (B=2000, deterministic seeds, same rank-sum statistic
+`pocketsweep.py` itself uses — reimplementation validated against 8
+stored `p_auc` values before trusting it further, e.g. 0.141 vs stored
+0.14, 0.023 vs 0.02, 0.024 vs 0.015):
+
+| | round 1 (n=110) | round 2, veto (n=80) |
+|---|---|---|
+| mean null max-AUC, uniform | 0.740 | 0.763 |
+| mean null max-AUC, pocket-block | 0.821 | 0.846 |
+| BH-FDR 5% survivors, uniform | 45/110 | 33/80 |
+| **BH-FDR 5% survivors, pocket-block** | **0/110** | **1/80** |
+
+More extreme than this task's own cited external estimate (a
+circular-shift null: 11/55, 4/40) — flagged, not glossed over: a
+whole-pocket-block null also captures pocket-level *score* correlation
+(seeds in the same detected pocket score similarly under a spatially
+smooth operator), not just spatial proximity, making it a stricter
+compactness match than a coordinate-only shift. Both are legitimate
+readings; this task reports its own number as the stricter one, uniform
+numbers kept alongside per this task's own Constraint.
+
+**Data**: `results/tasks/0328_pocketsweep_null_recalibration/{result.json,upstream_artifacts/}`.
+**Full detail**: `.ai/tasks/DONE/TASK-0328-pocketsweep-null-calibration-and-determinism.md`.
