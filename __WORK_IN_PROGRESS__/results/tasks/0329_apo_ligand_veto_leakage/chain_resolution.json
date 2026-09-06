@@ -1,0 +1,692 @@
+{
+ "ASB_1A3W": {
+  "pdb": "1A3W",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_1FRP": {
+  "pdb": "1FRP",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_1H78": {
+  "pdb": "1H78",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_1NE7": {
+  "pdb": "1NE7",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_1PFK": {
+  "pdb": "1PFK",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_1T49": {
+  "pdb": "1T49",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_1W25": {
+  "pdb": "1W25",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_1Z8D_1": {
+  "pdb": "1Z8D",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_2BXA": {
+  "pdb": "2BXA",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_2J0X": {
+  "pdb": "2J0X",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_2PA3": {
+  "pdb": "2PA3",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_2QPY": {
+  "pdb": "2QPY",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_2VD3": {
+  "pdb": "2VD3",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_2Y0P": {
+  "pdb": "2Y0P",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_3CEH": {
+  "pdb": "3CEH",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_3E3N": {
+  "pdb": "3E3N",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_3ETG": {
+  "pdb": "3ETG",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_3H6O": {
+  "pdb": "3H6O",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_3IFA": {
+  "pdb": "3IFA",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_3LU6": {
+  "pdb": "3LU6",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_3PG9": {
+  "pdb": "3PG9",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_4E6C": {
+  "pdb": "4E6C",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_4GRS": {
+  "pdb": "4GRS",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_4LRL": {
+  "pdb": "4LRL",
+  "chain": "B",
+  "chain_guessed": false
+ },
+ "ASB_4PFK": {
+  "pdb": "4PFK",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_1DGK": {
+  "pdb": "1DGK",
+  "chain": "N",
+  "chain_guessed": false
+ },
+ "CAS_1NXE": {
+  "pdb": "1NXE",
+  "chain": "B",
+  "chain_guessed": true
+ },
+ "CAS_1OWC": {
+  "pdb": "1OWC",
+  "chain": "A",
+  "chain_guessed": true
+ },
+ "CAS_1YBA": {
+  "pdb": "1YBA",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_2P9E": {
+  "pdb": "2P9E",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_2PA3": {
+  "pdb": "2PA3",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_3I1Y": {
+  "pdb": "3I1Y",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_3KOO": {
+  "pdb": "3KOO",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_4G6B": {
+  "pdb": "4G6B",
+  "chain": "A",
+  "chain_guessed": true
+ },
+ "CAS_4JAE": {
+  "pdb": "4JAE",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_4JAG": {
+  "pdb": "4JAG",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5AI4": {
+  "pdb": "5AI4",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5AIA": {
+  "pdb": "5AIA",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5AK5": {
+  "pdb": "5AK5",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5AKH": {
+  "pdb": "5AKH",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5AKY": {
+  "pdb": "5AKY",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5ALF": {
+  "pdb": "5ALF",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5ALM": {
+  "pdb": "5ALM",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5ALO": {
+  "pdb": "5ALO",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5ALU": {
+  "pdb": "5ALU",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5ALW": {
+  "pdb": "5ALW",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5AM0": {
+  "pdb": "5AM0",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5AM5": {
+  "pdb": "5AM5",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CB_1CUZ": {
+  "pdb": "1CUZ",
+  "chain": "A",
+  "chain_guessed": true
+ },
+ "CB_1NOK": {
+  "pdb": "1NOK",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CB_1RXD": {
+  "pdb": "1RXD",
+  "chain": "B",
+  "chain_guessed": true
+ },
+ "CB_3AAR": {
+  "pdb": "3AAR",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CB_3BIF": {
+  "pdb": "3BIF",
+  "chain": "A",
+  "chain_guessed": true
+ },
+ "CB_3GL0": {
+  "pdb": "3GL0",
+  "chain": "C",
+  "chain_guessed": false
+ },
+ "CB_3P3I": {
+  "pdb": "3P3I",
+  "chain": "E-F",
+  "chain_guessed": false
+ },
+ "CB_3VQ9": {
+  "pdb": "3VQ9",
+  "chain": "A-B",
+  "chain_guessed": false
+ },
+ "CB_4DNC": {
+  "pdb": "4DNC",
+  "chain": "A",
+  "chain_guessed": true
+ },
+ "CB_4JAX": {
+  "pdb": "4JAX",
+  "chain": "C",
+  "chain_guessed": true
+ },
+ "CB_4TWI": {
+  "pdb": "4TWI",
+  "chain": "A",
+  "chain_guessed": true
+ },
+ "CB_5CAE": {
+  "pdb": "5CAE",
+  "chain": "B",
+  "chain_guessed": false
+ },
+ "CB_5GGC": {
+  "pdb": "5GGC",
+  "chain": "A",
+  "chain_guessed": true
+ },
+ "CB_5IWI": {
+  "pdb": "5IWI",
+  "chain": "A-B",
+  "chain_guessed": false
+ },
+ "CB_6AQE": {
+  "pdb": "6AQE",
+  "chain": "B",
+  "chain_guessed": false
+ },
+ "CB_6KSC": {
+  "pdb": "6KSC",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CB_6PLF": {
+  "pdb": "6PLF",
+  "chain": "B",
+  "chain_guessed": false
+ },
+ "CB_6U9C": {
+  "pdb": "6U9C",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CB_6Z89": {
+  "pdb": "6Z89",
+  "chain": "C-D",
+  "chain_guessed": false
+ },
+ "CB_7Q00": {
+  "pdb": "7Q00",
+  "chain": "B",
+  "chain_guessed": true
+ },
+ "CS_2ZB1": {
+  "pdb": "2ZB1",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_1EM6": {
+  "pdb": "1EM6",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_1GZ3": {
+  "pdb": "1GZ3",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_1M8P": {
+  "pdb": "1M8P",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_1NH8": {
+  "pdb": "1NH8",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_1QW7": {
+  "pdb": "1QW7",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_1UXV": {
+  "pdb": "1UXV",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_1W96": {
+  "pdb": "1W96",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_2BU8": {
+  "pdb": "2BU8",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_2IEG": {
+  "pdb": "2IEG",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_2NW8": {
+  "pdb": "2NW8",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_2Q8M_2": {
+  "pdb": "2Q8M",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_2R1R": {
+  "pdb": "2R1R",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_2VGI": {
+  "pdb": "2VGI",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_2YLO": {
+  "pdb": "2YLO",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_3DC2": {
+  "pdb": "3DC2",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_3ETE_1": {
+  "pdb": "3ETE",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_3FUD": {
+  "pdb": "3FUD",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_3HQP": {
+  "pdb": "3HQP",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_3LSX": {
+  "pdb": "3LSX",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_3O2M": {
+  "pdb": "3O2M",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_3R1R": {
+  "pdb": "3R1R",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_4G1N": {
+  "pdb": "4G1N",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_4HYW": {
+  "pdb": "4HYW",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "ASB_4MRA": {
+  "pdb": "4MRA",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_1CZA": {
+  "pdb": "1CZA",
+  "chain": "N",
+  "chain_guessed": false
+ },
+ "CAS_1I2D": {
+  "pdb": "1I2D",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_1NXG": {
+  "pdb": "1NXG",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_1PSD": {
+  "pdb": "1PSD",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_2P9C": {
+  "pdb": "2P9C",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_2P9G": {
+  "pdb": "2P9G",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_3DDN": {
+  "pdb": "3DDN",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_3I28": {
+  "pdb": "3I28",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_3OTQ": {
+  "pdb": "3OTQ",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_4JAD": {
+  "pdb": "4JAD",
+  "chain": "A",
+  "chain_guessed": true
+ },
+ "CAS_4JAF": {
+  "pdb": "4JAF",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5AHX": {
+  "pdb": "5AHX",
+  "chain": "A",
+  "chain_guessed": true
+ },
+ "CAS_5AI5": {
+  "pdb": "5AI5",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5AK4": {
+  "pdb": "5AK4",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5AKE": {
+  "pdb": "5AKE",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5AKX": {
+  "pdb": "5AKX",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5ALD": {
+  "pdb": "5ALD",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5ALH": {
+  "pdb": "5ALH",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5ALN": {
+  "pdb": "5ALN",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5ALT": {
+  "pdb": "5ALT",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5ALV": {
+  "pdb": "5ALV",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5ALY": {
+  "pdb": "5ALY",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CAS_5AM4": {
+  "pdb": "5AM4",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CB_1BZJ": {
+  "pdb": "1BZJ",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CB_1K0N": {
+  "pdb": "1K0N",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CB_1RTC": {
+  "pdb": "1RTC",
+  "chain": "A",
+  "chain_guessed": true
+ },
+ "CB_2ZJ7": {
+  "pdb": "2ZJ7",
+  "chain": "A",
+  "chain_guessed": true
+ },
+ "CB_3BGL": {
+  "pdb": "3BGL",
+  "chain": "C-D",
+  "chain_guessed": false
+ },
+ "CB_3BRK": {
+  "pdb": "3BRK",
+  "chain": "X",
+  "chain_guessed": true
+ },
+ "CB_3KJR": {
+  "pdb": "3KJR",
+  "chain": "A-B",
+  "chain_guessed": false
+ },
+ "CB_3U6K": {
+  "pdb": "3U6K",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CB_4CON": {
+  "pdb": "4CON",
+  "chain": "B",
+  "chain_guessed": true
+ },
+ "CB_4I8Y": {
+  "pdb": "4I8Y",
+  "chain": "A",
+  "chain_guessed": true
+ },
+ "CB_4K86": {
+  "pdb": "4K86",
+  "chain": "A",
+  "chain_guessed": true
+ },
+ "CB_4ZOE": {
+  "pdb": "4ZOE",
+  "chain": "B",
+  "chain_guessed": true
+ },
+ "CB_5CK1": {
+  "pdb": "5CK1",
+  "chain": "A",
+  "chain_guessed": true
+ },
+ "CB_5HQ8": {
+  "pdb": "5HQ8",
+  "chain": "A",
+  "chain_guessed": false
+ },
+ "CB_5UXA": {
+  "pdb": "5UXA",
+  "chain": "A",
+  "chain_guessed": true
+ },
+ "CB_6KQF": {
+  "pdb": "6KQF",
+  "chain": "D",
+  "chain_guessed": true
+ },
+ "CB_6NLF": {
+  "pdb": "6NLF",
+  "chain": "G",
+  "chain_guessed": true
+ },
+ "CB_6RXD": {
+  "pdb": "6RXD",
+  "chain": "A",
+  "chain_guessed": true
+ },
+ "CB_6XQX": {
+  "pdb": "6XQX",
+  "chain": "B",
+  "chain_guessed": true
+ },
+ "CB_7GOS": {
+  "pdb": "7GOS",
+  "chain": "B",
+  "chain_guessed": false
+ },
+ "CB_8CN8": {
+  "pdb": "8CN8",
+  "chain": "B",
+  "chain_guessed": true
+ },
+ "PM_1J8F": {
+  "pdb": "1J8F",
+  "chain": "B",
+  "chain_guessed": true
+ }
+}

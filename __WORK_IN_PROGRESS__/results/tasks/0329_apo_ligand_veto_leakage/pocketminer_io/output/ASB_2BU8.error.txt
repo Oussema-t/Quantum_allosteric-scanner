@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/opt/predict.py", line 53, in main
+    preds = make_predictions([str(pdb_path)], model, NN_PATH)
+  File "/opt/gvp/src/xtal_predict.py", line 17, in make_predictions
+    X, S, mask = process_strucs(strucs)
+  File "/opt/gvp/src/validate_performance_on_xtals.py", line 33, in process_strucs
+    xyz = prot_bb.xyz.reshape(l, 4, 3)
+ValueError: cannot reshape array of size 4311 into shape (360,4,3)

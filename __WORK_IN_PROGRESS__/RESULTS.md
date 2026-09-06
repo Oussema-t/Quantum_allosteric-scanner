@@ -12090,3 +12090,73 @@ exposure — outside this task's own named scope, a full appendix audit
 would be its own task.
 
 **Full detail**: `.ai/tasks/DONE/TASK-0335-scope-correct-the-standing-negatives.md`.
+
+## The apo-ligand veto exception leaks: the true pocket is 4.2x more likely than any other candidate to depend on it to survive ([[TASK-0329]], 2026-09-06)
+
+The `allosteric` branch's own Stage-4 veto keeps a candidate pocket if
+PocketMiner accessibility is above the protein's own median, **except**
+pockets that contact a ligand already bound in the apo file — those are
+kept regardless. That exception uses ligand location, adjacent to the
+label, to protect a candidate. This task measured how much work it is
+actually doing, on the same 138-structure cohort [[TASK-0327]]/
+[[TASK-0328]] already used (read-only worktree, nothing pushed
+upstream, per this task's own Owner note — Oussema).
+
+**Direct mechanism test — the decisive evidence, no counterfactual
+walk re-run needed.** A property of the veto decision itself: of the
+pockets kept, how often is that survival attributable *only* to the
+ligand exception (would have been vetoed by accessibility alone),
+compared within the same protein between the TRUE (drug) pocket and
+every other candidate:
+
+| | exception-only survivors | rate |
+|---|---|---|
+| TRUE (drug) pocket | 10/74 | **13.5%** |
+| every OTHER candidate | 10/313 | **3.2%** |
+
+**The true pocket is 4.2x more likely than an arbitrary candidate to
+depend specifically on the ligand exception to survive** — real,
+measured label-adjacency, not inferred from the exception's own design.
+
+**Minimum contract (exception removed / label-independent proxy),
+confirms the same direction independently**: real PocketMiner
+accessibility was re-run fresh for this exact cohort (no per-residue
+score for it was ever committed anywhere in the `allosteric` branch's
+own history, `git log --all` confirmed) via the already-vendored Docker
+image ([[TASK-0269]]/[[TASK-0285]]), 103/138 structures usable after
+export/alignment checks; ligand contact computed fresh from raw apo-PDB
+HETATM records (`apo_bound_ligands.json` alone is missing 28/138
+proteins entirely). Reconstruction validated at 82.3% agreement against
+round-2's own real surviving pockets (623 pocket-decisions, 91
+proteins) — not perfect, disclosed as a real limit on the arms below:
+
+| arm | n | pooled-cell hit rate |
+|---|---|---|
+| A: current (ligand-aware) veto, as actually run | 67 | **14.6%** |
+| B: accessibility-only (exception removed) | 82 | **11.2%** |
+| C: accessibility at matched retention rate | 82 | 11.8% |
+
+A ~3-point, ~20% relative drop — a second, independent confirmation of
+the direct-mechanism finding. The Intent Contract's own second arm
+(ligand-free vs. ligand-present subset, n=9 vs. n=56) is reported too
+but is underpowered and not directionally confirmatory on its own —
+disclosed rather than only citing the arm that fits the headline; the
+direct-mechanism test above is the trustworthy evidence.
+
+**A real upstream data-consistency finding, flagged for Oussema**:
+`veto_keep.json`'s own stored keep-list disagrees with what
+`pocketsweep.py`'s actual round-2 run carried forward for at least one
+protein (`ASB_1W25`) — found while validating [[TASK-0327]]'s own
+"best member wins" reduction, which needed re-validating against
+round-2's own real output instead (97-99% agreement for 10/14 CTQW
+score families once validated correctly; 4 `residLOG`/`residRAW`
+families never validate above ~87% and were excluded from every arm).
+
+**Out of Scope, honored**: no veto redesign proposed or implemented —
+this task measures the current rule; narrowing or removing the
+exception is Oussema's call.
+
+**Script**: `scripts/task0329_apo_ligand_veto_leakage.py`. **Data**:
+`results/tasks/0329_apo_ligand_veto_leakage/{veto_leakage_result.json,
+pocketminer_io/output/}`. **Full detail**:
+`.ai/tasks/DONE/TASK-0329-apo-ligand-veto-leakage-gate.md`.

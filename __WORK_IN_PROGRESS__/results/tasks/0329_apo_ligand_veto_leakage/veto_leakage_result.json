@@ -1,0 +1,3024 @@
+{
+ "n_round1": 138,
+ "n_round2": 138,
+ "n_chain_guessed": 28,
+ "n_ligand_contact_computed": 138,
+ "n_pocketminer_ok": 103,
+ "n_reconstructed": 91,
+ "reconstruction_validation": {
+  "n_pockets_checked": 623,
+  "agreement": 0.8234349919743178,
+  "disagree_examples": [
+   [
+    "ASB_1A3W",
+    4,
+    true,
+    false,
+    0.5521569416666667,
+    false
+   ],
+   [
+    "ASB_1T49",
+    3,
+    false,
+    true,
+    0.3516085,
+    false
+   ],
+   [
+    "ASB_1W25",
+    1,
+    true,
+    false,
+    0.6159549,
+    true
+   ],
+   [
+    "ASB_1Z8D_1",
+    1,
+    true,
+    false,
+    0.760783379310345,
+    false
+   ],
+   [
+    "ASB_2BXA",
+    3,
+    false,
+    true,
+    0.5620854615384615,
+    false
+   ],
+   [
+    "ASB_2BXA",
+    7,
+    true,
+    false,
+    0.610264,
+    false
+   ],
+   [
+    "ASB_2QPY",
+    3,
+    true,
+    false,
+    0.4063607,
+    false
+   ],
+   [
+    "ASB_2QPY",
+    4,
+    false,
+    true,
+    0.39845875,
+    false
+   ]
+  ]
+ },
+ "arm_A_all": {
+  "label": "A: current (ligand-aware) veto, as actually run",
+  "n": 67,
+  "hit_rate": 0.14592422502870261,
+  "rows": [
+   {
+    "name": "ASB_1A3W",
+    "cluster": "Pyruvate kinase 1",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.09230769230769231
+   },
+   {
+    "name": "ASB_1PFK",
+    "cluster": "ATP-dependent 6-phosphofructokinase isozyme 1",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06153846153846154
+   },
+   {
+    "name": "ASB_1T49",
+    "cluster": "Tyrosine-protein phosphatase non-receptor type 1",
+    "n_kept_pockets": 6,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.4
+   },
+   {
+    "name": "ASB_1W25",
+    "cluster": "Response regulator PleD",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.4230769230769231
+   },
+   {
+    "name": "ASB_1Z8D_1",
+    "cluster": "Glycogen phosphorylase, muscle form",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06923076923076923
+   },
+   {
+    "name": "ASB_2BXA",
+    "cluster": "Serum albumin",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.16153846153846155
+   },
+   {
+    "name": "ASB_3E3N",
+    "cluster": "Glycogen phosphorylase, muscle form",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.007692307692307693
+   },
+   {
+    "name": "ASB_3H6O",
+    "cluster": "Pyruvate kinase PKM",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.15384615384615385
+   },
+   {
+    "name": "ASB_3LU6",
+    "cluster": "Serum albumin",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.23846153846153847
+   },
+   {
+    "name": "ASB_4PFK",
+    "cluster": "ATP-dependent 6-phosphofructokinase",
+    "n_kept_pockets": 6,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.09230769230769231
+   },
+   {
+    "name": "CAS_1DGK",
+    "cluster": "CAS0027",
+    "n_kept_pockets": 6,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.015384615384615385
+   },
+   {
+    "name": "CAS_3I1Y",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "CAS_3KOO",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CAS_4JAE",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 7,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.03076923076923077
+   },
+   {
+    "name": "CAS_5AK5",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 3,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1
+   },
+   {
+    "name": "CAS_5AKH",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 3,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.05384615384615385
+   },
+   {
+    "name": "CAS_5AKY",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06153846153846154
+   },
+   {
+    "name": "CAS_5ALM",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 2,
+    "n_pockets_total": 2,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1
+   },
+   {
+    "name": "CAS_5ALO",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 3,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.09230769230769231
+   },
+   {
+    "name": "CAS_5ALU",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "CAS_5ALW",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1
+   },
+   {
+    "name": "CAS_5AM5",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CB_1CUZ",
+    "cluster": "P00590",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.2153846153846154
+   },
+   {
+    "name": "CB_1NOK",
+    "cluster": "P00489",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.4153846153846154
+   },
+   {
+    "name": "CB_3BIF",
+    "cluster": "P25114",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.2230769230769231
+   },
+   {
+    "name": "CB_3GL0",
+    "cluster": "Q5S3I3",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.17692307692307693
+   },
+   {
+    "name": "CB_4DNC",
+    "cluster": "Q9H7Z6",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.3230769230769231
+   },
+   {
+    "name": "CB_4JAX",
+    "cluster": "P33284",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.23846153846153847
+   },
+   {
+    "name": "CB_4TWI",
+    "cluster": "O28597",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.09230769230769231
+   },
+   {
+    "name": "CB_5CAE",
+    "cluster": "P53590",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CB_5GGC",
+    "cluster": "A0QUZ2",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1
+   },
+   {
+    "name": "CB_6AQE",
+    "cluster": "Q9RY20",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 3,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.46923076923076923
+   },
+   {
+    "name": "CB_6KSC",
+    "cluster": "P9WNV1",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.038461538461538464
+   },
+   {
+    "name": "ASB_1GZ3",
+    "cluster": "NAD-dependent malic enzyme, mitochondrial",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "ASB_1M8P",
+    "cluster": "Sulfate adenylyltransferase",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.03076923076923077
+   },
+   {
+    "name": "ASB_1UXV",
+    "cluster": "NAD(P)-dependent glyceraldehyde-3-phosphate dehydrogenase",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.2230769230769231
+   },
+   {
+    "name": "ASB_1W96",
+    "cluster": "Acetyl-CoA carboxylase",
+    "n_kept_pockets": 6,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.038461538461538464
+   },
+   {
+    "name": "ASB_2R1R",
+    "cluster": "Ribonucleoside-diphosphate reductase 1 subunit alpha",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.5538461538461539
+   },
+   {
+    "name": "ASB_2VGI",
+    "cluster": "Pyruvate kinase PKLR",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "ASB_2YLO",
+    "cluster": "Androgen receptor",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.13076923076923078
+   },
+   {
+    "name": "ASB_3HQP",
+    "cluster": "Pyruvate kinase",
+    "n_kept_pockets": 6,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.015384615384615385
+   },
+   {
+    "name": "ASB_3LSX",
+    "cluster": "Glutamate receptor 3",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.05384615384615385
+   },
+   {
+    "name": "ASB_3O2M",
+    "cluster": "Mitogen-activated protein kinase 8",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06153846153846154
+   },
+   {
+    "name": "ASB_3R1R",
+    "cluster": "Ribonucleoside-diphosphate reductase 1 subunit alpha",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.2
+   },
+   {
+    "name": "ASB_4G1N",
+    "cluster": "Pyruvate kinase PKM",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1076923076923077
+   },
+   {
+    "name": "ASB_4HYW",
+    "cluster": "Pyruvate kinase 1",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.11538461538461539
+   },
+   {
+    "name": "CAS_1I2D",
+    "cluster": "CAS0010",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 3,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.038461538461538464
+   },
+   {
+    "name": "CAS_1NXG",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.43846153846153846
+   },
+   {
+    "name": "CAS_3I28",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06153846153846154
+   },
+   {
+    "name": "CAS_3OTQ",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.05384615384615385
+   },
+   {
+    "name": "CAS_4JAF",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 7,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "CAS_5AHX",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 3,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CAS_5AKE",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 2,
+    "n_pockets_total": 2,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.09230769230769231
+   },
+   {
+    "name": "CAS_5AKX",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.11538461538461539
+   },
+   {
+    "name": "CAS_5ALD",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 3,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.046153846153846156
+   },
+   {
+    "name": "CAS_5ALH",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 3,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1076923076923077
+   },
+   {
+    "name": "CAS_5ALN",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1
+   },
+   {
+    "name": "CAS_5ALV",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 2,
+    "n_pockets_total": 2,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1076923076923077
+   },
+   {
+    "name": "CAS_5ALY",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 3,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1076923076923077
+   },
+   {
+    "name": "CAS_5AM4",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "CB_1BZJ",
+    "cluster": "P18031",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1076923076923077
+   },
+   {
+    "name": "CB_1K0N",
+    "cluster": "O00299",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CB_1RTC",
+    "cluster": "P02879",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1
+   },
+   {
+    "name": "CB_5HQ8",
+    "cluster": "Q9H7B4",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.33076923076923076
+   },
+   {
+    "name": "CB_5UXA",
+    "cluster": "O32553",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.23846153846153847
+   },
+   {
+    "name": "CB_6RXD",
+    "cluster": "B7GTV0",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.5461538461538461
+   },
+   {
+    "name": "PM_1J8F",
+    "cluster": "Novel cryptic pocket set",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.2230769230769231
+   }
+  ]
+ },
+ "arm_A_recon_subset": {
+  "label": "A': current veto, RECON SUBSET (fair baseline for B/C)",
+  "n": 65,
+  "hit_rate": 0.1446153846153846,
+  "rows": [
+   {
+    "name": "ASB_1A3W",
+    "cluster": "Pyruvate kinase 1",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.09230769230769231
+   },
+   {
+    "name": "ASB_1PFK",
+    "cluster": "ATP-dependent 6-phosphofructokinase isozyme 1",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06153846153846154
+   },
+   {
+    "name": "ASB_1T49",
+    "cluster": "Tyrosine-protein phosphatase non-receptor type 1",
+    "n_kept_pockets": 6,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.4
+   },
+   {
+    "name": "ASB_1W25",
+    "cluster": "Response regulator PleD",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.4230769230769231
+   },
+   {
+    "name": "ASB_1Z8D_1",
+    "cluster": "Glycogen phosphorylase, muscle form",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06923076923076923
+   },
+   {
+    "name": "ASB_2BXA",
+    "cluster": "Serum albumin",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.16153846153846155
+   },
+   {
+    "name": "ASB_3E3N",
+    "cluster": "Glycogen phosphorylase, muscle form",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.007692307692307693
+   },
+   {
+    "name": "ASB_3H6O",
+    "cluster": "Pyruvate kinase PKM",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.15384615384615385
+   },
+   {
+    "name": "ASB_3LU6",
+    "cluster": "Serum albumin",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.23846153846153847
+   },
+   {
+    "name": "ASB_4PFK",
+    "cluster": "ATP-dependent 6-phosphofructokinase",
+    "n_kept_pockets": 6,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.09230769230769231
+   },
+   {
+    "name": "CAS_1DGK",
+    "cluster": "CAS0027",
+    "n_kept_pockets": 6,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.015384615384615385
+   },
+   {
+    "name": "CAS_3I1Y",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "CAS_3KOO",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CAS_4JAE",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 7,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.03076923076923077
+   },
+   {
+    "name": "CAS_5AK5",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 3,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1
+   },
+   {
+    "name": "CAS_5AKH",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 3,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.05384615384615385
+   },
+   {
+    "name": "CAS_5AKY",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06153846153846154
+   },
+   {
+    "name": "CAS_5ALM",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 2,
+    "n_pockets_total": 2,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1
+   },
+   {
+    "name": "CAS_5ALO",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 3,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.09230769230769231
+   },
+   {
+    "name": "CAS_5ALU",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "CAS_5ALW",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1
+   },
+   {
+    "name": "CAS_5AM5",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CB_1CUZ",
+    "cluster": "P00590",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.2153846153846154
+   },
+   {
+    "name": "CB_1NOK",
+    "cluster": "P00489",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.4153846153846154
+   },
+   {
+    "name": "CB_3BIF",
+    "cluster": "P25114",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.2230769230769231
+   },
+   {
+    "name": "CB_3GL0",
+    "cluster": "Q5S3I3",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.17692307692307693
+   },
+   {
+    "name": "CB_4JAX",
+    "cluster": "P33284",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.23846153846153847
+   },
+   {
+    "name": "CB_4TWI",
+    "cluster": "O28597",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.09230769230769231
+   },
+   {
+    "name": "CB_5CAE",
+    "cluster": "P53590",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CB_5GGC",
+    "cluster": "A0QUZ2",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1
+   },
+   {
+    "name": "CB_6AQE",
+    "cluster": "Q9RY20",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 3,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.46923076923076923
+   },
+   {
+    "name": "CB_6KSC",
+    "cluster": "P9WNV1",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.038461538461538464
+   },
+   {
+    "name": "ASB_1GZ3",
+    "cluster": "NAD-dependent malic enzyme, mitochondrial",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "ASB_1M8P",
+    "cluster": "Sulfate adenylyltransferase",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.03076923076923077
+   },
+   {
+    "name": "ASB_1UXV",
+    "cluster": "NAD(P)-dependent glyceraldehyde-3-phosphate dehydrogenase",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.2230769230769231
+   },
+   {
+    "name": "ASB_1W96",
+    "cluster": "Acetyl-CoA carboxylase",
+    "n_kept_pockets": 6,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.038461538461538464
+   },
+   {
+    "name": "ASB_2R1R",
+    "cluster": "Ribonucleoside-diphosphate reductase 1 subunit alpha",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.5538461538461539
+   },
+   {
+    "name": "ASB_2VGI",
+    "cluster": "Pyruvate kinase PKLR",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "ASB_2YLO",
+    "cluster": "Androgen receptor",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.13076923076923078
+   },
+   {
+    "name": "ASB_3HQP",
+    "cluster": "Pyruvate kinase",
+    "n_kept_pockets": 6,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.015384615384615385
+   },
+   {
+    "name": "ASB_3O2M",
+    "cluster": "Mitogen-activated protein kinase 8",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06153846153846154
+   },
+   {
+    "name": "ASB_3R1R",
+    "cluster": "Ribonucleoside-diphosphate reductase 1 subunit alpha",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.2
+   },
+   {
+    "name": "ASB_4G1N",
+    "cluster": "Pyruvate kinase PKM",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1076923076923077
+   },
+   {
+    "name": "ASB_4HYW",
+    "cluster": "Pyruvate kinase 1",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.11538461538461539
+   },
+   {
+    "name": "CAS_1I2D",
+    "cluster": "CAS0010",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 3,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.038461538461538464
+   },
+   {
+    "name": "CAS_1NXG",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 5,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.43846153846153846
+   },
+   {
+    "name": "CAS_3I28",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06153846153846154
+   },
+   {
+    "name": "CAS_3OTQ",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.05384615384615385
+   },
+   {
+    "name": "CAS_4JAF",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 7,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "CAS_5AHX",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 3,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CAS_5AKE",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 2,
+    "n_pockets_total": 2,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.09230769230769231
+   },
+   {
+    "name": "CAS_5AKX",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.11538461538461539
+   },
+   {
+    "name": "CAS_5ALD",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 3,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.046153846153846156
+   },
+   {
+    "name": "CAS_5ALH",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 3,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1076923076923077
+   },
+   {
+    "name": "CAS_5ALN",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1
+   },
+   {
+    "name": "CAS_5ALV",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 2,
+    "n_pockets_total": 2,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1076923076923077
+   },
+   {
+    "name": "CAS_5ALY",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 3,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1076923076923077
+   },
+   {
+    "name": "CAS_5AM4",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "CB_1BZJ",
+    "cluster": "P18031",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1076923076923077
+   },
+   {
+    "name": "CB_1K0N",
+    "cluster": "O00299",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CB_1RTC",
+    "cluster": "P02879",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1
+   },
+   {
+    "name": "CB_5HQ8",
+    "cluster": "Q9H7B4",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.33076923076923076
+   },
+   {
+    "name": "CB_5UXA",
+    "cluster": "O32553",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.23846153846153847
+   },
+   {
+    "name": "CB_6RXD",
+    "cluster": "B7GTV0",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.5461538461538461
+   },
+   {
+    "name": "PM_1J8F",
+    "cluster": "Novel cryptic pocket set",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 4,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.2230769230769231
+   }
+  ]
+ },
+ "arm_B_accessibility_only": {
+  "label": "B: accessibility-only (exception removed)",
+  "n": 82,
+  "hit_rate": 0.11163227016885555,
+  "drug_pocket_survival": 0.7804878048780488,
+  "mean_kept_fraction": 0.5361014324428958,
+  "rows": [
+   {
+    "name": "ASB_1A3W",
+    "cluster": "Pyruvate kinase 1",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.05384615384615385
+   },
+   {
+    "name": "ASB_1NE7",
+    "cluster": "Glucosamine-6-phosphate isomerase 1",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.18461538461538463
+   },
+   {
+    "name": "ASB_1PFK",
+    "cluster": "ATP-dependent 6-phosphofructokinase isozyme 1",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "ASB_1T49",
+    "cluster": "Tyrosine-protein phosphatase non-receptor type 1",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.4076923076923077
+   },
+   {
+    "name": "ASB_1W25",
+    "cluster": "Response regulator PleD",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.3230769230769231
+   },
+   {
+    "name": "ASB_1Z8D_1",
+    "cluster": "Glycogen phosphorylase, muscle form",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.015384615384615385
+   },
+   {
+    "name": "ASB_2BXA",
+    "cluster": "Serum albumin",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.2
+   },
+   {
+    "name": "ASB_3CEH",
+    "cluster": "Glycogen phosphorylase, liver form",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06153846153846154
+   },
+   {
+    "name": "ASB_3E3N",
+    "cluster": "Glycogen phosphorylase, muscle form",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "ASB_3H6O",
+    "cluster": "Pyruvate kinase PKM",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.14615384615384616
+   },
+   {
+    "name": "ASB_3IFA",
+    "cluster": "Fructose-1,6-bisphosphatase isozyme 2",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.25384615384615383
+   },
+   {
+    "name": "ASB_3LU6",
+    "cluster": "Serum albumin",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "ASB_4PFK",
+    "cluster": "ATP-dependent 6-phosphofructokinase",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_1DGK",
+    "cluster": "CAS0027",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_1OWC",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_2P9E",
+    "cluster": "CAS0040",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_3I1Y",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06923076923076923
+   },
+   {
+    "name": "CAS_3KOO",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "CAS_4G6B",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_4JAE",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_4JAG",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_5AK5",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "CAS_5AKH",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.05384615384615385
+   },
+   {
+    "name": "CAS_5AKY",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CAS_5ALM",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06923076923076923
+   },
+   {
+    "name": "CAS_5ALO",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CAS_5ALU",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.12307692307692308
+   },
+   {
+    "name": "CAS_5ALW",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1
+   },
+   {
+    "name": "CAS_5AM5",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "CB_1CUZ",
+    "cluster": "P00590",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.17692307692307693
+   },
+   {
+    "name": "CB_1NOK",
+    "cluster": "P00489",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.25384615384615383
+   },
+   {
+    "name": "CB_3AAR",
+    "cluster": "Q5ZUA2",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CB_3BIF",
+    "cluster": "P25114",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.25384615384615383
+   },
+   {
+    "name": "CB_3GL0",
+    "cluster": "Q5S3I3",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.2076923076923077
+   },
+   {
+    "name": "CB_4JAX",
+    "cluster": "P33284",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.38461538461538464
+   },
+   {
+    "name": "CB_4TWI",
+    "cluster": "O28597",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.09230769230769231
+   },
+   {
+    "name": "CB_5CAE",
+    "cluster": "P53590",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CB_5GGC",
+    "cluster": "A0QUZ2",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.09230769230769231
+   },
+   {
+    "name": "CB_6AQE",
+    "cluster": "Q9RY20",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.43846153846153846
+   },
+   {
+    "name": "CB_6KSC",
+    "cluster": "P9WNV1",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.023076923076923078
+   },
+   {
+    "name": "ASB_1GZ3",
+    "cluster": "NAD-dependent malic enzyme, mitochondrial",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "ASB_1M8P",
+    "cluster": "Sulfate adenylyltransferase",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.023076923076923078
+   },
+   {
+    "name": "ASB_1UXV",
+    "cluster": "NAD(P)-dependent glyceraldehyde-3-phosphate dehydrogenase",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.2076923076923077
+   },
+   {
+    "name": "ASB_1W96",
+    "cluster": "Acetyl-CoA carboxylase",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.046153846153846156
+   },
+   {
+    "name": "ASB_2IEG",
+    "cluster": "Glycogen phosphorylase, muscle form",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "ASB_2R1R",
+    "cluster": "Ribonucleoside-diphosphate reductase 1 subunit alpha",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.49230769230769234
+   },
+   {
+    "name": "ASB_2VGI",
+    "cluster": "Pyruvate kinase PKLR",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.03076923076923077
+   },
+   {
+    "name": "ASB_2YLO",
+    "cluster": "Androgen receptor",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.38461538461538464
+   },
+   {
+    "name": "ASB_3FUD",
+    "cluster": "Leukotriene A-4 hydrolase",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "ASB_3HQP",
+    "cluster": "Pyruvate kinase",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.03076923076923077
+   },
+   {
+    "name": "ASB_3O2M",
+    "cluster": "Mitogen-activated protein kinase 8",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.038461538461538464
+   },
+   {
+    "name": "ASB_3R1R",
+    "cluster": "Ribonucleoside-diphosphate reductase 1 subunit alpha",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.16153846153846155
+   },
+   {
+    "name": "ASB_4G1N",
+    "cluster": "Pyruvate kinase PKM",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "ASB_4HYW",
+    "cluster": "Pyruvate kinase 1",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "ASB_4MRA",
+    "cluster": "Glycogen phosphorylase, muscle form",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.4307692307692308
+   },
+   {
+    "name": "CAS_1CZA",
+    "cluster": "CAS0027",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.015384615384615385
+   },
+   {
+    "name": "CAS_1I2D",
+    "cluster": "CAS0010",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.038461538461538464
+   },
+   {
+    "name": "CAS_1NXG",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_3I28",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06153846153846154
+   },
+   {
+    "name": "CAS_3OTQ",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.046153846153846156
+   },
+   {
+    "name": "CAS_4JAD",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_4JAF",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_5AHX",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CAS_5AKE",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06923076923076923
+   },
+   {
+    "name": "CAS_5AKX",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.11538461538461539
+   },
+   {
+    "name": "CAS_5ALD",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.03076923076923077
+   },
+   {
+    "name": "CAS_5ALH",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.09230769230769231
+   },
+   {
+    "name": "CAS_5ALN",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1
+   },
+   {
+    "name": "CAS_5ALV",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1
+   },
+   {
+    "name": "CAS_5ALY",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06923076923076923
+   },
+   {
+    "name": "CAS_5AM4",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "CB_1BZJ",
+    "cluster": "P18031",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CB_1K0N",
+    "cluster": "O00299",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CB_1RTC",
+    "cluster": "P02879",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.038461538461538464
+   },
+   {
+    "name": "CB_3U6K",
+    "cluster": "P0CE47",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CB_4I8Y",
+    "cluster": "P45723",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.2076923076923077
+   },
+   {
+    "name": "CB_4ZOE",
+    "cluster": "Q92AS9",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06923076923076923
+   },
+   {
+    "name": "CB_5HQ8",
+    "cluster": "Q9H7B4",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.19230769230769232
+   },
+   {
+    "name": "CB_5UXA",
+    "cluster": "O32553",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.23076923076923078
+   },
+   {
+    "name": "CB_6RXD",
+    "cluster": "B7GTV0",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.5230769230769231
+   },
+   {
+    "name": "CB_8CN8",
+    "cluster": "G3XDA2",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.34615384615384615
+   },
+   {
+    "name": "PM_1J8F",
+    "cluster": "Novel cryptic pocket set",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   }
+  ]
+ },
+ "arm_C_matched_retention": {
+  "label": "C: accessibility @ matched retention rate",
+  "n": 82,
+  "hit_rate": 0.11829268292682926,
+  "drug_pocket_survival": 0.6951219512195121,
+  "mean_kept_fraction": 0.45163085559427024,
+  "rows": [
+   {
+    "name": "ASB_1A3W",
+    "cluster": "Pyruvate kinase 1",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.09230769230769231
+   },
+   {
+    "name": "ASB_1NE7",
+    "cluster": "Glucosamine-6-phosphate isomerase 1",
+    "n_kept_pockets": 1,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 1.0
+   },
+   {
+    "name": "ASB_1PFK",
+    "cluster": "ATP-dependent 6-phosphofructokinase isozyme 1",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06153846153846154
+   },
+   {
+    "name": "ASB_1T49",
+    "cluster": "Tyrosine-protein phosphatase non-receptor type 1",
+    "n_kept_pockets": 6,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.4
+   },
+   {
+    "name": "ASB_1W25",
+    "cluster": "Response regulator PleD",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.3230769230769231
+   },
+   {
+    "name": "ASB_1Z8D_1",
+    "cluster": "Glycogen phosphorylase, muscle form",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.015384615384615385
+   },
+   {
+    "name": "ASB_2BXA",
+    "cluster": "Serum albumin",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.2
+   },
+   {
+    "name": "ASB_3CEH",
+    "cluster": "Glycogen phosphorylase, liver form",
+    "n_kept_pockets": 1,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "ASB_3E3N",
+    "cluster": "Glycogen phosphorylase, muscle form",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "ASB_3H6O",
+    "cluster": "Pyruvate kinase PKM",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.16153846153846155
+   },
+   {
+    "name": "ASB_3IFA",
+    "cluster": "Fructose-1,6-bisphosphatase isozyme 2",
+    "n_kept_pockets": 1,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "ASB_3LU6",
+    "cluster": "Serum albumin",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "ASB_4PFK",
+    "cluster": "ATP-dependent 6-phosphofructokinase",
+    "n_kept_pockets": 6,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "CAS_1DGK",
+    "cluster": "CAS0027",
+    "n_kept_pockets": 6,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_1OWC",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_2P9E",
+    "cluster": "CAS0040",
+    "n_kept_pockets": 1,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_3I1Y",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CAS_3KOO",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CAS_4G6B",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 1,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_4JAE",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 7,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_4JAG",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 1,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_5AK5",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1
+   },
+   {
+    "name": "CAS_5AKH",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.05384615384615385
+   },
+   {
+    "name": "CAS_5AKY",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CAS_5ALM",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 2,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.12307692307692308
+   },
+   {
+    "name": "CAS_5ALO",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.13076923076923078
+   },
+   {
+    "name": "CAS_5ALU",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "CAS_5ALW",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1
+   },
+   {
+    "name": "CAS_5AM5",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "CB_1CUZ",
+    "cluster": "P00590",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.17692307692307693
+   },
+   {
+    "name": "CB_1NOK",
+    "cluster": "P00489",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.2692307692307692
+   },
+   {
+    "name": "CB_3AAR",
+    "cluster": "Q5ZUA2",
+    "n_kept_pockets": 1,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CB_3BIF",
+    "cluster": "P25114",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.25384615384615383
+   },
+   {
+    "name": "CB_3GL0",
+    "cluster": "Q5S3I3",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.17692307692307693
+   },
+   {
+    "name": "CB_4JAX",
+    "cluster": "P33284",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.38461538461538464
+   },
+   {
+    "name": "CB_4TWI",
+    "cluster": "O28597",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.09230769230769231
+   },
+   {
+    "name": "CB_5CAE",
+    "cluster": "P53590",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.13846153846153847
+   },
+   {
+    "name": "CB_5GGC",
+    "cluster": "A0QUZ2",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.11538461538461539
+   },
+   {
+    "name": "CB_6AQE",
+    "cluster": "Q9RY20",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.43846153846153846
+   },
+   {
+    "name": "CB_6KSC",
+    "cluster": "P9WNV1",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.038461538461538464
+   },
+   {
+    "name": "ASB_1GZ3",
+    "cluster": "NAD-dependent malic enzyme, mitochondrial",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "ASB_1M8P",
+    "cluster": "Sulfate adenylyltransferase",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.015384615384615385
+   },
+   {
+    "name": "ASB_1UXV",
+    "cluster": "NAD(P)-dependent glyceraldehyde-3-phosphate dehydrogenase",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.2076923076923077
+   },
+   {
+    "name": "ASB_1W96",
+    "cluster": "Acetyl-CoA carboxylase",
+    "n_kept_pockets": 6,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.038461538461538464
+   },
+   {
+    "name": "ASB_2IEG",
+    "cluster": "Glycogen phosphorylase, muscle form",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "ASB_2R1R",
+    "cluster": "Ribonucleoside-diphosphate reductase 1 subunit alpha",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.5230769230769231
+   },
+   {
+    "name": "ASB_2VGI",
+    "cluster": "Pyruvate kinase PKLR",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1076923076923077
+   },
+   {
+    "name": "ASB_2YLO",
+    "cluster": "Androgen receptor",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.38461538461538464
+   },
+   {
+    "name": "ASB_3FUD",
+    "cluster": "Leukotriene A-4 hydrolase",
+    "n_kept_pockets": 1,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "ASB_3HQP",
+    "cluster": "Pyruvate kinase",
+    "n_kept_pockets": 6,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.015384615384615385
+   },
+   {
+    "name": "ASB_3O2M",
+    "cluster": "Mitogen-activated protein kinase 8",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.038461538461538464
+   },
+   {
+    "name": "ASB_3R1R",
+    "cluster": "Ribonucleoside-diphosphate reductase 1 subunit alpha",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "ASB_4G1N",
+    "cluster": "Pyruvate kinase PKM",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "ASB_4HYW",
+    "cluster": "Pyruvate kinase 1",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.11538461538461539
+   },
+   {
+    "name": "ASB_4MRA",
+    "cluster": "Glycogen phosphorylase, muscle form",
+    "n_kept_pockets": 6,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.4307692307692308
+   },
+   {
+    "name": "CAS_1CZA",
+    "cluster": "CAS0027",
+    "n_kept_pockets": 1,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_1I2D",
+    "cluster": "CAS0010",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_1NXG",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 5,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_3I28",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.06153846153846154
+   },
+   {
+    "name": "CAS_3OTQ",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.046153846153846156
+   },
+   {
+    "name": "CAS_4JAD",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 1,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_4JAF",
+    "cluster": "CAS0001",
+    "n_kept_pockets": 7,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CAS_5AHX",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CAS_5AKE",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 2,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.09230769230769231
+   },
+   {
+    "name": "CAS_5AKX",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.11538461538461539
+   },
+   {
+    "name": "CAS_5ALD",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.046153846153846156
+   },
+   {
+    "name": "CAS_5ALH",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1076923076923077
+   },
+   {
+    "name": "CAS_5ALN",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1
+   },
+   {
+    "name": "CAS_5ALV",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 2,
+    "n_pockets_total": 6,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1076923076923077
+   },
+   {
+    "name": "CAS_5ALY",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 3,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.1076923076923077
+   },
+   {
+    "name": "CAS_5AM4",
+    "cluster": "CAS0002",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 7,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.08461538461538462
+   },
+   {
+    "name": "CB_1BZJ",
+    "cluster": "P18031",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CB_1K0N",
+    "cluster": "O00299",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 8,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.07692307692307693
+   },
+   {
+    "name": "CB_1RTC",
+    "cluster": "P02879",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CB_3U6K",
+    "cluster": "P0CE47",
+    "n_kept_pockets": 1,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CB_4I8Y",
+    "cluster": "P45723",
+    "n_kept_pockets": 1,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CB_4ZOE",
+    "cluster": "Q92AS9",
+    "n_kept_pockets": 1,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "CB_5HQ8",
+    "cluster": "Q9H7B4",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.3923076923076923
+   },
+   {
+    "name": "CB_5UXA",
+    "cluster": "O32553",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.23846153846153847
+   },
+   {
+    "name": "CB_6RXD",
+    "cluster": "B7GTV0",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.6615384615384615
+   },
+   {
+    "name": "CB_8CN8",
+    "cluster": "G3XDA2",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": false,
+    "cell_hit_rate": 0.0
+   },
+   {
+    "name": "PM_1J8F",
+    "cluster": "Novel cryptic pocket set",
+    "n_kept_pockets": 4,
+    "n_pockets_total": 9,
+    "drug_pocket_survived": true,
+    "cell_hit_rate": 0.09230769230769231
+   }
+  ]
+ },
+ "ligand_free_subset": {
+  "n_proteins": 18,
+  "result": {
+   "label": "  ligand-FREE subset, current veto (real)",
+   "n": 9,
+   "hit_rate": 0.20170940170940174,
+   "rows": [
+    {
+     "name": "CB_1CUZ",
+     "cluster": "P00590",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.2153846153846154
+    },
+    {
+     "name": "CB_3BIF",
+     "cluster": "P25114",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.2230769230769231
+    },
+    {
+     "name": "CB_4TWI",
+     "cluster": "O28597",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.09230769230769231
+    },
+    {
+     "name": "CB_5GGC",
+     "cluster": "A0QUZ2",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.1
+    },
+    {
+     "name": "CAS_5AHX",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 3,
+     "n_pockets_total": 3,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.07692307692307693
+    },
+    {
+     "name": "CB_1RTC",
+     "cluster": "P02879",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.1
+    },
+    {
+     "name": "CB_5UXA",
+     "cluster": "O32553",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.23846153846153847
+    },
+    {
+     "name": "CB_6RXD",
+     "cluster": "B7GTV0",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.5461538461538461
+    },
+    {
+     "name": "PM_1J8F",
+     "cluster": "Novel cryptic pocket set",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.2230769230769231
+    }
+   ]
+  }
+ },
+ "ligand_present_subset": {
+  "n_proteins": 73,
+  "result": {
+   "label": "  ligand-PRESENT subset, current veto (real)",
+   "n": 56,
+   "hit_rate": 0.13543956043956046,
+   "rows": [
+    {
+     "name": "ASB_1A3W",
+     "cluster": "Pyruvate kinase 1",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.09230769230769231
+    },
+    {
+     "name": "ASB_1PFK",
+     "cluster": "ATP-dependent 6-phosphofructokinase isozyme 1",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.06153846153846154
+    },
+    {
+     "name": "ASB_1T49",
+     "cluster": "Tyrosine-protein phosphatase non-receptor type 1",
+     "n_kept_pockets": 6,
+     "n_pockets_total": 6,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.4
+    },
+    {
+     "name": "ASB_1W25",
+     "cluster": "Response regulator PleD",
+     "n_kept_pockets": 5,
+     "n_pockets_total": 5,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.4230769230769231
+    },
+    {
+     "name": "ASB_1Z8D_1",
+     "cluster": "Glycogen phosphorylase, muscle form",
+     "n_kept_pockets": 5,
+     "n_pockets_total": 5,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.06923076923076923
+    },
+    {
+     "name": "ASB_2BXA",
+     "cluster": "Serum albumin",
+     "n_kept_pockets": 5,
+     "n_pockets_total": 5,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.16153846153846155
+    },
+    {
+     "name": "ASB_3E3N",
+     "cluster": "Glycogen phosphorylase, muscle form",
+     "n_kept_pockets": 5,
+     "n_pockets_total": 5,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.007692307692307693
+    },
+    {
+     "name": "ASB_3H6O",
+     "cluster": "Pyruvate kinase PKM",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.15384615384615385
+    },
+    {
+     "name": "ASB_3LU6",
+     "cluster": "Serum albumin",
+     "n_kept_pockets": 5,
+     "n_pockets_total": 5,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.23846153846153847
+    },
+    {
+     "name": "ASB_4PFK",
+     "cluster": "ATP-dependent 6-phosphofructokinase",
+     "n_kept_pockets": 6,
+     "n_pockets_total": 6,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.09230769230769231
+    },
+    {
+     "name": "CAS_1DGK",
+     "cluster": "CAS0027",
+     "n_kept_pockets": 6,
+     "n_pockets_total": 6,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.015384615384615385
+    },
+    {
+     "name": "CAS_3I1Y",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.08461538461538462
+    },
+    {
+     "name": "CAS_3KOO",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.07692307692307693
+    },
+    {
+     "name": "CAS_4JAE",
+     "cluster": "CAS0001",
+     "n_kept_pockets": 7,
+     "n_pockets_total": 7,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.03076923076923077
+    },
+    {
+     "name": "CAS_5AK5",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 3,
+     "n_pockets_total": 3,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.1
+    },
+    {
+     "name": "CAS_5AKH",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 3,
+     "n_pockets_total": 3,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.05384615384615385
+    },
+    {
+     "name": "CAS_5AKY",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.06153846153846154
+    },
+    {
+     "name": "CAS_5ALM",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 2,
+     "n_pockets_total": 2,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.1
+    },
+    {
+     "name": "CAS_5ALO",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 3,
+     "n_pockets_total": 3,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.09230769230769231
+    },
+    {
+     "name": "CAS_5ALU",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 5,
+     "n_pockets_total": 5,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.08461538461538462
+    },
+    {
+     "name": "CAS_5ALW",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.1
+    },
+    {
+     "name": "CAS_5AM5",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.07692307692307693
+    },
+    {
+     "name": "CB_1NOK",
+     "cluster": "P00489",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.4153846153846154
+    },
+    {
+     "name": "CB_3GL0",
+     "cluster": "Q5S3I3",
+     "n_kept_pockets": 5,
+     "n_pockets_total": 5,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.17692307692307693
+    },
+    {
+     "name": "CB_4JAX",
+     "cluster": "P33284",
+     "n_kept_pockets": 5,
+     "n_pockets_total": 5,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.23846153846153847
+    },
+    {
+     "name": "CB_5CAE",
+     "cluster": "P53590",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.07692307692307693
+    },
+    {
+     "name": "CB_6AQE",
+     "cluster": "Q9RY20",
+     "n_kept_pockets": 3,
+     "n_pockets_total": 3,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.46923076923076923
+    },
+    {
+     "name": "CB_6KSC",
+     "cluster": "P9WNV1",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.038461538461538464
+    },
+    {
+     "name": "ASB_1GZ3",
+     "cluster": "NAD-dependent malic enzyme, mitochondrial",
+     "n_kept_pockets": 5,
+     "n_pockets_total": 5,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.07692307692307693
+    },
+    {
+     "name": "ASB_1M8P",
+     "cluster": "Sulfate adenylyltransferase",
+     "n_kept_pockets": 5,
+     "n_pockets_total": 5,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.03076923076923077
+    },
+    {
+     "name": "ASB_1UXV",
+     "cluster": "NAD(P)-dependent glyceraldehyde-3-phosphate dehydrogenase",
+     "n_kept_pockets": 5,
+     "n_pockets_total": 5,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.2230769230769231
+    },
+    {
+     "name": "ASB_1W96",
+     "cluster": "Acetyl-CoA carboxylase",
+     "n_kept_pockets": 6,
+     "n_pockets_total": 6,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.038461538461538464
+    },
+    {
+     "name": "ASB_2R1R",
+     "cluster": "Ribonucleoside-diphosphate reductase 1 subunit alpha",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.5538461538461539
+    },
+    {
+     "name": "ASB_2VGI",
+     "cluster": "Pyruvate kinase PKLR",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.08461538461538462
+    },
+    {
+     "name": "ASB_2YLO",
+     "cluster": "Androgen receptor",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.13076923076923078
+    },
+    {
+     "name": "ASB_3HQP",
+     "cluster": "Pyruvate kinase",
+     "n_kept_pockets": 6,
+     "n_pockets_total": 6,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.015384615384615385
+    },
+    {
+     "name": "ASB_3O2M",
+     "cluster": "Mitogen-activated protein kinase 8",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.06153846153846154
+    },
+    {
+     "name": "ASB_3R1R",
+     "cluster": "Ribonucleoside-diphosphate reductase 1 subunit alpha",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.2
+    },
+    {
+     "name": "ASB_4G1N",
+     "cluster": "Pyruvate kinase PKM",
+     "n_kept_pockets": 5,
+     "n_pockets_total": 5,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.1076923076923077
+    },
+    {
+     "name": "ASB_4HYW",
+     "cluster": "Pyruvate kinase 1",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.11538461538461539
+    },
+    {
+     "name": "CAS_1I2D",
+     "cluster": "CAS0010",
+     "n_kept_pockets": 3,
+     "n_pockets_total": 3,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.038461538461538464
+    },
+    {
+     "name": "CAS_1NXG",
+     "cluster": "CAS0001",
+     "n_kept_pockets": 5,
+     "n_pockets_total": 5,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.43846153846153846
+    },
+    {
+     "name": "CAS_3I28",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.06153846153846154
+    },
+    {
+     "name": "CAS_3OTQ",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.05384615384615385
+    },
+    {
+     "name": "CAS_4JAF",
+     "cluster": "CAS0001",
+     "n_kept_pockets": 7,
+     "n_pockets_total": 7,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.08461538461538462
+    },
+    {
+     "name": "CAS_5AKE",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 2,
+     "n_pockets_total": 2,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.09230769230769231
+    },
+    {
+     "name": "CAS_5AKX",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.11538461538461539
+    },
+    {
+     "name": "CAS_5ALD",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 3,
+     "n_pockets_total": 3,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.046153846153846156
+    },
+    {
+     "name": "CAS_5ALH",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 3,
+     "n_pockets_total": 3,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.1076923076923077
+    },
+    {
+     "name": "CAS_5ALN",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.1
+    },
+    {
+     "name": "CAS_5ALV",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 2,
+     "n_pockets_total": 2,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.1076923076923077
+    },
+    {
+     "name": "CAS_5ALY",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 3,
+     "n_pockets_total": 3,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.1076923076923077
+    },
+    {
+     "name": "CAS_5AM4",
+     "cluster": "CAS0002",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.08461538461538462
+    },
+    {
+     "name": "CB_1BZJ",
+     "cluster": "P18031",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.1076923076923077
+    },
+    {
+     "name": "CB_1K0N",
+     "cluster": "O00299",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.07692307692307693
+    },
+    {
+     "name": "CB_5HQ8",
+     "cluster": "Q9H7B4",
+     "n_kept_pockets": 4,
+     "n_pockets_total": 4,
+     "drug_pocket_survived": true,
+     "cell_hit_rate": 0.33076923076923076
+    }
+   ]
+  }
+ },
+ "direct_mechanism": {
+  "true_exception_only_rate": 0.13513513513513514,
+  "true_n": 74,
+  "other_exception_only_rate": 0.03194888178913738,
+  "other_n": 313
+ }
+}
