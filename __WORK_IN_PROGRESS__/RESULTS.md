@@ -11916,3 +11916,60 @@ not a filter — out of this task's scope, a Phase-2 hook).
 propagator call — runs in seconds). **Data**:
 `results/tasks/0331_distal_subset_rerun/distal_subset_rerun.json`. **Full
 detail**: `.ai/tasks/DONE/TASK-0331-rerun-ctqw-negatives-on-the-distal-subset.md`.
+
+## Reproducibility artifact pack: cold container build reproduces the §2 headline number byte-for-byte ([[TASK-0333]], 2026-09-06)
+
+The challenge's reproducibility rubric asks for a container image, a
+pinned environment, deterministic seeds, structured logs, and a README
+with exact run commands — none existed for the research pipeline
+(`__WORK_IN_PROGRESS__/`, as distinct from the deployed web app's own
+Python-3.9/FastAPI stack, unaffected here). All five now do; see
+`REPRODUCIBILITY.md` (repo root) for the full pack.
+
+**The Planned Validation was met twice, not eyeballed**: a real
+`docker build -f Dockerfile.pipeline` + `docker run`, cold, on this
+machine, and independently a clean `python -m venv` install from the
+pinned `pyproject.toml`, both reproduce [[TASK-0318]]'s residualised-
+ceiling AUC — the number [[TASK-0332]] promotes into §2 — to full float
+precision: **0.5948718035160693**, asserted by
+`scripts/verify_reproducibility.py` (exit 0 = exact match).
+
+**A real gap found only because the cold container was actually run, not
+inspected**: the first build failed cleanly on a missing second input
+file (`results/tasks/0305_asbench_detection/asbench_detection.json`,
+read at import time alongside the feature cache) — fixed, disclosed in
+both the Dockerfile and the README, not silently patched.
+
+**A finding, not just packaging**: `__WORK_IN_PROGRESS__/results/` is
+gitignored, and [[TASK-0318]]'s own Phase-A output (the feature cache
+that makes the headline number reproducible without re-fetching 105 PDB
+structures from RCSB) had never been committed. "A cold clone... must
+reproduce" was not actually true until this task force-added it.
+
+**Pinned, closing a gap [[TASK-0110]]/[[TASK-0108]] explicitly flagged
+and deferred**: `allostery`'s own 9 direct dependencies in
+`pyproject.toml`, plus the full 36-package transitive closure in the new
+`requirements-lock.txt`. **Seeding**: `PYTHONHASHSEED=0` set explicitly
+(container `ENV` and the new wrapper script's own subprocess
+environment); `SEEDING_CONVENTION.md` documents the repo-wide rule and
+[[TASK-0319]]'s own real bootstrap-loop pitfall (an `int` `random_state`
+re-seeding instead of advancing across repeated `.sample()` calls) so it
+is not rediscovered. `pocketsweep.py`'s own known-broken seed
+([[TASK-0328]]'s fix) is referenced, not duplicated here, per this
+task's own "owns the requirement, not the fix" scope. **Structured
+logs**: `scripts/run_reproducible_headline.py` wraps the headline run
+externally (the pipeline script itself is untouched) and emits
+`results/tasks/0318_input_space_ceiling/run_log.jsonl`.
+
+**What was not re-executed, disclosed**: TASK-0318's own Phase A
+(re-deriving all 19 features from raw coordinates on 105 structures,
+network-dependent, ~100+ minutes per [[TASK-0310]]'s comparable run) —
+the validated path is Phase B against the already-committed Phase-A
+output, the officially-supported fast path that script already exposes.
+If Phase A itself does not reproduce, that is a finding for
+[[TASK-0318]], not this packaging task, per its own Constraint.
+
+**Scripts**: `scripts/verify_reproducibility.py`,
+`scripts/run_reproducible_headline.py`. **New root files**:
+`Dockerfile.pipeline`, `docker-compose.yml`, `REPRODUCIBILITY.md`.
+**Full detail**: `.ai/tasks/DONE/TASK-0333-reproducibility-artifact-pack.md`.

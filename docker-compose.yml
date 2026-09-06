@@ -1,0 +1,49 @@
+# TASK-0333 -- documents how this repo's five container images relate.
+# Composes/documents the four pre-existing tool images (TASK-0285,
+# TASK-0269); does not rebuild or modify them. Adds the one missing
+# image: the pipeline itself.
+#
+# These are independent, single-purpose images, not a linked
+# multi-container application -- there is no network/volume wiring
+# between them because the pipeline's own headline reproducibility
+# target (TASK-0318's residualised ceiling) does not call fpocket,
+# p2rank, pocketminer, or evoef2 at all (confirmed by reading its
+# imports before writing this file). Run whichever single service you
+# need; `docker compose up` with no args would build all five, which is
+# rarely what you want.
+#
+# Run the one this task's own Planned Validation asks for:
+#   docker compose run --rm pipeline
+# See REPRODUCIBILITY.md for what that reproduces and how to check it.
+
+services:
+  pipeline:
+    build:
+      context: .
+      dockerfile: Dockerfile.pipeline
+    # No volumes by default: the committed feature_cache/ + annotations
+    # baked into the image are sufficient for the fast, offline,
+    # byte-identical reproducibility target. Mount a host results/ dir
+    # if you want the container's own re-computed ceiling_result.json
+    # and run_log.jsonl copied back out:
+    #   docker compose run --rm -v $(pwd)/results_out:/app/__WORK_IN_PROGRESS__/results/tasks/0318_input_space_ceiling pipeline
+
+  fpocket:
+    build:
+      context: __WORK_IN_PROGRESS__/tools/fpocket
+    profiles: ["tools"]  # not built by a plain `docker compose up`
+
+  p2rank:
+    build:
+      context: __WORK_IN_PROGRESS__/tools/p2rank
+    profiles: ["tools"]
+
+  pocketminer:
+    build:
+      context: __WORK_IN_PROGRESS__/tools/pocketminer
+    profiles: ["tools"]
+
+  evoef2:
+    build:
+      context: __WORK_IN_PROGRESS__/tools/evoef2
+    profiles: ["tools"]

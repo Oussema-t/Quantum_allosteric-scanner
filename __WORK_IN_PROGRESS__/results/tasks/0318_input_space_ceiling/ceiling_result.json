@@ -1,0 +1,50 @@
+{
+ "n_structures": 105,
+ "n_proteins": 74,
+ "self_check": {
+  "hop_on_joint": 0.5,
+  "euclid_on_joint": 0.5,
+  "euclid_on_hop_only": 0.5677548690776117
+ },
+ "ctqw_cross_check": {
+  "raw": 0.585032912867206,
+  "resid_joint": 0.5091318411792283
+ },
+ "raw_ceiling": {
+  "mean": 0.655849814229446,
+  "median": 0.7004608294930875
+ },
+ "residual_ceiling": {
+  "mean": 0.5948718035160693,
+  "median": 0.6203067765567766,
+  "wilcoxon_p": 3.323215176925895e-06
+ },
+ "cluster_robust": {
+  "n_rows": 105,
+  "n_clusters": 74,
+  "p_value": 1e-05,
+  "exact": false,
+  "median": 0.12030677655677657
+ },
+ "feature_importance_last_fold": {
+  "degree": 0.019097077967040566,
+  "hop_prox": 0.00020495776208278026,
+  "euclid_prox": 0.11289572081429163,
+  "gnm_msf": 0.0027530812906799264,
+  "gnm_degree": 0.0,
+  "gnm_clust": -0.005542168674698788,
+  "V_B": 0.01706688824262568,
+  "V_T": 0.020745049162165862,
+  "V_R": 0.02119097077967038,
+  "V_C": 0.039941836310760294,
+  "V_M": -0.0019609472372247526,
+  "ctqw": -0.01031713059133088,
+  "chiral_circulation": 0.03402575820523472,
+  "transport": 0.010688270322670012,
+  "spectral_coherence": 0.005941005400914001,
+  "entanglement_entropy": 0.004461985874532615,
+  "prs_low": 0.004932834787425544,
+  "dcc_low": -0.04194709873978675,
+  "persistent_h2_void": -0.02109680099709179
+ }
+}

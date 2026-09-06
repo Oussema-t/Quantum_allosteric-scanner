@@ -1,0 +1,88 @@
+# TASK-0333 -- reproducibility container for the RESEARCH PIPELINE
+# (__WORK_IN_PROGRESS__/, the task0NNN_*.py analysis scripts and the
+# `allostery` package), as distinct from the deployed web app's own
+# container concerns (backend/, Python 3.9, FastAPI -- unaffected by
+# this file, no change to how the live app is run or served).
+#
+# Scope, per this task's own Constraint ("packaging, not science"): this
+# containerizes an EXISTING, already-validated pipeline. It does not
+# rebuild or replace the four external-tool images that already exist
+# (tools/{fpocket,p2rank,pocketminer,evoef2}/Dockerfile, TASK-0285) --
+# those are separate, optional, single-purpose images for tools this
+# specific reproducibility target (TASK-0318's residualised ceiling)
+# does not call. See docker-compose.yml for how all five images relate.
+#
+# Base image pinned to the exact Python version (3.13.4) the pinned
+# dependency set in __WORK_IN_PROGRESS__/pyproject.toml was locked
+# against (__WORK_IN_PROGRESS__/requirements-lock.txt) -- reproducing a
+# number computed under one interpreter version with a different one is
+# not the reproducibility this task is chartered to deliver.
+FROM python:3.13.4-slim
+
+# TASK-0333's own seeding convention (see REPRODUCIBILITY.md): every
+# script in this pipeline that uses a hash-dependent unordered container
+# (a bare `set`/`dict` over strings) without an enclosing `sorted()` is
+# non-deterministic across process restarts unless PYTHONHASHSEED is
+# fixed. Set here so every invocation of this image inherits it -- not
+# left to whoever runs `docker run` to remember.
+ENV PYTHONHASHSEED=0
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# ProDy (and Cython, which builds it) need a C compiler -- python:slim
+# ships neither. Confirmed the hard way: the first build of this image
+# failed with `error: [Errno 2] No such file or directory: 'gcc'`.
+RUN apt-get update && apt-get install -y --no-install-recommends gcc g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install the exact transitive closure first (better layer caching: this
+# layer only invalidates if the lock file itself changes, not on every
+# source edit).
+COPY __WORK_IN_PROGRESS__/requirements-lock.txt /app/requirements-lock.txt
+RUN pip install --no-cache-dir -r /app/requirements-lock.txt
+
+# `backend/data_layer.py` is a real cross-package dependency of the
+# research pipeline (task0318_input_space_ceiling.py imports
+# `backend.data_layer.fetch`) -- confirmed by reading its own imports
+# before writing this Dockerfile, not assumed. It needs only numpy
+# (already installed above) and stdlib, never fastapi/uvicorn, so the
+# backend/ directory is copied but requirements.txt (backend's own,
+# FastAPI-stack) is deliberately NOT installed here -- this container
+# is not the deployed web app.
+COPY backend/ /app/backend/
+COPY __WORK_IN_PROGRESS__/pyproject.toml /app/__WORK_IN_PROGRESS__/pyproject.toml
+COPY __WORK_IN_PROGRESS__/src/ /app/__WORK_IN_PROGRESS__/src/
+RUN pip install --no-cache-dir -e /app/__WORK_IN_PROGRESS__/ --no-deps
+
+COPY __WORK_IN_PROGRESS__/scripts/ /app/__WORK_IN_PROGRESS__/scripts/
+COPY __WORK_IN_PROGRESS__/config/ /app/__WORK_IN_PROGRESS__/config/
+
+# The committed feature cache + the two upstream JSONs the script reads
+# at import time (ASBench annotations, ASBench detection cohort) are the
+# artifact that makes the headline reproducibility target runnable
+# WITHOUT network access to RCSB inside the container (Phase A --
+# re-deriving every feature from raw PDB coordinates on 105 real
+# structures -- is the expensive, network-dependent path; Phase B, the
+# LOPO model fit that actually PRODUCES the reported number, is fully
+# deterministic and offline once Phase A's own output is cached). All
+# three paths confirmed by reading the script's own top-level `open()`
+# calls before writing this Dockerfile, not guessed -- the first build
+# of this image was missing the third one and failed with a clean
+# `FileNotFoundError` naming exactly what was missing. See
+# REPRODUCIBILITY.md for both the fast (this image's default) and full
+# cold-start commands.
+COPY __WORK_IN_PROGRESS__/results/tasks/0318_input_space_ceiling/feature_cache/ \
+     /app/__WORK_IN_PROGRESS__/results/tasks/0318_input_space_ceiling/feature_cache/
+COPY __WORK_IN_PROGRESS__/results/tasks/0304_asbench_casbench/asbench_annotations.json \
+     /app/__WORK_IN_PROGRESS__/results/tasks/0304_asbench_casbench/asbench_annotations.json
+COPY __WORK_IN_PROGRESS__/results/tasks/0305_asbench_detection/asbench_detection.json \
+     /app/__WORK_IN_PROGRESS__/results/tasks/0305_asbench_detection/asbench_detection.json
+
+WORKDIR /app/__WORK_IN_PROGRESS__
+
+# Default command reproduces the one named result this task's own
+# Planned Validation specifies (TASK-0318's residualised ceiling,
+# 0.5948718035160693) and asserts it byte-for-byte -- exits non-zero on
+# any mismatch, never eyeballed.
+CMD ["python3", "scripts/run_reproducible_headline.py"]
