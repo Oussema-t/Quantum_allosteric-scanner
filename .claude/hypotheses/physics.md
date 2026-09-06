@@ -656,6 +656,12 @@ worse where the gate is loose), and raw cavity size remains the best
 available within-gate selector. The predictor gate does the
 discriminating work; the walk adds nothing.
 
+**Related, not the same construction ([[HYP-P25]], 2026-09-06):** a
+different pipeline (PASSer-seeded veto, [[TASK-0327]]) built directly on
+the forward CTQW score (no reverse-seeding, no predictor-consensus gate)
+shows a distinct, gate-independent proximity-anticorrelation mechanism —
+see that hypothesis for the measurement.
+
 **Status, 2026-07-23 (TASK-0140): tested, claim not supported on real data — FAIL,
 consistent with HYP-P10's own FAIL.** Reference script confirmed absent (as flagged
 above); reconstructed independently from this hypothesis's own description + the cited
@@ -1638,3 +1644,96 @@ AUC=1.000 in all 4 structures. Both the efficacy-specific and
 capacity-to-couple readings are rejected on independent data — V_C
 discriminates occupancy/coupling-capacity, a real but more limited claim
 than "predicts allosteric effect."
+
+---
+
+## HYP-P25 · The PASSer-seeded veto pipeline's below-chance pocket pick is a measured proximity-anticorrelation, not an unexplained defect
+
+**Claim.** [[TASK-0327]] found the `allosteric` branch's PASSer-seeded
+CTQW veto pipeline picks the drug pocket at rank 1 *below* both chance
+and a random-order-through-the-same-veto null (8.9%/15.7% vs.
+12.8%/27.3% chance and 18.4%/36.3% random, held-out, pre/post-veto) and
+described this as the walk "actively subtracting value." That phrasing
+treats the shortfall as an unexplained defect. This hypothesis states
+the mechanism directly: the pipeline's own S2 stage is a symmetric CTQW
+scored by proximity/connectivity to the active site (`PIPELINE_DESIGN.md`
+S2: "seed = each pocket residue... target = active site"), physically
+the same construction [[TASK-0320]] measured at rho(ctqw, proximity) =
++0.808 candidate-level. On a cohort restricted to *already-distal*
+truth pockets (S5's own cohort definition: `is_distal` proteins only —
+confirmed below, this is not a sampling artifact of this task's join), a
+proximity-tracking ranker should fail systematically *more* as the truth
+pocket's own distance from the active site grows — a positive-in-sign,
+mechanistic, falsifiable prediction, not a restatement of "it fails."
+
+**Status, 2026-09-06 ([[TASK-0334]]): TESTED — CONFIRMED, and the
+specificity control clears.** Read-only scoring pass over the same
+stored `s14_r{1,2}_k10_h2_*.json` artifacts [[TASK-0327]] used (no walk
+re-run), joined to `allosteric/datasets/pocket_distance.csv` (vendored;
+verified byte-identical between commit `f257789`, used by [[TASK-0331]],
+and current HEAD `8dcc6fa` — `git diff` empty) on the protein-id key,
+100% join coverage (96/96 round 1, 67/67 round 2), and the CSV's own
+49-protein ASBench-distal count reproduced exactly against
+[[TASK-0331]]'s independent derivation (join verified correct before
+trusting anything downstream, per this task's own Planned Validation).
+
+Per-protein pipeline hit-rate (fraction of the 104 cells in which the
+drug pocket is ranked #1) vs. the truth pocket's own distance from the
+active site (`pocket_distance.csv`'s `median_hop`/`median_euclid`,
+computed by the collaborator between annotated active-site and
+annotated truth residues — the same object as this hypothesis's target,
+not re-derived):
+
+| | pre-veto, held-out (n=64) | post-veto, held-out (n=44) | pre-veto, full (n=96) | post-veto, full (n=67) |
+|---|---|---|---|---|
+| pipeline hit-rate vs. distance, Spearman rho | **−0.41** (p=8.1e-4) | **−0.61** (p=9.3e-6) | **−0.40** (p=4.4e-5) | **−0.48** (p=4.1e-5) |
+| PASSer hit vs. distance, Spearman rho (specificity control) | +0.12 (p=0.33, n.s.) | +0.21 (p=0.18, n.s.) | +0.03 (p=0.74, n.s.) | −0.06 (p=0.64, n.s.) |
+| random-arm-2 (closed form) vs. distance, Spearman rho | +0.32 (p=0.014) | +0.31 (p=0.043) | +0.32 (p=0.0013) | +0.42 (p=3.4e-4) |
+
+Negative, significant at every one of 8 combinations tested (2 rounds ×
+2 cohort definitions × 2 distance metrics; only `median_hop` shown
+above, `median_euclid` agrees to within 0.03 of every rho listed —
+full table in the task file). Power stated before interpreting: at
+n=44-96 the minimum detectable |rho| at p=0.05 is 0.20-0.30 — every
+observed pipeline rho clears this by a wide margin, this is not a
+power artifact in the direction [[TASK-0331]]'s addendum warned about.
+
+**The specificity control is what makes this a mechanism claim and not
+just "distal proteins are hard for everyone":** PASSer (the ML-based
+arm-1 baseline, trained without any explicit distance feature) shows
+**no** significant correlation with distance in any of the 8
+combinations (all p > 0.17). Whatever makes distal truth pockets harder
+to find, it acts specifically on the CTQW-ranked arm, consistent with
+that arm's ranking being driven by the same proximity signal [[TASK-0320]]
+already quantified, not by the truth pocket being generically
+harder to characterize. The random-order arm's own positive correlation
+with distance (larger/farther truth pockets are also larger, raising
+its size-driven closed-form hit chance) works *against* the pipeline's
+negative correlation, if anything — the pipeline is failing more on
+distal truth even as its own random-order floor is rising there, which
+makes the anti-correlation harder to produce by chance, not easier.
+
+**What this does not show, stated directly:** the Outcome as filed also
+asked for the distance from the active site to the pocket the pipeline
+*actually* picks on a miss (arm (a)) — `pocket_distance.csv` carries
+only (active site, truth pocket) distances, not (active site, every
+candidate pocket) distances, and getting the latter needs per-pocket
+3D geometry from the raw structures, which this task's own Constraints
+ruled out ("no PDB refetch"). What is shown is the operational form of
+the same mechanism: hit-rate on the truth pocket falls monotonically as
+that pocket's own distance grows, which is what a proximity-tracking
+ranker predicts and a truth-agnostic one (PASSer) does not show.
+[[HYP-P9]]'s own "the predictor gate does the discriminating work; the
+walk adds nothing" finding (a different construction — reverse-seeded
+post-gate ranking, [[TASK-0320]]/[[TASK-0325]]) is a distinct mechanism
+from this one (a proximity gradient in the forward CTQW score itself,
+gate-independent) — related, not duplicated; both are cited from each
+other's text.
+
+**Consequence:** wherever the submission states the veto pipeline
+"subtracts value" or fails without explanation ([[TASK-0327]]'s own Done
+section uses that phrase), it can now cite a measured, signed mechanism
+instead of an unexplained negative — a stronger and more defensible
+claim for [[TASK-0332]]'s submission-corrections pass to use, not yet
+applied there (that task is unclaimed as of this hypothesis's filing;
+this status update is the citable source, not an edit to that task).

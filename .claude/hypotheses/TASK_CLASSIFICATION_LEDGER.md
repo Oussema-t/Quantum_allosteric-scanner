@@ -483,6 +483,7 @@ finding about external SOTA predictors).
 | TASK-0328 | `ENG` | pocketsweep.py seed/null-shape fixes; explicitly self-checked against this same reminder and correctly found no new hypothesis needed (reuses TASK-0158/190/201's existing compactness-null principle). |
 | TASK-0331 | `NO-HYP` (fold candidate — extends HYP-P14) | Distal-only ASBench subset (n=45) cannot detect proximity, its own dominant confound (p=0.89 vs. full-cohort p=0.00035) — the CTQW result there is UNDETERMINED for lack of power, not a sharper negative. Not landed (incremental caveat on an already-well-evidenced claim, not a new mechanism). |
 | TASK-0333 | `ENG` | Reproducibility artifact pack (container, pinned env, seeding convention, structured logs) — pure packaging, no scientific claim. |
+| TASK-0334 | `HYP-P25` (new) | **Landed directly** (2026-09-06) — the veto pipeline's below-chance pocket pick (TASK-0327) is a measured proximity-anticorrelation (Spearman rho −0.40 to −0.61, all p<0.002, n=44-96) with the truth pocket's own distance from the active site, not an unexplained "subtracts value" defect; PASSer (non-distance-based) shows no such correlation (specificity control clears, all p>0.17). Genuinely distinct mechanism from HYP-P9 (reverse-seeded/gated construction) — cross-referenced, not merged. |
 
 ## Disposition — applying the standing rule to every `NO-HYP` draft
 
@@ -603,3 +604,28 @@ the four — TASK-0327's own PASSer citations (Xiao/Tian/Tao, 2 papers +
 publisher/PMC before that task's own Done section was written, and
 HYP-P11's existing ENAQT citations (Mohseni/Rebentrost/Caruso/Viciani)
 were already in place, checked, not found missing.
+
+## Follow-up landing, 2026-09-06 — TASK-0334
+
+Filed by Reviewer thread as a direct follow-up to TASK-0327: turn the
+below-chance pipeline result into a tested mechanism rather than leaving
+it as an unexplained negative. Read-only join of TASK-0327's own stored
+artifacts against `allosteric/datasets/pocket_distance.csv` (vendored;
+verified byte-identical to TASK-0331's source commit). Result: the
+pipeline's per-protein hit rate on the truth pocket anti-correlates with
+that pocket's own distance from the active site (Spearman rho −0.40 to
+−0.61, all 8 combinations tested p<0.002, power checked and cleared at
+n=44-96), while PASSer — the non-distance-based external baseline —
+shows no such correlation (all p>0.17), ruling out "distal proteins are
+just universally harder" as the explanation. Landed as a new hypothesis,
+**`HYP-P25`**, per the standing rule: this is a genuinely different
+mechanism from HYP-P9's "predictor gate does the discriminating work"
+finding (a different construction, reverse-seeded and gated; HYP-P25's
+pipeline is the forward, gate-independent CTQW score) — cross-referenced
+in both directions, not folded together. One Outcome item from the
+filing (distance from active site to the pipeline's actual wrong pick,
+on a miss) could not be measured — `pocket_distance.csv` only carries
+(active site, truth pocket) distances, not per-candidate-pocket
+geometry, and getting the latter needs a PDB refetch the task's own
+Constraints ruled out; stated as an open limitation in HYP-P25's own
+text, not smoothed over. `INDEX.md` regenerated after this landing.

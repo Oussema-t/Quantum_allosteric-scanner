@@ -232,7 +232,7 @@ def main():
         print(f"  {k}: {v}")
     print("  random-closed-form check:", r1_verify)
     print("  source counts:", r1_src)
-    print("  HELD-OUT ONLY (excludes asbench/casbench -- PASSer's own reported training/validation sets):")
+    print(f"  HELD-OUT ONLY (excludes {LEAKY_SOURCES} -- PASSer's own training data; casbench is PASSer's external test set, not excluded):")
     for k, v in r1_held.items():
         print(f"    {k}: {v}")
 
@@ -242,7 +242,7 @@ def main():
         print(f"  {k}: {v}")
     print("  random-closed-form check:", r2_verify)
     print("  source counts:", r2_src)
-    print("  HELD-OUT ONLY (excludes asbench/casbench -- PASSer's own reported training/validation sets):")
+    print(f"  HELD-OUT ONLY (excludes {LEAKY_SOURCES} -- PASSer's own training data; casbench is PASSer's external test set, not excluded):")
     for k, v in r2_held.items():
         print(f"    {k}: {v}")
 
