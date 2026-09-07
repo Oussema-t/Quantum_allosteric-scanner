@@ -132,11 +132,26 @@ chance correction:
 
 | arm | ALL (n≈276 fam) | distal (n=48 fam) |
 |---|---|---|
-| CTQW `hnew\|full\|p_avg` | obs 4, chance 1.25, **excess +2.75** | obs **0**, chance 0.52, **excess −0.52** |
-| fpocket_drug / passer_rank / pocket_size | obs 5, **excess +3.75** | obs 0, excess −0.52 |
+| CTQW `hnew\|full\|p_avg` | obs 4, chance 1.25, **excess +2.75**, 95% CI [1.09,10.24] | obs **0**, chance 0.52, **excess −0.52** |
+| fpocket_drug / passer_rank / pocket_size | obs 5, **excess +3.75**, 95% CI [1.62,11.67] | obs 0, excess −0.52 |
 
-**Three plain classical descriptors beat the CTQW on ALL, and the CTQW clears
-zero distal families.** The README's headline distal margin (19 vs 1) does not
+**Corrected, 2026-09-07 ([[TASK-0338]]) — do not write "classical beats CTQW".**
+4 vs 5 is not a real gap: exact Poisson 95% CIs heavily overlap, and the paired
+exact test on the identical 276 families (McNemar — this is one paired
+comparison, not two independent samples: 1 discordant family total, CTQW-only
+0 / classical-only 1) gives p=1.0. **The exclusion sentence for the draft is
+methodological, not a scoreboard**: under matched multiplicity, a matched
+candidate set and a matched null, *no arm — quantum or classical — clears more
+than 5 of 276 families, and the arms are statistically indistinguishable from
+each other and barely distinguishable from chance.* Exclude the v2 pipeline
+results on that basis (best-of-221-cells selection does not survive
+multiplicity matching, 69→4) — a referee can't turn that argument around the
+way they can turn around "we lost by one family." Full numbers, both the
+original table and the CIs/paired test, are in
+`matched_comparison_result.json`'s own `family_table` and
+`paired_exact_tests_all_split`.
+
+The CTQW clears zero distal families either way. The README's headline distal margin (19 vs 1) does not
 survive matching — 0.52 is less than one family clearing by luck. Do not quote
 226/131, 40/19, the per-family Hamiltonian table, or the distal margin.
 
@@ -164,6 +179,11 @@ explained and should be replaced by the mechanism, not repeated.
 
 1. **[[TASK-0318]]** — residual AUC 0.5949/0.6203, p=3.3×10⁻⁶, 74 clusters,
    0.6017 with proximity deleted. Retitle in the same edit (item 4 above).
+   **The 0.6017 number is now regenerable, not just committed** ([[TASK-0338]]
+   Part B, 2026-09-07): `task0318_input_space_ceiling.py --phase-b-only
+   --exclude-proximity` reproduces the committed
+   `no_proximity_feature_check.json` byte-for-byte from the existing cache —
+   safe to cite as a validated, executable number.
 2. **[[TASK-0334]]/`HYP-P25`** — the mechanism, with its specificity control.
 3. **[[TASK-0331]]/[[HYP-P21]]** — the cohort defect, measured three independent
    ways: distal subset cannot detect proximity itself (p=0.89), ~30% of pairs

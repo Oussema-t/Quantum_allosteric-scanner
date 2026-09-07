@@ -59,6 +59,7 @@ import urllib.request
 import numpy as np
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import dijkstra
+from scipy.stats import binomtest, chi2
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ART = os.path.join(HERE, "upstream_artifacts")
@@ -304,6 +305,32 @@ def null_p5_for_arms(v, arm_orders, rng):
     return out
 
 
+# --------------------------------------------------------------------------
+# TASK-0338 Part A -- the original table had obs/chance/real_excess and
+# NOTHING else: no variance, no CI, no p-value (flagged by the 2026-09-07
+# adversarial audit). Two additions, both computed straight from data already
+# in `table`/`per_family_clear` -- no re-run of the null needed.
+# --------------------------------------------------------------------------
+
+# proximity(-hop) and degree are refetch-scoped to the 80 distal structures
+# ONLY (see classical_pocket_order_refetch's own docstring) -- their "near"
+# split is structurally empty, so their "ALL" duplicated "distal" under a key
+# that implies full coverage. Renamed per TASK-0338 Part A's own outcome.
+REFETCH_SCOPED_ARMS = {"proximity(-hop)", "degree"}
+
+
+def poisson_ci(k, alpha=0.05):
+    """Exact (Garwood 1936) two-sided Poisson CI for a count k, via the
+    chi-squared/Poisson duality -- the standard closed-form used e.g. in
+    R's `poisson.test` and scipy's own docs for exact Poisson intervals.
+    Appropriate here because each arm's family-clearing count is a rare-event
+    count out of a large family pool (4-5 / 276, p<2%), where the Poisson
+    approximation to the underlying binomial is standard and conservative."""
+    lo = 0.5 * chi2.ppf(alpha / 2, 2 * k) if k > 0 else 0.0
+    hi = 0.5 * chi2.ppf(1 - alpha / 2, 2 * (k + 1))
+    return round(float(lo), 2), round(float(hi), 2)
+
+
 def main():
     wmap = load_worklist()
     recs = load_round("r2_minhop2.json.gz")
@@ -372,6 +399,7 @@ def main():
     def family_counts(split, arm):
         obs_clear, chance_clear = 0, 0.0
         n_fam = 0
+        clears = {}  # fam -> bool, for the paired test below
         for fam, names in families_by_split[split].items():
             vals_obs = [per_structure[n]["observed"].get(arm) for n in names]
             vals_obs = [x for x in vals_obs if x is not None]
@@ -380,7 +408,9 @@ def main():
             if not vals_obs:
                 continue
             n_fam += 1
-            if max(vals_obs) >= P5_THRESHOLD:
+            fam_clears = max(vals_obs) >= P5_THRESHOLD
+            clears[fam] = fam_clears
+            if fam_clears:
                 obs_clear += 1
             # family "clears by chance" prob, approximated as 1-prod(1-p_i)
             # over structures in the family (independence across structures
@@ -389,24 +419,60 @@ def main():
             for p in vals_chance:
                 p_none *= (1.0 - p)
             chance_clear += (1.0 - p_none)
-        return n_fam, obs_clear, chance_clear
+        return n_fam, obs_clear, chance_clear, clears
 
     table = {}
+    family_clears_all_split = {}  # arm -> {fam: bool}, ALL split, for pairwise tests
     for arm in all_arms:
         table[arm] = {}
         for split in ("ALL", "near", "distal"):
-            n_fam, obs, chance = family_counts(split, arm)
+            n_fam, obs, chance, clears = family_counts(split, arm)
             table[arm][split] = dict(n_families=n_fam, observed_clearing=obs,
                                       chance_expected_clearing=round(chance, 2),
-                                      real_excess=round(obs - chance, 2))
+                                      real_excess=round(obs - chance, 2),
+                                      poisson_ci95=list(poisson_ci(obs)))
+            if split == "ALL":
+                family_clears_all_split[arm] = clears
+        if arm in REFETCH_SCOPED_ARMS:
+            # This arm's "ALL" duplicated "distal" (near is structurally
+            # empty -- refetch was scoped to the 80 distal structures only).
+            # Renamed so nobody reads it as true full-cohort coverage.
+            table[arm]["distal_only"] = table[arm].pop("ALL")
 
     print("\n=== Family-level P@5>=0.8 clearing, matched metric+multiplicity+null ===")
     for arm in all_arms:
         print(f"\n{arm}:")
-        for split in ("ALL", "near", "distal"):
-            r = table[arm][split]
-            print(f"  {split:7s} n_fam={r['n_families']:4d} observed={r['observed_clearing']:4d} "
-                  f"chance~{r['chance_expected_clearing']:6.2f} real_excess~{r['real_excess']:6.2f}")
+        for split, r in table[arm].items():
+            print(f"  {split:11s} n_fam={r['n_families']:4d} observed={r['observed_clearing']:4d} "
+                  f"chance~{r['chance_expected_clearing']:6.2f} real_excess~{r['real_excess']:6.2f} "
+                  f"poisson_ci95={r['poisson_ci95']}")
+
+    # -------- paired exact test (McNemar/sign, via binomtest), ALL split --
+    # Every arm scores the SAME 276 families, so "CTQW clears 4, fpocket_drug
+    # clears 5" is a paired comparison, not two independent samples -- the
+    # right test is on the DISCORDANT families (one arm clears, the other
+    # doesn't), not on comparing two marginal CIs. Restricted to arm pairs
+    # that both have a real "ALL" (i.e. not REFETCH_SCOPED_ARMS).
+    all_split_arms = [a for a in all_arms if a not in REFETCH_SCOPED_ARMS]
+    ctqw_arms = [a for a in all_split_arms if a.startswith("ctqw:")]
+    classical_arms = [a for a in all_split_arms if not a.startswith("ctqw:")]
+    paired_tests = {}
+    for c_arm in ctqw_arms:
+        for k_arm in classical_arms:
+            fams = set(family_clears_all_split[c_arm]) & set(family_clears_all_split[k_arm])
+            b = sum(1 for f in fams if family_clears_all_split[c_arm][f] and not family_clears_all_split[k_arm][f])
+            c = sum(1 for f in fams if family_clears_all_split[k_arm][f] and not family_clears_all_split[c_arm][f])
+            n_discordant = b + c
+            pval = 1.0 if n_discordant == 0 else float(binomtest(min(b, c), n_discordant, 0.5).pvalue)
+            paired_tests[f"{c_arm} vs {k_arm}"] = dict(
+                n_families_compared=len(fams),
+                ctqw_only_clears=b, classical_only_clears=c, n_discordant=n_discordant,
+                mcnemar_exact_p=round(pval, 4),
+            )
+    print("\n=== Paired exact test (McNemar), ALL split, CTQW vs each classical arm ===")
+    for k, v in paired_tests.items():
+        print(f"  {k}: ctqw-only={v['ctqw_only_clears']} classical-only={v['classical_only_clears']} "
+              f"p={v['mcnemar_exact_p']}")
 
     out = dict(
         validation_cell_reproduction=val1,
@@ -416,6 +482,7 @@ def main():
         n_distal_refetch_failed=n_distal_failed,
         b_null=B_NULL,
         family_table=table,
+        paired_exact_tests_all_split=paired_tests,
     )
     out_path = os.path.join(HERE, "matched_comparison_result.json")
     json.dump(out, open(out_path, "w"), indent=2)

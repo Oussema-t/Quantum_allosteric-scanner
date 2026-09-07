@@ -57,6 +57,14 @@ structures, reassemble per-structure OOF scores. The reported ceiling is
 computed ONLY from out-of-fold predictions -- never in-sample.
 
 Run: ../.venv/bin/python3 scripts/task0318_input_space_ceiling.py [--phase-b-only]
+
+TASK-0338 addendum, 2026-09-07: `no_proximity_feature_check.json` (the number
+promoted into the draft as "0.6017 with proximity features deleted outright")
+was committed with no script that produces it. Added `--exclude-proximity`:
+drops `hop_prox`/`euclid_prox` from the LOPO design matrix (the two features
+of 19 that ARE proximity, not a re-derivation) and writes that same JSON,
+leaving the default `ceiling_result.json` path/content untouched (ADD-only).
+Run: ../.venv/bin/python3 scripts/task0318_input_space_ceiling.py --phase-b-only --exclude-proximity
 """
 from __future__ import annotations
 
@@ -268,9 +276,14 @@ def load_cache():
     return rows
 
 
-def phase_b():
+def phase_b(exclude_proximity: bool = False):
     rows = load_cache()
     print(f"Loaded {len(rows)} cached structures for Phase B\n")
+    kept_features = [f for f in FEATURE_NAMES if not exclude_proximity or f not in ("hop_prox", "euclid_prox")]
+    kept_idx = [FEATURE_NAMES.index(f) for f in kept_features]
+    if exclude_proximity:
+        print(f"--exclude-proximity: fitting on {len(kept_idx)}/{len(FEATURE_NAMES)} features "
+              f"(dropped hop_prox, euclid_prox)\n")
 
     # ---- self-checks (this task's own Constraint: re-run TASK-0315's check) ----
     print("### Self-checks: joint residualisation on [hop, euclid] ###")
@@ -310,7 +323,7 @@ def phase_b():
     print("### Pooling residues across structures for LOPO-by-protein fit ###")
     X_all, y_all, prot_all, struct_all = [], [], [], []
     for si, r in enumerate(rows):
-        X_all.append(r["X"]); y_all.append(r["y"])
+        X_all.append(r["X"][:, kept_idx]); y_all.append(r["y"])
         prot_all.extend([r["protein"]] * len(r["y"]))
         struct_all.extend([si] * len(r["y"]))
     X_all = np.vstack(X_all); y_all = np.concatenate(y_all)
@@ -406,7 +419,7 @@ def phase_b():
         pr = permutation_importance(clf, X_all[last_test_mask], y_all[last_test_mask],
                                      n_repeats=5, random_state=0, scoring="roc_auc")
         imp = pr.importances_mean
-        for name, v in sorted(zip(FEATURE_NAMES, imp), key=lambda t: -t[1])[:8]:
+        for name, v in sorted(zip(kept_features, imp), key=lambda t: -t[1])[:8]:
             print(f"  {name:<22} {v:+.4f}")
 
     print("\n### Verdict, per this task's own pre-registered table ###")
@@ -418,6 +431,19 @@ def phase_b():
         print("  TASK-0147 (structured bath) becomes rational, targeted against this ceiling.")
 
     OUT.mkdir(parents=True, exist_ok=True)
+    if exclude_proximity:
+        # TASK-0338 Part B: reproduce the committed no_proximity_feature_check.json
+        # (same field set that file already has) rather than touching ceiling_result.json.
+        out_path = OUT / "no_proximity_feature_check.json"
+        out_path.write_text(json.dumps(dict(
+            kept_features=kept_features,
+            n=len(raw_aucs),
+            raw_mean=float(raw_aucs.mean()), raw_median=float(np.median(raw_aucs)),
+            resid_mean=float(resid_aucs.mean()), resid_median=float(np.median(resid_aucs)),
+            wilcoxon_p=float(p_wil),
+        ), indent=1))
+        print(f"\nWrote {out_path}")
+        return 0
     (OUT / "ceiling_result.json").write_text(json.dumps(dict(
         n_structures=len(rows), n_proteins=len(proteins),
         self_check=dict(hop_on_joint=float(np.mean(hop_on_joint)),
@@ -428,7 +454,7 @@ def phase_b():
         residual_ceiling=dict(mean=float(resid_aucs.mean()), median=float(np.median(resid_aucs)),
                                wilcoxon_p=float(p_wil)),
         cluster_robust=cluster_result,
-        feature_importance_last_fold=dict(zip(FEATURE_NAMES, [float(x) for x in imp])) if imp is not None else None,
+        feature_importance_last_fold=dict(zip(kept_features, [float(x) for x in imp])) if imp is not None else None,
     ), indent=1))
     print(f"\nWrote {OUT}/ceiling_result.json")
     return 0
@@ -437,10 +463,13 @@ def phase_b():
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--phase-b-only", action="store_true")
+    ap.add_argument("--exclude-proximity", action="store_true",
+                     help="TASK-0338: drop hop_prox/euclid_prox from the LOPO design matrix "
+                          "and write no_proximity_feature_check.json instead of ceiling_result.json")
     args = ap.parse_args()
     if not args.phase_b_only:
         phase_a()
-    return phase_b()
+    return phase_b(exclude_proximity=args.exclude_proximity)
 
 
 if __name__ == "__main__":
