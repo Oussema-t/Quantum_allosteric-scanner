@@ -1,0 +1,35 @@
+name: submission-parity
+
+# TASK-0332's own Constraints: "a pre-commit hook on these two paths was
+# offered and never wired (TASK-0307 follow-up) -- wire it here." A local
+# hook would not catch an edit made directly on GitHub (CLAUDE.md
+# convention 6: the repo owner sometimes edits there), so this runs in CI
+# instead -- the only enforcement point both edit paths pass through.
+#
+# .ai/tools/doc_parity.py already exists and already passes (verified
+# locally before this workflow was added); this only makes that fact
+# durable across every future edit to either twin, not just today's.
+
+on:
+  push:
+    paths:
+      - '__WORK_IN_PROGRESS__/documentation/PHASE1_SUBMISSION_V*.md'
+      - '__WORK_IN_PROGRESS__/documentation/PHASE1_SUBMISSION_V*.html'
+  pull_request:
+    paths:
+      - '__WORK_IN_PROGRESS__/documentation/PHASE1_SUBMISSION_V*.md'
+      - '__WORK_IN_PROGRESS__/documentation/PHASE1_SUBMISSION_V*.html'
+  workflow_dispatch: {}        # allow manual run from the Actions tab
+
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Check PHASE1_SUBMISSION_V1 twins carry the same content
+        run: |
+          python3 .ai/tools/doc_parity.py \
+            __WORK_IN_PROGRESS__/documentation/PHASE1_SUBMISSION_V1.md \
+            __WORK_IN_PROGRESS__/documentation/PHASE1_SUBMISSION_V1.html

@@ -12160,3 +12160,54 @@ exception is Oussema's call.
 `results/tasks/0329_apo_ligand_veto_leakage/{veto_leakage_result.json,
 pocketminer_io/output/}`. **Full detail**:
 `.ai/tasks/DONE/TASK-0329-apo-ligand-veto-leakage-gate.md`.
+
+## Cold-clone verification passes byte-identical; doc_parity wired into CI ([[TASK-0340]], 2026-09-07)
+
+An adversarial submission audit (§3.1) called the reproducibility
+container a BLOCKER: `Dockerfile.pipeline` `COPY`s three paths under
+`__WORK_IN_PROGRESS__/results/`, which `.gitignore` excludes, with no
+negation — the reviewer's own snapshot had no `.git` to check whether
+those paths were force-added anyway. **They are** (`git ls-files`
+confirms all three tracked, [[TASK-0333]]'s `ff0979d`), so no `.gitignore`
+change was needed — but that check alone isn't proof a real clone works,
+so this task ran the actual thing: `git clone` of the `origin` remote
+(the collaborator's fork this project pushes to) to a scratch path
+outside this working tree, `git checkout bartosz`, confirmed 105/105
+`.npz` feature-cache files and both upstream JSONs land from the clone
+alone, then `docker build -f Dockerfile.pipeline` + `docker run` — cold,
+no reuse of anything outside what git tracked:
+
+```
+expected : 0.5948718035160693
+actual   : 0.5948718035160693
+|diff|   : 0.000e+00  (tolerance 1e-09)
+RESULT: PASS -- byte-identical reproduction
+```
+
+[[TASK-0332]]'s draft can now safely state "reproduces the §2 headline
+byte-for-byte from a cold clone" — this is the run that makes that
+sentence true rather than asserted.
+
+**§3.10 — `doc_parity.py` wired into CI**, closing a gap flagged twice
+([[TASK-0307]] follow-up, never wired; the same audit's §3.10 again). New
+`.github/workflows/submission-parity.yml`: runs `doc_parity.py` against
+`PHASE1_SUBMISSION_V1.{md,html}` on any push or pull request touching
+either twin, plus a manual `workflow_dispatch`. CI rather than a local
+pre-commit hook because the repo owner sometimes edits directly on
+GitHub (`CLAUDE.md` convention 6) — a local hook would not fire there;
+`pull_request` is included (beyond the audit's own `push`-only draft) so
+a change proposed via PR is covered too. Confirmed the exact invocation
+the workflow runs passes locally before committing: `parity OK`.
+
+Two more review findings checked and found already resolved, recorded so
+they are not re-filed: §3.6 ("Submission Guidelines not in the repo" —
+they are, `documentation/2026-04-06-Phase-1-Submission-Guidelines-VF.
+{md,pdf}`, an incomplete snapshot); §3.4 (`no_proximity_feature_check.json`
+"does not exist" — it does; the real gap, no script regenerates it, is
+[[TASK-0338]] Part B, not this task's).
+
+**Files**: `.github/workflows/submission-parity.yml` (new). No pipeline
+or Dockerfile changes — everything §3.1 flagged was already correct;
+this task only proved it from a genuinely cold clone rather than leaving
+it asserted. **Full detail**:
+`.ai/tasks/DONE/TASK-0340-cold-clone-verification-and-parity-ci.md`.
