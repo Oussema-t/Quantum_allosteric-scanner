@@ -200,9 +200,9 @@
   <h1>Quantum Allosteric Scanner</h1>
   <p class="standfirst">The benchmark cannot certify what the challenge asks. Here is the measurement that shows it, and the specification for one that could.</p>
   <div class="meta">
-    <span><b>Draft</b> v1 — for adversarial review</span>
-    <span><b>Date</b> 2026-09-02</span>
-    <span><b>Deadline</b> 2026-09-15 · 13 days</span>
+    <span><b>Draft</b> v1</span>
+    <span><b>Date</b> 2026-09-07</span>
+    <span><b>Deadline</b> 2026-09-15 · 8 days</span>
     <span><b>Format</b> 6pp + 3pp appendix + repo link</span>
     <span><b>Markdown twin</b> documentation/PHASE1_SUBMISSION_V1.md</span>
   </div>
@@ -210,18 +210,17 @@
 
 <div class="notice">
   <h4>What this document is</h4>
-  <p>This is the first full draft, restructured onto the seven-item table of contents mandated by Guidelines §4.3 — <em>not</em> the six assessment criteria the previous draft was organised around. A reviewer following the Guidelines would have looked for item 4 in that version and not found it.</p>
+  <p>This draft is restructured onto the seven-item table of contents mandated by Guidelines §4.3 — <em>not</em> the six assessment criteria the previous draft was organised around. A reviewer following the Guidelines would have looked for item 4 in that version and not found it. What is still unfinished is marked as such — we would rather show visible holes than plausible filler.</p>
   <p><strong>Content parity:</strong> <code>documentation/PHASE1_SUBMISSION_V1.html</code> and <code>documentation/PHASE1_SUBMISSION_V1.md</code> carry the same content. Edit both, or regenerate one from the other — two drifting copies of a submission is the failure mode that produced TASK-0307. Verified by <code>.ai/tools/doc_parity.py</code>.</p>
-  <p>It is circulated for <strong>adversarial review</strong>. Section 8 lists the six places we believe this document is weakest and asks you to attack them specifically. What is still unfinished is marked as such — we would rather hand you a draft with visible holes than a draft with plausible filler.</p>
 </div>
 
 <!-- ============ 1 ============ -->
 <section>
-  <div class="num">01</div>
+  <div class="num">1</div>
   <div class="body">
     <h2>Problem Framing<span class="sub">Guidelines §4.1 — "why quantum or quantum-AI methods offer a credible advantage <em>or novel insight</em>"</span></h2>
 
-    <p><strong>We claim the novel insight, not the advantage.</strong> §4.1's formulation is disjunctive, and answering it honestly requires saying which disjunct we are taking. We identified nine candidate quantum-advantage routes for this problem. We closed all nine by measurement, and we report that as our principal finding rather than working around it.</p>
+    <p><strong>What is actually quantum here: a real coherent process used as a modelling language, not an asymptotic advantage — stated directly, not left to infer.</strong> §4.1's formulation is disjunctive; we take the <strong>insight</strong> disjunct, not the advantage one, and say so rather than let a reader assume otherwise. We identified nine candidate quantum-advantage routes for this problem and closed all nine by measurement — our principal finding, not a result we work around.</p>
 
     <p>Cryptic allosteric pockets are the most valuable unexploited target class in small-molecule drug discovery: absent from the apo structure by definition, which is exactly why they are both underexploited and hard to validate. The challenge asks for a method that finds them from apo structure. We implemented that method in full — §4.1's own specification, a continuous-time quantum walk on the residue contact network seeded at the active site — and then did something we believe no competing submission will have done. <strong>We audited whether the benchmark can certify the answer.</strong></p>
 
@@ -236,6 +235,8 @@
     </table></div>
     <p>We stress provenance because it determines what the result means: <strong>we did not select the failing targets.</strong> Two of three came from Table 1; the extension followed §6's own instruction and its named source. The mandated gate has been operating at <strong>1/3 validated coverage</strong>, and the shortfall is systemic across two independent target sources.</p>
 
+    <p><strong>c-Myc (1NKP)</strong> — the challenge's own fourth mandated target, named separately from Table 1 — has no drug-bound structure at all (it is "widely considered an undruggable target," §6), so it cannot carry the apo/holo contrast above by construction, not by omission. What we ran instead: a 4-operator consensus prediction (<code>results/MYC_MAX/</code>), which agrees on one residue (943) across all four operators independent of any labelled pocket. No AUC, no floor, no ceiling — this target has no ground truth to score against, and we report that plainly rather than improvise one.</p>
+
     <h3>Finding 2 — two of the failures are previously unreported</h3>
     <p>An unexplained ligand holds the "apo" pocket open. BCR-ABL1's <code>1OPL</code> carries <code>MYR</code> with <strong>75% overlap</strong> of the scored pocket window; GLUCOKINASE's <code>1V4S</code> carries <code>MRK</code> at <strong>88%</strong>; PKR's <code>7FS3</code> carries an allosteric modulator at <strong>92%</strong>. These are depositions the field uses as apo. They are not apo at the site of interest.</p>
 
@@ -246,7 +247,7 @@
 
 <!-- ============ 2 ============ -->
 <section>
-  <div class="num">02</div>
+  <div class="num">2</div>
   <div class="body">
     <h2>Technical Approach<span class="sub">Guidelines §4.3 item 2 — the <em>proposed</em> method, and the paradigm, stated in terms</span></h2>
 
@@ -255,6 +256,7 @@
     <p>We are <strong>not</strong> proposing to run QAOA on a protein. Our own evidence says the instances are not hard: side-chain packing at pocket scale is a pairwise MRF with treewidth 2–5, solved exactly in 0.001–0.159 s against a naive 10<sup>14</sup> search space. A hard regime exists only at ~50–80 residues, which is most of a domain, not a pocket.</p>
 
     <h3>What we propose to build</h3>
+    <p><strong>This is a benchmark-and-instrument proposal that uses a quantum-inspired method as its first test subject, not a method paper with a benchmark attached.</strong> §1 showed the existing evaluation instrument cannot certify any method's claim on this problem, quantum or classical — so the PoC that actually moves the field is the validated instrument itself, applied first to our own walk because it is the method in hand, and built to apply equally to whatever a competing submission proposes.</p>
     <p><strong>(a) A certifying cryptic-pocket benchmark.</strong> Blind validity rule + endogenous-ligand audit + positive control + measured limit of detection, applied at scale to establish which apo/holo pairs can support a cryptic-pocket claim at all. Our audit found 5 of 7 standard targets fail; the field is using them.</p>
     <p><strong>(b) A screening criterion for the hard regime</strong> — which targets sit where a search-based, possibly quantum-amenable method could matter, decidable <em>from apo alone</em>. Our own data motivates this: coupled search succeeds on 20% of restarts for KRAS_G12C and 0/65 for PTP1B. The two valid targets disagree, and at n=2 we cannot adjudicate.</p>
     <p><strong>(c) The apo vs stripped-holo delta.</strong> Published propensity methods report 89.8%/98.1% on ASBench/CASBench — but those benchmarks evaluate <em>ligand-removed holo</em> conformations, not apo. Measuring the same observable on both isolates precisely the quantity cryptic-pocket prediction depends on. To our knowledge that delta has never been reported.</p>
@@ -270,18 +272,18 @@
 
 <!-- ============ 3 ============ -->
 <section>
-  <div class="num">03</div>
+  <div class="num">3</div>
   <div class="body">
     <h2>Feasibility &amp; Resource Requirements</h2>
     <p>At full resolution — one qubit per residue, the convention every number in this document uses — the register needs <strong>169–704 qubits and 3.3M–124.9M two-qubit gates</strong>. Louvain coarse-graining to a NISQ-plausible 10–15 qubits destroys most of the ranking signal (retention Jaccard 0.00–0.18) without reaching hardware-usable fidelity.</p>
-    <p>Against a real IBM device calibration snapshot, every mandatory target verdicts <strong><code>FAULT_TOLERANT_ONLY</code></strong>, at both resolutions. We checked both hardware routes named in the challenge's own bibliography; neither changes this picture.</p>
+    <p>Against a real IBM device calibration snapshot, every mandatory target verdicts <strong><code>FAULT_TOLERANT_ONLY</code></strong>, at both resolutions. We checked both hardware routes named in the challenge's own bibliography; neither changes this picture. AWS Braket and Classiq access were separately confirmed with the organisers as a Phase-2-only benefit, not required or available for Phase 1 — irrelevant to the verdict above either way, which is set by qubit count and circuit depth, not by choice of NISQ cloud provider.</p>
     <p>This is why the proposal in §2 is classical-plus-quantum-inspired rather than hardware-targeted. The resource picture was measured before the framing was chosen, not after.</p>
   </div>
 </section>
 
 <!-- ============ 4 ============ -->
 <section>
-  <div class="num">04</div>
+  <div class="num">4</div>
   <div class="body">
     <h2>Expected Impact<span class="sub">New section — absent from the previous draft, mandated by §4.3</span></h2>
     <p><strong>What a successful PoC would demonstrate:</strong> that cryptic-pocket method claims in this field are currently uncertifiable, and that a validated instrument changes which published results survive.</p>
@@ -298,7 +300,7 @@
 
 <!-- ============ 5 ============ -->
 <section>
-  <div class="num">05</div>
+  <div class="num">5</div>
   <div class="body">
     <h2>Validation Plan<span class="sub">Guidelines §8 calls this "one of the strongest differentiators"</span></h2>
     <p>Already built and in use, not proposed:</p>
@@ -316,24 +318,51 @@
 
 <!-- ============ 6 ============ -->
 <section>
-  <div class="num">06</div>
+  <div class="num">6</div>
   <div class="body">
     <h2>Hybrid / Cross-Domain Architecture</h2>
     <p>Classical ENM ensemble generation → quantum-inspired transport subroutine → classical verification (fpocket druggability, proximity floor, null). One runner emits all three artefacts, so the connectivity matrix, the site-level hit list and this report cannot disagree.</p>
+    <svg viewBox="0 0 760 190" role="img" aria-label="Pipeline: apo structure to classical ENM ensemble generation to quantum-inspired transport subroutine to classical verification, emitting the connectivity matrix, hit list and this report" style="width:100%;height:auto;font-family:'Source Sans 3',sans-serif;margin:0 0 1.3em">
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--ink-3)"/></marker>
+      </defs>
+      <text x="10" y="16" font-size="12" fill="var(--ink-3)">Apo structure</text>
+      <line x1="10" y1="24" x2="10" y2="55" stroke="var(--ink-3)" marker-end="url(#arrow)"/>
+      <rect x="10" y="60" width="200" height="70" rx="4" fill="var(--surface-2)" stroke="var(--rule-strong)"/>
+      <text x="110" y="88" font-size="13" font-weight="700" text-anchor="middle" fill="var(--ink)">Classical ENM</text>
+      <text x="110" y="106" font-size="13" text-anchor="middle" fill="var(--ink)">ensemble generation</text>
+      <line x1="210" y1="95" x2="255" y2="95" stroke="var(--ink-3)" marker-end="url(#arrow)"/>
+      <rect x="260" y="60" width="220" height="70" rx="4" fill="var(--surface-2)" stroke="var(--rule-strong)"/>
+      <text x="370" y="88" font-size="13" font-weight="700" text-anchor="middle" fill="var(--ink)">Quantum-inspired</text>
+      <text x="370" y="106" font-size="13" text-anchor="middle" fill="var(--ink)">transport subroutine</text>
+      <line x1="480" y1="95" x2="525" y2="95" stroke="var(--ink-3)" marker-end="url(#arrow)"/>
+      <rect x="530" y="45" width="220" height="100" rx="4" fill="var(--surface-2)" stroke="var(--rule-strong)"/>
+      <text x="640" y="70" font-size="13" font-weight="700" text-anchor="middle" fill="var(--ink)">Classical verification</text>
+      <text x="640" y="90" font-size="11.5" text-anchor="middle" fill="var(--ink-2)">fpocket druggability,</text>
+      <text x="640" y="106" font-size="11.5" text-anchor="middle" fill="var(--ink-2)">proximity floor, null</text>
+      <line x1="640" y1="145" x2="640" y2="160" stroke="var(--ink-3)"/>
+      <line x1="530" y1="160" x2="750" y2="160" stroke="var(--ink-3)"/>
+      <line x1="530" y1="160" x2="530" y2="172" stroke="var(--ink-3)" marker-end="url(#arrow)"/>
+      <line x1="640" y1="160" x2="640" y2="172" stroke="var(--ink-3)" marker-end="url(#arrow)"/>
+      <line x1="750" y1="160" x2="750" y2="172" stroke="var(--ink-3)" marker-end="url(#arrow)"/>
+      <text x="530" y="185" font-size="11" text-anchor="middle" fill="var(--ink-3)">Connectivity matrix</text>
+      <text x="640" y="185" font-size="11" text-anchor="middle" fill="var(--ink-3)">Site-level hit list</text>
+      <text x="750" y="185" font-size="11" text-anchor="middle" fill="var(--ink-3)">This report</text>
+    </svg>
     <div class="open">
-      <span class="tag">Open — diagram not yet drawn</span>
-      <p>The architecture figure is unbuilt. Also unresolved and more serious: the shipped demo reports P@5 with no floor, on an operator this register has since falsified. A judge who clicks the demo and then reads this document would find them in contradiction. This must be fixed before submission, not explained.</p>
+      <span class="tag">Confirmed, not hypothetical</span>
+      <p>The shipped demo (<code>main</code> branch) currently reports raw occupation P@5 with no proximity floor, on an observable this register has since found to be ~80% proximity once conditioned (§1, Finding 3). Checked directly against <code>main</code>'s deployed code, not inferred — the <code>keepalive.yml</code> workflow keeps that demo live, so a judge clicking through is not hypothetical either. Reconciling the demo (add the floor, or gate the reported metric behind it) is tracked and not yet done. Disclosed here because a judge finding this contradiction unaided would cost more than naming it does.</p>
     </div>
   </div>
 </section>
 
 <!-- ============ 7 ============ -->
 <section>
-  <div class="num">07</div>
+  <div class="num">7</div>
   <div class="body">
     <h2>Team Capability</h2>
 
-    <p>Three people, spanning the three disciplines this problem actually requires — and one methodological commitment that explains the rest of this document.</p>
+    <p>Three people, spanning the three disciplines this problem actually requires.</p>
 
     <div class="tw"><table>
       <tr><th>Member</th><th>Discipline</th><th>Role here</th></tr>
@@ -342,15 +371,13 @@
       <tr><td><b>Bartosz Chmura</b></td><td>PhD, molecular photophysics · 14 years software quality assurance</td><td class="n">Scope and narrative decisions, verification methodology</td></tr>
     </table></div>
 
-    <h3>Why this team produced a falsification record instead of a results paper</h3>
+    <h3>One methodological commitment explains the rest of this document</h3>
 
-    <p>The appendices report five retractions in seven days, all self-found. That is not an accident of temperament — it is <strong>fourteen years of software quality assurance applied to a scientific register</strong>. QA practice supplies exactly the habits this document is built on: separation of the party that builds from the party that verifies; a negative control alongside every positive one; treating an unreproduced result as unverified rather than probably fine; and the discipline that finding your own defect before release is the cheap case.</p>
+    <p>Five retractions in seven days, all self-found (Appendix B) — not an accident of temperament but <strong>fourteen years of software QA applied to a scientific register</strong>: separation of the party that builds from the party that verifies, a negative control alongside every positive one, and treating an unreproduced result as unverified rather than probably fine. Applied to computational science, that stance produced the audit in §1, which is the submission — a team without it would have shipped the +18.4% quantum figure instead of testing and withdrawing it the same day.</p>
 
-    <p>Applied to computational science, that stance produced the audit in §1 — which is the submission. A team without it would have shipped the +18.4% quantum figure. We published it, tested the confound, and withdrew it the same day.</p>
+    <h3>An explicit adversarial split, and it is measurable</h3>
 
-    <h3>Execution model — an explicit adversarial split</h3>
-
-    <p>The register's ~338 tasks were produced by a role-separated agent workflow, with the reviewing role deliberately assigned to a <em>different model</em> from the implementing one, so that a defect and its audit do not share a failure mode:</p>
+    <p>The register's tasks were produced by a role-separated agent workflow, with the reviewing role deliberately assigned to a <em>different model</em> from the implementing one, so a defect and its audit do not share a failure mode:</p>
 
     <div class="tw"><table>
       <tr><th>Layer</th><th>Model</th><th>Roles</th></tr>
@@ -360,20 +387,16 @@
       <tr><td>Project</td><td class="n">Google Gemini 2.6 Pro</td><td>Critic / Reviewer / Researcher / Brainstormer</td></tr>
     </table></div>
 
-    <p>The separation is the point, and it is measurable: <strong>four of the five retractions in Appendix B were produced by the adversarial reviewer role attacking work the implementing role had just completed and believed correct.</strong> A cross-model critic caught the proximity confound, the missing baseline comparison, the symmetry category error, and the miscalibrated test. This is the same independent-verification principle QA applies to software, transplanted onto a research register — and it is why we are able to hand you a document whose weakest points are listed in §8 rather than discovered by a referee.</p>
+    <p><strong>Four of the five retractions in Appendix B were produced by the adversarial reviewer role attacking work the implementing role had just completed and believed correct</strong> — catching the proximity confound, the missing baseline comparison, a symmetry category error, and a miscalibrated test.</p>
 
-    <h3>Why we disclose this, and open the register with it</h3>
+    <h3>Why we disclose the register, in four sentences</h3>
 
-    <p>We could have described the outcome and omitted the method. We are doing the opposite, and publishing the working repository — including the <code>bartosz</code> branch, where the scientific register actually lives: <strong>338 task files</strong> (310 done), 549 commits, every retraction with its dated commit message stating the error against ourselves, and the internal disagreements and their resolutions left in rather than tidied out.</p>
-
-    <p>Three reasons. <strong>First</strong>, this is a Quantum <em>and AI</em> challenge that permits AI involvement; treating our own use of it as something to minimise would be incoherent. <strong>Second</strong>, the register is too large for one person to review unaided — reviewing it properly will itself likely require AI assistance, and we would rather say so than pretend to a reading nobody performs. <strong>Third</strong>, the traces that matter are visible in it: human-in-the-loop decisions, team disagreement, and how conflicts were resolved. That record is the evidence for every capability claim on this page.</p>
-
-    <p>Science is science, tools are tools, results are results — and the results here are the same results however they were reached. What should be judged is whether the verification was real. We have made that checkable rather than asked to be believed.</p>
+    <p>This is a Quantum <em>and AI</em> challenge that permits AI involvement, so treating our own use of it as something to minimise would be incoherent. The register is too large for one person to review unaided, and we would rather say so than pretend to a reading nobody performs. The traces that matter — human-in-the-loop decisions, team disagreement, how conflicts were resolved — are visible in it, which is the evidence for every capability claim on this page. What should be judged is whether the verification was real, not how it was produced, and we have made that checkable by publishing the working repository rather than asking to be believed.</p>
 
     <div class="tw"><table>
       <tr><th>Artefact</th><th>What is in it</th></tr>
       <tr><td><b>Repository</b><br><code>github.com/Oussema-t/Quantum_allosteric-scanner</code></td><td>The scanner, the pipeline, the analysis scripts behind every number in this document.</td></tr>
-      <tr><td><b>Branch <code>bartosz</code></b></td><td class="n">338 task files · 310 done · 549 commits · the full falsification record</td></tr>
+      <tr><td><b>Branch <code>bartosz</code></b></td><td class="n">359 task files · 328 done · 580 commits (as of <code>ffcfaca</code>, 2026-09-07) · the full falsification record</td></tr>
     </table></div>
 
     <div class="open">
@@ -440,34 +463,10 @@
   </div>
 </section>
 
-<!-- ============ 8 ============ -->
-<section class="plain">
-  <div class="body">
-    <h2>Attack these first</h2>
-    <p>The seven places we think this document is weakest, with our current answers. An adversarial review is more useful aimed than unaimed — if you break something not on this list, that is more valuable still.</p>
-    <div class="attack"><ol>
-      <li><span class="k">01</span><span><span class="q">"What is actually quantum about this?"</span><span class="a">Our single weakest point. We propose a benchmark and a classical readout, and we concede the formalism is classically simulable. Our defence is that §4.1 asks for advantage <em>or insight</em> and we take the second disjunct explicitly. Press on whether an ideation panel will accept that.</span></span></li>
-      <li><span class="k">02</span><span><span class="q">"Your one constructive result is a ceiling from a high-capacity model."</span><span class="a">It now clears both controls — the permuted-label null landed while this draft was being written (0.4993, 0/100 reps, z = 8.69). What remains arguable is that a gradient-boosted combination of features is an <em>upper bound</em>, on a single cohort, and that we have not shown any deployable ranker achieving it. Press there.</span></span></li>
-      <li><span class="k">03</span><span><span class="q">"You flip-flopped on multimodality twice in three days."</span><span class="a">True. Both reversals were self-caught, and the second found that both available tests are miscalibrated. Ask whether that reads as rigour or as instability — we genuinely do not know how it lands on a referee.</span></span></li>
-      <li><span class="k">04</span><span><span class="q">"How much of this is independently reproduced?"</span><span class="a">Honestly: one result. An independent from-scratch harness reproduced the proximity confound to four decimal places. Most of the rest is single-implementation.</span></span></li>
-      <li><span class="k">05</span><span><span class="q">"No multiplicity control across ~50 analyses."</span><span class="a">Conceded in Appendix C. No survivor below p = 0.019. Ask whether disclosing this helps us or simply hands a referee the weapon.</span></span></li>
-      <li><span class="k">06</span><span><span class="q">"Is a certifying benchmark a Phase-2 deliverable, or a paper?"</span><span class="a">Unresolved, and the most consequential strategic question here. If the panel wants a quantum PoC, our proposal may be well-argued and off-brief.</span></span></li>
-      <li><span class="k">07</span><span><span class="q">"Heavy AI involvement — won't a panel discount this as machine-generated?"</span><span class="a"><b>Decided: we disclose fully and open the register.</b> The counter-argument is that in a Quantum-and-AI challenge that permits AI use, hiding it would be incoherent — and that what should be judged is whether the verification was real, which we have made checkable. Challenge the decision if you disagree; it is deliberate, not an oversight. The narrower version worth pressing: does opening 338 task files help a reviewer, or simply give them 338 places to find something we missed?</span></span></li>
-    </ol></div>
-
-    <h3>What we specifically want from this round</h3>
-    <ul>
-      <li>A ruling on <strong>01</strong> and <strong>06</strong> — both are positioning calls, not technical ones, and they determine whether the rest of the document is the right document. <strong>07</strong> is decided; argue us out of it if you can.</li>
-      <li>Whether Appendix C should ship. It is unusual to volunteer this, and we may be wrong that honesty outscores exposure.</li>
-      <li>Anything in Appendix A you think we have graded too generously. The <span class="chip c-qual">Qualified</span> rows are where we are least confident of our own calibration.</li>
-    </ul>
-  </div>
-</section>
-
 <div class="foot">
   Team AuraQu · Cleveland Clinic Quantum Allosteric Scanner<br>
-  Draft v1 · 2026-09-02 · restructured onto Guidelines §4.3's seven-item ToC<br>
-  Open: §6 architecture diagram · two team biographies · demo/report consistency · multiplicity budget across the register
+  Draft v1 · 2026-09-07 · restructured onto Guidelines §4.3's seven-item ToC<br>
+  Open: two team biographies · demo/report consistency (§6) · multiplicity budget across the register
 </div>
 
 </div>

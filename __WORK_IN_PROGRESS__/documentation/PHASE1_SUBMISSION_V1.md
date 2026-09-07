@@ -7,9 +7,9 @@
 
 | | |
 |---|---|
-| **Draft** | v1 — for adversarial review |
-| **Date** | 2026-09-02 |
-| **Deadline** | 2026-09-15 · 13 days |
+| **Draft** | v1 |
+| **Date** | 2026-09-07 |
+| **Deadline** | 2026-09-15 · 8 days |
 | **Format** | 6pp + 3pp appendix + repo link |
 | **HTML twin** | `documentation/PHASE1_SUBMISSION_V1.html` — published at https://claude.ai/code/artifact/c603f27a-ce03-47d5-b236-97719048263a |
 
@@ -22,15 +22,11 @@
 
 ## What this document is
 
-This is the first full draft, restructured onto the seven-item table of contents
-mandated by Guidelines §4.3 — *not* the six assessment criteria the previous
-draft was organised around. A reviewer following the Guidelines would have looked
-for item 4 in that version and not found it.
-
-It is circulated for **adversarial review**. Section 8 lists the seven places we
-believe this document is weakest and asks you to attack them specifically. What
-is still unfinished is marked as such — we would rather hand you a draft with
-visible holes than a draft with plausible filler.
+This draft is restructured onto the seven-item table of contents mandated by
+Guidelines §4.3 — *not* the six assessment criteria the previous draft was
+organised around. A reviewer following the Guidelines would have looked for
+item 4 in that version and not found it. What is still unfinished is marked as
+such — we would rather show visible holes than plausible filler.
 
 ---
 
@@ -39,11 +35,12 @@ visible holes than a draft with plausible filler.
 *Guidelines §4.1 — "why quantum or quantum-AI methods offer a credible advantage
 **or novel insight**"*
 
-**We claim the novel insight, not the advantage.** §4.1's formulation is
-disjunctive, and answering it honestly requires saying which disjunct we are
-taking. We identified nine candidate quantum-advantage routes for this problem.
-We closed all nine by measurement, and we report that as our principal finding
-rather than working around it.
+**What is actually quantum here: a real coherent process used as a modelling
+language, not an asymptotic advantage — stated directly, not left to infer.**
+§4.1's formulation is disjunctive; we take the **insight** disjunct, not the
+advantage one, and say so rather than let a reader assume otherwise. We
+identified nine candidate quantum-advantage routes for this problem and closed
+all nine by measurement — our principal finding, not a result we work around.
 
 Cryptic allosteric pockets are the most valuable unexploited target class in
 small-molecule drug discovery: absent from the apo structure by definition, which
@@ -72,6 +69,15 @@ select the failing targets.** Two of three came from Table 1; the extension
 followed §6's own instruction and its named source. The mandated gate has been
 operating at **1/3 validated coverage**, and the shortfall is systemic across two
 independent target sources.
+
+**c-Myc (1NKP)** — the challenge's own fourth mandated target, named separately
+from Table 1 — has no drug-bound structure at all (it is "widely considered an
+undruggable target," §6), so it cannot carry the apo/holo contrast above by
+construction, not by omission. What we ran instead: a 4-operator consensus
+prediction (`results/MYC_MAX/`), which agrees on one residue (943) across all
+four operators independent of any labelled pocket. No AUC, no floor, no
+ceiling — this target has no ground truth to score against, and we report that
+plainly rather than improvise one.
 
 ### Finding 2 — two of the failures are previously unreported
 
@@ -113,6 +119,14 @@ space. A hard regime exists only at ~50–80 residues, which is most of a domain
 not a pocket.
 
 ### What we propose to build
+
+**This is a benchmark-and-instrument proposal that uses a quantum-inspired
+method as its first test subject, not a method paper with a benchmark
+attached.** §1 showed the existing evaluation instrument cannot certify any
+method's claim on this problem, quantum or classical — so the PoC that
+actually moves the field is the validated instrument itself, applied first to
+our own walk because it is the method in hand, and built to apply equally to
+whatever a competing submission proposes.
 
 **(a) A certifying cryptic-pocket benchmark.** Blind validity rule + endogenous-
 ligand audit + positive control + measured limit of detection, applied at scale to
@@ -162,7 +176,11 @@ fidelity.
 
 Against a real IBM device calibration snapshot, every mandatory target verdicts
 **`FAULT_TOLERANT_ONLY`**, at both resolutions. We checked both hardware routes
-named in the challenge's own bibliography; neither changes this picture.
+named in the challenge's own bibliography; neither changes this picture. AWS
+Braket and Classiq access were separately confirmed with the organisers as a
+Phase-2-only benefit, not required or available for Phase 1 — irrelevant to
+the verdict above either way, which is set by qubit count and circuit depth,
+not by choice of NISQ cloud provider.
 
 This is why the proposal in §2 is classical-plus-quantum-inspired rather than
 hardware-targeted. The resource picture was measured before the framing was
@@ -229,18 +247,36 @@ classical verification (fpocket druggability, proximity floor, null). One runner
 emits all three artefacts, so the connectivity matrix, the site-level hit list and
 this report cannot disagree.
 
-> **OPEN — diagram not yet drawn.** The architecture figure is unbuilt. Also
-> unresolved and more serious: the shipped demo reports P@5 with no floor, on an
-> operator this register has since falsified. A judge who clicks the demo and then
-> reads this document would find them in contradiction. This must be fixed before
-> submission, not explained.
+```
+ Apo structure                                                Three artefacts,
+      │                                                        one runner
+      ▼
+┌─────────────────┐    ┌──────────────────────┐    ┌───────────────────────┐
+│ Classical ENM    │───▶│ Quantum-inspired      │───▶│ Classical verification │
+│ ensemble         │    │ transport subroutine  │    │ (fpocket druggability, │
+│ generation       │    │ (continuous-time walk)│    │  proximity floor, null)│
+└─────────────────┘    └──────────────────────┘    └───────────┬───────────┘
+                                                                 │
+                                    ┌────────────────┬───────────┴──────────┐
+                                    ▼                ▼                      ▼
+                           Connectivity matrix   Site-level hit list   This report
+```
+
+> **Confirmed, not hypothetical: the shipped demo (`main` branch) currently
+> reports raw occupation P@5 with no proximity floor, on an observable this
+> register has since found to be ~80% proximity once conditioned (§1, Finding
+> 3).** Checked directly against `main`'s deployed code, not inferred — the
+> `keepalive.yml` workflow keeps that demo live, so a judge clicking through
+> is not hypothetical either. Reconciling the demo (add the floor, or gate the
+> reported metric behind it) is tracked and not yet done. Disclosed here
+> because a judge finding this contradiction unaided would cost more than
+> naming it does.
 
 ---
 
 ## 7. Team Capability
 
-Three people, spanning the three disciplines this problem actually requires — and
-one methodological commitment that explains the rest of this document.
+Three people, spanning the three disciplines this problem actually requires.
 
 | Member | Discipline | Role here |
 |---|---|---|
@@ -248,25 +284,22 @@ one methodological commitment that explains the rest of this document.
 | **Berke Turkaydin** | Molecular biology | Target selection, structural validity, biological interpretation |
 | **Bartosz Chmura** | PhD, molecular photophysics · 14 years software quality assurance | Scope and narrative decisions, verification methodology |
 
-### Why this team produced a falsification record instead of a results paper
+### One methodological commitment explains the rest of this document
 
-The appendices report five retractions in seven days, all self-found. That is not
-an accident of temperament — it is **fourteen years of software quality assurance
-applied to a scientific register**. QA practice supplies exactly the habits this
-document is built on: separation of the party that builds from the party that
-verifies; a negative control alongside every positive one; treating an
-unreproduced result as unverified rather than probably fine; and the discipline
-that finding your own defect before release is the cheap case.
+Five retractions in seven days, all self-found (Appendix B) — not an accident of
+temperament but **fourteen years of software QA applied to a scientific
+register**: separation of the party that builds from the party that verifies, a
+negative control alongside every positive one, and treating an unreproduced
+result as unverified rather than probably fine. Applied to computational
+science, that stance produced the audit in §1, which is the submission — a team
+without it would have shipped the +18.4% quantum figure instead of testing and
+withdrawing it the same day.
 
-Applied to computational science, that stance produced the audit in §1 — which is
-the submission. A team without it would have shipped the +18.4% quantum figure. We
-published it, tested the confound, and withdrew it the same day.
+### An explicit adversarial split, and it is measurable
 
-### Execution model — an explicit adversarial split
-
-The register's ~338 tasks were produced by a role-separated agent workflow, with
-the reviewing role deliberately assigned to a *different model* from the
-implementing one, so that a defect and its audit do not share a failure mode:
+The register's tasks were produced by a role-separated agent workflow, with the
+reviewing role deliberately assigned to a *different model* from the
+implementing one, so a defect and its audit do not share a failure mode:
 
 | Layer | Model | Roles |
 |---|---|---|
@@ -275,42 +308,27 @@ implementing one, so that a defect and its audit do not share a failure mode:
 | Project | Claude Opus | **Adversarial Reviewer / Critic** |
 | Project | Google Gemini 2.6 Pro | Critic / Reviewer / Researcher / Brainstormer |
 
-The separation is the point, and it is measurable: **four of the five retractions
-in Appendix B were produced by the adversarial reviewer role attacking work the
-implementing role had just completed and believed correct.** A cross-model critic
-caught the proximity confound, the missing baseline comparison, the symmetry
-category error, and the miscalibrated test. This is the same
-independent-verification principle QA applies to software, transplanted onto a
-research register — and it is why we are able to hand you a document whose weakest
-points are listed in §8 rather than discovered by a referee.
+**Four of the five retractions in Appendix B were produced by the adversarial
+reviewer role attacking work the implementing role had just completed and
+believed correct** — catching the proximity confound, the missing baseline
+comparison, a symmetry category error, and a miscalibrated test.
 
-### Why we disclose this, and open the register with it
+### Why we disclose the register, in four sentences
 
-We could have described the outcome and omitted the method. We are doing the
-opposite, and publishing the working repository — including the `bartosz` branch,
-where the scientific register actually lives: **338 task files** (310 done), 549
-commits, every retraction with its dated commit message stating the error against
-ourselves, and the internal disagreements and their resolutions left in rather
-than tidied out.
-
-Three reasons. **First**, this is a Quantum *and AI* challenge that permits AI
-involvement; treating our own use of it as something to minimise would be
-incoherent. **Second**, the register is too large for one person to review
-unaided — reviewing it properly will itself likely require AI assistance, and we
-would rather say so than pretend to a reading nobody performs. **Third**, the
-traces that matter are visible in it: human-in-the-loop decisions, team
-disagreement, and how conflicts were resolved. That record is the evidence for
-every capability claim on this page.
-
-Science is science, tools are tools, results are results — and the results here
-are the same results however they were reached. What should be judged is whether
-the verification was real. We have made that checkable rather than asked to be
-believed.
+This is a Quantum *and AI* challenge that permits AI involvement, so treating
+our own use of it as something to minimise would be incoherent. The register is
+too large for one person to review unaided, and we would rather say so than
+pretend to a reading nobody performs. The traces that matter — human-in-the-loop
+decisions, team disagreement, how conflicts were resolved — are visible in it,
+which is the evidence for every capability claim on this page. What should be
+judged is whether the verification was real, not how it was produced, and we
+have made that checkable by publishing the working repository rather than
+asking to be believed.
 
 | Artefact | What is in it |
 |---|---|
 | **Repository** `github.com/Oussema-t/Quantum_allosteric-scanner` | The scanner, the pipeline, the analysis scripts behind every number in this document. |
-| **Branch `bartosz`** | 338 task files · 310 done · 549 commits · the full falsification record |
+| **Branch `bartosz`** | 359 task files · 328 done · 580 commits (as of `ffcfaca`, 2026-09-07) · the full falsification record |
 
 > **INCOMPLETE — awaiting detail.** Oussema and Berke's specific backgrounds and
 > prior work are placeholders above pending their own text. They are named with
@@ -386,61 +404,6 @@ These are findable by any referee reading our repository, so we name them first.
 
 ---
 
-## 8. Attack these first
-
-The seven places we think this document is weakest, with our current answers. An
-adversarial review is more useful aimed than unaimed — if you break something not
-on this list, that is more valuable still.
-
-**01 — "What is actually quantum about this?"**
-Our single weakest point. We propose a benchmark and a classical readout, and we
-concede the formalism is classically simulable. Our defence is that §4.1 asks for
-advantage *or insight* and we take the second disjunct explicitly. Press on
-whether an ideation panel will accept that.
-
-**02 — "Your one constructive result is a ceiling from a high-capacity model."**
-It now clears both controls — the permuted-label null landed while this draft was
-being written (0.4993, 0/100 reps, z = 8.69). What remains arguable is that a
-gradient-boosted combination of features is an *upper bound*, on a single cohort,
-and that we have not shown any deployable ranker achieving it. Press there.
-
-**03 — "You flip-flopped on multimodality twice in three days."**
-True. Both reversals were self-caught, and the second found that both available
-tests are miscalibrated. Ask whether that reads as rigour or as instability — we
-genuinely do not know how it lands on a referee.
-
-**04 — "How much of this is independently reproduced?"**
-Honestly: one result. An independent from-scratch harness reproduced the proximity
-confound to four decimal places. Most of the rest is single-implementation.
-
-**05 — "No multiplicity control across ~50 analyses."**
-Conceded in Appendix C. No survivor below p = 0.019. Ask whether disclosing this
-helps us or simply hands a referee the weapon.
-
-**06 — "Is a certifying benchmark a Phase-2 deliverable, or a paper?"**
-Unresolved, and the most consequential strategic question here. If the panel wants
-a quantum PoC, our proposal may be well-argued and off-brief.
-
-**07 — "Heavy AI involvement — won't a panel discount this as machine-generated?"**
-**Decided: we disclose fully and open the register.** The counter-argument is that
-in a Quantum-and-AI challenge that permits AI use, hiding it would be incoherent —
-and that what should be judged is whether the verification was real, which we have
-made checkable. Challenge the decision if you disagree; it is deliberate, not an
-oversight. The narrower version worth pressing: does opening 338 task files help a
-reviewer, or simply give them 338 places to find something we missed?
-
-### What we specifically want from this round
-
-- A ruling on **01** and **06** — both are positioning calls, not technical ones,
-  and they determine whether the rest of the document is the right document. **07**
-  is decided; argue us out of it if you can.
-- Whether Appendix C should ship. It is unusual to volunteer this, and we may be
-  wrong that honesty outscores exposure.
-- Anything in Appendix A you think we have graded too generously. The QUALIFIED
-  rows are where we are least confident of our own calibration.
-
----
-
 *Team AuraQu · Cleveland Clinic Quantum Allosteric Scanner*
-*Draft v1 · 2026-09-02 · restructured onto Guidelines §4.3's seven-item ToC*
-*Open: §6 architecture diagram · two team biographies · demo/report consistency · multiplicity budget across the register*
+*Draft v1 · 2026-09-07 · restructured onto Guidelines §4.3's seven-item ToC*
+*Open: two team biographies · demo/report consistency (§6) · multiplicity budget across the register*

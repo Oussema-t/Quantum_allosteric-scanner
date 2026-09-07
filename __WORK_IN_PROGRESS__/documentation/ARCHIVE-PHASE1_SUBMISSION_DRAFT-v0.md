@@ -3,6 +3,18 @@
 > file is also ~30 tasks stale (last substantive edit 2026-08-26). The current draft is
 > **`PHASE1_SUBMISSION_V1.md`** in this directory, with an HTML twin of identical content.
 > Kept for history — several sections below were carried into v1 largely intact.
+>
+> **Renamed 2026-09-07 ([[TASK-0339]])**, from `PHASE1_SUBMISSION_DRAFT.md` — two files
+> both named like the live submission, eight days from deadline, is the [[TASK-0307]]
+> failure mode; existing line-number citations into the old filename across ~20 Done
+> task files were not updated (a deliberate scope decision, disclosed not silent —
+> those are frozen historical prose, not executable references).
+>
+> **Known residual error below, not fixed here**: the "unexplained ligand" framing
+> (BCR-ABL1's `1OPL`/`MYR`) is inverted — `MYR` is myristate, the *physiological*
+> mechanism, not an unexplained contaminant ([[TASK-0332]] item 1, citing Nagar et al.
+> 2003). Left as originally written, per this banner's own "kept for history, do not
+> edit" rule; do not cite this specific claim from here regardless.
 
 # Quantum Allosteric Scanner — Phase 1 Proposal (DRAFT v0.1)
 

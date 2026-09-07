@@ -12211,3 +12211,114 @@ or Dockerfile changes — everything §3.1 flagged was already correct;
 this task only proved it from a genuinely cold clone rather than leaving
 it asserted. **Full detail**:
 `.ai/tasks/DONE/TASK-0340-cold-clone-verification-and-parity-ci.md`.
+
+## "Classical beats CTQW" was never a real gap, and TASK-0318's 0.6017 is now regenerable ([[TASK-0338]], 2026-09-07)
+
+Two uncertainty gaps flagged by the 2026-09-07 adversarial audit, both on
+numbers feeding [[TASK-0332]]'s §2.
+
+**Part A.** [[TASK-0336]]'s own family-clearing table (CTQW 4/276, three
+classical descriptors 5/276) had `real_excess = obs - chance` and nothing
+else — no variance, no CI, no p-value. Added, without re-running the null
+(reused the same per-structure null draws already in
+`matched_comparison.py`): exact Poisson 95% CIs on every arm/split
+(`[1.09,10.24]` for CTQW vs `[1.62,11.67]` for the classical arms — heavily
+overlapping), and a paired exact test (McNemar — the correct test here,
+since every arm scores the identical 276 families, so this is one paired
+comparison, not two independent samples) on the discordant families only:
+1 discordant family total (classical clears it, CTQW doesn't), **p = 1.0**.
+**The honest reading is not "classical beats CTQW"**: under matched
+multiplicity, a matched candidate set and a matched null, no arm — quantum
+or classical — clears more than 5 of 276 families, and the arms are
+statistically indistinguishable from each other and barely distinguishable
+from chance. [[HYP-P13]]'s own status was updated with this correction
+(2026-09-07) rather than left standing on the unqualified 4-vs-5 framing;
+[[TASK-0332]]'s draft exclusion sentence was rewritten to the methodological
+argument (multiplicity, not scoreboard) so a referee can't turn "we lost by
+one family" around.
+
+Same pass fixed a labeling defect in the same artifact: `degree` and
+`proximity(-hop)` are refetch-scoped to the 80 distal structures only (an
+explicit, disclosed scope reduction — see the script's own docstring), but
+emitted an `"ALL"` key duplicating `"distal"`'s own 48-family count, which
+reads as full-cohort coverage. Renamed to `"distal_only"` for those two arms
+in `matched_comparison_result.json`; every other arm's real `"ALL"` is
+unchanged.
+
+**Part B.** [[TASK-0318]]'s `no_proximity_feature_check.json` (the 0.6017
+number promoted into the draft as "proximity deleted outright, still
+holds") is committed but no script in `scripts/` produced it — an earlier
+review's claim that the *file* was missing was itself wrong (it is present
+and committed; the review worked from a stale snapshot), but the defect
+underneath was real: no executable provenance. Added `--exclude-proximity`
+to `task0318_input_space_ceiling.py` (drops `hop_prox`/`euclid_prox` from
+the 19-feature LOPO design matrix — the two features that ARE proximity,
+nothing re-derived) and ran it against the existing committed feature cache
+(no PDB refetch, ~2 minutes): **reproduces the committed JSON byte-for-byte.**
+`--phase-b-only` (no `--exclude-proximity`) still writes the original
+`ceiling_result.json` unchanged, confirmed identical to the pre-edit file —
+this was ADD-only, not a rewrite of the existing path.
+
+**Files**: `__WORK_IN_PROGRESS__/scripts/task0318_input_space_ceiling.py`
+(added `--exclude-proximity`); `.../0336_matched_multiplicity_classical_comparison/matched_comparison.py`
+(added `poisson_ci`, paired McNemar test, `distal_only` rename);
+`matched_comparison_result.json` (regenerated — every original number
+byte-identical, confirmed by direct comparison before/after; new
+`poisson_ci95` and `paired_exact_tests_all_split` fields only).
+**Full detail**: `.ai/tasks/DONE/TASK-0338-uncertainty-on-the-two-remaining-section-2-inputs.md`.
+
+## Submission hygiene: ToC cut to 7 items, page budget rebalanced, three stale/missing facts fixed ([[TASK-0339]], 2026-09-07)
+
+Filed to land **before** [[TASK-0332]]'s v2 drafting starts, from the same
+2026-09-07 adversarial audit. Six fixes to `documentation/PHASE1_SUBMISSION_V1.{md,html}`:
+
+1. **§8 "Attack these first" + reviewer front-matter moved out** to new
+   `documentation/REVIEW_TARGETS.md` (not shipped) — the document now has
+   exactly the 7 items Guidelines §4.3 mandates, not 8. Its two open
+   questions (01 "what is quantum here", 06 "benchmark or paper") are now
+   answered directly in §1/§2 — **06's answer is a synthesis of content
+   already elsewhere in the document, not a new strategic decision**,
+   flagged in `REVIEW_TARGETS.md` for human sign-off before freeze since the
+   audit itself called it "the most consequential strategic question here."
+2. **Page budget**: §7 cut 709→522 words (26%), funding required additions
+   to §1-3. Net effect on the ~2233-word body: **+47 words (+2%)**, stated
+   precisely rather than claimed as a clean win; whole-document total fell
+   4044→3653 (**-10%**) once front-matter/§8 (never counted against the
+   6pp/3pp allowance) is removed. No PDF renderer available in this
+   environment — word-count used as the same proxy the source audit itself
+   used, disclosed, real render recommended before freeze.
+3. **c-Myc (1NKP)** — absent from V1 despite being a mandated minimum-set
+   target with real work already done (`results/MYC_MAX/`) — now has a
+   real paragraph in §1. **AWS Braket/Classiq** — the task's own suggested
+   sentence ("we evaluated the provided infrastructure") would have been
+   false (checked against [[TASK-0182]]/[[TASK-0221]]: neither was ever
+   run, both confirmed Phase-2-only by the organisers) — wrote the accurate
+   sentence instead.
+4. **`PHASE1_SUBMISSION_DRAFT.md`** (still carrying the inverted "MYR
+   unexplained ligand" claim) renamed to `ARCHIVE-PHASE1_SUBMISSION_DRAFT-v0.md`
+   — already had a superseded banner (mitigating "read as current"); the
+   rename addresses the audit's actual concern (two similarly-named files,
+   filename pattern-matching). ~20 Done tasks' historical line-references to
+   the old name left unfixed — frozen prose, disclosed, not silent.
+5. **§6** — drew a real pipeline diagram (ASCII/`.md`, inline SVG/`.html`).
+   Kept the demo/report P@5 contradiction disclosure, but verified it live
+   against `origin/main` first (still true: no floor anywhere in
+   `backend`/`frontend`) rather than trusting the source audit's own
+   no-`.git`-snapshot inference — reduced from the section's only content
+   to a scoped note beside the new diagram. Did not attempt to patch
+   `main`'s backend (a live-branch engineering change, [[TASK-0184]]'s own
+   tracked TODO, outside this task's scope).
+6. **§7 repo stats** — 338/310/549 → 359/328/580, pinned to `ffcfaca`,
+   2026-09-07.
+
+**Found and fixed a real regression in its own edit, not just re-ran a
+clean check**: deleting §8 removed the `.md`'s only source of literal
+"03"–"06" digit tokens, which had been coincidentally satisfying
+`doc_parity.py`'s comparison against the `.html`'s decorative zero-padded
+section badges (`<div class="num">03</div>` etc.) — a false pass, not a
+real content match. Confirmed via `git stash` that parity was genuinely
+clean before this task's edits (not a pre-existing bug), then fixed at the
+root — dropped the leading zero from all 7 badges — rather than padding
+new filler text into the `.md` to manufacture a match.
+
+**Full detail**: `.ai/tasks/DONE/TASK-0339-submission-hygiene-and-page-budget.md`.
