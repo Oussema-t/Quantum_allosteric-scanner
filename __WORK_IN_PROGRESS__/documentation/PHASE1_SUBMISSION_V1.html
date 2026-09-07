@@ -375,7 +375,7 @@
   <div class="body">
     <h2>Team Capability</h2>
 
-    <p>Three people, spanning the three disciplines this problem actually requires.</p>
+    <p>Three people, spanning the disciplines this problem requires.</p>
 
     <div class="tw"><table>
       <tr><th>Member</th><th>Discipline</th><th>Role here</th></tr>
@@ -384,37 +384,9 @@
       <tr><td><b>Bartosz Chmura</b></td><td>PhD, molecular photophysics · 14 years software quality assurance</td><td class="n">Scope and narrative decisions, verification methodology</td></tr>
     </table></div>
 
-    <h3>One methodological commitment explains the rest of this document</h3>
+    <p>Full biographies, prior work, and quantum-computing experience are in the separate Team Profile (§4.1) — not part of this 6-page proposal.</p>
 
-    <p>Five retractions in seven days, all self-found (Appendix B) — not an accident of temperament but <strong>fourteen years of software QA applied to a scientific register</strong>: separation of the party that builds from the party that verifies, a negative control alongside every positive one, and treating an unreproduced result as unverified rather than probably fine. Applied to computational science, that stance produced the audit in §1, which is the submission — a team without it would have shipped the +18.4% quantum figure instead of testing and withdrawing it the same day.</p>
-
-    <h3>An explicit adversarial split, and it is measurable</h3>
-
-    <p>The register's tasks were produced by a role-separated agent workflow, with the reviewing role deliberately assigned to a <em>different model</em> from the implementing one, so a defect and its audit do not share a failure mode:</p>
-
-    <div class="tw"><table>
-      <tr><th>Layer</th><th>Model</th><th>Roles</th></tr>
-      <tr><td>Repository</td><td class="n">Claude Sonnet</td><td>Implementers, Toolsmith, Architect/Planner</td></tr>
-      <tr><td>Repository</td><td class="n">Claude Opus</td><td>Code Reviewer</td></tr>
-      <tr><td>Project</td><td class="n">Claude Opus</td><td><b>Adversarial Reviewer / Critic</b></td></tr>
-      <tr><td>Project</td><td class="n">Google Gemini 2.6 Pro</td><td>Critic / Reviewer / Researcher / Brainstormer</td></tr>
-    </table></div>
-
-    <p><strong>Four of the five retractions in Appendix B were produced by the adversarial reviewer role attacking work the implementing role had just completed and believed correct</strong> — catching the proximity confound, the missing baseline comparison, a symmetry category error, and a miscalibrated test.</p>
-
-    <h3>Why we disclose the register, in four sentences</h3>
-
-    <p>This is a Quantum <em>and AI</em> challenge that permits AI involvement, so treating our own use of it as something to minimise would be incoherent. The register is too large for one person to review unaided, and we would rather say so than pretend to a reading nobody performs. The traces that matter — human-in-the-loop decisions, team disagreement, how conflicts were resolved — are visible in it, which is the evidence for every capability claim on this page. What should be judged is whether the verification was real, not how it was produced, and we have made that checkable by publishing the working repository rather than asking to be believed.</p>
-
-    <div class="tw"><table>
-      <tr><th>Artefact</th><th>What is in it</th></tr>
-      <tr><td><b>Repository</b><br><code>github.com/Oussema-t/Quantum_allosteric-scanner</code></td><td>The scanner, the pipeline, the analysis scripts behind every number in this document.</td></tr>
-      <tr><td><b>Branch <code>bartosz</code></b></td><td class="n">359 task files · 328 done · 580 commits (as of <code>ffcfaca</code>, 2026-09-07) · the full falsification record</td></tr>
-    </table></div>
-
-    <p><b>Oussema Turki</b> — M.Sc. Quantum Computing Technology (UPM); M.Sc. Quantum Engineering in progress (Leibniz Universität Hannover). Thesis benchmarked VQE and quantum annealing against DFT/CASSCF/HF references. Qiskit, PennyLane, QUBO formulation, hybrid QML; two years simulation engineering at Volkswagen R&amp;D. 1st place, PushQuantum; winner, OPUS Challenge.</p>
-
-    <p><b>Berke Turkaydin</b> — PhD, Leibniz-Forschungsinstitut für Molekulare Pharmakologie (FMP) Berlin / TU Berlin. K2P potassium channel (TREK-2) activation and inhibition via all-atom molecular dynamics and enhanced sampling (metadynamics, OneOPES), tracing allosteric coupling from the selectivity filter through the M4 helix to the fenestration sites. Two first-author papers, one currently under review at <em>Nature Communications</em>. GROMACS, AMBER, PLUMED, AlphaFold, RFdiffusion, ProteinMPNN, HPC.</p>
+    <p><strong>One methodological commitment explains this document</strong>: fourteen years of software QA applied to a scientific register — separation of the party that builds from the party that verifies, a negative control alongside every positive one. Five self-found retractions in seven days (Appendix B) are the evidence. The register was produced by a role-separated AI workflow, with the reviewing role deliberately assigned to a different model from the implementing one — disclosed in full in the Team Profile and the public repository, not minimised. This is a Quantum <em>and AI</em> challenge that permits AI involvement; the traces of human-in-the-loop decisions there are the evidence behind every capability claim here.</p>
   </div>
 </section>
 

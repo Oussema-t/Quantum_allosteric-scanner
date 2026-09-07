@@ -12387,3 +12387,53 @@ honest page count needs a real renderer, not a second word-count proxy.
 
 **Files**: `documentation/PHASE1_SUBMISSION_V1.{md,html}`. **Full detail**:
 `.ai/tasks/DONE/TASK-0332-submission-v2-corrections.md`.
+
+## Team Profile split out of §7 as its own §4.1 component; the "single largest saving" claim didn't hold up measured ([[TASK-0343]], 2026-09-07)
+
+Guidelines §4.1 (Team Profile) and §4.3 item 7 (Team Capability) are two
+different requirements this submission had conflated: §4.1 asks who these
+people are (name, role, affiliation, expertise, prior quantum/domain
+experience) as a separate component outside the 6-page limit; §7 asks why
+the team can execute *this* proposal, briefly, inside it. Full biographies
+were sitting inside §7.
+
+**Verified against the Guidelines file directly**, not the filing's own
+summary, before writing anything.
+
+New `documentation/TEAM_PROFILE.md` carries §4.1's three bullets in full:
+team name (AuraQu), each member's bio, and prior quantum-computing /
+problem-domain experience stated explicitly per member (Oussema: extensive
+quantum background; Berke: none in quantum, extensive in the problem
+domain; Bartosz: neither claimed). The full AI-workflow disclosure —
+adversarial-split model table, repo/branch artifact table, the four-sentence
+rationale — moved there as elaboration, per the task's instruction to keep
+only the short form in §7. **Lead contact details are genuinely absent from
+the entire submission set and are flagged, not invented** — this needs the
+repo owner before portal upload.
+
+§7 cut from **599 to 209 words**: the member table stays (already in the
+right register — discipline + one-line role), plus one short paragraph
+covering the QA methodological commitment and the short AI-disclosure form,
+pointing to the Team Profile for the rest.
+
+**Checked, and the task's own assumption did not hold**: the filing asked
+this task to "confirm [Berke's 'why classical detection fails' paragraph]
+landed in §1 and is not duplicated." It is not in §1. `grep` across both
+submission twins and `REVIEW_TARGETS.md` finds nothing. Per [[TASK-0332]]'s
+own Done section this was already disclosed: the paragraph's actual text
+was never supplied into the repository, only referenced as something Berke
+would provide — so there was nothing to duplicate, and nothing to confirm
+landed anywhere. Corrected rather than reported as confirmed.
+
+**Planned Validation, measured with `submission_build.py`, not assumed**:
+body pages **12 → 11**. A real, one-page saving — smaller than the filing's
+own prediction that moving the bios out was "the single largest structural
+saving available in the body." §7's ~600 words were a meaningful but not
+dominant share of a ~3200-word, 12-page body; the remaining gap to 6 pages
+is [[TASK-0344]]'s explicitly separate, sequenced-after task (font-size
+drop, then content cuts, against a re-measured number). `doc_parity.py`
+clean after the edit.
+
+**Files**: `documentation/TEAM_PROFILE.md` (new),
+`documentation/PHASE1_SUBMISSION_V1.{md,html}`. **Full detail**:
+`.ai/tasks/DONE/TASK-0343-team-profile-is-a-separate-component.md`.
