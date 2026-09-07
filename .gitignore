@@ -17,3 +17,4 @@ outputs/
 
 # runtime result cache (ephemeral)
 result_cache/
+allosteric/results/ml_model/*.joblib
