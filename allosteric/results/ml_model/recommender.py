@@ -31,15 +31,54 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 FK=['n_residues','n_edges','mean_degree','degree_var','degree_cv',
     'clustering_coefficient','graph_diameter','algebraic_connectivity','spectral_radius']
+def feasible_min_hops(X,active_idx,cut=8.0,min_candidates=15,min_frac=0.50,max_hop_frac=0.5):
+    """Which MIN_HOP values can this protein actually support?
+    A MIN_HOP is INFEASIBLE when the seed filter leaves too few candidate residues -- on a small
+    or compact protein a high MIN_HOP deletes most of the structure (KRAS spans only 5 hops, so
+    MIN_HOP=4 keeps 40 of 170 residues and 2 of its 21 true pocket residues).
+    Uses only the apo structure and the active site -- no truth, so it is valid at prediction time.
+    Returns {min_hop: {feasible, n_candidates, frac, max_hop}}."""
+    import numpy as np
+    from scipy.sparse import csr_matrix
+    from scipy.sparse.csgraph import dijkstra
+    X=np.asarray(X,float)
+    D2=((X[:,None,:]-X[None,:,:])**2).sum(-1)
+    adj=csr_matrix(((D2<cut*cut)&(D2>0)).astype(np.int8))
+    hop=dijkstra(adj,directed=False,indices=list(active_idx),unweighted=True,min_only=True)
+    fin=np.isfinite(hop); mx=float(hop[fin].max()) if fin.any() else 0.0
+    A=set(active_idx); out={}
+    for H in (1,2,3,4):
+        n=int(sum(1 for i in range(len(X)) if fin[i] and hop[i]>=H and i not in A))
+        # two conditions, both computable without the truth:
+        #  (a) the filter must leave at least half the protein as candidates
+        #  (b) MIN_HOP must be small relative to the protein's hop RANGE -- on a compact protein a
+        #      high MIN_HOP keeps only the outermost shell (KRAS: max_hop 5, so MIN_HOP=4 keeps
+        #      hops 4-5 only, which deleted 19 of its 21 true pocket residues)
+        ok_size = n>=min_candidates and n>=min_frac*len(X)
+        ok_range= H <= max_hop_frac*mx
+        why=[]
+        if not ok_size: why.append("only %d candidates (%.0f%% of protein)"%(n,100*n/len(X)))
+        if not ok_range: why.append("MIN_HOP %d too high for hop range %.0f"%(H,mx))
+        out[H]=dict(feasible=bool(ok_size and ok_range),n_candidates=n,frac=round(n/len(X),3),
+                    max_hop=mx,reason=("; ".join(why) if why else "ok"))
+    return out
+
 class Recommender:
     def __init__(self,model,cfgs,feature_names,meta=None):
         self.model=model; self.cfgs=cfgs; self.features=feature_names; self.meta=meta or {}
-    def recommend(self,topo,k=6,min_hops=None,temperature=1.0):
+    def recommend(self,topo,k=6,min_hops=None,temperature=1.0,feasibility=None):
         """topo: dict of the 9 topology features. k: how many configurations to return.
-        min_hops: optional restriction, e.g. [1,3]. Returns k dicts, weights summing to 1."""
+        min_hops: optional restriction, e.g. [1,3].
+        feasibility: output of feasible_min_hops(); infeasible MIN_HOP values are REMOVED from the
+        shortlist, so the pipeline is never handed a filter the protein cannot support.
+        Returns k dicts, weights summing to 1."""
         x=np.array([[float(topo.get(f,0) or 0) for f in self.features]])
         s=self.model.predict(x)[0]
         idx=list(range(len(self.cfgs)))
+        if feasibility is not None:
+            ok={h for h,d in feasibility.items() if d["feasible"]}
+            if not ok: raise ValueError("no MIN_HOP is feasible for this protein: %s"%feasibility)
+            idx=[i for i in idx if self.cfgs[i][0] in ok]
         if min_hops is not None:
             idx=[i for i in idx if self.cfgs[i][0] in min_hops]
         idx.sort(key=lambda i:-s[i]); idx=idx[:k]

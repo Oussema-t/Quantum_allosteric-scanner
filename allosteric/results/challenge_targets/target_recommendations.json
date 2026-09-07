@@ -1,0 +1,339 @@
+{
+ "KRAS_G12C": {
+  "topology": {
+   "n_residues": 170.0,
+   "n_edges": 812.0,
+   "mean_degree": 9.552941176470588,
+   "degree_var": 8.482491349480968,
+   "degree_cv": 0.3048769626708408,
+   "clustering_coefficient": 0.5529296030766617,
+   "graph_diameter": 8.0,
+   "algebraic_connectivity": 0.40255594598627414,
+   "spectral_radius": 11.579520462535253
+  },
+  "recommendations": [
+   {
+    "rank": 1,
+    "min_hop": 1,
+    "hamiltonian": "harm/comb",
+    "score": "green_zero_0.05",
+    "weight": 0.4057,
+    "predicted_auc": 0.6159
+   },
+   {
+    "rank": 2,
+    "min_hop": 1,
+    "hamiltonian": "harm/adj",
+    "score": "green_zero_0.05",
+    "weight": 0.3228,
+    "predicted_auc": 0.6145
+   },
+   {
+    "rank": 3,
+    "min_hop": 1,
+    "hamiltonian": "exp/sym",
+    "score": "neg_ED_final",
+    "weight": 0.105,
+    "predicted_auc": 0.6079
+   },
+   {
+    "rank": 4,
+    "min_hop": 1,
+    "hamiltonian": "gauss/comb",
+    "score": "green_lmax_0.05",
+    "weight": 0.0987,
+    "predicted_auc": 0.6075
+   },
+   {
+    "rank": 5,
+    "min_hop": 1,
+    "hamiltonian": "hnew/full",
+    "score": "green_lmax_0.05",
+    "weight": 0.0434,
+    "predicted_auc": 0.6027
+   },
+   {
+    "rank": 6,
+    "min_hop": 2,
+    "hamiltonian": "hnew/full",
+    "score": "neg_dD_mean",
+    "weight": 0.0244,
+    "predicted_auc": 0.5993
+   }
+  ],
+  "target": {
+   "name": "KRAS_G12C",
+   "pdb": "4LDJ",
+   "chain": "A",
+   "active": [
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    28,
+    29,
+    30,
+    31,
+    32,
+    116,
+    117,
+    119,
+    120,
+    145,
+    146,
+    147
+   ],
+   "truth": [
+    9,
+    10,
+    11,
+    12,
+    13,
+    16,
+    34,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    68,
+    69,
+    72,
+    95,
+    96,
+    99,
+    100,
+    103
+   ],
+   "cluster": "KRAS_G12C",
+   "is_distal": null,
+   "holo": "6OIM",
+   "drug": "MOV",
+   "n_apo_res": 170
+  }
+ },
+ "BCR_ABL1": {
+  "topology": {
+   "n_residues": 451.0,
+   "n_edges": 2099.0,
+   "mean_degree": 9.30820399113082,
+   "degree_var": 7.051351763265667,
+   "degree_cv": 0.28527932469721917,
+   "clustering_coefficient": 0.5455291690324956,
+   "graph_diameter": 15.0,
+   "algebraic_connectivity": 0.07972984795598931,
+   "spectral_radius": 10.99936177768255
+  },
+  "recommendations": [
+   {
+    "rank": 1,
+    "min_hop": 4,
+    "hamiltonian": "gauss/sym",
+    "score": "neg_dE",
+    "weight": 0.5082,
+    "predicted_auc": 0.6451
+   },
+   {
+    "rank": 2,
+    "min_hop": 4,
+    "hamiltonian": "binary/comb",
+    "score": "neg_dD_mean",
+    "weight": 0.2337,
+    "predicted_auc": 0.6368
+   },
+   {
+    "rank": 3,
+    "min_hop": 4,
+    "hamiltonian": "binary/sym",
+    "score": "neg_dE",
+    "weight": 0.1185,
+    "predicted_auc": 0.6296
+   },
+   {
+    "rank": 4,
+    "min_hop": 4,
+    "hamiltonian": "harm/adj",
+    "score": "neg_dD_mean",
+    "weight": 0.0745,
+    "predicted_auc": 0.6246
+   },
+   {
+    "rank": 5,
+    "min_hop": 4,
+    "hamiltonian": "exp/sym",
+    "score": "neg_dE",
+    "weight": 0.0325,
+    "predicted_auc": 0.6158
+   },
+   {
+    "rank": 6,
+    "min_hop": 4,
+    "hamiltonian": "hnew/full",
+    "score": "neg_dE",
+    "weight": 0.0325,
+    "predicted_auc": 0.6158
+   }
+  ],
+  "target": {
+   "name": "BCR_ABL1",
+   "pdb": "1OPL",
+   "chain": "A",
+   "active": [
+    267,
+    272,
+    275,
+    288,
+    289,
+    290,
+    304,
+    305,
+    308,
+    309,
+    312,
+    317,
+    318,
+    332,
+    334,
+    336,
+    337,
+    340,
+    373,
+    378,
+    380,
+    389,
+    398,
+    399,
+    400,
+    401
+   ],
+   "truth": [
+    351,
+    356,
+    359,
+    360,
+    363,
+    448,
+    451,
+    452,
+    453,
+    454,
+    456,
+    481,
+    482,
+    483,
+    484,
+    487,
+    512,
+    521,
+    525,
+    529
+   ],
+   "cluster": "BCR_ABL1",
+   "is_distal": null,
+   "holo": "5MO4",
+   "drug": "AY7",
+   "n_apo_res": 451
+  }
+ },
+ "HIV1_RT": {
+  "topology": {
+   "n_residues": 556.0,
+   "n_edges": 2585.0,
+   "mean_degree": 9.298561151079136,
+   "degree_var": 7.8281274261166605,
+   "degree_cv": 0.3008937671650292,
+   "clustering_coefficient": 0.5398250119420243,
+   "graph_diameter": 23.0,
+   "algebraic_connectivity": 0.020817123667835242,
+   "spectral_radius": 12.330726879716277
+  },
+  "recommendations": [
+   {
+    "rank": 1,
+    "min_hop": 2,
+    "hamiltonian": "binary/sym",
+    "score": "neg_dE",
+    "weight": 0.4162,
+    "predicted_auc": 0.7874
+   },
+   {
+    "rank": 2,
+    "min_hop": 2,
+    "hamiltonian": "gauss/sym",
+    "score": "neg_dE",
+    "weight": 0.3703,
+    "predicted_auc": 0.7848
+   },
+   {
+    "rank": 3,
+    "min_hop": 2,
+    "hamiltonian": "exp/sym",
+    "score": "neg_dE",
+    "weight": 0.0698,
+    "predicted_auc": 0.7474
+   },
+   {
+    "rank": 4,
+    "min_hop": 2,
+    "hamiltonian": "hnew/full",
+    "score": "neg_dE",
+    "weight": 0.0698,
+    "predicted_auc": 0.7474
+   },
+   {
+    "rank": 5,
+    "min_hop": 2,
+    "hamiltonian": "harm/sym",
+    "score": "neg_dE",
+    "weight": 0.0391,
+    "predicted_auc": 0.7344
+   },
+   {
+    "rank": 6,
+    "min_hop": 4,
+    "hamiltonian": "gauss/sym",
+    "score": "neg_dE",
+    "weight": 0.0348,
+    "predicted_auc": 0.7318
+   }
+  ],
+  "target": {
+   "name": "HIV1_RT",
+   "pdb": "1DLO",
+   "chain": "A",
+   "active": [
+    110,
+    185,
+    186
+   ],
+   "truth": [
+    95,
+    100,
+    101,
+    103,
+    106,
+    179,
+    180,
+    181,
+    188,
+    189,
+    190,
+    227,
+    229,
+    234,
+    236,
+    318
+   ],
+   "cluster": "HIV1_RT",
+   "is_distal": null,
+   "holo": "3V81",
+   "drug": "NVP",
+   "n_apo_res": 556
+  }
+ }
+}
