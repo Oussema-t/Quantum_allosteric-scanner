@@ -9,7 +9,7 @@ file did not silently fall behind its own source files.
 
 | id | claim | status | citing tasks |
 |---|---|---|---|
-| [[HYP-P13]] | Allostery is stabilisation of an otherwise-disfavoured conformation, not a signal propa... | 2026-09-07 | 15 |
+| [[HYP-P13]] | Allostery is stabilisation of an otherwise-disfavoured conformation, not a signal propa... | 2026-09-07 | 16 |
 | [[HYP-P8]] | For several targets, the apo contact graph does not contain the allosteric pocket signa... | 2026-09-04 | 11 |
 | [[HYP-P9]] | A chiral (broken-time-reversal) walk yields a proximity-orthogonal, directional loop ob... | 2026-09-03 | 11 |
 | [[HYP-P14]] | The discriminator is blocked by a single confound, and only a proximity-orthogonal obse... | 2026-09-04 | 9 |
@@ -25,7 +25,7 @@ file did not silently fall behind its own source files.
 | [[HYP-P3]] | V_C (currently structural centrality) would be more predictive as true dynamic covariance | 2026-09-03 | 3 |
 | [[HYP-P10]] | Cryptic pockets carry a "near-in-3D / far-on-apo-graph" coordinated-closure signature | 2026-07-22 | 3 |
 | [[HYP-P11]] | Engineered dephasing (ENAQT) does not improve pocket discrimination — it relaxes the wa... | 2026-07-20 | 3 |
-| [[HYP-P25]] | The PASSer-seeded veto pipeline's below-chance pocket pick is a measured proximity-anti... | 2026-09-06 | 3 |
+| [[HYP-P25]] | The PASSer-seeded veto pipeline's below-chance pocket pick is a measured proximity-anti... | 2026-09-07 | 3 |
 | [[HYP-S2]] | The "noodle wiggle" — steric infeasibility is a *coupling detector*, not a cost function | 2026-09-03 | 3 |
 | [[HYP-P4]] | The base Laplacian choice (normalised vs combinatorial, exp-decay vs binary) is load-be... | 2026-09-03 | 2 |
 | [[HYP-P5]] | H13 (full 3N ANM Hessian) sets a performance ceiling that H_new cannot reach | 2026-07-18 | 2 |

@@ -1,0 +1,622 @@
+{
+  "round1_pre_veto": {
+    "full_cohort__median_hop": {
+      "pipeline_hit_rate": {
+        "n_clusters": 55,
+        "n_rows": 96,
+        "cluster_rho": -0.36322040310587184,
+        "cluster_rho_asymptotic_p": 0.006418217186233695,
+        "cluster_permutation_p": 0.0059994000599940004,
+        "cluster_bootstrap_95ci": [
+          -0.5939211180672195,
+          -0.0984739945842133
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            27
+          ],
+          [
+            "CAS0001",
+            8
+          ],
+          [
+            "Glycogen phosphorylase, muscle form",
+            4
+          ]
+        ]
+      },
+      "passer_hit": {
+        "n_clusters": 55,
+        "n_rows": 96,
+        "cluster_rho": 0.16192006996445227,
+        "cluster_rho_asymptotic_p": 0.2375778227373453,
+        "cluster_permutation_p": 0.23517648235176483,
+        "cluster_bootstrap_95ci": [
+          -0.10441097615001721,
+          0.41530465013826495
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            27
+          ],
+          [
+            "CAS0001",
+            8
+          ],
+          [
+            "Glycogen phosphorylase, muscle form",
+            4
+          ]
+        ]
+      },
+      "random_p": {
+        "n_clusters": 55,
+        "n_rows": 96,
+        "cluster_rho": 0.11387322716328248,
+        "cluster_rho_asymptotic_p": 0.40777998981269703,
+        "cluster_permutation_p": 0.40475952404759524,
+        "cluster_bootstrap_95ci": [
+          -0.15429295774812948,
+          0.36928213583846586
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            27
+          ],
+          [
+            "CAS0001",
+            8
+          ],
+          [
+            "Glycogen phosphorylase, muscle form",
+            4
+          ]
+        ]
+      }
+    },
+    "held_out__median_hop": {
+      "pipeline_hit_rate": {
+        "n_clusters": 30,
+        "n_rows": 64,
+        "cluster_rho": -0.47612241077580264,
+        "cluster_rho_asymptotic_p": 0.00782288994496675,
+        "cluster_permutation_p": 0.010498950104989501,
+        "cluster_bootstrap_95ci": [
+          -0.714445257002556,
+          -0.1446396569716767
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            27
+          ],
+          [
+            "CAS0001",
+            8
+          ],
+          [
+            "CAS0027",
+            2
+          ]
+        ]
+      },
+      "passer_hit": {
+        "n_clusters": 30,
+        "n_rows": 64,
+        "cluster_rho": 0.09235483692959862,
+        "cluster_rho_asymptotic_p": 0.6273971687271352,
+        "cluster_permutation_p": 0.6292370762923708,
+        "cluster_bootstrap_95ci": [
+          -0.26960495516452854,
+          0.4383853724769691
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            27
+          ],
+          [
+            "CAS0001",
+            8
+          ],
+          [
+            "CAS0027",
+            2
+          ]
+        ]
+      },
+      "random_p": {
+        "n_clusters": 30,
+        "n_rows": 64,
+        "cluster_rho": -0.024584946070807346,
+        "cluster_rho_asymptotic_p": 0.897393462300687,
+        "cluster_permutation_p": 0.893010698930107,
+        "cluster_bootstrap_95ci": [
+          -0.3600760637655582,
+          0.31911691913025053
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            27
+          ],
+          [
+            "CAS0001",
+            8
+          ],
+          [
+            "CAS0027",
+            2
+          ]
+        ]
+      }
+    },
+    "full_cohort__median_euclid": {
+      "pipeline_hit_rate": {
+        "n_clusters": 55,
+        "n_rows": 96,
+        "cluster_rho": -0.38399772331205595,
+        "cluster_rho_asymptotic_p": 0.003800658691019101,
+        "cluster_permutation_p": 0.004299570042995701,
+        "cluster_bootstrap_95ci": [
+          -0.5989288202948335,
+          -0.12870553735300985
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            27
+          ],
+          [
+            "CAS0001",
+            8
+          ],
+          [
+            "Glycogen phosphorylase, muscle form",
+            4
+          ]
+        ]
+      },
+      "passer_hit": {
+        "n_clusters": 55,
+        "n_rows": 96,
+        "cluster_rho": 0.16205565258297336,
+        "cluster_rho_asymptotic_p": 0.23717993821109148,
+        "cluster_permutation_p": 0.23117688231176883,
+        "cluster_bootstrap_95ci": [
+          -0.10961474751569121,
+          0.4225503576441604
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            27
+          ],
+          [
+            "CAS0001",
+            8
+          ],
+          [
+            "Glycogen phosphorylase, muscle form",
+            4
+          ]
+        ]
+      },
+      "random_p": {
+        "n_clusters": 55,
+        "n_rows": 96,
+        "cluster_rho": 0.2285198890868367,
+        "cluster_rho_asymptotic_p": 0.09332595957278579,
+        "cluster_permutation_p": 0.09259074092590741,
+        "cluster_bootstrap_95ci": [
+          -0.033533193667550906,
+          0.4714973831361175
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            27
+          ],
+          [
+            "CAS0001",
+            8
+          ],
+          [
+            "Glycogen phosphorylase, muscle form",
+            4
+          ]
+        ]
+      }
+    },
+    "held_out__median_euclid": {
+      "pipeline_hit_rate": {
+        "n_clusters": 30,
+        "n_rows": 64,
+        "cluster_rho": -0.3824577878759943,
+        "cluster_rho_asymptotic_p": 0.03699276358364829,
+        "cluster_permutation_p": 0.0375962403759624,
+        "cluster_bootstrap_95ci": [
+          -0.642638176215836,
+          -0.0368482910652011
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            27
+          ],
+          [
+            "CAS0001",
+            8
+          ],
+          [
+            "CAS0027",
+            2
+          ]
+        ]
+      },
+      "passer_hit": {
+        "n_clusters": 30,
+        "n_rows": 64,
+        "cluster_rho": 0.1332708290711965,
+        "cluster_rho_asymptotic_p": 0.48262986682561615,
+        "cluster_permutation_p": 0.48535146485351466,
+        "cluster_bootstrap_95ci": [
+          -0.22252690435633765,
+          0.45936296516521574
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            27
+          ],
+          [
+            "CAS0001",
+            8
+          ],
+          [
+            "CAS0027",
+            2
+          ]
+        ]
+      },
+      "random_p": {
+        "n_clusters": 30,
+        "n_rows": 64,
+        "cluster_rho": 0.05607476774340194,
+        "cluster_rho_asymptotic_p": 0.7685171203856219,
+        "cluster_permutation_p": 0.7616238376162384,
+        "cluster_bootstrap_95ci": [
+          -0.2898094517647667,
+          0.40360289515387004
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            27
+          ],
+          [
+            "CAS0001",
+            8
+          ],
+          [
+            "CAS0027",
+            2
+          ]
+        ]
+      }
+    }
+  },
+  "round2_post_veto": {
+    "full_cohort__median_hop": {
+      "pipeline_hit_rate": {
+        "n_clusters": 40,
+        "n_rows": 67,
+        "cluster_rho": -0.3439554479231046,
+        "cluster_rho_asymptotic_p": 0.029767221969475486,
+        "cluster_permutation_p": 0.0313968603139686,
+        "cluster_bootstrap_95ci": [
+          -0.6200245438001114,
+          -0.0017607946258072261
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            21
+          ],
+          [
+            "CAS0001",
+            3
+          ],
+          [
+            "Glycogen phosphorylase, muscle form",
+            2
+          ]
+        ]
+      },
+      "passer_hit": {
+        "n_clusters": 40,
+        "n_rows": 67,
+        "cluster_rho": -0.017720925732423544,
+        "cluster_rho_asymptotic_p": 0.9135741535534424,
+        "cluster_permutation_p": 0.9185081491850815,
+        "cluster_bootstrap_95ci": [
+          -0.342648573271844,
+          0.3028618079990041
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            21
+          ],
+          [
+            "CAS0001",
+            3
+          ],
+          [
+            "Glycogen phosphorylase, muscle form",
+            2
+          ]
+        ]
+      },
+      "random_p": {
+        "n_clusters": 40,
+        "n_rows": 67,
+        "cluster_rho": 0.1960585845212221,
+        "cluster_rho_asymptotic_p": 0.225331316633667,
+        "cluster_permutation_p": 0.22467753224677534,
+        "cluster_bootstrap_95ci": [
+          -0.13281836451755152,
+          0.49487013903288346
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            21
+          ],
+          [
+            "CAS0001",
+            3
+          ],
+          [
+            "Glycogen phosphorylase, muscle form",
+            2
+          ]
+        ]
+      }
+    },
+    "held_out__median_hop": {
+      "pipeline_hit_rate": {
+        "n_clusters": 22,
+        "n_rows": 44,
+        "cluster_rho": -0.5009503625924563,
+        "cluster_rho_asymptotic_p": 0.017556528298604025,
+        "cluster_permutation_p": 0.0188981101889811,
+        "cluster_bootstrap_95ci": [
+          -0.8003787071189874,
+          -0.060363132534655375
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            21
+          ],
+          [
+            "CAS0001",
+            3
+          ],
+          [
+            "A0QUZ2",
+            1
+          ]
+        ]
+      },
+      "passer_hit": {
+        "n_clusters": 22,
+        "n_rows": 44,
+        "cluster_rho": 0.19613808188569437,
+        "cluster_rho_asymptotic_p": 0.38167695306125754,
+        "cluster_permutation_p": 0.390960903909609,
+        "cluster_bootstrap_95ci": [
+          -0.23435325799054477,
+          0.5669920189748727
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            21
+          ],
+          [
+            "CAS0001",
+            3
+          ],
+          [
+            "A0QUZ2",
+            1
+          ]
+        ]
+      },
+      "random_p": {
+        "n_clusters": 22,
+        "n_rows": 44,
+        "cluster_rho": 0.04090646375873197,
+        "cluster_rho_asymptotic_p": 0.8565687807040507,
+        "cluster_permutation_p": 0.8504149585041496,
+        "cluster_bootstrap_95ci": [
+          -0.4005598114512772,
+          0.46824988952800173
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            21
+          ],
+          [
+            "CAS0001",
+            3
+          ],
+          [
+            "A0QUZ2",
+            1
+          ]
+        ]
+      }
+    },
+    "full_cohort__median_euclid": {
+      "pipeline_hit_rate": {
+        "n_clusters": 40,
+        "n_rows": 67,
+        "cluster_rho": -0.4119473344063593,
+        "cluster_rho_asymptotic_p": 0.008261493186091158,
+        "cluster_permutation_p": 0.007499250074992501,
+        "cluster_bootstrap_95ci": [
+          -0.6658912464530007,
+          -0.09624723646705974
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            21
+          ],
+          [
+            "CAS0001",
+            3
+          ],
+          [
+            "Glycogen phosphorylase, muscle form",
+            2
+          ]
+        ]
+      },
+      "passer_hit": {
+        "n_clusters": 40,
+        "n_rows": 67,
+        "cluster_rho": -0.004353302018403225,
+        "cluster_rho_asymptotic_p": 0.9787311305070924,
+        "cluster_permutation_p": 0.9887011298870113,
+        "cluster_bootstrap_95ci": [
+          -0.3340752642016342,
+          0.3189600854595113
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            21
+          ],
+          [
+            "CAS0001",
+            3
+          ],
+          [
+            "Glycogen phosphorylase, muscle form",
+            2
+          ]
+        ]
+      },
+      "random_p": {
+        "n_clusters": 40,
+        "n_rows": 67,
+        "cluster_rho": 0.18388216611555272,
+        "cluster_rho_asymptotic_p": 0.2560348826239617,
+        "cluster_permutation_p": 0.2568743125687431,
+        "cluster_bootstrap_95ci": [
+          -0.15431218470943733,
+          0.4866247090811441
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            21
+          ],
+          [
+            "CAS0001",
+            3
+          ],
+          [
+            "Glycogen phosphorylase, muscle form",
+            2
+          ]
+        ]
+      }
+    },
+    "held_out__median_euclid": {
+      "pipeline_hit_rate": {
+        "n_clusters": 22,
+        "n_rows": 44,
+        "cluster_rho": -0.41447595837917084,
+        "cluster_rho_asymptotic_p": 0.05512774606402504,
+        "cluster_permutation_p": 0.057694230576942306,
+        "cluster_bootstrap_95ci": [
+          -0.7358517670988516,
+          0.059181074277184026
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            21
+          ],
+          [
+            "CAS0001",
+            3
+          ],
+          [
+            "A0QUZ2",
+            1
+          ]
+        ]
+      },
+      "passer_hit": {
+        "n_clusters": 22,
+        "n_rows": 44,
+        "cluster_rho": 0.253808610970278,
+        "cluster_rho_asymptotic_p": 0.2543842591597796,
+        "cluster_permutation_p": 0.26347365263473654,
+        "cluster_bootstrap_95ci": [
+          -0.16834293022164748,
+          0.6062238263707228
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            21
+          ],
+          [
+            "CAS0001",
+            3
+          ],
+          [
+            "A0QUZ2",
+            1
+          ]
+        ]
+      },
+      "random_p": {
+        "n_clusters": 22,
+        "n_rows": 44,
+        "cluster_rho": 0.0807681478126826,
+        "cluster_rho_asymptotic_p": 0.7208617343148779,
+        "cluster_permutation_p": 0.7231276872312768,
+        "cluster_bootstrap_95ci": [
+          -0.3753225583422067,
+          0.5153679344991218
+        ],
+        "top3_cluster_sizes": [
+          [
+            "CAS0002",
+            21
+          ],
+          [
+            "CAS0001",
+            3
+          ],
+          [
+            "A0QUZ2",
+            1
+          ]
+        ]
+      }
+    }
+  }
+}

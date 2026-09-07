@@ -1714,6 +1714,26 @@ negative correlation, if anything — the pipeline is failing more on
 distal truth even as its own random-order floor is rising there, which
 makes the anti-correlation harder to produce by chance, not easier.
 
+**Correction, 2026-09-07 ([[TASK-0337]]): the numbers above are row-level
+(over structures) and this cohort is cluster-concentrated — `CAS0002`
+alone contributes 20%+ of it. Not a nitpick given this register's own
+stated cluster-robust-inference identity (Appendix A); cluster-collapsed
+(median per cluster) re-analysis, with a cluster-permutation p-value and a
+cluster-bootstrap 95% CI (B=10000 each): pipeline hit-rate vs. distance
+stays negative and clears p<0.05 with a CI excluding zero in 7 of 8
+combinations (cluster rho −0.34 to −0.50, n_clusters 22-55; permutation p
+0.004-0.038) — the ONE exception is round 2/held-out/`median_euclid`
+specifically (p=0.058, CI [−0.736,+0.059], the smallest-n corner on the
+weaker metric; its `median_hop` sibling at the same n=22 clusters clears,
+p=0.019).** The PASSer specificity control is unweakened (still
+non-significant everywhere at cluster level, p=0.09-0.99). The random-arm
+control weakens from row-level significant-positive to cluster-level
+non-significant-positive (rho +0.11 to +0.23, p=0.09-0.90) — softened, not
+reversed. **Read plainly: the mechanism survives cluster-robust correction
+at 7 of 8 pre-registered combinations; the row-level numbers above
+overstated the evidence and should not be quoted without this correction.**
+Full table and method: [[TASK-0334]]'s own `## Correction` section.
+
 **What this does not show, stated directly:** the Outcome as filed also
 asked for the distance from the active site to the pocket the pipeline
 *actually* picks on a miss (arm (a)) — `pocket_distance.csv` carries

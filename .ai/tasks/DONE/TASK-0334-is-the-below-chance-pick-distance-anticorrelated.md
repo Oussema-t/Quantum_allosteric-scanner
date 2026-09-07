@@ -165,3 +165,91 @@ test set, not excluded. Flagged here rather than silently patched.
   precedent for this file.
 - Did not attempt arm (a)'s literal measurement (see above) — would
   require a PDB refetch, out of scope by this task's own Constraint.
+
+## Correction (2026-09-07, [[TASK-0337]], Implementer A)
+
+**Filed by Reviewer thread** (`.ai/reviews/2026-09-07/
+REVIEW-2026-09-07-adversarial-submission-audit.md` §3.2), confirmed
+independently before acting: `distance_anticorrelation.py` computes
+Spearman rho over **structures**, never referencing the `cluster` column
+present in `pocket_distance.csv` itself. The `is_distal` cohort this task
+scored is concentrated — **`CAS0002` alone contributes 27-28 of the ~50-96
+rows per combination** (20%+ of the full 138-row `is_distal` population).
+"n=44" was 44 correlated structures, not 44 independent proteins, and
+every p-value above is inflated by an unknown factor. [[TASK-0336]], run
+the same day by the same owner, states in its own text that family-level
+counting is mandatory and names this exact cluster — the trap was named
+in one task and stepped into in the other. Not a nitpick: this register's
+own stated identity is cluster-robust inference (Appendix A), and this
+was the one recent result quoted against that standard.
+
+**Planned Validation, run first**: re-ran `distance_anticorrelation.py`
+unmodified — output byte-identical to the stored
+`distance_anticorrelation_result.json` (`diff` empty). The row-level
+numbers above are not in question, only how they were counted.
+
+**Fix**: `cluster_robust_correction.py` (same directory) collapses each
+cluster to its median (distance, pipeline hit-rate) before the Spearman,
+then gets a p-value from a **cluster-level permutation test** (shuffle
+which cluster's distance pairs with which cluster's hit-rate, B=10000,
+[[TASK-0328]]'s own `det_seed` reused for deterministic seeding — its
+`draw_pocket_block_null` itself was not reusable here, a different null
+object: within-protein residue permutation vs. this task's between-cluster
+correlation permutation, stated rather than forced) and a **cluster
+bootstrap 95% CI** (resample clusters with replacement, B=10000) as a
+second, independent check, since at n_clusters in the 20s-30s neither
+alone is fully convincing. Applied to all 4 columns (pre/post-veto x
+held-out/full) x 2 distance metrics = 8 combinations, and to both
+specificity controls.
+
+**Result — stated exactly as it landed, not rounded to the pre-stated
+expectation:**
+
+| combination | n_clusters | cluster rho | permutation p | bootstrap 95% CI |
+|---|---|---|---|---|
+| round1 pre-veto, full, hop | 55 | −0.363 | 0.0060 | [−0.594, −0.098] |
+| round1 pre-veto, held-out, hop | 30 | −0.476 | 0.0105 | [−0.714, −0.145] |
+| round1 pre-veto, full, euclid | 55 | −0.384 | 0.0043 | [−0.599, −0.129] |
+| round1 pre-veto, held-out, euclid | 30 | −0.382 | 0.0376 | [−0.643, −0.037] |
+| round2 post-veto, full, hop | 40 | −0.344 | 0.0314 | [−0.620, −0.002] |
+| round2 post-veto, held-out, hop | 22 | −0.501 | 0.0189 | [−0.800, −0.060] |
+| round2 post-veto, full, euclid | 40 | −0.412 | 0.0075 | [−0.666, −0.096] |
+| **round2 post-veto, held-out, euclid** | **22** | **−0.414** | **0.0577** | **[−0.736, +0.059]** |
+
+**7 of 8 combinations clear p<0.05 and a CI excluding zero. One does
+not**: round 2 (post-veto), held-out cohort, `median_euclid` — the
+smallest-n corner (22 clusters) on the weaker of the two distance metrics
+— sits at p=0.058 with a CI that just crosses zero. Its sibling at the
+same round/cohort (`median_hop`, same 22 clusters) clears cleanly
+(p=0.019). **Read plainly: the mechanism survives cluster-robust
+correction at 7 of 8 pre-registered combinations, including both metrics
+on the largest (round 1) and one of two metrics on the smallest (round 2
+held-out) cohort. It does not cleanly survive on the single
+smallest-n/weakest-metric combination.** This is a real, disclosed
+weakening from the row-level numbers (which cleared p<0.002 everywhere),
+not a null result — the pre-registered expectation ("ρ≈−0.6 over ~30
+clusters is still p≈10⁻³") was optimistic on the exact p-value but
+directionally correct for 7/8 cells.
+
+**Specificity controls, re-checked at cluster level**: PASSer-hit vs.
+distance stays non-significant everywhere (rho −0.02 to +0.25, permutation
+p 0.09-0.99 across all 8 combinations) — the control that matters most
+(ruling out "distal proteins are just harder for everyone") is unweakened.
+**The random-order arm's own positive correlation is weaker than reported
+at row level**: cluster-level rho +0.11 to +0.23 (was +0.31 to +0.45
+row-level), now non-significant everywhere at cluster level (permutation p
+0.09-0.90). This softens, but does not reverse, the original "random arm
+moves opposite to the pipeline" argument — the sign is still consistently
+non-negative wherever measured, just not itself a cluster-robust finding.
+Stated precisely rather than left as originally overclaimed.
+
+**Files**: `cluster_robust_correction.py`,
+`cluster_robust_correction_result.json` (same directory as the original
+artifacts).
+
+**Landed**: [[HYP-P25]]'s Status updated in the same commit with a dated
+correction (not overwritten) — see that hypothesis's own text.
+[[TASK-0332]] should cite the **cluster-collapsed** numbers as the
+headline (rho ≈ −0.34 to −0.50, 7/8 combinations p<0.05) with the
+held-out/post-veto/median_euclid caveat named, not the original row-level
+numbers.
