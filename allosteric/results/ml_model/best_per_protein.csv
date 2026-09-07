@@ -1,0 +1,598 @@
+protein,cluster,is_distal,best_ham,best_score,best_minhop,auc,p5
+ASB_11BG,Seminal ribonuclease,0,binary/comb,residLOG,1,1.0,0.2
+ASB_1A3W,Pyruvate kinase 1,1,hnew/full,R,4,0.8857,1.0
+ASB_1DKU,Ribose-phosphate pyrophosphokinase,0,binary/sym,p_peak,2,1.0,0.2
+ASB_1EM6,"Glycogen phosphorylase, liver form",1,binary/comb,R,4,1.0,0.2
+ASB_1G3L,Glucose-1-phosphate thymidylyltransferase,0,harm/sym,residRAW_dX,3,1.0,0.6
+ASB_1GZ3,"NAD-dependent malic enzyme, mitochondrial",1,hnew/full,QMI,3,0.9895,0.8
+ASB_1H5S,Glucose-1-phosphate thymidylyltransferase 1,0,hnew/full,green_zero_0.01,2,0.8187,0.8
+ASB_1LVW,Glucose-1-phosphate thymidylyltransferase,0,gauss/adj,pavg_over_dX,2,0.9048,1.0
+ASB_1M8P,Sulfate adenylyltransferase,1,harm/comb,residLOG_dX,3,0.7214,0.2
+ASB_1MP3,Glucose-1-phosphate thymidylyltransferase,0,binary/comb,p_avg,3,1.0,0.2
+ASB_1OF6,"Phospho-2-dehydro-3-deoxyheptonate aldolase, tyrosine-inhibited",0,binary/sym,p_peak,1,1.0,0.2
+ASB_1PFK,ATP-dependent 6-phosphofructokinase isozyme 1,1,hnew/full,green_zero_0.05,3,0.8523,0.8
+ASB_1T49,Tyrosine-protein phosphatase non-receptor type 1,1,exp/comb,green_zero_0.05,3,1.0,1.0
+ASB_1UXV,NAD(P)-dependent glyceraldehyde-3-phosphate dehydrogenase,1,exp/adj,p_avg,4,0.9,0.6
+ASB_1W25,Response regulator PleD,1,harm/comb,QMI,4,1.0,0.2
+ASB_1W96,Acetyl-CoA carboxylase,1,harm/sym,residLOG_dE,3,0.9788,0.8
+ASB_1Z8D_1,"Glycogen phosphorylase, muscle form",1,binary/comb,green_zero_0.05,4,0.8077,0.2
+ASB_1Z8D_2,"Glycogen phosphorylase, muscle form",0,exp/sym,neg_ED_final,2,0.983,0.6
+ASB_1ZDS,Copper-containing nitrite reductase,0,binary/adj,neg_ED_final,1,1.0,0.2
+ASB_2BXA,Serum albumin,1,gauss/adj,neg_ED_final,4,0.9722,0.8
+ASB_2D60,Hemoglobin subunit beta,0,binary/adj,neg_ED_final,1,1.0,0.2
+ASB_2HVW,Putative deoxycytidylate deaminase,0,binary/adj,p_avg,2,1.0,0.2
+ASB_2IEG,"Glycogen phosphorylase, muscle form",1,binary/adj,neg_ED_final,4,1.0,0.4
+ASB_2J0X,Lysine-sensitive aspartokinase 3,1,binary/adj,p_peak,3,1.0,0.2
+ASB_2JHR,Myosin-2 heavy chain,0,binary/sym,residLOG_dX,4,1.0,0.6
+ASB_2Q5O,Indole-3-pyruvate decarboxylase,0,binary/sym,residLOG_dE,3,0.9302,0.2
+ASB_2QPY,Androgen receptor,1,exp/comb,residLOG,3,1.0,0.4
+ASB_2R1R,Ribonucleoside-diphosphate reductase 1 subunit alpha,1,exp/adj,green_zero_0.01,3,1.0,1.0
+ASB_2VGI,Pyruvate kinase PKLR,1,harm/comb,neg_ED_final,4,0.9455,1.0
+ASB_2YHD,Androgen receptor,0,binary/adj,R,3,1.0,0.2
+ASB_2YLO,Androgen receptor,1,hnew/full,green_zero_0.05,3,0.9889,1.0
+ASB_3CSM,Chorismate mutase,0,gauss/adj,neg_dD_mean,3,1.0,0.2
+ASB_3D2P,Amino-acid acetyltransferase,0,exp/comb,green_lmax_0.05,3,1.0,0.6
+ASB_3E3N,"Glycogen phosphorylase, muscle form",1,harm/comb,p_avg,4,0.76,0.2
+ASB_3ETE_2,"Glutamate dehydrogenase 1, mitochondrial",0,binary/adj,QMI,2,1.0,0.2
+ASB_3H6O,Pyruvate kinase PKM,1,gauss/sym,QMI,4,0.8788,1.0
+ASB_3HO6,Toxin A,0,exp/adj,QMI,2,1.0,0.4
+ASB_3HQP,Pyruvate kinase,1,hnew/full,neg_dD_mean,4,0.8848,0.8
+ASB_3KGF_1,Phospho-2-dehydro-3-deoxyheptonate aldolase AroG,0,binary/sym,residLOG_dX,1,0.9352,0.4
+ASB_3LSW,Glutamate receptor 3,0,exp/adj,neg_ED_final,1,0.9778,0.8
+ASB_3LSX,Glutamate receptor 3,1,hnew/full,R,1,1.0,0.2
+ASB_3LU6,Serum albumin,1,gauss/comb,green_lmax_0.05,3,0.9545,0.8
+ASB_3M3F,Glutamate receptor 3,0,binary/comb,green_lmax_0.05,2,1.0,0.4
+ASB_3MW9,"Glutamate dehydrogenase 1, mitochondrial",0,binary/adj,green_zero_0.05,3,1.0,0.2
+ASB_3O2M,Mitogen-activated protein kinase 8,1,binary/comb,residRAW,4,1.0,1.0
+ASB_3PTZ,UDP-glucose 6-dehydrogenase,0,exp/adj,p_peak,3,1.0,0.4
+ASB_3PYY,Tyrosine-protein kinase ABL1,0,exp/sym,R,2,1.0,0.6
+ASB_3R1R,Ribonucleoside-diphosphate reductase 1 subunit alpha,1,harm/adj,QMI,4,0.8125,0.6
+ASB_3UO9,"Glutaminase kidney isoform, mitochondrial",0,harm/sym,neg_ED_final,2,0.9556,0.8
+ASB_3ZCW,Kinesin-like protein KIF11,0,binary/adj,p_avg,3,1.0,0.6
+ASB_4B1F,Glutamate racemase,0,exp/adj,green_zero_0.01,2,1.0,0.4
+ASB_4BBG,Kinesin-like protein KIF11,0,harm/adj,neg_dD_mean,2,0.8828,0.6
+ASB_4E6C,Mitogen-activated protein kinase 14,1,gauss/adj,R,4,1.0,0.2
+ASB_4G1N,Pyruvate kinase PKM,1,binary/sym,neg_dD_mean,4,0.9815,0.6
+ASB_4GRS,2-dehydro-3-deoxyphosphoheptonate aldolase,1,gauss/comb,R,1,1.0,0.2
+ASB_4HO6,Glucose-1-phosphate thymidylyltransferase,0,binary/comb,p_peak,2,0.8611,0.8
+ASB_4HYW,Pyruvate kinase 1,1,binary/adj,QMI,4,0.9083,1.0
+ASB_4KZT,N-acetylglutamate kinase / N-acetylglutamate synthase,0,harm/adj,green_zero_0.01,1,0.9818,0.2
+ASB_4MRA,"Glycogen phosphorylase, muscle form",1,hnew/full,p_avg,1,1.0,0.2
+ASB_4PFK,ATP-dependent 6-phosphofructokinase,1,binary/adj,QMI,4,0.9091,0.6
+CAS_11BG,CAS0051,0,binary/adj,green_zero_0.01,1,1.0,0.2
+CAS_1BOZ,CAS0060,0,binary/sym,neg_ED_final,1,0.8281,0.2
+CAS_1BSR,CAS0051,0,hnew/full,green_zero_0.01,1,0.96,0.8
+CAS_1BZC,CAS0079,0,binary/adj,green_zero_0.05,1,1.0,0.2
+CAS_1BZJ,CAS0079,0,exp/adj,neg_dD_mean,1,0.9919,0.8
+CAS_1C84,CAS0079,0,binary/sym,p_peak,3,1.0,0.4
+CAS_1C85,CAS0079,0,harm/adj,green_zero_0.01,2,0.8796,0.4
+CAS_1C86,CAS0079,0,hnew/full,residLOG_dX,3,0.9667,0.8
+CAS_1C87,CAS0079,0,binary/sym,neg_dD_mean,3,1.0,1.0
+CAS_1C88,CAS0079,0,exp/comb,neg_ED_final,3,0.9444,1.0
+CAS_1DGK,CAS0027,1,harm/adj,residRAW_dX,1,0.8664,0.4
+CAS_1DLS,CAS0060,0,gauss/sym,neg_ED_final,1,0.9608,0.4
+CAS_1DRE,CAS0061,0,harm/adj,QMI,1,1.0,1.0
+CAS_1DRF,CAS0060,0,hnew/full,neg_ED_final,1,0.9389,1.0
+CAS_1ECV,CAS0079,0,exp/sym,neg_ED_final,3,0.98,0.8
+CAS_1FIN,CAS0091,0,binary/adj,neg_dD_mean,2,1.0,0.2
+CAS_1G1G,CAS0079,0,exp/adj,p_peak,3,1.0,0.4
+CAS_1G7G,CAS0079,0,harm/comb,pavg_over_dE,2,1.0,0.2
+CAS_1GOS,CAS0086,0,exp/adj,QMI,3,0.8333,0.4
+CAS_1HFQ,CAS0060,0,hnew/full,QMI,1,0.9531,0.4
+CAS_1I00,CAS0080,0,binary/adj,neg_dD_mean,1,1.0,0.2
+CAS_1I2D,CAS0010,1,harm/adj,R,4,1.0,1.0
+CAS_1I4O,CAS0071,0,binary/adj,neg_dE,3,1.0,1.0
+CAS_1ICE,CAS0070,0,gauss/sym,neg_ED_final,2,0.95,0.4
+CAS_1JUJ,CAS0080,0,binary/comb,green_zero_0.05,1,1.0,0.2
+CAS_1KAK,CAS0079,0,binary/comb,R,3,0.85,0.6
+CAS_1LDN,CAS0029,0,hnew/full,green_lmax_0.05,2,0.9545,0.8
+CAS_1LLD,CAS0028,0,hnew/full,neg_ED_final,2,0.9619,0.8
+CAS_1LTH,CAS0028,0,binary/adj,neg_dE,3,1.0,0.2
+CAS_1MVS,CAS0060,0,binary/adj,green_lmax_0.05,1,1.0,0.4
+CAS_1NXG,CAS0001,1,binary/comb,p_avg,3,1.0,0.4
+CAS_1OHJ,CAS0060,0,harm/adj,green_zero_0.01,1,0.8841,0.4
+CAS_1OJ9,CAS0086,0,exp/adj,green_zero_0.01,3,1.0,0.2
+CAS_1OJA,CAS0086,0,binary/adj,p_avg,3,0.9405,0.6
+CAS_1OJC,CAS0086,0,gauss/adj,p_peak,3,0.9394,0.6
+CAS_1OWC,CAS0001,1,binary/adj,residLOG,3,1.0,0.2
+CAS_1PTV,CAS0079,0,harm/adj,residLOG_dX,3,0.9231,0.6
+CAS_1RA2,CAS0061,0,hnew/full,green_zero_0.05,2,1.0,1.0
+CAS_1RA3,CAS0061,0,hnew/full,green_zero_0.05,1,0.9333,1.0
+CAS_1RA8,CAS0061,0,binary/comb,p_peak,2,1.0,1.0
+CAS_1RB2,CAS0061,0,binary/comb,green_zero_0.05,2,1.0,1.0
+CAS_1RB3,CAS0061,0,hnew/full,green_zero_0.05,2,0.8625,0.8
+CAS_1RC4,CAS0061,0,binary/adj,QMI,2,1.0,1.0
+CAS_1RD7,CAS0061,0,exp/sym,neg_dD_mean,1,1.0,1.0
+CAS_1RE7,CAS0061,0,binary/comb,neg_dD_mean,2,1.0,1.0
+CAS_1RG7,CAS0061,0,exp/sym,residLOG_dE,1,1.0,0.6
+CAS_1RH3,CAS0061,0,harm/adj,p_peak,2,0.925,1.0
+CAS_1RWM,CAS0070,0,harm/adj,R,1,0.8929,0.4
+CAS_1RWN,CAS0070,0,binary/adj,QMI,1,1.0,0.2
+CAS_1RWO,CAS0070,0,exp/adj,pavg_over_dE,1,1.0,0.2
+CAS_1RX4,CAS0061,0,exp/sym,p_avg,1,0.9833,1.0
+CAS_1RX5,CAS0061,0,harm/adj,neg_dD_mean,1,0.8681,1.0
+CAS_1RX6,CAS0061,0,binary/adj,green_lmax_0.05,2,1.0,1.0
+CAS_1RX7,CAS0061,0,binary/adj,green_lmax_0.05,2,1.0,1.0
+CAS_1S2Q,CAS0086,0,exp/adj,neg_ED_final,3,1.0,0.2
+CAS_1S2Y,CAS0086,0,exp/adj,neg_dD_mean,3,1.0,0.2
+CAS_1S3B,CAS0086,0,binary/comb,neg_dD_mean,3,1.0,0.2
+CAS_1S3E,CAS0086,0,binary/adj,p_peak,3,1.0,0.2
+CAS_1S3V,CAS0060,0,binary/comb,neg_dD_mean,1,1.0,0.2
+CAS_1TQ9,CAS0051,0,binary/adj,neg_dD_mean,2,1.0,0.4
+CAS_1U71,CAS0060,0,exp/sym,QMI,1,0.9375,0.8
+CAS_1XTU,CAS0050,0,binary/sym,green_zero_0.05,2,1.0,1.0
+CAS_1XTV,CAS0050,0,binary/sym,pavg_over_dE,2,1.0,0.8
+CAS_2AZR,CAS0079,0,binary/sym,p_peak,3,1.0,0.4
+CAS_2B07,CAS0079,0,exp/sym,neg_ED_final,3,0.975,0.8
+CAS_2BK3,CAS0086,0,exp/adj,residLOG_dX,3,1.0,0.6
+CAS_2BK4,CAS0086,0,binary/adj,p_peak,3,0.8851,0.4
+CAS_2BK5,CAS0086,0,gauss/adj,pavg_over_dX,3,0.9556,0.6
+CAS_2BYB,CAS0086,0,binary/adj,green_zero_0.01,3,0.9474,0.4
+CAS_2C2S,CAS0060,0,harm/sym,neg_ED_final,1,0.875,0.6
+CAS_2C2T,CAS0060,0,binary/sym,neg_dD_mean,1,0.881,0.2
+CAS_2C64,CAS0086,0,binary/sym,QMI,3,0.9583,0.6
+CAS_2C65,CAS0086,0,exp/comb,R,2,0.9655,0.2
+CAS_2C66,CAS0086,0,exp/comb,R,1,1.0,0.2
+CAS_2C67,CAS0086,0,exp/sym,green_lmax_0.05,3,0.9744,0.6
+CAS_2C70,CAS0086,0,binary/adj,QMI,3,0.9216,0.6
+CAS_2C72,CAS0086,0,exp/adj,neg_ED_final,3,1.0,0.2
+CAS_2C73,CAS0086,0,gauss/adj,green_zero_0.05,3,0.9167,0.6
+CAS_2C75,CAS0086,0,binary/comb,neg_dD_mean,3,1.0,0.2
+CAS_2C76,CAS0086,0,gauss/adj,p_peak,3,0.8772,0.4
+CAS_2EWN,CAS0011,0,exp/adj,neg_ED_final,1,0.9531,0.4
+CAS_2H4W,CAS0070,0,exp/adj,pavg_over_dE,1,1.0,0.2
+CAS_2H4Y,CAS0070,0,exp/adj,residLOG,1,1.0,0.2
+CAS_2H51,CAS0070,0,binary/sym,QMI,1,1.0,0.2
+CAS_2H54,CAS0070,0,binary/comb,pavg_over_dX,1,1.0,0.2
+CAS_2HB1,CAS0079,0,exp/adj,residLOG_dX,3,1.0,0.4
+CAS_2HBQ,CAS0070,0,harm/adj,pavg_over_dE,1,1.0,0.2
+CAS_2HBR,CAS0070,0,binary/adj,p_peak,1,1.0,0.2
+CAS_2HBY,CAS0070,0,exp/adj,pavg_over_dE,2,1.0,0.2
+CAS_2HBZ,CAS0070,0,binary/adj,p_avg,1,1.0,0.2
+CAS_2HIM,CAS0030,0,exp/adj,QMI,1,1.0,0.2
+CAS_2JFY,CAS0054,0,exp/sym,neg_dD_mean,1,1.0,0.2
+CAS_2NTA,CAS0079,0,binary/adj,residLOG_dX,3,1.0,0.2
+CAS_2P2D,CAS0030,0,hnew/full,neg_ED_final,2,0.9531,0.6
+CAS_2PSQ,CAS0067,0,binary/adj,neg_ED_final,4,1.0,0.8
+CAS_2QBQ,CAS0079,0,binary/adj,green_zero_0.05,3,1.0,0.2
+CAS_2V5Z,CAS0086,0,binary/sym,green_lmax_0.05,3,0.8125,0.2
+CAS_2V60,CAS0086,0,exp/adj,green_zero_0.01,3,1.0,0.2
+CAS_2V61,CAS0086,0,gauss/adj,QMI,3,0.881,0.4
+CAS_2VRL,CAS0086,0,binary/adj,green_zero_0.05,3,1.0,0.2
+CAS_2VRM,CAS0086,0,gauss/adj,QMI,3,0.9556,0.6
+CAS_2VZ2,CAS0086,0,binary/sym,neg_dE,2,0.8526,0.8
+CAS_2W3A,CAS0060,0,exp/sym,QMI,1,0.9167,0.6
+CAS_2W3M,CAS0060,0,exp/sym,p_avg,1,0.9062,0.6
+CAS_2XCG,CAS0086,0,gauss/sym,green_lmax_0.05,3,0.8889,0.6
+CAS_2XFN,CAS0086,0,gauss/adj,p_peak,3,0.9583,0.6
+CAS_2XFO,CAS0086,0,binary/adj,p_avg,3,1.0,0.6
+CAS_2XFP,CAS0086,0,binary/adj,residLOG_dX,3,0.9318,0.6
+CAS_2XFQ,CAS0086,0,binary/sym,green_lmax_0.05,3,0.8854,0.4
+CAS_2XFU,CAS0086,0,exp/adj,pavg_over_dE,3,0.8824,0.4
+CAS_2YM4,CAS0015,0,binary/comb,green_lmax_0.05,2,1.0,0.8
+CAS_2YM8,CAS0015,0,binary/adj,green_lmax_0.05,2,1.0,1.0
+CAS_2Z60,CAS0052,0,gauss/adj,green_zero_0.01,3,0.9375,1.0
+CAS_2ZN7,CAS0079,0,harm/comb,residRAW_dX,1,0.8519,0.4
+CAS_3CSM,CAS0016,0,exp/comb,neg_ED_final,3,1.0,0.2
+CAS_3D6F,CAS0070,0,exp/adj,pavg_over_dE,1,1.0,0.2
+CAS_3D6H,CAS0070,0,binary/comb,neg_ED_final,1,1.0,0.2
+CAS_3D6M,CAS0070,0,exp/sym,residLOG_dX,1,1.0,0.2
+CAS_3DJO,CAS0051,0,binary/adj,neg_dE,1,1.0,0.2
+CAS_3DJQ,CAS0051,0,binary/adj,green_zero_0.05,1,0.8333,0.6
+CAS_3DJV,CAS0051,0,binary/adj,residLOG_dX,1,0.75,0.6
+CAS_3DJX,CAS0051,0,binary/adj,residLOG_dX,2,1.0,0.4
+CAS_3F8Y,CAS0060,0,harm/adj,neg_dD_mean,1,0.9412,0.4
+CAS_3F8Z,CAS0060,0,binary/sym,pavg_over_dE,1,0.9444,0.4
+CAS_3FS6,CAS0060,0,binary/sym,neg_dE,1,0.9394,0.4
+CAS_3GHC,CAS0060,0,hnew/full,neg_ED_final,1,0.7955,0.4
+CAS_3GHW,CAS0060,0,harm/adj,green_zero_0.01,1,0.9667,0.6
+CAS_3GYF,CAS0060,0,binary/comb,residLOG_dE,1,1.0,0.2
+CAS_3HMI,CAS0056,0,exp/sym,neg_dD_mean,2,0.8194,0.2
+CAS_3I1Y,CAS0002,1,binary/sym,neg_dE,4,0.937,0.8
+CAS_3I28,CAS0002,1,gauss/sym,neg_dE,4,0.8768,1.0
+CAS_3ION,CAS0003,0,binary/sym,R,1,0.87,0.4
+CAS_3IOP,CAS0003,0,exp/adj,neg_ED_final,1,0.8981,0.6
+CAS_3KOO,CAS0002,1,gauss/sym,neg_dE,4,0.8676,1.0
+CAS_3L9H,CAS0021,0,harm/adj,neg_dD_mean,2,0.9082,0.6
+CAS_3NTZ,CAS0060,0,exp/adj,R,1,0.9103,0.4
+CAS_3NU0,CAS0060,0,gauss/sym,neg_ED_final,1,0.9861,0.6
+CAS_3NXR,CAS0060,0,binary/sym,neg_dE,1,0.9697,0.6
+CAS_3NXT,CAS0060,0,gauss/sym,QMI,1,0.8235,0.6
+CAS_3NXX,CAS0060,0,harm/adj,green_zero_0.05,1,0.9375,0.4
+CAS_3NZD,CAS0060,0,harm/adj,R,1,0.8971,0.2
+CAS_3OTQ,CAS0002,1,gauss/sym,neg_dE,1,0.9425,1.0
+CAS_3PO7,CAS0086,0,harm/comb,R,2,1.0,0.2
+CAS_3RI1,CAS0067,0,harm/adj,neg_dD_mean,4,1.0,0.6
+CAS_3RWP,CAS0003,0,binary/adj,green_zero_0.01,1,0.8,0.6
+CAS_3S7A,CAS0060,0,hnew/full,green_zero_0.01,2,1.0,1.0
+CAS_3ZYX,CAS0086,0,binary/sym,neg_dE,2,0.9722,0.2
+CAS_4A79,CAS0086,0,exp/adj,green_zero_0.01,3,1.0,0.2
+CAS_4A7A,CAS0086,0,binary/adj,p_peak,3,1.0,0.2
+CAS_4B1F,CAS0054,0,exp/adj,green_zero_0.01,2,1.0,0.6
+CAS_4CRT,CAS0086,0,gauss/adj,neg_dD_mean,2,0.85,0.2
+CAS_4CSM,CAS0016,0,binary/comb,R,3,0.9688,0.4
+CAS_4EJ1,CAS0061,0,exp/sym,p_avg,2,1.0,1.0
+CAS_4EY5,CAS0004,0,binary/comb,green_zero_0.05,1,1.0,0.4
+CAS_4EZ7,CAS0091,0,exp/comb,R,1,0.7905,0.4
+CAS_4FHB,CAS0061,0,hnew/full,green_zero_0.05,2,0.9048,1.0
+CAS_4FST,CAS0015,0,exp/adj,green_lmax_0.05,1,1.0,1.0
+CAS_4FSY,CAS0015,0,exp/comb,green_zero_0.01,1,0.9707,1.0
+CAS_4FT7,CAS0015,0,exp/adj,green_lmax_0.05,1,0.9943,1.0
+CAS_4FTA,CAS0015,0,exp/adj,green_lmax_0.05,1,0.9923,1.0
+CAS_4FTN,CAS0015,0,harm/comb,green_zero_0.05,1,1.0,1.0
+CAS_4FTO,CAS0015,0,binary/adj,green_lmax_0.05,2,1.0,1.0
+CAS_4FTR,CAS0015,0,exp/adj,green_lmax_0.05,1,0.9933,1.0
+CAS_4I13,CAS0061,0,binary/comb,R,1,0.7917,1.0
+CAS_4I1N,CAS0061,0,binary/adj,neg_ED_final,2,1.0,0.2
+CAS_4I8N,CAS0079,0,gauss/adj,pavg_over_dX,3,1.0,0.4
+CAS_4JAE,CAS0001,1,binary/adj,neg_ED_final,3,0.8783,0.8
+CAS_4JAF,CAS0001,1,exp/comb,QMI,3,0.9414,0.6
+CAS_4KD7,CAS0060,0,binary/adj,neg_dE,2,1.0,0.2
+CAS_4KEB,CAS0060,0,binary/sym,neg_dE,1,0.875,0.4
+CAS_4KJJ,CAS0061,0,binary/adj,pavg_over_dX,1,1.0,1.0
+CAS_4M6K,CAS0060,0,binary/adj,green_zero_0.05,1,0.8947,0.4
+CAS_4M6L,CAS0060,0,gauss/comb,p_avg,1,1.0,0.4
+CAS_4P3R,CAS0061,0,binary/adj,neg_ED_final,2,1.0,0.2
+CAS_4QLE,CAS0061,0,binary/adj,green_zero_0.01,2,1.0,1.0
+CAS_4QLG,CAS0061,0,hnew/full,green_zero_0.05,2,1.0,1.0
+CAS_4R1R,CAS0047,0,binary/adj,p_peak,4,1.0,0.2
+CAS_4RQK,CAS0003,0,binary/adj,pavg_over_dX,2,1.0,0.4
+CAS_4RQV,CAS0003,0,gauss/adj,green_zero_0.01,1,0.7407,0.8
+CAS_4RRV,CAS0003,0,binary/adj,p_avg,2,1.0,0.2
+CAS_4X5F,CAS0061,0,hnew/full,green_zero_0.05,2,0.9773,1.0
+CAS_4X5G,CAS0061,0,binary/comb,p_avg,2,1.0,1.0
+CAS_4X5H,CAS0061,0,binary/adj,green_lmax_0.05,2,1.0,1.0
+CAS_4X5I,CAS0061,0,gauss/comb,neg_ED_final,1,0.8308,1.0
+CAS_4X5J,CAS0061,0,binary/adj,neg_dE,1,0.8857,0.8
+CAS_4XX9,CAS0003,0,binary/sym,green_lmax_0.05,2,1.0,0.4
+CAS_4ZHI,CAS0021,0,binary/comb,neg_dE,2,0.855,0.6
+CAS_5AHX,CAS0002,1,gauss/sym,neg_dE,4,0.9087,1.0
+CAS_5AK5,CAS0002,1,gauss/sym,neg_dE,4,0.9072,1.0
+CAS_5AKE,CAS0002,1,binary/comb,residRAW_dX,3,0.88,0.8
+CAS_5AKH,CAS0002,1,binary/sym,neg_dE,1,0.9426,1.0
+CAS_5AKX,CAS0002,1,gauss/sym,neg_dE,1,0.873,1.0
+CAS_5AKY,CAS0002,1,gauss/sym,neg_dE,4,0.945,1.0
+CAS_5ALD,CAS0002,1,binary/sym,neg_dE,1,0.9085,1.0
+CAS_5ALH,CAS0002,1,gauss/sym,neg_dE,1,0.9789,1.0
+CAS_5ALM,CAS0002,1,binary/sym,neg_dE,3,0.9818,1.0
+CAS_5ALN,CAS0002,1,gauss/sym,neg_dE,4,0.9006,1.0
+CAS_5ALO,CAS0002,1,harm/adj,neg_dD_mean,3,0.8865,1.0
+CAS_5ALU,CAS0002,1,gauss/sym,neg_dE,4,0.94,1.0
+CAS_5ALV,CAS0002,1,binary/sym,neg_dE,1,0.9286,1.0
+CAS_5ALW,CAS0002,1,harm/adj,residRAW_dX,4,0.9333,1.0
+CAS_5ALY,CAS0002,1,gauss/sym,neg_dE,4,0.8939,1.0
+CAS_5AM0,CAS0002,1,binary/sym,residLOG_dE,4,0.9872,0.6
+CAS_5AM4,CAS0002,1,gauss/sym,neg_dE,4,0.9129,1.0
+CAS_5AM5,CAS0002,1,gauss/sym,neg_dE,4,0.8859,1.0
+CAS_5CC9,CAS0061,0,binary/adj,residLOG_dX,2,1.0,1.0
+CAS_5CCC,CAS0061,0,binary/adj,green_lmax_0.05,2,1.0,1.0
+CAS_5HF6,CAS0004,0,binary/comb,green_zero_0.05,1,0.9913,0.8
+CAS_5HF9,CAS0004,0,binary/comb,residRAW,1,1.0,0.4
+CAS_5HQY,CAS0060,0,gauss/sym,neg_ED_final,1,0.9559,0.4
+CAS_5HS3,CAS0080,0,binary/adj,pavg_over_dE,2,1.0,0.4
+CAS_5HSU,CAS0060,0,binary/sym,neg_dE,1,0.98,0.4
+CAS_5HT5,CAS0060,0,harm/adj,QMI,1,0.9688,0.4
+CAS_5MRL,CAS0086,0,harm/comb,R,1,0.8889,0.2
+CAS_5X67,CAS0080,0,binary/comb,green_zero_0.05,2,1.0,0.4
+CAS_7DFR,CAS0061,0,binary/comb,p_avg,2,1.0,1.0
+CB_1A4U,P10807,0,exp/adj,neg_dD_mean,2,1.0,0.4
+CB_1AK1,P32396,0,exp/adj,R,1,1.0,0.2
+CB_1BHS,P14061,0,exp/adj,green_zero_0.01,2,0.96,0.4
+CB_1BZJ,P18031,1,binary/adj,p_avg,3,1.0,0.2
+CB_1CUZ,P00590,1,binary/comb,green_lmax_0.05,3,1.0,0.2
+CB_1DPJ,P07267,0,harm/adj,neg_dE,3,1.0,0.4
+CB_1E6K,P0AE67,0,exp/sym,green_lmax_0.05,2,1.0,0.2
+CB_1EFH,Q06520,0,harm/sym,neg_dD_mean,2,0.9167,0.4
+CB_1EVY,P90551,0,harm/adj,p_avg,1,1.0,0.4
+CB_1FVR,Q02763,0,binary/adj,neg_dD_mean,1,1.0,0.2
+CB_1FWK,Q58504,0,hnew/full,green_lmax_0.05,2,0.8857,0.6
+CB_1HAV,P08617,0,binary/adj,p_avg,2,1.0,0.2
+CB_1K0N,O00299,1,binary/sym,QMI,3,1.0,0.6
+CB_1KG5,P17802,0,binary/adj,neg_dD_mean,3,0.9048,0.6
+CB_1KN9,P00803,0,harm/adj,p_peak,2,1.0,0.8
+CB_1KS9,P0A9J4,0,harm/adj,pavg_over_dX,1,0.9423,0.6
+CB_1KXR,P97571,0,binary/adj,green_zero_0.05,2,1.0,0.2
+CB_1LJU,P0A006,0,binary/adj,p_avg,2,1.0,0.2
+CB_1M5W,P0A794,0,exp/sym,pavg_over_dE,1,0.9643,0.8
+CB_1N05,O74866,0,exp/adj,neg_dE,2,1.0,0.4
+CB_1NBF,Q93009,0,gauss/comb,residLOG_dE,1,1.0,0.2
+CB_1NKO,Q9Y286,0,binary/adj,neg_dD_mean,1,1.0,0.4
+CB_1NOK,P00489,1,gauss/adj,green_lmax_0.05,4,0.8562,0.6
+CB_1NWH,P44801,0,gauss/adj,R,3,0.9333,0.6
+CB_1OMX,Q9ES89,0,harm/comb,green_zero_0.05,1,0.9538,0.6
+CB_1OS2,P39900,0,exp/adj,residLOG_dE,3,1.0,0.4
+CB_1P4V,Q47898,0,binary/sym,pavg_over_dX,1,1.0,0.4
+CB_1PTA,P0A434,0,binary/sym,green_lmax_0.05,2,1.0,0.2
+CB_1PX5,Q29599,0,hnew/full,residLOG_dE,2,0.9798,0.6
+CB_1QRZ,P00747,0,binary/sym,green_lmax_0.05,2,0.9524,0.6
+CB_1RJB,P36888,0,gauss/adj,residLOG,2,0.9643,0.4
+CB_1RTC,P02879,1,hnew/full,residLOG_dE,2,0.9394,0.4
+CB_1S8C,P09601,0,gauss/comb,green_lmax_0.05,1,1.0,0.2
+CB_1SH0,Q70ET3,0,binary/adj,green_zero_0.05,1,0.9825,0.2
+CB_1SND,P00644,0,binary/adj,p_peak,1,0.9524,0.6
+CB_1SUL,P38424,0,exp/sym,residLOG_dE,1,1.0,0.2
+CB_1TQN,P08684,0,harm/sym,QMI,1,1.0,0.2
+CB_1UKA,P96965,0,binary/adj,R,2,1.0,0.2
+CB_1VSN,P43235,0,gauss/sym,QMI,2,1.0,0.4
+CB_1WXE,P18843,0,binary/adj,R,3,1.0,0.2
+CB_1X0M,O57946,0,exp/sym,residLOG,1,0.9362,0.4
+CB_1XJF,O33839,0,gauss/adj,neg_dD_mean,1,0.8867,0.6
+CB_1XQZ,P11309,0,exp/sym,green_lmax_0.05,1,0.9079,0.2
+CB_1XTC,P01555,0,binary/adj,p_avg,1,1.0,0.2
+CB_1YS0,P30305,0,binary/comb,green_zero_0.05,1,1.0,0.4
+CB_1Z90,Q9M9P3,0,binary/adj,neg_ED_final,1,1.0,0.4
+CB_2CAM,P02701,0,gauss/sym,neg_ED_final,1,1.0,0.4
+CB_2CI4,P56965,0,hnew/full,green_lmax_0.05,1,0.9697,0.6
+CB_2DH4,Q12051,0,exp/sym,p_peak,2,1.0,0.4
+CB_2E2O,Q96Y14,0,binary/comb,pavg_over_dE,1,1.0,0.2
+CB_2E3M,Q9Y5P4,0,binary/adj,green_zero_0.01,3,1.0,0.2
+CB_2FRS,P29373,0,hnew/full,p_avg,2,1.0,0.6
+CB_2GCB,P15925,0,gauss/adj,residLOG_dX,1,1.0,0.2
+CB_2H6D,P54646,0,binary/adj,neg_dE,3,1.0,0.2
+CB_2H7G,P32989,0,exp/adj,residLOG_dX,1,1.0,0.2
+CB_2H7S,P00183,0,binary/sym,green_zero_0.05,1,1.0,0.6
+CB_2HIG,O15648,0,binary/adj,p_avg,2,1.0,0.2
+CB_2HYY,P00519,0,exp/sym,green_lmax_0.05,3,1.0,0.4
+CB_2JLQ,Q2YHF0,0,binary/comb,green_zero_0.05,1,1.0,0.2
+CB_2OFM,Q94734,0,exp/sym,green_lmax_0.05,1,1.0,0.4
+CB_2OQU,P00772,0,binary/comb,QMI,1,0.9032,0.6
+CB_2PSF,P27652,0,binary/sym,p_avg,2,1.0,0.2
+CB_2PWZ,P61889,0,harm/sym,QMI,1,0.9706,0.6
+CB_2QG5,Q5CYL9,0,binary/adj,p_avg,1,1.0,0.2
+CB_2QSU,Q9T0I8,0,binary/comb,R,1,1.0,0.2
+CB_2V6M,Q5SJA1,0,binary/adj,green_lmax_0.05,2,0.9143,0.8
+CB_2VL2,P30044,0,binary/adj,neg_dD_mean,3,1.0,0.2
+CB_2W6R,Q9X0C6,0,exp/adj,pavg_over_dE,1,1.0,0.2
+CB_2W8N,P51649,0,gauss/adj,green_zero_0.05,1,0.9778,0.2
+CB_2W9T,P13955,0,harm/sym,neg_ED_final,1,0.9615,0.4
+CB_2X36,P36776,0,binary/comb,p_avg,1,1.0,0.2
+CB_2X47,Q9BQ69,0,binary/adj,p_avg,1,1.0,0.2
+CB_2XE6,P00558,0,exp/sym,neg_dE,4,0.8889,0.6
+CB_2XQ0,Q10740,0,exp/adj,p_avg,3,1.0,0.4
+CB_2YWB,Q5SI28,0,binary/comb,neg_dE,3,1.0,0.2
+CB_2ZCO,A9JQL9,0,exp/comb,QMI,1,1.0,0.2
+CB_2ZJ7,Q9RBY1,1,binary/adj,p_avg,4,1.0,0.2
+CB_3ASY,Q5SKR5,0,hnew/full,green_zero_0.05,3,1.0,0.2
+CB_3B7W,Q08AH3,0,harm/sym,residLOG_dX,2,0.8438,0.6
+CB_3BIF,P25114,1,binary/sym,green_lmax_0.05,4,0.906,0.8
+CB_3BL7,Q96C86,0,gauss/adj,p_peak,4,1.0,0.4
+CB_3CHF,Q873X9,0,binary/adj,green_lmax_0.05,1,1.0,0.4
+CB_3D0R,Q8KND7,0,harm/adj,R,3,0.8864,0.6
+CB_3DFA,A3FQ16,0,gauss/adj,neg_dD_mean,1,0.9429,0.4
+CB_3DFJ,Q16651,0,binary/adj,p_peak,3,1.0,0.2
+CB_3F99,P15273,0,gauss/sym,green_lmax_0.05,2,0.9931,0.8
+CB_3FZO,Q14289,0,exp/adj,QMI,1,1.0,0.2
+CB_3G8A,Q9LCY2,0,binary/comb,green_zero_0.05,1,1.0,0.2
+CB_3GAR,P08179,0,binary/sym,neg_dD_mean,3,1.0,0.4
+CB_3GDG,P0C0Y5,0,binary/adj,neg_ED_final,2,1.0,0.2
+CB_3GL0,Q5S3I3,1,gauss/sym,neg_dE,1,0.8047,0.4
+CB_3H11,Q14790,0,exp/adj,residLOG,1,1.0,0.2
+CB_3H8A,P0A6P9,0,binary/comb,residLOG_dX,1,1.0,0.4
+CB_3HI6,P20701,0,binary/adj,p_avg,1,1.0,0.2
+CB_3IEC,Q7KZI7,0,binary/sym,p_avg,1,1.0,0.2
+CB_3KJE,Q3ACS5,0,exp/sym,pavg_over_dE,1,1.0,0.2
+CB_3LCK,P06239,0,gauss/comb,neg_ED_final,2,1.0,1.0
+CB_3MWK,Q72GF3,0,binary/comb,neg_ED_final,3,0.8476,0.4
+CB_3NAQ,Q9S7E4,0,binary/sym,R,1,1.0,0.2
+CB_3NAX,O15530,0,binary/adj,residLOG_dE,2,1.0,0.4
+CB_3NSH,P56817,0,exp/sym,green_zero_0.05,2,1.0,0.6
+CB_3OFJ,Q9AQ22,0,binary/adj,residLOG_dX,1,1.0,0.6
+CB_3OIC,P71079,0,exp/adj,green_zero_0.05,1,0.879,0.4
+CB_3P08,Q06187,0,exp/comb,neg_ED_final,1,0.9725,0.8
+CB_3PBF,P08427,0,binary/sym,pavg_over_dE,1,1.0,1.0
+CB_3QAS,P60472,0,exp/comb,QMI,1,1.0,0.2
+CB_3QWA,P38230,0,harm/comb,green_zero_0.05,1,0.9045,0.8
+CB_3RWV,Q9NZD2,0,exp/comb,residLOG_dX,1,1.0,0.2
+CB_3SR3,A0A6L8PEJ7,0,binary/adj,p_avg,1,1.0,0.2
+CB_3TPE,P23874,0,hnew/full,green_lmax_0.05,2,0.9167,0.4
+CB_3U49,P39644,0,binary/comb,p_avg,1,1.0,0.2
+CB_3VGM,B1VZT1,0,binary/comb,green_zero_0.05,1,1.0,1.0
+CB_3VIA,Q96CS7,0,binary/adj,neg_ED_final,2,1.0,0.4
+CB_3VJB,P37268,0,binary/sym,residLOG_dX,2,1.0,0.4
+CB_3W90,Q5SL35,0,exp/sym,p_avg,3,1.0,0.2
+CB_3WB9,Q67PI3,0,binary/sym,neg_dD_mean,1,1.0,0.8
+CB_4AAL,Q74FY6,0,binary/adj,green_zero_0.05,1,0.9167,0.4
+CB_4AMV,P17169,0,binary/adj,p_peak,3,1.0,0.2
+CB_4BY5,Q9VWX8,0,binary/adj,neg_ED_final,3,1.0,0.2
+CB_4D1N,P29475,0,harm/sym,neg_ED_final,1,0.973,0.4
+CB_4D8L,O87170,0,harm/adj,green_zero_0.01,1,0.9535,0.4
+CB_4DNC,Q9H7Z6,1,binary/adj,green_lmax_0.05,3,0.8702,1.0
+CB_4E00,Q00972,0,exp/sym,green_lmax_0.05,3,0.8167,0.6
+CB_4ESH,Q9HZN8,0,binary/adj,p_avg,1,1.0,1.0
+CB_4F4I,P65248,0,binary/adj,green_lmax_0.05,1,1.0,0.2
+CB_4F5H,P00509,0,binary/adj,p_peak,3,1.0,0.2
+CB_4GOJ,Q13432,0,exp/adj,p_avg,3,1.0,0.4
+CB_4HC4,Q96LA8,0,exp/comb,neg_ED_final,2,1.0,0.4
+CB_4HON,Q6B0I6,0,exp/sym,residLOG_dE,3,0.8929,0.6
+CB_4HR7,P24182,0,gauss/sym,neg_dE,1,1.0,0.2
+CB_4HYE,Q8DNC2,0,binary/sym,green_lmax_0.05,1,1.0,0.4
+CB_4HZR,Q07912,0,exp/adj,green_zero_0.01,1,1.0,0.4
+CB_4I36,P00512,0,exp/sym,p_peak,2,0.9167,0.4
+CB_4IWS,Q9I6N5,0,gauss/sym,green_lmax_0.05,1,0.931,0.6
+CB_4JAX,P33284,1,gauss/sym,neg_dE,4,0.9565,0.6
+CB_4KMY,P14207,0,exp/adj,neg_dD_mean,1,1.0,0.2
+CB_4LA5,Q9F1Y6,0,binary/sym,neg_dE,2,1.0,0.2
+CB_4LG4,Q13188,0,binary/comb,residLOG,2,0.879,0.6
+CB_4LJP,Q96EP0,0,binary/adj,neg_dD_mean,2,1.0,0.2
+CB_4M23,G9MBV2,0,binary/sym,p_avg,1,1.0,0.2
+CB_4MOW,B4E6Z1,0,exp/comb,neg_dD_mean,3,0.9444,0.8
+CB_4N4A,Q8N1G2,0,binary/sym,p_avg,1,1.0,0.2
+CB_4NI8,Q8RJ47,0,exp/comb,green_zero_0.05,3,0.88,0.8
+CB_4OMG,C9K1X5,0,binary/adj,neg_dD_mean,1,0.9559,0.4
+CB_4OS8,P41222,0,binary/comb,green_zero_0.05,3,1.0,0.2
+CB_4OYZ,Q96PN6,0,binary/sym,R,2,0.9815,0.2
+CB_4PUN,P28720,0,exp/sym,R,4,0.85,0.2
+CB_4PWN,Q9H4A3,0,gauss/sym,neg_ED_final,1,1.0,0.6
+CB_4QVK,Q9HGR1,0,exp/comb,green_zero_0.05,1,1.0,0.6
+CB_4R7T,Q9KKS5,0,exp/sym,neg_dD_mean,2,1.0,0.6
+CB_4RF5,Q6WVP7,0,binary/adj,neg_dE,1,1.0,0.2
+CB_4RIE,Q9ZGC0,0,gauss/sym,QMI,2,1.0,0.2
+CB_4RVS,O53146,0,binary/sym,green_zero_0.05,1,1.0,0.2
+CB_4TRM,P9WGR1,0,exp/sym,green_lmax_0.05,2,1.0,0.2
+CB_4TWI,O28597,1,binary/sym,pavg_over_dE,4,0.9833,1.0
+CB_4UD4,O13833,0,binary/adj,green_lmax_0.05,1,1.0,0.2
+CB_4UUM,O96445,0,binary/sym,p_avg,1,1.0,0.2
+CB_4WBH,Q6P988,0,harm/sym,green_lmax_0.05,1,0.9797,0.8
+CB_4XV1,P15056,0,binary/adj,residLOG_dX,3,1.0,0.2
+CB_4Z7C,Q97UL5,0,exp/comb,R,3,0.9286,0.8
+CB_4ZCS,Q8IEE9,0,binary/comb,residRAW,1,1.0,0.2
+CB_5ACV,Q9K2N0,0,gauss/adj,green_zero_0.05,1,1.0,0.2
+CB_5AJO,Q10471,0,exp/adj,green_zero_0.01,2,0.9444,0.6
+CB_5AR2,O43353,0,binary/sym,R,2,1.0,0.2
+CB_5AZQ,P68082,0,binary/adj,neg_ED_final,1,1.0,0.4
+CB_5CAE,P53590,1,harm/sym,neg_dD_mean,1,0.8191,0.2
+CB_5DCW,K7WDL7,0,harm/adj,green_zero_0.05,1,0.9512,0.4
+CB_5DOV,Q6E7K0,0,gauss/adj,green_zero_0.05,2,1.0,0.2
+CB_5DZP,I6Y9J2,0,binary/sym,QMI,1,1.0,0.2
+CB_5EO7,Q2UNX8,0,binary/adj,p_avg,2,1.0,0.2
+CB_5F3K,Q12931,0,binary/sym,green_zero_0.05,1,0.9852,0.8
+CB_5FSU,C9ZP98,0,binary/adj,p_peak,1,1.0,0.4
+CB_5FTK,P55072,0,binary/adj,green_zero_0.05,2,1.0,0.2
+CB_5GGC,A0QUZ2,1,gauss/adj,QMI,4,0.875,1.0
+CB_5GMO,A3LWG4,0,binary/sym,pavg_over_dE,1,0.9929,0.8
+CB_5GW7,P42592,0,gauss/sym,residLOG_dE,4,1.0,0.4
+CB_5H9K,Q7YT09,0,binary/adj,neg_dD_mean,3,1.0,0.6
+CB_5HIJ,F6KV61,0,harm/comb,residLOG,3,0.8882,0.8
+CB_5HQ8,Q9H7B4,1,binary/adj,pavg_over_dE,4,1.0,0.2
+CB_5HSM,P9WME9,0,binary/adj,p_peak,1,1.0,0.2
+CB_5ICS,Q9BPX1,0,harm/adj,p_peak,1,0.9487,0.4
+CB_5IOX,Q8P9V9,0,binary/comb,neg_dD_mean,2,0.8947,0.2
+CB_5JHT,P03433,0,gauss/adj,neg_ED_final,2,0.75,0.6
+CB_5K7K,P11712,0,gauss/adj,R,3,0.9,0.6
+CB_5L45,G9VYV4,0,harm/adj,QMI,3,0.9524,0.6
+CB_5LCC,Q8EP31,0,harm/comb,neg_ED_final,1,0.8418,0.4
+CB_5LOC,P04964,0,binary/comb,p_avg,1,1.0,0.2
+CB_5LOR,Q9BRQ3,0,harm/adj,neg_dD_mean,1,0.9545,0.4
+CB_5LQJ,P22734,0,exp/adj,green_zero_0.05,1,0.82,0.6
+CB_5MBT,Q0P8Q4,0,exp/adj,neg_dE,1,0.8788,0.8
+CB_5NR9,P14769,0,harm/sym,neg_dD_mean,1,0.9167,0.4
+CB_5NY2,D0VWZ1,0,binary/sym,green_zero_0.05,2,1.0,0.2
+CB_5NZM,Q4QDU3,0,harm/adj,green_zero_0.01,1,0.9485,0.2
+CB_5O1M,Q3L8N0,0,gauss/comb,residRAW,1,1.0,0.2
+CB_5OP0,A0R5T1,0,binary/adj,neg_ED_final,3,1.0,0.2
+CB_5T2V,A0R723,0,harm/comb,pavg_over_dX,1,0.95,0.6
+CB_5TC0,Q12866,0,hnew/full,p_peak,1,0.9706,1.0
+CB_5U95,O24146,0,harm/sym,residRAW_dX,1,0.959,0.4
+CB_5UXA,O32553,1,hnew/full,residLOG,4,1.0,0.4
+CB_5W5D,P21707,0,binary/adj,p_peak,1,1.0,0.2
+CB_5WBM,P50053,0,exp/comb,residLOG,3,1.0,0.6
+CB_5XCW,P45040,0,exp/comb,R,2,1.0,0.2
+CB_5Z18,Q6W7J7,0,binary/sym,green_lmax_0.05,1,0.9762,0.2
+CB_5Z43,V5TDZ4,0,harm/comb,R,3,1.0,0.2
+CB_5Z67,Q8RDL3,0,binary/sym,green_zero_0.05,1,1.0,0.2
+CB_5ZJ4,Q9L1E4,0,binary/comb,green_zero_0.05,1,1.0,0.2
+CB_5ZV0,P25081,0,gauss/comb,green_lmax_0.05,1,0.9938,0.8
+CB_6AQE,Q9RY20,1,binary/comb,green_zero_0.05,3,1.0,0.4
+CB_6BZI,Q4KCZ3,0,binary/adj,p_avg,1,1.0,0.4
+CB_6CFS,Q92871,0,binary/sym,green_lmax_0.05,2,0.9571,0.4
+CB_6CQE,Q92918,0,binary/adj,residLOG_dX,2,1.0,0.2
+CB_6DDL,P49902,0,exp/sym,p_peak,2,0.9412,0.2
+CB_6EIF,Q13627,0,hnew/full,neg_dD_mean,1,0.9524,0.2
+CB_6FGJ,W8U368,0,binary/adj,green_zero_0.05,3,1.0,0.2
+CB_6FP0,Q84HF5,0,harm/sym,neg_dE,3,0.9091,1.0
+CB_6G6Y,P52732,0,harm/comb,neg_dD_mean,3,0.8714,0.4
+CB_6H6K,Q980A5,0,binary/adj,R,3,1.0,0.2
+CB_6HEI,Q96RU2,0,binary/sym,p_peak,2,0.9236,0.4
+CB_6HL0,Q96RI1,0,binary/sym,neg_dD_mean,2,0.9848,0.4
+CB_6HR4,G3XD46,0,harm/sym,green_lmax_0.05,3,1.0,0.4
+CB_6HRV,Q6P4V5,0,binary/sym,green_zero_0.05,2,0.9638,0.4
+CB_6INF,Q6VAB4,0,gauss/adj,neg_dD_mean,2,1.0,0.2
+CB_6ISU,P15374,0,gauss/sym,green_zero_0.05,3,1.0,0.4
+CB_6JNJ,Q53TZ2,0,binary/sym,p_avg,1,1.0,0.2
+CB_6JP2,M9SC49,0,exp/adj,neg_dD_mean,3,1.0,0.6
+CB_6KSC,P9WNV1,1,binary/adj,p_peak,4,1.0,1.0
+CB_6KX4,P97784,0,gauss/adj,p_peak,1,1.0,0.2
+CB_6KYQ,O15075,0,binary/adj,residLOG_dX,1,1.0,0.4
+CB_6L61,M1HE54,0,hnew/full,QMI,1,1.0,0.6
+CB_6N5J,P10121,0,harm/comb,pavg_over_dE,1,1.0,0.6
+CB_6NEI,Q5C9L2,0,binary/adj,p_peak,1,1.0,0.2
+CB_6NFL,Q9UH17,0,binary/sym,neg_ED_final,2,1.0,0.4
+CB_6OAH,P14324,0,binary/comb,p_avg,2,1.0,0.2
+CB_6P5B,P61088,0,binary/adj,green_zero_0.05,2,1.0,0.4
+CB_6PK5,P43408,0,binary/comb,neg_dD_mean,2,0.8409,0.4
+CB_6PNT,T1KUK4,0,exp/comb,R,2,1.0,0.2
+CB_6PUV,Q8IUN9,0,exp/adj,green_zero_0.01,1,1.0,0.4
+CB_6PVG,L0E4H0,0,exp/sym,p_avg,3,1.0,0.2
+CB_6Q7Q,O58216,0,binary/comb,p_avg,3,1.0,0.6
+CB_6Q8Z,P51570,0,binary/adj,p_avg,3,1.0,0.8
+CB_6QFL,O14733,0,exp/comb,green_lmax_0.05,2,1.0,0.6
+CB_6RXD,B7GTV0,1,gauss/sym,pavg_over_dE,4,1.0,1.0
+CB_6S3P,K7RJ88,0,binary/adj,p_avg,1,1.0,0.2
+CB_6TN3,Q4WAR0,0,binary/adj,neg_ED_final,2,1.0,0.2
+CB_6UW3,A0QTG2,0,gauss/sym,p_avg,4,1.0,0.2
+CB_6X41,F5B5W8,0,harm/sym,green_lmax_0.05,1,1.0,0.6
+CB_6XL4,P00533,0,binary/comb,p_avg,2,1.0,0.2
+CB_6XQX,P08149,1,gauss/adj,R,3,1.0,0.2
+CB_6XUE,P21589,0,binary/sym,neg_dD_mean,2,1.0,0.2
+CB_6YDK,P71447,0,hnew/full,green_zero_0.05,3,1.0,1.0
+CB_6Z6Z,P80188,0,binary/comb,green_lmax_0.05,2,1.0,0.2
+CB_7AQB,Q16659,0,binary/sym,p_peak,1,1.0,0.2
+CB_7AUT,Q99321,0,binary/comb,neg_ED_final,1,1.0,0.6
+CB_7B6Q,P22188,0,exp/sym,QMI,2,0.9167,0.6
+CB_7BHJ,O33877,0,exp/comb,residLOG,1,1.0,0.4
+CB_7BTC,Q15382,0,binary/comb,p_avg,1,0.8571,0.8
+CB_7C48,P96356,0,binary/adj,neg_ED_final,1,0.9127,0.4
+CB_7CEH,W0TJ64,0,exp/adj,green_lmax_0.05,1,1.0,1.0
+CB_7CIU,Q9W469,0,binary/sym,residLOG_dX,1,1.0,0.4
+CB_7CLU,Q5W249,0,binary/adj,green_zero_0.05,2,1.0,0.2
+CB_7CRM,P94968,0,binary/sym,neg_dD_mean,3,0.8901,0.8
+CB_7CYR,A0QTT2,0,binary/adj,residLOG_dE,2,1.0,0.2
+CB_7D48,P0DSP4,0,binary/sym,neg_dE,3,0.963,0.2
+CB_7DJN,P02768,0,binary/sym,neg_dE,3,0.9855,0.4
+CB_7ERY,Q0DPB7,0,binary/adj,residLOG_dX,3,1.0,0.2
+CB_7FT3,O00560,0,binary/adj,neg_dE,4,1.0,0.2
+CB_7K4W,P23360,0,binary/comb,neg_ED_final,2,1.0,0.4
+CB_7KQL,Q8TDQ0,0,binary/comb,neg_dD_mean,1,1.0,0.2
+CB_7MOI,Q9ZVN4,0,exp/adj,pavg_over_dE,1,1.0,0.4
+CB_7O1I,O53872,0,binary/adj,p_avg,4,1.0,0.4
+CB_7PLD,Q9A9Z1,0,hnew/full,neg_dD_mean,2,1.0,0.6
+CB_7QLU,P11838,0,binary/comb,neg_dD_mean,1,1.0,0.2
+CB_7QOQ,K5B7Z4,0,exp/comb,residLOG,1,1.0,0.2
+CB_7R51,B2RID1,0,binary/comb,green_lmax_0.05,3,1.0,0.4
+CB_7SE6,P22087,0,binary/comb,p_avg,1,1.0,0.2
+CB_7SO5,P18177,0,exp/sym,residLOG_dE,2,1.0,0.2
+CB_7VDA,P00366,0,exp/sym,green_lmax_0.05,3,0.9583,0.6
+CB_7W19,A5Y459,0,hnew/full,R,4,1.0,0.4
+CB_7WMY,A0R6S0,0,exp/comb,neg_ED_final,2,0.8979,0.2
+CB_7YMF,O00571,0,exp/sym,neg_ED_final,1,1.0,0.4
+CB_8BRE,Q9I5Q5,0,binary/sym,green_lmax_0.05,1,1.0,0.4
+CB_8CFB,Q9I685,0,binary/adj,p_peak,3,1.0,0.2
+CB_8CN8,G3XDA2,1,binary/comb,neg_dD_mean,1,1.0,0.2
+CB_8ELM,P30043,0,exp/comb,residLOG_dE,3,0.9487,0.6
+CB_8EVV,Q9HWI0,0,binary/adj,p_peak,2,1.0,0.4
+CB_8GHC,P18054,0,binary/comb,green_zero_0.01,2,0.8971,0.4
+CB_8H0N,Q9UBP6,0,harm/adj,green_lmax_0.05,1,0.96,0.6
+CB_8IAS,Q8DQ84,0,binary/sym,p_avg,1,1.0,0.4
+CB_8IXP,A9Y8T1,0,hnew/full,p_peak,1,0.919,0.4
+CB_8J1K,Q9GZT9,0,gauss/sym,p_avg,2,1.0,0.2
+CB_8PFP,Q14191,0,hnew/full,p_avg,2,0.875,0.6
+CB_8SXW,Q72KY0,0,exp/comb,residLOG,3,1.0,0.2
+CB_9ATC,P0A786,0,gauss/sym,green_lmax_0.05,1,0.9688,0.6
+CS_1ALB,1ALB,0,binary/adj,neg_ED_final,3,1.0,0.2
+CS_1B6B,1B6B,0,exp/adj,pavg_over_dX,1,0.9048,0.6
+CS_1PZT,1PZT,0,gauss/sym,pavg_over_dE,2,1.0,0.4
+CS_1TQO,1TQO,0,binary/sym,residLOG_dE,1,1.0,0.4
+CS_2H4E,2H4E,0,binary/adj,QMI,1,1.0,0.2
+CS_2ZB1,2ZB1,1,gauss/sym,p_peak,3,1.0,0.4
+CS_3CHE,3CHE,0,binary/adj,p_avg,2,1.0,0.2
+PM_1ADE,Adenylosuccinate synthetase,0,binary/adj,residLOG_dX,1,1.0,0.2
+PM_1ALB,Adipocyte lipid-binding protein,0,binary/adj,neg_ED_final,3,1.0,0.2
+PM_1EX6,Guanylate kinase,0,gauss/sym,green_lmax_0.05,1,0.8833,0.6
+PM_1EXM,Elongation factor TU,0,gauss/sym,green_lmax_0.05,3,0.9722,0.6
+PM_1EZM,Novel cryptic pocket set,0,binary/adj,green_zero_0.05,3,1.0,0.2
+PM_1J8F,Novel cryptic pocket set,1,binary/comb,residLOG_dX,4,0.8889,0.6
+PM_1MY0,AMPA receptor GluR2 subunit,0,binary/comb,residLOG,2,1.0,0.2
+PM_1NI6,Heme oxygenase-1,0,binary/adj,residLOG,3,1.0,0.4
+PM_1S2O,Novel cryptic pocket set,0,gauss/comb,QMI,2,0.8947,0.4
+PM_2LAO,Novel cryptic pocket set,0,binary/adj,green_zero_0.01,1,1.0,0.2
+PM_2OY4,Novel cryptic pocket set,0,exp/comb,p_avg,3,1.0,0.6
+PM_2QFO,Heat shock protein 90,0,binary/sym,p_peak,1,0.98,0.4
+PM_3FVJ,Novel cryptic pocket set,0,binary/adj,pavg_over_dX,2,0.9778,1.0
+PM_3KJE,Novel cryptic pocket set,0,exp/sym,pavg_over_dE,1,1.0,0.2
+PM_3RWV,"Cryptosite proteins used in validation, with a different structure used for human glycolipid transfer protein (3rwv)",0,gauss/comb,neg_ED_final,3,0.9444,0.6
+PM_4IC4,Novel cryptic pocket set,0,binary/sym,neg_ED_final,3,1.0,0.4
+PM_4W51,Novel cryptic pocket set,0,exp/sym,green_zero_0.05,2,0.9796,1.0
+PM_5H9A,Novel cryptic pocket set,0,gauss/adj,neg_ED_final,2,0.8167,0.6
+PM_5NIA,Novel cryptic pocket set,0,binary/adj,p_avg,1,1.0,0.4
+PM_5NZM,Novel cryptic pocket set,0,harm/adj,green_zero_0.01,1,0.9485,0.2
+PM_6HB0,Novel cryptic pocket set,0,exp/adj,green_zero_0.05,2,1.0,0.2
