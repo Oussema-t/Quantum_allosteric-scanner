@@ -272,3 +272,33 @@ Design/Reviewer call.
 - No `claim.py`-style whitelist entry added to `.claude/settings.json` yet;
   the tool is invoked as `.venv/bin/python3 .ai/tools/submission_build.py`
   and will prompt until whitelisted. Worth a follow-up if it is run often.
+
+## Correction — 2026-09-07, Toolsmith (found and fixed under [[TASK-0342]])
+
+**THE NUMBER above is wrong.** The body/appendix split was found by
+`_APPENDIX_HEADING_RE = r"appendix\s+[a-z]\b"` searching the rendered PDF's
+prose for the word "Appendix" — and S1's own taxonomy table cites
+"(Appendix C)" inline, on page 2, well before the real appendix. The
+regex matched that citation, not the real "Appendix A" heading (page 13),
+and reported the split as body=1/appendix=16 on the next render, not the
+body=9/appendix=8 stated above. **The 9/6 and 8/3 figures this task reported
+were never a real measurement of the true split — the detector was broken
+from the first run.** `chars_below_min_font`'s 1229 count also predates the
+clipping fix in [[TASK-0342]] and is superseded there.
+
+Root-caused and fixed under [[TASK-0342]] (filed the same day from human
+review of the built PDF, for an unrelated defect — the clipping bug — that
+surfaced this one during verification): the split is now found by an
+invisible unique literal token injected as the first thing inside
+`#appendix`, not by matching document prose. No wording anywhere in the
+document can collide with a token like
+`SUBMISSION_BUILD_APPENDIX_START_7f3a9c` by accident. Regression test:
+`test_inline_appendix_mention_in_body_is_not_a_false_split` reproduces this
+exact case (a body page citing "(Appendix C)" inline) and asserts the split
+isn't fooled by it.
+
+**The corrected, re-verified number is in [[TASK-0342]]'s Done section.**
+Left this section's original (wrong) text above unedited, per this
+register's convention of appending dated corrections rather than rewriting
+what a past thread actually reported — future readers should not cite the
+9/6 or 8/3 figures above; cite TASK-0342's instead.

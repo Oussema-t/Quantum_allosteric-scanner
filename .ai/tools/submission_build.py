@@ -41,6 +41,28 @@ they get trusted. Pinned explicitly, and stated in the report every run:
   * whether webfonts were fetched online is recorded -- an offline build falls
     back to Georgia/system and paginates differently; the report says so
 
+TASK-0342 -- the first real render silently lost content. The source's
+`.tw{overflow-x:auto}` scrolls on screen (correct, deliberate, left alone);
+on paper there is nowhere to scroll to, so it just clips, mid-word, with no
+signal that anything is missing. Fixed in the injected stylesheet only:
+tables reflow (`table-layout:auto`, `white-space:normal`) instead of
+overflowing, and the print-only floor below brings every sub-10pt selector
+(chips, table headers, eyebrow/meta/foot, and `code` -- found by rendering and
+re-measuring: `code{font-size:.855em}` shrinks below the floor even inside an
+already-compliant container, which reading the stylesheet alone missed) up to
+10.5pt in the same pass, since raising those interacts directly with how much
+a reflowed table needs to wrap. Two categories of sub-10pt text are left
+alone deliberately, not missed: the S6 SVG diagram's labels (scale with the
+vector graphic's own coordinate system -- a CSS floor changes the source
+value the SVG then re-scales, not the rendered size) and `<sup>` exponents
+(conventionally smaller than body text everywhere; flooring them would look
+broken). A "no horizontal overflow" compliance check catches content that,
+once allowed to reflow, spills PAST the page margin instead of being
+invisibly clipped -- but it cannot see content some *other*, not-yet-found
+overflow:hidden/auto box clips to nothing, since that leaves no trace in the
+PDF to check. The report says so; open the rendered PDF once per structural
+change, don't rely on the checks alone.
+
 CHANGE REPORT. Blindness to re-reading the same document is the real problem a
 page count does not touch. This diffs v(N) against a git ref (default HEAD)
 using `doc_parity.py`'s own extractors -- numbers added/removed, headings
@@ -96,18 +118,42 @@ MIN_FONT_PT = 10.0
 A4_PT = (595.276, 841.890)
 PAGE_SIZE_TOL_PT = 3.0
 
+# @page margins -- named so the clipping check (below) uses the exact same
+# numbers as the injected stylesheet, instead of a second hardcoded guess.
+MM_TO_PT = 72.0 / 25.4
+MARGIN_TOP_MM, MARGIN_RIGHT_MM, MARGIN_BOTTOM_MM, MARGIN_LEFT_MM = 16.0, 15.0, 18.0, 15.0
+MARGIN_LEFT_PT = MARGIN_LEFT_MM * MM_TO_PT
+MARGIN_RIGHT_PT = MARGIN_RIGHT_MM * MM_TO_PT
+CLIP_TOLERANCE_PT = 2.0  # antialiasing / sub-pixel rounding slack, not a real allowance
+
+# TASK-0342: selectors confirmed (by rendering and re-measuring, not by
+# reading the source alone) to sit under MIN_FONT_PT in the base stylesheet.
+# Floored here rather than left to a generic "shrink to fit" rule -- the task
+# explicitly forbids solving anything in this file by going *under* 10pt.
+_SMALL_TEXT_SELECTORS = (
+    ".eyebrow", ".meta", ".notice h4", "th", ".chip", ".legend .lbl",
+    ".attack .k", ".foot", ".open .tag", ".num",
+    # code{font-size:.855em} is RELATIVE -- it shrinks below the floor even
+    # where its ambient container (table cell, .notice p, .open p) is itself
+    # already >=10pt, so auditing only container selectors missed it. Found
+    # by rendering and re-measuring (per TASK-0341/0342's own instruction),
+    # not by reading the stylesheet -- it accounted for over half of the
+    # first re-render's still-outstanding sub-10pt characters.
+    "code",
+)
+
 CHROME_MACOS = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 # Injected into a COPY of the HTML before rendering. Reported verbatim each run.
 PRINT_CSS = """
-/* ===== injected by submission_build.py (TASK-0341) -- NOT in the source file ===== */
-@page { size: A4; margin: 16mm 15mm 18mm 15mm; }
-@media print {
-  *, *::before, *::after {
+/* ===== injected by submission_build.py (TASK-0341/0342) -- NOT in the source file ===== */
+@page {{ size: A4; margin: {top}mm {right}mm {bottom}mm {left}mm; }}
+@media print {{
+  *, *::before, *::after {{
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-  }
-  :root {
+  }}
+  :root {{
     --paper:#F6F8F7 !important; --surface:#FFFFFF !important; --surface-2:#EEF2F1 !important;
     --ink:#14201E !important; --ink-2:#3B4A47 !important; --ink-3:#6B7B77 !important;
     --rule:#D8E0DE !important; --rule-strong:#B8C5C2 !important;
@@ -116,17 +162,73 @@ PRINT_CSS = """
     --qual:#8A6314 !important; --qual-bg:#F6EEDD !important;
     --dead:#9B2C2C !important; --dead-bg:#F7E6E4 !important;
     --undet:#475569 !important; --undet-bg:#EAEDF1 !important;
-  }
-  html, body { background:#FFFFFF !important; }
-  .wrap { max-width:none !important; padding:0 0 8mm !important; }
-  #appendix { break-before: page !important; }
-  .tw, table, .attack, .open, .notice, svg, tr { break-inside: avoid; }
-  h1, h2, h3 { break-after: avoid; }
-}
-"""
+  }}
+  html, body {{ background:#FFFFFF !important; }}
+  .wrap {{ max-width:none !important; padding:0 0 8mm !important; }}
+  #appendix {{ break-before: page !important; }}
+  .attack, .open, .notice, svg, tr {{ break-inside: avoid; }}
+  h1, h2, h3 {{ break-after: avoid; }}
+
+  /* TASK-0342: overflow-x:auto has nothing to scroll to on paper -- it just
+     clips, silently, mid-word ("no -- and not even a single-molecule prope...").
+     Correct and deliberate for the screen version (kept in the source
+     untouched); wrong for print. Let tables reflow to the page width instead
+     of overflowing it. */
+  .tw {{ overflow: visible !important; break-inside: auto; }}
+  table {{ table-layout: auto !important; width: 100% !important; }}
+  th, td, td.n, .chip {{
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;   /* one unbreakable token must not
+                                              reopen the same clipping bug */
+  }}
+
+  /* TASK-0342: Guidelines S5 says "minimum 10pt", no exemption for table
+     furniture. These selectors measured under 10pt in the base stylesheet
+     (eyebrow/meta/foot ~9pt, table headers/chips ~7.9pt) -- floored, not
+     shrunk; see MIN_FONT_PT and the "small text" compliance check below,
+     which is the self-verification that this list is actually complete. */
+  {small_text_selector_list} {{
+    font-size: 10.5pt !important;
+  }}
+}}
+""".format(top=MARGIN_TOP_MM, right=MARGIN_RIGHT_MM, bottom=MARGIN_BOTTOM_MM,
+          left=MARGIN_LEFT_MM, small_text_selector_list=", ".join(_SMALL_TEXT_SELECTORS))
 
 APPENDIX_MARKER = 'id="appendix"'
-_APPENDIX_HEADING_RE = re.compile(r"appendix\s+[a-z]\b", re.I)
+
+# TASK-0342 correction: a heading-text regex here (matched "Appendix\s+[a-z]")
+# fired on the FIRST substring matching "Appendix" + a letter anywhere in the
+# rendered PDF text -- including S1's own body prose, which cites "(Appendix
+# C)" inline in its taxonomy table, pages before the real appendix. That is a
+# false positive, not a rare edge case: it corrupted the body/appendix page
+# split on every run so far (confirmed directly -- v10's report claimed the
+# appendix started on page 2; the real "Appendix A" heading is on page 13).
+# Fixed by not searching rendered prose for the word "Appendix" at all: an
+# invisible, unique literal token is injected as the first thing inside
+# #appendix and the PDF is searched for that exact token instead. No wording
+# in the document can collide with it by accident.
+#
+# First attempt used `position:absolute` to add zero layout height. Wrong:
+# confirmed live that Chrome's print pagination anchors an absolutely
+# positioned element (no positioned ancestor -> initial containing block) to
+# its PRE-pagination static position, not to the page its in-flow neighbours
+# land on -- the token never showed up in any page's extracted text at all.
+# Left in normal flow instead (white-on-white, so still invisible) --
+# genuinely part of the flow, so it paginates exactly where "Appendix A"
+# itself does, at the cost of one harmless near-zero-height line before it.
+_APPENDIX_MARKER_TOKEN = "SUBMISSION_BUILD_APPENDIX_START_7f3a9c"
+_APPENDIX_OPEN_TAG_RE = re.compile(r'(<section\b[^>]*\bid="appendix"[^>]*>)', re.I)
+
+
+def mark_appendix_start(html: str) -> str:
+    """Insert the invisible page-detection marker as the first child of
+    #appendix. No-op (returns html unchanged) if #appendix isn't found --
+    _first_appendix_page then correctly reports "no marker found" rather than
+    silently mis-splitting."""
+    marker = ('<span style="font-size:10.5pt;color:#FFFFFF">'
+             + _APPENDIX_MARKER_TOKEN + "</span>")
+    new_html, n = _APPENDIX_OPEN_TAG_RE.subn(r"\1" + marker, html, count=1)
+    return new_html if n else html
 
 
 # --------------------------------------------------------------------------
@@ -230,7 +332,7 @@ def render_pdf(chrome: str, html_path: Path, out_pdf: Path,
     src = html_path.read_text(encoding="utf-8")
     td = tempfile.mkdtemp(prefix="submission_build.")
     tmp_html = Path(td) / "submission.print.html"
-    tmp_html.write_text(inject_print_css(src), encoding="utf-8")
+    tmp_html.write_text(inject_print_css(mark_appendix_start(src)), encoding="utf-8")
     log = Path(td) / "chrome.log"
     cmd = [
         chrome,
@@ -305,6 +407,12 @@ class RenderedPage:
     height: float
     text: str
     char_sizes: List[float] = field(default_factory=list)
+    # (x0, x1, word) for every extracted word -- TASK-0342's clipping check.
+    # Content genuinely clipped by an overflow:hidden/auto box leaves no trace
+    # here (it was never painted); this instead catches the failure mode the
+    # fix itself could introduce -- something that, once allowed to reflow
+    # instead of being clipped, spills PAST the printable margin instead.
+    words: List[Tuple[float, float, str]] = field(default_factory=list)
 
 
 def pdf_to_pages(pdf_path: Path) -> List[RenderedPage]:
@@ -316,16 +424,17 @@ def pdf_to_pages(pdf_path: Path) -> List[RenderedPage]:
         for p in pdf.pages:
             sizes = [round(float(c.get("size", 0.0)), 1)
                      for c in p.chars if c.get("size")]
+            words = [(float(w["x0"]), float(w["x1"]), w["text"])
+                     for w in p.extract_words()]
             pages.append(RenderedPage(
                 width=float(p.width), height=float(p.height),
-                text=(p.extract_text() or ""), char_sizes=sizes))
+                text=(p.extract_text() or ""), char_sizes=sizes, words=words))
     return pages
 
 
 def _first_appendix_page(pages: List[RenderedPage]) -> Optional[int]:
     for i, pg in enumerate(pages, start=1):
-        flat = re.sub(r"\s+", " ", pg.text)
-        if _APPENDIX_HEADING_RE.search(flat):
+        if _APPENDIX_MARKER_TOKEN in pg.text:
             return i
     return None
 
@@ -349,6 +458,27 @@ def _dominant_font(pages: List[RenderedPage]) -> Tuple[Optional[float], int, Lis
     return modal, small, sorted(small_sizes)
 
 
+def _clipping_violations(pages: List[RenderedPage],
+                         max_examples: int = 5) -> Tuple[int, List[str]]:
+    """(count, up-to-max_examples "pN: 'word' Xpt past the margin" strings)."""
+    right_bound = A4_PT[0] - MARGIN_RIGHT_PT
+    left_bound = MARGIN_LEFT_PT
+    count = 0
+    examples: List[str] = []
+    for i, pg in enumerate(pages, start=1):
+        for x0, x1, word in pg.words:
+            over_right = x1 - (right_bound + CLIP_TOLERANCE_PT)
+            over_left = (left_bound - CLIP_TOLERANCE_PT) - x0
+            over = max(over_right, over_left)
+            if over > 0:
+                count += 1
+                if len(examples) < max_examples:
+                    side = "right" if over_right >= over_left else "left"
+                    examples.append("p%d: %r overflows the %s margin by %.1f pt"
+                                    % (i, word, side, over))
+    return count, examples
+
+
 @dataclass
 class Check:
     name: str
@@ -364,6 +494,7 @@ def analyze(pages: List[RenderedPage]) -> Dict:
     else:
         body_pages, appx_pages = appx_start - 1, total - (appx_start - 1)
     modal, small_ct, small_sizes = _dominant_font(pages)
+    clip_ct, clip_examples = _clipping_violations(pages)
     size_ok = bool(pages) and all(
         abs(p.width - A4_PT[0]) <= PAGE_SIZE_TOL_PT
         and abs(p.height - A4_PT[1]) <= PAGE_SIZE_TOL_PT
@@ -378,6 +509,8 @@ def analyze(pages: List[RenderedPage]) -> Dict:
         "modal_font_pt": modal,
         "chars_below_min_font": small_ct,
         "small_font_sizes_pt": small_sizes,
+        "clipping_violation_count": clip_ct,
+        "clipping_examples": clip_examples,
     }
 
 
@@ -396,7 +529,7 @@ def evaluate(analysis: Dict) -> Tuple[str, List[Check]]:
         "PASS" if b <= MAX_BODY_PAGES else "FAIL",
         "%d / %d%s" % (b, MAX_BODY_PAGES,
                        "" if analysis["appendix_starts_on_page"]
-                       else "  (no 'Appendix X' heading found -- whole doc counted as body)")))
+                       else "  (no #appendix marker found in the render -- whole doc counted as body)")))
 
     a = analysis["appendix_pages"]
     checks.append(Check(
@@ -419,8 +552,26 @@ def evaluate(analysis: Dict) -> Tuple[str, List[Check]]:
         sizes = ", ".join("%.1f" % s for s in analysis["small_font_sizes_pt"])
         checks.append(Check(
             "small text", "WARN",
-            "%d characters < %.0f pt (sizes: %s pt) -- typically status chips and "
-            "table headers; a strict reader may still count these" % (small, MIN_FONT_PT, sizes)))
+            "%d characters < %.0f pt (sizes: %s pt). Chips/headers/eyebrow/"
+            "meta/foot/code are floored to 10.5pt by the injected stylesheet "
+            "(TASK-0342). Confirmed residual sources, left alone deliberately: "
+            "the S6 SVG pipeline diagram's labels (scale with the vector "
+            "graphic's own coordinate system -- a CSS font-size floor changes "
+            "the source value the SVG then re-scales, not the rendered size) "
+            "and <sup> exponents (conventionally smaller than body text "
+            "everywhere, flooring them would look broken, not fixed). If a "
+            "size appears here that ISN'T one of those two, the selector "
+            "list is incomplete again -- re-measure with pdfplumber, don't "
+            "assume" % (small, MIN_FONT_PT, sizes)))
+
+    clip = analysis["clipping_violation_count"]
+    checks.append(Check(
+        "no horizontal overflow",
+        "PASS" if clip == 0 else "FAIL",
+        "0 words past the printable margin" if clip == 0 else
+        "%d word(s) past the printable margin -- %s%s" % (
+            clip, "; ".join(analysis["clipping_examples"]),
+            " ..." if clip > len(analysis["clipping_examples"]) else "")))
 
     if any(c.status == "FAIL" for c in checks):
         return "FAIL", checks
@@ -567,6 +718,10 @@ def render_report(ctx: Dict, verbose: bool = False) -> str:
         L.append("  split rule: '#appendix' forced to a page break; "
                  "body = pages 1-%d, appendix = pages %d-%d"
                  % (a["body_pages"], a["appendix_starts_on_page"], a["total_pages"]))
+    L.append("  NOTE (TASK-0342): 'no horizontal overflow' catches content spilling")
+    L.append("  PAST the page margin. It cannot see content an overflow:hidden/auto box")
+    L.append("  clips to nothing -- that leaves no trace in the PDF to check. Open the")
+    L.append("  PDF once per structural change; don't rely on this check alone.")
     L.append("")
     if ctx.get("change") is not None:
         L.append("CHANGE SINCE %s" % ctx["since_ref"])
