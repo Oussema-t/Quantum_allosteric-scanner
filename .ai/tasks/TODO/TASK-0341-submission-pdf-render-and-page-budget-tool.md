@@ -94,3 +94,81 @@ rather than after: [[TASK-0339]] already identified the cut order (§7 first, th
 Appendix A's QUALIFIED rows). If it is comfortably under, §3 — 107 words for a
 20%-weighted criterion — has room it is currently not using, and that is worth
 knowing with equal urgency.
+
+## Requirements revised, 2026-09-07 — this section takes precedence
+
+Two inputs from the repo owner change what this tool is for. Read this before the
+Intent Contract above; where they conflict, this wins.
+
+### 1. The need is a BUILD, not a checker
+
+Stated directly: *"any agent can generate more text than I will be capable of
+reading… re-reading the same document several times will quickly make me blind to
+changes. I need the least clicks before a version gets created."*
+
+So the deliverable is **one command that produces a numbered PDF**, with the
+compliance checks running as a side effect and reporting themselves. Not a gate
+the human invokes separately — a build whose output happens to be certified.
+
+```
+<one command>  ->  PHASE1_SUBMISSION_v<N>.pdf   +   a short report
+```
+
+The page count is the part the owner *can* check at a glance and will. Margins,
+font size, paper size and the print stylesheet are the parts they explicitly do
+**not** want to re-check — *"I will likely check this once or twice."* So those
+must be asserted by the tool on every run and surface only as PASS, or as a loud
+FAIL naming the specific rule broken. Silence means compliant.
+
+### 2. The bigger need is a CHANGE REPORT, and it is the part nothing covers yet
+
+Blindness to repeated re-reading is the real problem, and a page count does not
+touch it. The tool should answer *"what changed since the last version"* so the
+owner reads only the delta, not the document.
+
+**`doc_parity.py` already has the machinery.** It extracts numbers, headings,
+code identifiers and the title as comparable sets in order to diff the `.md`
+against the `.html`. **Point the same extractors at v(N) and v(N−1) of the same
+file** and a semantic change report falls out nearly free:
+
+- numbers added / removed / changed (the highest-value line — this register's
+  failure mode is a stale figure surviving an edit)
+- headings added / removed / reordered
+- per-section word-count delta, so growth is visible where it happened
+- anything that moved out of, or into, the appendix split
+
+Reuse, do not reimplement — a second extractor that drifts from `doc_parity`'s
+would be worse than none. If the extractors need to be lifted into a shared
+module to be usable twice, that refactor is in scope.
+
+### 3. Unlimited re-upload — confirmed by the organisers, 2026-09-07
+
+> *"You can cancel and reupload as many times as you want until the Sep 15th
+> deadline is reached. After that, everything you've uploaded by that time will
+> be counted as submitted."*
+
+This removes the cliff. **There is no penalty for uploading a v1 today and a v9
+on the 14th**, and a submitted-but-imperfect document strictly dominates an
+unsubmitted perfect one. Two consequences for this task:
+
+- Version numbering must be **monotonic and traceable** — the PDF should carry,
+  or the report should print, the commit SHA it was built from, so an uploaded
+  artifact can be matched back to a repo state after the fact.
+- Optimise the tool for **iteration count, not for one perfect run.** If a build
+  takes a minute and the report is three lines, it will be run twenty times. If
+  it takes ten minutes and emits a wall of output, it will be run twice and then
+  bypassed.
+
+Recorded in `documentation/2026-08-26-organiser-clarifications.md` alongside the
+other organiser answers.
+
+### Acceptance, revised
+
+- One command, from a clean tree, produces a numbered PDF and a report.
+- The report fits on a screen. Compliance is PASS/FAIL, not a table to read.
+- The change report names what changed since the previous version, using
+  `doc_parity`'s own extractors.
+- Still ships with a test proving it **fails** on a seeded over-length fixture
+  ([[TASK-0319]]), and now also one proving the change report **detects** a
+  seeded number change. A change report that silently misses an edit is the
+  failure mode that matters here.

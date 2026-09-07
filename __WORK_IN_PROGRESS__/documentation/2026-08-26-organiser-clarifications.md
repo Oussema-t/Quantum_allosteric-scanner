@@ -48,6 +48,7 @@ what remains open:
 | 3 | **(a)** Cardiac Myosin's mandated structures — is 8QYP→8QYR acceptable? | **ANSWERED — accepted as primary** |
 | 5 | **(c)** Deliverable format | **ANSWERED — no prescribed formats** |
 | 2, 4 | **(b)** the benchmark-validity finding | **Substantively responsive, not directly answered** — see below |
+| — | **(g)** may a submitted document be revised / re-uploaded? | **ANSWERED 2026-09-07 — yes, unlimited** |
 | — | **(d)** which reference governs when the bibliography contradicts itself | **UNANSWERED** |
 | — | **(e)** does Constraint 3 exclude minimisation / Monte-Carlo sampling? | **UNANSWERED** |
 | — | **(f)** does Constraint 3 exclude an MD-*trained* tool with MD-free inference? | **UNANSWERED — gates [[TASK-0269]]** |
@@ -138,3 +139,22 @@ treat format as a free choice.
   Bartosz.
 - Public Challenge Statement checked the same day: **no corresponding public
   revision found.**
+
+## (g) Revisions and re-upload — answered 2026-09-07
+
+**Question**: is it allowed to make revisions of a submitted document? Are these
+versioned? Can we upload / delete / re-upload newer ones?
+
+**Organiser answer, verbatim**:
+
+> You can cancel and reupload as many times as you want until the Sep 15th
+> deadline is reached. After that, everything you've uploaded by that time will
+> be counted as submitted.
+
+**Consequence**: there is no cliff and no penalty for iterating. A
+submitted-but-imperfect document strictly dominates an unsubmitted perfect one,
+so the operating rule from here is **upload early and re-upload often** — the
+last artifact standing at the deadline is the submission. This also settles the
+earlier open question about whether the "multiple entries" FAQ clause could be
+stretched to cover revisions: it does not need to be. Revisions are explicitly
+allowed in their own right. See [[TASK-0341]], which is built around this.
