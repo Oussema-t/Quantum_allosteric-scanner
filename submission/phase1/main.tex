@@ -1,0 +1,175 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=0.85in]{geometry}
+\usepackage{booktabs,amsmath,amssymb,graphicx,microtype}
+\usepackage[table]{xcolor}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue]{hyperref}
+\usepackage{titlesec}
+\titlespacing*{\section}{0pt}{6pt}{3pt}
+\titlespacing*{\subsection}{0pt}{5pt}{2pt}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
+\setlength{\parskip}{2pt}
+\newcommand{\num}[1]{\textbf{#1}}
+
+\begin{document}
+\pagestyle{empty}
+
+\begin{center}
+{\Large\bfseries A Quantum Allosteric Scanner for Undruggable Targets}\\[2pt]
+{\large Continuous-time quantum walks with learned operator selection}\\[4pt]
+{\normalsize Team AuraQu \quad$\vert$\quad Cleveland Clinic problem statement:\\
+\emph{Unlocking undruggable targets: quantum simulation of allosteric signal propagation}}
+\end{center}
+\vspace{-4pt}\hrule\vspace{6pt}
+
+\section{Problem Framing}
+
+A cryptic allosteric pocket is useful precisely when it is \emph{distal}: far enough from the
+active site that no geometric pocket-finder looking near the catalytic machinery will locate it.
+This is not a rhetorical point, and we measured it. Ranking residues purely by graph distance from
+the active site --- the strongest ``free'' classical heuristic --- achieves \num{AUC 0.227} on
+distal targets across 53 protein families. That is not merely weak; it is \emph{below chance},
+because a distal pocket is by definition where proximity is not. Geometry does not underperform on
+this problem, it points the wrong way.
+
+That is the gap a quantum method can fill, and it is why the challenge's own success definition
+names \emph{distal} regulatory residues specifically. Signal propagation through a protein contact
+network is a transport problem on a graph. A continuous-time quantum walk (CTQW) explores such a
+graph by amplitude interference rather than diffusion: paths cancel and reinforce, so the walker
+distinguishes routes that a classical random walk --- which only accumulates probability ---
+cannot. Our hypothesis is that this interference structure is what carries allosteric information,
+and our evidence is that the walk succeeds exactly where the distance heuristic inverts.
+
+\section{Technical Approach}
+
+\textbf{Paradigm.} Hybrid quantum--AI. The physics layer is a CTQW, currently executed by exact
+spectral simulation and targeted for Trotterised circuit execution in Phase 2 (\S3). The learning
+layer is a classical regressor that selects which quantum operator to run. We state plainly that
+today's results come from simulation, not hardware; \S3 gives the qubit and depth budget and the
+path to execution.
+
+\textbf{The walk.} From the apo structure alone we build a C$\alpha$ contact graph at 8\,\AA{}
+(elastic-network assumption, as the challenge specifies) and a Hamiltonian $H$ from its adjacency
+or Laplacian, optionally with a diagonal site potential $V$ encoding B-factor disorder, solvent
+exposure, rigidity and low-mode participation. Seeding at the active site, the walker evolves as
+$U(t)=e^{-iHt}$ and we score every candidate residue by its dynamic connectivity to that site.
+
+A single evolution time is unsafe: destructive interference can drive a genuine coupling to zero,
+and on disordered graphs the walk can Anderson-localise. We therefore use time-averaged
+quantities, including the closed form
+$p_{\mathrm{avg}}(s\!\to\!a)=\sum_k |v_k(s)|^2|v_k(a)|^2$,
+which is parameter-free and provably free of cancellation. Alongside it we score Green's functions
+$|G(E,\eta)|^2$, walker dispersion diagnostics, and a spectral variance
+$\Delta E=\sqrt{\langle E^2\rangle-\langle E\rangle^2}$ that proved to be our single strongest
+score.
+
+\textbf{The operator is not universal --- and that is the central technical finding.} We evaluated
+13 Hamiltonians $\times$ 17 scores $\times$ 4 seed-filter settings $=$ 884 configurations per
+protein on 630 proteins. A variance decomposition is decisive: main effects (``this Hamiltonian is
+generally good'') explain \num{1\%} of the variance in performance; the remaining \num{99\%} is
+interaction and per-protein variation. Across 630 proteins there are \num{308 distinct winning
+configurations}. There is no single right operator to publish.
+
+\textbf{The AI layer follows directly from that.} Rather than fix an operator or search all 884,
+we train a model to \emph{recommend} configurations from protein topology alone. Input: nine graph
+features (size, edges, degree statistics, clustering, diameter, algebraic connectivity, spectral
+radius). Output: a ranked, weighted shortlist of $k$ configurations to run, $k$ chosen by the user.
+A feasibility gate first removes settings the protein cannot support --- on a compact protein
+spanning five hops, an aggressive seed filter deletes the answer before the walk starts.
+
+\section{Feasibility and Resource Requirements}
+
+\textbf{Already demonstrated.} The pipeline described above has been run end to end on a
+1022-protein worklist; 630 proteins across 399 families produce a scoreable result. Total cloud
+compute for every experiment reported here is under \num{EUR 3}. The classical simulation cost
+is dominated by one eigendecomposition per operator per protein, which is seconds at these sizes.
+Feasibility of the \emph{classical} half is therefore not a projection --- it is measured.
+
+\textbf{The quantum half, honestly.} Mapping one residue to one qubit is not viable for a
+500-residue target on near-term hardware. Our Phase 2 plan is basis encoding of the seed with
+Trotterised evolution, $e^{-iHt}\approx(\prod_j e^{-iH_jt/r})^r$, where $H$ decomposes over graph
+edges. At $r=2$ we already measure $\sim10^{-3}$ agreement with exact evolution in simulation, so
+depth stays shallow by construction. Coarse-graining is the enabling step and we report a genuine
+failure: a 16-node community-level walk collapsed to AUC 0.529, because scoring at community level
+and back-propagating to residues forces ties. Fixing this --- compressing while proving the
+topological signal survives --- is the principal Phase 2 risk and the principal Phase 2 task.
+
+\textbf{Resources needed.} AWS Braket and Classiq access as provided; one modest CPU node for the
+classical layer. No proprietary data: every structure is public RCSB, and no classical MD
+trajectory enters the pipeline, per the challenge constraint.
+
+\section{Expected Impact}
+
+A successful PoC delivers a scanner that ingests an apo structure of a shelved target and returns a
+ranked probability map of candidate allosteric sites, upstream of high-throughput screening. The
+quantitative target we propose for Phase 2 follows from what we already achieve: on distal targets
+the walk must beat the geometric floor with family-level significance, which it currently does at
+$p<10^{-8}$, and it must place true pocket residues in the top five often enough to direct library
+design. We are explicit that the second half is where the current method is weakest (\S5), and that
+is the honest measure of what Phase 2 must improve.
+
+\section{Validation Plan}
+
+Our validation discipline is the part of this proposal we would most want a reviewer to examine,
+because the failure mode in this field is a number that survives no control.
+
+\textbf{Counting.} Structures are grouped into protein families and every result is counted per
+family, never per structure. This is not cosmetic: one family in our set contributes 28 structures
+of a single protein, and per-structure counting inflated an early result by roughly twentyfold.
+
+\textbf{Controls actually run.} Label-permutation nulls preserving score correlation; family-level
+permutation nulls; a favourite-pocket null; a random-residue-through-the-same-pipeline null; and
+the proximity floor described in \S1. Classical baselines --- proximity, degree, pocket size,
+fpocket druggability, PASSer rank --- are scored on the identical residues and labels.
+
+\textbf{Blind evaluation.} Every model number is leave-one-family-out cross-validated: each protein
+is scored by a model that never saw its family.
+
+\textbf{Headline results, and their limits.}
+
+\begin{center}\small
+\begin{tabular}{lrrr}
+\toprule
+& proximity floor & CTQW (blind) & families where CTQW wins \\ \midrule
+\textbf{Distal targets} (91 proteins, 53 families) & 0.227 & \num{0.617} & \num{47/53}, $p<10^{-8}$ \\
+Near targets (539 proteins, 350 families) & 0.633 & 0.597 & 137/350 (floor wins) \\
+All (630 proteins, 399 families) & 0.574 & 0.600 & 182/399, $p=0.09$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+We state the negative half plainly: \emph{overall} the walk does not beat distance. The result is
+specifically and only about distal targets --- which is what the challenge asks about, and which
+is the case classical geometry cannot address.
+
+On held-out targets never seen in training, the model's six recommended configurations were run
+through the full pipeline. On \textbf{BCR-ABL1} (1OPL$\to$5MO4, asciminib) the best of the six
+reached \num{AUC 0.900, P@5 0.80} --- four of the top five residues are genuine myristoyl-pocket
+contacts. On \textbf{HIV-1 reverse transcriptase} the best reached AUC 0.679, matching an
+independent pre-registered run, but with no top-five hit.
+
+\textbf{What we found wrong, and report anyway.} The recommender's \emph{ranking} works; its
+\emph{confidence weighting} does not --- on BCR-ABL1 the winning configuration sat at rank 4 with
+7\% weight while the top-weighted pick scored AUC 0.140. Merging the shortlist is worse than
+picking one from it. And two defects in the challenge's own Table 1 warrant flagging to the
+organisers: \textbf{6C1H contains no mavacamten} (only ADP and MG, verified live against RCSB), and
+\textbf{4OBE is wild-type KRAS}, not G12C --- residue 12 is glycine, so the named apo structure is
+the wrong genotype for the stated objective.
+
+\section{Hybrid / Cross-Domain Integration}
+
+The hybrid design is not decorative. The quantum layer produces evidence --- a residue ranking per
+operator --- and the AI layer decides which evidence to gather, reducing 884 candidate quantum
+computations to $k$ (typically 6), a $147\times$ reduction. Measured leave-one-family-out, $k{=}6$
+retains a configuration reaching AUC $\ge0.8$ for 45\% of proteins and recovers 43 of the 71
+families that exhaustive search finds; $k{=}20$ recovers 54. This matters more, not less, on
+quantum hardware, where each configuration is a separate circuit and exhaustive sweeps are
+impossible. HPC orchestration runs the classical sweeps that generate the model's training data.
+
+\section{Team Capability}
+
+\textcolor{red}{[PLACEHOLDER --- team names, roles, affiliations, and prior quantum/domain
+experience to be supplied. Note the guidelines require a separate Team Profile section in the
+portal in addition to this.]}
+
+\end{document}
