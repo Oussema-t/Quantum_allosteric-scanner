@@ -39,6 +39,14 @@ documentation/*.pdf
 documentation/*.md
 documentation/references/
 
+# TASK-0341: submission_build.py output -- numbered PDF + .report.txt per run,
+# rebuilt on demand from the git-tracked HTML twin. The uploaded artifact is
+# traced back to a repo state by the commit SHA in its filename and report, not
+# by committing the binary. (The root-level `documentation/*.pdf` rule above is
+# root-anchored and does not reach this nested path -- see the references note
+# below for why nested vs root patterns differ.)
+__WORK_IN_PROGRESS__/documentation/_build/
+
 # Local cache for downloaded papers/notebook exports the scientific register
 # cites (see documentation/REFERENCES.md, the tracked index, and
 # .ai/reference/PAPER_CITATION_PROTOCOL.md). Re-fetchable, not project

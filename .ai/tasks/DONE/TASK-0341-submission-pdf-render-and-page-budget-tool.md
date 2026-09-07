@@ -1,6 +1,6 @@
 # TASK-0341 — A deterministic PDF render + page-count gate for the submission
 
-- Status: TODO
+- Status: Done
 - Owner: **Toolsmith**
 - Priority: High — it is the last unverified constraint that can force a rewrite rather than an edit
 - Filed: 2026-09-07 by Reviewer thread (id via `claim.py reserve-next`)
@@ -172,3 +172,103 @@ other organiser answers.
   ([[TASK-0319]]), and now also one proving the change report **detects** a
   seeded number change. A change report that silently misses an edit is the
   failure mode that matters here.
+
+## Done — 2026-09-07, Toolsmith
+
+### Deliverable
+
+- `.ai/tools/submission_build.py` — one command. `.venv/bin/python3
+  .ai/tools/submission_build.py` → a numbered PDF under
+  `__WORK_IN_PROGRESS__/documentation/_build/` (gitignored, new rule added) +
+  a screen-sized report to stdout and a `.report.txt` twin. Exit 0 PASS /
+  1 compliance FAIL / 2 usage / 3 environment.
+- `.ai/tools/test_submission_build.py` — 16 tests. The two acceptance-bar
+  cases are pure functions (no Chrome): `test_overlength_body_fails` and
+  `test_change_report_detects_number_change`. Chrome e2e tests run when Chrome
+  is present and `skip` (not fail) when a sandbox blocks the render.
+  `pytest .ai/tools/test_submission_build.py .ai/tools/test_doc_parity.py` →
+  30 passed (doc_parity regression clean — extractors imported, not forked).
+- `CAPABILITIES.md` — new "Submission Document Capability Set" section:
+  `doc.submission.build` + a row for the pre-existing `doc.parity.check`.
+
+### THE NUMBER (the deliverable as much as the tool — run against committed HEAD `b7a6a99`)
+
+```
+[PASS] paper size      A4 (595.0 x 841.9 pt)
+[FAIL] body pages      9 / 6
+[FAIL] appendix pages  8 / 3
+[PASS] body font       12.4 pt (min 10 pt)
+[WARN] small text      1229 characters < 10 pt (6.3–9.9 pt): eyebrow, .meta,
+                       .foot, h2 .sub captions, table <th>, verdict chips
+RESULT: FAIL
+```
+
+**The document is 17 pages against a 9-page allowance** — body 3 over, appendix
+5 over — *after* the injected print CSS (A4, tightened margins, `.wrap`
+max-width removed, forced light theme). This is the trigger the task's own
+**Consequence** section describes: [[TASK-0332]]'s drafting plan changes before
+it starts, not after. [[TASK-0339]] already named the cut order (§7 first, then
+Appendix A's QUALIFIED rows) — but a 3-page body overage and a 5-page appendix
+overage is well beyond what trimming §7 recovers. This needs an owner/Reviewer
+decision on structural cuts, not word-count nibbling. **Flagged, not acted on
+— this task measures; TASK-0332 decides what to cut.**
+
+The `small text` WARN is a second, separate exposure: the guidelines say
+"minimum 10pt font" flatly. 1229 characters render below that — mostly
+chrome (eyebrow, meta, footer) and table headers / status chips, not body
+copy. Left as WARN because body text is compliant and "minimum font" is
+conventionally read as body copy, but a strict screener could bounce it.
+Design/Reviewer call.
+
+### Decisions (Toolsmith)
+
+- **Renderer: headless Google Chrome, `--headless=old`.** `--headless=new`
+  deadlocks against an already-running Chrome on macOS (reproduced — the
+  render never returns). Old headless is fully independent. No
+  `pandoc`/`weasyprint`/`wkhtmltopdf` install; prints the CI-parity-enforced
+  HTML twin, so there is no third artifact to keep in sync.
+- **Does not wait for Chrome to exit.** Chrome writes the PDF in ~2 s but
+  routinely does not terminate promptly (lingering helpers; under a sandbox it
+  hangs on a Mach-port rendezvous). The tool polls for the output file to
+  appear and stop growing, then kills the process group. This is why the
+  first naive `subprocess.run(timeout=90)` version timed out even though the
+  PDF was already on disk.
+- **Determinism is injected into a *copy*, never the source** (task
+  constraint: do not modify the submission). The exact injected CSS is
+  printed in every report. Pins: `@page size:A4` + fixed margins; forced
+  light theme via `!important` custom-property overrides (beats the twin's
+  `prefers-color-scheme` / `[data-theme]` rules regardless of specificity);
+  `#appendix { break-before: page }` so the body/appendix split is a real
+  page boundary, not a "which page did the heading land on" heuristic.
+  Report records the Chrome version and whether webfonts were fetched online
+  (offline → Georgia fallback → different pagination, stated loudly).
+- **Change report reuses `doc_parity.py`'s extractors verbatim** (`html_to_text`,
+  `numbers`, `_norm_heading`) via same-directory import — no second extractor
+  to drift. Adds section segmentation (`_sections`, split on `<h2>`) for the
+  per-section word delta, which `doc_parity` did not need. Compares the
+  working-tree HTML against `--since` (default `HEAD`); skips with a note when
+  the ref has no such file.
+- **Local-only, no new CI workflow.** Chrome is macOS-local; webfont loading
+  over the network is flaky in CI; the gate's value is pre-upload. The tool
+  exits 3 with a clear message when Chrome/pdfplumber is absent, so if anyone
+  wires it to CI later it skips cleanly rather than failing for the wrong
+  reason. `doc_parity` stays the CI content check.
+- **`pdfplumber` is a dev-only dependency** — already in `.venv`, deliberately
+  not added to `requirements.txt` (same policy as `pytest` for
+  `pytest_local.py`; Render never renders PDFs). Lazily imported; the tool
+  prints the `pip install` line if it is missing.
+- **Versioning:** `max(existing v<N>) + 1`, or `--version N`. PDF and report
+  are named `PHASE1_SUBMISSION_v<N>_<sha>[-dirty]` so an uploaded artifact
+  traces back to a repo state without committing the binary (organisers
+  confirmed unlimited re-upload — recorded in the task's §3).
+
+### Not done / follow-ups
+
+- The tool does **not** decide or make any cut to the submission — see THE
+  NUMBER above; that is [[TASK-0332]] / owner+Reviewer.
+- `doc_parity`'s number regex occasionally surfaces a spurious bare integer
+  (e.g. `-6` from a folded `10⁻⁶`) in the change report's figure list.
+  Cosmetic, in the shared extractor, CI-wired — not touched under this task.
+- No `claim.py`-style whitelist entry added to `.claude/settings.json` yet;
+  the tool is invoked as `.venv/bin/python3 .ai/tools/submission_build.py`
+  and will prompt until whitelisted. Worth a follow-up if it is run often.
