@@ -121,7 +121,11 @@ PAGE_SIZE_TOL_PT = 3.0
 # @page margins -- named so the clipping check (below) uses the exact same
 # numbers as the injected stylesheet, instead of a second hardcoded guess.
 MM_TO_PT = 72.0 / 25.4
-MARGIN_TOP_MM, MARGIN_RIGHT_MM, MARGIN_BOTTOM_MM, MARGIN_LEFT_MM = 16.0, 15.0, 18.0, 15.0
+# TASK-0344: tightened from the original 16/15/18/15mm -- still well inside
+# normal print margins (A4 body text commonly runs 12-20mm), a free page-count
+# lever alongside the font-size and line-height ones below, not a font-size
+# workaround (Guidelines S5 constrains font size specifically, not margins).
+MARGIN_TOP_MM, MARGIN_RIGHT_MM, MARGIN_BOTTOM_MM, MARGIN_LEFT_MM = 11.0, 11.0, 12.0, 11.0
 MARGIN_LEFT_PT = MARGIN_LEFT_MM * MM_TO_PT
 MARGIN_RIGHT_PT = MARGIN_RIGHT_MM * MM_TO_PT
 CLIP_TOLERANCE_PT = 2.0  # antialiasing / sub-pixel rounding slack, not a real allowance
@@ -133,6 +137,11 @@ CLIP_TOLERANCE_PT = 2.0  # antialiasing / sub-pixel rounding slack, not a real a
 _SMALL_TEXT_SELECTORS = (
     ".eyebrow", ".meta", ".notice h4", "th", ".chip", ".legend .lbl",
     ".attack .k", ".foot", ".open .tag", ".num",
+    # TASK-0344: h2 .sub was fine at the source's own 1.72rem h2 (its .95rem
+    # relative size stayed >=10pt), but the print-only h2 shrink (1.3rem)
+    # this task adds drags it under the floor too -- found by re-measuring
+    # after adding the h2 override, not assumed safe.
+    "h2 .sub",
     # code{font-size:.855em} is RELATIVE -- it shrinks below the floor even
     # where its ambient container (table cell, .notice p, .open p) is itself
     # already >=10pt, so auditing only container selectors missed it. Found
@@ -143,6 +152,28 @@ _SMALL_TEXT_SELECTORS = (
 )
 
 CHROME_MACOS = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+
+# TASK-0344: the source's own body{font-size:16.5px} renders at 12.4pt in the
+# PDF -- comfortably above the 10pt floor, and the cheapest page-count lever
+# available (free -- costs no content). Chosen to land the dominant body text
+# at ~10.5pt rather than the 10.0pt floor itself, matching the register's own
+# small-text elements (already floored to 10.5pt, TASK-0342) so the whole
+# document reads as one consistent size, not two. 14px measured at 10.5pt in
+# the rendered PDF (confirmed by re-running the same pdfplumber measurement
+# this file's own compliance check uses, not computed from the px:pt ratio
+# alone). Print-only -- the source HTML (also a published, screen-read
+# artifact) keeps its original 16.5px, per TASK-0341/0342's own established
+# print-vs-screen separation.
+#
+# table{font-size:14.6px} is LEFT UNTOUCHED, not scaled proportionally --
+# tried that first and it was a real bug, caught by re-measuring rather than
+# assumed correct: 14.6px is already only 88% of body's 16.5px (10.95pt in
+# print, already close to the floor before this task touched anything), so
+# scaling it by the same 14/16.5 ratio as body pushed it to 9.3pt -- UNDER
+# the 10pt floor this file exists to enforce. Table text stays at its
+# original size; only body prose shrinks.
+PRINT_BODY_FONT_PX = 14
+PRINT_BODY_LINE_HEIGHT = 1.22
 
 # Injected into a COPY of the HTML before rendering. Reported verbatim each run.
 PRINT_CSS = """
@@ -164,6 +195,40 @@ PRINT_CSS = """
     --undet:#475569 !important; --undet-bg:#EAEDF1 !important;
   }}
   html, body {{ background:#FFFFFF !important; }}
+
+  /* TASK-0344: a free (no content cut) page-count lever -- body text at
+     16.5px/12.4pt has headroom down to the 10pt floor; landed at ~10.5pt
+     instead of the floor itself so it matches the small-text elements
+     TASK-0342 already floored there, one size for the whole document
+     rather than two. table{{font-size:14.6px}} deliberately NOT touched --
+     see PRINT_BODY_FONT_PX's own comment for why scaling it proportionally
+     was tried and reverted (it fell under the 10pt floor). */
+  body {{ font-size: {body_font_px}px !important; line-height: {body_line_height} !important; }}
+
+  /* TASK-0344: source line-height is 1.62 -- generous for screen reading,
+     not required by the Guidelines (S5 constrains font size, not leading).
+     A second free lever alongside the font-size and margin ones; still
+     comfortably readable, not compressed to the point of hurting legibility. */
+
+  /* TASK-0344: section{{padding-top:44px;margin-top:40px}} is 84px (~63pt,
+     nearly a full text line at this font size) of pure whitespace BETWEEN
+     every section -- 8 sections/appendices, over half a page cumulative.
+     Screen-appropriate for a scannable web page; print doesn't need the
+     same visual separation once the rule/number column already marks the
+     boundary. Third free lever, same category as font-size/line-height/
+     margins: layout spacing, not content. */
+  section {{ padding-top: 8px !important; margin-top: 8px !important; }}
+  p, ul, ol {{ margin: 0 0 .6em !important; }}
+  li {{ margin-bottom: .3em !important; }}
+
+  /* TASK-0344: h2/h3 are rem-based (relative to the ROOT html element,
+     default 16px) so the body font-size print override above does not
+     touch them at all -- confirmed by re-measuring, not assumed. 1.72rem
+     h2 (~20.7pt) is a screen display size; print headings this large cost
+     real vertical space across 10 section/appendix headings. */
+  h2 {{ font-size: 1.3rem !important; margin-bottom: .3em !important; }}
+  h3 {{ font-size: 1.0rem !important; margin: .4em 0 .3em !important; }}
+
   .wrap {{ max-width:none !important; padding:0 0 8mm !important; }}
   #appendix {{ break-before: page !important; }}
   .attack, .open, .notice, svg, tr {{ break-inside: avoid; }}
@@ -182,6 +247,31 @@ PRINT_CSS = """
                                               reopen the same clipping bug */
   }}
 
+  /* TASK-0344: overflow-wrap:anywhere (above) tells table-layout:auto's own
+     width algorithm every character is a valid break point, so a column
+     whose actual content is short-but-space-separated (e.g. "Oussema
+     Turki") gets squeezed to near-zero width and then wraps letter by
+     letter ("Ousse/ma/Turki") instead of at the space -- found by
+     rendering and looking at the PDF, not visible from the source or from
+     the "no horizontal overflow"/clipping checks, which only catch
+     content escaping the page, not an ugly-but-contained wrap. A min-width
+     on the first column gives table-layout:auto enough room to wrap at
+     word boundaries instead. */
+  td:first-child, th:first-child {{ min-width: 26mm; }}
+
+  /* TASK-0344: same auto-layout squeeze, different column -- Appendix A's
+     Verdict column holds only .chip badges ("Holds"/"Qualified"/
+     "Retracted"/"Undetermined") but overflow-wrap:anywhere let it be
+     squeezed to the point "Holds" itself wrapped to "Hol/ds". A chip is a
+     short badge by design; it should never wrap. */
+  .chip {{ white-space: nowrap !important; }}
+
+  /* TASK-0344: same squeeze again -- table headers ("ALLOSTERIC", "SITE",
+     "CLAIM"...) are short, uppercase, letter-spaced labels by design; none
+     of them need to wrap, and overflow-wrap:anywhere let "ALLOSTERIC" break
+     to "ALLOST/ERIC" in the narrower taxonomy table. */
+  th {{ white-space: nowrap !important; }}
+
   /* TASK-0342: Guidelines S5 says "minimum 10pt", no exemption for table
      furniture. These selectors measured under 10pt in the base stylesheet
      (eyebrow/meta/foot ~9pt, table headers/chips ~7.9pt) -- floored, not
@@ -192,7 +282,8 @@ PRINT_CSS = """
   }}
 }}
 """.format(top=MARGIN_TOP_MM, right=MARGIN_RIGHT_MM, bottom=MARGIN_BOTTOM_MM,
-          left=MARGIN_LEFT_MM, small_text_selector_list=", ".join(_SMALL_TEXT_SELECTORS))
+          left=MARGIN_LEFT_MM, small_text_selector_list=", ".join(_SMALL_TEXT_SELECTORS),
+          body_font_px=PRINT_BODY_FONT_PX, body_line_height=PRINT_BODY_LINE_HEIGHT)
 
 APPENDIX_MARKER = 'id="appendix"'
 

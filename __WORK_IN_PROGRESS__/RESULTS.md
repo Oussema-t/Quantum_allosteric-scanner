@@ -12437,3 +12437,94 @@ clean after the edit.
 **Files**: `documentation/TEAM_PROFILE.md` (new),
 `documentation/PHASE1_SUBMISSION_V1.{md,html}`. **Full detail**:
 `.ai/tasks/DONE/TASK-0343-team-profile-is-a-separate-component.md`.
+
+## 17 pages to a compliant 6+3 — free typography levers, real content cuts, and two visual bugs caught by actually opening the PDF ([[TASK-0344]], 2026-09-07)
+
+Sequence followed exactly as filed: confirmed [[TASK-0342]]/[[TASK-0343]]
+already landed, re-rendered and re-measured against the real current
+number (**12/6 body FAIL, 5/3 appendix FAIL** — not the stale 9/6·8/3 the
+task was filed against), dropped body font toward 10.5pt, re-measured
+after every single change, only then cut content — never against a stale
+count.
+
+**Free levers first, all print-only in `submission_build.py`'s injected
+stylesheet — the source HTML, also a published screen-read artifact, is
+untouched**: body font 12.4→10.5pt (matching TASK-0342's own small-text
+floor, one size for the whole document), line-height 1.62→1.22, page
+margins 16/15/18/15mm→11/11/12/11mm (still ordinary print margins),
+section spacing 84px→8px, paragraph/list margins 1.05em→0.6em, `h2`/`h3`
+1.72rem→1.3rem/1.0rem. The last one mattered for a reason not obvious in
+advance: headings are `rem`-based (relative to the *root* element), so the
+body font-size lever does not touch them at all — confirmed by
+re-measuring, not assumed.
+
+**Two regressions caught mid-lever, fixed before they shipped, not left as
+fallout**: scaling `table{font-size:14.6px}` proportionally with body font
+dropped it to 9.3pt — *under* the 10pt floor this whole file exists to
+enforce — reverted, table font left at its original size. `h2 .sub`
+(section subtitles) fell under 10pt once `h2` itself shrank — added to
+the existing TASK-0342 small-text floor list rather than given a one-off
+rule.
+
+**Content, cut order followed exactly** (§7 already handled by
+[[TASK-0343]] → Appendix A's rows → tables over prose): Appendix A/B/C
+compressed to compact fragments, full methodology left linked in the
+repository per §4.4's own allowance, nothing deleted outright; §2's
+(a)/(b)/(c) converted from three paragraphs into a table, applying "prefer
+tables to prose" literally rather than only to existing tables; §1/§2/§4/
+§5/§6 prose tightened throughout with no claim or number dropped.
+**§3 grown, not cut, per this task's own explicit protection**: 153→309
+words, a real data/compute/software paragraph answering Guidelines §4.3
+item 3's own three-part ask, not padding.
+
+**A real content bug caught while compressing, unrelated to the page
+budget**: §1's taxonomy table already said "(Appendix C)" for cardiac
+myosin's single-molecule limitation — a dangling reference from
+[[TASK-0332]]'s own edit, since no such bullet existed in Appendix C.
+Added it.
+
+**Planned Validation, both halves, the second one actually performed**:
+`submission_build.py` reports **RESULT: PASS** — body 6/6, appendix 3/3,
+body font 10.5pt, no horizontal overflow; small-text WARN unchanged at
+~200 characters, the same disclosed SVG-label/`<sup>`-exponent residual
+[[TASK-0342]] already accepted, confirmed not a new regression by diffing
+the reported size list. The task's own second validation clause — "a human
+opens the PDF and confirms no table is clipped" — was run for real:
+rendered all 9 final pages to PNG via `pdfplumber` and read every one.
+Found two genuine visual defects the numeric compliance checks cannot see
+(the tool's own report says as much):
+
+1. The §6 SVG pipeline diagram's rightmost text (`text-anchor="middle"` at
+   x=750) sat past its own `viewBox="0 0 760 190"` right edge — always
+   marginal, only visibly clipped once tighter print margins removed its
+   rounding slack. Widened the viewBox to 800; no content positions moved.
+2. `overflow-wrap:anywhere` — [[TASK-0342]]'s own fix for a genuinely
+   unbreakable long token — tells `table-layout:auto`'s width algorithm
+   that *every* character is a valid break point, so short-but-narrow
+   columns got squeezed to near-zero width and then broke words letter by
+   letter: team member names ("Ousse/ma/Turki"), verdict chips
+   ("HOL/DS"), table headers ("ALLOST/ERIC"). Fixed with three targeted
+   rules (`min-width` on first columns, `white-space:nowrap` on `.chip`
+   and `th`) rather than removing `anywhere` itself, which would have
+   reopened the exact clipping bug it was written to close.
+
+Re-rendered and re-viewed after each fix. Final 9-page PDF read page by
+page: no clipping, no mid-word breaks, no overlap.
+
+`doc_parity.py` clean after every batch. `test_submission_build.py` +
+`test_doc_parity.py`: 24+14=38 pass, matching [[TASK-0342]]'s own count —
+no regression from the CSS changes. Checked for confidential/proprietary
+material per the task's own instruction: none found; the only new mention
+is a disclosure ("no proprietary or synthetic structures" in §3), not a
+leak.
+
+**Left open, correctly not decided here**: whether Appendix A/B/C qualify
+as §4.4 "supplementary material" (technical diagrams, references, prior
+work) at all, versus needing to move into §5 or the repo link proper.
+This task's own filing named that a repo-owner scoping question, not an
+implementer call — compression alone reached compliance without forcing
+the decision, so it stays open, disclosed rather than resolved by default.
+
+**Files**: `.ai/tools/submission_build.py` (print-CSS levers + bug fixes),
+`documentation/PHASE1_SUBMISSION_V1.{md,html}`. **Full detail**:
+`.ai/tasks/DONE/TASK-0344-cut-to-the-page-limits.md`.
