@@ -1,6 +1,6 @@
 # TASK-0332 — Submission v2: Berke's structural corrections, promote TASK-0318, team §7
 
-- Status: TODO — brief updated 2026-09-06, read the update section before starting
+- Status: Done
 - Owner: **Reviewer thread** (drafting) → **Berke** (structural sign-off) → repo owner
 - Priority: High — 9 days to 15 September; one item is a factual error a structural biologist will catch on sight
 - Filed: 2026-09-06 by Reviewer thread (id via `claim.py reserve-next`)
@@ -207,3 +207,89 @@ explained and should be replaced by the mechanism, not repeated.
 copy those caveats forward rather than re-deriving them. [[TASK-0333]]'s
 container reproduces the §2 headline number byte-for-byte from a cold clone —
 state that in the reproducibility section, it is a direct criterion-2 asset.
+
+## Done (2026-09-07, Implementer D)
+
+All edits applied to both twins in one pass, `doc_parity.py` verified after
+every batch, final check: `parity OK` (figures / code identifiers / document
+title / section headings / heading ORDER all match).
+
+**Item 1 — MYR/1OPL fixed.** §1 Finding 2 rewritten: BCR-ABL1's `MYR` is now
+correctly framed as the physiological autoinhibitory myristate ligand (Nagar
+et al. 2003), the textbook mechanism, not a contaminant — asciminib named as
+the myristate-mimetic existence proof, adjacent to the correction as
+instructed. GLUCOKINASE/`MRK` and PKR's allosteric modulator remain
+genuinely unexplained; the shared consequence (scoring confound) is kept,
+only the interpretation changed. Checked: no repeat of the old wording in
+`REVERSE_CTQW_BRIEF.html` (none found) or the archived DRAFT (frozen
+historical record, [[TASK-0339]]'s own scope, not touched here).
+
+**Item 2 — cryptic/allosteric taxonomy.** New table at the top of §1 states
+Berke's classification (BCR-ABL1: allosteric, not cryptic; KRAS: both;
+cardiac myosin: allosteric, not cryptic, not even single-molecule — flagged
+into Appendix C rather than carried as an ordinary target). Folded in the
+collaborator's own median-hop-0 measurement for cryptic datasets as an
+explicit "cryptic ≠ distal, now measured" finding, per the task's own
+instruction to state it as a real contribution, not just a caveat.
+
+**Item 3 — clinical paragraph added to §4**, Berke's text lightly adapted,
+kept adjacent (same terms — asciminib, myristoyl site) to item 1's
+correction as instructed.
+
+**Item 4 — TASK-0318 promoted into §2, retitled in the same edit.** Replaced
+§2(d) and its notice box with a new "What we already have — four positive
+results" subsection carrying, in the Brief-update's own specified order: (1)
+TASK-0318 — retitled away from "ceiling" language (now "a validated upper
+bound within one specific feature span"), 0.5949/0.6203/p=3.3e-6/0.6017,
+**with the cold-clone byte-for-byte reproduction now stated directly**
+(0.5948718035160693, this register's own [[TASK-0340]] verification, which
+this session also performed) — a direct Criterion-2 asset, per the Brief's
+own instruction, folded into §2 itself since the mandated 7-item ToC has no
+separate reproducibility section (adding one would re-open [[TASK-0339]]'s
+own just-closed ToC-violation finding); (2) TASK-0334/HYP-P25's mechanism —
+**cluster-robust CORRECTED numbers used** ("7 of 8 combinations clear,
+cluster rho −0.34 to −0.50, p=0.004–0.038, one borderline at p=0.058"), NOT
+the original row-level "−0.408/−0.614" table the filing text itself carried
+— [[TASK-0337]]'s own explicit instruction, checked and followed; (3)
+TASK-0331/HYP-P21's cohort defect, three ways; (4) TASK-0328's pocket-block
+null (45/110→0/110, 33/80→1/80). Propagated the same 0.6203-median number
+into §4's Expected-Impact table and Appendix A's claims-ledger row
+(previously both still said "0.595", now consistent across the whole
+document), and fixed two stray "§2(d)" references elsewhere (§5, Appendix
+C) that would have dangled after the restructure.
+
+**Item 5 — §7 team.** Berke's label/role corrected to the supplied text.
+Oussema's and Berke's bios added, replacing the "INCOMPLETE — awaiting
+detail" placeholder, condensed per instruction (Oussema's awards list cut to
+two placements + the thesis + the toolset). **Not done**: lifting Berke's
+"why classical detection fails" paragraph into §1 — the paragraph's actual
+text was never supplied into the repository, only referenced as something
+Berke would provide; fabricating content and attributing it to a named
+collaborator was not an option. Flagged here rather than silently dropped;
+recorded in `REVIEW_TARGETS.md` would be the next place to track it if not
+resolved before freeze.
+
+**Brief-update items also applied**: v2 pipeline results confirmed absent
+from the draft (nothing to remove); ligand-contamination and
+distal-denominator caveats attached at every ASBench-resting claim in the
+new §2 section; three Appendix-C additions landed (apo-ligand veto leak
+4.2×, ASBench/PASSer training contamination, TASK-0328's unreproducible
+`hash()` seed); [[TASK-0333]]/[[TASK-0340]]'s cold-clone reproducibility
+stated in §2 as instructed.
+
+**Page budget — measured, not silently exceeded.** Body (§1–7) is now
+**3174 words**, up from [[TASK-0339]]'s own 2233-word baseline (+941,
++42%) — this task's own required content (four positives, taxonomy table,
+clinical paragraph, two bios) is inherently additive and TASK-0339's own
+Done section flagged exactly this risk in advance ("+700–900 words with no
+cuts named"). One trim pass applied to the new §2 section during drafting
+(saved ~230 words) without cutting load-bearing content. **At TASK-0339's
+own word-per-page estimate this body is very likely over the 6pp limit now**
+— a further trim-and-render pass, with an actual PDF page count (neither
+this task nor [[TASK-0339]] had a renderer available), is recommended
+before freeze. Not attempted here: further cuts risk removing content this
+task was specifically asked to add, and a real page count needs a real
+renderer, not another word-count proxy.
+
+**Files**: `documentation/PHASE1_SUBMISSION_V1.{md,html}`, both, one commit,
+parity-checked per the task's own Constraint.

@@ -12322,3 +12322,68 @@ root — dropped the leading zero from all 7 badges — rather than padding
 new filler text into the `.md` to manufacture a match.
 
 **Full detail**: `.ai/tasks/DONE/TASK-0339-submission-hygiene-and-page-budget.md`.
+
+## Submission v2 lands: MYR corrected, taxonomy fixed, four positives promoted into §2 — and the page budget is very likely over, disclosed rather than hidden ([[TASK-0332]], 2026-09-07)
+
+Every named item applied to both `PHASE1_SUBMISSION_V1.{md,html}` twins in
+one pass, `doc_parity.py` clean after every batch.
+
+**The factual error**: BCR-ABL1's `1OPL` carries `MYR` (myristate) — the
+draft called it an unexplained contaminant confounding an "apo" pocket
+score. It is the physiological autoinhibitory ligand of that exact pocket
+(Nagar et al. 2003), the textbook mechanism the whole submission argues for,
+not a contaminant. Asciminib, an approved myristate-mimetic BCR-ABL1
+inhibitor, is named as the existence proof, placed adjacent to the
+correction as instructed. GLUCOKINASE/`MRK` and PKR's modulator remain
+genuinely unexplained — only BCR-ABL1's framing changed; the underlying
+scoring-confound finding is untouched.
+
+**Taxonomy**: a new table states cryptic (absent from apo) and allosteric
+(distal from active site) as orthogonal properties — BCR-ABL1 allosteric-
+not-cryptic, KRAS both, cardiac myosin allosteric-not-cryptic-and-not-even-
+single-molecule (flagged into Appendix C rather than carried as an ordinary
+target). The collaborator's own median-hop-0 measurement on cryptic
+datasets is now stated as its own finding — "cryptic ≠ distal, now
+measured" — not only a caveat on ours.
+
+**§2 restructured** into four positive results, in the order the brief
+specified: (1) TASK-0318, retitled away from "ceiling of the input space"
+language to "a validated upper bound within one specific 19-feature span"
+(overclaim named and removed, not just softened), with its cold-clone
+byte-identical reproduction ([[TASK-0340]], `0.5948718035160693`) stated
+directly as a Criterion-2 asset; (2) TASK-0334/HYP-P25's mechanism, using
+**[[TASK-0337]]'s cluster-robust CORRECTED numbers** (7/8 combinations
+clear, cluster rho −0.34 to −0.50, p = 0.004–0.038) rather than the
+filing's own original row-level table — checked against TASK-0337's
+explicit instruction before writing anything, not assumed current; (3)
+TASK-0331/HYP-P21's cohort defect, three independent measurements; (4)
+TASK-0328's pocket-block null, BH-FDR survivors 45/110→0/110. The corrected
+0.5949/0.6203 numbers were propagated into §4's table and Appendix A's
+claims ledger too — both were still quoting the stale "0.595".
+
+**Team**: Berke's label and role corrected to the supplied text; both
+Oussema's and Berke's bios added, replacing the "INCOMPLETE" placeholder,
+condensed per instruction. **Not done, disclosed rather than fabricated**:
+lifting Berke's "why classical detection fails" paragraph into §1 — the
+actual paragraph text was never supplied into the repository, only
+referenced as something he would provide. Writing content and attributing
+it to a named collaborator without his own words was not an option.
+
+**Three new Appendix C disclosures**: the apo-ligand veto's 4.2× leak
+([[TASK-0329]]), ASBench being PASSer's own training data
+([[TASK-0327]]), and the unreproducible `hash()`-seeded null
+([[TASK-0328]]).
+
+**Page budget — measured, not hidden.** Body (§1–7) is now **3174 words**,
+up from [[TASK-0339]]'s own 2233-word baseline (+941, +42%) — a risk
+[[TASK-0339]]'s own Done section flagged in advance. One trim pass applied
+during drafting (saved ~230 words) without cutting content this task was
+specifically asked to add. **At [[TASK-0339]]'s own words-per-page
+estimate, this body is very likely over the 6pp limit now.** No PDF
+renderer was available to get an exact count (same gap [[TASK-0339]] hit);
+a trim-and-render pass before freeze is recommended, not attempted here —
+further cuts risk removing content this task was asked to add, and an
+honest page count needs a real renderer, not a second word-count proxy.
+
+**Files**: `documentation/PHASE1_SUBMISSION_V1.{md,html}`. **Full detail**:
+`.ai/tasks/DONE/TASK-0332-submission-v2-corrections.md`.

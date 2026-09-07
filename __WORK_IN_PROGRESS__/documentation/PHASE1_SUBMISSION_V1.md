@@ -42,16 +42,35 @@ advantage one, and say so rather than let a reader assume otherwise. We
 identified nine candidate quantum-advantage routes for this problem and closed
 all nine by measurement — our principal finding, not a result we work around.
 
-Cryptic allosteric pockets are the most valuable unexploited target class in
-small-molecule drug discovery: absent from the apo structure by definition, which
-is exactly why they are both underexploited and hard to validate. The challenge
-asks for a method that finds them from apo structure. We implemented that method
-in full — §4.1's own specification, a continuous-time quantum walk on the residue
-contact network seeded at the active site — and then did something we believe no
-competing submission will have done. **We audited whether the benchmark can
-certify the answer.**
+**Cryptic and allosteric are two different, orthogonal properties, and this
+document does not conflate them.** Cryptic means the pocket is absent from the
+apo structure and opens only on binding. Allosteric means the site is distal
+from the active site, not co-located with it. Our three mandated targets
+combine them differently:
 
-It cannot, for three diagnosable reasons.
+| Site | Allosteric | Cryptic |
+|---|---|---|
+| BCR-ABL1 myristoyl pocket | yes | **no** |
+| KRAS_G12C switch-II pocket | yes | **yes** |
+| Cardiac myosin (mavacamten site) | yes | **no** — and not even a single-molecule property; a single-chain apo structure cannot represent it, which belongs with our other disclosed limitations (Appendix C), not carried silently as an ordinary benchmark target |
+
+The most valuable unexploited target class in small-molecule drug discovery is
+the cryptic one — absent from the apo structure by definition, which is exactly
+why it is both underexploited and hard to validate. The challenge asks for a
+method that finds such pockets from apo structure alone. We implemented that
+method in full — §4.1's own specification, a continuous-time quantum walk on the
+residue contact network seeded at the active site — and then did something we
+believe no competing submission will have done. **We audited whether the
+benchmark can certify the answer.**
+
+One audit finding belongs here already, because it corrects the framing above:
+a collaborator's independent, 1233-protein unified benchmark measured that the
+field's own cryptic-pocket datasets have **median hop = 0** from the active
+site — cryptic pockets are not, on the whole, distal at all; most sit at or
+adjacent to it. **Cryptic ≠ distal, now measured rather than assumed**, and it
+is a real, exportable finding in its own right, not only a caveat on ours.
+
+It cannot certify the answer, for three diagnosable reasons.
 
 ### Finding 1 — two of the three mandated targets cannot express the contrast the challenge's own premise assumes
 
@@ -81,11 +100,19 @@ plainly rather than improvise one.
 
 ### Finding 2 — two of the failures are previously unreported
 
-An unexplained ligand holds the "apo" pocket open. BCR-ABL1's `1OPL` carries
-`MYR` with **75% overlap** of the scored pocket window; GLUCOKINASE's `1V4S`
-carries `MRK` at **88%**; PKR's `7FS3` carries an allosteric modulator at
-**92%**. These are depositions the field uses as apo. They are not apo at the
-site of interest.
+A ligand holds the "apo" pocket open at three of our audited sites — and in
+one of the three, it is not unexplained at all. BCR-ABL1's `1OPL` carries
+`MYR` (myristate) with **75% overlap** of the scored pocket window: this is
+the physiological autoinhibitory ligand of that exact pocket (Nagar et al.
+2003, docking into the C-lobe myristoyl pocket and clamping the αI helix),
+the textbook example of the mechanism we claim to be chasing, not a
+contaminant — asciminib, an approved BCR-ABL1 inhibitor, is a myristate
+mimetic designed for this same pocket. GLUCOKINASE's `1V4S` carries `MRK` at
+**88%**; PKR's `7FS3` carries an allosteric modulator at **92%** — these two
+remain genuinely unexplained. All three are depositions the field uses as
+apo, and none of the three is apo at the site of interest — one shared
+consequence (the pocket score is confounded by occupancy) from two different
+causes (mechanism, in one case; unexplained contamination, in the other two).
 
 ### Finding 3 — the quantum observable's apparent signal is geometry
 
@@ -145,24 +172,53 @@ holo* conformations, not apo. Measuring the same observable on both isolates
 precisely the quantity cryptic-pocket prediction depends on. To our knowledge
 that delta has never been reported.
 
-**(d) A combined-readout ranker.** Our newest result, and the one constructive
-lead we have. Individually, none of seven implemented observables survives
-conditioning on proximity. *Jointly*, under leave-one-protein-out cross-validation
-on 105 structures, they reach residualised AUC **0.595** — and the ceiling barely
-moves when both proximity features are removed from the model entirely (0.602).
-The information is in the representation; no single observable exposes it.
+### What we already have — four positive results
 
-> #### Both controls, stated
->
-> (d) clears a positive control — proximity
-> residualised on itself lands at **0.5000 exactly**, 105/105 — and a negative
-> one: a permuted-label null centres on **0.4993 ± 0.0110** with **0 of 100**
-> replicates reaching the observed value (z = 8.69). We ran the negative control
-> because we had found the same omission invalidate one of our own headlines a
-> day earlier.
->
-> It remains an *upper bound* — a high-capacity model on one cohort — and the
-> proximity-excluded variant (0.602) has not had its own separate null.
+Criterion 1 scores badly for a submission built mostly on closed negatives.
+Criterion 2 (evidence and validity of approach) is where the register's
+actual strength shows, so we lead with it here.
+
+**1. A validated upper bound, within one specific feature span, on what the
+apo contact graph can express** — not a "ceiling of the input space"; that
+phrase overclaims and is not used here. A gradient-boosted fit over 19
+hand-built scalar functionals of the same apo contact graph, leave-one-
+protein-out over 74 protein clusters: **residualised AUC 0.5949 mean /
+0.6203 median, p = 3.3×10⁻⁶**, holding at **0.6017** with both proximity
+features deleted outright — the "the model just reconstructed proximity"
+objection, tested rather than argued away. It is an upper bound *within that
+19-feature span*, not a lower bound on any function of the graph — it does
+not foreclose a graph-neural-network route. Regenerable on demand: a cold
+clone of the public repository reproduces the underlying number byte-for-byte
+(`0.5948718035160693`), no reuse of anything outside what the repository
+tracks — a direct Criterion-2 reproducibility asset.
+
+**2. A measured mechanism for why the walk fails, not just that it does.**
+Pipeline hit-rate anti-correlates with the true pocket's own distance from
+the active site — cluster-robust: **7 of 8 pre-registered combinations clear
+a cluster-permutation test** (cluster rho −0.34 to −0.50, 22–55 clusters,
+p = 0.004–0.038, one borderline at p = 0.058). A distance-agnostic ML
+specificity control (PASSer, identical pockets) shows no such correlation
+anywhere (p = 0.09–0.99), ruling out "distal proteins are just harder for
+everyone." This is the answer to why the quantum method fails, a stronger
+claim than the failure alone.
+
+**3. The evaluation cohort is not testing what it is assumed to test —
+three independent measurements.** On ASBench/CASBench, most annotated
+"allosteric" pairs are not distal: on a genuinely distal ~45-structure
+subset, our own design cannot even detect proximity, its own dominant
+confound elsewhere (p = 0.89) — a design that cannot detect its own confound
+cannot rule anything in or out. Separately, ~30% of curated pairs across
+three disjoint benchmarks are covalently adjacent (no distal signal present
+by construction), and every one of 40 ASBench structures sampled is
+ligand-bound at the scored site, not truly apo. Every claim above resting on
+ASBench carries this caveat and the ligand-contamination one together.
+
+**4. A stricter null changes which of our own findings survive.** A
+spatially-compact, pocket-block permutation null (matching the real positive
+set's own 1–3-pocket concentration) is far stricter than the uniform null we
+used by default: BH-FDR 5% survivors fall from 45/110 to **0/110** on the
+primary cohort, 33/80 to 1/80 on the veto-corrected one — a reusable
+methodological contribution independent of any target's biology.
 
 ---
 
@@ -196,11 +252,22 @@ chosen, not after.
 this field are currently uncertifiable, and that a validated instrument changes
 which published results survive.
 
+Cryptic allosteric sites matter clinically because they are the route to
+targets that orthosteric chemistry cannot reach — proteins whose active sites
+are too polar, too shallow, or too conserved across a family to permit a
+selective ligand. Asciminib is the existence proof: a myristoyl-site inhibitor
+(§1, Finding 2) that retains activity against the ATP-site resistance
+mutations that defeated four generations of orthosteric BCR-ABL1 inhibitors.
+The reason there are not more asciminibs is not that the sites are absent. It
+is that we cannot currently tell a real one from a scoring artefact,
+prospectively, on a protein where the answer is not already known. That is the
+capability this instrument is meant to certify.
+
 | Target | Quantitative goal | Baseline today |
 |---|---|---|
 | Certified apo/holo pairs | ≥ 40 pairs passing the blind validity rule | 7 audited, 2 pass |
 | Apo vs stripped-holo delta | Reported for ≥ 100 structures | Never reported |
-| Combined readout | Residual AUC ≥ 0.60, LOPO, with a null | 0.595, null passed |
+| Combined readout | Residual AUC ≥ 0.60, LOPO, with a null | 0.6203 median, null passed |
 | Re-audit of published claims | The 84% headline decomposed | Done: it is a six-way disjunction |
 
 That last row is the shape of the impact. The field's leading reported figure —
@@ -234,8 +301,8 @@ Already built and in use, not proposed:
 **Added because we found we had been running it asymmetrically:** a mandatory
 *negative* control alongside every positive one. We had consistently verified that
 a test can detect signal and never that it refuses noise. That omission produced a
-false headline in our own register within the last week. It is now applied — the
-constructive result in §2(d) carries a permuted-label null, and running it is what
+false headline in our own register within the last week. It is now applied — §2's
+positive result 1 carries a permuted-label null, and running it is what
 let us promote that result from a lead to a finding.
 
 ---
@@ -281,7 +348,7 @@ Three people, spanning the three disciplines this problem actually requires.
 | Member | Discipline | Role here |
 |---|---|---|
 | **Oussema Turki** | Quantum algorithms | Operator design, propagator formulation |
-| **Berke Turkaydin** | Molecular biology | Target selection, structural validity, biological interpretation |
+| **Berke Turkaydin** | Computational biophysics / structural chemistry | Target selection and mechanistic classification, structural validity auditing, ensemble and free-energy methodology, biological interpretation |
 | **Bartosz Chmura** | PhD, molecular photophysics · 14 years software quality assurance | Scope and narrative decisions, verification methodology |
 
 ### One methodological commitment explains the rest of this document
@@ -330,10 +397,19 @@ asking to be believed.
 | **Repository** `github.com/Oussema-t/Quantum_allosteric-scanner` | The scanner, the pipeline, the analysis scripts behind every number in this document. |
 | **Branch `bartosz`** | 359 task files · 328 done · 580 commits (as of `ffcfaca`, 2026-09-07) · the full falsification record |
 
-> **INCOMPLETE — awaiting detail.** Oussema and Berke's specific backgrounds and
-> prior work are placeholders above pending their own text. They are named with
-> disciplines only; nothing has been attributed to them that they have not
-> supplied.
+**Oussema Turki** — M.Sc. Quantum Computing Technology (UPM); M.Sc. Quantum
+Engineering in progress (Leibniz Universität Hannover). Thesis benchmarked VQE
+and quantum annealing against DFT/CASSCF/HF references. Qiskit, PennyLane,
+QUBO formulation, hybrid QML; two years simulation engineering at Volkswagen
+R&D. 1st place, PushQuantum; winner, OPUS Challenge.
+
+**Berke Turkaydin** — PhD, Leibniz-Forschungsinstitut für Molekulare
+Pharmakologie (FMP) Berlin / TU Berlin. K2P potassium channel (TREK-2)
+activation and inhibition via all-atom molecular dynamics and enhanced
+sampling (metadynamics, OneOPES), tracing allosteric coupling from the
+selectivity filter through the M4 helix to the fenestration sites. Two
+first-author papers, one currently under review at *Nature Communications*.
+GROMACS, AMBER, PLUMED, AlphaFold, RFdiffusion, ProteinMPNN, HPC.
 
 ---
 
@@ -356,7 +432,7 @@ for.
 | Instances are not computationally hard | **HOLDS** | Fixed backbone: treewidth 2–5, exact optimum in < 0.16 s. Coupled backbone + rotamer: median 5, max 7 at realistic window size — still far below the ~50–80-residue regime where a hard instance appears. |
 | Hardware verdict is `FAULT_TOLERANT_ONLY` | **HOLDS** | Both resolutions, real device calibration |
 | No structural descriptor predicts which method suits which protein | **HOLDS** | Size, chains, fold class, site separation all null against a working positive control |
-| Combined readout reaches residual AUC 0.595 — our strongest constructive result, and the only one clearing both controls | **HOLDS** | 105 structures, 74 proteins, leave-one-protein-out; cluster-robust p = 1×10⁻⁵. *Positive control:* proximity residualised on itself → 0.5000 exactly, 105/105. *Negative control:* permuted-label null 0.4993 ± 0.0110, **0 of 100** reps reach the observed value, z = 8.69. Holds at 0.6017 with both proximity features removed. *Caveat: a high-capacity model, so this is an upper bound, on one cohort.* |
+| Combined readout reaches residual AUC 0.5949 mean / 0.6203 median — our strongest constructive result, and the only one clearing both controls | **HOLDS** | 105 structures, 74 proteins, leave-one-protein-out; cluster-robust p = 1×10⁻⁵. *Positive control:* proximity residualised on itself → 0.5000 exactly, 105/105. *Negative control:* permuted-label null 0.4993 ± 0.0110, **0 of 100** reps reach the observed value, z = 8.69. Holds at 0.6017 with both proximity features removed, byte-for-byte regenerable and cold-clone reproducible. *Caveat: an upper bound within a specific 19-feature span, on one cohort — not a lower bound on any function of the graph, and not a "ceiling" on the input space itself.* |
 | Hamiltonian potential terms carry residual signal once geometry and proximity are controlled for — deliberately not worded as "beat geometry", because they do not | **QUALIFIED** | Two different questions, both answered. *Residualised:* retains signal, 0.740 → 0.660, p = 0.027. *Head-to-head:* **loses** to plain geometry, 0.751 vs 0.795, p = 0.29. And the published margin was a 5-column fitted model against a 1-column unfitted score — matched unfitted, it is 0.599 vs 0.575. |
 | The quantum contribution is larger than the 5–10% Shapley estimate | **RETRACTED** | Withdrawn 2026-09-01. The unconditioned AUC inflated it; the more rigorous earlier method had it right |
 | The site-distance distribution is a continuum with no discrete classes | **RETRACTED** | Rested on a test with too little power at the relevant separation (~40% at n = 26). A stronger "zero power" version of this was itself withdrawn — the original figure compared a separation in sample-SD units against a power curve in component-SD units. |
@@ -394,16 +470,33 @@ These are findable by any referee reading our repository, so we name them first.
   that way needs its directional value reported beside it.
 - **Negative controls were omitted systematically** until two days ago. We
   verified that tests detect signal and never that they refuse noise; this
-  produced one false headline in the last week. Now applied to the §2(d) result,
-  and being retrofitted to the rest — most existing verdicts in the register have
-  still never faced one.
+  produced one false headline in the last week. Now applied to §2's positive
+  result 1, and being retrofitted to the rest — most existing verdicts in the
+  register have still never faced one.
 - **Modality is undetermined.** Two tests, miscalibrated in opposite directions,
   produced our two contradictory verdicts. Neither was earned.
 - **One external comparator has no number attached.** ProteinLens was confirmed
   live but is browser-only with no API. Flagged, not skipped.
+- **The apo-ligand veto exception leaks.** One veto rule protects a candidate
+  pocket if its residues contact a ligand already bound in the deposited
+  "apo" file — the true pocket is **4.2×** more likely than an arbitrary
+  candidate to survive *only* through that exception (13.5% vs 3.2%, paired
+  within-protein). The exception uses ligand occupancy, which is adjacent to
+  the label it is meant to be blind to.
+- **ASBench is a training set for one of our own comparators, not held out.**
+  PASSer's own training data includes ASBench; CASBench is held out. Any
+  comparison against PASSer that uses ASBench is contaminated in PASSer's
+  favour, not ours — disclosed because it affects how a PASSer-beats-us or
+  PASSer-beats-classical comparison should be read, whichever direction it
+  runs.
+- **One upstream permutation-null seed was not reproducible.** A null relied
+  on `hash()` with `PYTHONHASHSEED` unset, so a stored p-value from it could
+  not be regenerated bit-for-bit. A deterministic-seed patch has been written;
+  it has not yet landed upstream in the branch that produced the original
+  figure.
 
 ---
 
 *Team AuraQu · Cleveland Clinic Quantum Allosteric Scanner*
 *Draft v1 · 2026-09-07 · restructured onto Guidelines §4.3's seven-item ToC*
-*Open: two team biographies · demo/report consistency (§6) · multiplicity budget across the register*
+*Open: reconciling the live `main`-branch demo with §6's own disclosure · multiplicity budget across the register*
