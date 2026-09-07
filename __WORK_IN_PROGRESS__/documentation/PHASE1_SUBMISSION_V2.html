@@ -1,0 +1,372 @@
+<title>Quantum Allosteric Scanner — Phase 1 Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root{
+    --paper:#F6F8F7; --surface:#FFFFFF; --surface-2:#EEF2F1;
+    --ink:#14201E; --ink-2:#3B4A47; --ink-3:#6B7B77;
+    --rule:#D8E0DE; --rule-strong:#B8C5C2;
+    --accent:#0E5A55; --accent-soft:#E3EFED;
+    --holds:#1C6B48; --holds-bg:#E4F0E9;
+    --qual:#8A6314; --qual-bg:#F6EEDD;
+    --dead:#9B2C2C; --dead-bg:#F7E6E4;
+    --undet:#475569; --undet-bg:#EAEDF1;
+    --shadow:0 1px 2px rgba(20,32,30,.06),0 8px 24px -12px rgba(20,32,30,.18);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --paper:#0D1312; --surface:#141C1B; --surface-2:#1B2422;
+      --ink:#E7EEEC; --ink-2:#B3C1BE; --ink-3:#839591;
+      --rule:#283432; --rule-strong:#3A4947;
+      --accent:#59C3B5; --accent-soft:#14322F;
+      --holds:#6DC79A; --holds-bg:#14301F;
+      --qual:#D7A94A; --qual-bg:#33280F;
+      --dead:#E38B84; --dead-bg:#341A18;
+      --undet:#9AA8B8; --undet-bg:#1D242C;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0D1312; --surface:#141C1B; --surface-2:#1B2422;
+    --ink:#E7EEEC; --ink-2:#B3C1BE; --ink-3:#839591;
+    --rule:#283432; --rule-strong:#3A4947;
+    --accent:#59C3B5; --accent-soft:#14322F;
+    --holds:#6DC79A; --holds-bg:#14301F;
+    --qual:#D7A94A; --qual-bg:#33280F;
+    --dead:#E38B84; --dead-bg:#341A18;
+    --undet:#9AA8B8; --undet-bg:#1D242C;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:"Source Sans 3",ui-sans-serif,system-ui,sans-serif;
+    font-size:16.5px; line-height:1.62;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:0 28px 96px}
+
+  /* ---------- masthead ---------- */
+  .mast{border-bottom:2px solid var(--ink);padding:56px 0 22px;margin-bottom:8px}
+  .eyebrow{
+    font-family:"JetBrains Mono",ui-monospace,monospace;
+    font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;
+  }
+  h1{
+    font-family:"Source Serif 4",Georgia,serif;
+    font-size:clamp(2.1rem,5vw,3.05rem); line-height:1.08; font-weight:700;
+    margin:.34em 0 .28em; letter-spacing:-.018em; text-wrap:balance;
+  }
+  .standfirst{
+    font-family:"Source Serif 4",Georgia,serif;
+    font-size:1.16rem;color:var(--ink-2);max-width:64ch;margin:0;
+  }
+  .meta{
+    display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:26px;
+    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;color:var(--ink-3);
+  }
+  .meta b{color:var(--ink-2);font-weight:600}
+
+  /* ---------- notice ---------- */
+  .notice{
+    background:var(--surface);border:1px solid var(--rule);
+    border-left:3px solid var(--accent);
+    border-radius:3px;padding:20px 24px;margin:30px 0 44px;box-shadow:var(--shadow);
+  }
+  .notice h4{
+    font-family:"JetBrains Mono",ui-monospace,monospace;
+    font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--accent);margin:0 0 9px;font-weight:600;
+  }
+  .notice p{margin:0 0 9px;color:var(--ink-2);font-size:15.4px}
+  .notice p:last-child{margin-bottom:0}
+
+  /* ---------- sections ---------- */
+  section{
+    display:grid;grid-template-columns:56px minmax(0,1fr);gap:0 24px;
+    padding-top:44px;margin-top:40px;border-top:1px solid var(--rule);
+  }
+  section.plain{grid-template-columns:minmax(0,1fr)}
+  .num{
+    font-family:"JetBrains Mono",ui-monospace,monospace;
+    font-size:13px;font-weight:600;color:var(--accent);
+    padding-top:.5em;letter-spacing:.02em;
+  }
+  .body{min-width:0}
+  h2{
+    font-family:"Source Serif 4",Georgia,serif;
+    font-size:1.72rem;line-height:1.16;font-weight:700;margin:0 0 .16em;
+    letter-spacing:-.012em;text-wrap:balance;
+  }
+  h2 .sub{display:block;font-size:.95rem;font-family:"Source Sans 3",sans-serif;
+    font-weight:400;color:var(--ink-3);letter-spacing:0;margin-top:.5em;font-style:italic}
+  h3{
+    font-family:"Source Sans 3",sans-serif;font-size:1.03rem;font-weight:700;
+    margin:2em 0 .5em;color:var(--ink);
+  }
+  p{margin:0 0 1.05em;max-width:68ch}
+  ul,ol{margin:0 0 1.05em;padding-left:1.25em;max-width:68ch}
+  li{margin-bottom:.5em}
+  strong{font-weight:700}
+  em{font-style:italic}
+  a{color:var(--accent);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+  a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+  code{
+    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.855em;
+    background:var(--surface-2);padding:.1em .34em;border-radius:2px;color:var(--ink-2);
+  }
+
+  /* ---------- claim / verdict chips ---------- */
+  .chip{
+    display:inline-block;font-family:"JetBrains Mono",ui-monospace,monospace;
+    font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;
+    padding:2px 7px;border-radius:2px;white-space:nowrap;
+  }
+  .c-holds{background:var(--holds-bg);color:var(--holds)}
+  .c-qual{background:var(--qual-bg);color:var(--qual)}
+  .c-dead{background:var(--dead-bg);color:var(--dead)}
+  .c-undet{background:var(--undet-bg);color:var(--undet)}
+
+  /* ---------- tables ---------- */
+  .tw{overflow-x:auto;margin:0 0 1.4em;border:1px solid var(--rule);border-radius:3px;background:var(--surface)}
+  table{border-collapse:collapse;width:100%;font-size:14.6px}
+  th{
+    text-align:left;font-family:"JetBrains Mono",ui-monospace,monospace;
+    font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+    color:var(--ink-3);padding:11px 14px;border-bottom:1px solid var(--rule-strong);
+    white-space:nowrap;background:var(--surface-2);
+  }
+  td{padding:11px 14px;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink-2)}
+  tr:last-child td{border-bottom:none}
+  td.n{font-family:"JetBrains Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink)}
+  td b{color:var(--ink)}
+  .ledger td:first-child{border-left:3px solid transparent}
+  .ledger tr.holds td:first-child{border-left-color:var(--holds)}
+  .ledger tr.qual td:first-child{border-left-color:var(--qual)}
+  .ledger tr.dead td:first-child{border-left-color:var(--dead)}
+  .ledger tr.undet td:first-child{border-left-color:var(--undet)}
+
+  /* ---------- callouts ---------- */
+  .open{
+    background:var(--qual-bg);border:1px dashed var(--qual);border-radius:3px;
+    padding:16px 20px;margin:0 0 1.3em;
+  }
+  .open .tag{
+    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10.5px;
+    letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--qual);
+    display:block;margin-bottom:6px;
+  }
+  .open p{margin:0;color:var(--ink-2);font-size:15.2px}
+
+  .attack{background:var(--surface);border:1px solid var(--rule);border-radius:3px;padding:4px 0;box-shadow:var(--shadow)}
+  .attack ol{margin:0;padding:0;list-style:none;max-width:none}
+  .attack li{
+    display:grid;grid-template-columns:34px minmax(0,1fr);gap:0 14px;
+    padding:16px 22px;border-bottom:1px solid var(--rule);margin:0;
+  }
+  .attack li:last-child{border-bottom:none}
+  .attack .k{
+    font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;
+    font-weight:600;color:var(--dead);padding-top:.15em;
+  }
+  .attack .q{display:block;font-weight:700;color:var(--ink);margin-bottom:4px;font-size:15.4px}
+  .attack .a{display:block;color:var(--ink-2);font-size:14.7px}
+
+  .legend{display:flex;flex-wrap:wrap;gap:9px 18px;margin:0 0 1.2em;align-items:center}
+  .legend span.lbl{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--ink-3);letter-spacing:.06em}
+
+  blockquote{
+    margin:0 0 1.2em;padding:2px 0 2px 20px;border-left:2px solid var(--rule-strong);
+    color:var(--ink-2);font-family:"Source Serif 4",Georgia,serif;font-style:italic;max-width:66ch;
+  }
+  hr.thin{border:none;border-top:1px solid var(--rule);margin:2.4em 0}
+  .foot{margin-top:56px;padding-top:22px;border-top:2px solid var(--ink);
+    font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--ink-3);line-height:1.8}
+  @media (max-width:700px){
+    section{grid-template-columns:minmax(0,1fr);gap:0}
+    .num{padding-top:0;margin-bottom:6px}
+    .wrap{padding:0 18px 64px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+  /* ---- print: tables must not clip on paper (screen keeps overflow-x:auto) ---- */
+  @media print {
+    /* Chrome renders the build tool's 14px lever at 9.7pt, not the 10.5pt it
+       assumes; 15px measures ~10.4pt and clears the 10pt floor. */
+    body, p, li, ul, ol { font-size: 15px !important; line-height: 1.33 !important; }
+    th, td, td.n { font-size: 14.6px !important; }
+    .tw { overflow: visible !important; }
+    table { table-layout: auto !important; width: 100% !important; }
+    th, td, td.n, .chip { white-space: normal !important; }
+    pre, pre code { font-size: 8.6pt !important; }   /* ASCII diagram must not wrap */
+    section { break-inside: auto; }
+  }
+</style>
+<div class="wrap">
+
+<header class="mast">
+  <div class="eyebrow">Global Quantum + AI Challenge 2026 · Phase 1 Ideation · Team AuraQu</div>
+  <h1>Quantum Allosteric Scanner</h1>
+  <p class="standfirst">The benchmark cannot certify what the challenge asks. Here is the measurement that shows it, and the specification for one that could.</p>
+</header>
+
+<!-- ============ 1 ============ -->
+<section>
+  <div class="num">1</div>
+  <div class="body">
+    <h2>Problem Framing</h2>
+
+    <p>Cryptic allosteric sites are the route to targets orthosteric chemistry cannot reach — proteins whose active sites are too polar, too shallow, or too conserved across a family to permit a selective ligand. Asciminib is the existence proof: a myristoyl-site inhibitor that retains activity against the ATP-site resistance mutations that defeated four generations of orthosteric BCR-ABL1 drugs. The reason there are not more asciminibs is not that the sites are absent. <strong>It is that nobody can currently tell a real one from a scoring artefact, prospectively, on a protein where the answer is not already known.</strong></p>
+
+    <p>That is a measurement problem before it is a method problem, and it is where we spent Phase 1.</p>
+
+    <p>We built the method the challenge specifies — a continuous-time quantum walk on the residue contact network, seeded at the active site, ranking distal residues by transport — and then asked whether the field's benchmarks can certify its answer. <strong>They cannot, and the same limitation applies to every competing method, quantum or classical.</strong> Four measurements, each with a direct consequence:</p>
+
+    <h3>Cryptic and allosteric are orthogonal, and the benchmarks conflate them</h3>
+    <p>We assembled a unified 1233-protein benchmark across five public datasets and measured, for every annotated site, its graph distance from the active site. Only 23% of curated allosteric sites and 7% of drug-contact pockets are genuinely distal; the cryptic-pocket datasets have <strong>median hop = 0</strong> — their pockets sit essentially <em>on</em> the active site. <em>Consequence:</em> a method that searches distally is being scored on pockets that are not distal, so the benchmark rewards proximity. This is why every propagation method, ours included, is beaten by distance-to-the-active-site.</p>
+
+    <h3>Most standard targets cannot express the contrast they are used to test</h3>
+    <p>A blind, pre-registered validity rule — apo closed, holo open, ligand stripped, cavity re-scored — passes <strong>1 of 3</strong> mandated targets and <strong>1 of 4</strong> from the recommended database.</p>
+    <div class="tw"><table>
+      <tr><th>Target set</th><th>Source</th><th>Valid</th></tr>
+      <tr><td>KRAS_G12C, BCR-ABL1, cardiac myosin</td><td>Table 1, mandated</td><td class="n"><b>1 of 3</b></td></tr>
+      <tr><td>PTP1B, glucokinase, caspase-1, caspase-7</td><td>Recommended database</td><td class="n"><b>1 of 4</b></td></tr>
+    </table></div>
+    <p>We did not choose the failing targets. <em>Consequence:</em> where the apo structure already has an open pocket, "finding" it demonstrates nothing, and published success rates on those targets do not measure prediction.</p>
+    <p><strong>c-Myc (<code>1NKP</code>)</strong>, the challenge's separately named fourth target, has no drug-bound structure in the PDB — it cannot carry the apo/holo contrast by construction, so the validity rule does not apply to it at all. We ran a four-operator consensus instead (<code>results/MYC_MAX/</code>; the operators agree on residue 943). There is no ground truth to score that consensus against, so we report it together with its lack of validation rather than as a performance number.</p>
+
+    <h3>"Apo" does not mean ligand-free, and the exceptions are not random</h3>
+    <p>We assumed apo depositions were empty at the site of interest. They are not: <strong>3 of 7</strong> audited targets have a ligand holding the pocket open, and <strong>40 of 40</strong> ASBench structures we sampled carry a bound ligand at the scored site. One case is mechanistically expected — BCR-ABL1's <code>1OPL</code> carries myristate, the physiological autoinhibitory ligand of that exact pocket. Two are unexplained: glucokinase <code>1V4S</code>/<code>MRK</code> (88% overlap) and PKR <code>7FS3</code> (92%). <em>Consequence:</em> the contamination correlates with the label — the most interesting targets are the ones most likely to be pre-opened — so it inflates measured performance rather than adding noise.</p>
+
+    <h3>Our own method fails this instrument, which is the honest test of it</h3>
+    <p>Walk occupation scores AUC 0.5921 across 108 structures. Conditioned on distance to the active site it falls to <strong>0.5184, not significant</strong> — roughly 80% of the apparent signal was inherited proximity. We published the unconditioned number and retracted it four days later.</p>
+  </div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section>
+  <div class="num">2</div>
+  <div class="body">
+    <h2>Technical Approach</h2>
+
+    <h3>Paradigm</h3>
+    <p><strong>Quantum-inspired, classically simulable.</strong> Single-particle continuous-time quantum walks on a residue contact graph simulate efficiently on classical hardware; we claim no asymptotic speedup. The formalism is used as a <em>modelling language</em> for coherent, interference-carrying transport. We are explicitly not proposing QAOA on a protein: side-chain packing at pocket scale is a pairwise Markov random field of treewidth 2–5, solved exactly in 0.001–0.159 s against a naive 10<sup>14</sup> configuration space. A genuinely hard regime appears only at ~50–80 coupled residues — most of a domain, not a pocket.</p>
+
+    <h3>The physical hypothesis, and what we did to it</h3>
+    <p>A classical random walk sums probabilities over paths; a quantum walk sums amplitudes, so paths can interfere. The hypothesis worth testing is that <strong>interference between propagation paths distinguishes allosterically coupled residue pairs from merely nearby ones</strong> — that coherence carries coupling information distance does not. We tested it in the strongest forms we could construct:</p>
+    <div class="tw"><table>
+      <tr><th>Construction</th><th>Why it should have worked</th><th>Conditioned on proximity</th></tr>
+      <tr><td>Converged CTQW on <code>H_new</code></td><td>The specified method: contact Laplacian plus five chemical and structural potentials</td><td class="n">0.5921 → <b>0.5184</b></td></tr>
+      <tr><td>Chiral walk (Peierls phases)</td><td>Broken time-reversal symmetry gives a circulating component <b>orthogonal to radial flow by construction</b> — the strongest available prior for a proximity-independent observable</td><td class="n"><b>0.4960</b> — below chance</td></tr>
+      <tr><td>Engineered dephasing (ENAQT)</td><td>Environment-assisted transport is where coherence demonstrably helps in photosynthetic complexes</td><td class="n">relaxes to the proximity limit</td></tr>
+      <tr><td>Spectral coherence; entanglement entropy</td><td>Direct coherence measures rather than occupation</td><td class="n">0.5226; 0.4903</td></tr>
+    </table></div>
+    <p><strong>The mechanism behind the null is measured, not assumed.</strong> The converged walk's transfer matrix has row entropy at 0.86–0.89 of maximum and near-full numerical rank: it has equilibrated. Only 11–14% of the possible seed conditioning survives, and what survives is 0.63–0.79 anti-correlated with hop distance. <strong>It is a distance measure with extra steps</strong> — and this is not a tuning failure, because the pipeline's hit rate anti-correlates with true-pocket distance in 7 of 8 pre-registered cluster-permutation tests (ρ −0.34 to −0.50, 22–55 clusters, p = 0.004–0.038), while a machine-learned pocket predictor scored on the identical pockets shows no such correlation (p = 0.09–0.99). The walk degrades with distance; the classical baseline does not.</p>
+    <p>We also ran the full ensemble end to end — thirteen operators × seventeen scores, with a cryptic-opening veto — over 1022 proteins. Under matched multiplicity, one candidate set and a matched null, <strong>no arm clears more than 5 of 276 protein families, and quantum and classical arms are statistically indistinguishable</strong> (McNemar p = 1.0).</p>
+    <p><strong>Our honest position: single-particle coherent transport on a static contact graph is exhausted.</strong> We closed nine candidate advantage routes by measurement. A remaining quantum route must supply something the static graph does not have — either a true many-body object (conformational search, whose hard regime we have located at 50–80 residues) or dynamics rather than one structure. We would rather state that than propose a tenth variant of a construction we have already falsified four ways.</p>
+
+    <h3>What we propose to build in Phase 2</h3>
+    <p><strong>A certifying instrument, with our own method as its first test subject.</strong> The instrument failure in §1 applies to any method; the deliverable that moves the field is the validated benchmark, built to apply equally to a competing submission.</p>
+    <div class="tw"><table>
+      <tr><th>Component</th><th>What it does</th><th>Why it is needed</th></tr>
+      <tr><td><b>(a)</b> Certifying cryptic-pocket benchmark</td><td>Blind validity rule, endogenous-ligand audit, positive control, measured detection limit, at scale</td><td>5 of 7 standard targets fail the contrast; the field uses them regardless</td></tr>
+      <tr><td><b>(b)</b> Apo vs stripped-holo delta</td><td>Isolates what cryptic-pocket prediction actually depends on</td><td>Leading methods report 89.8%/98.1% on ASBench/CASBench, but evaluate <em>ligand-removed holo</em>, not apo. We have found no report of the delta</td></tr>
+      <tr><td><b>(c)</b> Screening criterion for the hard regime</td><td>Decides <em>from apo alone</em> whether a target needs many-body treatment</td><td>Coupled search fires for 20% of KRAS_G12C restarts and 0 of 65 for PTP1B — two valid targets disagree, and n = 2 cannot adjudicate</td></tr>
+    </table></div>
+    <p>Component (b) is roughly 27 minutes of compute over 100 apo/holo pairs and half a day of scripting against pairs we have already identified. We expect to report it before Phase 2 begins rather than propose it.</p>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section>
+  <div class="num">3</div>
+  <div class="body">
+    <h2>Feasibility &amp; Resource Requirements</h2>
+    <p><strong>Hardware, measured rather than assumed.</strong> At one qubit per residue — the convention behind every number here — the register needs <strong>169–704 qubits and 3.3M–124.9M two-qubit gates</strong>. Coarse-graining to a NISQ-plausible 10–15 qubits destroys the ranking signal (retention Jaccard 0.00–0.18) without reaching usable fidelity. Against a real IBM device calibration snapshot, every mandated target verdicts <strong><code>FAULT_TOLERANT_ONLY</code></strong> at both resolutions. We checked both hardware routes named in the challenge bibliography; neither changes this. AWS Braket and Classiq access were confirmed with the organisers as a Phase-2 benefit — irrelevant to a verdict set by qubit count and circuit depth, not by cloud provider. <strong>This is why §2 proposes classical-plus-quantum-inspired rather than hardware-targeted work: the resource picture was measured before the framing was chosen.</strong></p>
+    <p><strong>Data.</strong> Public apo/holo PDB depositions plus five field benchmarks for cohort scale. No proprietary or synthetic structures. Every cohort's contamination and coverage limits are audited in §1 rather than assumed clean — that audit is itself a Phase-2 deliverable.</p>
+    <p><strong>Compute.</strong> Classical throughout. Elastic-network ensemble generation, contact-graph construction and the walk's own simulation run on commodity CPUs; the largest single analysis (105-structure feature extraction) completes in under two hours on one machine, containerised and reproducible from a cold clone. The 1022-protein ensemble sweep needed a modest HPC allocation for a day.</p>
+    <p><strong>Software.</strong> Python/NumPy/SciPy for operator and propagator mathematics, <code>fpocket</code> for candidate detection, BioPython and ProDy for parsing — no dependency the field does not already use.</p>
+    <p><strong>The binding constraint is benchmark validity, not compute budget.</strong> More hardware does not fix a target that fails the apo/holo contrast by construction.</p>
+  </div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section>
+  <div class="num">4</div>
+  <div class="body">
+    <h2>Expected Impact</h2>
+    <p><strong>What a successful PoC demonstrates:</strong> that cryptic-pocket method claims in this field are currently uncertifiable, and that a validated instrument changes which published results survive.</p>
+    <p>The field's headline figure illustrates the gap. "84% recovery" is <strong>99 of 118 structures detected by at least one of six statistical measures</strong>. Requiring three of six drops it to 57.6%; requiring all six, to 17.8%. The number is real and correctly computed — it is simply not what a reader assumes it means. A certifying benchmark makes that distinction automatic rather than archaeological.</p>
+    <div class="tw"><table>
+      <tr><th>Target</th><th>Quantitative goal</th><th>Baseline today</th></tr>
+      <tr><td>Certified apo/holo pairs</td><td>≥ 40 pairs passing the blind validity rule</td><td class="n">7 audited, 2 pass</td></tr>
+      <tr><td>Apo vs stripped-holo delta</td><td>Reported for ≥ 100 structures</td><td class="n">not reported in the literature we surveyed</td></tr>
+      <tr><td>Combined readout</td><td>Residual AUC ≥ 0.60, LOPO, against a matched null</td><td class="n">0.6203 median, null passed</td></tr>
+      <tr><td>Re-audit of published claims</td><td>The 84% headline decomposed</td><td class="n">done — a six-way disjunction</td></tr>
+    </table></div>
+    <p>For Cleveland Clinic the value is a go/no-go instrument applied <em>before</em> committing chemistry to a predicted site: a prospective ranking that has survived a proximity floor, a spatially matched null and a cluster-robust test is a different object from one that has not, and today the two are reported identically.</p>
+  </div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section>
+  <div class="num">5</div>
+  <div class="body">
+    <h2>Validation Plan</h2>
+    <p>Built and in use, not proposed:</p>
+    <ul>
+      <li><strong>Proximity floor.</strong> Every score must beat the strongest trivial baseline — degree, hop distance, Euclidean distance from the seed. This is what demoted our own headline result.</li>
+      <li><strong>Spatially matched nulls.</strong> Three generations, each fixing a measured defect in the last. The current pocket-block null matches the real positives' own spatial concentration; moving to it changed BH-FDR survivors from 45/110 to <strong>0/110</strong>.</li>
+      <li><strong>Positive control with a measured detection limit</strong> — planted, confound-orthogonal, so a null result can be distinguished from an underpowered test. On a genuinely distal subset our design cannot detect even proximity (p = 0.89), so we report that it cannot adjudicate rather than reporting a false negative.</li>
+      <li><strong>Cluster-robust inference.</strong> Exact cluster-level permutation, adopted after four selection procedures in our own work died of pseudo-replication.</li>
+      <li><strong>A negative control beside every positive one.</strong> Added after we noticed the asymmetry: we had verified that our tests detect signal, never that they refuse noise. That omission produced a false headline, and closing it is what promoted our strongest result from a lead to a finding.</li>
+    </ul>
+    <p><strong>Success criteria for Phase 2:</strong> the instrument certifies ≥ 40 apo/holo pairs; a combined apo-only readout holds residual AUC ≥ 0.60 under leave-one-protein-out against a matched null; and at least one published cryptic-pocket claim is confirmed or overturned by re-measurement.</p>
+  </div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section>
+  <div class="num">6</div>
+  <div class="body">
+    <h2>Hybrid / Cross-Domain Architecture</h2>
+    <p>Classical ensemble generation → quantum-inspired transport → classical verification. One runner emits all three required artefacts, so they cannot disagree with each other.</p>
+<pre><code> Apo structure                                              Three artefacts,
+      │                                                       one runner
+      ▼
+┌──────────────────┐   ┌───────────────────────┐   ┌────────────────────────┐
+│ Classical ENM    │──▶│ Quantum-inspired      │──▶│ Classical verification │
+│ ensemble         │   │ transport subroutine  │   │ (druggability,         │
+│ generation       │   │ (continuous-time walk)│   │  proximity floor, null)│
+└──────────────────┘   └───────────────────────┘   └───────────┬────────────┘
+                                                               │
+                                  ┌────────────────┬───────────┴──────────┐
+                                  ▼                ▼                      ▼
+                         Connectivity matrix  Site-level hit list   Methodological
+                                                                       report
+</code></pre>
+    <p>The runner emits the three required deliverables in a single pass: the <strong>connectivity matrix</strong> (residue–residue transport), the <strong>site-level hit list</strong> (ranked candidate pockets, each carrying its proximity-floor and null verdict), and the <strong>methodological report</strong> (per-target provenance, controls run, and the cohort every claim was measured on). Because one pass produces all three, a hit list cannot disagree with the matrix it came from.</p>
+    <p>The rationale for the split is empirical: the classical stages carry the signal we can currently certify, and the quantum-inspired stage is the component under test. Keeping them separable is what allowed us to measure that the transport subroutine adds nothing beyond the classical baseline — a hybrid design that could not isolate its own quantum stage could not have found that.</p>
+  </div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section>
+  <div class="num">7</div>
+  <div class="body">
+    <h2>Team Capability</h2>
+    <div class="tw"><table>
+      <tr><th>Member</th><th>Discipline</th><th>Role in this project</th></tr>
+      <tr><td><b>Oussema Turki</b></td><td>Quantum algorithms</td><td>Operator design, propagator formulation, ensemble sweeps</td></tr>
+      <tr><td><b>Berke Turkaydin</b></td><td>Computational biophysics / structural chemistry</td><td>Target selection and mechanistic classification, structural validity auditing, biological interpretation</td></tr>
+      <tr><td><b>Bartosz Chmura</b></td><td>Molecular photophysics; software quality assurance</td><td>Verification methodology, scope and reporting decisions</td></tr>
+    </table></div>
+    <p>Full biographies, affiliations and prior quantum-computing experience are in the separate Team Profile.</p>
+    <p><strong>One methodological commitment shaped this submission.</strong> We used an AI-assisted workflow, which accelerates work and generates plausible errors at the same rate. So we built the register to catch its own failures: the role that implements is separated from the role that verifies and assigned to a different model, every positive control has a negative one, and every claim carries the cohort it was measured on. It found five of our own errors in seven days, including our headline result. We report that as evidence the method of working is sound, not as a credential — the full task history, including every retraction, is public at <code>github.com/Oussema-t/Quantum_allosteric-scanner</code> (branch <code>bartosz</code>).</p>
+  </div>
+</section>
+
+</div>
