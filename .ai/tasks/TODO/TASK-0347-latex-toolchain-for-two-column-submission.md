@@ -88,3 +88,35 @@ route is validated, passing, and produced a submittable PDF today. So:
 The motivation is density, not typesetting quality — the current PDF is already
 clean. Judge the result on pages saved and constraints kept, not on whether it
 looks like a LaTeX paper.
+
+## Added 2026-09-08 — the page counter is wrong, and this is the strongest argument for the task
+
+The CSS multi-column fallback named below was applied and built. Measured:
+
+| | |
+|---|---|
+| physical pages in the rendered PDF | **3** |
+| pages reported by `submission_build.py` | **7 / 6 — FAIL** |
+
+**A greater than 2× error, in the one number the whole build exists to certify.**
+`column-count` breaks whatever `pdf_to_pages()` uses to attribute text to pages,
+and the checker reports a failure on a document that is comfortably compliant.
+
+Two consequences, both of which raise this task's priority:
+
+1. **The CSS fallback is not a fallback.** It produces a correct PDF that our own
+   tooling cannot measure, so we would be shipping on an uncertified page count.
+   Strike it as the cheap route back — it is only cheap if the checker works.
+2. **No page count in this register has ever been validated against physical
+   reality.** Single-column numbers were never cross-checked the way this
+   two-column one accidentally was. Before trusting any figure from
+   `submission_build.py` again, assert `len(pdfplumber.pages)` against the
+   reported total — a one-line check that would have caught this immediately, and
+   whose absence is the same "unverified checker" failure [[TASK-0319]] keeps
+   finding.
+
+**This is why LaTeX rather than more CSS.** Pagination in a two-column CSS render
+is emergent and, as measured here, not reliably observable by our own tools.
+LaTeX pagination is explicit, deterministic and reproducible from the source — it
+is the format the checker can trust, and it gives the document the conventional
+scientific presentation a panel expects. Priority raised accordingly.

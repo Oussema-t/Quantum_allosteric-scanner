@@ -198,7 +198,15 @@
        assumes; 15px measures ~10.4pt and clears the 10pt floor. */
     body, p, li, ul, ol { font-size: 15px !important; line-height: 1.33 !important; }
     th, td, td.n { font-size: 14.6px !important; }
+    section .body h2, section .body h3 { break-after: auto !important; }
+    section, section .body { break-inside: auto !important; }
+    /* two-column body: ~40% more content per page. Tables, the diagram and
+       section headings span both columns so nothing is squeezed or clipped. */
+    section .body { column-count: 2 !important; column-gap: 7mm !important; }
+    section .body h2, section .body h3, section .body .tw, section .body pre {
+      column-span: all !important; }
     .tw { overflow: visible !important; }
+    section:last-of-type .tw, section:last-of-type table, section:last-of-type tr { break-inside: auto !important; }
     table { table-layout: auto !important; width: 100% !important; }
     th, td, td.n, .chip { white-space: normal !important; }
     pre, pre code { font-size: 8.6pt !important; }   /* ASCII diagram must not wrap */
@@ -243,6 +251,21 @@
 
     <h3>Our own method fails this instrument, which is the honest test of it</h3>
     <p>Walk occupation scores AUC 0.5921 across 108 structures. Conditioned on distance to the active site it falls to <strong>0.5184, not significant</strong> — roughly 80% of the apparent signal was inherited proximity. We published the unconditioned number and retracted it four days later.</p>
+
+    <p><strong>Our five guesses per target, and our own verdict on them.</strong> The required hit list is five ranked residues per protein. For the three targets where a drug-bound structure exists to check against, we also report what our own validation says about them — which is that none is distinguishable from chance:</p>
+    <div class="tw"><table>
+      <tr><th>Target</th><th>Top five residues</th><th>Residue AUC</th><th>Our verdict</th></tr>
+      <tr><td>KRAS_G12C (<code>4LDJ</code>)</td><td class="n">31, 122, 33, 121, 29</td><td class="n">0.514</td><td class="n"><code>NO_SIGNAL_IN_APO</code></td></tr>
+      <tr><td>BCR-ABL1 (<code>1OPL</code>)</td><td class="n">402, 311, 310, 301, 338</td><td class="n">0.541</td><td class="n"><code>NO_SIGNAL_IN_APO</code></td></tr>
+      <tr><td>Cardiac myosin</td><td class="n">682, 683, 681, 680, 133</td><td class="n">0.548</td><td class="n"><code>NO_SIGNAL_IN_APO</code></td></tr>
+      <tr><td>c-Myc (<code>1NKP</code>)</td><td class="n">943, 246, 925, 226, 243</td><td class="n">—</td><td class="n">no ground truth; 4-operator consensus</td></tr>
+    </table></div>
+    <p>All three floor confidence intervals include the observed score. <strong>We submit the five as required and state plainly that we cannot certify them</strong> — the conclusion this proposal reaches about the field's published numbers, applied to our own.</p>
+
+    <p><strong>What <code>NO_SIGNAL_IN_APO</code> means.</strong> It is our own diagnostic verdict, not a crash: the score's confidence interval overlaps that of the best trivial baseline computed on the same structure. It says the apo contact graph, as we encode it, carries nothing about that pocket beyond what distance already supplies.</p>
+    <p><strong>Why we report numbers this close to chance, and claim nothing beats them.</strong> Because the alternative is reporting a selection artefact. On any single protein we can find an operator and score that look excellent — with thirteen operators and seventeen scores there are 221 chances per target, and reporting the best of them is ordinary practice in this field. We did exactly that early on and it produced a headline we retracted four days later. Under matched multiplicity across 276 protein families, <strong>no arm clears more than 5 — ours or any classical baseline — and they are statistically indistinguishable from each other</strong> (McNemar p = 1.0). The near-chance numbers above are what survives that correction. A method can be made to fit one protein; what none of ours does, quantum or classical, is generalise across the ensemble.</p>
+
+
   </div>
 </section>
 
@@ -286,9 +309,7 @@
   <div class="body">
     <h2>Feasibility &amp; Resource Requirements</h2>
     <p><strong>Hardware, measured rather than assumed.</strong> At one qubit per residue — the convention behind every number here — the register needs <strong>169–704 qubits and 3.3M–124.9M two-qubit gates</strong>. Coarse-graining to a NISQ-plausible 10–15 qubits destroys the ranking signal (retention Jaccard 0.00–0.18) without reaching usable fidelity. Against a real IBM device calibration snapshot, every mandated target verdicts <strong><code>FAULT_TOLERANT_ONLY</code></strong> at both resolutions. We checked both hardware routes named in the challenge bibliography; neither changes this. AWS Braket and Classiq access were confirmed with the organisers as a Phase-2 benefit — irrelevant to a verdict set by qubit count and circuit depth, not by cloud provider. <strong>This is why §2 proposes classical-plus-quantum-inspired rather than hardware-targeted work: the resource picture was measured before the framing was chosen.</strong></p>
-    <p><strong>Data.</strong> Public apo/holo PDB depositions plus five field benchmarks for cohort scale. No proprietary or synthetic structures. Every cohort's contamination and coverage limits are audited in §1 rather than assumed clean — that audit is itself a Phase-2 deliverable.</p>
-    <p><strong>Compute.</strong> Classical throughout. Elastic-network ensemble generation, contact-graph construction and the walk's own simulation run on commodity CPUs; the largest single analysis (105-structure feature extraction) completes in under two hours on one machine, containerised and reproducible from a cold clone. The 1022-protein ensemble sweep needed a modest HPC allocation for a day.</p>
-    <p><strong>Software.</strong> Python/NumPy/SciPy for operator and propagator mathematics, <code>fpocket</code> for candidate detection, BioPython and ProDy for parsing — no dependency the field does not already use.</p>
+    <p><strong>Data, compute and software.</strong> Public apo/holo PDB depositions plus five field benchmarks for cohort scale — no proprietary or synthetic structures, and every cohort's contamination and coverage limits are audited in §1 rather than assumed clean. Compute is classical throughout: ensemble generation, contact-graph construction and the walk's own simulation run on commodity CPUs, the largest single analysis (105-structure feature extraction) completing in under two hours on one machine, containerised and reproducible from a cold clone; the 1022-protein ensemble sweep needed a modest HPC allocation for a day. Software is Python/NumPy/SciPy, <code>fpocket</code> for candidate detection, and BioPython/ProDy for parsing — no dependency the field does not already use.</p>
     <p><strong>The binding constraint is benchmark validity, not compute budget.</strong> More hardware does not fix a target that fails the apo/holo contrast by construction.</p>
   </div>
 </section>
@@ -318,11 +339,11 @@
     <h2>Validation Plan</h2>
     <p>Built and in use, not proposed:</p>
     <ul>
-      <li><strong>Proximity floor.</strong> Every score must beat the strongest trivial baseline — degree, hop distance, Euclidean distance from the seed. This is what demoted our own headline result.</li>
-      <li><strong>Spatially matched nulls.</strong> Three generations, each fixing a measured defect in the last. The current pocket-block null matches the real positives' own spatial concentration; moving to it changed BH-FDR survivors from 45/110 to <strong>0/110</strong>.</li>
-      <li><strong>Positive control with a measured detection limit</strong> — planted, confound-orthogonal, so a null result can be distinguished from an underpowered test. On a genuinely distal subset our design cannot detect even proximity (p = 0.89), so we report that it cannot adjudicate rather than reporting a false negative.</li>
-      <li><strong>Cluster-robust inference.</strong> Exact cluster-level permutation, adopted after four selection procedures in our own work died of pseudo-replication.</li>
-      <li><strong>A negative control beside every positive one.</strong> Added after we noticed the asymmetry: we had verified that our tests detect signal, never that they refuse noise. That omission produced a false headline, and closing it is what promoted our strongest result from a lead to a finding.</li>
+      <li><strong>Proximity floor</strong> — every score must beat degree, hop and Euclidean distance from the seed. This is what demoted our own headline result.</li>
+      <li><strong>Spatially matched nulls</strong> — three generations, each fixing a measured defect in the last. Moving to a pocket-block null changed BH-FDR survivors from 45/110 to <strong>0/110</strong>.</li>
+      <li><strong>Positive control with a measured detection limit</strong> — so a null result is distinguishable from an underpowered test. On a genuinely distal subset our design cannot detect even proximity (p = 0.89), so we report that it cannot adjudicate rather than reporting a false negative.</li>
+      <li><strong>Cluster-robust inference</strong> — exact cluster-level permutation, adopted after four selection procedures in our own work died of pseudo-replication.</li>
+      <li><strong>A negative control beside every positive one</strong> — added after we noticed we had verified that our tests detect signal, never that they refuse noise. That omission produced a false headline.</li>
     </ul>
     <p><strong>Success criteria for Phase 2:</strong> the instrument certifies ≥ 40 apo/holo pairs; a combined apo-only readout holds residual AUC ≥ 0.60 under leave-one-protein-out against a matched null; and at least one published cryptic-pocket claim is confirmed or overturned by re-measurement.</p>
   </div>
@@ -334,19 +355,15 @@
   <div class="body">
     <h2>Hybrid / Cross-Domain Architecture</h2>
     <p>Classical ensemble generation → quantum-inspired transport → classical verification. One runner emits all three required artefacts, so they cannot disagree with each other.</p>
-<pre><code> Apo structure                                              Three artefacts,
-      │                                                       one runner
-      ▼
-┌──────────────────┐   ┌───────────────────────┐   ┌────────────────────────┐
-│ Classical ENM    │──▶│ Quantum-inspired      │──▶│ Classical verification │
-│ ensemble         │   │ transport subroutine  │   │ (druggability,         │
-│ generation       │   │ (continuous-time walk)│   │  proximity floor, null)│
-└──────────────────┘   └───────────────────────┘   └───────────┬────────────┘
-                                                               │
-                                  ┌────────────────┬───────────┴──────────┐
-                                  ▼                ▼                      ▼
-                         Connectivity matrix  Site-level hit list   Methodological
-                                                                       report
+<pre><code>  Apo structure
+       │
+  ┌────▼─────────┐   ┌──────────────────────┐   ┌───────────────────────┐
+  │ Classical ENM│──▶│ Quantum-inspired     │──▶│ Classical verification│
+  │ ensemble     │   │ transport subroutine │   │ (druggability,        │
+  │ generation   │   │ (continuous-time walk)│  │  proximity floor,null)│
+  └──────────────┘   └──────────────────────┘   └───────────┬───────────┘
+                                                            │
+        Connectivity matrix  ·  Hit list  ·  Methodological report
 </code></pre>
     <p>The runner emits the three required deliverables in a single pass: the <strong>connectivity matrix</strong> (residue–residue transport), the <strong>site-level hit list</strong> (ranked candidate pockets, each carrying its proximity-floor and null verdict), and the <strong>methodological report</strong> (per-target provenance, controls run, and the cohort every claim was measured on). Because one pass produces all three, a hit list cannot disagree with the matrix it came from.</p>
     <p>The rationale for the split is empirical: the classical stages carry the signal we can currently certify, and the quantum-inspired stage is the component under test. Keeping them separable is what allowed us to measure that the transport subroutine adds nothing beyond the classical baseline — a hybrid design that could not isolate its own quantum stage could not have found that.</p>
@@ -361,11 +378,11 @@
     <div class="tw"><table>
       <tr><th>Member</th><th>Discipline</th><th>Role in this project</th></tr>
       <tr><td><b>Oussema Turki</b></td><td>Quantum algorithms</td><td>Operator design, propagator formulation, ensemble sweeps</td></tr>
-      <tr><td><b>Berke Turkaydin</b></td><td>Computational biophysics / structural chemistry</td><td>Target selection and mechanistic classification, structural validity auditing, biological interpretation</td></tr>
+      <tr><td><b>Berke Turkaydin</b></td><td>Computational biophysics / structural chemistry</td><td>Target selection and mechanistic classification, structural validity auditing</td></tr>
       <tr><td><b>Bartosz Chmura</b></td><td>Molecular photophysics; software quality assurance</td><td>Verification methodology, scope and reporting decisions</td></tr>
     </table></div>
-    <p>Full biographies, affiliations and prior quantum-computing experience are in the separate Team Profile.</p>
-    <p><strong>One methodological commitment shaped this submission.</strong> We used an AI-assisted workflow, which accelerates work and generates plausible errors at the same rate. So we built the register to catch its own failures: the role that implements is separated from the role that verifies and assigned to a different model, every positive control has a negative one, and every claim carries the cohort it was measured on. It found five of our own errors in seven days, including our headline result. We report that as evidence the method of working is sound, not as a credential — the full task history, including every retraction, is public at <code>github.com/Oussema-t/Quantum_allosteric-scanner</code> (branch <code>bartosz</code>).</p>
+    <p>Full biographies, affiliations and prior quantum-computing experience are in the Team Profile.</p>
+    <p><strong>One methodological commitment shaped this submission.</strong> An AI-assisted workflow generates plausible errors at the rate it generates work, so we built the register to catch its own: the implementing role is separated from the verifying one and assigned to a different model, every positive control has a negative one, and every claim carries the cohort it was measured on. It caught five of our own errors in seven days, including our headline result — evidence the method works, not a credential. Full task history, retractions included: <code>github.com/Oussema-t/Quantum_allosteric-scanner</code> (branch <code>bartosz</code>).</p>
   </div>
 </section>
 

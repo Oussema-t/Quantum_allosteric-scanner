@@ -22,6 +22,23 @@ We built the method the challenge specifies — a continuous-time quantum walk o
 
 **Our own method fails this instrument, which is the honest test of it.** Walk occupation scores AUC 0.5921 across 108 structures. Conditioned on distance to the active site it falls to **0.5184, not significant** — roughly 80% of the apparent signal was inherited proximity. We published the unconditioned number and retracted it four days later.
 
+**Our five guesses per target, and our own verdict on them.** The required hit list is five ranked residues per protein. For the three targets where a drug-bound structure exists to check against, we also report what our own validation says about them — which is that none is distinguishable from chance:
+
+| Target | Top five residues | Residue-level AUC | Our verdict |
+|---|---|---|---|
+| KRAS_G12C (`4LDJ`) | 31, 122, 33, 121, 29 | 0.514 | `NO_SIGNAL_IN_APO` |
+| BCR-ABL1 (`1OPL`) | 402, 311, 310, 301, 338 | 0.541 | `NO_SIGNAL_IN_APO` |
+| Cardiac myosin | 682, 683, 681, 680, 133 | 0.548 | `NO_SIGNAL_IN_APO` |
+| c-Myc (`1NKP`) | 943, 246, 925, 226, 243 | — | no ground truth; 4-operator consensus |
+
+All three floor confidence intervals include the observed score. **We submit the five as required and state plainly that we cannot certify them** — the conclusion this proposal reaches about the field's published numbers, applied to our own.
+
+**What `NO_SIGNAL_IN_APO` means.** It is our own diagnostic verdict, not a crash: the score's confidence interval overlaps that of the best trivial baseline computed on the same structure. It says the apo contact graph, as we encode it, carries nothing about that pocket beyond what distance already supplies.
+
+**Why we report numbers this close to chance, and claim nothing beats them.** Because the alternative is reporting a selection artefact. On any single protein we can find an operator and score that look excellent — with thirteen operators and seventeen scores there are 221 chances per target, and reporting the best of them is ordinary practice in this field. We did exactly that early on and it produced a headline we retracted four days later. Under matched multiplicity across 276 protein families, **no arm clears more than 5 — ours or any classical baseline — and they are statistically indistinguishable from each other** (McNemar p = 1.0). The near-chance numbers above are what survives that correction. A method can be made to fit one protein; what none of ours does, quantum or classical, is generalise across the ensemble.
+
+
+
 ---
 
 ## 2. Technical Approach
@@ -67,11 +84,7 @@ Component (b) is ~27 minutes of compute over 100 apo/holo pairs and half a day o
 
 **Hardware, measured rather than assumed.** At one qubit per residue — the convention behind every number here — the register needs **169–704 qubits and 3.3M–124.9M two-qubit gates**. Coarse-graining to a NISQ-plausible 10–15 qubits destroys the ranking signal (retention Jaccard 0.00–0.18) without reaching usable fidelity. Against a real IBM device calibration snapshot, every mandated target verdicts **`FAULT_TOLERANT_ONLY`** at both resolutions. We checked both hardware routes named in the challenge bibliography; neither changes this. AWS Braket and Classiq access were confirmed with the organisers as a Phase-2 benefit — irrelevant to a verdict set by qubit count and circuit depth, not by cloud provider. **This is why §2 proposes classical-plus-quantum-inspired rather than hardware-targeted work: the resource picture was measured before the framing was chosen.**
 
-**Data.** Public apo/holo PDB depositions plus five field benchmarks for cohort scale. No proprietary or synthetic structures. Every cohort's contamination and coverage limits are audited in §1 rather than assumed clean — that audit is itself a Phase-2 deliverable.
-
-**Compute.** Classical throughout. ENM ensemble generation, contact-graph construction and the walk's own simulation run on commodity CPUs; the largest single analysis (105-structure feature extraction) completes in under two hours on one machine, containerised and reproducible from a cold clone. The 1022-protein ensemble sweep needed a modest HPC allocation for a day.
-
-**Software.** Python/NumPy/SciPy for operator and propagator mathematics, `fpocket` for candidate detection, BioPython/ProDy for parsing — no dependency the field does not already use.
+**Data, compute and software.** Public apo/holo PDB depositions plus five field benchmarks for cohort scale — no proprietary or synthetic structures, and every cohort's contamination and coverage limits are audited in §1 rather than assumed clean. Compute is classical throughout: ensemble generation, contact-graph construction and the walk's own simulation run on commodity CPUs, the largest single analysis (105-structure feature extraction) completing in under two hours on one machine, containerised and reproducible from a cold clone; the 1022-protein ensemble sweep needed a modest HPC allocation for a day. Software is Python/NumPy/SciPy, `fpocket` for candidate detection, and BioPython/ProDy for parsing — no dependency the field does not already use.
 
 **The binding constraint is benchmark validity, not compute budget.** More hardware does not fix a target that fails the apo/holo contrast by construction.
 
