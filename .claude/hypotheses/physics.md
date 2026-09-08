@@ -1838,3 +1838,75 @@ being fooled by it fresh; untested here. Also does not extend to
 CryptoBench's own much larger cohort (not fetched, see above) — the
 effect's size on that specific benchmark is inferred by mechanism, not
 independently measured.
+
+## HYP-P27 · The register's own "7 audited, 2 pass" blind-validity headline is a property of the mandated target list, not of cryptic-pocket benchmark pairs generally
+
+**Claim.** [[TASK-0209]]'s pre-registered blind validity rule (apo
+closed AND holo open, `_is_hit` = overlap_frac≥0.5 AND druggability≥0.5,
+both states ligand-stripped) found only 2 of 7 challenge-mandated/
+recommended-database targets VALID (28.6%). The submission's central
+claim — "most standard benchmarks cannot express the contrast they are
+used to test" — is currently evidenced by that single 7-target sample.
+If the same rule run over a real cryptic-pocket benchmark POPULATION
+(not hand-picked biology targets) lands near the same ~1-in-3 rate, the
+claim generalizes to "cryptic-pocket benchmarking generally." If it
+lands much higher, the honest finding narrows to "the challenge's own
+seven targets specifically are unrepresentative" — a real, but
+differently-shaped, result ([[TASK-0346]]'s own filed Note anticipated
+exactly this fork).
+
+**Status, 2026-09-08 ([[TASK-0346]]): TESTED — the rate is far better at
+scale; the seven mandated targets are the unrepresentative case, not the
+population.** [[TASK-0209]]'s exact rule (same `_is_hit` constants,
+reused not re-tuned) run over [[TASK-0345]]'s own frozen 63-pair cohort
+(cryptosite [Cimermancic et al. 2016] + pocketminer [Meller et al.
+2023], both apo AND holo ligand-stripped per this task's own filing
+text) — same pipeline, same cached structures, no new fetch:
+
+| cohort | n | VALID |
+|---|---|---|
+| 7 mandated/recommended targets ([[TASK-0209]]) | 7 | **28.6%** (2/7) |
+| cryptosite pairs | 21 | 52.4% (11/21) |
+| pocketminer pairs | 42 | 47.6% (20/42) |
+| **combined, 63 pairs / 59 distinct proteins** | 63 | **49.2%** (31/63) |
+
+Cluster-collapsed (per-protein majority, [[TASK-0337]] discipline; only
+4/59 proteins contribute 2 pairs each, all internally unanimous):
+**47.5%** — confirms the pair-level 49.2% is not an artifact of the small
+duplication. **Planned Validation held exactly**: re-scoring all 7
+mandated targets with this task's own harness reproduced [[TASK-0209]]'s
+recorded verdict on all 7/7, including the two edge cases that first
+exposed a real bug in the harness itself before the full run (holo must
+be ligand-stripped like apo — an unstripped first draft flipped
+CARDIAC_MYOSIN INVALID→VALID; CASPASE1's ligand sits on chain B of 2FQQ,
+not chain A, RCSB-verified live).
+
+**Second output, same pass — endogenous-ligand occupancy does not
+predict the failure mode here, unlike [[TASK-0329]]'s ASBench finding.**
+10/63 (15.9%) apo structures carry a non-water HETATM within 4.5 Å of
+the annotated site (generalizing [[TASK-0329]]'s 40/40-ASBench audit to
+this cohort — a much lower rate, because CryptoSite/PocketMiner apo
+depositions were curated specifically to BE apo, unlike ASBench). Read
+naively occupied pairs are slightly MORE likely VALID (6/10, 60%) than
+empty ones (25/53, 47%) — the opposite direction contamination would
+predict — but Fisher's exact p=0.51 on n=10: **underpowered, not
+confirmatory in either direction**, reported per this task's own
+Constraint rather than only reporting a direction that fits a narrative.
+
+**Read plainly, and the honest framing this task's own Note asked for:**
+the pre-registered rule is not "too strict" — on a population actually
+curated for closed→open contrast it passes essentially half its pairs.
+The 7 mandated/recommended challenge targets fail it at roughly half
+that rate. **The finding is not "cryptic-pocket benchmarks generally
+cannot express this contrast" — it is "the specific targets this
+challenge mandates are worse, by this exact measure, than an ordinary
+cryptic-pocket benchmark population."** That is a narrower claim than
+the submission's current framing and needs to replace it, not sit beside
+it — a reviewer who checks the seven against a real population and finds
+this same gap will read the broader framing as overclaiming.
+
+**What this does not show:** CryptoBench itself (not fetched, same scope
+reduction as [[HYP-P26]]/[[TASK-0345]]) — the 63-pair figure is a lower
+bound on the population this rule was tested against, not the full
+one. Also does not re-run any register cell against the corrected 49.2%
+framing — that is a submission-drafting decision, not made here.

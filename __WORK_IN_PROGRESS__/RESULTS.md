@@ -12528,3 +12528,75 @@ the decision, so it stays open, disclosed rather than resolved by default.
 **Files**: `.ai/tools/submission_build.py` (print-CSS levers + bug fixes),
 `documentation/PHASE1_SUBMISSION_V1.{md,html}`. **Full detail**:
 `.ai/tasks/DONE/TASK-0344-cut-to-the-page-limits.md`.
+
+## The submission's "7 audited, 2 pass" is a property of the mandated target list, not of cryptic-pocket benchmarks — the same rule passes 49.2% at scale ([[TASK-0346]], 2026-09-08)
+
+[[TASK-0209]]'s pre-registered blind validity rule (apo closed, holo open,
+ligand stripped, `_is_hit` = overlap_frac≥0.5 AND druggability≥0.5, both
+constants reused verbatim, not re-tuned) run over [[TASK-0345]]'s own
+frozen 63-pair cohort (cryptosite 21 + pocketminer 42, 59 distinct
+proteins) — not the collaborator's ~1042-pair unified benchmark, which is
+never fetched anywhere in this repo (same disclosed scope reduction as
+[[TASK-0345]]).
+
+**A real bug caught by this task's own Planned Validation before trusting
+anything.** A first draft scored holo AS DEPOSITED (ligand present)
+instead of ligand-stripped like apo — this task's own filing text says
+"ligand stripped" applies to holo too, not only to a separate middle
+state. Re-scoring the 7 register-mandated/recommended targets against
+[[TASK-0209]]'s own recorded verdicts caught it immediately: CARDIAC_MYOSIN
+flipped INVALID→VALID purely because the ligand's own atoms, not the holo
+conformation, drove druggability past the bar. Fixed (strip holo too);
+separately, CASPASE1's F1G ligand sits on chain B of 2FQQ, not chain A
+(RCSB-verified live, `targets.yaml`'s `chains: [A,B]` doesn't say which).
+**After both fixes, all 7/7 register targets reproduce [[TASK-0209]]'s
+exact verdict** — the harness is trusted on the strength of an exact
+match, not a plausible one.
+
+**Result:**
+
+| cohort | n | VALID |
+|---|---|---|
+| 7 mandated/recommended targets ([[TASK-0209]]) | 7 | 28.6% (2/7) |
+| cryptosite pairs | 21 | 52.4% (11/21) |
+| pocketminer pairs | 42 | 47.6% (20/42) |
+| combined, 63 pairs / 59 distinct proteins | 63 | **49.2% (31/63)** |
+
+Cluster-collapsed per-protein (per [[TASK-0337]]; only 4/59 proteins
+contribute 2 pairs each, all internally unanimous): 47.5% — the 49.2%
+pair-level figure isn't a duplication artifact.
+
+**Read plainly: the pre-registered rule is not too strict.** On a
+population actually curated for closed→open contrast, it passes roughly
+half its pairs — the 7 mandated/recommended challenge targets fail it at
+about half *that* rate. The submission's current framing ("most standard
+targets cannot express the contrast") does not survive this measurement
+unchanged; the honest, narrower claim is that the challenge's own
+mandated/recommended-database targets specifically are unrepresentatively
+bad by this measure, not that cryptic-pocket benchmarking is broken in
+general. **This changes a number the submission currently quotes — flagged
+for the next drafting pass explicitly, not left for a reader to find.**
+
+**Second output, same pass: endogenous-ligand occupancy does not predict
+the failure mode here**, unlike [[TASK-0329]]'s 40/40-ASBench finding.
+10/63 (15.9%) apo structures carry a non-water HETATM within 4.5 Å of the
+annotated site — far lower than ASBench, because CryptoSite/PocketMiner
+apo depositions were curated specifically to be genuinely apo. Occupied
+pairs are VALID at 6/10 (60%) vs. empty pairs at 25/53 (47%) — the
+opposite direction contamination would predict, but Fisher's exact
+p=0.51 on n=10: reported as underpowered, not as confirming or
+disconfirming anything, per this task's own Constraint.
+
+Landed as new hypothesis **HYP-P27** in `physics.md` (a distinct
+mechanism — benchmark-population validity rate — from [[HYP-P26]]'s
+stripped-holo-vs-apo delta; not a fold-in). `INDEX.md` regenerated;
+`hyp_register_check.py` shows only pre-existing staleness flags, none
+from this entry.
+
+**Not done**: CryptoBench not fetched (same scope reduction as
+[[TASK-0345]]); no edit to `PHASE1_SUBMISSION_V1/V2` itself — reframing
+the "7 audited, 2 pass" claim is a drafting decision for whoever owns
+that document's next pass, with this task's own table as the input.
+
+**Files**: `__WORK_IN_PROGRESS__/scripts/task0346_blind_validity_at_scale.py`.
+**Full detail**: `.ai/tasks/DONE/TASK-0346-blind-validity-rule-at-scale.md`.
