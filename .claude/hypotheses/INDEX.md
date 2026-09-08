@@ -9,7 +9,7 @@ file did not silently fall behind its own source files.
 
 | id | claim | status | citing tasks |
 |---|---|---|---|
-| [[HYP-P13]] | Allostery is stabilisation of an otherwise-disfavoured conformation, not a signal propa... | 2026-09-07 | 16 |
+| [[HYP-P13]] | Allostery is stabilisation of an otherwise-disfavoured conformation, not a signal propa... | 2026-09-08 | 16 |
 | [[HYP-P8]] | For several targets, the apo contact graph does not contain the allosteric pocket signa... | 2026-09-04 | 12 |
 | [[HYP-P9]] | A chiral (broken-time-reversal) walk yields a proximity-orthogonal, directional loop ob... | 2026-09-03 | 12 |
 | [[HYP-P14]] | The discriminator is blocked by a single confound, and only a proximity-orthogonal obse... | 2026-09-04 | 9 |
@@ -29,6 +29,7 @@ file did not silently fall behind its own source files.
 | [[HYP-S2]] | The "noodle wiggle" — steric infeasibility is a *coupling detector*, not a cost function | 2026-09-03 | 3 |
 | [[HYP-P4]] | The base Laplacian choice (normalised vs combinatorial, exp-decay vs binary) is load-be... | 2026-09-03 | 2 |
 | [[HYP-P5]] | H13 (full 3N ANM Hessian) sets a performance ceiling that H_new cannot reach | 2026-07-18 | 2 |
+| [[HYP-P26]] | Computationally stripping a holo structure's ligand is not apo-isation, and cryptic-poc... | 2026-09-07 | 2 |
 | [[HYP-S3]] | Overlap measures magnitude; hardness is set by coupling; they are orthogonal | 2026-08-12 | 2 |
 | [[HYP-P6]] | Propagation time t in CTQW is currently unprincipled; a spectral choice would close a v... | 2026-07-16 | 1 |
 | [[HYP-P7]] | Coherence adds no signal for allosteric pocket prediction on these proteins | no verdict recorded | 1 |
@@ -36,10 +37,9 @@ file did not silently fall behind its own source files.
 | [[HYP-P18]] | On real, field-annotated ground truth, this register's observables do not beat random a... | 2026-09-06 | 1 |
 | [[HYP-P19]] | The apo contact graph's connectivity between active site and pocket is broad and redund... | 2026-07-18 | 1 |
 | [[HYP-P24]] | V_C separates allosteric from orthosteric holo sites, but tracks occupancy/coupling-cap... | 2026-08-28 | 1 |
-| [[HYP-P26]] | Computationally stripping a holo structure's ligand is not apo-isation, and cryptic-poc... | 2026-09-07 | 1 |
+| [[HYP-P27]] | The register's own "7 audited, 2 pass" blind-validity headline is a property of the man... | 2026-09-08 | 1 |
 | [[HYP-P16]] | The pipeline's own statistical test lacks power to detect a real signal at realistic st... | 2026-07-31 | 0 |
 | [[HYP-P17]] | Purpose-built cryptic/allosteric-pocket predictors do not close this register's own res... | 2026-08-25 | 0 |
 | [[HYP-P20]] | This register's pocket labels cannot express ligand-dependent allostery; BCR-ABL1's own... | 2026-08-25 | 0 |
 | [[HYP-P22]] | The population structure of allosteric-site distance is undetermined; a floor/continuum... | 2026-09-01 | 0 |
 | [[HYP-P23]] | Discriminator B — per-measure applicability descriptors do not predict which of the six... | 2026-09-01 | 0 |
-| [[HYP-P27]] | The register's own "7 audited, 2 pass" blind-validity headline is a property of the man... | 2026-09-08 | 0 |

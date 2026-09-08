@@ -1,0 +1,3358 @@
+{
+ "jacs_reference": {
+  "citation": "Mohtashim, Sajjan & Kais, JACS 148(27):29206-29219 (2026), DOI 10.1021/jacs.6c08053",
+  "reported_rho_median_vs_eigenvector": 0.95,
+  "reported_kendall_tau_vs_eigenvector": 0.87,
+  "reported_overlap_at_10": [
+   0.9,
+   1.0
+  ]
+ },
+ "planned_validation": {
+  "n_checked": 105,
+  "n_exact_match": 105
+ },
+ "n_structures": 105,
+ "n_failed": 3,
+ "n_proteins": 74,
+ "cutoff": 8.0,
+ "rank_correlation_vs_ctqw": {
+  "degree": {
+   "n": 105,
+   "median": 0.3804,
+   "iqr": [
+    0.2783,
+    0.4794
+   ],
+   "cluster_bootstrap_median_ci95": [
+    0.3321,
+    0.4128
+   ],
+   "n_clusters": 74
+  },
+  "gnm_msf": {
+   "n": 105,
+   "median": -0.4495,
+   "iqr": [
+    -0.5712,
+    -0.3359
+   ],
+   "cluster_bootstrap_median_ci95": [
+    -0.4961,
+    -0.3999
+   ],
+   "n_clusters": 74
+  },
+  "betweenness": {
+   "n": 105,
+   "median": 0.3036,
+   "iqr": [
+    0.2157,
+    0.3937
+   ],
+   "cluster_bootstrap_median_ci95": [
+    0.2723,
+    0.337
+   ],
+   "n_clusters": 74
+  },
+  "eigenvector": {
+   "n": 105,
+   "median": 0.4129,
+   "iqr": [
+    0.1435,
+    0.599
+   ],
+   "cluster_bootstrap_median_ci95": [
+    0.3284,
+    0.4949
+   ],
+   "n_clusters": 74
+  },
+  "closeness": {
+   "n": 105,
+   "median": 0.3424,
+   "iqr": [
+    0.2097,
+    0.472
+   ],
+   "cluster_bootstrap_median_ci95": [
+    0.3082,
+    0.3999
+   ],
+   "n_clusters": 74
+  }
+ },
+ "auc_per_arm": {
+  "ctqw": {
+   "n": 105,
+   "mean": 0.585,
+   "median": 0.6085,
+   "cluster_bootstrap_median_ci95": [
+    0.5231,
+    0.6923
+   ],
+   "n_clusters": 74
+  },
+  "degree": {
+   "n": 105,
+   "mean": 0.4476,
+   "median": 0.4506,
+   "cluster_bootstrap_median_ci95": [
+    0.4054,
+    0.4839
+   ],
+   "n_clusters": 74
+  },
+  "gnm_msf": {
+   "n": 105,
+   "mean": 0.4987,
+   "median": 0.5123,
+   "cluster_bootstrap_median_ci95": [
+    0.4418,
+    0.538
+   ],
+   "n_clusters": 74
+  },
+  "betweenness": {
+   "n": 105,
+   "mean": 0.5669,
+   "median": 0.5931,
+   "cluster_bootstrap_median_ci95": [
+    0.5233,
+    0.6161
+   ],
+   "n_clusters": 74
+  },
+  "eigenvector": {
+   "n": 105,
+   "mean": 0.4726,
+   "median": 0.4766,
+   "cluster_bootstrap_median_ci95": [
+    0.4105,
+    0.5553
+   ],
+   "n_clusters": 74
+  },
+  "closeness": {
+   "n": 105,
+   "mean": 0.5879,
+   "median": 0.6362,
+   "cluster_bootstrap_median_ci95": [
+    0.5266,
+    0.7101
+   ],
+   "n_clusters": 74
+  }
+ },
+ "auc_delta_ctqw_minus_arm": {
+  "degree": {
+   "n": 105,
+   "median_delta": 0.1217,
+   "cluster_permutation_p": 0.0,
+   "n_clusters": 74,
+   "exact": false
+  },
+  "gnm_msf": {
+   "n": 105,
+   "median_delta": 0.11,
+   "cluster_permutation_p": 0.031,
+   "n_clusters": 74,
+   "exact": false
+  },
+  "betweenness": {
+   "n": 105,
+   "median_delta": 0.0241,
+   "cluster_permutation_p": 0.5025,
+   "n_clusters": 74,
+   "exact": false
+  },
+  "eigenvector": {
+   "n": 105,
+   "median_delta": 0.0837,
+   "cluster_permutation_p": 0.0,
+   "n_clusters": 74,
+   "exact": false
+  },
+  "closeness": {
+   "n": 105,
+   "median_delta": 0.0087,
+   "cluster_permutation_p": 0.9285,
+   "n_clusters": 74,
+   "exact": false
+  }
+ },
+ "per_structure": {
+  "11BG": {
+   "pdb": "11BG",
+   "protein": "Seminal ribonuclease",
+   "n_residues": 248,
+   "n_elig": 205,
+   "rho_vs_ctqw": {
+    "degree": 0.2940491295640064,
+    "gnm_msf": -0.25588304940730733,
+    "betweenness": 0.29118166337761825,
+    "eigenvector": -0.5795851847724646,
+    "closeness": 0.13789212800572864
+   },
+   "auc": {
+    "ctqw": 0.608502538071066,
+    "degree": 0.5345812182741116,
+    "gnm_msf": 0.25380710659898476,
+    "betweenness": 0.7639593908629441,
+    "eigenvector": 0.46192893401015234,
+    "closeness": 0.8080583756345178
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1A3W": {
+   "pdb": "1A3W",
+   "protein": "Pyruvate kinase 1",
+   "n_residues": 981,
+   "n_elig": 863,
+   "rho_vs_ctqw": {
+    "degree": 0.5257496019571584,
+    "gnm_msf": -0.5377810390918566,
+    "betweenness": 0.31290269372009133,
+    "eigenvector": 0.5093633955245839,
+    "closeness": 0.372252678508948
+   },
+   "auc": {
+    "ctqw": 0.5159591194968554,
+    "degree": 0.46037735849056605,
+    "gnm_msf": 0.6113207547169812,
+    "betweenness": 0.47303459119496855,
+    "eigenvector": 0.37429245283018864,
+    "closeness": 0.2623034591194969
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1B86": {
+   "pdb": "1B86",
+   "protein": "Hemoglobin subunit beta",
+   "n_residues": 574,
+   "n_elig": 512,
+   "rho_vs_ctqw": {
+    "degree": 0.40046455014176185,
+    "gnm_msf": -0.43662010773536186,
+    "betweenness": 0.2945357367812482,
+    "eigenvector": -0.15278149159601462,
+    "closeness": 0.35154544550860145
+   },
+   "auc": {
+    "ctqw": 0.46751968503937014,
+    "degree": 0.26279527559055116,
+    "gnm_msf": 0.7957677165354331,
+    "betweenness": 0.26131889763779526,
+    "eigenvector": 0.3051181102362205,
+    "closeness": 0.3661417322834646
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1DKU": {
+   "pdb": "1DKU",
+   "protein": "Ribose-phosphate pyrophosphokinase",
+   "n_residues": 590,
+   "n_elig": 520,
+   "rho_vs_ctqw": {
+    "degree": 0.18582939073483667,
+    "gnm_msf": -0.3120562860524916,
+    "betweenness": 0.42509630331759407,
+    "eigenvector": -0.024333442289129988,
+    "closeness": 0.4982615721894101
+   },
+   "auc": {
+    "ctqw": 0.692257217847769,
+    "degree": 0.23195538057742782,
+    "gnm_msf": 0.7550853018372703,
+    "betweenness": 0.6141732283464567,
+    "eigenvector": 0.129757217847769,
+    "closeness": 0.6361548556430446
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1EM6": {
+   "pdb": "1EM6",
+   "protein": "Glycogen phosphorylase, liver form",
+   "n_residues": 1574,
+   "n_elig": 1414,
+   "rho_vs_ctqw": {
+    "degree": 0.45882398937766444,
+    "gnm_msf": -0.5046283893174911,
+    "betweenness": 0.3381698629778511,
+    "eigenvector": 0.11802529317452333,
+    "closeness": 0.27985452782155307
+   },
+   "auc": {
+    "ctqw": 0.46079220314735336,
+    "degree": 0.40747943490701005,
+    "gnm_msf": 0.3507689556509299,
+    "betweenness": 0.7702968526466382,
+    "eigenvector": 0.5393866237482118,
+    "closeness": 0.9070770743919886
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1FRP": {
+   "pdb": "1FRP",
+   "protein": "Fructose-1,6-bisphosphatase 1",
+   "n_residues": 640,
+   "n_elig": 553,
+   "rho_vs_ctqw": {
+    "degree": 0.4099626880228091,
+    "gnm_msf": -0.49811840763461807,
+    "betweenness": 0.39465993832650476,
+    "eigenvector": 0.45123671541736793,
+    "closeness": 0.5009277548321686
+   },
+   "auc": {
+    "ctqw": 0.5598540145985401,
+    "degree": 0.44306569343065694,
+    "gnm_msf": 0.5215328467153285,
+    "betweenness": 0.4343065693430657,
+    "eigenvector": 0.618978102189781,
+    "closeness": 0.3056569343065693
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1G3L": {
+   "pdb": "1G3L",
+   "protein": "Glucose-1-phosphate thymidylyltransferase",
+   "n_residues": 1169,
+   "n_elig": 1037,
+   "rho_vs_ctqw": {
+    "degree": 0.41307068201854175,
+    "gnm_msf": -0.393375938147149,
+    "betweenness": 0.26498860408237623,
+    "eigenvector": 0.3679517353103342,
+    "closeness": 0.20356740893237438
+   },
+   "auc": {
+    "ctqw": 0.7447520184544405,
+    "degree": 0.3893598615916955,
+    "gnm_msf": 0.4635524798154556,
+    "betweenness": 0.6235870818915801,
+    "eigenvector": 0.496482122260669,
+    "closeness": 0.7160899653979239
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1GZ3": {
+   "pdb": "1GZ3",
+   "protein": "NAD-dependent malic enzyme, mitochondrial",
+   "n_residues": 2216,
+   "n_elig": 1985,
+   "rho_vs_ctqw": {
+    "degree": 0.5901554986970261,
+    "gnm_msf": -0.5712385501017891,
+    "betweenness": 0.363960356799078,
+    "eigenvector": 0.7289108042680498,
+    "closeness": 0.2096620223867193
+   },
+   "auc": {
+    "ctqw": 0.7160867372667675,
+    "degree": 0.10501765002521435,
+    "gnm_msf": 0.6782652546646495,
+    "betweenness": 0.6207766011094301,
+    "eigenvector": 0.6323751891074131,
+    "closeness": 0.8862834089762985
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1H5S": {
+   "pdb": "1H5S",
+   "protein": "Glucose-1-phosphate thymidylyltransferase 1",
+   "n_residues": 1161,
+   "n_elig": 1029,
+   "rho_vs_ctqw": {
+    "degree": 0.3042687106664941,
+    "gnm_msf": -0.3179223974955661,
+    "betweenness": 0.26787662717900523,
+    "eigenvector": -0.020885081016653574,
+    "closeness": 0.25894530165372537
+   },
+   "auc": {
+    "ctqw": 0.8107207752877044,
+    "degree": 0.4649454875832828,
+    "gnm_msf": 0.35062083585705633,
+    "betweenness": 0.7375075711689885,
+    "eigenvector": 0.5411114476075105,
+    "closeness": 0.7563976377952756
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1H78": {
+   "pdb": "1H78",
+   "protein": "Anaerobic ribonucleoside-triphosphate reductase",
+   "n_residues": 534,
+   "n_elig": 464,
+   "rho_vs_ctqw": {
+    "degree": 0.45864913297703885,
+    "gnm_msf": -0.45182223264096655,
+    "betweenness": 0.4087085054359824,
+    "eigenvector": 0.35115174768220986,
+    "closeness": 0.3401720009604377
+   },
+   "auc": {
+    "ctqw": 0.33794902669074856,
+    "degree": 0.3136664659843468,
+    "gnm_msf": 0.6712823600240818,
+    "betweenness": 0.3156732891832229,
+    "eigenvector": 0.33814970901063623,
+    "closeness": 0.2755368252056994
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1I7S": {
+   "pdb": "1I7S",
+   "protein": "Anthranilate synthase component 1",
+   "n_residues": 1406,
+   "n_elig": 1241,
+   "rho_vs_ctqw": {
+    "degree": 0.33118247628601954,
+    "gnm_msf": -0.39990742760372733,
+    "betweenness": 0.2849079747926557,
+    "eigenvector": -0.45455778409912123,
+    "closeness": 0.3350150070100288
+   },
+   "auc": {
+    "ctqw": 0.7686536901865368,
+    "degree": 0.7821877534468776,
+    "gnm_msf": 0.1907948094079481,
+    "betweenness": 0.8077858880778589,
+    "eigenvector": 0.360705596107056,
+    "closeness": 0.7680961070559611
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1IWH": {
+   "pdb": "1IWH",
+   "protein": "Hemoglobin subunit alpha",
+   "n_residues": 287,
+   "n_elig": 253,
+   "rho_vs_ctqw": {
+    "degree": 0.4125870806033656,
+    "gnm_msf": -0.34639667077188474,
+    "betweenness": 0.3280658954314121,
+    "eigenvector": -0.22127347717898904,
+    "closeness": 0.17547070088796565
+   },
+   "auc": {
+    "ctqw": 0.9224021592442645,
+    "degree": 0.5037112010796221,
+    "gnm_msf": 0.5053981106612686,
+    "betweenness": 0.3522267206477733,
+    "eigenvector": 0.4352226720647773,
+    "closeness": 0.34143049932523617
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1JLR": {
+   "pdb": "1JLR",
+   "protein": "Uracil phosphoribosyltransferase",
+   "n_residues": 940,
+   "n_elig": 837,
+   "rho_vs_ctqw": {
+    "degree": 0.25698980218249545,
+    "gnm_msf": -0.275501295617932,
+    "betweenness": 0.17262350935783327,
+    "eigenvector": -0.10179270255316793,
+    "closeness": 0.19473765969785117
+   },
+   "auc": {
+    "ctqw": 0.31889469753547417,
+    "degree": 0.3657113517550411,
+    "gnm_msf": 0.5123226288274831,
+    "betweenness": 0.7289021657953697,
+    "eigenvector": 0.626680358476475,
+    "closeness": 0.7805731889469754
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1KFL": {
+   "pdb": "1KFL",
+   "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase, Phe-sensitive",
+   "n_residues": 2736,
+   "n_elig": 2450,
+   "rho_vs_ctqw": {
+    "degree": 0.1898649783140128,
+    "gnm_msf": -0.31089282883733593,
+    "betweenness": 0.07992799130017707,
+    "eigenvector": -0.6110153215063479,
+    "closeness": 0.19769328187843585
+   },
+   "auc": {
+    "ctqw": 0.9376913607525016,
+    "degree": 0.49910040718411663,
+    "gnm_msf": 0.17859284744799725,
+    "betweenness": 0.6199141441242385,
+    "eigenvector": 0.48660080174236925,
+    "closeness": 0.8837789211199142
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1LVW": {
+   "pdb": "1LVW",
+   "protein": "Glucose-1-phosphate thymidylyltransferase",
+   "n_residues": 1170,
+   "n_elig": 1038,
+   "rho_vs_ctqw": {
+    "degree": 0.3586061807375824,
+    "gnm_msf": -0.4264628534270222,
+    "betweenness": 0.3035931569641417,
+    "eigenvector": 0.30269946176732426,
+    "closeness": 0.34242538000580425
+   },
+   "auc": {
+    "ctqw": 0.8256985055230669,
+    "degree": 0.42750974658869395,
+    "gnm_msf": 0.38336582196231317,
+    "betweenness": 0.7461825860948668,
+    "eigenvector": 0.603882391163093,
+    "closeness": 0.7847222222222221
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1M8P": {
+   "pdb": "1M8P",
+   "protein": "Sulfate adenylyltransferase",
+   "n_residues": 1719,
+   "n_elig": 1525,
+   "rho_vs_ctqw": {
+    "degree": 0.034836619891758264,
+    "gnm_msf": -0.3380484820286388,
+    "betweenness": 0.16984579691230603,
+    "eigenvector": 0.6049978641374897,
+    "closeness": 0.34005223980193355
+   },
+   "auc": {
+    "ctqw": 0.3446140234461403,
+    "degree": 0.4544164270441642,
+    "gnm_msf": 0.7705153727051537,
+    "betweenness": 0.359065103590651,
+    "eigenvector": 0.3624198186241982,
+    "closeness": 0.1389810513898105
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1MP3": {
+   "pdb": "1MP3",
+   "protein": "Glucose-1-phosphate thymidylyltransferase",
+   "n_residues": 578,
+   "n_elig": 504,
+   "rho_vs_ctqw": {
+    "degree": 0.3320561542426794,
+    "gnm_msf": -0.41336582110355324,
+    "betweenness": 0.2977206297830001,
+    "eigenvector": 0.8228596361482218,
+    "closeness": 0.3009625574922325
+   },
+   "auc": {
+    "ctqw": 0.7715743440233236,
+    "degree": 0.4785714285714286,
+    "gnm_msf": 0.3330903790087464,
+    "betweenness": 0.8056851311953352,
+    "eigenvector": 0.6778425655976676,
+    "closeness": 0.8626822157434402
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1NE7": {
+   "pdb": "1NE7",
+   "protein": "Glucosamine-6-phosphate isomerase 1",
+   "n_residues": 1651,
+   "n_elig": 1471,
+   "rho_vs_ctqw": {
+    "degree": 0.4553887563732483,
+    "gnm_msf": -0.5515764481242501,
+    "betweenness": 0.4480738998080312,
+    "eigenvector": 0.5711169266571642,
+    "closeness": 0.4867054107015555
+   },
+   "auc": {
+    "ctqw": 0.8169934640522876,
+    "degree": 0.5037999696002432,
+    "gnm_msf": 0.4337285301717586,
+    "betweenness": 0.6835385316917464,
+    "eigenvector": 0.6743426052591579,
+    "closeness": 0.6580407356741146
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1NH8": {
+   "pdb": "1NH8",
+   "protein": "ATP phosphoribosyltransferase",
+   "n_residues": 276,
+   "n_elig": 236,
+   "rho_vs_ctqw": {
+    "degree": 0.12972491822512167,
+    "gnm_msf": -0.4111061912565562,
+    "betweenness": 0.04418795206033426,
+    "eigenvector": 0.5308905494666015,
+    "closeness": 0.2760620408847576
+   },
+   "auc": {
+    "ctqw": 0.2801724137931034,
+    "degree": 0.6998922413793104,
+    "gnm_msf": 0.7532327586206896,
+    "betweenness": 0.605603448275862,
+    "eigenvector": 0.14439655172413793,
+    "closeness": 0.2079741379310345
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1NJJ": {
+   "pdb": "1NJJ",
+   "protein": "Ornithine decarboxylase",
+   "n_residues": 1404,
+   "failed": true,
+   "error": "ValueError(\"found 15 near-zero ANM modes (>6) AND the contact graph has 2 disconnected components (via operator_diagnostics on this Hessian) -- this is TASK-0005's original disconnected-graph regression (independent rigid motion of each piece), not TASK-0128's single-connected-structure floppiness case; do not proceed with a single global rigid-body-nullspace assumption.\")"
+  },
+  "1OF6": {
+   "pdb": "1OF6",
+   "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase, tyrosine-inhibited",
+   "n_residues": 2770,
+   "n_elig": 2481,
+   "rho_vs_ctqw": {
+    "degree": 0.18000906936015895,
+    "gnm_msf": -0.3158947991313277,
+    "betweenness": 0.14344766148716082,
+    "eigenvector": 0.7855355053636248,
+    "closeness": 0.2552472280948047
+   },
+   "auc": {
+    "ctqw": 0.946705818820035,
+    "degree": 0.5088767382206021,
+    "gnm_msf": 0.27916160388821387,
+    "betweenness": 0.6628020791143513,
+    "eigenvector": 0.5725327393006615,
+    "closeness": 0.7244667206696368
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1PFK": {
+   "pdb": "1PFK",
+   "protein": "ATP-dependent 6-phosphofructokinase isozyme 1",
+   "n_residues": 640,
+   "n_elig": 553,
+   "rho_vs_ctqw": {
+    "degree": 0.19417666053981397,
+    "gnm_msf": -0.2373471650332386,
+    "betweenness": 0.16214330146004313,
+    "eigenvector": 0.2350722915743609,
+    "closeness": 0.1823081768492892
+   },
+   "auc": {
+    "ctqw": 0.36894785847299816,
+    "degree": 0.3633030726256983,
+    "gnm_msf": 0.6209264432029795,
+    "betweenness": 0.38623137802607077,
+    "eigenvector": 0.3759310986964618,
+    "closeness": 0.4447160148975791
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1QW7": {
+   "pdb": "1QW7",
+   "protein": "Parathion hydrolase",
+   "n_residues": 670,
+   "n_elig": 597,
+   "rho_vs_ctqw": {
+    "degree": 0.3752303039282907,
+    "gnm_msf": -0.41541284794830025,
+    "betweenness": 0.3369561599065698,
+    "eigenvector": 0.7012084507293261,
+    "closeness": 0.28433730713390454
+   },
+   "auc": {
+    "ctqw": 0.9362416107382551,
+    "degree": 0.761744966442953,
+    "gnm_msf": 0.3221476510067114,
+    "betweenness": 0.8456375838926175,
+    "eigenvector": 0.8741610738255033,
+    "closeness": 0.4471476510067114
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1T49": {
+   "pdb": "1T49",
+   "protein": "Tyrosine-protein phosphatase non-receptor type 1",
+   "n_residues": 282,
+   "n_elig": 233,
+   "rho_vs_ctqw": {
+    "degree": 0.3564091039847557,
+    "gnm_msf": -0.4341708313885316,
+    "betweenness": 0.36876375298406183,
+    "eigenvector": 0.4293951571589577,
+    "closeness": 0.41437202217383656
+   },
+   "auc": {
+    "ctqw": 0.2709251101321586,
+    "degree": 0.30469897209985314,
+    "gnm_msf": 0.6395007342143906,
+    "betweenness": 0.3142437591776799,
+    "eigenvector": 0.276064610866373,
+    "closeness": 0.5176211453744493
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1UXV": {
+   "pdb": "1UXV",
+   "protein": "NAD(P)-dependent glyceraldehyde-3-phosphate dehydrogenase",
+   "n_residues": 499,
+   "n_elig": 445,
+   "rho_vs_ctqw": {
+    "degree": -0.12600498002798913,
+    "gnm_msf": 0.01395472663170552,
+    "betweenness": -0.008366912569225953,
+    "eigenvector": 0.045438006152471816,
+    "closeness": 0.1341515817984924
+   },
+   "auc": {
+    "ctqw": 0.1610808546292417,
+    "degree": 0.3744239631336405,
+    "gnm_msf": 0.6736489317134479,
+    "betweenness": 0.781524926686217,
+    "eigenvector": 0.2997486384583159,
+    "closeness": 0.38447842480100547
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1W0F": {
+   "pdb": "1W0F",
+   "protein": "Cytochrome P450 3A4",
+   "n_residues": 459,
+   "n_elig": 372,
+   "rho_vs_ctqw": {
+    "degree": 0.49884411160795195,
+    "gnm_msf": -0.5993939680731807,
+    "betweenness": 0.435116539946723,
+    "eigenvector": 0.326373200696921,
+    "closeness": 0.509761020550903
+   },
+   "auc": {
+    "ctqw": 0.2987249544626594,
+    "degree": 0.34949908925318757,
+    "gnm_msf": 0.6115664845173042,
+    "betweenness": 0.611111111111111,
+    "eigenvector": 0.31648451730418947,
+    "closeness": 0.8005464480874317
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1W25": {
+   "pdb": "1W25",
+   "protein": "Response regulator PleD",
+   "n_residues": 908,
+   "n_elig": 802,
+   "rho_vs_ctqw": {
+    "degree": 0.32906424955334074,
+    "gnm_msf": -0.25358538633654637,
+    "betweenness": 0.23342932160579422,
+    "eigenvector": 0.7932155260237241,
+    "closeness": 0.07106216857457108
+   },
+   "auc": {
+    "ctqw": 0.8127388535031848,
+    "degree": 0.38999625327838144,
+    "gnm_msf": 0.5545147995503934,
+    "betweenness": 0.5287373548145373,
+    "eigenvector": 0.86129636568003,
+    "closeness": 0.4825028100412139
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1W96": {
+   "pdb": "1W96",
+   "protein": "Acetyl-CoA carboxylase",
+   "n_residues": 1627,
+   "n_elig": 1454,
+   "rho_vs_ctqw": {
+    "degree": 0.30214750392488865,
+    "gnm_msf": -0.5873353466106916,
+    "betweenness": 0.22756165543632484,
+    "eigenvector": 0.49492330226427483,
+    "closeness": 0.26410615273937516
+   },
+   "auc": {
+    "ctqw": 0.8861588861588862,
+    "degree": 0.58001008001008,
+    "gnm_msf": 0.17117117117117114,
+    "betweenness": 0.6964026964026964,
+    "eigenvector": 0.9609399609399609,
+    "closeness": 0.6062811062811063
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1Z8D_1": {
+   "pdb": "1Z8D_1",
+   "protein": "Glycogen phosphorylase, muscle form",
+   "n_residues": 819,
+   "n_elig": 735,
+   "rho_vs_ctqw": {
+    "degree": 0.2050004612765107,
+    "gnm_msf": -0.3870561931679437,
+    "betweenness": 0.35366247721165184,
+    "eigenvector": 0.4006871526006446,
+    "closeness": 0.5335263428695773
+   },
+   "auc": {
+    "ctqw": 0.21977349250076522,
+    "degree": 0.367003367003367,
+    "gnm_msf": 0.6937557392102847,
+    "betweenness": 0.4067187021732476,
+    "eigenvector": 0.3515457606366697,
+    "closeness": 0.27364554637281907
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1Z8D_2": {
+   "pdb": "1Z8D_2",
+   "protein": "Glycogen phosphorylase, muscle form",
+   "n_residues": 819,
+   "n_elig": 735,
+   "rho_vs_ctqw": {
+    "degree": 0.2050004612765107,
+    "gnm_msf": -0.3870561931679437,
+    "betweenness": 0.35366247721165184,
+    "eigenvector": 0.4006848255236225,
+    "closeness": 0.5335263428695773
+   },
+   "auc": {
+    "ctqw": 0.9531506849315069,
+    "degree": 0.2228767123287671,
+    "gnm_msf": 0.6367123287671232,
+    "betweenness": 0.4786301369863013,
+    "eigenvector": 0.3728767123287672,
+    "closeness": 0.7283561643835617
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "1ZDS": {
+   "pdb": "1ZDS",
+   "protein": "Copper-containing nitrite reductase",
+   "n_residues": 1007,
+   "n_elig": 901,
+   "rho_vs_ctqw": {
+    "degree": 0.795649194235779,
+    "gnm_msf": -0.8052790026573045,
+    "betweenness": 0.5536506066526544,
+    "eigenvector": 0.7792274166914809,
+    "closeness": 0.5431660648290002
+   },
+   "auc": {
+    "ctqw": 0.687989921612542,
+    "degree": 0.4066349384098544,
+    "gnm_msf": 0.598124300111982,
+    "betweenness": 0.48488241881299,
+    "eigenvector": 0.42315229563269874,
+    "closeness": 0.40033594624860025
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2ATS": {
+   "pdb": "2ATS",
+   "protein": "4-hydroxy-tetrahydrodipicolinate synthase",
+   "n_residues": 584,
+   "n_elig": 513,
+   "rho_vs_ctqw": {
+    "degree": 0.7296807822526307,
+    "gnm_msf": -0.6952833455639749,
+    "betweenness": 0.5617189633251417,
+    "eigenvector": 0.6796156805356454,
+    "closeness": 0.354338257643686
+   },
+   "auc": {
+    "ctqw": 0.2734375,
+    "degree": 0.154296875,
+    "gnm_msf": 0.671875,
+    "betweenness": 0.611328125,
+    "eigenvector": 0.310546875,
+    "closeness": 0.828125
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2BE9": {
+   "pdb": "2BE9",
+   "protein": "Aspartate carbamoyltransferase regulatory chain",
+   "n_residues": 441,
+   "n_elig": 371,
+   "rho_vs_ctqw": {
+    "degree": 0.2076124038483599,
+    "gnm_msf": -0.48964696371878363,
+    "betweenness": 0.12232723411087056,
+    "eigenvector": 0.5525326822344474,
+    "closeness": 0.4175533036773491
+   },
+   "auc": {
+    "ctqw": 0.13383838383838387,
+    "degree": 0.5876262626262626,
+    "gnm_msf": 0.8353535353535353,
+    "betweenness": 0.3702020202020202,
+    "eigenvector": 0.07954545454545453,
+    "closeness": 0.062373737373737366
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2BU8": {
+   "pdb": "2BU8",
+   "protein": "Pyruvate dehydrogenase kinase isozyme 2",
+   "n_residues": 359,
+   "n_elig": 299,
+   "rho_vs_ctqw": {
+    "degree": 0.5382211570499127,
+    "gnm_msf": -0.5713917276146169,
+    "betweenness": 0.3453099858510619,
+    "eigenvector": 0.8031141837444726,
+    "closeness": 0.4114201944690156
+   },
+   "auc": {
+    "ctqw": 0.36858237547892714,
+    "degree": 0.5139846743295019,
+    "gnm_msf": 0.39157088122605366,
+    "betweenness": 0.7770114942528735,
+    "eigenvector": 0.3187739463601532,
+    "closeness": 0.7685823754789273
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2BXA": {
+   "pdb": "2BXA",
+   "protein": "Serum albumin",
+   "n_residues": 1135,
+   "failed": true,
+   "error": "ValueError(\"found 16 near-zero ANM modes (>6) AND the contact graph has 2 disconnected components (via operator_diagnostics on this Hessian) -- this is TASK-0005's original disconnected-graph regression (independent rigid motion of each piece), not TASK-0128's single-connected-structure floppiness case; do not proceed with a single global rigid-body-nullspace assumption.\")"
+  },
+  "2D60": {
+   "pdb": "2D60",
+   "protein": "Hemoglobin subunit beta",
+   "n_residues": 572,
+   "n_elig": 510,
+   "rho_vs_ctqw": {
+    "degree": 0.6008656291963439,
+    "gnm_msf": -0.6343480977718213,
+    "betweenness": 0.41633456264686464,
+    "eigenvector": 0.412886722092018,
+    "closeness": 0.44314285565780437
+   },
+   "auc": {
+    "ctqw": 0.5826,
+    "degree": 0.503,
+    "gnm_msf": 0.32400000000000007,
+    "betweenness": 0.8304,
+    "eigenvector": 0.7546,
+    "closeness": 0.9084
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2HIM": {
+   "pdb": "2HIM",
+   "protein": "L-asparaginase 1",
+   "n_residues": 1308,
+   "n_elig": 1170,
+   "rho_vs_ctqw": {
+    "degree": 0.47162856501911943,
+    "gnm_msf": -0.46424399724869664,
+    "betweenness": 0.27226977319347556,
+    "eigenvector": 0.540968895066166,
+    "closeness": 0.22055244631806348
+   },
+   "auc": {
+    "ctqw": 0.8061058474495167,
+    "degree": 0.6176189109005646,
+    "gnm_msf": 0.2646186237917504,
+    "betweenness": 0.6351804000382811,
+    "eigenvector": 0.85577567231314,
+    "closeness": 0.7680639295626376
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2HVW": {
+   "pdb": "2HVW",
+   "protein": "Putative deoxycytidylate deaminase",
+   "n_residues": 439,
+   "n_elig": 370,
+   "rho_vs_ctqw": {
+    "degree": 0.30842534341630184,
+    "gnm_msf": -0.37337334705029135,
+    "betweenness": 0.23959547979772267,
+    "eigenvector": 0.28520102509978257,
+    "closeness": 0.30815853475074695
+   },
+   "auc": {
+    "ctqw": 0.8638331365604093,
+    "degree": 0.5580480125934671,
+    "gnm_msf": 0.45926800472255014,
+    "betweenness": 0.5257772530499804,
+    "eigenvector": 0.4765840220385675,
+    "closeness": 0.4811097992916174
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2IEG": {
+   "pdb": "2IEG",
+   "protein": "Glycogen phosphorylase, muscle form",
+   "n_residues": 1608,
+   "n_elig": 1444,
+   "rho_vs_ctqw": {
+    "degree": 0.4427728223277508,
+    "gnm_msf": -0.44952257520383354,
+    "betweenness": 0.280125384264375,
+    "eigenvector": 0.8410512051781498,
+    "closeness": 0.17324147747833513
+   },
+   "auc": {
+    "ctqw": 0.37844646606018195,
+    "degree": 0.334383018427805,
+    "gnm_msf": 0.5176113832516912,
+    "betweenness": 0.6870072311639842,
+    "eigenvector": 0.5405644973174715,
+    "closeness": 0.8761838115232097
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2J0X": {
+   "pdb": "2J0X",
+   "protein": "Lysine-sensitive aspartokinase 3",
+   "n_residues": 892,
+   "n_elig": 781,
+   "rho_vs_ctqw": {
+    "degree": 0.1446129463116349,
+    "gnm_msf": -0.34302108683435006,
+    "betweenness": 0.19790626383367046,
+    "eigenvector": 0.33504128521599075,
+    "closeness": 0.38835494754439115
+   },
+   "auc": {
+    "ctqw": 0.6373081463990555,
+    "degree": 0.6252066115702479,
+    "gnm_msf": 0.19409681227863046,
+    "betweenness": 0.8075560802833529,
+    "eigenvector": 0.8276269185360094,
+    "closeness": 0.8936835891381345
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2JHR": {
+   "pdb": "2JHR",
+   "protein": "Myosin-2 heavy chain",
+   "n_residues": 776,
+   "n_elig": 685,
+   "rho_vs_ctqw": {
+    "degree": 0.6544308206584237,
+    "gnm_msf": -0.7887805017233657,
+    "betweenness": 0.5104227147903684,
+    "eigenvector": 0.6436078651865773,
+    "closeness": 0.5954947940015249
+   },
+   "auc": {
+    "ctqw": 0.5180860805860806,
+    "degree": 0.5058951465201464,
+    "gnm_msf": 0.40098443223443225,
+    "betweenness": 0.81753663003663,
+    "eigenvector": 0.410485347985348,
+    "closeness": 0.6285485347985348
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2NW8": {
+   "pdb": "2NW8",
+   "protein": "Tryptophan 2,3-dioxygenase",
+   "n_residues": 530,
+   "n_elig": 465,
+   "rho_vs_ctqw": {
+    "degree": 0.03990700325019705,
+    "gnm_msf": -0.24482496049497063,
+    "betweenness": 0.1352191361709345,
+    "eigenvector": -0.05481734593038523,
+    "closeness": 0.34264196184212975
+   },
+   "auc": {
+    "ctqw": 0.4903306300686214,
+    "degree": 0.5531815346225826,
+    "gnm_msf": 0.44603867747972553,
+    "betweenness": 0.69463505926388,
+    "eigenvector": 0.5483468496568933,
+    "closeness": 0.5665938864628821
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2PA3": {
+   "pdb": "2PA3",
+   "protein": "D-3-phosphoglycerate dehydrogenase",
+   "n_residues": 406,
+   "n_elig": 329,
+   "rho_vs_ctqw": {
+    "degree": 0.2568588399443844,
+    "gnm_msf": -0.38627319114170533,
+    "betweenness": 0.20150311053166678,
+    "eigenvector": 0.8585355744411272,
+    "closeness": 0.3335112565961965
+   },
+   "auc": {
+    "ctqw": 0.12032710280373833,
+    "degree": 0.3500778816199377,
+    "gnm_msf": 0.772196261682243,
+    "betweenness": 0.40498442367601245,
+    "eigenvector": 0.0883956386292835,
+    "closeness": 0.2165109034267913
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2PUV": {
+   "pdb": "2PUV",
+   "protein": "Glutamine--fructose-6-phosphate aminotransferase",
+   "n_residues": 1378,
+   "n_elig": 1224,
+   "rho_vs_ctqw": {
+    "degree": 0.4242222645763813,
+    "gnm_msf": -0.44145553560753814,
+    "betweenness": 0.28624652354697244,
+    "eigenvector": -0.07199137381853804,
+    "closeness": 0.25130292911895247
+   },
+   "auc": {
+    "ctqw": 0.5074636346312646,
+    "degree": 0.5559613796608016,
+    "gnm_msf": 0.39598551737280063,
+    "betweenness": 0.37705646954201866,
+    "eigenvector": 0.6092866670901353,
+    "closeness": 0.6574350504986343
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2Q5O": {
+   "pdb": "2Q5O",
+   "protein": "Indole-3-pyruvate decarboxylase",
+   "n_residues": 1060,
+   "n_elig": 942,
+   "rho_vs_ctqw": {
+    "degree": 0.07861249213988297,
+    "gnm_msf": -0.22380458105487694,
+    "betweenness": 0.16650499941532199,
+    "eigenvector": 0.25576715741124073,
+    "closeness": 0.335748412672479
+   },
+   "auc": {
+    "ctqw": 0.6083333333333334,
+    "degree": 0.6371415770609319,
+    "gnm_msf": 0.2629928315412186,
+    "betweenness": 0.8197132616487455,
+    "eigenvector": 0.6364695340501793,
+    "closeness": 0.6918010752688172
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2Q8M_1": {
+   "pdb": "2Q8M_1",
+   "protein": "Fructose-1,6-bisphosphatase class 1",
+   "n_residues": 608,
+   "n_elig": 525,
+   "rho_vs_ctqw": {
+    "degree": 0.44413085201510716,
+    "gnm_msf": -0.3359000874897894,
+    "betweenness": 0.20147456111611864,
+    "eigenvector": 0.8727573381542557,
+    "closeness": -0.04305444770713504
+   },
+   "auc": {
+    "ctqw": 0.6996153846153846,
+    "degree": 0.2459615384615385,
+    "gnm_msf": 0.8842307692307693,
+    "betweenness": 0.2253846153846154,
+    "eigenvector": 0.6534615384615384,
+    "closeness": 0.0723076923076923
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2Q8M_2": {
+   "pdb": "2Q8M_2",
+   "protein": "Fructose-1,6-bisphosphatase class 1",
+   "n_residues": 608,
+   "n_elig": 525,
+   "rho_vs_ctqw": {
+    "degree": 0.44413085201510716,
+    "gnm_msf": -0.3359000874897894,
+    "betweenness": 0.20147456111611864,
+    "eigenvector": 0.8727573381542557,
+    "closeness": -0.04305444770713504
+   },
+   "auc": {
+    "ctqw": 0.741362763915547,
+    "degree": 0.4784069097888676,
+    "gnm_msf": 0.46449136276391556,
+    "betweenness": 0.46305182341650675,
+    "eigenvector": 0.7317658349328215,
+    "closeness": 0.5266314779270633
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2QMX": {
+   "pdb": "2QMX",
+   "protein": "Prephenate dehydratase",
+   "n_residues": 550,
+   "n_elig": 480,
+   "rho_vs_ctqw": {
+    "degree": 0.22846729860000684,
+    "gnm_msf": -0.3001473069584534,
+    "betweenness": 0.21567470941628036,
+    "eigenvector": 0.32133613861171273,
+    "closeness": 0.3014341619763099
+   },
+   "auc": {
+    "ctqw": 0.2157799374073464,
+    "degree": 0.45058474715862296,
+    "gnm_msf": 0.5570746170317905,
+    "betweenness": 0.5931477516059958,
+    "eigenvector": 0.1185966068193049,
+    "closeness": 0.4064404546203262
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2QPY": {
+   "pdb": "2QPY",
+   "protein": "Androgen receptor",
+   "n_residues": 258,
+   "n_elig": 209,
+   "rho_vs_ctqw": {
+    "degree": 0.5462376806529273,
+    "gnm_msf": -0.6313462852936537,
+    "betweenness": 0.38439981071560025,
+    "eigenvector": 0.5730335454019665,
+    "closeness": 0.48884147914891257
+   },
+   "auc": {
+    "ctqw": 0.34221105527638196,
+    "degree": 0.30201005025125627,
+    "gnm_msf": 0.7135678391959799,
+    "betweenness": 0.26884422110552764,
+    "eigenvector": 0.13417085427135678,
+    "closeness": 0.30678391959799
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2R1R": {
+   "pdb": "2R1R",
+   "protein": "Ribonucleoside-diphosphate reductase 1 subunit alpha",
+   "n_residues": 2242,
+   "n_elig": 1991,
+   "rho_vs_ctqw": {
+    "degree": 0.30958183012001056,
+    "gnm_msf": -0.7889375391070594,
+    "betweenness": 0.34933291049237053,
+    "eigenvector": 0.7826921607365128,
+    "closeness": 0.7737694124097323
+   },
+   "auc": {
+    "ctqw": 0.7972306312366857,
+    "degree": 0.40537055723735843,
+    "gnm_msf": 0.3613633815450163,
+    "betweenness": 0.6469895728220652,
+    "eigenvector": 0.7589415853795268,
+    "closeness": 0.8232705460253391
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2RD5": {
+   "pdb": "2RD5",
+   "protein": "Acetylglutamate kinase, chloroplastic",
+   "n_residues": 815,
+   "n_elig": 715,
+   "rho_vs_ctqw": {
+    "degree": 0.36446661019392135,
+    "gnm_msf": -0.4968426947423485,
+    "betweenness": 0.22793582054889083,
+    "eigenvector": -0.12927706535987835,
+    "closeness": 0.4435054077935743
+   },
+   "auc": {
+    "ctqw": 0.7387654958677686,
+    "degree": 0.5484891528925621,
+    "gnm_msf": 0.31663223140495866,
+    "betweenness": 0.6169938016528925,
+    "eigenvector": 0.37138429752066116,
+    "closeness": 0.8576317148760331
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2V4Y": {
+   "pdb": "2V4Y",
+   "protein": "Uridylate kinase",
+   "n_residues": 1407,
+   "n_elig": 1247,
+   "rho_vs_ctqw": {
+    "degree": 0.39412073279810306,
+    "gnm_msf": -0.49529698539118905,
+    "betweenness": 0.4049685380597559,
+    "eigenvector": 0.04867002450528757,
+    "closeness": 0.48443017198923866
+   },
+   "auc": {
+    "ctqw": 0.802572123740007,
+    "degree": 0.4012281311551385,
+    "gnm_msf": 0.5293708724365659,
+    "betweenness": 0.4859228362877998,
+    "eigenvector": 0.4575947167188043,
+    "closeness": 0.6967616730390452
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2VD3": {
+   "pdb": "2VD3",
+   "protein": "ATP phosphoribosyltransferase",
+   "n_residues": 577,
+   "n_elig": 507,
+   "rho_vs_ctqw": {
+    "degree": 0.2747988725749289,
+    "gnm_msf": -0.5512613949661326,
+    "betweenness": 0.3367537969236471,
+    "eigenvector": 0.2952125166593342,
+    "closeness": 0.5696379343385289
+   },
+   "auc": {
+    "ctqw": 0.2627755511022044,
+    "degree": 0.4149549098196393,
+    "gnm_msf": 0.8684869739478958,
+    "betweenness": 0.41658316633266523,
+    "eigenvector": 0.08542084168336672,
+    "closeness": 0.15355711422845691
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2VGI": {
+   "pdb": "2VGI",
+   "protein": "Pyruvate kinase PKLR",
+   "n_residues": 2008,
+   "n_elig": 1791,
+   "rho_vs_ctqw": {
+    "degree": 0.6486307061185822,
+    "gnm_msf": -0.5140917952692432,
+    "betweenness": 0.32457191928535,
+    "eigenvector": 0.46997119601398857,
+    "closeness": 0.1827838818735769
+   },
+   "auc": {
+    "ctqw": 0.3853040652563168,
+    "degree": 0.39873333775449304,
+    "gnm_msf": 0.5300417799588832,
+    "betweenness": 0.4520193646793554,
+    "eigenvector": 0.6625439352742224,
+    "closeness": 0.5886663571854898
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2VVT": {
+   "pdb": "2VVT",
+   "protein": "Glutamate racemase",
+   "n_residues": 535,
+   "n_elig": 465,
+   "rho_vs_ctqw": {
+    "degree": 0.4506207338578762,
+    "gnm_msf": -0.36982233478304466,
+    "betweenness": 0.28783054132631875,
+    "eigenvector": 0.5887249542887425,
+    "closeness": 0.15308049538508856
+   },
+   "auc": {
+    "ctqw": 0.7994639376218322,
+    "degree": 0.36013645224171537,
+    "gnm_msf": 0.760233918128655,
+    "betweenness": 0.33820662768031184,
+    "eigenvector": 0.351364522417154,
+    "closeness": 0.21393762183235868
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2W4I": {
+   "pdb": "2W4I",
+   "protein": "Glutamate racemase",
+   "n_residues": 1017,
+   "n_elig": 904,
+   "rho_vs_ctqw": {
+    "degree": 0.37044120103690237,
+    "gnm_msf": -0.4776619209457288,
+    "betweenness": 0.37199815130782143,
+    "eigenvector": -0.34307090577814503,
+    "closeness": 0.42874376166493405
+   },
+   "auc": {
+    "ctqw": 0.8286674132138858,
+    "degree": 0.3871017000916217,
+    "gnm_msf": 0.509111269469612,
+    "betweenness": 0.5975771149343377,
+    "eigenvector": 0.2414740914181004,
+    "closeness": 0.5901964776544844
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2XJC": {
+   "pdb": "2XJC",
+   "protein": "Cytosolic purine 5'-nucleotidase",
+   "n_residues": 463,
+   "n_elig": 388,
+   "rho_vs_ctqw": {
+    "degree": 0.45340714526316045,
+    "gnm_msf": -0.5179711300761347,
+    "betweenness": 0.39368876095794153,
+    "eigenvector": 0.353936276452438,
+    "closeness": 0.4772711817871171
+   },
+   "auc": {
+    "ctqw": 0.6544973544973546,
+    "degree": 0.40714285714285714,
+    "gnm_msf": 0.4132275132275132,
+    "betweenness": 0.5941798941798941,
+    "eigenvector": 0.7317460317460318,
+    "closeness": 0.7559523809523809
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2YHD": {
+   "pdb": "2YHD",
+   "protein": "Androgen receptor",
+   "n_residues": 249,
+   "n_elig": 200,
+   "rho_vs_ctqw": {
+    "degree": 0.6736673305856732,
+    "gnm_msf": -0.6783799594989874,
+    "betweenness": 0.4396969924248107,
+    "eigenvector": 0.5132453311332784,
+    "closeness": 0.4423407377702857
+   },
+   "auc": {
+    "ctqw": 0.486328125,
+    "degree": 0.39713541666666663,
+    "gnm_msf": 0.517578125,
+    "betweenness": 0.5032552083333333,
+    "eigenvector": 0.34375,
+    "closeness": 0.6484375
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "2YLO": {
+   "pdb": "2YLO",
+   "protein": "Androgen receptor",
+   "n_residues": 250,
+   "n_elig": 201,
+   "rho_vs_ctqw": {
+    "degree": 0.6415107999988269,
+    "gnm_msf": -0.6925757351854589,
+    "betweenness": 0.40310477316388355,
+    "eigenvector": 0.5105911038865081,
+    "closeness": 0.49920551036627725
+   },
+   "auc": {
+    "ctqw": 0.34921465968586385,
+    "degree": 0.4091623036649215,
+    "gnm_msf": 0.6225130890052356,
+    "betweenness": 0.3795811518324607,
+    "eigenvector": 0.14450261780104715,
+    "closeness": 0.3256544502617801
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3BZ7": {
+   "pdb": "3BZ7",
+   "protein": "Myosin-2 heavy chain",
+   "n_residues": 703,
+   "n_elig": 618,
+   "rho_vs_ctqw": {
+    "degree": 0.7462515229480023,
+    "gnm_msf": -0.7913392240986713,
+    "betweenness": 0.5331232266391803,
+    "eigenvector": 0.5885956171361639,
+    "closeness": 0.5213697323168571
+   },
+   "auc": {
+    "ctqw": 0.5829740187949143,
+    "degree": 0.49436152570480923,
+    "gnm_msf": 0.27683803206191265,
+    "betweenness": 0.8818131564400222,
+    "eigenvector": 0.7463792150359315,
+    "closeness": 0.9563294637921503
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3C1N": {
+   "pdb": "3C1N",
+   "protein": "Probable aspartokinase",
+   "n_residues": 1825,
+   "n_elig": 1618,
+   "rho_vs_ctqw": {
+    "degree": 0.38364568929195614,
+    "gnm_msf": -0.41664133673729237,
+    "betweenness": 0.19430279778863807,
+    "eigenvector": -0.6861143774642394,
+    "closeness": 0.12027765612519657
+   },
+   "auc": {
+    "ctqw": 0.864863184079602,
+    "degree": 0.5574937810945273,
+    "gnm_msf": 0.4014925373134328,
+    "betweenness": 0.590360696517413,
+    "eigenvector": 0.11822139303482587,
+    "closeness": 0.3578047263681592
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3CEH": {
+   "pdb": "3CEH",
+   "protein": "Glycogen phosphorylase, liver form",
+   "n_residues": 1588,
+   "n_elig": 1426,
+   "rho_vs_ctqw": {
+    "degree": 0.47104953218859624,
+    "gnm_msf": -0.5070561815236002,
+    "betweenness": 0.3392261541849463,
+    "eigenvector": 0.7809149624637296,
+    "closeness": 0.29584418439419397
+   },
+   "auc": {
+    "ctqw": 0.5411275778248255,
+    "degree": 0.40143495648082805,
+    "gnm_msf": 0.526385948404297,
+    "betweenness": 0.5281502391594134,
+    "eigenvector": 0.5677879714576962,
+    "closeness": 0.8089077079902769
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3CSM": {
+   "pdb": "3CSM",
+   "protein": "Chorismate mutase",
+   "n_residues": 504,
+   "n_elig": 437,
+   "rho_vs_ctqw": {
+    "degree": 0.27832113705465356,
+    "gnm_msf": -0.2892457715368849,
+    "betweenness": 0.28134796517241534,
+    "eigenvector": 0.30737741102131044,
+    "closeness": 0.1987567444686791
+   },
+   "auc": {
+    "ctqw": 0.7561188811188811,
+    "degree": 0.4941724941724942,
+    "gnm_msf": 0.6284965034965035,
+    "betweenness": 0.585955710955711,
+    "eigenvector": 0.25903263403263405,
+    "closeness": 0.2546620046620046
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3D2P": {
+   "pdb": "3D2P",
+   "protein": "Amino-acid acetyltransferase",
+   "n_residues": 848,
+   "n_elig": 737,
+   "rho_vs_ctqw": {
+    "degree": 0.1735036033776217,
+    "gnm_msf": -0.042498182230657176,
+    "betweenness": 0.07049242845962092,
+    "eigenvector": 0.020250262233611656,
+    "closeness": -0.03991511693889498
+   },
+   "auc": {
+    "ctqw": 0.7431518723994452,
+    "degree": 0.5305565187239945,
+    "gnm_msf": 0.3939840499306519,
+    "betweenness": 0.5071081830790569,
+    "eigenvector": 0.6459778085991678,
+    "closeness": 0.4607749653259362
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3DC2": {
+   "pdb": "3DC2",
+   "protein": "D-3-phosphoglycerate dehydrogenase",
+   "n_residues": 1049,
+   "n_elig": 908,
+   "rho_vs_ctqw": {
+    "degree": 0.2630222212859788,
+    "gnm_msf": -0.6815220229773271,
+    "betweenness": 0.27063844567270073,
+    "eigenvector": 0.7317568999297533,
+    "closeness": 0.6935228800263346
+   },
+   "auc": {
+    "ctqw": 0.21708333333333335,
+    "degree": 0.24805555555555553,
+    "gnm_msf": 0.9516666666666667,
+    "betweenness": 0.2536111111111111,
+    "eigenvector": 0.03708333333333333,
+    "closeness": 0.030069444444444468
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3EK5": {
+   "pdb": "3EK5",
+   "protein": "Uridylate kinase",
+   "n_residues": 1435,
+   "n_elig": 1272,
+   "rho_vs_ctqw": {
+    "degree": 0.3804407457360807,
+    "gnm_msf": -0.45037905860405125,
+    "betweenness": 0.33488424234336556,
+    "eigenvector": 0.8554326590576045,
+    "closeness": 0.36742943096372566
+   },
+   "auc": {
+    "ctqw": 0.2805091487669053,
+    "degree": 0.2920710686820472,
+    "gnm_msf": 0.6135773004508088,
+    "betweenness": 0.5294616812516573,
+    "eigenvector": 0.26677273932643863,
+    "closeness": 0.7591089896579156
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3EPS": {
+   "pdb": "3EPS",
+   "protein": "Isocitrate dehydrogenase kinase/phosphatase",
+   "n_residues": 1125,
+   "n_elig": 980,
+   "rho_vs_ctqw": {
+    "degree": 0.3536910952606318,
+    "gnm_msf": -0.4782627095558009,
+    "betweenness": 0.3138012749694857,
+    "eigenvector": 0.6891632434694178,
+    "closeness": 0.49022508336670506
+   },
+   "auc": {
+    "ctqw": 0.8379603850131255,
+    "degree": 0.5563996499880677,
+    "gnm_msf": 0.3134197756741707,
+    "betweenness": 0.6986715456208734,
+    "eigenvector": 0.6511812902712593,
+    "closeness": 0.6860631612441334
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3ETE_1": {
+   "pdb": "3ETE_1",
+   "protein": "Glutamate dehydrogenase 1, mitochondrial",
+   "n_residues": 2970,
+   "n_elig": 2667,
+   "rho_vs_ctqw": {
+    "degree": 0.48143239153716605,
+    "gnm_msf": -0.5715527427153854,
+    "betweenness": 0.45481761065125254,
+    "eigenvector": 0.4805898924234654,
+    "closeness": 0.4546507599994362
+   },
+   "auc": {
+    "ctqw": 0.8391856868154837,
+    "degree": 0.3632848424044812,
+    "gnm_msf": 0.3062034946910793,
+    "betweenness": 0.9360421369450714,
+    "eigenvector": 0.755162611821754,
+    "closeness": 0.9763188696597275
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3ETE_2": {
+   "pdb": "3ETE_2",
+   "protein": "Glutamate dehydrogenase 1, mitochondrial",
+   "n_residues": 2970,
+   "n_elig": 2667,
+   "rho_vs_ctqw": {
+    "degree": 0.48143239153716605,
+    "gnm_msf": -0.5715527427153854,
+    "betweenness": 0.45481761065125254,
+    "eigenvector": 0.4805907255251928,
+    "closeness": 0.4546507599994362
+   },
+   "auc": {
+    "ctqw": 0.9478710295728368,
+    "degree": 0.4167408269441402,
+    "gnm_msf": 0.5745824205914567,
+    "betweenness": 0.528237951807229,
+    "eigenvector": 0.49431818181818177,
+    "closeness": 0.4525088992332968
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3FUD": {
+   "pdb": "3FUD",
+   "protein": "Leukotriene A-4 hydrolase",
+   "n_residues": 606,
+   "n_elig": 521,
+   "rho_vs_ctqw": {
+    "degree": 0.4793799340600162,
+    "gnm_msf": -0.602039593527198,
+    "betweenness": 0.44348161664051594,
+    "eigenvector": 0.32926757867190715,
+    "closeness": 0.614158689312716
+   },
+   "auc": {
+    "ctqw": 0.344336569579288,
+    "degree": 0.5493527508090617,
+    "gnm_msf": 0.5216828478964401,
+    "betweenness": 0.32022653721682853,
+    "eigenvector": 0.5553398058252428,
+    "closeness": 0.26472491909385115
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3H30": {
+   "pdb": "3H30",
+   "protein": "Casein kinase II subunit alpha",
+   "n_residues": 666,
+   "n_elig": 580,
+   "rho_vs_ctqw": {
+    "degree": 0.3267082885873283,
+    "gnm_msf": -0.41482752777874304,
+    "betweenness": 0.3035874243782034,
+    "eigenvector": -0.27652261461681743,
+    "closeness": 0.3818641583948106
+   },
+   "auc": {
+    "ctqw": 0.9180774469741195,
+    "degree": 0.5898034637088928,
+    "gnm_msf": 0.5512745670363883,
+    "betweenness": 0.28429655575014595,
+    "eigenvector": 0.25685931115002913,
+    "closeness": 0.3197120062268924
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3H6O": {
+   "pdb": "3H6O",
+   "protein": "Pyruvate kinase PKM",
+   "n_residues": 1978,
+   "n_elig": 1765,
+   "rho_vs_ctqw": {
+    "degree": 0.5928773239483808,
+    "gnm_msf": -0.5800341001401732,
+    "betweenness": 0.3639237939169868,
+    "eigenvector": 0.575254899344394,
+    "closeness": 0.3157931879525717
+   },
+   "auc": {
+    "ctqw": 0.45247284162378504,
+    "degree": 0.3597948827901658,
+    "gnm_msf": 0.5733276157804459,
+    "betweenness": 0.3934748427672956,
+    "eigenvector": 0.6420811892510006,
+    "closeness": 0.5060748999428244
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3HFR": {
+   "pdb": "3HFR",
+   "protein": "Glutamate racemase",
+   "n_residues": 518,
+   "n_elig": 450,
+   "rho_vs_ctqw": {
+    "degree": 0.2245677122456835,
+    "gnm_msf": -0.24746229199485764,
+    "betweenness": 0.14924735430792252,
+    "eigenvector": 0.7437998870776317,
+    "closeness": 0.14354303583262862
+   },
+   "auc": {
+    "ctqw": 0.6862921348314606,
+    "degree": 0.36539325842696635,
+    "gnm_msf": 0.6894382022471911,
+    "betweenness": 0.3015730337078652,
+    "eigenvector": 0.5276404494382022,
+    "closeness": 0.19528089887640449
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3HO6": {
+   "pdb": "3HO6",
+   "protein": "Toxin A",
+   "n_residues": 495,
+   "n_elig": 424,
+   "rho_vs_ctqw": {
+    "degree": 0.3887305940739089,
+    "gnm_msf": -0.4579886808195779,
+    "betweenness": 0.3238656364468222,
+    "eigenvector": 0.9236803866468305,
+    "closeness": 0.33600876128505447
+   },
+   "auc": {
+    "ctqw": 0.8186412128017967,
+    "degree": 0.47566909975669097,
+    "gnm_msf": 0.523301516002246,
+    "betweenness": 0.45835672842972114,
+    "eigenvector": 0.8021710649447876,
+    "closeness": 0.39640651319483433
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3IFA": {
+   "pdb": "3IFA",
+   "protein": "Fructose-1,6-bisphosphatase isozyme 2",
+   "n_residues": 1290,
+   "n_elig": 1139,
+   "rho_vs_ctqw": {
+    "degree": 0.3499504188444651,
+    "gnm_msf": -0.539829047723886,
+    "betweenness": 0.2953071267873642,
+    "eigenvector": 0.32197447255823153,
+    "closeness": 0.4719812638370773
+   },
+   "auc": {
+    "ctqw": 0.8744493392070485,
+    "degree": 0.4575991189427313,
+    "gnm_msf": 0.29779735682819386,
+    "betweenness": 0.5971365638766519,
+    "eigenvector": 0.6440528634361233,
+    "closeness": 0.78215859030837
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3IRH": {
+   "pdb": "3IRH",
+   "protein": "HD domain protein",
+   "n_residues": 1783,
+   "n_elig": 1579,
+   "rho_vs_ctqw": {
+    "degree": 0.2733061358700145,
+    "gnm_msf": -0.26603746232155,
+    "betweenness": 0.16186515156467632,
+    "eigenvector": 0.00048724531373492565,
+    "closeness": 0.16823944237335434
+   },
+   "auc": {
+    "ctqw": 0.7364390555201021,
+    "degree": 0.5324399064028931,
+    "gnm_msf": 0.3345564773452457,
+    "betweenness": 0.7660604126781535,
+    "eigenvector": 0.5626462454796852,
+    "closeness": 0.7580302063390768
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3K5V": {
+   "pdb": "3K5V",
+   "protein": "Tyrosine-protein kinase ABL1",
+   "n_residues": 569,
+   "n_elig": 482,
+   "rho_vs_ctqw": {
+    "degree": 0.32824956522822174,
+    "gnm_msf": -0.32216119984476477,
+    "betweenness": 0.22646247539398756,
+    "eigenvector": -0.3280332648905625,
+    "closeness": 0.27712319536132524
+   },
+   "auc": {
+    "ctqw": 0.6881720430107527,
+    "degree": 0.5664769133459835,
+    "gnm_msf": 0.26299810246679317,
+    "betweenness": 0.6072106261859582,
+    "eigenvector": 0.35762175838077165,
+    "closeness": 0.8364326375711575
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3KGF_1": {
+   "pdb": "3KGF_1",
+   "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase AroG",
+   "n_residues": 905,
+   "n_elig": 797,
+   "rho_vs_ctqw": {
+    "degree": 0.5697661647460295,
+    "gnm_msf": -0.5833416605635373,
+    "betweenness": 0.4351878860885493,
+    "eigenvector": 0.47070471839200917,
+    "closeness": 0.4118991790926084
+   },
+   "auc": {
+    "ctqw": 0.4501503585473051,
+    "degree": 0.4791811242192922,
+    "gnm_msf": 0.36005089058524176,
+    "betweenness": 0.6818181818181818,
+    "eigenvector": 0.5592181355540135,
+    "closeness": 0.8386537126995142
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3KGF_2": {
+   "pdb": "3KGF_2",
+   "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase AroG",
+   "n_residues": 905,
+   "n_elig": 797,
+   "rho_vs_ctqw": {
+    "degree": 0.5697661647460295,
+    "gnm_msf": -0.5833416605635373,
+    "betweenness": 0.4351878860885493,
+    "eigenvector": 0.4707002147841689,
+    "closeness": 0.4118991790926084
+   },
+   "auc": {
+    "ctqw": 0.6510800508259212,
+    "degree": 0.5766836086404066,
+    "gnm_msf": 0.4216010165184244,
+    "betweenness": 0.6928843710292248,
+    "eigenvector": 0.48856416772554,
+    "closeness": 0.7421219822109275
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3LSW": {
+   "pdb": "3LSW",
+   "protein": "Glutamate receptor 3",
+   "n_residues": 258,
+   "n_elig": 213,
+   "rho_vs_ctqw": {
+    "degree": 0.6840784706485948,
+    "gnm_msf": -0.716616042578873,
+    "betweenness": 0.6068304107514976,
+    "eigenvector": 0.5989566387923732,
+    "closeness": 0.6556224098760611
+   },
+   "auc": {
+    "ctqw": 0.5631067961165048,
+    "degree": 0.5703883495145631,
+    "gnm_msf": 0.25312066574202496,
+    "betweenness": 0.754507628294036,
+    "eigenvector": 0.8009708737864076,
+    "closeness": 0.906380027739251
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3LSX": {
+   "pdb": "3LSX",
+   "protein": "Glutamate receptor 3",
+   "n_residues": 258,
+   "n_elig": 213,
+   "rho_vs_ctqw": {
+    "degree": 0.638196469543822,
+    "gnm_msf": -0.6453962711199306,
+    "betweenness": 0.5866647791272416,
+    "eigenvector": 0.5487468986019804,
+    "closeness": 0.6253085545009699
+   },
+   "auc": {
+    "ctqw": 0.21698113207547165,
+    "degree": 0.3136792452830188,
+    "gnm_msf": 0.6698113207547169,
+    "betweenness": 0.3443396226415094,
+    "eigenvector": 0.2028301886792453,
+    "closeness": 0.4528301886792453
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3LU6": {
+   "pdb": "3LU6",
+   "protein": "Serum albumin",
+   "n_residues": 1156,
+   "n_elig": 1018,
+   "rho_vs_ctqw": {
+    "degree": 0.29065340752315194,
+    "gnm_msf": -0.20011684218905545,
+    "betweenness": 0.17231204355185933,
+    "eigenvector": -0.5036273470176947,
+    "closeness": 0.02690513362529374
+   },
+   "auc": {
+    "ctqw": 0.8129555997349238,
+    "degree": 0.6122846255798542,
+    "gnm_msf": 0.2500828363154407,
+    "betweenness": 0.7239893969516237,
+    "eigenvector": 0.39206428098078194,
+    "closeness": 0.7041915175612989
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3M3F": {
+   "pdb": "3M3F",
+   "protein": "Glutamate receptor 3",
+   "n_residues": 258,
+   "n_elig": 213,
+   "rho_vs_ctqw": {
+    "degree": 0.5356016519745778,
+    "gnm_msf": -0.5728763340047336,
+    "betweenness": 0.5000541736537042,
+    "eigenvector": 0.4626304822410037,
+    "closeness": 0.5899141965941146
+   },
+   "auc": {
+    "ctqw": 0.5460199004975124,
+    "degree": 0.5816749585406301,
+    "gnm_msf": 0.30638474295190715,
+    "betweenness": 0.753731343283582,
+    "eigenvector": 0.6865671641791045,
+    "closeness": 0.8177860696517413
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3MWB": {
+   "pdb": "3MWB",
+   "protein": "Prephenate dehydratase",
+   "n_residues": 601,
+   "n_elig": 526,
+   "rho_vs_ctqw": {
+    "degree": 0.4903722309505093,
+    "gnm_msf": -0.4808635270617508,
+    "betweenness": 0.3708925697483645,
+    "eigenvector": 0.14352017662210229,
+    "closeness": 0.3119839931592863
+   },
+   "auc": {
+    "ctqw": 0.4227005870841487,
+    "degree": 0.49015003261578605,
+    "gnm_msf": 0.45727332028701895,
+    "betweenness": 0.6644487932159165,
+    "eigenvector": 0.1726027397260274,
+    "closeness": 0.5814090019569471
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3O2M": {
+   "pdb": "3O2M",
+   "protein": "Mitogen-activated protein kinase 8",
+   "n_residues": 736,
+   "n_elig": 651,
+   "rho_vs_ctqw": {
+    "degree": 0.24354354943466028,
+    "gnm_msf": -0.22111360240788308,
+    "betweenness": 0.1000580625948608,
+    "eigenvector": -0.6319746946107524,
+    "closeness": 0.08595804307921391
+   },
+   "auc": {
+    "ctqw": 0.554608656649473,
+    "degree": 0.48390894819466246,
+    "gnm_msf": 0.24938326979143305,
+    "betweenness": 0.8609553711594528,
+    "eigenvector": 0.4618748598340435,
+    "closeness": 0.9583987441130299
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3PG9": {
+   "pdb": "3PG9",
+   "protein": "Phospho-2-dehydro-3-deoxyheptonate aldolase",
+   "n_residues": 2704,
+   "n_elig": 2429,
+   "rho_vs_ctqw": {
+    "degree": 0.25859898481164195,
+    "gnm_msf": -0.2590804139073054,
+    "betweenness": 0.163900642267035,
+    "eigenvector": -0.376442847849286,
+    "closeness": 0.12781838392791955
+   },
+   "auc": {
+    "ctqw": 0.6808080808080808,
+    "degree": 0.4591368227731864,
+    "gnm_msf": 0.6855371900826446,
+    "betweenness": 0.52089072543618,
+    "eigenvector": 0.06652892561983469,
+    "closeness": 0.39605142332415055
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3PJG": {
+   "pdb": "3PJG",
+   "protein": "UDP-glucose 6-dehydrogenase",
+   "n_residues": 389,
+   "n_elig": 341,
+   "rho_vs_ctqw": {
+    "degree": 0.32466344462272306,
+    "gnm_msf": -0.35839681141788404,
+    "betweenness": 0.1617011353961993,
+    "eigenvector": 0.22326157813024888,
+    "closeness": 0.15706410634869905
+   },
+   "auc": {
+    "ctqw": 0.5776859504132231,
+    "degree": 0.39917355371900826,
+    "gnm_msf": 0.5705234159779614,
+    "betweenness": 0.48829201101928377,
+    "eigenvector": 0.24545454545454545,
+    "closeness": 0.5612947658402203
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3PTZ": {
+   "pdb": "3PTZ",
+   "protein": "UDP-glucose 6-dehydrogenase",
+   "n_residues": 2744,
+   "n_elig": 2461,
+   "rho_vs_ctqw": {
+    "degree": 0.39417249942472615,
+    "gnm_msf": -0.6844212580474458,
+    "betweenness": 0.40259440402027274,
+    "eigenvector": 0.7204439180884374,
+    "closeness": 0.6987512192393629
+   },
+   "auc": {
+    "ctqw": 0.9493257049448305,
+    "degree": 0.6130830754860179,
+    "gnm_msf": 0.08543989725027731,
+    "betweenness": 0.7324128670675463,
+    "eigenvector": 0.8785976998073444,
+    "closeness": 0.9356646622686672
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3PXF": {
+   "pdb": "3PXF",
+   "protein": "Cyclin-dependent kinase 2",
+   "n_residues": 302,
+   "n_elig": 244,
+   "rho_vs_ctqw": {
+    "degree": 0.28079741006203,
+    "gnm_msf": -0.3293632206981153,
+    "betweenness": 0.29006604463278934,
+    "eigenvector": 0.3741637031254518,
+    "closeness": 0.3520487652701987
+   },
+   "auc": {
+    "ctqw": 0.8132183908045976,
+    "degree": 0.525323275862069,
+    "gnm_msf": 0.5089798850574713,
+    "betweenness": 0.6142241379310345,
+    "eigenvector": 0.4382183908045977,
+    "closeness": 0.44414511494252873
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3PYY": {
+   "pdb": "3PYY",
+   "protein": "Tyrosine-protein kinase ABL1",
+   "n_residues": 522,
+   "n_elig": 441,
+   "rho_vs_ctqw": {
+    "degree": 0.33429283104802937,
+    "gnm_msf": -0.4794135836152643,
+    "betweenness": 0.21024533314443788,
+    "eigenvector": 0.5459167774073542,
+    "closeness": 0.39220956869203655
+   },
+   "auc": {
+    "ctqw": 0.6313131313131313,
+    "degree": 0.45687645687645695,
+    "gnm_msf": 0.49961149961149964,
+    "betweenness": 0.49980574980574977,
+    "eigenvector": 0.5747863247863247,
+    "closeness": 0.5310800310800311
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3QH0": {
+   "pdb": "3QH0",
+   "protein": "Prostaglandin G/H synthase 2",
+   "n_residues": 1101,
+   "n_elig": 965,
+   "rho_vs_ctqw": {
+    "degree": 0.39097737574613495,
+    "gnm_msf": -0.38061164493784083,
+    "betweenness": 0.3312775708534075,
+    "eigenvector": 0.29000409022095336,
+    "closeness": 0.2718621362315579
+   },
+   "auc": {
+    "ctqw": 0.26671173201141657,
+    "degree": 0.34790446146913023,
+    "gnm_msf": 0.5423614240648942,
+    "betweenness": 0.5551299384106956,
+    "eigenvector": 0.4584647739221872,
+    "closeness": 0.7100796154423915
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3UO9": {
+   "pdb": "3UO9",
+   "protein": "Glutaminase kidney isoform, mitochondrial",
+   "n_residues": 1624,
+   "n_elig": 1444,
+   "rho_vs_ctqw": {
+    "degree": 0.38939230835919453,
+    "gnm_msf": -0.5321839785739615,
+    "betweenness": 0.2561186306523555,
+    "eigenvector": 0.7085458485529414,
+    "closeness": 0.4351167698704306
+   },
+   "auc": {
+    "ctqw": 0.4731705182072829,
+    "degree": 0.26422443977591037,
+    "gnm_msf": 0.6471025910364145,
+    "betweenness": 0.593312324929972,
+    "eigenvector": 0.5014880952380952,
+    "closeness": 0.9101453081232493
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "3ZCW": {
+   "pdb": "3ZCW",
+   "protein": "Kinesin-like protein KIF11",
+   "n_residues": 321,
+   "n_elig": 270,
+   "rho_vs_ctqw": {
+    "degree": 0.5494965214375835,
+    "gnm_msf": -0.6199362588421423,
+    "betweenness": 0.5295552889952647,
+    "eigenvector": 0.6043951220181346,
+    "closeness": 0.6072972572646551
+   },
+   "auc": {
+    "ctqw": 0.5231372549019608,
+    "degree": 0.5019607843137255,
+    "gnm_msf": 0.4418300653594771,
+    "betweenness": 0.5871895424836602,
+    "eigenvector": 0.5615686274509804,
+    "closeness": 0.6958169934640523
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "4B1F": {
+   "pdb": "4B1F",
+   "protein": "Glutamate racemase",
+   "n_residues": 510,
+   "n_elig": 442,
+   "rho_vs_ctqw": {
+    "degree": 0.4352021792362632,
+    "gnm_msf": -0.45061796206588206,
+    "betweenness": 0.36899885305726476,
+    "eigenvector": 0.38828151507173453,
+    "closeness": 0.3909869337253443
+   },
+   "auc": {
+    "ctqw": 0.7201970443349754,
+    "degree": 0.3270935960591133,
+    "gnm_msf": 0.7139573070607553,
+    "betweenness": 0.3909688013136289,
+    "eigenvector": 0.2430213464696223,
+    "closeness": 0.6307060755336616
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "4B2D": {
+   "pdb": "4B2D",
+   "protein": "Pyruvate kinase PKM",
+   "n_residues": 2068,
+   "n_elig": 1847,
+   "rho_vs_ctqw": {
+    "degree": 0.5548534464916848,
+    "gnm_msf": -0.5696321815704599,
+    "betweenness": 0.3239401274634585,
+    "eigenvector": 0.5856307250707764,
+    "closeness": 0.3177725114860587
+   },
+   "auc": {
+    "ctqw": 0.8712269272529859,
+    "degree": 0.8374592833876221,
+    "gnm_msf": 0.08718783930510317,
+    "betweenness": 0.7735070575461456,
+    "eigenvector": 0.9682953311617807,
+    "closeness": 0.7233441910966342
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "4BBG": {
+   "pdb": "4BBG",
+   "protein": "Kinesin-like protein KIF11",
+   "n_residues": 336,
+   "n_elig": 285,
+   "rho_vs_ctqw": {
+    "degree": 0.4080193992998586,
+    "gnm_msf": -0.4704111917155963,
+    "betweenness": 0.39442013498188017,
+    "eigenvector": 0.4521639961224839,
+    "closeness": 0.527147011109957
+   },
+   "auc": {
+    "ctqw": 0.7272727272727273,
+    "degree": 0.4915394824153948,
+    "gnm_msf": 0.5368281353682813,
+    "betweenness": 0.5106171201061712,
+    "eigenvector": 0.3808891838088918,
+    "closeness": 0.5126078301260784
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "4CFE": {
+   "pdb": "4CFE",
+   "protein": "5'-AMP-activated protein kinase catalytic subunit alpha-2",
+   "n_residues": 1743,
+   "failed": true,
+   "error": "ValueError(\"found 16 near-zero ANM modes (>6) AND the contact graph has 2 disconnected components (via operator_diagnostics on this Hessian) -- this is TASK-0005's original disconnected-graph regression (independent rigid motion of each piece), not TASK-0128's single-connected-structure floppiness case; do not proceed with a single global rigid-body-nullspace assumption.\")"
+  },
+  "4E6C": {
+   "pdb": "4E6C",
+   "protein": "Mitogen-activated protein kinase 14",
+   "n_residues": 330,
+   "n_elig": 268,
+   "rho_vs_ctqw": {
+    "degree": 0.39912305857525565,
+    "gnm_msf": -0.4315422179025926,
+    "betweenness": 0.22113392951621583,
+    "eigenvector": 0.23894374666078982,
+    "closeness": 0.3457533308912046
+   },
+   "auc": {
+    "ctqw": 0.13825757575757575,
+    "degree": 0.27320075757575757,
+    "gnm_msf": 0.7888257575757576,
+    "betweenness": 0.14393939393939392,
+    "eigenvector": 0.4393939393939394,
+    "closeness": 0.3352272727272727
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "4G1N": {
+   "pdb": "4G1N",
+   "protein": "Pyruvate kinase PKM",
+   "n_residues": 2072,
+   "n_elig": 1851,
+   "rho_vs_ctqw": {
+    "degree": 0.5276696073849091,
+    "gnm_msf": -0.6085574645639896,
+    "betweenness": 0.40716603868285267,
+    "eigenvector": 0.6792747184982308,
+    "closeness": 0.42486081889124555
+   },
+   "auc": {
+    "ctqw": 0.665758896151053,
+    "degree": 0.4145424836601307,
+    "gnm_msf": 0.38202614379084965,
+    "betweenness": 0.7894335511982571,
+    "eigenvector": 0.5659041394335512,
+    "closeness": 0.9576252723311547
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "4GRS": {
+   "pdb": "4GRS",
+   "protein": "2-dehydro-3-deoxyphosphoheptonate aldolase",
+   "n_residues": 1329,
+   "n_elig": 1189,
+   "rho_vs_ctqw": {
+    "degree": 0.25812570163954884,
+    "gnm_msf": -0.2698763936086451,
+    "betweenness": 0.13916897819063057,
+    "eigenvector": 0.19487529956040323,
+    "closeness": 0.1673616641887022
+   },
+   "auc": {
+    "ctqw": 0.14046210200056355,
+    "degree": 0.33713722175260635,
+    "gnm_msf": 0.7766976613130459,
+    "betweenness": 0.3757396449704142,
+    "eigenvector": 0.04649196956889264,
+    "closeness": 0.16976613130459287
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "4HO6": {
+   "pdb": "4HO6",
+   "protein": "Glucose-1-phosphate thymidylyltransferase",
+   "n_residues": 288,
+   "n_elig": 238,
+   "rho_vs_ctqw": {
+    "degree": 0.29528388224149327,
+    "gnm_msf": -0.35507884632588277,
+    "betweenness": 0.22173689734142962,
+    "eigenvector": 0.3214921051308083,
+    "closeness": 0.3161442452253745
+   },
+   "auc": {
+    "ctqw": 0.33923303834808255,
+    "degree": 0.3724188790560472,
+    "gnm_msf": 0.5379793510324484,
+    "betweenness": 0.5637905604719764,
+    "eigenvector": 0.4273598820058997,
+    "closeness": 0.6450958702064896
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "4HYW": {
+   "pdb": "4HYW",
+   "protein": "Pyruvate kinase 1",
+   "n_residues": 994,
+   "n_elig": 875,
+   "rho_vs_ctqw": {
+    "degree": 0.5722840789258298,
+    "gnm_msf": -0.6852951169703373,
+    "betweenness": 0.4225565506821094,
+    "eigenvector": 0.6626419592757952,
+    "closeness": 0.5000467115026737
+   },
+   "auc": {
+    "ctqw": 0.7696586114307633,
+    "degree": 0.5526467203682393,
+    "gnm_msf": 0.42942079018028384,
+    "betweenness": 0.4576141158419639,
+    "eigenvector": 0.5700038358266206,
+    "closeness": 0.3984464902186421
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "4JA8": {
+   "pdb": "4JA8",
+   "protein": "Isocitrate dehydrogenase [NADP], mitochondrial",
+   "n_residues": 822,
+   "n_elig": 711,
+   "rho_vs_ctqw": {
+    "degree": 0.3183495783344821,
+    "gnm_msf": -0.2588875356152465,
+    "betweenness": 0.1907810864326284,
+    "eigenvector": -0.5505594940715263,
+    "closeness": 0.1268613841903187
+   },
+   "auc": {
+    "ctqw": 0.4310540950455005,
+    "degree": 0.4167087967644085,
+    "gnm_msf": 0.33177451971688576,
+    "betweenness": 0.6294236602628918,
+    "eigenvector": 0.5572548028311426,
+    "closeness": 0.9298849848331648
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "4JKT": {
+   "pdb": "4JKT",
+   "protein": "Glutaminase kidney isoform, mitochondrial",
+   "n_residues": 1563,
+   "n_elig": 1389,
+   "rho_vs_ctqw": {
+    "degree": 0.3680938880652251,
+    "gnm_msf": -0.5160974749550827,
+    "betweenness": 0.25615252951735257,
+    "eigenvector": -0.4247331897150257,
+    "closeness": 0.4357693799463157
+   },
+   "auc": {
+    "ctqw": 0.6147744812210598,
+    "degree": 0.3097453267021094,
+    "gnm_msf": 0.6317312639341451,
+    "betweenness": 0.42812124849939975,
+    "eigenvector": 0.43946149888526836,
+    "closeness": 0.8592865717715658
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "4KZT": {
+   "pdb": "4KZT",
+   "protein": "N-acetylglutamate kinase / N-acetylglutamate synthase",
+   "n_residues": 1724,
+   "n_elig": 1525,
+   "rho_vs_ctqw": {
+    "degree": 0.41647375177427365,
+    "gnm_msf": -0.24358238933630857,
+    "betweenness": 0.2945336442550439,
+    "eigenvector": 0.0859617446300187,
+    "closeness": -0.02546185512027889
+   },
+   "auc": {
+    "ctqw": 0.8951861643533818,
+    "degree": 0.6933795990306235,
+    "gnm_msf": 0.23705662040096936,
+    "betweenness": 0.7412976426525666,
+    "eigenvector": 0.8381802159065874,
+    "closeness": 0.6756168759638687
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "4LRL": {
+   "pdb": "4LRL",
+   "protein": "HD domain protein",
+   "n_residues": 1790,
+   "n_elig": 1586,
+   "rho_vs_ctqw": {
+    "degree": 0.35311568861248577,
+    "gnm_msf": -0.33368541590244155,
+    "betweenness": 0.24433556177838558,
+    "eigenvector": 0.516912194429277,
+    "closeness": 0.24717033672182687
+   },
+   "auc": {
+    "ctqw": 0.5164517720002818,
+    "degree": 0.36313675755654196,
+    "gnm_msf": 0.44359895723243853,
+    "betweenness": 0.6161488057493131,
+    "eigenvector": 0.6438385119425069,
+    "closeness": 0.8715916296766011
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "4MRA": {
+   "pdb": "4MRA",
+   "protein": "Glycogen phosphorylase, muscle form",
+   "n_residues": 806,
+   "n_elig": 722,
+   "rho_vs_ctqw": {
+    "degree": 0.17969367314113865,
+    "gnm_msf": -0.34628111230121045,
+    "betweenness": 0.3649828401544561,
+    "eigenvector": 0.32749732769663353,
+    "closeness": 0.5051936846534434
+   },
+   "auc": {
+    "ctqw": 0.34517687392862717,
+    "degree": 0.28330995792426367,
+    "gnm_msf": 0.7201184354059529,
+    "betweenness": 0.39660277388187626,
+    "eigenvector": 0.27676484338475926,
+    "closeness": 0.419588592800374
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  },
+  "4PFK": {
+   "pdb": "4PFK",
+   "protein": "ATP-dependent 6-phosphofructokinase",
+   "n_residues": 319,
+   "n_elig": 266,
+   "rho_vs_ctqw": {
+    "degree": -0.06449870631055483,
+    "gnm_msf": -0.0916853294992835,
+    "betweenness": -0.18254784725222,
+    "eigenvector": 0.39014825594832964,
+    "closeness": 0.17006327018863984
+   },
+   "auc": {
+    "ctqw": 0.15503875968992248,
+    "degree": 0.3362403100775194,
+    "gnm_msf": 0.7621124031007752,
+    "betweenness": 0.40843023255813954,
+    "eigenvector": 0.10707364341085272,
+    "closeness": 0.14631782945736432
+   },
+   "validation": {
+    "checked": true,
+    "exact_match": true,
+    "max_abs_diff": {
+     "degree": 0.0,
+     "gnm_msf": 0.0,
+     "ctqw": 0.0
+    }
+   }
+  }
+ }
+}

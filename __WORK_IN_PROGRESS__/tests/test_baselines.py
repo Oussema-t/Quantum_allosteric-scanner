@@ -11,8 +11,10 @@ import pytest
 from allostery.baselines import (
     _parse_fpocket_info,
     betweenness_centrality,
+    closeness_centrality,
     connectivity_robustness,
     degree_centrality,
+    eigenvector_centrality,
     euclid_from_seed_centroid,
     fpocket_baseline,
     hop_from_seed,
@@ -79,6 +81,40 @@ class TestClassicalBaselines:
         bc = betweenness_centrality(coords, cutoff=3.0)
         assert bc.shape == (6,)
         assert np.isfinite(bc).all()
+
+    # -- TASK-0348: eigenvector_centrality / closeness_centrality ----------
+
+    def test_eigenvector_centrality_path_graph_interior_beats_endpoints(self):
+        coords = _chain_coords(4, spacing=2.0)
+        ec = eigenvector_centrality(coords, cutoff=3.0)
+        assert ec.shape == (4,)
+        assert np.isfinite(ec).all()
+        assert ec[1] == pytest.approx(ec[2])  # symmetric chain
+        assert ec[1] > ec[0]  # interior outranks the endpoints
+
+    def test_eigenvector_centrality_disconnected_graph_does_not_crash(self):
+        cluster_a = _chain_coords(3, spacing=2.0)
+        cluster_b = _chain_coords(3, spacing=2.0) + np.array([1000.0, 0.0, 0.0])
+        coords = np.vstack([cluster_a, cluster_b])
+        ec = eigenvector_centrality(coords, cutoff=3.0)
+        assert ec.shape == (6,)
+        assert np.isfinite(ec).all()
+
+    def test_closeness_centrality_path_graph_interior_beats_endpoints(self):
+        coords = _chain_coords(4, spacing=2.0)
+        cc = closeness_centrality(coords, cutoff=3.0)
+        assert cc.shape == (4,)
+        # classic path-graph property: interior nodes reach everyone faster
+        assert cc[1] == pytest.approx(cc[2])
+        assert cc[1] > cc[0]
+
+    def test_closeness_centrality_disconnected_graph_does_not_crash(self):
+        cluster_a = _chain_coords(3, spacing=2.0)
+        cluster_b = _chain_coords(3, spacing=2.0) + np.array([1000.0, 0.0, 0.0])
+        coords = np.vstack([cluster_a, cluster_b])
+        cc = closeness_centrality(coords, cutoff=3.0)
+        assert cc.shape == (6,)
+        assert np.isfinite(cc).all()
 
 
 # ---------------------------------------------------------------------------

@@ -1146,6 +1146,53 @@ plausible (ΔG 0.20–2.32 thermal units, Boltzmann weight 0.10–0.82 on all 3
 real targets) — decides only the premise-plausibility fragment, not the
 discriminating test itself.
 
+**Status update, 2026-09-08 ([[TASK-0348]]) — the mandatory centrality
+ablation, and a real divergence from the published number it was run
+against.** Mohtashim, Sajjan & Kais (JACS 148(27):29206-29219, 2026, DOI
+10.1021/jacs.6c08053) publish a CTQW construction essentially identical to
+this project's own (weighted Cα<8Å contact network, long-time-averaged
+occupation) and report it agrees with classical eigenvector centrality at
+Spearman ρ median≈0.95, claiming no quantum advantage — the "decorative
+quantum layer" objection, now citable rather than hypothetical. Ran the
+equivalent ablation on this project's own construction and cohort (TASK-0318's
+own 105-structure/74-protein ASBench cohort and labels, reused directly,
+not reconstructed; added `eigenvector_centrality`/`closeness_centrality` to
+`baselines.py` beside the existing `degree_centrality`/`betweenness_centrality`;
+Planned Validation — re-derive degree/gnm_msf/ctqw via this task's own graph
+path and confirm byte-exact match against the committed feature cache before
+trusting the new centralities — passed 105/105).
+
+**Do not force this into "reproduces JACS."** Rank correlation with
+eigenvector centrality is only **median ρ=0.41** (cluster-bootstrap 95% CI
+[0.33, 0.49]) here, not ≈0.95 — this project's own CTQW construction does
+NOT collapse onto eigenvector centrality the way the published one does, a
+genuine divergence from the paper this ablation was run to check against, not
+smoothed over. AUC-vs-truth-label is correspondingly **not uniformly null**:
+CTQW beats degree (AUC 0.585 vs 0.448, cluster-permutation p=0.0), GNM-alone
+(vs 0.499, p=0.031) and eigenvector centrality itself (vs 0.473, p=0.0), but
+is statistically indistinguishable from betweenness (vs 0.567, p=0.50) and
+closeness (vs 0.588, p=0.93) — CTQW does not even clear the AUC bar of the
+one classical baseline (closeness) it was checked against.
+
+**This is not a contradiction of HYP-P13, it is a sharper version of the
+same mechanism.** Degree, eigenvector centrality and GNM-alone are all
+seed-BLIND graph properties (no information about where the active site
+is); CTQW is seed-referencing by construction (it starts there). That CTQW
+beats exactly the seed-blind arms and only those is consistent with — not
+contrary to — this hypothesis's own core claim (TASK-0226's "every
+seed-referencing observable is a proximity detector"): betweenness and
+closeness are themselves path/distance-based measures that can proxy for
+proximity-to-many-points even without seed information, which is the
+candidate explanation for why CTQW ties them specifically rather than
+beating them too. Not tested directly here (would need a seed-blind-vs-
+seed-aware control on the same three arms); stated as the working
+explanation, not a confirmed one.
+
+Three structures (of 108) hit TASK-0005's own pre-existing disconnected-
+contact-graph guard (`superpose.py::_check_anm_rigid_body_nullspace`) and
+were skipped, matching `task0318_input_space_ceiling.py`'s own Phase A
+convention for the same guard — not a new defect.
+
 ---
 
 ## HYP-P14 · The discriminator is blocked by a single confound, and only a proximity-orthogonal observable can unblock it

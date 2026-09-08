@@ -372,6 +372,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0344 | 17 pages against a 6+3 limit (12/6 body FAIL, 5/3 appendix FAIL, re-measured fresh after [[TASK-0342]]/[[TASK-0343]] landed, per this task's own sequencing). **Resolved: RESULT: PASS.** Free levers only, all print-only in `submission_build.py`'s injected stylesheet, source HTML untouched: body font 12.4->10.5pt, line-height 1.62->1.22, margins 16/15/18/15mm->11/11/12/11mm, section spacing 84px->8px, paragraph/list margins 1.05em->0.6em, h2/h3 1.72rem-> 1.3rem/1.0rem (rem-based, confirmed the body-font lever alone doesn't touch them). Two regressions caught mid-lever and fixed, not shipped: table font naively scaled with body font fell to 9.3pt (under the floor) -- reverted, left untouched; `h2 .sub` fell under 10pt once h2 shrank -- added to the existing small-text floor list. Content: Appendix A/B/C compressed to fragments (full methodology stays linked per §4.4); §2's (a)/(b)/(c) converted prose->table per the cut-order's own "tables over prose"; §1/§2/§4/§5/§6 tightened; **§3 grown 153->309 words per this task's own explicit protection** (added a real data/compute/software paragraph, Guidelines §4.3 item 3's own ask, not padding). **A real dangling cross-reference caught while compressing**: §1's taxonomy table cited "(Appendix C)" for cardiac myosin's single-molecule limitation but no such bullet existed -- added it. **Planned Validation's human-PDF-check actually run, not skipped**: rendered all 9 pages to PNG and read each one, found and fixed two real visual defects the numeric checks cannot see -- the S6 SVG diagram's rightmost text sat past its own viewBox edge (widened 760->800) and `overflow-wrap:anywhere` (TASK-0342's own fix) squeezed narrow table columns into mid-word breaks (team names, verdict chips, headers) -- fixed with three targeted min-width/nowrap rules rather than removing `anywhere` and reopening the bug it fixed. `doc_parity.py` clean throughout; 24+14=38 tests pass, matching TASK-0342's own count, no regression. **Left open, correctly not decided here**: whether Appendix A/B/C qualify as §4.4 supplementary material at all -- this task's own filing named it a repo-owner scoping question; compression alone reached compliance without forcing it | Implementer D | Done | BLOCKER | 2026-09-07 | — | — | `.ai/tasks/DONE/TASK-0344-cut-to-the-page-limits.md` |
 | TASK-0346 | Run [[TASK-0209]]'s pre-registered blind validity rule (apo closed, holo open, ligand stripped) at scale, plus the endogenous-ligand audit generalized. **Resolved.** Did not fetch the ~1042-pair unified benchmark (never vendored here) -- reused [[TASK-0345]]'s own frozen 63-pair cohort (cryptosite 21 + pocketminer 42), same cached PDBs, same gates. **Result: the submission's "7 audited, 2 pass" (28.6%) headline is a property of the mandated target list, not of cryptic-pocket benchmarks generally** -- the same rule passes 52.4% of cryptosite pairs, 47.6% of pocketminer pairs, 49.2% combined (63 pairs / 59 distinct proteins; 47.5% cluster-collapsed per [[TASK-0337]]). A real bug caught by this task's own Planned Validation before trusting the run: first draft scored holo AS DEPOSITED instead of ligand-stripped, flipping CARDIAC_MYOSIN INVALID->VALID; fixed (both apo and holo ligand-stripped, matching this task's own filing text), plus a chain-letter fix for CASPASE1 (F1G sits on chain B of 2FQQ, not A). **After both fixes, all 7/7 register targets reproduce [[TASK-0209]]'s exact recorded verdict** -- the Planned Validation this task required. Endogenous-ligand audit: 10/63 (15.9%) apo structures carry a non-water HETATM near the site (vs ASBench's 40/40, [[TASK-0329]]) -- occupancy does not predict the apo-hit failure mode here (Fisher p=0.51, n=10, underpowered). Landed as new hypothesis **HYP-P27** (distinct from HYP-P26). **This changes a number the submission currently quotes -- flagged for the draft explicitly, not left implicit** | Implementer C | Done | High | 2026-09-08 | 2026-09-08 | Submission's S1/S4 "7 audited, 2 pass" framing needs replacing with the narrower, correct claim (mandated targets specifically underperform a real benchmark population) before the next drafting pass -- not acted on here | `.ai/tasks/DONE/TASK-0346-blind-validity-rule-at-scale.md` |
 | TASK-0349 | `--appendix-heading` broke the LaTeX compile ("tectonic exited 1") -- the insertion branch had never executed in a passing build before this (every prior build reported "no marker found"). **Resolved.** First step per the task's own required order: made the failure legible before guessing -- added `--keep-logs` (missing; tectonic writes no `.log` on failure without it, despite claiming to), re-ran the exact bisected command, read the real transcript: `Missing $ inserted` at the marker line. Root cause: the shared `_APPENDIX_MARKER_TOKEN` (`SUBMISSION_BUILD_APPENDIX_START_7f3a9c`) contains raw `_` -- harmless in the HTML route's `<span>`, but `_` is LaTeX's math-mode subscript operator in plain text. `xcolor` being loaded was correctly ruled out by the filing; the real defect was one line further in. **Fix: escape `_` to `\_` only in `submission_build_latex.py`** (the HTML route's literal underscores stay correct as-is -- the two routes need different escaping of the same logical token, not a different token); verified detection still works since `\_` typesets to a literal `_` glyph in the extracted PDF text. Re-ran the bisected command post-fix: compiles, PASS, appendix pages 2/3 reported correctly, split at page 5. `compile_latex()` now always passes `--keep-logs` and names the `.log` path in any failure message. **Ships with a fixture that actually exercises the split** (new end-to-end test, caught its own fixture bug on first run -- a title containing "Appendix" collided with the real search), plus a direct regression guard against the raw token ever reappearing. 48 tests pass (up from 22 for this file, 46 total before) | Implementer C | Done | Medium | 2026-09-08 | 2026-09-08 | Unblocks moving the 15 references out of the 6-page body via the appendix split, freeing headroom before [[TASK-0345]]/[[TASK-0346]]'s results land | `.ai/tasks/DONE/TASK-0349-appendix-split-marker-never-compiled.md` |
+| TASK-0348 | **The mandatory centrality ablation this project had never run.** Mohtashim/Sajjan/Kais (JACS 2026, DOI 10.1021/jacs.6c08053) publish a near-identical CTQW construction and report rho≈0.95 vs eigenvector centrality, no quantum advantage -- making that comparison mandatory here too. Added `eigenvector_centrality`/`closeness_centrality` to `baselines.py` (a real bug caught by the new unit tests: `nx.eigenvector_centrality_numpy` raises on a disconnected graph in this networkx version, fixed per-connected-component). Ran on TASK-0318's own 105-structure/74-protein cohort; Planned Validation passed 105/105 exact-match against the feature cache before trusting the new centralities. **Result does not simply confirm the paper**: median rho=0.41 vs eigenvector centrality (not ~0.95), and AUC is not uniformly null -- CTQW beats degree/GNM-alone/eigenvector centrality (cluster-permutation p<0.05) but ties betweenness/closeness (p=0.50/0.93). Reading is consistent with HYP-P13, not contrary to it: CTQW beats exactly the seed-blind arms. Folded into HYP-P13 as a dated Status update (sharpened, not new); corrected `PHASE1_SUBMISSION_V2.md`'s own draft sentence, which had claimed our measurements were "consistent with" the published rho. **Process incident, filed as a standing rule**: the first run sat silent for 2+ hours (fully-buffered stdout) -- killed and rewritten with flushed per-structure progress/ETA and incremental checkpointing, which also surfaced and fixed a real 2x inefficiency (an expensive computation called twice per structure). New rule in Current Rules below | Implementer B | Done | Highest | 2026-09-08 | 2026-09-08 | Both DOIs live-verified via Crossref, added to `REFERENCES.md`; 8 new baseline tests | `.ai/tasks/DONE/TASK-0348-mandatory-centrality-ablation.md` |
 
 ## Current Rules
 
@@ -579,6 +580,51 @@ see the claim-before-start rule under "Current Rules" below.
   unlabelled beside a pre-registered one, and never summed into a
   "several independent p<0.05 results converge" claim without the family
   size that produced them.
+
+- **Long-running scripts must print visible, flushed progress — this has
+  now cost real time more than once (TASK-0348, 2026-09-08).** A script run
+  via `nohup ... > log.txt 2>&1 &` sits fully stdout-buffered by default
+  when Python isn't attached to a TTY — `print()` calls accumulate in an
+  internal buffer that may not flush until exit, so a genuinely-healthy,
+  hours-long run and a silently-hung one are **indistinguishable** from the
+  log alone (`tail`/`cat` both show nothing either way). [[TASK-0348]]'s own
+  centrality-ablation run sat for 2+ hours with zero bytes of output before
+  being killed and rerun instrumented — not because the computation was
+  wrong, but because there was no way to tell working-slowly from stuck
+  without `sudo`-gated tools this environment doesn't have. Required for
+  any script expected to run more than ~1 minute unattended, before it is
+  ever backgrounded:
+  1. **Unbuffered/line-buffered stdout, always** — `python3 -u script.py`
+     *and* `sys.stdout.reconfigure(line_buffering=True)` at the top of the
+     script itself (the second is the one that actually matters if a
+     caller forgets `-u`; do both, don't rely on the invocation alone).
+  2. **One progress line per real unit of work** (per structure/protein/
+     fold/batch — not per algorithm step inside one), printed the moment
+     that unit finishes, carrying at minimum: an index (`i/N`), elapsed
+     time, and an ETA extrapolated from the mean per-unit time so far.
+     Silence for more than a few seconds between lines on a script that
+     claims to be almost done is itself informative — a `[1/108] ... eta=
+     114s` line at the start is what turns "no idea" into "here is the
+     actual expected wall-clock."
+  3. **Checkpoint incrementally to disk** (append one result per completed
+     unit to a JSONL file, `flush()`ed after each write — not one
+     dict-in-memory written only at the very end). A kill/crash then loses
+     at most the one unit in flight, and a rerun resumes from the
+     checkpoint instead of repaying the entire cost. [[TASK-0348]]'s own
+     rerun does this: `checkpoint.jsonl`, one line per structure, loaded on
+     startup to skip already-done work.
+  4. **Never pay the same expensive derivation twice per unit** if it can
+     be paid once and reused — a real, avoidable inefficiency in
+     [[TASK-0348]]'s first version (calling a 19-feature computation twice
+     per structure, once to validate and once to score, when the validated
+     result could simply be reused) roughly doubled that run's own cost on
+     top of the visibility problem. Cheap to catch by reading your own loop
+     before backgrounding it: count how many times the expensive call
+     appears per unit of work.
+  A script an agent cannot see progress on is a script its own author
+  cannot tell "slow" from "stuck" on either — this is not just about what
+  a human watching the terminal needs; the agent that launched it hits the
+  exact same blind spot, which is what actually happened here.
 
 ## Open Questions
 

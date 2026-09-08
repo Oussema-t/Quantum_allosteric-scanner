@@ -81,6 +81,62 @@ def betweenness_centrality(coords: np.ndarray, cutoff: float = 10.0) -> np.ndarr
     return np.array([bc[i] for i in range(len(coords))])
 
 
+def eigenvector_centrality(coords: np.ndarray, cutoff: float = 10.0) -> np.ndarray:
+    """Eigenvector centrality on the unweighted contact graph, (n,) --
+    TASK-0348: the one baseline Mohtashim, Sajjan & Kais (JACS 2026,
+    DOI 10.1021/jacs.6c08053) report their CTQW construction reduces to
+    (Spearman rho median ~0.95 against classical eigenvector centrality,
+    on a construction essentially identical to this project's own).
+
+    `nx.eigenvector_centrality_numpy` (principal eigenvector of the
+    adjacency matrix via direct eigendecomposition), not
+    `nx.eigenvector_centrality` (power iteration, can fail to converge)
+    -- but the numpy form is not itself disconnected-graph-safe: this
+    networkx version *raises* `AmbiguousSolution` outright on a
+    disconnected graph (checked directly -- an earlier version of this
+    docstring claimed otherwise before the unit test below caught it).
+    Per-connected-component instead: eigenvector centrality is computed
+    within each component separately (a well-defined quantity there) and
+    concatenated back into (n,) index order; an isolated node (a
+    1-residue "component") gets 0.0 -- there is no other node for its
+    centrality to be relative to, and 0.0 keeps it off both ends of any
+    ranking rather than injecting an arbitrary nonzero value. Matches
+    this module's own "external/graph baselines never crash the caller"
+    convention (`betweenness_centrality` above).
+    """
+    import networkx as nx
+
+    A = contact_matrix(coords, cutoff=cutoff, weight="binary")
+    G = nx.from_numpy_array(A)
+    out = np.zeros(len(coords))
+    for component in nx.connected_components(G):
+        if len(component) < 2:
+            continue
+        sub = G.subgraph(component)
+        ec = nx.eigenvector_centrality_numpy(sub)
+        for i, v in ec.items():
+            out[i] = v
+    return out
+
+
+def closeness_centrality(coords: np.ndarray, cutoff: float = 10.0) -> np.ndarray:
+    """Closeness centrality on the unweighted contact graph, (n,) --
+    TASK-0348, same motivation as `eigenvector_centrality` above.
+
+    `nx.closeness_centrality`'s default (Wasserman & Faust improved
+    formula: normalized by the fraction of the graph actually reachable)
+    is disconnected-graph-safe already -- no special-casing needed here,
+    unlike `eigenvector_centrality`'s deliberate numpy-vs-power-iteration
+    choice above.
+    """
+    import networkx as nx
+
+    A = contact_matrix(coords, cutoff=cutoff, weight="binary")
+    G = nx.from_numpy_array(A)
+    cc = nx.closeness_centrality(G)
+    return np.array([cc[i] for i in range(len(coords))])
+
+
 # ---------------------------------------------------------------------------
 # Proximity-to-seed baselines (TASK-0094, REVIEW-2026-07-13 finding P1-A)
 # ---------------------------------------------------------------------------

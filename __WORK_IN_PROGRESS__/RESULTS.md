@@ -12667,3 +12667,84 @@ up from 46).
 **Files**: `.ai/tools/submission_build_latex.py`,
 `.ai/tools/test_submission_build_latex.py`. **Full detail**:
 `.ai/tasks/DONE/TASK-0349-appendix-split-marker-never-compiled.md`.
+
+## The mandatory centrality ablation: CTQW does not reproduce the published rho≈0.95, and its AUC advantage is real but selective ([[TASK-0348]], 2026-09-08)
+
+Mohtashim, Sajjan & Kais (*J Am Chem Soc* 148(27):29206-29219, 2026, DOI
+10.1021/jacs.6c08053) publish a CTQW-on-protein-contact-graph construction
+essentially identical to this project's own — weighted Cα<8Å network,
+long-time-averaged occupation, ~150 proteins, a small hardware demo — and
+report it agrees with classical **eigenvector centrality** at Spearman rho
+median≈0.95, claiming no quantum advantage. This project had never run that
+comparison: `baselines.py` had degree and betweenness centrality, not
+eigenvector or closeness, and no script had ever put CTQW next to all four
+(plus GNM-alone) on one cohort.
+
+**Added** `eigenvector_centrality`/`closeness_centrality` to `baselines.py`
+(same module/conventions as the existing two; `eigenvector_centrality`
+needed a per-connected-component fix after this networkx version raises
+`AmbiguousSolution` on a disconnected graph rather than the older
+"never raises" assumption — caught by the unit test written alongside it,
+not assumed). Ran the ablation on TASK-0318's own 105-structure/74-protein
+ASBench cohort and labels, reused directly (not reconstructed). Planned
+Validation — re-derive degree/GNM-alone/CTQW via this task's own graph
+path and confirm byte-exact match against the committed feature cache
+before trusting the two new centralities — **passed 105/105.** 3 of 108
+structures hit a pre-existing disconnected-graph guard
+(`superpose.py::_check_anm_rigid_body_nullspace`, TASK-0005's own regression
+check) and were skipped, matching `task0318_input_space_ceiling.py`'s own
+Phase A convention for the same guard.
+
+**Result — do not force this into "reproduces JACS."** Rank correlation
+with eigenvector centrality is only **median rho=0.41** (cluster-bootstrap
+95% CI [0.33, 0.49]), not ≈0.95 — this project's own construction does not
+collapse onto eigenvector centrality the way the published one does. AUC
+against the same truth labels is correspondingly **not uniformly null**:
+
+| arm | AUC mean | AUC vs CTQW, cluster-permutation p |
+|---|---|---|
+| CTQW | 0.585 | — |
+| degree | 0.448 | **0.0** (CTQW wins) |
+| GNM-alone (`gnm_msf`) | 0.499 | **0.031** (CTQW wins) |
+| eigenvector centrality | 0.473 | **0.0** (CTQW wins) |
+| betweenness | 0.567 | 0.50 (tied) |
+| closeness | 0.588 | 0.93 (tied — closeness's own mean is slightly *higher*) |
+
+**Reading, consistent with HYP-P13, not contrary to it**: degree,
+eigenvector centrality and GNM-alone are all seed-BLIND graph properties —
+they carry no information about where the active site is. CTQW is
+seed-referencing by construction. That it beats exactly the seed-blind arms
+and ties the two path/distance-based ones (betweenness, closeness — which
+can proxy for proximity-to-many-points even without seed information) is
+the same "every seed-referencing observable is a proximity detector"
+mechanism this register already established (TASK-0226), now sharpened on
+a comparison this project had never actually run. Not tested directly here
+(would need a seed-blind-vs-seed-aware control on the same three arms) —
+stated as the working explanation, not a confirmed one.
+
+**Corrected [[PHASE1_SUBMISSION_V2]]'s own draft sentence** ("our own
+measurements above are consistent with them," referring to the JACS
+rho≈0.95/no-advantage claims) to state the actual numbers — they are not
+consistent at the specific-number level (0.41 vs 0.95), though the
+qualitative "no clean quantum advantage" reading survives at the aggregate
+level given the tie against 2 of 5 classical arms.
+
+**Process note, filed as a standing rule**: the first run of this
+ablation's script sat silent for 2+ hours with zero bytes of stdout —
+Python fully-buffers stdout when redirected to a file, so a healthy,
+slow, multi-hour run and a hung one were indistinguishable from the log
+alone. Killed and rewritten with `sys.stdout.reconfigure(line_buffering=
+True)`, one flushed progress line per structure (index/elapsed/ETA), and
+incremental JSONL checkpointing (a kill/crash loses at most the one
+structure in flight, and a rerun resumes rather than repaying the whole
+cost) — this also surfaced and fixed a real inefficiency (the original
+version called the same expensive 19-feature computation twice per
+structure, once to validate and once to score). New rule added to
+`.ai/COMMON.md`'s Current Rules for every future long-running script.
+
+**Files**: `__WORK_IN_PROGRESS__/src/allostery/baselines.py` (+
+`eigenvector_centrality`/`closeness_centrality`), `tests/test_baselines.py`
+(+8 tests), `scripts/task0348_centrality_ablation.py` (new),
+`documentation/REFERENCES.md` (+2 rows, both DOIs live-verified via
+Crossref), `documentation/PHASE1_SUBMISSION_V2.md` (1-sentence correction).
+**Full detail**: `.ai/tasks/DONE/TASK-0348-mandatory-centrality-ablation.md`.
