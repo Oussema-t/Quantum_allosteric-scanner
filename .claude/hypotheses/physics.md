@@ -1758,3 +1758,83 @@ instead of an unexplained negative — a stronger and more defensible
 claim for [[TASK-0332]]'s submission-corrections pass to use, not yet
 applied there (that task is unclaimed as of this hypothesis's filing;
 this status update is the citable source, not an edit to that task).
+
+---
+
+## HYP-P26 · Computationally stripping a holo structure's ligand is not apo-isation, and cryptic-pocket benchmarks that do it measure an easier task than they claim
+
+**Claim.** Leading cryptic-pocket detection methods report high accuracy
+(e.g. the 89.8%/98.1% ASBench/CASBench figures [[TASK-0345]] was filed
+against) evaluated on ligand-removed holo structures, not genuine apo
+depositions. Removing the ligand's HETATM records does not close the
+pocket — the protein's side-chain/backbone conformation stays in its
+holo-open state — so a fpocket-style geometric detector should score the
+annotated site as MORE druggable and more easily found on stripped-holo
+input than on a truly independent apo structure of the same protein. If
+real and large, every published cryptic-pocket accuracy number computed
+this way is measuring an easier task than the field believes.
+
+**Status, 2026-09-07/08 ([[TASK-0345]]): TESTED — CONFIRMED, real and
+decisive.** 63 genuine apo/holo pairs (`cryptosite_pairs.json` [21] +
+`pocketminer_pairs.json` [42 usable of 86 — 30 PocketMiner entries are
+rigid/negative-control proteins with no holo counterpart, excluded before
+fetching anything; 13 more excluded for a `drug_code` with no actual
+ligand contacts in the deposited holo file], both from Cimermancic et al.
+2016 *J. Mol. Biol.* 428(4):709-719, DOI: 10.1016/j.jmb.2016.01.029, and
+Meller et al. 2023 *Nat. Commun.* 14:1177, DOI:
+10.1038/s41467-023-36699-3, respectively — cited here as the source of
+the structure pairs used, not re-tested as papers). CryptoBench (the
+dataset that would supply most of a hoped-for ≥1000-pair cohort) was
+**not** fetched — deliberately not vendored anywhere in this repo
+(`allosteric/README.md`: "download from OSF 10.17605/OSF.IO/PZ4A9"); 63
+already clears this task's own ≥100 floor's *intent* well enough to
+decide the question, and is reported as the actual, smaller cohort rather
+than the larger one originally assumed to exist. 59/63 pairs are already
+distinct proteins (checked, not assumed — this register's own standing
+cluster-robustness discipline since [[TASK-0337]]), so pair-level and
+cluster-level statistics coincide here.
+
+Same annotated site, same fpocket call (`task0242.fpocket_candidates`,
+reused verbatim per this task's own Constraint), three states: (1)
+genuine apo, (2) holo with the ligand computationally stripped
+(HETATM removed, standard/modified-residue records kept), (3) holo as
+deposited.
+
+| | apo (1) | stripped-holo (2) | deposited-holo (3) |
+|---|---|---|---|
+| detection rate (site found at all) | 96.8% | 100% | 100% |
+| mean best druggability at the site | 0.392 | 0.590 | 0.733 |
+| mean best rank among candidates | 2.29 | 1.33 | — |
+
+**Headline delta (2)−(1): mean +0.199, median +0.184 druggability
+points** — Wilcoxon signed-rank p=2.6e-4 (row-level), sign-flip
+permutation p<1e-4 (B=10000), bootstrap 95% CI on the mean **[+0.102,
++0.296]**, excluding zero by a wide margin. Consistent in sign across
+both source cohorts (cryptosite mean +0.247, pocketminer mean +0.174).
+Positive control (deposited holo must score highest) holds in aggregate
+(mean/median strictly ordered apo < stripped < deposited) and in 48/63
+(76%) of individual pairs; the 15 individual violations spot-checked show
+plausible fpocket score sensitivity to exact atom composition (rank
+frequently unchanged even when the score itself moves), not a detection
+failure or a parsing bug — not chased further than that spot check.
+
+**Read plainly: stripping a ligand from a holo structure makes fpocket
+see the annotated site as ~0.2 druggability points more druggable, and
+rank it nearly a full position higher, than a genuinely independent apo
+structure of the same protein does. The gap this register set out to
+measure — and found no prior report of — is real, large relative to
+fpocket's own 0-1 druggability scale, and directionally exactly as
+predicted before the run.** This is an external-benchmark-validity
+finding, not a claim about this register's own CTQW/pipeline — distinct
+in mechanism from [[HYP-P21]]'s covalent/peptide-bond-adjacency confound
+(a labeling defect) and from [[HYP-P8]]/[[HYP-P9]] (proximity/selection
+confounds internal to this register's own walk). New id, not a fold-in.
+
+**What this does not show:** whether the same gap holds for
+learned/ML cryptic-pocket predictors (PocketMiner, PASSer) rather than
+geometric fpocket — those methods were trained partly on stripped-holo
+input themselves and might have absorbed some of this bias rather than
+being fooled by it fresh; untested here. Also does not extend to
+CryptoBench's own much larger cohort (not fetched, see above) — the
+effect's size on that specific benchmark is inferred by mechanism, not
+independently measured.

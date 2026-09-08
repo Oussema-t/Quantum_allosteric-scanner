@@ -1,0 +1,3245 @@
+[
+ {
+  "pair": {
+   "apo": "1ALB",
+   "chain": "A",
+   "holo": "1LIC",
+   "holo_chain": "A",
+   "drug_code": "HDS",
+   "source": "cryptosite",
+   "desc": "Side chains protruding into the site",
+   "truth_resnums": [
+    16,
+    19,
+    20,
+    25,
+    29,
+    32,
+    33,
+    40,
+    57,
+    58,
+    75,
+    76,
+    78,
+    104,
+    115,
+    126,
+    128
+   ],
+   "n_truth": 17,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.653,
+   "best_rank": 1,
+   "n_pockets": 11
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.672,
+   "best_rank": 1,
+   "n_pockets": 5
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.841,
+   "best_rank": 1,
+   "n_pockets": 5
+  }
+ },
+ {
+  "pair": {
+   "apo": "1BSQ",
+   "chain": "A",
+   "holo": "1GX8",
+   "holo_chain": "A",
+   "drug_code": "RTL",
+   "source": "cryptosite",
+   "desc": "Loops protruding into the site",
+   "truth_resnums": [
+    39,
+    41,
+    56,
+    58,
+    62,
+    69,
+    71,
+    92,
+    105,
+    107,
+    118,
+    120
+   ],
+   "n_truth": 12,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.697,
+   "best_rank": 1,
+   "n_pockets": 13
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.895,
+   "best_rank": 1,
+   "n_pockets": 11
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.928,
+   "best_rank": 1,
+   "n_pockets": 11
+  }
+ },
+ {
+  "pair": {
+   "apo": "1NEP",
+   "chain": "A",
+   "holo": "2HKA",
+   "holo_chain": "C",
+   "drug_code": "C3S",
+   "source": "cryptosite",
+   "desc": "Loops protruding into the site",
+   "truth_resnums": [
+    20,
+    30,
+    36,
+    37,
+    38,
+    57,
+    59,
+    64,
+    66,
+    94,
+    95,
+    96,
+    100,
+    101,
+    103,
+    105,
+    107,
+    109,
+    124,
+    126,
+    128
+   ],
+   "n_truth": 21,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.672,
+   "best_rank": 1,
+   "n_pockets": 10
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.981,
+   "best_rank": 1,
+   "n_pockets": 7
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.981,
+   "best_rank": 1,
+   "n_pockets": 7
+  }
+ },
+ {
+  "pair": {
+   "apo": "4AKE",
+   "chain": "B",
+   "holo": "1ANK",
+   "holo_chain": "B",
+   "drug_code": "ANP",
+   "source": "cryptosite",
+   "desc": "Secondary structure elements too open",
+   "truth_resnums": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    88,
+    119,
+    123,
+    132,
+    133,
+    134,
+    137,
+    138,
+    156,
+    167,
+    198,
+    199,
+    200,
+    201,
+    202,
+    205
+   ],
+   "n_truth": 24,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.769,
+   "best_rank": 1,
+   "n_pockets": 7
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.85,
+   "best_rank": 1,
+   "n_pockets": 13
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.992,
+   "best_rank": 1,
+   "n_pockets": 13
+  }
+ },
+ {
+  "pair": {
+   "apo": "3CHE",
+   "chain": "A",
+   "holo": "2IUZ",
+   "holo_chain": "B",
+   "drug_code": "D1H",
+   "source": "cryptosite",
+   "desc": "Side chains protruding into the site",
+   "truth_resnums": [
+    52,
+    76,
+    136,
+    137,
+    138,
+    139,
+    177,
+    243,
+    245,
+    246,
+    299,
+    301,
+    384
+   ],
+   "n_truth": 13,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.5,
+   "best_rank": 1,
+   "n_pockets": 15
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.763,
+   "best_rank": 1,
+   "n_pockets": 18
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.938,
+   "best_rank": 1,
+   "n_pockets": 18
+  }
+ },
+ {
+  "pair": {
+   "apo": "1TQO",
+   "chain": "A",
+   "holo": "1TR5",
+   "holo_chain": "A",
+   "drug_code": "THP",
+   "source": "cryptosite",
+   "desc": "Loops protruding into the site",
+   "truth_resnums": [
+    21,
+    22,
+    35,
+    36,
+    37,
+    40,
+    83,
+    84,
+    85,
+    87,
+    89,
+    113,
+    115
+   ],
+   "n_truth": 13,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.266,
+   "best_rank": 1,
+   "n_pockets": 9
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.132,
+   "best_rank": 1,
+   "n_pockets": 5
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.029,
+   "best_rank": 2,
+   "n_pockets": 5
+  }
+ },
+ {
+  "pair": {
+   "apo": "3L7U",
+   "chain": "C",
+   "holo": "2HVD",
+   "holo_chain": "C",
+   "drug_code": "ADP",
+   "source": "cryptosite",
+   "desc": "Loops too open in the apo state",
+   "truth_resnums": [
+    12,
+    52,
+    55,
+    58,
+    60,
+    64,
+    88,
+    94,
+    105,
+    112,
+    113,
+    115,
+    118
+   ],
+   "n_truth": 13,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.763,
+   "best_rank": 1,
+   "n_pockets": 12
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.591,
+   "best_rank": 1,
+   "n_pockets": 16
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.935,
+   "best_rank": 1,
+   "n_pockets": 16
+  }
+ },
+ {
+  "pair": {
+   "apo": "1PZT",
+   "chain": "A",
+   "holo": "1PZY",
+   "holo_chain": "D",
+   "drug_code": "UDP",
+   "source": "cryptosite",
+   "desc": "Loops too open in the apo state",
+   "truth_resnums": [
+    187,
+    188,
+    189,
+    191,
+    226,
+    228,
+    252,
+    253,
+    254,
+    279,
+    314,
+    344,
+    347,
+    350,
+    353
+   ],
+   "n_truth": 15,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.188,
+   "best_rank": 1,
+   "n_pockets": 15
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.372,
+   "best_rank": 1,
+   "n_pockets": 15
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.092,
+   "best_rank": 2,
+   "n_pockets": 14
+  }
+ },
+ {
+  "pair": {
+   "apo": "2AX9",
+   "chain": "A",
+   "holo": "2PIQ",
+   "holo_chain": "A",
+   "drug_code": "RB1",
+   "source": "cryptosite",
+   "desc": "Side chains protruding into the site",
+   "truth_resnums": [
+    712,
+    716,
+    720,
+    730,
+    734,
+    737,
+    738,
+    894,
+    898
+   ],
+   "n_truth": 9,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": false,
+   "best_druggability": 0.0,
+   "best_rank": null,
+   "n_pockets": 16
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.589,
+   "best_rank": 2,
+   "n_pockets": 18
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.666,
+   "best_rank": 2,
+   "n_pockets": 18
+  }
+ },
+ {
+  "pair": {
+   "apo": "1BP5",
+   "chain": "A",
+   "holo": "1RYO",
+   "holo_chain": "A",
+   "drug_code": "OXL",
+   "source": "cryptosite",
+   "desc": "Loops protruding into the site",
+   "truth_resnums": [
+    63,
+    95,
+    120,
+    124,
+    125,
+    126,
+    127,
+    188,
+    249
+   ],
+   "n_truth": 9,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.047,
+   "best_rank": 4,
+   "n_pockets": 20
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.903,
+   "best_rank": 1,
+   "n_pockets": 23
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.838,
+   "best_rank": 1,
+   "n_pockets": 23
+  }
+ },
+ {
+  "pair": {
+   "apo": "2IYT",
+   "chain": "A",
+   "holo": "2IYQ",
+   "holo_chain": "A",
+   "drug_code": "ADP",
+   "source": "cryptosite",
+   "desc": "Loops too open in the apo state",
+   "truth_resnums": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    110,
+    117,
+    150,
+    153,
+    154,
+    155,
+    158
+   ],
+   "n_truth": 15,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.004,
+   "best_rank": 5,
+   "n_pockets": 10
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.527,
+   "best_rank": 1,
+   "n_pockets": 10
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.996,
+   "best_rank": 1,
+   "n_pockets": 10
+  }
+ },
+ {
+  "pair": {
+   "apo": "1RRG",
+   "chain": "A",
+   "holo": "1S9D",
+   "holo_chain": "A",
+   "drug_code": "AFB",
+   "source": "cryptosite",
+   "desc": "Loops missing in the unbound structure",
+   "truth_resnums": [
+    18,
+    51,
+    53,
+    64,
+    65,
+    66,
+    67,
+    74,
+    78,
+    81
+   ],
+   "n_truth": 10,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.208,
+   "best_rank": 2,
+   "n_pockets": 13
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.84,
+   "best_rank": 1,
+   "n_pockets": 11
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.947,
+   "best_rank": 1,
+   "n_pockets": 10
+  }
+ },
+ {
+  "pair": {
+   "apo": "2CM2",
+   "chain": "A",
+   "holo": "2H4K",
+   "holo_chain": "A",
+   "drug_code": "509",
+   "source": "cryptosite",
+   "desc": "Loops too open in the apo state",
+   "truth_resnums": [
+    46,
+    48,
+    49,
+    115,
+    120,
+    181,
+    182,
+    183,
+    215,
+    216,
+    217,
+    219,
+    220,
+    221,
+    262,
+    266
+   ],
+   "n_truth": 16,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.003,
+   "best_rank": 5,
+   "n_pockets": 15
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.511,
+   "best_rank": 1,
+   "n_pockets": 18
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.685,
+   "best_rank": 1,
+   "n_pockets": 18
+  }
+ },
+ {
+  "pair": {
+   "apo": "1PKL",
+   "chain": "B",
+   "holo": "3HQP",
+   "holo_chain": "P",
+   "drug_code": "ATP",
+   "source": "cryptosite",
+   "desc": "Interdomain motions (e.g., hinge)",
+   "truth_resnums": [
+    26,
+    27,
+    28,
+    29,
+    49,
+    51,
+    54,
+    55,
+    59,
+    60,
+    83,
+    90,
+    145,
+    175,
+    238,
+    264,
+    330,
+    331,
+    334,
+    335
+   ],
+   "n_truth": 20,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.028,
+   "best_rank": 6,
+   "n_pockets": 32
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.149,
+   "best_rank": 2,
+   "n_pockets": 30
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.856,
+   "best_rank": 1,
+   "n_pockets": 30
+  }
+ },
+ {
+  "pair": {
+   "apo": "2ZB1",
+   "chain": "A",
+   "holo": "2NPQ",
+   "holo_chain": "A",
+   "drug_code": "BOG",
+   "source": "cryptosite",
+   "desc": "Secondary structure elements too close",
+   "truth_resnums": [
+    191,
+    192,
+    195,
+    197,
+    198,
+    199,
+    200,
+    201,
+    229,
+    232,
+    233,
+    236,
+    242,
+    246,
+    249,
+    258,
+    259,
+    291,
+    292,
+    293,
+    294
+   ],
+   "n_truth": 21,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.004,
+   "best_rank": 3,
+   "n_pockets": 28
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.984,
+   "best_rank": 1,
+   "n_pockets": 27
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.999,
+   "best_rank": 1,
+   "n_pockets": 27
+  }
+ },
+ {
+  "pair": {
+   "apo": "2H4E",
+   "chain": "B",
+   "holo": "3CFN",
+   "holo_chain": "B",
+   "drug_code": "2AN",
+   "source": "cryptosite",
+   "desc": "Side chains protruding into the site",
+   "truth_resnums": [
+    15,
+    16,
+    17,
+    24,
+    52,
+    108,
+    109,
+    110,
+    119
+   ],
+   "n_truth": 9,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.42,
+   "best_rank": 1,
+   "n_pockets": 6
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.797,
+   "best_rank": 1,
+   "n_pockets": 7
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.865,
+   "best_rank": 1,
+   "n_pockets": 7
+  }
+ },
+ {
+  "pair": {
+   "apo": "1XCG",
+   "chain": "B",
+   "holo": "1OW3",
+   "holo_chain": "B",
+   "drug_code": "GDP",
+   "source": "cryptosite",
+   "desc": "Loops too open in the apo state",
+   "truth_resnums": [
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    30,
+    34,
+    35,
+    37,
+    118,
+    120,
+    121,
+    160,
+    161,
+    162
+   ],
+   "n_truth": 18,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.312,
+   "best_rank": 1,
+   "n_pockets": 10
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.717,
+   "best_rank": 1,
+   "n_pockets": 11
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.259,
+   "best_rank": 1,
+   "n_pockets": 12
+  }
+ },
+ {
+  "pair": {
+   "apo": "2AIR",
+   "chain": "H",
+   "holo": "1ZA1",
+   "holo_chain": "D",
+   "drug_code": "CTP",
+   "source": "cryptosite",
+   "desc": "Unstructured regions in the apo state (C or N termini)",
+   "truth_resnums": [
+    2,
+    3,
+    11,
+    12,
+    17,
+    19,
+    20,
+    58,
+    60,
+    82,
+    84,
+    86,
+    89,
+    91,
+    94,
+    96
+   ],
+   "n_truth": 16,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.028,
+   "best_rank": 2,
+   "n_pockets": 11
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.187,
+   "best_rank": 2,
+   "n_pockets": 7
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.345,
+   "best_rank": 2,
+   "n_pockets": 7
+  }
+ },
+ {
+  "pair": {
+   "apo": "3FDL",
+   "chain": "A",
+   "holo": "2YXJ",
+   "holo_chain": "A",
+   "drug_code": "N3C",
+   "source": "cryptosite",
+   "desc": "Secondary structure elements too open",
+   "truth_resnums": [
+    93,
+    96,
+    97,
+    100,
+    101,
+    104,
+    105,
+    108,
+    126,
+    129,
+    130,
+    136,
+    137,
+    138,
+    139,
+    141,
+    142,
+    145,
+    146,
+    191,
+    195,
+    197
+   ],
+   "n_truth": 22,
+   "frac_present": 0.909,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.607,
+   "best_rank": 1,
+   "n_pockets": 11
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.193,
+   "best_rank": 1,
+   "n_pockets": 13
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.642,
+   "best_rank": 1,
+   "n_pockets": 13
+  }
+ },
+ {
+  "pair": {
+   "apo": "1B6B",
+   "chain": "A",
+   "holo": "1KUV",
+   "holo_chain": "A",
+   "drug_code": "CA5",
+   "source": "cryptosite",
+   "desc": "Loops protruding into the site",
+   "truth_resnums": [
+    55,
+    56,
+    60,
+    62,
+    63,
+    64,
+    122,
+    123,
+    124,
+    125,
+    126,
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    158,
+    159,
+    160,
+    161,
+    163,
+    164,
+    167,
+    168,
+    170,
+    183,
+    186,
+    188
+   ],
+   "n_truth": 31,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.024,
+   "best_rank": 2,
+   "n_pockets": 11
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.092,
+   "best_rank": 1,
+   "n_pockets": 7
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.563,
+   "best_rank": 1,
+   "n_pockets": 7
+  }
+ },
+ {
+  "pair": {
+   "apo": "1RTC",
+   "chain": "A",
+   "holo": "1BR6",
+   "holo_chain": "A",
+   "drug_code": "PT1",
+   "source": "cryptosite",
+   "desc": "Side chains protruding into the site",
+   "truth_resnums": [
+    78,
+    79,
+    80,
+    81,
+    93,
+    121,
+    122,
+    123,
+    172,
+    176,
+    177,
+    180,
+    208,
+    211
+   ],
+   "n_truth": 14,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.43,
+   "best_rank": 2,
+   "n_pockets": 17
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.073,
+   "best_rank": 2,
+   "n_pockets": 18
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.171,
+   "best_rank": 2,
+   "n_pockets": 18
+  }
+ },
+ {
+  "pair": {
+   "apo": "1ADE",
+   "chain": "A",
+   "holo": "1CIB",
+   "holo_chain": "A",
+   "drug_code": "IMP",
+   "source": "pocketminer",
+   "desc": "Adenylosuccinate synthetase",
+   "truth_resnums": [
+    11,
+    12,
+    13,
+    38,
+    39,
+    40,
+    126,
+    127,
+    128,
+    129,
+    130,
+    133,
+    134,
+    224,
+    228,
+    238,
+    239,
+    273,
+    274,
+    275,
+    303
+   ],
+   "n_truth": 21,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.033,
+   "best_rank": 4,
+   "n_pockets": 27
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.65,
+   "best_rank": 1,
+   "n_pockets": 22
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.986,
+   "best_rank": 1,
+   "n_pockets": 23
+  }
+ },
+ {
+  "pair": {
+   "apo": "1ALB",
+   "chain": "A",
+   "holo": "1LIC",
+   "holo_chain": "A",
+   "drug_code": "HDS",
+   "source": "pocketminer",
+   "desc": "Adipocyte lipid-binding protein",
+   "truth_resnums": [
+    16,
+    19,
+    20,
+    25,
+    29,
+    32,
+    33,
+    40,
+    57,
+    58,
+    75,
+    76,
+    78,
+    104,
+    115,
+    126,
+    128
+   ],
+   "n_truth": 17,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.653,
+   "best_rank": 1,
+   "n_pockets": 11
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.672,
+   "best_rank": 1,
+   "n_pockets": 5
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.841,
+   "best_rank": 1,
+   "n_pockets": 5
+  }
+ },
+ {
+  "pair": {
+   "apo": "1BSQ",
+   "chain": "A",
+   "holo": "1GX8",
+   "holo_chain": "A",
+   "drug_code": "RTL",
+   "source": "pocketminer",
+   "desc": "Bovine \u03b2-lactoglobulin",
+   "truth_resnums": [
+    39,
+    41,
+    56,
+    58,
+    62,
+    69,
+    71,
+    92,
+    105,
+    107,
+    118,
+    120
+   ],
+   "n_truth": 12,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.697,
+   "best_rank": 1,
+   "n_pockets": 13
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.895,
+   "best_rank": 1,
+   "n_pockets": 11
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.928,
+   "best_rank": 1,
+   "n_pockets": 11
+  }
+ },
+ {
+  "pair": {
+   "apo": "1EX6",
+   "chain": "A",
+   "holo": "1GKY",
+   "holo_chain": "A",
+   "drug_code": "5GP",
+   "source": "pocketminer",
+   "desc": "Guanylate kinase",
+   "truth_resnums": [
+    34,
+    38,
+    41,
+    50,
+    69,
+    71,
+    73,
+    78,
+    79,
+    80,
+    98,
+    99,
+    100,
+    103
+   ],
+   "n_truth": 14,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.286,
+   "best_rank": 1,
+   "n_pockets": 10
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.323,
+   "best_rank": 1,
+   "n_pockets": 10
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.847,
+   "best_rank": 1,
+   "n_pockets": 9
+  }
+ },
+ {
+  "pair": {
+   "apo": "1EXM",
+   "chain": "A",
+   "holo": "1HA3",
+   "holo_chain": "B",
+   "drug_code": "MAU",
+   "source": "pocketminer",
+   "desc": "Elongation factor TU",
+   "truth_resnums": [
+    93,
+    97,
+    117,
+    118,
+    121,
+    122,
+    124,
+    125,
+    126,
+    160,
+    161,
+    162,
+    321,
+    323,
+    325,
+    326,
+    327,
+    328,
+    343,
+    345,
+    385,
+    386,
+    387,
+    389,
+    394,
+    396,
+    397,
+    398
+   ],
+   "n_truth": 28,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.329,
+   "best_rank": 1,
+   "n_pockets": 22
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.751,
+   "best_rank": 1,
+   "n_pockets": 25
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.807,
+   "best_rank": 1,
+   "n_pockets": 24
+  }
+ },
+ {
+  "pair": {
+   "apo": "1MY0",
+   "chain": "B",
+   "holo": "1N0T",
+   "holo_chain": "D",
+   "drug_code": "AT1",
+   "source": "pocketminer",
+   "desc": "AMPA receptor GluR2 subunit",
+   "truth_resnums": [
+    13,
+    61,
+    89,
+    90,
+    91,
+    96,
+    138,
+    140,
+    141,
+    142,
+    143,
+    174,
+    193,
+    195,
+    196,
+    220
+   ],
+   "n_truth": 16,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.684,
+   "best_rank": 1,
+   "n_pockets": 17
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.702,
+   "best_rank": 1,
+   "n_pockets": 13
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.959,
+   "best_rank": 1,
+   "n_pockets": 13
+  }
+ },
+ {
+  "pair": {
+   "apo": "1NEP",
+   "chain": "A",
+   "holo": "2HKA",
+   "holo_chain": "C",
+   "drug_code": "C3S",
+   "source": "pocketminer",
+   "desc": "Niemann-Pick C2 Protein",
+   "truth_resnums": [
+    20,
+    30,
+    36,
+    37,
+    38,
+    57,
+    59,
+    64,
+    66,
+    94,
+    95,
+    96,
+    100,
+    101,
+    103,
+    105,
+    107,
+    109,
+    124,
+    126,
+    128
+   ],
+   "n_truth": 21,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.672,
+   "best_rank": 1,
+   "n_pockets": 10
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.981,
+   "best_rank": 1,
+   "n_pockets": 7
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.981,
+   "best_rank": 1,
+   "n_pockets": 7
+  }
+ },
+ {
+  "pair": {
+   "apo": "1NI6",
+   "chain": "D",
+   "holo": "3HOK",
+   "holo_chain": "B",
+   "drug_code": "Q80",
+   "source": "pocketminer",
+   "desc": "Heme oxygenase-1",
+   "truth_resnums": [
+    28,
+    31,
+    32,
+    35,
+    47,
+    50,
+    54,
+    136,
+    139,
+    140,
+    143,
+    147,
+    167,
+    211,
+    214,
+    215
+   ],
+   "n_truth": 16,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.75,
+   "best_rank": 1,
+   "n_pockets": 13
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.805,
+   "best_rank": 1,
+   "n_pockets": 14
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.964,
+   "best_rank": 1,
+   "n_pockets": 13
+  }
+ },
+ {
+  "pair": {
+   "apo": "2BLS",
+   "chain": "B",
+   "holo": "3GQZ",
+   "holo_chain": "A",
+   "drug_code": "GF7",
+   "source": "pocketminer",
+   "desc": "AmpC \u03b2-lactamase",
+   "truth_resnums": [
+    119,
+    148,
+    150,
+    272,
+    290,
+    291,
+    292,
+    293,
+    294
+   ],
+   "n_truth": 9,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.934,
+   "best_rank": 1,
+   "n_pockets": 15
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.41,
+   "best_rank": 2,
+   "n_pockets": 19
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.793,
+   "best_rank": 1,
+   "n_pockets": 19
+  }
+ },
+ {
+  "pair": {
+   "apo": "2QFO",
+   "chain": "B",
+   "holo": "2WI7",
+   "holo_chain": "A",
+   "drug_code": "2KL",
+   "source": "pocketminer",
+   "desc": "Heat shock protein 90",
+   "truth_resnums": [
+    51,
+    52,
+    55,
+    58,
+    93,
+    96,
+    97,
+    98,
+    102,
+    107,
+    110,
+    135,
+    138,
+    139,
+    150,
+    184
+   ],
+   "n_truth": 16,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.5,
+   "best_rank": 1,
+   "n_pockets": 14
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.539,
+   "best_rank": 1,
+   "n_pockets": 12
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.968,
+   "best_rank": 1,
+   "n_pockets": 12
+  }
+ },
+ {
+  "pair": {
+   "apo": "3F74",
+   "chain": "C",
+   "holo": "3BQM",
+   "holo_chain": "C",
+   "drug_code": "BQM",
+   "source": "pocketminer",
+   "desc": "LFA1 I domain",
+   "truth_resnums": [
+    130,
+    132,
+    134,
+    153,
+    157,
+    161,
+    166,
+    231,
+    233,
+    235,
+    255,
+    257,
+    258,
+    259,
+    284,
+    285,
+    286,
+    287,
+    298,
+    302
+   ],
+   "n_truth": 20,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.653,
+   "best_rank": 1,
+   "n_pockets": 9
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.301,
+   "best_rank": 1,
+   "n_pockets": 12
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.864,
+   "best_rank": 1,
+   "n_pockets": 12
+  }
+ },
+ {
+  "pair": {
+   "apo": "4AKE",
+   "chain": "B",
+   "holo": "1ANK",
+   "holo_chain": "B",
+   "drug_code": "ANP",
+   "source": "pocketminer",
+   "desc": "Adenylate kinase",
+   "truth_resnums": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    88,
+    119,
+    123,
+    132,
+    133,
+    134,
+    137,
+    138,
+    156,
+    167,
+    198,
+    199,
+    200,
+    201,
+    202,
+    205
+   ],
+   "n_truth": 24,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.769,
+   "best_rank": 1,
+   "n_pockets": 7
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.85,
+   "best_rank": 1,
+   "n_pockets": 13
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.992,
+   "best_rank": 1,
+   "n_pockets": 13
+  }
+ },
+ {
+  "pair": {
+   "apo": "3PPN",
+   "chain": "A",
+   "holo": "3PPR",
+   "holo_chain": "B",
+   "drug_code": "4CS",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    39,
+    41,
+    91,
+    94,
+    135,
+    136,
+    137,
+    175,
+    217,
+    241
+   ],
+   "n_truth": 10,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.137,
+   "best_rank": 2,
+   "n_pockets": 20
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.573,
+   "best_rank": 1,
+   "n_pockets": 17
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.703,
+   "best_rank": 1,
+   "n_pockets": 17
+  }
+ },
+ {
+  "pair": {
+   "apo": "4W51",
+   "chain": "A",
+   "holo": "4W58",
+   "holo_chain": "A",
+   "drug_code": "3H2",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    78,
+    84,
+    87,
+    88,
+    91,
+    99,
+    102,
+    103,
+    106,
+    107,
+    108,
+    109,
+    110,
+    111,
+    112,
+    114,
+    118,
+    121,
+    153
+   ],
+   "n_truth": 19,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.644,
+   "best_rank": 1,
+   "n_pockets": 10
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.946,
+   "best_rank": 1,
+   "n_pockets": 10
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.95,
+   "best_rank": 1,
+   "n_pockets": 10
+  }
+ },
+ {
+  "pair": {
+   "apo": "4I92",
+   "chain": "A",
+   "holo": "4I94",
+   "holo_chain": "B",
+   "drug_code": "ANP",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    62,
+    63,
+    71,
+    73,
+    85,
+    87,
+    116,
+    132,
+    133,
+    134,
+    135,
+    139,
+    185,
+    186,
+    188,
+    198,
+    200,
+    205
+   ],
+   "n_truth": 18,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.291,
+   "best_rank": 2,
+   "n_pockets": 30
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.032,
+   "best_rank": 2,
+   "n_pockets": 24
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.215,
+   "best_rank": 1,
+   "n_pockets": 24
+  }
+ },
+ {
+  "pair": {
+   "apo": "6E5D",
+   "chain": "A",
+   "holo": "6E5F",
+   "holo_chain": "A",
+   "drug_code": "L6T",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    121,
+    152,
+    153,
+    154,
+    169,
+    171,
+    172,
+    173,
+    180,
+    182,
+    184,
+    185,
+    186,
+    201,
+    203,
+    213,
+    214,
+    217,
+    220
+   ],
+   "n_truth": 19,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.0,
+   "best_rank": 11,
+   "n_pockets": 12
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.608,
+   "best_rank": 1,
+   "n_pockets": 8
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.683,
+   "best_rank": 1,
+   "n_pockets": 8
+  }
+ },
+ {
+  "pair": {
+   "apo": "5H9A",
+   "chain": "A",
+   "holo": "6E5L",
+   "holo_chain": "A",
+   "drug_code": "HVD",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    10,
+    13,
+    16,
+    19,
+    20,
+    23,
+    25,
+    29,
+    33,
+    36,
+    38,
+    53,
+    55,
+    57,
+    58,
+    59,
+    60,
+    77,
+    119,
+    128
+   ],
+   "n_truth": 20,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.888,
+   "best_rank": 1,
+   "n_pockets": 9
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.794,
+   "best_rank": 1,
+   "n_pockets": 9
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.807,
+   "best_rank": 1,
+   "n_pockets": 9
+  }
+ },
+ {
+  "pair": {
+   "apo": "4IC4",
+   "chain": "A",
+   "holo": "4INQ",
+   "holo_chain": "A",
+   "drug_code": "PIF",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    643,
+    655,
+    656,
+    657,
+    658,
+    659,
+    660,
+    665,
+    670,
+    673,
+    717,
+    718,
+    720,
+    745,
+    746,
+    767,
+    769,
+    778,
+    780,
+    941,
+    945,
+    948,
+    949
+   ],
+   "n_truth": 23,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.764,
+   "best_rank": 1,
+   "n_pockets": 26
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.546,
+   "best_rank": 1,
+   "n_pockets": 20
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.996,
+   "best_rank": 1,
+   "n_pockets": 20
+  }
+ },
+ {
+  "pair": {
+   "apo": "1EZM",
+   "chain": "A",
+   "holo": "3DBK",
+   "holo_chain": "A",
+   "drug_code": "RDF",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    111,
+    112,
+    113,
+    114,
+    115,
+    128,
+    129,
+    132,
+    137,
+    140,
+    141,
+    144,
+    155,
+    164,
+    197,
+    198,
+    222,
+    223
+   ],
+   "n_truth": 18,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.333,
+   "best_rank": 1,
+   "n_pockets": 12
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.634,
+   "best_rank": 1,
+   "n_pockets": 13
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.931,
+   "best_rank": 1,
+   "n_pockets": 13
+  }
+ },
+ {
+  "pair": {
+   "apo": "1S2O",
+   "chain": "A",
+   "holo": "1U2S",
+   "holo_chain": "A",
+   "drug_code": "GLC",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    42,
+    43,
+    67,
+    107,
+    111,
+    116,
+    118,
+    149,
+    153,
+    155,
+    189
+   ],
+   "n_truth": 11,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.035,
+   "best_rank": 2,
+   "n_pockets": 9
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.544,
+   "best_rank": 1,
+   "n_pockets": 12
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.544,
+   "best_rank": 1,
+   "n_pockets": 12
+  }
+ },
+ {
+  "pair": {
+   "apo": "2OY4",
+   "chain": "A",
+   "holo": "3DPF",
+   "holo_chain": "A",
+   "drug_code": "AXB",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    158,
+    159,
+    160,
+    161,
+    193,
+    194,
+    197,
+    198,
+    212,
+    213,
+    214,
+    216,
+    217,
+    218,
+    219,
+    220,
+    221,
+    222,
+    224,
+    226,
+    227,
+    228,
+    230
+   ],
+   "n_truth": 23,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.118,
+   "best_rank": 1,
+   "n_pockets": 8
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.746,
+   "best_rank": 1,
+   "n_pockets": 6
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.968,
+   "best_rank": 1,
+   "n_pockets": 6
+  }
+ },
+ {
+  "pair": {
+   "apo": "5NIA",
+   "chain": "A",
+   "holo": "5NI6",
+   "holo_chain": "A",
+   "drug_code": "DJ3",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    134,
+    136,
+    137,
+    267,
+    268,
+    269,
+    270,
+    271,
+    291,
+    292,
+    295,
+    296,
+    299,
+    311,
+    314,
+    318,
+    325,
+    365,
+    367,
+    369,
+    374,
+    375,
+    377,
+    378,
+    382,
+    383,
+    563,
+    565
+   ],
+   "n_truth": 28,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.697,
+   "best_rank": 1,
+   "n_pockets": 33
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.669,
+   "best_rank": 1,
+   "n_pockets": 33
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.808,
+   "best_rank": 1,
+   "n_pockets": 33
+  }
+ },
+ {
+  "pair": {
+   "apo": "1Y1A",
+   "chain": "A",
+   "holo": "1Y1A",
+   "holo_chain": "B",
+   "drug_code": "GSH",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    12,
+    16,
+    31,
+    49,
+    88,
+    89
+   ],
+   "n_truth": 6,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.001,
+   "best_rank": 6,
+   "n_pockets": 10
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.774,
+   "best_rank": 1,
+   "n_pockets": 13
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.954,
+   "best_rank": 1,
+   "n_pockets": 13
+  }
+ },
+ {
+  "pair": {
+   "apo": "3NX1",
+   "chain": "A",
+   "holo": "3NX2",
+   "holo_chain": "A",
+   "drug_code": "FER",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    21,
+    23,
+    25,
+    27,
+    41,
+    46,
+    93,
+    95,
+    132,
+    134
+   ],
+   "n_truth": 10,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.883,
+   "best_rank": 1,
+   "n_pockets": 9
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.908,
+   "best_rank": 1,
+   "n_pockets": 7
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.963,
+   "best_rank": 1,
+   "n_pockets": 7
+  }
+ },
+ {
+  "pair": {
+   "apo": "5NZM",
+   "chain": "A",
+   "holo": "2OEG",
+   "holo_chain": "A",
+   "drug_code": "UPG",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    81,
+    82,
+    83,
+    84,
+    95,
+    130,
+    162,
+    188,
+    189,
+    190,
+    191,
+    219,
+    220,
+    221,
+    256,
+    257,
+    282,
+    284,
+    305,
+    306,
+    307,
+    308,
+    355,
+    376,
+    378,
+    380
+   ],
+   "n_truth": 26,
+   "frac_present": 1.0,
+   "frac_identical": 0.962
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.329,
+   "best_rank": 2,
+   "n_pockets": 33
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.582,
+   "best_rank": 1,
+   "n_pockets": 41
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.673,
+   "best_rank": 1,
+   "n_pockets": 33
+  }
+ },
+ {
+  "pair": {
+   "apo": "2CEY",
+   "chain": "A",
+   "holo": "6H76",
+   "holo_chain": "A",
+   "drug_code": "SLB",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    10,
+    11,
+    17,
+    49,
+    65,
+    66,
+    67,
+    70,
+    127,
+    147,
+    149,
+    151,
+    170,
+    186,
+    187,
+    212,
+    214
+   ],
+   "n_truth": 17,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.121,
+   "best_rank": 1,
+   "n_pockets": 17
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.701,
+   "best_rank": 2,
+   "n_pockets": 12
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.88,
+   "best_rank": 1,
+   "n_pockets": 12
+  }
+ },
+ {
+  "pair": {
+   "apo": "1URP",
+   "chain": "A",
+   "holo": "2DRI",
+   "holo_chain": "A",
+   "drug_code": "RIP",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    13,
+    15,
+    16,
+    89,
+    90,
+    137,
+    141,
+    164,
+    189,
+    190,
+    215,
+    235
+   ],
+   "n_truth": 12,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.573,
+   "best_rank": 1,
+   "n_pockets": 12
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.158,
+   "best_rank": 2,
+   "n_pockets": 15
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.169,
+   "best_rank": 2,
+   "n_pockets": 15
+  }
+ },
+ {
+  "pair": {
+   "apo": "3FVJ",
+   "chain": "A",
+   "holo": "2B03",
+   "holo_chain": "A",
+   "drug_code": "TUD",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    2,
+    5,
+    6,
+    9,
+    13,
+    15,
+    16,
+    19,
+    20,
+    21,
+    23,
+    24,
+    25,
+    29,
+    30,
+    41,
+    45,
+    106,
+    107,
+    109,
+    111
+   ],
+   "n_truth": 21,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.619,
+   "best_rank": 1,
+   "n_pockets": 8
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.678,
+   "best_rank": 1,
+   "n_pockets": 7
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.908,
+   "best_rank": 1,
+   "n_pockets": 7
+  }
+ },
+ {
+  "pair": {
+   "apo": "2ZKU",
+   "chain": "B",
+   "holo": "3VQS",
+   "holo_chain": "A",
+   "drug_code": "JT1",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    179,
+    191,
+    192,
+    193,
+    195,
+    196,
+    197,
+    200,
+    288,
+    289,
+    316,
+    366,
+    368,
+    384,
+    413,
+    414,
+    415,
+    447,
+    448,
+    450,
+    452,
+    454,
+    462,
+    466,
+    547,
+    551
+   ],
+   "n_truth": 26,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.012,
+   "best_rank": 4,
+   "n_pockets": 37
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.028,
+   "best_rank": 2,
+   "n_pockets": 35
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.251,
+   "best_rank": 1,
+   "n_pockets": 35
+  }
+ },
+ {
+  "pair": {
+   "apo": "5ZA4",
+   "chain": "A",
+   "holo": "5YYB",
+   "holo_chain": "A",
+   "drug_code": "NGE",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    15,
+    18,
+    19,
+    27,
+    28,
+    29,
+    105,
+    331,
+    333,
+    362,
+    366,
+    381,
+    382,
+    383,
+    384,
+    386,
+    387,
+    397,
+    404,
+    408,
+    477
+   ],
+   "n_truth": 21,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.665,
+   "best_rank": 1,
+   "n_pockets": 31
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.143,
+   "best_rank": 2,
+   "n_pockets": 42
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.361,
+   "best_rank": 2,
+   "n_pockets": 40
+  }
+ },
+ {
+  "pair": {
+   "apo": "3P53",
+   "chain": "A",
+   "holo": "6I11",
+   "holo_chain": "A",
+   "drug_code": "H0H",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    14,
+    16,
+    48,
+    93,
+    95,
+    101,
+    134,
+    214,
+    215,
+    216,
+    217,
+    224
+   ],
+   "n_truth": 12,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.109,
+   "best_rank": 3,
+   "n_pockets": 22
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.779,
+   "best_rank": 1,
+   "n_pockets": 23
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.948,
+   "best_rank": 1,
+   "n_pockets": 23
+  }
+ },
+ {
+  "pair": {
+   "apo": "2HQ8",
+   "chain": "B",
+   "holo": "2HPS",
+   "holo_chain": "A",
+   "drug_code": "CTZ",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    19,
+    20,
+    22,
+    23,
+    36,
+    39,
+    61,
+    103,
+    107,
+    111,
+    124,
+    127,
+    128,
+    131,
+    135,
+    139,
+    143,
+    160,
+    179,
+    180,
+    181,
+    182
+   ],
+   "n_truth": 22,
+   "frac_present": 1.0,
+   "frac_identical": 0.909
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.796,
+   "best_rank": 1,
+   "n_pockets": 10
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.858,
+   "best_rank": 1,
+   "n_pockets": 16
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.765,
+   "best_rank": 1,
+   "n_pockets": 13
+  }
+ },
+ {
+  "pair": {
+   "apo": "4R72",
+   "chain": "A",
+   "holo": "4R74",
+   "holo_chain": "D",
+   "drug_code": "F6P",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    9,
+    11,
+    36,
+    37,
+    58,
+    59,
+    60,
+    103,
+    147,
+    148,
+    149,
+    150,
+    184,
+    185,
+    186,
+    203,
+    205,
+    206,
+    229,
+    269
+   ],
+   "n_truth": 20,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.403,
+   "best_rank": 1,
+   "n_pockets": 21
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.005,
+   "best_rank": 7,
+   "n_pockets": 19
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.008,
+   "best_rank": 7,
+   "n_pockets": 19
+  }
+ },
+ {
+  "pair": {
+   "apo": "3QXW",
+   "chain": "B",
+   "holo": "3QXV",
+   "holo_chain": "A",
+   "drug_code": "MTX",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    4,
+    6,
+    24,
+    25,
+    26,
+    28,
+    29,
+    30,
+    31,
+    32,
+    34,
+    36,
+    74,
+    75,
+    76,
+    79,
+    80,
+    81,
+    100,
+    120
+   ],
+   "n_truth": 20,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": false,
+   "best_druggability": 0.0,
+   "best_rank": null,
+   "n_pockets": 1
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.496,
+   "best_rank": 1,
+   "n_pockets": 5
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.755,
+   "best_rank": 1,
+   "n_pockets": 5
+  }
+ },
+ {
+  "pair": {
+   "apo": "3KJE",
+   "chain": "A",
+   "holo": "3KJG",
+   "holo_chain": "A",
+   "drug_code": "ADP",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    40,
+    191,
+    192,
+    215,
+    216,
+    217,
+    218,
+    221,
+    222,
+    225
+   ],
+   "n_truth": 18,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.638,
+   "best_rank": 1,
+   "n_pockets": 19
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.092,
+   "best_rank": 5,
+   "n_pockets": 17
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.256,
+   "best_rank": 3,
+   "n_pockets": 17
+  }
+ },
+ {
+  "pair": {
+   "apo": "2LAO",
+   "chain": "A",
+   "holo": "1LAH",
+   "holo_chain": "E",
+   "drug_code": "ORN",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    11,
+    14,
+    52,
+    69,
+    70,
+    71,
+    72,
+    77,
+    117,
+    120,
+    121,
+    122,
+    161
+   ],
+   "n_truth": 13,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.742,
+   "best_rank": 1,
+   "n_pockets": 12
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.114,
+   "best_rank": 2,
+   "n_pockets": 12
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.114,
+   "best_rank": 2,
+   "n_pockets": 11
+  }
+ },
+ {
+  "pair": {
+   "apo": "4P0I",
+   "chain": "B",
+   "holo": "5OTA",
+   "holo_chain": "A",
+   "drug_code": "AQQ",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    36,
+    39,
+    42,
+    77,
+    94,
+    95,
+    96,
+    97,
+    102,
+    115,
+    117,
+    165,
+    168,
+    169,
+    170,
+    206,
+    207,
+    209,
+    210,
+    239
+   ],
+   "n_truth": 20,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.08,
+   "best_rank": 3,
+   "n_pockets": 14
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.719,
+   "best_rank": 1,
+   "n_pockets": 14
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.766,
+   "best_rank": 1,
+   "n_pockets": 14
+  }
+ },
+ {
+  "pair": {
+   "apo": "1J8F",
+   "chain": "C",
+   "holo": "6QCN",
+   "holo_chain": "B",
+   "drug_code": "AR6",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    84,
+    85,
+    86,
+    89,
+    95,
+    96,
+    97,
+    98,
+    104,
+    167,
+    168,
+    187,
+    235,
+    261,
+    262,
+    263,
+    264,
+    266,
+    286,
+    287,
+    288,
+    322,
+    323,
+    324
+   ],
+   "n_truth": 24,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.76,
+   "best_rank": 1,
+   "n_pockets": 18
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.894,
+   "best_rank": 1,
+   "n_pockets": 19
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.977,
+   "best_rank": 1,
+   "n_pockets": 19
+  }
+ },
+ {
+  "pair": {
+   "apo": "6HB0",
+   "chain": "A",
+   "holo": "6HBD",
+   "holo_chain": "A",
+   "drug_code": "GZL",
+   "source": "pocketminer",
+   "desc": "Novel cryptic pocket set",
+   "truth_resnums": [
+    28,
+    29,
+    31,
+    32,
+    105,
+    106,
+    124,
+    159,
+    163,
+    187,
+    213,
+    241,
+    261
+   ],
+   "n_truth": 13,
+   "frac_present": 0.846,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.01,
+   "best_rank": 8,
+   "n_pockets": 19
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.798,
+   "best_rank": 1,
+   "n_pockets": 19
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.894,
+   "best_rank": 1,
+   "n_pockets": 18
+  }
+ },
+ {
+  "pair": {
+   "apo": "1OK8",
+   "chain": "A",
+   "holo": "1OKE",
+   "holo_chain": "B",
+   "drug_code": "BOG",
+   "source": "pocketminer",
+   "desc": "Cryptosite proteins used in validation, with a different structure used for human glycolipid transfer protein (3rwv)",
+   "truth_resnums": [
+    48,
+    49,
+    50,
+    135,
+    193,
+    198,
+    200,
+    205,
+    207,
+    270,
+    271,
+    274,
+    277,
+    280,
+    281
+   ],
+   "n_truth": 15,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.127,
+   "best_rank": 2,
+   "n_pockets": 26
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.869,
+   "best_rank": 1,
+   "n_pockets": 26
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.869,
+   "best_rank": 1,
+   "n_pockets": 26
+  }
+ },
+ {
+  "pair": {
+   "apo": "2OHG",
+   "chain": "A",
+   "holo": "2OHV",
+   "holo_chain": "A",
+   "drug_code": "NHL",
+   "source": "pocketminer",
+   "desc": "Cryptosite proteins used in validation, with a different structure used for human glycolipid transfer protein (3rwv)",
+   "truth_resnums": [
+    11,
+    12,
+    36,
+    50,
+    53,
+    54,
+    57,
+    73,
+    75,
+    76,
+    117,
+    119,
+    120,
+    148,
+    185
+   ],
+   "n_truth": 15,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.01,
+   "best_rank": 6,
+   "n_pockets": 20
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.869,
+   "best_rank": 1,
+   "n_pockets": 12
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.578,
+   "best_rank": 1,
+   "n_pockets": 14
+  }
+ },
+ {
+  "pair": {
+   "apo": "3RWV",
+   "chain": "A",
+   "holo": "3S0K",
+   "holo_chain": "A",
+   "drug_code": "03F",
+   "source": "pocketminer",
+   "desc": "Cryptosite proteins used in validation, with a different structure used for human glycolipid transfer protein (3rwv)",
+   "truth_resnums": [
+    30,
+    33,
+    34,
+    37,
+    42,
+    45,
+    48,
+    49,
+    52,
+    92,
+    96,
+    100,
+    103,
+    104,
+    107,
+    108,
+    124,
+    132,
+    136,
+    140,
+    144,
+    148,
+    151,
+    156,
+    161,
+    165,
+    183,
+    207,
+    209
+   ],
+   "n_truth": 29,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.32,
+   "best_rank": 1,
+   "n_pockets": 16
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.945,
+   "best_rank": 1,
+   "n_pockets": 14
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.995,
+   "best_rank": 1,
+   "n_pockets": 14
+  }
+ }
+]

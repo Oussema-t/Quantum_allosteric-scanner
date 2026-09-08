@@ -1,0 +1,154 @@
+[
+ {
+  "pair": {
+   "apo": "1ALB",
+   "chain": "A",
+   "holo": "1LIC",
+   "holo_chain": "A",
+   "drug_code": "HDS",
+   "source": "cryptosite",
+   "desc": "Side chains protruding into the site",
+   "truth_resnums": [
+    16,
+    19,
+    20,
+    25,
+    29,
+    32,
+    33,
+    40,
+    57,
+    58,
+    75,
+    76,
+    78,
+    104,
+    115,
+    126,
+    128
+   ],
+   "n_truth": 17,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.653,
+   "best_rank": 1,
+   "n_pockets": 11
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.672,
+   "best_rank": 1,
+   "n_pockets": 5
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.841,
+   "best_rank": 1,
+   "n_pockets": 5
+  }
+ },
+ {
+  "pair": {
+   "apo": "1BSQ",
+   "chain": "A",
+   "holo": "1GX8",
+   "holo_chain": "A",
+   "drug_code": "RTL",
+   "source": "cryptosite",
+   "desc": "Loops protruding into the site",
+   "truth_resnums": [
+    39,
+    41,
+    56,
+    58,
+    62,
+    69,
+    71,
+    92,
+    105,
+    107,
+    118,
+    120
+   ],
+   "n_truth": 12,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.697,
+   "best_rank": 1,
+   "n_pockets": 13
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.895,
+   "best_rank": 1,
+   "n_pockets": 11
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.928,
+   "best_rank": 1,
+   "n_pockets": 11
+  }
+ },
+ {
+  "pair": {
+   "apo": "1NEP",
+   "chain": "A",
+   "holo": "2HKA",
+   "holo_chain": "C",
+   "drug_code": "C3S",
+   "source": "cryptosite",
+   "desc": "Loops protruding into the site",
+   "truth_resnums": [
+    20,
+    30,
+    36,
+    37,
+    38,
+    57,
+    59,
+    64,
+    66,
+    94,
+    95,
+    96,
+    100,
+    101,
+    103,
+    105,
+    107,
+    109,
+    124,
+    126,
+    128
+   ],
+   "n_truth": 21,
+   "frac_present": 1.0,
+   "frac_identical": 1.0
+  },
+  "state1_apo": {
+   "detected": true,
+   "best_druggability": 0.672,
+   "best_rank": 1,
+   "n_pockets": 10
+  },
+  "state2_holo_stripped": {
+   "detected": true,
+   "best_druggability": 0.981,
+   "best_rank": 1,
+   "n_pockets": 7
+  },
+  "state3_holo_deposited": {
+   "detected": true,
+   "best_druggability": 0.981,
+   "best_rank": 1,
+   "n_pockets": 7
+  }
+ }
+]
