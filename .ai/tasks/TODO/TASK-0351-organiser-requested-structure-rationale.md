@@ -32,7 +32,7 @@ Three specific exposures:
 
 | structure | situation | what the draft says |
 |---|---|---|
-| **KRAS `4LDJ`** | organisers suggested **8S8C**; we use 4LDJ ([[TASK-0270]]: 4OBE is wild-type, not G12C) | nothing |
+| **KRAS `4LDJ`** | we reported `4OBE` is wild-type; they answered *use 8S8C*; **we RCSB-verified 8S8C live and it is HOLO (MK-1084-bound)** — unusable as apo, so `4LDJ` was found and used ([[TASK-0270]]) | nothing |
 | **BCR-ABL1 `1OPL`** | substitution explicitly permitted, **rationale explicitly requested**; we kept 1OPL — the one carrying myristate at the scored site | reports the myristate finding, but never says why we kept the structure |
 | **Cardiac myosin 8QYP→8QYR** | accepted as primary | substitution not mentioned at all |
 
@@ -54,9 +54,15 @@ it. Not saying so invites the obvious question of whether we knew.
   rather than substituting.** The honest answer is that the myristate occupancy
   is a finding rather than a defect for our purposes — it is what let us measure
   that "apo" depositions are not ligand-free. Say that.
-- For KRAS, state why `4LDJ` and not the suggested `8S8C`. If there is no strong
-  reason, **consider simply running 8S8C** — it is the organisers' own
-  suggestion and declining it silently is the weakest of the three positions.
+- For KRAS, state the **verified chain**, which is a strength rather than a
+  deviation to excuse: we reported that `4OBE` is wild-type at residue 12
+  ([[TASK-0155]], [[TASK-0192]]); the organisers answered *"a nice structure for
+  KRAS G12C would be 8S8C"*; **we checked 8S8C against RCSB and it is holo,
+  bound to MK-1084**, so it cannot serve as the apo half of an apo/holo contrast;
+  we therefore searched and used `4LDJ`, verified as real G12C and genuinely apo
+  (`config/targets.yaml`). Every step is recorded and re-checkable. **This is the
+  strongest of the three structure passages, not the weakest** — do not write it
+  apologetically.
 - Constraints:
   - Quote the clarification, do not paraphrase it.
   - This is a compliance passage, not an argument — keep it short; the appendix
@@ -101,16 +107,24 @@ with no MD trajectory at any stage, within scope?"*
 
 ## Still to send, and it should be one message
 
+- **(e) narrowed**, phrased so it cannot be answered about ENM again.
 - **(d)** which reference governs when the bibliography contradicts itself — still
   unanswered.
-- **(e) narrowed**, as above.
-- **Two verified defects in the challenge's own Table 1**, found on the
-  `allosteric` branch and checked against RCSB: **`6C1H` contains no mavacamten**,
-  and **`4OBE` is wild-type KRAS rather than G12C**. These are genuine
-  contributions and should go to the organisers **regardless of which submission
-  ships** — other teams are working to the same table.
-- Optionally, confirm the **`4LDJ` vs suggested `8S8C`** choice for KRAS while the
-  channel is open, which would close the largest of the three structure exposures
-  above outright rather than by explanation.
+- **`8S8C` is holo.** Their suggested KRAS replacement is MK-1084-bound
+  (RCSB-verified live, [[TASK-0270]]). They offered it in good faith answering our
+  own defect report, and **other teams may take the suggestion at face value** and
+  use a drug-bound structure as an apo input. This is worth telling them plainly
+  and without triumph — it is the same class of service as the Table 1 defects
+  below.
+- **`6C1H` contains no mavacamten** — found on the `allosteric` branch, checked
+  against RCSB.
+
+**Attribution correction, so we do not over-claim in either direction**: the
+`4OBE`-is-wild-type finding is **ours and already delivered** — [[TASK-0155]]
+found it, [[TASK-0192]] flagged it, and it was reported to the organisers on
+2026-08-26, which is what prompted the `8S8C` suggestion. It is not a new
+contribution to announce, and an earlier version of this task described it as one
+in error. The genuinely new items for the organisers are **`6C1H`** and
+**`8S8C`-is-holo**.
 
 The channel is live and has answered within days on both previous occasions.
