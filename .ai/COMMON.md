@@ -626,6 +626,42 @@ see the claim-before-start rule under "Current Rules" below.
   a human watching the terminal needs; the agent that launched it hits the
   exact same blind spot, which is what actually happened here.
 
+- **Before you assume, check the register — the answer is very often already
+  there (2026-09-08, at the repo owner's direct instruction).** When you are
+  about to state something you have not verified this session — a structure's
+  properties, whether a comparison has been run, what an external result implies
+  for us, why a past choice was made — **stop and search first.** Not "consult
+  the register if convenient": search before the sentence is written, because an
+  assumption reads exactly like a finding once it is in a file.
+
+  **This is evidenced, not exhortation.** Four times in a single week a thread
+  reached for a conclusion the register already held, and every time the recorded
+  answer was both *different from* and *more favourable than* the assumption:
+
+  | assumed | already recorded |
+  |---|---|
+  | "we should just run the organisers' suggested `8S8C` for KRAS" | `8S8C` was RCSB-verified live and is **holo** (MK-1084-bound); `4LDJ` was found and used instead ([[TASK-0270]], `config/targets.yaml`) |
+  | "our KRAS residue numbers look like an index-array bug" | `4LDJ` genuinely numbers its chain 0–169, and residue 12 is `CYS` — canonical, and the mutation proves it |
+  | "our measurements are consistent with the JACS ρ≈0.95 centrality result" | not measured at the time; when run, median ρ = **0.41** and CTQW beats the seed-blind baselines ([[TASK-0348]]) |
+  | "the chiral walk is the only arm that tested interference" | the converged limit was **proven phase-free** ([[TASK-0130]]) and *three* observables were built to reach past it ([[TASK-0140]], [[TASK-0146]], [[TASK-0157]]) |
+
+  Note the direction. The register's habitual failure mode is over-claiming, so
+  the reflex is to guard against optimism — but three of the four above were
+  assumptions that *under-sold* our own work, and one of them was written into a
+  submission draft. **An unverified concession is as much a defect as an
+  unverified claim**, and it is harder to catch because it sounds like rigour.
+
+  **How to actually do it**, cheaply: `grep -rn "<the thing>" .ai/tasks/ .claude/hypotheses/ __WORK_IN_PROGRESS__/config/ __WORK_IN_PROGRESS__/documentation/`
+  costs seconds. `config/targets.yaml` and `documentation/2026-08-26-organiser-clarifications.md`
+  in particular carry decisions whose *reasons* are recorded inline and are
+  invisible to a task-file-only search. If the search returns nothing, say
+  "not found in the register" rather than filling the gap with inference —
+  that is a useful signal to the next reader, and it is the honest state.
+
+  This is [[TASK-0321]]'s write-mostly finding restated as a working habit: the
+  problem was never that the register lacks answers. It is that the default is
+  not to look.
+
 ## Open Questions
 
 - When should root-level expert briefs be introduced instead of staying reference-first?
