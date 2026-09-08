@@ -375,7 +375,20 @@ def mark_appendix_start(tex: str, appendix_heading_pattern: Optional[str]) -> st
     """Insert the shared invisible marker right after the LaTeX section
     command matching `appendix_heading_pattern` (a literal substring to find,
     e.g. "Appendix A"). No-op if not found or not requested -- matches
-    submission_build.mark_appendix_start's own no-op contract."""
+    submission_build.mark_appendix_start's own no-op contract.
+
+    TASK-0349: `_APPENDIX_MARKER_TOKEN` ("SUBMISSION_BUILD_APPENDIX_START_
+    7f3a9c") is shared verbatim with the HTML route, where `_` is an
+    ordinary character inside a <span>. In raw LaTeX text mode `_` is the
+    math-mode subscript operator -- writing the token unescaped here always
+    produced "Missing $ inserted" and an unrecoverable XeTeX halt (confirmed
+    live, this task's own bisection). This branch had never compiled once
+    before this fix -- every prior build reported "no #appendix marker
+    found", so the insertion code ran for the first time here. Escaping is
+    done in THIS module, not by changing the shared token itself, since the
+    HTML route's literal underscores are correct there and must stay that
+    way -- the two routes need different escaping of the same logical
+    token, not a different token."""
     if not appendix_heading_pattern:
         return tex
     idx = tex.find(appendix_heading_pattern)
@@ -384,8 +397,9 @@ def mark_appendix_start(tex: str, appendix_heading_pattern: Optional[str]) -> st
     line_end = tex.find("\n", idx)
     if line_end == -1:
         return tex
+    latex_safe_token = _APPENDIX_MARKER_TOKEN.replace("_", r"\_")
     marker = ("\n{\\color{white}\\fontsize{%s}{%s}\\selectfont %s}\n"
-             % (BODY_FONT_PT, BODY_LEADING_PT, _APPENDIX_MARKER_TOKEN))
+             % (BODY_FONT_PT, BODY_LEADING_PT, latex_safe_token))
     return tex[:line_end + 1] + marker + tex[line_end + 1:]
 
 
@@ -417,7 +431,14 @@ def compile_latex(tectonic: str, tex_path: Path, out_pdf: Path,
     # MD5 xdvipdfmx generates per run). This flag closes that gap; its
     # documented cost (SyncTeX's absolute paths) is irrelevant here, SyncTeX
     # is never requested.
-    cmd = [tectonic, "-Z", "deterministic-mode", "-o", str(outdir), str(tex_path)]
+    # TASK-0349: `--keep-logs` -- without it, a FAILED compile leaves no
+    # `.log` on disk at all (confirmed live: tectonic prints the XeTeX
+    # transcript to stdout/stderr but writes no file unless asked, even
+    # though it claims "Transcript written to ...log"). The tool's own
+    # `.tex` is already retained regardless of outcome (`build()` writes it
+    # before calling this function) -- this closes the matching gap on the
+    # `.log` side, so a failed compile no longer destroys its own evidence.
+    cmd = [tectonic, "-Z", "deterministic-mode", "--keep-logs", "-o", str(outdir), str(tex_path)]
     try:
         r = subprocess.run(cmd, capture_output=True, text=True, timeout=deadline_s, env=env)
     except subprocess.TimeoutExpired:
@@ -425,7 +446,10 @@ def compile_latex(tectonic: str, tex_path: Path, out_pdf: Path,
     produced = outdir / (tex_path.stem + ".pdf")
     if r.returncode != 0 or not produced.is_file():
         tail = (r.stdout or r.stderr or "").strip().splitlines()[-15:]
-        return False, "tectonic exited %s: %s" % (r.returncode, " | ".join(tail))
+        log_path = outdir / (tex_path.stem + ".log")
+        log_note = (" (full transcript: %s)" % log_path) if log_path.is_file() else \
+                   " (no .log produced -- tectonic failed before writing one)"
+        return False, "tectonic exited %s: %s%s" % (r.returncode, " | ".join(tail), log_note)
     if produced != out_pdf:
         produced.replace(out_pdf)
     return True, ""

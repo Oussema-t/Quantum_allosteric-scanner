@@ -12600,3 +12600,70 @@ that document's next pass, with this task's own table as the input.
 
 **Files**: `__WORK_IN_PROGRESS__/scripts/task0346_blind_validity_at_scale.py`.
 **Full detail**: `.ai/tasks/DONE/TASK-0346-blind-validity-rule-at-scale.md`.
+
+## `--appendix-heading` had never compiled once: an unescaped underscore in a shared marker token halts XeTeX ([[TASK-0349]], 2026-09-08)
+
+`submission_build_latex.py --appendix-heading Appendix` failed
+(`tectonic exited 1`) on the real submission's new references appendix,
+while the same source built fine without the flag. Every build to date
+had reported "no `#appendix` marker found in the render" — the insertion
+branch had **never executed in a passing build**, so this was its first
+real exercise.
+
+**Made the failure legible first, per the task's own required order.**
+`--keep-logs` was missing from the `tectonic` invocation — without it, a
+failed compile leaves no `.log` on disk at all, despite tectonic's own
+stdout claiming "Transcript written to ...log". Added it, re-ran the
+exact bisected command, read the real transcript:
+
+```
+! Missing $ inserted.
+l.243 ...\selectfont SUBMISSION_
+                              BUILD_APPENDIX_START_7f3a9c}
+```
+
+**Root cause**: the shared `_APPENDIX_MARKER_TOKEN`
+(`SUBMISSION_BUILD_APPENDIX_START_7f3a9c`, used by both the HTML and
+LaTeX routes) contains raw `_` — an ordinary character inside the HTML
+route's `<span>`, but LaTeX's math-mode subscript operator in plain
+text. Writing it unescaped inside the marker's `{\color{white}...}`
+group is the textbook bare-underscore-in-text-mode defect and halts
+XeTeX unrecoverably. `xcolor` being loaded was already correctly ruled
+out by the filing (the obvious hypothesis, and wrong) — the real defect
+was one token further into the same line.
+
+**Fix**: escape `_` → `\_` only inside `submission_build_latex.py`'s own
+`mark_appendix_start()` — the shared token itself is untouched, since
+the HTML route's literal underscores are correct as they are; the two
+routes need different escaping of the same logical token, not two
+tokens. Detection is unaffected: the split is read back from the
+rendered PDF's extracted text, and `\_` typesets to a literal `_` glyph
+there.
+
+**Verified fixed**: re-ran the exact bisected command post-fix —
+compiles, `RESULT: PASS`, `appendix pages 2/3`, split correctly reported
+at page 5 (`body pages 4/6`). `compile_latex()` now always passes
+`--keep-logs` and names the `.log` path directly in any future failure
+message, closing the evidence-retention gap the filing flagged as a
+defect in its own right (the `.tex` was already retained unconditionally
+before this task).
+
+**Test coverage — a fixture that actually exercises the split, per the
+task's own Constraint** ("a no-op-when-absent test does not cover
+this"): a new end-to-end test builds a real document with a genuine
+`## Appendix` heading through `--appendix-heading`, asserting it
+compiles AND that the reported split lands exactly where the body ends
+(`body_pages == appendix_starts_on_page - 1`), not merely "somewhere".
+Caught its own fixture bug on the first run — the fixture's title
+originally contained the word "Appendix" itself, colliding with the
+literal-substring search and misclassifying the whole document as
+appendix; fixed the fixture (the real submission's own heading has no
+such collision), not the search. Added a direct regression guard
+(`test_mark_appendix_start_escapes_underscores_for_tex_text_mode`) that
+fails if the raw token ever reappears in LaTeX output. Full suite: 48
+pass (`test_submission_build.py` + `test_submission_build_latex.py`,
+up from 46).
+
+**Files**: `.ai/tools/submission_build_latex.py`,
+`.ai/tools/test_submission_build_latex.py`. **Full detail**:
+`.ai/tasks/DONE/TASK-0349-appendix-split-marker-never-compiled.md`.

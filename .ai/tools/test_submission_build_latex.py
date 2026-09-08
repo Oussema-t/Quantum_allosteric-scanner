@@ -149,9 +149,24 @@ def test_preprocess_combines_superscript_digit_runs():
 def test_mark_appendix_start_inserts_after_matched_line():
     tex = "\\subsection{Body}\ntext\n\\subsection{Appendix A}\nmore\n"
     out = sbl.mark_appendix_start(tex, "Appendix A")
-    assert sbl._APPENDIX_MARKER_TOKEN in out
-    assert out.index(sbl._APPENDIX_MARKER_TOKEN) > out.index("Appendix A")
-    assert out.index(sbl._APPENDIX_MARKER_TOKEN) < out.index("more")
+    escaped = sbl._APPENDIX_MARKER_TOKEN.replace("_", r"\_")
+    assert escaped in out
+    assert out.index(escaped) > out.index("Appendix A")
+    assert out.index(escaped) < out.index("more")
+
+
+def test_mark_appendix_start_escapes_underscores_for_tex_text_mode():
+    """TASK-0349: the shared `_APPENDIX_MARKER_TOKEN` contains raw `_`,
+    which is the math-mode subscript operator in plain LaTeX text -- writing
+    it unescaped produced "Missing $ inserted" and an unrecoverable XeTeX
+    halt (this task's own bisection). The raw, un-escaped token must never
+    appear in LaTeX output again -- this is a regression guard on the exact
+    defect, not just a check that a marker exists somewhere."""
+    tex = "\\subsection{Appendix A}\nmore\n"
+    out = sbl.mark_appendix_start(tex, "Appendix A")
+    assert sbl._APPENDIX_MARKER_TOKEN not in out, \
+        "raw underscore token leaked into LaTeX source -- reintroduces TASK-0349"
+    assert r"\_" in out
 
 
 def test_mark_appendix_start_noop_when_pattern_missing():
@@ -268,6 +283,37 @@ def test_end_to_end_real_submission_compiles_and_passes(tmp_path):
     assert modal is not None and modal >= sb.MIN_FONT_PT - 0.05, modal
     clip = next(c for c in ctx["checks"] if c.name == "no horizontal overflow")
     assert clip.status == "PASS", clip.detail
+
+
+@pytest.mark.skipif(not _e2e_ready, reason="needs pandoc + tectonic + pdfplumber")
+def test_end_to_end_appendix_heading_split_compiles_and_lands_correctly(tmp_path):
+    """TASK-0349: `mark_appendix_start`'s insertion branch had NEVER executed
+    in a passing build before this task -- every prior end-to-end test built
+    the real submission WITHOUT `--appendix-heading`, so `_e2e_ready`'s own
+    build() call always took the no-op path. This fixture is the first test
+    that actually exercises the split: a document with real body content
+    (>=1 full page) followed by an "Appendix" heading with its own content,
+    built WITH `--appendix-heading`, asserting both that it compiles (the
+    literal defect: an unescaped `_` in the marker token halted XeTeX with
+    "Missing $ inserted") and that the reported split lands on the body's
+    last real page, not page 1 or page 0."""
+    filler = ("This is a long filler sentence written to occupy real "
+             "vertical space on the page so the body genuinely spans "
+             "multiple pages before the appendix begins. " * 20)
+    body = "\n\n".join("## Section %d\n\n%s" % (i, filler) for i in range(6))
+    md = ("# Split fixture\n\n" + body +
+         "\n\n## Appendix\n\nThis is the appendix content, after the split marker.\n")
+    md_path = tmp_path / "appendix_split.md"
+    md_path.write_text(md, encoding="utf-8")
+    code, ctx = sbl.build(md_path, tmp_path, "HEAD", version=98, want_change=False,
+                         appendix_heading_pattern="Appendix")
+    _skip_if_environment_failure(ctx)
+    assert "error" not in ctx, ctx.get("error")
+    a = ctx["analysis"]
+    assert a["appendix_starts_on_page"] is not None, \
+        "split marker not found in the rendered PDF -- compiled, but detection regressed"
+    assert 1 < a["appendix_starts_on_page"] <= a["total_pages"], a
+    assert a["body_pages"] == a["appendix_starts_on_page"] - 1, a
 
 
 @pytest.mark.skipif(not _e2e_ready, reason="needs pandoc + tectonic + pdfplumber")
