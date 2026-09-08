@@ -114,11 +114,8 @@ def train(fr="../full_run_1022",wl="/Users/t/Downloads/datasets/operator_worklis
     m=make_pipeline(StandardScaler(),Ridge(alpha=10.0)).fit(X,A)   # tiny (~100 KB) and beats a 205 MB forest on AUC
     meta=dict(architecture="9 topology features -> StandardScaler -> Ridge(alpha=10) multi-output -> 884 predicted AUCs -> rank -> top-k -> softmax weights",n_proteins=len(prot),n_families=len({W[n]["cluster"] for n in prot}),n_configs=len(cfgs),
               min_hops=[1,2,3,4],validation="leave-one-family-out GroupKFold(5)",
-              measured={"k=1":{"hit_good":0.281,"best_auc":0.612,"fam_p5_08":22},
-                        "k=3":{"hit_good":0.36,"best_auc":0.690,"fam_p5_08":29},
-                        "k=6":{"hit_good":0.45,"best_auc":0.744,"fam_p5_08":38},
-                        "k=20":{"hit_good":0.61,"best_auc":0.826,"fam_p5_08":54},
-                        "oracle_884":{"hit_good":1.0,"best_auc":0.964,"fam_p5_08":71}},
+              measured_by="evaluate_recommender.py — run it to regenerate; numbers are NOT stored here\n"
+                          "so they cannot go stale. Results land in ../seeded_classical/ and this folder.",
               caveat="best-of-k assumes the user selects among the k results; merging blind gives ~0.610")
     r=Recommender(m,cfgs,FK,meta); r.save(out)
     print("trained on %d proteins / %d families, %d configurations -> %s"%(meta["n_proteins"],meta["n_families"],len(cfgs),out))
