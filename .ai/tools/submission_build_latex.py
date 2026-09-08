@@ -126,6 +126,12 @@ LATEX_PREAMBLE = r"""\documentclass[10pt,a4paper,twocolumn]{article}
 %% >=, etc.) is closed separately in _preprocess_markdown, not by font choice.
 \usepackage{fontspec}
 \usepackage[margin=%(margin)smm]{geometry}
+%% Reviewer thread, 2026-09-08: the mandated seven items already carry their
+%% own numbers in the source ("## 1. Problem Framing"), and pandoc maps `#` to
+%% \section / `##` to \subsection, so LaTeX's automatic numbering rendered them
+%% as "1.1 1. Problem Framing". Suppressing LaTeX numbering keeps the mandated
+%% 1--7 exactly as the Guidelines require, rather than renumbering them.
+\setcounter{secnumdepth}{0}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{calc}

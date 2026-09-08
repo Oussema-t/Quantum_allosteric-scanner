@@ -64,6 +64,8 @@ We tested it, in the strongest forms we could construct:
 
 We also ran the full ensemble end to end — thirteen operators × seventeen scores, with a cryptic-opening veto — over 1022 proteins. Under matched multiplicity, one candidate set and a matched null, **no arm clears more than 5 of 276 protein families, and quantum and classical arms are statistically indistinguishable** (McNemar p = 1.0).
 
+**Prior art, and what is actually new here.** A continuous-time quantum walk on a residue interaction network was published in July 2026 (Mohtashim, Sajjan & Kais, *J. Am. Chem. Soc.* 148:29206) — the same construction we use, over ~150 proteins, with a small hardware demonstration. They report their walk-based centrality agrees with classical eigenvector centrality at Spearman ρ ≈ 0.95, and claim no quantum advantage. We take both findings as given; our own measurements above are consistent with them. What that paper explicitly defers is the allosteric application, and that is where our contribution sits: active-site-seeded pathway scoring, apo/holo blind validation, and the benchmark-validity audit that occupies §1. The sponsor's own group has separately published a quantum binding-site structure prediction result (Zhang et al., *Adv. Sci.* 13:e13641), so we make no claim that this domain is untouched by quantum methods. Cryptic-pocket prediction specifically, as far as we can establish, has none.
+
 **Our honest position: single-particle coherent transport on a static contact graph is exhausted.** We closed nine candidate advantage routes by measurement. A remaining quantum route must supply something the static graph does not have — either a true many-body object (conformational search, whose hard regime we have located at 50–80 residues) or dynamics rather than one structure. We would rather state that than propose a tenth variant of a construction we have already falsified four ways.
 
 ### What we propose to build in Phase 2
@@ -125,23 +127,8 @@ Built and in use, not proposed:
 
 Classical ENM ensemble generation → quantum-inspired transport → classical verification. One runner emits all three required artefacts, so they cannot disagree with each other.
 
-```
- Apo structure                                              Three artefacts,
-      │                                                       one runner
-      ▼
-┌──────────────────┐   ┌───────────────────────┐   ┌────────────────────────┐
-│ Classical ENM    │──▶│ Quantum-inspired      │──▶│ Classical verification │
-│ ensemble         │   │ transport subroutine  │   │ (druggability,         │
-│ generation       │   │ (continuous-time walk)│   │  proximity floor, null)│
-└──────────────────┘   └───────────────────────┘   └───────────┬────────────┘
-                                                                │
-                                   ┌────────────────┬───────────┴──────────┐
-                                   ▼                ▼                      ▼
-                          Connectivity matrix  Site-level hit list   Methodological
-                                                                        report
-```
+**Pipeline.** Classical ENM ensemble generation → quantum-inspired transport subroutine (continuous-time walk) → classical verification (druggability, proximity floor, matched null). A single runner emits all three required artefacts in one pass — the **connectivity matrix** (residue–residue transport), the **site-level hit list** (five ranked residues, each with its proximity-floor and null verdict), and the **methodological report** (per-target provenance, controls run, and the cohort every claim was measured on) — so a hit list cannot disagree with the matrix it came from.
 
-The runner emits the three required deliverables in a single pass: the **connectivity matrix** (residue–residue transport), the **site-level hit list** (ranked candidate pockets, each carrying its proximity-floor and null verdict), and the **methodological report** (per-target provenance, controls run, and the cohort every claim was measured on). Because one pass produces all three, a hit list cannot disagree with the matrix it came from.
 
 The rationale for the split is empirical: the classical stages carry the signal we can currently certify, and the quantum-inspired stage is the component under test. Keeping them separable is what allowed us to measure that the transport subroutine adds nothing beyond the classical baseline — a hybrid design that could not isolate its own quantum stage could not have found that.
 
