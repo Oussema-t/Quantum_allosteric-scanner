@@ -64,18 +64,53 @@ it. Not saying so invites the obvious question of whether we knew.
 - Planned Validation: after drafting, re-read the clarifications file end to end
   and confirm no other organiser request is unmet.
 
-## Also still open with the organisers, and worth one message
+## Updated 2026-09-08 — (e) and (f) are now answered
 
-Three of our own questions remain **UNANSWERED** and one gates a task:
+Recorded verbatim in `documentation/2026-08-26-organiser-clarifications.md`.
 
-- **(d)** which reference governs when the bibliography contradicts itself
-- **(e)** does Constraint 3 exclude minimisation / Monte-Carlo sampling?
-- **(f)** does Constraint 3 exclude an MD-*trained* tool with MD-free inference?
-  — **gates [[TASK-0269]]**
+**(f) — answered cleanly, in our favour.** *"PocketMiner requires only a static
+PDB structure at inference and does not take MD trajectories as an input, so it
+does not violate this rule."* The MD-trained / MD-free-inference distinction is
+accepted and the operative test is what the tool consumes **at inference**.
 
-Separately, two verified defects in the challenge's own Table 1 were found on
-the `allosteric` branch — `6C1H` contains no mavacamten, and `4OBE` is wild-type
-KRAS rather than G12C — both checked against RCSB. **These should go to the
-organisers regardless of which submission ships**, and they pair naturally with
-re-asking (d)–(f) in one message. The channel is live and has answered within
-days twice.
+- **[[TASK-0269]] is unblocked** — it was gated on exactly this.
+- It retrospectively validates that task's own constraint-3 call (*"legal under
+  the literal reading… the closest call of the four"*), which was escalated
+  rather than self-authorised. Worth noting: the register flagged it instead of
+  assuming, and the flag turned out to be the right instinct.
+- It legitimises the cryptic-opening veto stage of the pipeline.
+- **The submission may now say so**, which removes a disclosed risk from
+  Appendix C rather than leaving it open.
+
+**(e) — answered for ENM, but not for what we asked.** We asked whether
+*minimisation-based or Monte-Carlo conformational sampling* is excluded. The reply
+confirms **closed-form ANM/GNM modes are allowed**, which is welcome and which we
+already relied on — but it does not address minimisation or Monte-Carlo directly.
+
+**Do not read this as blanket permission**, because a live proposal component
+depends on it: §2 component (c), the screening criterion for the hard regime,
+treats side-chain packing as a search/minimisation problem, and the coupled-search
+numbers (20% of KRAS_G12C restarts, 0 of 65 for PTP1B) come from exactly that. If
+minimisation-based conformational search is out of scope, (c) needs rewording or
+removal.
+
+**Action: ask the narrow question again, once, in the same message as the items
+below.** Phrase it so it cannot be answered about ENM again — e.g. *"is a
+conformational search that minimises an energy function over side-chain rotamers,
+with no MD trajectory at any stage, within scope?"*
+
+## Still to send, and it should be one message
+
+- **(d)** which reference governs when the bibliography contradicts itself — still
+  unanswered.
+- **(e) narrowed**, as above.
+- **Two verified defects in the challenge's own Table 1**, found on the
+  `allosteric` branch and checked against RCSB: **`6C1H` contains no mavacamten**,
+  and **`4OBE` is wild-type KRAS rather than G12C**. These are genuine
+  contributions and should go to the organisers **regardless of which submission
+  ships** — other teams are working to the same table.
+- Optionally, confirm the **`4LDJ` vs suggested `8S8C`** choice for KRAS while the
+  channel is open, which would close the largest of the three structure exposures
+  above outright rather than by explanation.
+
+The channel is live and has answered within days on both previous occasions.

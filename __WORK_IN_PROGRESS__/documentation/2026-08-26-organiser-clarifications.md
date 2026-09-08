@@ -50,8 +50,8 @@ what remains open:
 | 2, 4 | **(b)** the benchmark-validity finding | **Substantively responsive, not directly answered** — see below |
 | — | **(g)** may a submitted document be revised / re-uploaded? | **ANSWERED 2026-09-07 — yes, unlimited** |
 | — | **(d)** which reference governs when the bibliography contradicts itself | **UNANSWERED** |
-| — | **(e)** does Constraint 3 exclude minimisation / Monte-Carlo sampling? | **UNANSWERED** |
-| — | **(f)** does Constraint 3 exclude an MD-*trained* tool with MD-free inference? | **UNANSWERED — gates [[TASK-0269]]** |
+| — | **(e)** does Constraint 3 exclude minimisation / Monte-Carlo sampling? | **ANSWERED 2026-09-08 — ENM explicitly allowed; MC/minimisation not directly addressed** |
+| — | **(f)** does Constraint 3 exclude an MD-*trained* tool with MD-free inference? | **ANSWERED 2026-09-08 — no; PocketMiner permitted. [[TASK-0269]] unblocked** |
 
 **On (b).** The organisers did not address the benchmark-validity audit in
 words, but answers 2 and 4 respond to it in substance: they offered an
@@ -158,3 +158,51 @@ last artifact standing at the deadline is the submission. This also settles the
 earlier open question about whether the "multiple entries" FAQ clause could be
 stretched to cover revisions: it does not need to be. Revisions are explicitly
 allowed in their own right. See [[TASK-0341]], which is built around this.
+
+
+## (e) and (f) — answered 2026-09-08
+
+Recorded verbatim and unedited, as with the 2026-08-26 reply. Our reading follows
+separately and must not be confused with the organisers' own words.
+
+> **1. Does Constraint 3 exclude minimisation-based or Monte-Carlo conformational
+> sampling?**
+>
+> Constraint 3 strictly states that solutions "cannot rely on classical MD
+> trajectories as inputs" and that the goal is to predict dynamics "ab initio from
+> topology". Furthermore, the challenge explicitly assumes the "elastic network
+> hypothesis", which posits that the "topology of the contact network is the
+> primary driver of signal propagation". Therefore, utilizing closed-form
+> elastic-network (ANM/GNM) mode perfectly fits with the scope of the challenge,
+> so it is allowed.
+>
+> **2. Does Constraint 3 exclude a third-party tool that was trained on MD data
+> but whose own inference is MD-free?**
+>
+> The challenge constraints specify that the "solution cannot rely on classical MD
+> trajectories as inputs". PocketMiner requires only a static PDB structure at
+> inference and does not take MD trajectories as an input, so it does not violate
+> this rule.
+
+### Our reading, and one thing still open
+
+**(f) is answered cleanly and in our favour.** PocketMiner is permitted; the
+MD-trained / MD-free-inference distinction is accepted, and the operative test is
+what the tool consumes at inference. **This unblocks [[TASK-0269]]**, which was
+gated on exactly this question, and it retrospectively validates that task's own
+constraint-3 call (*"legal under the literal reading… flagged as the closest call
+of the four"*). It also legitimises the cryptic-opening veto stage.
+
+**(e) is answered for ENM, but not for what we asked.** The question was whether
+*minimisation-based or Monte-Carlo conformational sampling* is excluded. The reply
+confirms **closed-form ANM/GNM modes are allowed** — which we already used and
+which is welcome — but it does not address minimisation or Monte-Carlo sampling
+directly; it answers about a method we did not ask about.
+
+**Why that residue matters, and it is not academic**: our own Phase-2 component
+(c), the screening criterion for the hard regime, rests on side-chain packing
+treated as a search/minimisation problem, and the coupled-search measurements
+(20% of KRAS_G12C restarts, 0 of 65 for PTP1B) come from exactly that. If
+minimisation-based conformational search is out of scope, that component needs
+rewording or removing. **Do not read (e) as blanket permission.** Worth one
+short follow-up asking the narrow question again — see [[TASK-0351]].
