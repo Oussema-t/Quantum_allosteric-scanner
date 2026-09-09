@@ -135,7 +135,10 @@ Topology → k weighted configurations out of 884. **Negative result:** exact-wi
 ## 6. Where the two branches agree, and where they don't
 
 **Agree, independently measured:**
-- The walk does not beat distance. Our blind LOFO on distal gives **AUC 0.500**; his gives 0.5184.
+- The walk does not beat distance — but by two DIFFERENT measurements, not one. Ours is a **raw**
+  AUC on distal with the cell chosen blind (**0.500**, chance before any correction). His is a
+  **residualised** AUC on 108 structures (**0.5184**, nothing left once distance is regressed out).
+  Same conclusion, different quantities; his is the stronger form. Do not quote them as one number.
 - Both centrality ablations: beats the seed-blind baselines (degree, eigenvector, GNM), **ties the
   seed-aware ones** (betweenness, closeness).
 - Both found the JACS ρ≈0.95 does NOT replicate (0.689 ours, 0.41 his).
@@ -147,6 +150,10 @@ Topology → k weighted configurations out of 884. **Negative result:** exact-wi
 - I find **+0.114** using a **finite-delay phase-keeping** observable.
 - Different observables. His τ objection to my number is legitimate and unresolved: the integration
   window is set by 1/gap, and he has measured that 46% of structures flip sign with the clock.
+
+**NOT an agreement, though an earlier version of this file implied it:** the pipeline SHAPE is
+shared (candidate detection → CTQW → veto) but the candidate detector differs — **PASSer here,
+fpocket there** — which changes which residues are scored. That is a cohort difference, in §0.
 
 **Only on the allosteric branch:** the unconstrained test, the AI recommender negative, the
 null-corrected family counts, the two-source observable.

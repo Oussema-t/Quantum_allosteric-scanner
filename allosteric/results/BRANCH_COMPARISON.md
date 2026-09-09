@@ -103,18 +103,28 @@ the local rate of evolution) but with **no phase, no interference, no long-range
 
 ## PART 3 — WHERE WE AGREE
 
-Each measured independently, on different cohorts, reaching the same conclusion.
+**Eight points.** Each measured independently, on different cohorts, reaching the same conclusion.
+
+*(An earlier version of this file listed "same pipeline architecture" as a ninth agreement. That
+was wrong and is corrected below: the pipeline SHAPE is shared — candidate detection → CTQW →
+veto — but the candidate detector differs, PASSer vs fpocket, which changes which residues are
+scored. It belongs in Part 4.4, not here.)*
 
 | point | allosteric | bartosz |
 |---|---|---|
-| **the walk does not beat distance** | blind LOFO on distal: **AUC 0.500** | distance-conditioned: **0.5184, n.s.** |
+| **the walk does not beat distance** | blind LOFO on distal, **raw** AUC **0.500** | **residualised** AUC (distance removed) **0.5184**, n.s. |
+
+> **Read that row carefully — the two numbers are different quantities.** Mine is a raw AUC on the
+> distal cohort with the cell chosen blind: the walk is at chance before any correction. His is a
+> residualised AUC on 108 structures: once distance is regressed out, nothing remains. Both support
+> the same conclusion by different routes, and his is the stronger statement. They are not
+> interchangeable and should not be quoted as one number.
 | **centrality ablation verdict** | beats degree/eigenvector/GNM, **ties closeness & betweenness** | same verdict, same wording |
 | **JACS ρ≈0.95 does not replicate** | ours **0.689** | his **0.41** |
 | **best-of-N is not a score** | sweep 137 families, **99.8 from chance** | retracted a headline after the same realisation |
 | **classical stages do the localisation** | unconstrained: closeness 48 → **6 proteins** | "the classical stages carry the signal we can currently certify" |
 | **Table 1 defects** | 6C1H no mavacamten; 4OBE wild-type | same two, reported to organisers |
 | **family-level counting is mandatory** | CAS0002 = 28 of 91 distal | four selection procedures died of pseudo-replication |
-| **the pipeline architecture** | PASSer → CTQW → veto → CTQW | fpocket → CTQW → veto |
 | **no quantum advantage demonstrated** | not a quantum-advantage claim; classically simulated | no asymptotic speedup claimed |
 
 ---
