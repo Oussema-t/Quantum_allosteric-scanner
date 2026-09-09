@@ -35,7 +35,8 @@ normalizes first). This is deliberate and load-bearing: claim.py's own
 invocation is already blanket-whitelisted, so an unscoped stage wrapper
 would silently make that whitelist imply unconstrained `git add` of any
 repo path. Anything outside .ai/.claude still needs a plain `git add`,
-which correctly prompts. Full recommended workflow:
+which correctly prompts. Recommended workflow as of this task -- see the
+TASK-0356 paragraph below for the current, revised form:
     claim GIT-COMMIT -> commit-guard --expect-empty -> stage --expect ... ->
     commit-guard --expect ... -> git commit -> release GIT-COMMIT
 
@@ -107,6 +108,36 @@ reported two, with nothing in the `--expect` contract explaining which to
 expect. The rule is now fixed and unconditional: a rename always counts
 as two entries, list both.
 
+Extended for TASK-0356: two independent defects in the documented
+sequence, both reproduced live. (1) `--expect-empty` is unpassable
+immediately after `move`/`resolve`, which legitimately leaves its own
+rename staged -- and closing a task then committing it is the ordinary
+order of work, not an edge case. `--expect-empty` remains correct for
+what it actually asserts (nothing staged yet) and is now documented as
+valid *only* for a true from-scratch commit; the revised recommended
+sequence for the ordinary "I already ran `move`" case skips straight to
+`stage --expect <paths, including that rename>`, whose own
+self-verification (unchanged) gives the identical contamination check
+one step later, never a weaker one. (2) The two-step
+`commit-guard --expect ... -> git commit` boundary was routinely joined
+with `| tail -1 && ...` to keep output short -- with `pipefail` off (this
+shell's default), `&&` after a pipe tests the pipe's last command, not
+the guard, so a *failing* guard's chain proceeded to commit anyway. Real
+incident: this defect swept another thread's staged rename into an
+unrelated commit, twice in one week, including once inside the commit
+that filed this very task. `commit-guard --expect ... --commit
+--message-file PATH` closes this by fusing check and action into one
+process -- no shell step exists between them for that idiom to attach to.
+Because that internal `git commit` call is a subprocess of claim.py's own
+process, invisible to `git_commit_guard_hook.py`'s PreToolUse match (which
+only inspects the one literal Bash command the harness matched, never a
+child process it spawns), `--commit` independently re-verifies GIT-COMMIT
+session identity in-process (`verify_git_commit_session()`) before
+committing -- otherwise this path would have silently reopened exactly
+the gap TASK-0042 closed, for itself alone. Old two-step usage
+(`commit-guard --expect ...` with no `--commit`) is unchanged and still
+supported for anything that wants the check without the action.
+
 No third-party dependencies -- stdlib only.
 
 Usage:
@@ -117,6 +148,7 @@ Usage:
     claim.py status       [TASK-0024 | GIT-COMMIT | SCQ-0001]
     claim.py sync         [--dry-run] [--check]
     claim.py commit-guard --expect PATH [PATH ...]
+    claim.py commit-guard --expect PATH [PATH ...] --commit --message-file PATH
     claim.py commit-guard --expect-empty
     claim.py move         TASK-0024 IN_PROGRESS --as "Toolsmith (this thread)" [--force --reason TEXT] [--keep-claim]
     claim.py resolve      TASK-0024 done --as "Toolsmith (this thread)" [--note TEXT] [--no-stage]
@@ -249,6 +281,59 @@ def read_lock(task_id):
         return None
     with open(path, "r") as f:
         return json.load(f)
+
+
+def verify_git_commit_session():
+    # type: () -> Optional[str]
+    """None if GIT-COMMIT is validly claimed by this exact running session;
+    otherwise a human-readable reason it is not.
+
+    TASK-0356: `commit-guard --commit` (below) runs `git commit` itself,
+    as a subprocess of claim.py's own process -- invisible to
+    `git_commit_guard_hook.py`'s PreToolUse check, which only ever sees
+    the literal Bash tool_input.command text of the ONE call the harness
+    matched against (`\\bgit\\s+(commit|push)`), never a child process an
+    allowed call goes on to spawn. That hook cannot gate this path no
+    matter how it's invoked -- so this path must independently re-verify
+    the identical identity rule in-process, not rely on the hook to catch
+    it externally. Deliberately mirrors the hook's own three checks
+    (lock exists / session_id recorded on both sides / session_ids match)
+    rather than being a looser approximation of them -- same fail-closed
+    posture, on purpose: a same-invariant check that's weaker on this one
+    call path would be exactly the kind of "looks enforced, isn't"
+    regression this task exists to close. Not called *by* the hook itself
+    (kept separate rather than refactored to share one function across
+    both) -- the hook is a small, already-incident-tested, independently
+    reviewable file; duplicating three straightforward comparisons here
+    is a smaller risk than touching it."""
+    lock = read_lock("GIT-COMMIT")
+    if lock is None:
+        return (
+            "GIT-COMMIT is not currently claimed. Run `python3 "
+            ".ai/tools/claim.py claim GIT-COMMIT \"<label>\"` first."
+        )
+    held_sid = lock.get("session_id")
+    caller_sid = session_id()
+    if not held_sid or not caller_sid:
+        return (
+            "GIT-COMMIT is claimed by %r, but its recorded session_id is "
+            "missing (an old lock, or one claimed outside a Claude Code "
+            "session) -- identity cannot be verified, so this is denied "
+            "rather than assumed safe. Release and re-claim to refresh "
+            "the lock's session_id, then retry." % lock.get("claimant")
+        )
+    if held_sid != caller_sid:
+        return (
+            "GIT-COMMIT is claimed by %r [session %s...], not this "
+            "session [%s...]. If that other claim is stale, release it "
+            "explicitly (`claim.py release GIT-COMMIT`) or override with "
+            "`claim.py claim GIT-COMMIT ... --force --reason ... "
+            "--hitl-override` -- only with an explicit human instruction "
+            "in the current conversation to do so, never on an agent's "
+            "own judgment."
+            % (lock.get("claimant"), held_sid[:8], caller_sid[:8])
+        )
+    return None
 
 
 def disk_task_ids():
@@ -1328,10 +1413,66 @@ def cmd_commit_guard(args):
         )
         return 1
 
+    if not args.commit:
+        if args.expect_empty:
+            print("ok: staged index is empty")
+        else:
+            print("ok: staged index exactly matches --expect (%d path(s))" % len(expected))
+        return 0
+
+    # TASK-0356: `--commit` fuses this check with the actual `git commit`
+    # into one atomic call. Real incident this closes: the documented
+    # sequence's separate check-then-commit shell steps were chained as
+    # `commit-guard --expect ... | tail -1 && git commit ...` -- with
+    # `pipefail` off (this shell's default; verified `false | tail -1`
+    # exits 0), `&&` tests `tail`'s exit status, not the guard's, so a
+    # failing guard's own `&&` chain proceeded to commit anyway. Twice.
+    # There is no shell step here for that idiom to attach to: this
+    # process either calls `git commit` itself, having just verified the
+    # check in the same call, or it doesn't call it at all.
     if args.expect_empty:
-        print("ok: staged index is empty")
-    else:
-        print("ok: staged index exactly matches --expect (%d path(s))" % len(expected))
+        print(
+            "error: --commit cannot be combined with --expect-empty -- "
+            "there is nothing to commit yet; stage first, then re-run "
+            "with --expect --commit",
+            file=sys.stderr,
+        )
+        return 1
+    if not args.message_file:
+        print("error: --commit requires --message-file PATH", file=sys.stderr)
+        return 1
+    if not os.path.exists(args.message_file):
+        print(
+            "error: --message-file %s does not exist" % args.message_file,
+            file=sys.stderr,
+        )
+        return 1
+
+    # Re-verify GIT-COMMIT identity in-process: the `git commit` call two
+    # lines down is a subprocess of THIS process, invisible to
+    # `git_commit_guard_hook.py`'s PreToolUse check (that hook only ever
+    # sees the literal Bash command the harness matched -- this one,
+    # `claim.py commit-guard ...`, not the child process it goes on to
+    # spawn). Skipping this would silently reopen exactly the gap
+    # TASK-0042 closed, for this one call path only.
+    reason = verify_git_commit_session()
+    if reason is not None:
+        print("error: refusing to commit -- %s" % reason, file=sys.stderr)
+        return 1
+
+    proc = subprocess.run(["git", "commit", "-F", args.message_file], cwd=REPO_ROOT)
+    if proc.returncode != 0:
+        print(
+            "error: git commit exited %d -- staged index is untouched, "
+            "nothing was lost" % proc.returncode,
+            file=sys.stderr,
+        )
+        return proc.returncode
+
+    print(
+        "ok: staged index exactly matched --expect (%d path(s)), committed"
+        % len(expected)
+    )
     return 0
 
 
@@ -1393,10 +1534,12 @@ def cmd_stage(args):
         print(
             "error: GIT-COMMIT is not currently claimed -- run `claim.py "
             "claim GIT-COMMIT <claimant>` before staging (stage is the "
-            "deliberate pre-commit step: claim -> commit-guard "
-            "--expect-empty -> stage -> commit-guard --expect -> commit -> "
-            "release). Real incident, 2026-07-24: a thread staged files via "
-            "this command before ever claiming the lock -- nothing "
+            "deliberate pre-commit step: claim -> stage --expect <paths, "
+            "incl. any pending move/resolve rename> -> commit-guard "
+            "--expect <same paths> --commit --message-file PATH -> release "
+            "-- only prefix with `commit-guard --expect-empty` if nothing "
+            "has been staged yet this session, TASK-0356). Real incident, "
+            "2026-07-24: a thread staged files via "
             "previously checked for that.",
             file=sys.stderr,
         )
@@ -1716,7 +1859,8 @@ def build_parser():
 
     p_guard = sub.add_parser(
         "commit-guard",
-        help="refuse (read-only check) unless the staged index exactly matches --expect(-empty)",
+        help="refuse unless the staged index exactly matches --expect(-empty); "
+        "read-only by default, add --commit to also perform the commit atomically",
     )
     guard_group = p_guard.add_mutually_exclusive_group(required=True)
     guard_group.add_argument(
@@ -1730,10 +1874,33 @@ def build_parser():
     guard_group.add_argument(
         "--expect-empty",
         action="store_true",
-        help="assert nothing is currently staged -- run this before your first "
-        "git add/stage, so a fail-fast check happens before you ever touch the "
-        "index, instead of adding then discovering contamination and having to "
-        "undo it",
+        help="assert nothing is currently staged -- valid only for a "
+        "from-scratch commit, before your first `stage`/`git add` this "
+        "session; a prior `move`/`resolve` already left its own rename "
+        "staged and legitimately fails this (TASK-0356) -- skip straight "
+        "to `stage --expect <paths incl. that rename>` instead, whose own "
+        "self-verification gives the same contamination check one step "
+        "later. Incompatible with --commit.",
+    )
+    p_guard.add_argument(
+        "--commit",
+        action="store_true",
+        help="TASK-0356: if the --expect check passes, immediately run "
+        "`git commit -F <--message-file>` in the same process -- no "
+        "separate shell step between check and commit for a `|`/`;`/`&&` "
+        "idiom to silently disconnect (the exact mechanism that let a "
+        "failing guard's commit proceed anyway, twice). Re-verifies "
+        "GIT-COMMIT session identity itself before committing (the "
+        "PreToolUse hook cannot see this call's own `git commit` "
+        "subprocess). Requires --expect (not --expect-empty) and "
+        "--message-file.",
+    )
+    p_guard.add_argument(
+        "--message-file",
+        metavar="PATH",
+        help="path to the full commit message, read verbatim via `git commit "
+        "-F` -- required with --commit; write it with the Write tool first, "
+        "never pass a message inline",
     )
     p_guard.set_defaults(func=cmd_commit_guard)
 

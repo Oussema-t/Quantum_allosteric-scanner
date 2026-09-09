@@ -18,6 +18,19 @@ that were separately persisted somewhere readable at hook time, which
 that task's own Open Questions left unsolved on purpose rather than
 overreach in one pass.
 
+Known, deliberately-covered gap (TASK-0356): this hook can only ever see
+the ONE literal Bash command the harness matched `_COMMIT_OR_PUSH_RE`
+against -- never a child process that command goes on to spawn. `claim.py
+commit-guard --expect ... --commit` runs `git commit` as its own internal
+subprocess, so this hook never sees it and cannot gate it. That path does
+not rely on this hook: it re-verifies the identical identity rule itself,
+in-process, via `claim.verify_git_commit_session()` (same three checks as
+`main()` below, kept as a second implementation rather than a shared one
+-- this file is small and independently reviewable on its own, and
+duplicating three straightforward comparisons was judged lower-risk than
+refactoring the one file every ordinary `git commit`/`git push` call
+depends on). If you change the identity rule here, change it there too.
+
 Identity check, not just existence: TASK-0042's own Open Questions named
 a real gap in the plain "is GIT-COMMIT claimed by anyone" check -- nothing
 stopped a thread from claiming under a free-text label that doesn't match

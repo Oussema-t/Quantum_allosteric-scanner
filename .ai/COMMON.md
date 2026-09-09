@@ -377,7 +377,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0351 | Document the structure rationale the organisers explicitly asked for (*"Please document the rationale in your submission"*, 2026-08-26) -- currently absent from the draft, which names `4LDJ`/`1OPL`/`1NKP` and cites the clarification nowhere. Also carries the one message still to send: narrowed **(e)**, still-unanswered **(d)**, and two items worth reporting -- **`6C1H` contains no mavacamten** and **`8S8C` is holo** (MK-1084-bound, RCSB-verified live, [[TASK-0270]]). | Reviewer thread / next drafting pass | TODO | High | 2026-09-08 | 2026-09-08 | **(f) is answered and in our favour** -- PocketMiner permitted, [[TASK-0269]] unblocked. **(e) answered only for ENM**, not for the minimisation/Monte-Carlo question actually asked -- section 2 component (c) depends on the difference, so not blanket permission. | `.ai/tasks/TODO/TASK-0351-organiser-requested-structure-rationale.md` | — |
 | TASK-0352 | Three-way consistency check (locks / on-disk task files / this registry) + a decision-index scoping call -- deliberately not a search tool: a search tool makes a negative result authoritative, and an incomplete confident negative licenses the assumption it was built to prevent. **Done.** Part B shipped: `.ai/tools/task_reconcile.py`, 19 tests. Part A investigated, not built as specified -- see [[TASK-0354]]. **[relocated by TASK-0355, 2026-09-09]:** Real first run: **147 disagreements** -- 26 `malformed_registry_row` (this row was one of them: fixed to 9 columns in this same edit), 108 `file_no_registry_row` (roughly TASK-0095-TASK-0353, checked against this file's own "must not silently drift" rule, no exemption found), 1 concrete row bug (TASK-0316's Path cell is a literal un-expanded `*`). [[TASK-0354]] (Part A reframing) and [[TASK-0355]] (the Claimed-By/At-cell-misuse this row itself exhibited, 19 rows, real data at risk from a plain `sync` run) filed as follow-ups | Toolsmith | Done | Medium | 2026-09-09 | — | — | `.ai/tasks/DONE/TASK-0352-decision-index-and-registry-reconciliation.md` |
 | TASK-0353 | A submission version ledger -- one row per change: what changed, why (task or review id), and what must not regress. Filed after V2, a ground-up rewrite, silently dropped c-Myc, a mandated minimum-set target [[TASK-0339]] had added to V1 four days earlier; caught by the repo owner rather than by us. Seeded with the known V1->V2->V3 entries. | Reviewer thread / each drafting pass | TODO | High | 2026-09-09 | 2026-09-09 | Internal artifact, not shipped. Pairs with [[TASK-0352]] Part B rather than duplicating it: that reconciles task state, this records document decisions. Prior version files stay on disk -- deleting them destroys the comparison the ledger exists to make. | `.ai/tasks/TODO/TASK-0353-submission-version-ledger.md` | — |
-| TASK-0356 | `commit-guard --expect-empty` cannot pass after `claim.py move`, because `git mv` stages both sides of the rename while `move` is deliberately exempt from needing GIT-COMMIT. Closing a task then committing it -- the normal order -- makes step two of the documented sequence fail every time, so threads bypass the guard. Already caused one wrong commit (another thread's staged file swept in) and one independently-invented workaround. | Toolsmith | TODO | High | 2026-09-09 | 2026-09-09 | Not fixed by [[TASK-0024.002]], which addressed `--expect <paths>` rather than `--expect-empty`. Recommendation is to reorder the documented sequence rather than make the guard conditional -- and to land it in the string `claim.py` prints, which is what threads copy. | `.ai/tasks/TODO/TASK-0356-expect-empty-is-incompatible-with-move.md` | — |
+| TASK-0356 | `commit-guard --expect-empty` cannot pass after `claim.py move`, because `git mv` stages both sides of the rename while `move` is deliberately exempt from needing GIT-COMMIT -- closing a task then committing it (the normal order) made step two of the documented sequence fail every time, so threads bypassed the guard; already caused one wrong commit (another thread's staged file swept in) and one independently-invented workaround. **Done.** Revised sequence: the ordinary post-`move` case skips `--expect-empty` entirely (still correctly fails there, not weakened -- `stage --expect`'s own self-verification gives the same check one step later). New `commit-guard --expect ... --commit --message-file PATH` fuses check+commit atomically, closing the separate, worse defect found in the same filing: `pipefail` off by default in this shell meant piping `commit-guard`'s output through `tail -1` before the `&&` tested `tail`'s exit status, not the guard's, and committed anyway on a *failing* guard -- twice. Found and closed a gap the filing didn't anticipate: `--commit`'s own `git commit` subprocess is invisible to `git_commit_guard_hook.py`'s PreToolUse match (child process, not the matched Bash command) -- new `verify_git_commit_session()` re-checks GIT-COMMIT session identity in-process before committing, so `--commit` isn't a silent bypass of TASK-0042's own protection. 8 new tests (134 total). This commit dogfoods the new flow | Toolsmith | Done | High | 2026-09-09 | — | — | `.ai/tasks/DONE/TASK-0356-expect-empty-is-incompatible-with-move.md` |
 | TASK-0354 | [[TASK-0352]] Part A's own scoping decision, filed rather than built: a passive decision index risks the same "confident negative" failure Part A's own task argued against, since "decisions" have no structural tag anywhere in this repo the way `HYP-Pxx` hypotheses do. Recommends build-time assertions instead (per [[TASK-0352]]'s own addendum), starting with a `config/targets.yaml` genotype/apo-verdict assertion. **[relocated by TASK-0355, 2026-09-09]:** No timing hold. Unclaimed -- released after filing, not being worked now | Toolsmith | TODO | Low | 2026-09-09 | — | — | `.ai/tasks/TODO/TASK-0354-decision-assertions-not-a-passive-index.md` |
 | TASK-0355 | `claim.py sync`'s next real (non-`--check`) run would have silently deleted unique content hand-misused as free-text result/handoff summaries in the `Claimed By`/`Claimed At` cells of this file's own rows -- found while validating [[TASK-0352]]'s numbers against `sync --check`. **Done.** Scope grew from the filed 19 rows to 22 by pickup (2 more rows, including [[TASK-0352]]'s own, had made the identical mistake since filing; 1 of the 22 was this task's own live claim, not misuse). 15 of the 21 real-misuse rows carried genuinely unique content (not duplicated elsewhere in the row) -- relocated into `Description` under a dated marker; 6 were exact duplicates of `Assigned To`/`Last Active` already in the row, needing no edit. Ran a real `sync`: `sync --check` now reports 0 claim-column changes. Retracted the never-real "ninth-column handoff-note" convention this task's own filing had cited (it pointed at a `malformed_registry_row` `sync` can't even parse) -- added a corrected `Current Rules` bullet naming `Description` as the one real home | Toolsmith | Done | Medium | 2026-09-09 | — | — | `.ai/tasks/DONE/TASK-0355-claimed-by-at-cells-hold-unique-content-sync-would-delete.md` |
 | TASK-0348 | **The mandatory centrality ablation this project had never run.** Mohtashim/Sajjan/Kais (JACS 2026, DOI 10.1021/jacs.6c08053) publish a near-identical CTQW construction and report rho≈0.95 vs eigenvector centrality, no quantum advantage -- making that comparison mandatory here too. Added `eigenvector_centrality`/`closeness_centrality` to `baselines.py` (a real bug caught by the new unit tests: `nx.eigenvector_centrality_numpy` raises on a disconnected graph in this networkx version, fixed per-connected-component). Ran on TASK-0318's own 105-structure/74-protein cohort; Planned Validation passed 105/105 exact-match against the feature cache before trusting the new centralities. **Result does not simply confirm the paper**: median rho=0.41 vs eigenvector centrality (not ~0.95), and AUC is not uniformly null -- CTQW beats degree/GNM-alone/eigenvector centrality (cluster-permutation p<0.05) but ties betweenness/closeness (p=0.50/0.93). Reading is consistent with HYP-P13, not contrary to it: CTQW beats exactly the seed-blind arms. Folded into HYP-P13 as a dated Status update (sharpened, not new); corrected `PHASE1_SUBMISSION_V2.md`'s own draft sentence, which had claimed our measurements were "consistent with" the published rho. **Process incident, filed as a standing rule**: the first run sat silent for 2+ hours (fully-buffered stdout) -- killed and rewritten with flushed per-structure progress/ETA and incremental checkpointing, which also surfaced and fixed a real 2x inefficiency (an expensive computation called twice per structure). New rule in Current Rules below **[relocated by TASK-0355, 2026-09-09]:** Both DOIs live-verified via Crossref, added to `REFERENCES.md`; 8 new baseline tests | Implementer B | Done | Highest | 2026-09-08 | — | — | `.ai/tasks/DONE/TASK-0348-mandatory-centrality-ablation.md` |
@@ -463,22 +463,42 @@ see the claim-before-start rule under "Current Rules" below.
      requires an explicit human instruction in the current conversation,
      not an agent's own judgment call, unlike the advisory task-row
      override above.
-  2. `python3 .ai/tools/claim.py commit-guard --expect-empty` — fail fast
-     if the index isn't actually clean, before you touch it (beats
-     staging first and discovering contamination after).
+  2. **Only if nothing has been staged yet this session** (no prior
+     `move`/`resolve`/`stage`): `python3 .ai/tools/claim.py commit-guard
+     --expect-empty` — fail fast if the index isn't actually clean, before
+     you touch it. **Skip this step if you already ran `move`/`resolve`**
+     (the ordinary "close a task, then commit it" order) — `git mv` stages
+     its own rename regardless of GIT-COMMIT, which was never required for
+     `move`, so `--expect-empty` *correctly* fails there; it is not a false
+     alarm to route around by chaining past it, it is simply the wrong
+     check for that moment (TASK-0356). Step 3's own self-verification
+     gives the identical contamination check one step later either way.
   3. `python3 .ai/tools/claim.py stage --expect <path> [<path> ...]` for
-     any `.ai/`/`.claude/` files — stages exactly those paths and
-     self-verifies. Files outside `.ai/`/`.claude/` still need a plain
-     `git add`, which correctly prompts (deliberately not whitelisted —
-     see TASK-0029's Intent Contract for why an unscoped stage would have
-     been a whitelist-bypass in disguise).
+     any `.ai/`/`.claude/` files — include any rename pair from an earlier
+     `move`/`resolve` in the same `--expect` list. Stages exactly those
+     paths and self-verifies. Files outside `.ai/`/`.claude/` still need a
+     plain `git add`, which correctly prompts (deliberately not
+     whitelisted — see TASK-0029's Intent Contract for why an unscoped
+     stage would have been a whitelist-bypass in disguise).
   4. **`python3 .ai/tools/claim.py commit-guard --expect <path> [<path>
-     ...]` immediately before `git commit` — every time, even if no time
-     seems to have passed since step 2/3.** This is the check that
-     actually catches contamination; step 1's claim is not a substitute
-     for it. Refuses if the staged index contains anything beyond what
-     you declared.
-  5. `git commit`, then `python3 .ai/tools/claim.py release GIT-COMMIT`.
+     ...] --commit --message-file <path to the full commit message>`
+     — the check and the actual `git commit` in one atomic call, no
+     separate shell step between them (TASK-0356).** Write the message
+     with the Write tool first, never pass it inline. Real incident this
+     replaces: the former two-step `commit-guard --expect ... | tail -1 &&
+     git commit ...` idiom silently committed anyway on a *failing* guard
+     twice, because `pipefail` is off by default in this shell and `&&`
+     after a pipe tests `tail`'s exit status, not the guard's — this
+     command has no pipe/chain boundary for that to happen to. Re-verifies
+     GIT-COMMIT session identity itself before committing, since its own
+     `git commit` subprocess is invisible to the PreToolUse hook below
+     (which only ever inspects the one literal Bash command it was
+     matched against, never a child process that command goes on to
+     spawn). The old two-step form (`commit-guard --expect ...` with no
+     `--commit`, followed by a separate `git commit` Bash call — still
+     hook-checked normally) still works for anything that wants the check
+     without the action.
+  5. `python3 .ai/tools/claim.py release GIT-COMMIT`.
 - **`scq-enter` as soon as you know your file list, not when you're ready
   to commit (reviewer feedback, 2026-09-06).** With five-plus concurrent
   threads on one `GIT-COMMIT` lock, SCQ only reduces contention if other

@@ -1,6 +1,6 @@
 # TASK-0356 — `commit-guard --expect-empty` cannot pass after `move`, so people bypass the guard
 
-- Status: TODO
+- Status: Done
 - Owner: **Toolsmith**
 - Priority: High — this guard has already been bypassed and a wrong commit resulted
 - Filed: 2026-09-09 by Reviewer thread (id via `claim.py reserve-next`)
@@ -130,3 +130,110 @@ anything.
 - **No audit of past commits is proposed.** They are known-good by inspection and
   re-verifying would cost more than it returns. Close the enforcement gap; do not
   re-litigate the history.
+
+## Done — 2026-09-09, Toolsmith
+
+**Both defects fixed.** Design 2 (reorder the sequence, don't make the guard
+conditional) for defect 1, exactly as this task's own filing recommended.
+Design 3 (`commit-guard` performs the commit itself) for defect 2, also
+exactly as recommended — but with one addition this task's own filing did
+not anticipate, found while implementing it, below.
+
+**Defect 1 — `--expect-empty` vs `move`.** `--expect-empty` is unchanged
+and still correctly fails right after a `move`/`resolve` (confirmed with a
+new regression test — it must never be weakened into tolerating a dirty
+index, per this task's own Constraint). What changed is the *documented*
+sequence: the ordinary "close a task, then commit it" case no longer calls
+`--expect-empty` at all. It goes straight to `stage --expect <paths incl.
+the pending rename>`, whose own self-verification (unchanged code, TASK-
+0029) gives the identical contamination check one step later — not a
+weaker one, just a later one. `--expect-empty` remains correct and
+documented for the one case it actually fits: a true from-scratch commit,
+before anything has been staged this session.
+
+**Defect 2 — the guard's exit status silently discarded by a pipe.**
+New `commit-guard --expect <paths> --commit --message-file PATH`: if the
+`--expect` check passes, runs `git commit -F <file>` in the same process.
+No shell step exists between check and action for a `|`/`;`/`&&` idiom to
+attach to — the two incidents this task documents (TASK-0330, and the
+commit that filed this task itself) both happened at exactly that
+boundary. Old two-step usage (`commit-guard --expect ...` with no
+`--commit`, a separate `git commit` call after) is untouched and still
+supported.
+
+**Found while implementing design 3, not anticipated by this task's own
+filing: a hook-bypass gap.** `git_commit_guard_hook.py`'s PreToolUse check
+only ever inspects the ONE literal Bash command text the harness matched
+`_COMMIT_OR_PUSH_RE` against — it has no visibility into a child process
+that command goes on to spawn. `commit-guard --commit`'s own `git commit`
+call is exactly such a child process (a subprocess of `claim.py`'s Python
+process, itself invoked as one whitelisted Bash call). Confirmed by
+reading the hook's matching logic directly before building anything: had
+`--commit` shelled out without another check, it would have been a real,
+undetected regression — any thread able to run the already-whitelisted
+`claim.py commit-guard` could commit with **zero session-identity
+verification**, silently reopening the exact gap TASK-0042 closed, for
+this one call path. **Fix**: `verify_git_commit_session()` (new function
+in `claim.py`) re-implements the hook's identical three checks (lock
+exists / session_id recorded on both sides / session_ids match) and is
+called in-process by `--commit` before it ever runs `git commit`. Kept as
+a second, independent implementation rather than refactoring the hook to
+share one function — the hook is small, already incident-tested, and every
+ordinary `git commit`/`git push` call depends on it; duplicating three
+straightforward comparisons was judged lower-risk than touching that file.
+Both files now cross-reference this decision in their own docstrings
+(`git_commit_guard_hook.py`'s "Known, deliberately-covered gap" paragraph,
+`claim.py`'s `verify_git_commit_session()` docstring) so a future change to
+the identity rule in one is flagged to update the other.
+
+**Validation:**
+- Live scratch-repo reproduction *before* writing any fix: confirmed
+  `commit-guard --expect-empty` fails immediately after `move`, and
+  separately confirmed `false | tail -1; echo $?` prints `0` in this
+  shell (pipefail off) — both defects reproduced from first principles,
+  not taken on the filing's word alone.
+- `.venv/bin/python -m pytest .ai/tools/` → **134 passed** (126 before this
+  task, +8 new): `TestExpectEmptyIncompatibleWithMove` (2 tests — confirms
+  `--expect-empty` still correctly fails after `move`, and that the
+  *whole revised documented sequence* completes end-to-end after a real
+  `move`, per this task's own stated acceptance bar: "the acceptance bar
+  is the whole sequence, not the guard in isolation") and
+  `TestCommitGuardCommitMode` (6 tests — happy path commits and the log/
+  status confirm it; refuses and does **not** commit on a path mismatch,
+  an unclaimed lock, a session_id mismatch, `--expect-empty` combined with
+  `--commit`, and a missing/absent `--message-file`; every negative case
+  asserts `git log` is byte-identical before/after, not just a nonzero
+  exit code).
+- A separate live scratch-repo script (not part of the pytest suite,
+  scratchpad-only) ran the full revised sequence end to end including the
+  real `git commit`, confirmed the rename landed correctly attributed
+  (`git log` shows `rename ... (69%)`), and confirmed a session-id
+  mismatch produces zero commits (`git log` unchanged) before the pytest
+  version of the same checks was written.
+- **This very commit dogfoods the fix**: staged via the revised sequence
+  (no `--expect-empty`, since other files were already staged this
+  session) and landed via `commit-guard --expect ... --commit
+  --message-file PATH` itself — the first real (non-scratch-repo) use of
+  the new flow, on a real multi-file commit with a real multi-paragraph
+  message.
+
+**Written into the strings `claim.py` prints itself** (this task's own
+Constraint): the module docstring's Usage block, the running changelog's
+new TASK-0356 paragraph, `commit-guard --help`'s `--expect-empty`/
+`--commit` text, and `stage`'s own "GIT-COMMIT not claimed" error message
+(previously named the exact unpassable sequence this task opened with) —
+all now state the revised sequence, not the old unpassable one. Also
+updated: `.ai/COMMON.md`'s "Current Rules" bullet (steps 2-5 rewritten)
+and `CAPABILITIES.md`'s `repo.commit.guard`/`repo.commit.stage` rows.
+
+**Also fixed in passing**: this task's own registry row was one of
+[[TASK-0352]]'s ~26 `malformed_registry_row` cases (10 pipe-delimited
+fields, not 9) — corrected to 9 columns in the same edit that moved it to
+`Done`, folding its stray `Claimed By`/`Claimed At` content into
+`Description` first (same TASK-0355 lesson, applied here rather than
+repeated).
+
+**Open, correctly left open:** whether `move`'s internal `git mv` should
+become a real `git mv` end to end (this task's own Note references this as
+still-unresolved from [[TASK-0024.002]]) — unrelated to either defect
+fixed here, not touched.

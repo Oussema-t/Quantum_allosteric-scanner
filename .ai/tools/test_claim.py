@@ -17,6 +17,7 @@ Run under pytest: pytest test_claim.py -q
 """
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 import sys
@@ -69,10 +70,10 @@ def _make_scratch_repo(tmp_path: Path) -> Path:
     return repo
 
 
-def _claim(repo: Path, *args) -> subprocess.CompletedProcess:
+def _claim(repo: Path, *args, env: dict | None = None) -> subprocess.CompletedProcess:
     return subprocess.run(
         [sys.executable, str(repo / ".ai" / "tools" / "claim.py"), *args],
-        cwd=repo, capture_output=True, text=True,
+        cwd=repo, capture_output=True, text=True, env=env,
     )
 
 
@@ -454,6 +455,212 @@ class TestRenameAlwaysSplitsIntoTwoPaths:
         new_only = _claim(repo, "stage", "--expect", new_path)
         assert new_only.returncode == 1
         assert old_path in new_only.stderr
+
+
+class TestExpectEmptyIncompatibleWithMove:
+    """TASK-0356: `--expect-empty` cannot pass immediately after `move`,
+    which legitimately leaves its own rename staged -- and closing a task
+    then committing it is the ordinary order of work, not an edge case.
+    Reproduced live twice in one week (TASK-0330, and again inside the
+    commit that filed this task). The fix is not to weaken
+    `--expect-empty` (it must keep failing here -- that's the correct,
+    documented behaviour now) but to route the ordinary post-`move` case
+    around it entirely: straight to `stage --expect <paths incl. the
+    rename>`, whose own self-verification gives the identical
+    contamination check one step later."""
+
+    def test_expect_empty_still_correctly_fails_after_move(self, tmp_path):
+        """Confirm the guard is not weakened into tolerating a dirty
+        index -- it must still fail here, naming exactly what's staged."""
+        repo = _make_scratch_repo(tmp_path)
+        assert _claim(repo, "claim", "TASK-9001", "test").returncode == 0
+        moved = _claim(repo, "move", "TASK-9001", "IN_PROGRESS", "--as", "test")
+        assert moved.returncode == 0, moved.stderr
+
+        result = _claim(repo, "commit-guard", "--expect-empty")
+        assert result.returncode == 1
+        assert "TASK-9001-scratch.md" in result.stderr
+
+    def test_revised_sequence_skips_expect_empty_and_completes(self, tmp_path):
+        """The acceptance bar this task states explicitly: the whole
+        *documented* sequence, run after a `move`, must complete -- not
+        the guard checked in isolation. No `--expect-empty` step."""
+        repo = _make_scratch_repo(tmp_path)
+        assert _claim(repo, "claim", "TASK-9001", "test").returncode == 0
+        moved = _claim(repo, "move", "TASK-9001", "IN_PROGRESS", "--as", "test")
+        assert moved.returncode == 0, moved.stderr
+        old_path = ".ai/tasks/TODO/TASK-9001-scratch.md"
+        new_path = ".ai/tasks/IN_PROGRESS/TASK-9001-scratch.md"
+
+        assert _claim(repo, "claim", "GIT-COMMIT", "test").returncode == 0
+
+        staged = _claim(repo, "stage", "--expect", old_path, new_path)
+        assert staged.returncode == 0, staged.stderr
+
+        msg = tmp_path / "msg.txt"
+        msg.write_text("TASK-9001: sequence smoke test\n")
+        committed = _claim(
+            repo, "commit-guard", "--expect", old_path, new_path,
+            "--commit", "--message-file", str(msg),
+        )
+        assert committed.returncode == 0, committed.stderr
+
+        released = _claim(repo, "release", "GIT-COMMIT")
+        assert released.returncode == 0, released.stderr
+
+        log = subprocess.run(
+            ["git", "log", "--oneline", "-1"], cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout
+        assert "sequence smoke test" in log
+
+
+class TestCommitGuardCommitMode:
+    """TASK-0356: `commit-guard --expect ... --commit --message-file PATH`
+    fuses the path-list check and the actual `git commit` into one
+    process. Real incident this closes: the previously-documented
+    two-step boundary (`commit-guard --expect ... | tail -1 && git
+    commit ...`) silently committed anyway on a *failing* guard, because
+    `pipefail` is off by default in this shell and `&&` after a pipe
+    tests `tail`'s exit status, not the guard's -- happened twice,
+    including inside the commit that filed this task. There is no
+    separate shell step here for that idiom to attach to."""
+
+    def _prep_staged_commit_file(self, repo: Path, tmp_path: Path) -> tuple[str, Path]:
+        rel = ".ai/tasks/TODO/TASK-9001-scratch.md"
+        (repo / rel).write_text((repo / rel).read_text() + "\nedited for commit test\n")
+        assert _claim(repo, "claim", "GIT-COMMIT", "test").returncode == 0
+        assert _claim(repo, "stage", "--expect", rel).returncode == 0
+        msg = tmp_path / "msg.txt"
+        msg.write_text("TASK-9001: commit-guard --commit smoke test\n")
+        return rel, msg
+
+    def test_commit_succeeds_when_expect_matches_and_session_is_valid(self, tmp_path):
+        repo = _make_scratch_repo(tmp_path)
+        rel, msg = self._prep_staged_commit_file(repo, tmp_path)
+
+        before = subprocess.run(
+            ["git", "log", "--oneline"], cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout
+
+        result = _claim(repo, "commit-guard", "--expect", rel, "--commit", "--message-file", str(msg))
+        assert result.returncode == 0, result.stderr
+        assert "committed" in result.stdout
+
+        after = subprocess.run(
+            ["git", "log", "--oneline"], cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout
+        assert after != before
+        assert "commit-guard --commit smoke test" in after
+
+        status = subprocess.run(
+            ["git", "status", "--porcelain"], cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout
+        real_changes = [l for l in status.splitlines() if ".locks" not in l]
+        assert not real_changes, "expected a clean tree after the atomic commit"
+
+    def test_refuses_and_does_not_commit_on_path_mismatch(self, tmp_path):
+        repo = _make_scratch_repo(tmp_path)
+        rel, msg = self._prep_staged_commit_file(repo, tmp_path)
+
+        before = subprocess.run(
+            ["git", "log", "--oneline"], cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout
+
+        result = _claim(
+            repo, "commit-guard", "--expect", ".ai/COMMON.md",  # wrong path
+            "--commit", "--message-file", str(msg),
+        )
+        assert result.returncode == 1
+        assert rel in result.stderr
+
+        after = subprocess.run(
+            ["git", "log", "--oneline"], cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout
+        assert after == before, "a mismatched --expect must not commit anything"
+
+    def test_refuses_and_does_not_commit_when_git_commit_unclaimed(self, tmp_path):
+        repo = _make_scratch_repo(tmp_path)
+        rel = ".ai/tasks/TODO/TASK-9001-scratch.md"
+        (repo / rel).write_text((repo / rel).read_text() + "\nedited, but never claimed GIT-COMMIT\n")
+        # Stage directly with plain git (bypassing `stage`'s own
+        # claim-required check) to isolate --commit's own re-verification.
+        subprocess.run(["git", "add", rel], cwd=repo, check=True)
+        msg = tmp_path / "msg.txt"
+        msg.write_text("should never land\n")
+
+        before = subprocess.run(
+            ["git", "log", "--oneline"], cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout
+
+        result = _claim(repo, "commit-guard", "--expect", rel, "--commit", "--message-file", str(msg))
+        assert result.returncode == 1
+        assert "not currently claimed" in result.stderr
+
+        after = subprocess.run(
+            ["git", "log", "--oneline"], cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout
+        assert after == before
+
+    def test_refuses_and_does_not_commit_on_session_id_mismatch(self, tmp_path):
+        """The specific gap this task found and closed: --commit's own
+        `git commit` subprocess is invisible to `git_commit_guard_hook.py`
+        (that hook only inspects the one literal Bash command the harness
+        matched, never a child process it spawns) -- so --commit must
+        re-verify GIT-COMMIT session identity itself, in-process, exactly
+        as strictly as the hook does for an ordinary `git commit` call."""
+        repo = _make_scratch_repo(tmp_path)
+        rel = ".ai/tasks/TODO/TASK-9001-scratch.md"
+        (repo / rel).write_text((repo / rel).read_text() + "\nedited under a foreign claim\n")
+
+        foreign_env = dict(os.environ)
+        foreign_env["CLAUDE_CODE_SESSION_ID"] = "foreign-session-aaaa"
+        assert _claim(repo, "claim", "GIT-COMMIT", "test", env=foreign_env).returncode == 0
+        assert _claim(repo, "stage", "--expect", rel, env=foreign_env).returncode == 0
+
+        msg = tmp_path / "msg.txt"
+        msg.write_text("should never land\n")
+
+        this_session_env = dict(os.environ)
+        this_session_env["CLAUDE_CODE_SESSION_ID"] = "this-session-bbbb"
+
+        before = subprocess.run(
+            ["git", "log", "--oneline"], cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout
+
+        result = _claim(
+            repo, "commit-guard", "--expect", rel, "--commit", "--message-file", str(msg),
+            env=this_session_env,
+        )
+        assert result.returncode == 1
+        assert "not this session" in result.stderr
+
+        after = subprocess.run(
+            ["git", "log", "--oneline"], cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout
+        assert after == before, "a session_id mismatch must not commit anything"
+
+    def test_refuses_combination_with_expect_empty(self, tmp_path):
+        repo = _make_scratch_repo(tmp_path)
+        assert _claim(repo, "claim", "GIT-COMMIT", "test").returncode == 0
+        msg = tmp_path / "msg.txt"
+        msg.write_text("irrelevant\n")
+
+        result = _claim(repo, "commit-guard", "--expect-empty", "--commit", "--message-file", str(msg))
+        assert result.returncode == 1
+        assert "--expect-empty" in result.stderr
+
+    def test_refuses_missing_message_file(self, tmp_path):
+        repo = _make_scratch_repo(tmp_path)
+        rel, _ = self._prep_staged_commit_file(repo, tmp_path)
+
+        result = _claim(repo, "commit-guard", "--expect", rel, "--commit")
+        assert result.returncode == 1
+        assert "--message-file" in result.stderr
+
+        missing = tmp_path / "does-not-exist.txt"
+        result2 = _claim(repo, "commit-guard", "--expect", rel, "--commit", "--message-file", str(missing))
+        assert result2.returncode == 1
+        assert "does not exist" in result2.stderr
 
 
 if __name__ == "__main__":
