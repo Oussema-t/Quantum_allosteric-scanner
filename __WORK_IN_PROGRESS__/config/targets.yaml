@@ -39,11 +39,23 @@ schema_version: 1
 #   warnings          : free-text hazards carried from the source docs.
 #   source            : which doc(s) an entry traces to, and whether this
 #                       task (TASK-0003) independently re-checked it on RCSB.
+#   genotype_check    : TASK-0354 -- optional. A single residue-identity fact
+#                       (role/chain/residue/expect_resname), verified at
+#                       build time (allostery.clean.assert_genotype_identity,
+#                       wired into clean_from_config) against whichever role's
+#                       structure is actually loaded. Not a pocket-residue
+#                       list -- see the HARD RULE below for why that
+#                       distinction matters. `reason_ref` must point at
+#                       existing prose (this file's own comments), never
+#                       restate it -- the two would drift apart otherwise.
+#                       Absent on every target with no such concern (most).
 #
 # HARD RULE (SYSTEMS_allosteric_corrected_v2.md's central correction, carried
 # forward unchanged): no hand-transcribed pocket-residue numbers go in this
 # file. Every field above is metadata about *structures and ligands*, not a
-# residue list. Deriving the actual pocket (by sequence-aligned Ca-to-holo-
+# residue list (genotype_check is a single mutation-identity fact used only
+# to catch a wrong-structure proposal, not a pocket boundary -- TASK-0354).
+# Deriving the actual pocket (by sequence-aligned Ca-to-holo-
 # ligand-heavy-atom contact at pocket_contact_cutoff) is labels.py's job
 # (TASK-0004), not this file's.
 
@@ -78,6 +90,17 @@ targets:
                     # -> 0.514. Full side-by-side: TASK-0270's own Done
                     # section and RESULTS.md.
     holo_pdb: 6OIM
+    genotype_check:  # TASK-0354: build-time guard (allostery.clean.assert_
+                    # genotype_identity, wired into clean_from_config) --
+                    # fails loudly if a future apo_pdb edit reintroduces a
+                    # wrong-genotype structure, the exact TASK-0270 mistake
+                    # above. ONE residue identity, not a pocket-residue
+                    # list (see this file's own HARD RULE below).
+      role: apo
+      chain: A
+      residue: 12
+      expect_resname: CYS
+      reason_ref: "this entry's own apo_pdb comment above (TASK-0270)"
     chains: ["A"]
     keep_nucleic: false
     quarantine: false

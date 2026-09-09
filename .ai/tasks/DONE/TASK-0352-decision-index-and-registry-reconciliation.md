@@ -303,3 +303,23 @@ Deliberately, given what Part B's own first real run just found: `TASK-0352`
 (corrected from a malformed 10-column row to 9), `TASK-0354`, and `TASK-0355`
 all get clean, 9-column `COMMON.md` rows in this same commit — not adding to
 the backlog this task exists to report.
+
+### Correction, 2026-09-09 (Toolsmith, while working [[TASK-0354]]) — Part A's own table cites the wrong task id
+
+Part A's "Where the four recent assumption failures actually had their
+answers" table names `[[TASK-0130]]` for "the chiral walk was the only
+interference test." Wrong task: TASK-0130 is `time_averaged_ctqw_
+converged` (the closed-form convergence fix) -- it contains no mention of
+chirality or interference at all (checked directly, grepped the file).
+The chiral-walk observable is **[[TASK-0140]]** (`chiral.py`, "Chiral
+(broken-time-reversal) circulation observable"); TASK-0130 is cited
+*inside* `chiral.py`'s own docstring as reused math (its degenerate-
+eigenvalue-grouping discipline, generalized from a diagonal quantity to
+an off-diagonal one) -- almost certainly the source of the mix-up, not a
+typo with no explanation. Not corrected in the table itself (this task is
+Done; the table's prose stays as originally written per this project's
+no-silent-rewrite convention) -- flagged here so a future reader of Part
+A's table does not chase the wrong task file. [[TASK-0354]]'s own
+candidate-2 audit (propagators.py docstring pointer to [[TASK-0350]], the
+decisive result this whole citation chain was ultimately about) used the
+corrected id.

@@ -298,6 +298,70 @@ def clean(
     )
 
 
+def assert_genotype_identity(target_name: str, cfg: dict, role: str, result: CleanResult) -> None:
+    """TASK-0354: raises if a loaded structure's own residue identity
+    contradicts targets.yaml's recorded genotype/apo verdict for this
+    target -- a real, twice-repeated mistake (TASK-0270): a wrong-genotype
+    PDB id (4OBE, RCSB-confirmed wild-type at residue 12, not G12C) was
+    proposed and used as KRAS_G12C's apo structure, not caught until a
+    downstream result (the register's own KRAS_G12C floor-clear) turned
+    out not to survive on the correct genotype. The organisers' own
+    suggested replacement (8S8C) repeated the same class of mistake in
+    the other direction (genuinely G12C, but holo not apo) before 4LDJ was
+    settled on -- see that target's own `apo_pdb` comment for the full
+    incident.
+
+    Wired into `clean_from_config` itself, same precedent
+    `assert_functional_provenance_allowed` (labels.py, TASK-0231) set for
+    a build-time assertion: every real caller is protected the moment a
+    wrong-genotype structure is actually loaded (proposing a substitution
+    interactively, or a live pipeline run), not only whichever test
+    happens to check the field directly -- exactly the gap TASK-0231 found
+    for `func_ligand` and this task's own filing found again here (a
+    pinned `test_kras_g12c_anchors` regression test had gone stale and red
+    for 2+ weeks, unnoticed, checking the very genotype this guards).
+
+    `genotype_check` is optional per-target config -- absent (the common
+    case; most targets carry no such concern) is a silent no-op. It names
+    ONE residue identity to verify, not a pocket-residue list: distinct in
+    kind from this file's own HARD RULE against hand-transcribed pocket
+    residues, which is about the *derived allosteric pocket*, not a
+    single, well-defined mutation-identity fact used only to catch a
+    wrong-structure proposal.
+
+    Deliberately does not restate the reasoning in its own error message
+    (this task's own Constraint, to prevent the two from drifting apart)
+    -- points at targets.yaml's own comment for the *why*.
+    """
+    check = cfg.get("genotype_check")
+    if not check or check.get("role", "apo") != role:
+        return
+    chain = check["chain"]
+    resnum = check["residue"]
+    expect = check["expect_resname"]
+    match = [
+        i
+        for i, (c, n) in enumerate(zip(result.chain_ids, result.resnums))
+        if c == chain and int(n) == resnum
+    ]
+    if not match:
+        raise ValueError(
+            f"{target_name}: genotype_check names chain {chain} residue "
+            f"{resnum}, not found in {role} structure {result.pdb_id} "
+            f"(chain {chain} may be absent, or this residue was cleaned/"
+            "gapped out) -- cannot verify identity. See targets.yaml's own "
+            f"{role}_pdb comment for {target_name}."
+        )
+    actual = result.resnames[match[0]]
+    if actual != expect:
+        raise ValueError(
+            f"{target_name}: {role} structure {result.pdb_id} residue "
+            f"{chain}{resnum} is {actual}, expected {expect}. See "
+            f"targets.yaml's own {role}_pdb comment for {target_name} for "
+            f"why this residue is checked ({check.get('reason_ref', 'no reason_ref recorded')})."
+        )
+
+
 def clean_from_config(target_name: str, role: str = "apo") -> CleanResult:
     """Convenience wrapper: load target config and call clean().
 
@@ -330,7 +394,12 @@ def clean_from_config(target_name: str, role: str = "apo") -> CleanResult:
     # completely unaffected -- additive, not a breaking schema change.
     chains = cfg.get(f"{role}_chains", cfg.get("chains"))
     keep_nucleic = cfg.get("keep_nucleic", False)
-    return clean(pdb_id, chains=chains, keep_nucleic=keep_nucleic)
+    result = clean(pdb_id, chains=chains, keep_nucleic=keep_nucleic)
+    # TASK-0354: build-time genotype/identity guard, see assert_genotype_
+    # identity's own docstring -- no-op for the large majority of targets
+    # that carry no `genotype_check`.
+    assert_genotype_identity(target_name, cfg, role, result)
+    return result
 
 
 # ---------------------------------------------------------------------------

@@ -31,6 +31,16 @@ Three propagators (same H, different physics):
 
 The dephasing sweep in Phase 0a tests that AUC is flat across gamma values,
 confirming coherence adds nothing beyond topology for these protein graphs.
+
+Before adding a new coherent-vs-decoherent interference-test observable
+here (TASK-0354): read `.ai/tasks/DONE/TASK-0350-coherent-vs-decoherent-
+matched-twin.md` first. This register has repeated attempts at the same
+underlying question -- chiral circulation (`chiral.py`, TASK-0140),
+frequency-domain, HOM -- each of which changed the observable along with
+the coherence, confounding the two (TASK-0350's own filing). TASK-0350 is
+the first matched-operator/seed/cohort direct test and reached a
+pre-registered, decisive verdict; check whether it already answers the
+question before building a fifth variant.
 """
 from __future__ import annotations
 

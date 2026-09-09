@@ -37,7 +37,12 @@ for _p in (_SRC, _SCRIPTS):
     if str(_p) not in sys.path:
         sys.path.insert(0, str(_p))
 
-from allostery.clean import load_target_config  # noqa: E402
+from allostery.clean import (  # noqa: E402
+    assert_genotype_identity,
+    clean,
+    clean_from_config,
+    load_target_config,
+)
 from allostery.labels import (  # noqa: E402
     assert_functional_provenance_allowed,
     build_labels,
@@ -110,6 +115,141 @@ class TestFunctionalProvenanceGuard:
             assert_functional_provenance_allowed(
                 "top-degree fallback", {}, target_name="FAKE_TARGET_NAME"
             )
+
+
+# ---------------------------------------------------------------------------
+# 1b. Genotype-identity guard (TASK-0354) -- a real, twice-repeated mistake
+#     (TASK-0270): a wrong-genotype PDB id (4OBE, wild-type at residue 12,
+#     not G12C) proposed and used as KRAS_G12C's apo structure, undetected
+#     until a downstream result flipped. Wired into `clean_from_config`
+#     itself, same build-time precedent as 1. above.
+# ---------------------------------------------------------------------------
+
+class TestGenotypeIdentityGuard:
+    def test_synthetic_mismatch_raises(self):
+        """Fast, synthetic, no network -- the guard's own comparison logic,
+        isolated from any real structure fetch."""
+        from allostery.clean import CleanResult
+        import numpy as np
+
+        fake_apo = CleanResult(
+            pdb_id="FAKE", coords=np.zeros((3, 3)), resnums=np.array([11, 12, 13]),
+            resnames=["ALA", "GLY", "VAL"], chain_ids=["A", "A", "A"],
+            resolution=1.0, bfactors=np.zeros(3), b_mean=0.0, b_std=0.0,
+            gap_pairs=[], insertion_code_residues=[],
+        )
+        cfg = {"genotype_check": {"role": "apo", "chain": "A", "residue": 12, "expect_resname": "CYS", "reason_ref": "test"}}
+        with pytest.raises(ValueError, match="is GLY, expected CYS"):
+            assert_genotype_identity("FAKE_TARGET", cfg, "apo", fake_apo)
+
+    def test_synthetic_match_does_not_raise(self):
+        from allostery.clean import CleanResult
+        import numpy as np
+
+        fake_apo = CleanResult(
+            pdb_id="FAKE", coords=np.zeros((3, 3)), resnums=np.array([11, 12, 13]),
+            resnames=["ALA", "CYS", "VAL"], chain_ids=["A", "A", "A"],
+            resolution=1.0, bfactors=np.zeros(3), b_mean=0.0, b_std=0.0,
+            gap_pairs=[], insertion_code_residues=[],
+        )
+        cfg = {"genotype_check": {"role": "apo", "chain": "A", "residue": 12, "expect_resname": "CYS", "reason_ref": "test"}}
+        assert_genotype_identity("FAKE_TARGET", cfg, "apo", fake_apo)  # must not raise
+
+    def test_no_genotype_check_is_a_silent_no_op(self):
+        """Every target without a genotype_check (the common case) must be
+        completely unaffected -- confirmed against a real ASD target's
+        actual config, not a fabricated empty dict."""
+        from allostery.clean import CleanResult
+        import numpy as np
+
+        cfg = load_target_config("PTP1B", config_path=CONFIG_PATH)
+        assert "genotype_check" not in cfg
+        fake = CleanResult(
+            pdb_id="FAKE", coords=np.zeros((1, 3)), resnums=np.array([1]),
+            resnames=["ALA"], chain_ids=["A"], resolution=1.0,
+            bfactors=np.zeros(1), b_mean=0.0, b_std=0.0,
+            gap_pairs=[], insertion_code_residues=[],
+        )
+        assert_genotype_identity("PTP1B", cfg, "apo", fake)  # must not raise
+
+    def test_role_mismatch_is_a_no_op(self):
+        """genotype_check.role='apo' must not fire when role='holo' -- the
+        guard checks the structure actually being loaded for that role,
+        not every structure regardless of role."""
+        from allostery.clean import CleanResult
+        import numpy as np
+
+        fake_holo = CleanResult(
+            pdb_id="FAKE", coords=np.zeros((1, 3)), resnums=np.array([12]),
+            resnames=["GLY"], chain_ids=["A"], resolution=1.0,
+            bfactors=np.zeros(1), b_mean=0.0, b_std=0.0,
+            gap_pairs=[], insertion_code_residues=[],
+        )
+        cfg = {"genotype_check": {"role": "apo", "chain": "A", "residue": 12, "expect_resname": "CYS"}}
+        assert_genotype_identity("FAKE_TARGET", cfg, "holo", fake_holo)  # must not raise
+
+    def test_missing_residue_raises_with_a_distinct_message(self):
+        from allostery.clean import CleanResult
+        import numpy as np
+
+        fake_apo = CleanResult(
+            pdb_id="FAKE", coords=np.zeros((1, 3)), resnums=np.array([99]),
+            resnames=["ALA"], chain_ids=["A"], resolution=1.0,
+            bfactors=np.zeros(1), b_mean=0.0, b_std=0.0,
+            gap_pairs=[], insertion_code_residues=[],
+        )
+        cfg = {"genotype_check": {"role": "apo", "chain": "A", "residue": 12, "expect_resname": "CYS"}}
+        with pytest.raises(ValueError, match="not found in apo structure"):
+            assert_genotype_identity("FAKE_TARGET", cfg, "apo", fake_apo)
+
+    def test_error_points_at_the_comment_not_a_restated_reason(self):
+        """This task's own Constraint: the error must carry a pointer
+        (reason_ref), never restate the reasoning itself -- so the two can
+        never drift apart. Confirmed the actual restated-incident prose
+        (the wild-type/G12C story) is NOT duplicated into the error
+        string, only referenced."""
+        from allostery.clean import CleanResult
+        import numpy as np
+
+        fake_apo = CleanResult(
+            pdb_id="FAKE", coords=np.zeros((1, 3)), resnums=np.array([12]),
+            resnames=["GLY"], chain_ids=["A"], resolution=1.0,
+            bfactors=np.zeros(1), b_mean=0.0, b_std=0.0,
+            gap_pairs=[], insertion_code_residues=[],
+        )
+        cfg = {"genotype_check": {"role": "apo", "chain": "A", "residue": 12, "expect_resname": "CYS", "reason_ref": "see the apo_pdb comment"}}
+        with pytest.raises(ValueError) as exc_info:
+            assert_genotype_identity("FAKE_TARGET", cfg, "apo", fake_apo)
+        msg = str(exc_info.value)
+        assert "see the apo_pdb comment" in msg
+        assert "wild-type" not in msg.lower()
+        assert "organiser" not in msg.lower()
+
+    # --- Real-network: the actual seeded historical mistake (TASK-0270) ---
+
+    def test_real_current_kras_apo_passes(self):
+        """Control: the real, current KRAS_G12C config (4LDJ) must not
+        raise -- confirms the guard doesn't false-positive on the
+        legitimate, corrected target before checking it fires on the
+        wrong one below."""
+        try:
+            clean_from_config("KRAS_G12C", role="apo")  # must not raise
+        except ValueError:
+            raise
+        except Exception as exc:  # noqa: BLE001
+            pytest.skip(f"real-structure fetch unavailable in this environment: {exc!r}")
+
+    def test_seeded_wild_type_mistake_is_caught(self):
+        """The exact TASK-0270 incident: 4OBE is real, RCSB-deposited, and
+        wild-type at residue 12 (GLY) -- not G12C. Must raise, not
+        silently proceed, if ever proposed again as KRAS_G12C's apo."""
+        cfg = load_target_config("KRAS_G12C", config_path=CONFIG_PATH)
+        try:
+            wrong_apo = clean("4OBE", chains=cfg.get("chains"), keep_nucleic=cfg.get("keep_nucleic", False))
+        except Exception as exc:  # noqa: BLE001
+            pytest.skip(f"real-structure fetch unavailable in this environment: {exc!r}")
+        with pytest.raises(ValueError, match="is GLY, expected CYS"):
+            assert_genotype_identity("KRAS_G12C", cfg, "apo", wrong_apo)
 
 
 # ---------------------------------------------------------------------------

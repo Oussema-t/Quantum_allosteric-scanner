@@ -120,7 +120,14 @@ def test_asd_verified_targets_are_verified_with_resolvable_drug_ligand():
 
 def test_kras_g12c_anchors():
     cfg = load_target_config("KRAS_G12C", config_path=CONFIG_PATH)
-    assert cfg["apo_pdb"] == "4OBE"
+    # TASK-0270 (2026-08-26): apo replaced 4OBE -> 4LDJ (4OBE is WILD-TYPE
+    # KRAS, not G12C -- see targets.yaml's own apo_pdb comment). This
+    # assertion pinned the pre-replacement value for 2+ weeks after that
+    # -- found live, still red, by TASK-0354 (which exists specifically
+    # to stop this class of drift going uncaught; see clean.py::
+    # assert_genotype_identity for the build-time guard this task added
+    # so a future regression fails immediately, not silently in a pin).
+    assert cfg["apo_pdb"] == "4LDJ"
     assert cfg["holo_pdb"] == "6OIM"
     assert cfg["drug_ligand"] == "MOV"
 
