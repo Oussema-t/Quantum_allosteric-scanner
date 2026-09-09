@@ -23,13 +23,18 @@ config or test files exist in this repo yet.
 No third-party dependencies -- stdlib only. Always runs against the local
 working tree, never against Render.
 
-Interpreter resolution (TASK-0026.005): prefers `REPO_ROOT/.venv/bin/python3`
-if it exists on disk, so this works from a cold Bash call regardless of
-whether the invoking shell happens to have a venv active (it can't, across
-separate tool calls -- shell state doesn't persist). Falls back to
-`sys.executable` unchanged when no `.venv/` is present, so environments
-where the ambient interpreter already has the test deps keep working
-exactly as before -- purely additive, not a behavior change for that case.
+Interpreter resolution (TASK-0026.005, scoped per-preset by TASK-0069):
+works from a cold Bash call regardless of whether the invoking shell has a
+venv active (it can't, across separate tool calls -- shell state doesn't
+persist). Every preset except `backend` (plus `--file` mode) prefers
+`__WORK_IN_PROGRESS__/.venv/bin/python3` first -- the research tree has
+its own pinned lock (`requirements-lock.txt`, TASK-0333) and a WIP-only
+dependency going missing under the root `.venv/` was the original live
+symptom (TASK-0069). The `backend` preset prefers `REPO_ROOT/.venv/bin/
+python3` (built to `requirements.txt`'s backend pins). Both then fall
+back to the root `.venv/`, then `sys.executable` unchanged -- a checkout
+with only one venv (today's actual state) or none (CI) behaves exactly as
+before, purely additive.
 
 Usage:
     pytest_local.py <preset> [--json]
@@ -69,18 +74,49 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 WIP_SRC = str(REPO_ROOT / "__WORK_IN_PROGRESS__" / "src")
 WIP_TESTS_DIR = REPO_ROOT / "__WORK_IN_PROGRESS__" / "tests"
 
+# TASK-0026.005 / TASK-0069: two possible repo-local venvs. The research
+# tree carries its own pinned lock (`__WORK_IN_PROGRESS__/requirements-
+# lock.txt`, TASK-0333) and may be provisioned into its own venv; the root
+# `.venv/` is the one built to `requirements.txt`'s backend pins.
+REPO_VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python3"
+WIP_VENV_PYTHON = REPO_ROOT / "__WORK_IN_PROGRESS__" / ".venv" / "bin" / "python3"
+
 # TASK-0196: basename-exact, no path separators or traversal reach this --
 # `^test_...\.py$` anchored on the full string, checked before any
 # filesystem access.
 _TEST_FILE_RE = re.compile(r"^test_[A-Za-z0-9_]+\.py$")
 
 
-def _resolve_interpreter():
-    # type: () -> str
-    """`.venv/bin/python3` if present, else `sys.executable` unchanged."""
-    venv_python = REPO_ROOT / ".venv" / "bin" / "python3"
-    if venv_python.exists():
-        return str(venv_python)
+def _resolve_interpreter(prefer_wip, wip_venv_python=WIP_VENV_PYTHON, repo_venv_python=REPO_VENV_PYTHON):
+    # type: (bool, Path, Path) -> str
+    """Resolve a real venv interpreter for a cold Bash call -- no venv can
+    be active across separate tool calls, so the ambient `sys.executable`
+    is usually the bare system python with no test deps (TASK-0026.005).
+
+    `prefer_wip=True` -- every preset except `backend`, plus `--file`
+    mode: try `__WORK_IN_PROGRESS__/.venv/bin/python3` first. TASK-0069:
+    once a root `.venv/` existed, the old repo-root-wide resolver silently
+    picked it for `wip-*` presets too, so a WIP-only dependency
+    (matplotlib, installed into the WIP venv for `viz.py`'s tests) went
+    missing with `ModuleNotFoundError` even though it was right there in
+    the venv the WIP suite is supposed to use.
+
+    `prefer_wip=False` -- the `backend` preset only: the root `.venv/`
+    first, since that's the one built to `requirements.txt`'s backend
+    pins.
+
+    Both then fall back to the root `.venv/`, then `sys.executable`
+    unchanged -- a checkout with only one venv (today's actual state: no
+    `__WORK_IN_PROGRESS__/.venv/`), or none at all (CI), behaves exactly
+    as before this change. TASK-0026.005's own Constraint, preserved.
+    """
+    candidates = []
+    if prefer_wip:
+        candidates.append(wip_venv_python)
+    candidates.append(repo_venv_python)
+    for candidate in candidates:
+        if candidate.exists():
+            return str(candidate)
     return sys.executable
 
 # extra_pythonpath: the `allostery` package under __WORK_IN_PROGRESS__/src has
@@ -109,8 +145,20 @@ def _run_targets(targets, extra_pythonpath):
     # type: (list, object) -> tuple
     """Shared execution path: same interpreter resolution, PYTHONPATH
     plumbing, and pytest-missing diagnostic for both preset mode and
-    `--file` mode (TASK-0196) -- one code path, not two."""
-    interpreter = _resolve_interpreter()
+    `--file` mode (TASK-0196) -- one code path, not two.
+
+    `prefer_wip` (TASK-0069) is derived from `extra_pythonpath`: every
+    WIP-oriented preset and `--file` mode already passes `WIP_SRC` here,
+    `backend` passes `None` -- so the same signal that decides the
+    PYTHONPATH also decides which venv to prefer, with no third field
+    added to the PRESETS table. `all`/`cross-tree` run both trees through
+    one interpreter (unchanged -- this task is resolver-only, not an
+    execution-model change) and so get the WIP venv when it exists: the
+    more-likely-complete superset for a combined run; the backend/WIP
+    numpy-version divergence is a separately-flagged Open Question, not
+    this task's call."""
+    prefer_wip = extra_pythonpath is not None
+    interpreter = _resolve_interpreter(prefer_wip)
     cmd = [interpreter, "-m", "pytest", "-q"] + targets
     env = os.environ.copy()
     if extra_pythonpath:
