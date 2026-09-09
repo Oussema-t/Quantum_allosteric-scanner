@@ -1,6 +1,6 @@
 # TASK-0362 — Submission improvements: promote the delivered result, and reframe around the instrument
 
-- Status: TODO
+- Status: Done
 - Owner: **Reviewer or Implementer** (document work, not compute)
 - Priority: **High**
 - **Blocked until [[TASK-0360]] reports.** Do not start before it lands — item 3 folds its result in, and rebuilding the PDF twice wastes the page budget check.
@@ -115,3 +115,85 @@ are immune by construction. Do not overstate its reach.
 
 - [2026-09-09 22:23] `.ai/COMMON.md` -- registry row
 - [2026-09-09 22:23] `.ai/tasks/TODO/TASK-0362-submission-improvements-instrument-spine.md` -- the task file itself
+- [2026-09-09 23:07] `__WORK_IN_PROGRESS__/documentation/PHASE1_SUBMISSION_V3.md` -- promote component (b); add the protein-identity floor
+- [2026-09-09 23:07] `__WORK_IN_PROGRESS__/documentation/SUBMISSION_VERSION_LEDGER.md` -- V3 revisions block
+- [2026-09-09 23:07] `.ai/COMMON.md` -- registry row status/path
+- [2026-09-09 23:07] `.ai/tasks/DONE/TASK-0362-submission-improvements-instrument-spine.md` -- task file, moved to DONE
+
+## Done, 2026-09-09 (Reviewer)
+
+**Unblocked correctly**: [[TASK-0360]] reported Done before this was started, so
+item 3's input existed rather than being guessed at.
+
+### Item 1 — component (b) promoted, with its caveat intact
+
+Moved into Section 1 as a fifth measurement (the count in the lead sentence
+updated from "Four" to "Five"), beside the contamination audit it belongs with
+rather than in the Phase-2 table. Every figure re-checked **against
+[[TASK-0345]]'s own file, not against the draft's rendering of it**, per Planned
+Validation: `63 pairs, 59 distinct proteins`, `+0.199`, `+0.184`, `2.6e-4`,
+`[+0.102, +0.296]`, `cryptosite +0.247`, `pocketminer +0.174` — all matched
+verbatim.
+
+The "so what" is stated in-sentence as the Constraints require: those 89.8%/98.1%
+headline figures describe a task ~0.2 AUC easier than the one they are read as
+solving, and that gap is **larger than the margin separating most published
+methods from each other**. The `n = 63, not >= 100` caveat is carried explicitly
+and the >=100 remains a Phase-2 target — not dropped to make the result look
+finished.
+
+### Items 2-3 — spine, and the cascade
+
+The detector cascade had already been folded into Section 4 by another thread
+before this task started (94.8% by >=1 of four, 24.0% by all four, with
+PocketMiner's different-question mechanism stated rather than treated as noise).
+**Checked rather than assumed, and left alone** — re-writing a correct passage to
+put this task's fingerprints on it would have been churn.
+
+### Item 4 — the protein-identity floor, with its reach kept exact
+
+Added to the Validation Plan as a second floor immediately after the proximity
+floor, which is where floors live in this document. **The immunity sentence is
+load-bearing and is stated in the same bullet**: the floor bites on *pooled* AUC
+across proteins; per-structure metrics, including every number in this document,
+are immune by construction. Overstating its reach would have been precisely the
+error this register has criticised elsewhere.
+
+### Item 5 — housekeeping
+
+`SUBMISSION_VERSION_LEDGER.md` updated per [[TASK-0353]]'s format with a **V3
+revisions** block: seven rows, each with what changed, why, and what must not
+regress. The two entries most likely to be undone by a later editor are stated as
+prohibitions: never demote (b) back to a proposal, and never drop the floor's
+immunity sentence.
+
+Also removed a `§1` cross-reference from Section 2 — house style for this
+document forbids them, and it had survived earlier passes.
+
+### Page budget — paid for, not exceeded
+
+Net +243 words (+160 Problem Framing, +120 Validation Plan, -37 Technical
+Approach). Removing the now-stale Phase-2 table row (b) and its trailing sentence
+funded the promotion, as the filing predicted. **Body remains 5/6**; appendix
+moved 1/3 -> 2/3.
+
+### Planned Validation — both gates passed
+
+Build: **RESULT: PASS**. Paper size A4, body pages 5/6, appendix 2/3, body font
+10.5pt, **0 words past the printable margin**, glyph coverage clean, every `[n]`
+citation resolving with none orphaned. The single standing WARN (6 characters at
+7.0/7.3pt) is the known pdfplumber superscript-flattening residual, unchanged by
+this task.
+
+Every number moved or requoted was verified against its own source artifact
+(`TASK-0345`'s task file; `0359_cohort_extension_by_protein/cohort_extension_result.json`
+for `0.65` / `p<5e-5` / the 54-protein replication), not against the current
+draft.
+
+### Not done, disclosed
+
+No number was changed anywhere — this task edited framing, placement and emphasis
+only, per its own Constraint. [[TASK-0361]]'s aggregation audit was still running
+(claimed by Implementer A at 22:56) when this closed; if it finds a pooled number
+in the submission, item 4's wording must be revisited, exactly as this task's
+filing anticipated.

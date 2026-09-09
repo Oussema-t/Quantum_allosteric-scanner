@@ -67,6 +67,18 @@ this ledger exists to make.
 | §5: finite-T convergence check added | [[TASK-0350]] — 50/108 verdicts flip between T=15 and the converged limit | Keep; no published lineage reports this check |
 | References moved to the appendix | [[TASK-0349]] fixed the appendix split; §4.4 names references as appendix-eligible | References stay out of the 6-page body |
 
+## V3 revisions — the instrument spine ([[TASK-0362]], 2026-09-09)
+
+| change | why | must not regress |
+|---|---|---|
+| Apo-vs-stripped-holo promoted from **Phase-2 proposal to delivered result** | [[TASK-0345]] ran it on 2026-09-07/08 and the document still said "we expect to report it": 63 pairs / 59 distinct proteins, **+0.199** mean, median +0.184, Wilcoxon p=2.6e-4, sign-flip permutation p<1e-4, bootstrap 95% CI **[+0.102, +0.296]**, same sign in both source cohorts | **Never demote it back to a proposal.** And **keep the n=63 caveat** — the ≥100 stays a Phase-2 target rather than being quietly dropped to make the result look finished |
+| §1 count "Four measurements" → **"Five"** | the delta is an instrument finding, not a method result, and belongs beside the contamination audit | Keep it in §1, not in the Phase-2 table |
+| §4 impact-table baseline cell now reads **"Done at n = 63"** | the row previously advertised a gap we had already closed | Do not restore "Not reported in the literature we surveyed" as *our* status — it remains true of the literature, not of us |
+| §5: **protein-identity floor** added as a second floor | [[TASK-0359]]/[[HYP-P28]] — a constant-per-protein score with zero site information reaches **AUC 0.65**, p<5e-5, reproduced on 54 proteins added afterwards | **Keep the immunity sentence.** The floor bites on *pooled* AUC; per-structure metrics — including every number in this document — are immune by construction. Overstating its reach would be the exact error we criticise elsewhere |
+| §4: detector cascade added beside the 84% decomposition | [[TASK-0360]] — 94.8% flagged by ≥1 of four detectors, **24.0%** by all four | Keep the *mechanism*, not just the ratio: PocketMiner answers a different question (pockets that open) from the other three's static-cavity geometry. Without that, it reads as noise |
+| Phase-2 table row (b) removed; §2 sentence rewritten | (b) is delivered, so listing it as a component to build was stale — and removing it paid the page budget for the §1 promotion | Components (a) and (c) are what remain |
+| "§1" cross-reference removed from §2 | house style: no section-symbol cross-references in the shipped document | No § cross-references |
+
 ---
 
 ## Open, not yet in any version

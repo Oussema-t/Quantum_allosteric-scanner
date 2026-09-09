@@ -10,7 +10,7 @@ Cryptic allosteric sites are the route to targets orthosteric chemistry cannot r
 
 That is a measurement problem before it is a method problem, and it is where we spent Phase 1.
 
-We built the method the challenge specifies — a continuous-time quantum walk on the residue contact network, seeded at the active site, ranking distal residues by transport — and then asked whether the field's benchmarks can certify its answer. **They cannot, and the same limitation applies to every competing method, quantum or classical.** Four measurements, each with a direct consequence:
+We built the method the challenge specifies — a continuous-time quantum walk on the residue contact network, seeded at the active site, ranking distal residues by transport — and then asked whether the field's benchmarks can certify its answer. **They cannot, and the same limitation applies to every competing method, quantum or classical.** Five measurements, each with a direct consequence:
 
 **Cryptic and allosteric are orthogonal, and the benchmarks conflate them.** We assembled a unified 1233-protein benchmark across five public datasets [4–6] and measured, for every annotated site, its graph distance from the active site. Only 23% of curated allosteric sites and 7% of drug-contact pockets are genuinely distal; the cryptic-pocket datasets have **median hop = 0** — their pockets sit essentially *on* the active site. *Consequence:* a method that searches distally is being scored on pockets that are not distal, so the benchmark rewards proximity. This is why every propagation method, ours included, is beaten by distance-to-the-active-site.
 
@@ -30,6 +30,8 @@ We built the method the challenge specifies — a continuous-time quantum walk o
 A reader holding only the published Challenge Statement would otherwise see three unexplained deviations. All three trace to the 2026-08-26 clarification, and the `8S8C` check is recorded in our configuration alongside the choice it produced.
 
 **"Apo" does not mean ligand-free, and the exceptions are not random.** We assumed apo depositions were empty at the site of interest. They are not: **3 of 7** audited targets have a ligand holding the pocket open, and **40 of 40** ASBench structures we sampled carry a bound ligand at the scored site. One case is mechanistically expected — BCR-ABL1's `1OPL` carries myristate, the physiological autoinhibitory ligand of that exact pocket [3]. Two are unexplained: glucokinase `1V4S`/`MRK` (88% overlap) and PKR `7FS3` (92%). *Consequence:* the contamination correlates with the label — the most interesting targets are the ones most likely to be pre-opened — so it inflates measured performance rather than adding noise.
+
+**And ligand-removed holo is measurably easier than apo — we measured the gap nobody reports.** The field's leading recovery figures, 89.8% on ASBench [4] and 98.1% on CASBench [5], are obtained on structures where the ligand is deleted from a holo deposition, not on genuine apo structures. Across 63 apo/holo pairs spanning 59 distinct proteins, cavity detection scores **+0.199 higher on the stripped-holo half than on the true apo half** (median +0.184; Wilcoxon p = 2.6e-4; sign-flip permutation p < 1e-4; bootstrap 95% CI [+0.102, +0.296], excluding zero by a wide margin), with the same sign in both source cohorts. *Consequence:* those headline numbers describe a task roughly 0.2 AUC easier than the one they are read as solving, and the difference is not a rounding detail — it is larger than the margin separating most published methods from each other. We report it at n = 63 pairs; the ≥ 100 the instrument should certify remains a Phase-2 target.
 
 **Our own method fails this instrument, which is the honest test of it.** Walk occupation scores AUC 0.5921 across 108 structures. Conditioned on distance to the active site it falls to **0.5184, not significant** — roughly 80% of the apparent signal was inherited proximity. We published the unconditioned number and retracted it four days later.
 
@@ -85,15 +87,14 @@ One ordering in that experiment is worth reporting, because it is not nothing. C
 
 ### What we propose to build in Phase 2
 
-**A certifying instrument, with our own method as its first test subject.** The instrument-failure in §1 applies to any method; the deliverable that moves the field is the validated benchmark, built to apply equally to a competing submission.
+**A certifying instrument, with our own method as its first test subject.** The instrument failure described above applies to any method; the deliverable that moves the field is the validated benchmark, built to apply equally to a competing submission.
 
 | Component | What it does | Why it is needed |
 |---|---|---|
 | **(a) Certifying cryptic-pocket benchmark** | Blind validity rule, endogenous-ligand audit, positive control, measured detection limit, at scale | 5 of 7 standard targets fail the contrast; the field uses them regardless |
-| **(b) Apo vs stripped-holo delta** | Isolates what cryptic-pocket prediction actually depends on | Leading methods report 89.8%/98.1% on ASBench [4] / CASBench [5], but evaluate *ligand-removed holo*, not apo. We have found no report of the delta |
 | **(c) Screening criterion for the hard regime** | Decides *from apo alone* whether a target needs many-body treatment | Coupled search fires for 20% of KRAS_G12C restarts and 0 of 65 for PTP1B — two valid targets disagree, and n = 2 cannot adjudicate |
 
-Component (b) is ~27 minutes of compute over 100 apo/holo pairs and half a day of scripting against pairs we have already identified. We expect to report it before Phase 2 begins rather than propose it.
+The apo-vs-stripped-holo delta that was the third component of this instrument is no longer part of the proposal: we ran it, and it is reported above. Components (a) and (c) are what remain to build.
 
 ---
 
@@ -116,7 +117,7 @@ The field's headline figure illustrates the gap. "84% recovery" [4] is **99 of 1
 | Target | Quantitative goal | Baseline today |
 |---|---|---|
 | Certified apo/holo pairs | ≥ 40 pairs passing the blind validity rule | 7 audited, 2 pass |
-| Apo vs stripped-holo delta | Reported for ≥ 100 structures | Not reported in the literature we surveyed |
+| Apo vs stripped-holo delta | Reported for ≥ 100 structures | **Done at n = 63 pairs: +0.199, CI [+0.102, +0.296]** |
 | Combined readout | Residual AUC ≥ 0.60, LOPO, against a matched null | 0.6203 median, null passed |
 | Re-audit of published claims | The 84% headline decomposed | Done — a six-way disjunction |
 
@@ -129,6 +130,7 @@ For Cleveland Clinic the value is a go/no-go instrument applied *before* committ
 Built and in use, not proposed:
 
 - **Proximity floor.** Every score must beat the strongest trivial baseline — degree, hop distance, Euclidean distance from the seed. This is what demoted our own headline result.
+- **Protein-identity floor.** A second floor, which we found because we looked for it: replace every residue's score with its own protein's mean — destroying all information about *where* in the structure anything is — and pool across the cohort as a family-level metric ordinarily does. That constant-per-protein score reaches **AUC 0.65** (p < 5e-5), reproduced independently on 54 proteins added afterwards. Any AUC pooled across proteins must be reported against it. Per-structure metrics, including the ones in this document, are immune by construction — a score that is constant within a structure is a tie inside that structure's own curve — but a pooled figure without this floor is not interpretable, and we have found no report of the check.
 - **Spatially matched nulls.** Three generations, each fixing a measured defect in the last. The current pocket-block null [11,12] matches the real positives' own spatial concentration; moving to it changed BH-FDR [10] survivors from 45/110 to **0/110**.
 - **Positive control with a measured detection limit.** Planted, confound-orthogonal signal — so a null result can be distinguished from an underpowered test. On a genuinely distal subset our design cannot detect even proximity (p = 0.89), so we report that it cannot adjudicate rather than reporting a false negative.
 - **A convergence check on the propagation time.** Not a detail: between a typical finite `T = 15` and the converged limit, **50 of 108 structures flip the sign of their verdict** (41 of 108 in the decoherent arm). A continuous-time walk reported at a fixed finite `T` without a convergence check is reporting a coin flip on roughly 40% of its cohort, and we have found no report of this check in the published lineage.
