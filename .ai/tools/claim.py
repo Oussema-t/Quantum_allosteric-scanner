@@ -97,6 +97,20 @@ deletion to stage, not a typo. `_is_tracked()` (a `git ls-files
 --error-unmatch` check) distinguishes the two; a genuinely never-tracked
 missing path still refuses with the original error.
 
+Extended for TASK-0024.001: `claim`/`release`/`status` accept an arbitrary
+whole-file resource id, not only `TASK-XXXX` rows -- any argument that is
+not a clean task-id shape (`24`/`TASK-0024`/`26.1`) is namespaced as a
+`RESOURCE-<NAME>.lock`, for claiming a shared coordination file
+(`.ai/COMMON.md`, `RESULTS.md`) before a working-tree-level operation a
+normal row edit wouldn't cover -- `git checkout -- <path>`, a multi-step
+edit spanning several tool calls, a `sync`-recovery reset. `is_task_id()`
+stays false for these, so `move`/`resolve` refuse them and `sync` ignores
+them. Core mechanism landed early via TASK-0195; closed here with the
+id-vs-resource split tightened from a digit-*anywhere* `re.search` (which
+silently mapped a real filename like `PHASE1_SUBMISSION_V3.md` to
+`TASK-0001`) to an anchored whole-string shape match. Every documented
+task-id form still resolves unchanged.
+
 Extended for TASK-0024.002: `_staged_paths()` (shared by `commit-guard`
 and `stage`'s self-verification) now reads `git diff --cached --name-only
 --no-renames`. Without `--no-renames`, whether a renamed path collapsed to
@@ -193,7 +207,17 @@ LOCKS_DIR = os.path.join(TASKS_DIR, ".locks")
 COMMON_MD = os.path.join(REPO_ROOT, ".ai", "COMMON.md")
 TASK_STATE_DIRS = ["TODO", "IN_PROGRESS", "DONE"]
 
-TASK_ID_RE = re.compile(r"(\d+)(?:\.(\d+))?")
+# TASK-0024.001: anchored task-id SHAPE, not a loose digit search. The
+# original `re.search(r"(\d+)(?:\.(\d+))?")` matched a digit ANYWHERE in
+# the argument, so a real filename with a digit in it (`PHASE1_SUBMISSION_
+# V3.md`, a live file in this repo) silently resolved to `TASK-0001` --
+# a genuine footgun in a coordination-safety tool. Now: the whole
+# stripped argument must be a clean task-id shape (optional `TASK-`
+# prefix, digits, optional single dotted-numeric subtask suffix, nothing
+# else) to take the task-id path; everything else falls through to the
+# resource-id path. Every documented task-id form still resolves
+# unchanged (`24`, `TASK-0024`, `TASK-24`, `26.1`, `TASK-0026.001`).
+TASK_ID_RE = re.compile(r"^(?:TASK-)?(\d+)(?:\.(\d+))?$", re.IGNORECASE)
 TASK_ID_ONLY_RE = re.compile(r"^TASK-\d{4}(?:\.\d+)?$")
 TABLE_ROW_RE = re.compile(r"^\|\s*TASK-\d{4}(?:\.\d+)?\s*\|")
 
@@ -221,29 +245,33 @@ _RESOURCE_SANITIZE_RE = re.compile(r"[^A-Za-z0-9_.\-]")
 def normalize_task_id(raw):
     # type: (str) -> str
     """Accepts TASK-0024, 24, TASK-0026.001, 26.1, GIT-COMMIT, RESULTS.md,
-    COMMON.md, or any other non-numeric string, etc.
+    COMMON.md, path/with/slashes.md, or any other non-task string.
 
     Dotted suffixes are the .ai/tasks/README.md subtask convention
     (TASK-XXXX.NNN) for independently claimable slices of a parent task.
     GIT-COMMIT (TASK-0028) is a fixed non-numeric resource id, checked
-    before the numeric parsing below. Any other input with no digit in it
-    (TASK-0024.001) is treated as a literal whole-file/arbitrary resource
-    id instead of an error -- sanitized and namespaced under
-    `RESOURCE-` so it can never collide with a real TASK-XXXX id. A
-    string that DOES contain a digit (e.g. "26" or embedded in a longer
-    non-task string) still resolves as a TASK id via the numeric path
-    below, unchanged from before this task -- only genuinely digit-free
-    input takes the new resource-id path.
+    first.
+
+    TASK-0024.001: the argument takes the task-id path only if the WHOLE
+    stripped string is a clean task-id shape (`TASK_ID_RE` -- optional
+    `TASK-` prefix, digits, optional `.NNN` subtask suffix). Anything else
+    -- including a filename that merely contains a digit
+    (`PHASE1_SUBMISSION_V3.md`) -- is treated as a literal whole-file/
+    arbitrary resource id: sanitized and namespaced under `RESOURCE-` so
+    it can never collide with a real TASK-XXXX id (`is_task_id` stays
+    false for it, exactly like GIT-COMMIT). The earlier version searched
+    for a digit anywhere in the string, which silently mapped
+    `PHASE1_SUBMISSION_V3.md` to `TASK-0001`.
     """
-    upper = raw.strip().upper()
-    if upper in SPECIAL_RESOURCE_IDS:
-        return upper
-    match = TASK_ID_RE.search(raw)
+    stripped = raw.strip()
+    if stripped.upper() in SPECIAL_RESOURCE_IDS:
+        return stripped.upper()
+    match = TASK_ID_RE.match(stripped)
     if match:
         main = "TASK-%04d" % int(match.group(1))
         sub = match.group(2)
         return main if sub is None else "%s.%03d" % (main, int(sub))
-    sanitized = _RESOURCE_SANITIZE_RE.sub("_", raw.strip())
+    sanitized = _RESOURCE_SANITIZE_RE.sub("_", stripped)
     if not sanitized:
         raise SystemExit("error: could not find a task number or a usable resource id in %r" % raw)
     return RESOURCE_ID_PREFIX + sanitized.upper()

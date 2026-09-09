@@ -110,7 +110,7 @@ see the claim-before-start rule under "Current Rules" below.
 | TASK-0022 | Frontend/UI tiered test coverage — presence / isolated functionality / intent chains / E2E process | Implementer | TODO | P0 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0022-frontend-ui-tiered-test-coverage.md` |
 | TASK-0023 | YAGNI / scope-creep review of Product feature backlog vs. challenge rubric | General Critic | In Progress | P1 | 2026-07-04 | — | — | `.ai/tasks/IN_PROGRESS/TASK-0023-product-yagni-scope-review.md` |
 | TASK-0024 | Whitelisted claim/free tool for scaffold coordination files — hardens TASK-0017 after two real collisions this session | Toolsmith | Done | P0 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0024-claim-lock-tool.md` |
-| TASK-0024.001 | Extend `claim.py` to lock whole-file resources (e.g. `COMMON.md` itself), not just `TASK-XXXX` rows — filed after a risky git-checkout/restore maneuver on this file this session | Toolsmith | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0024.001-whole-file-resource-locks.md` |
+| TASK-0024.001 | Extend `claim.py` to lock whole-file resources (e.g. `COMMON.md` itself), not just `TASK-XXXX` rows — filed after a risky git-checkout/restore maneuver on this file this session. **Done.** Core `RESOURCE-*` mechanism had already landed via TASK-0195; this pass finished the checklist (README section, `sync`-ignores-it test, Planned Validation) and fixed a real footgun in the landed code: the id-vs-resource split was a digit-*anywhere* search that silently mapped `PHASE1_SUBMISSION_V3.md` → `TASK-0001` — now an anchored whole-string task-id shape, every documented form unchanged. 4 new tests (160 total). Third `COMMON.md` incident (a TASK-0069 `sync`-recovery `git checkout` this session) folded in | Toolsmith | Done | P1 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0024.001-whole-file-resource-locks.md` |
 | TASK-0024.002 | Fix `commit-guard`/`stage`'s shared `_staged_paths()`: git's content-similarity rename detection makes a moved+edited file's `--expect` shape unpredictable (needs old+new path sometimes, only new path other times) — add `--no-renames` for deterministic always-split behavior | Toolsmith | Done | P1 | 2026-07-09 | — | — | `.ai/tasks/DONE/TASK-0024.002-rename-detection-false-mismatch.md` |
 | TASK-0025 | Single-command preference + reusable-script convention for all threads (widened from `.ai/`-only), delivered as a `.github/instructions/` policy doc + Claude Skill | Skills Crafter | Done | P2 | 2026-07-04 | — | — | `.ai/tasks/DONE/TASK-0025-command-hygiene-skill.md` |
 | TASK-0026 | Recover `agents-tools/capability-runner.sh` (parent/coordinator — see subtasks below) | Toolsmith | TODO | P1 | 2026-07-04 | — | — | `.ai/tasks/TODO/TASK-0026-capability-runner-recovery.md` |
@@ -561,10 +561,16 @@ see the claim-before-start rule under "Current Rules" below.
   1. **Claim `RESULTS.md` (and `COMMON.md`, same reasoning) before editing**,
      the same discipline `GIT-COMMIT` already gets: `python3
      .ai/tools/claim.py claim __WORK_IN_PROGRESS__/RESULTS.md "<your label>"`
-     — [[TASK-0024.001]]'s general resource-id support, closed by this task
-     (any claim argument with no digit in it, e.g. a bare filename or a
-     `path/with/slashes.md`, is treated as a literal resource id instead of
-     erroring; one with a digit still resolves as a `TASK-XXXX` id, unchanged).
+     — [[TASK-0024.001]]'s general resource-id support (any claim argument
+     that is not a clean task-id shape — `24`/`TASK-0024`/`26.1` — e.g. a
+     bare filename or a `path/with/slashes.md`, even one with a digit like
+     `PHASE1_SUBMISSION_V3.md`, is namespaced as a `RESOURCE-*` lock
+     instead of erroring or being misread as a task id). **This especially
+     covers any working-tree-level operation a normal row edit wouldn't —
+     `git checkout -- .ai/COMMON.md`, a multi-step edit spanning several
+     tool calls, a manual restore, a `sync`-recovery reset — claim
+     `COMMON.md` as a resource first so a concurrent thread sees "hands
+     off" (three independent incidents on this file so far).**
      Then, immediately after claiming and before making any edit, run
      `python3 .ai/tools/claim.py check-staleness <same path>` to confirm
      nothing changed since your claim's content snapshot — the same

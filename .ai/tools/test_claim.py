@@ -269,6 +269,54 @@ class TestResourceIdSupport:
         status = _claim(repo, "status", "TASK-9001")
         assert "TASK-9001: claimed by 'test'" in status.stdout
 
+    def test_filename_with_a_digit_is_a_resource_not_a_misread_task_id(self, tmp_path):
+        """TASK-0024.001: the earlier `re.search` for a digit anywhere in
+        the argument silently mapped a real filename like
+        `PHASE1_SUBMISSION_V3.md` to `TASK-0001`. It must be a resource id
+        -- the whole string is not a clean task-id shape."""
+        repo = _make_scratch_repo(tmp_path)
+        result = _claim(repo, "claim", "PHASE1_SUBMISSION_V3.md", "test")
+        assert result.returncode == 0
+        assert "RESOURCE-PHASE1_SUBMISSION_V3.MD" in result.stdout
+        assert "TASK-0001" not in result.stdout
+
+        status = _claim(repo, "status", "PHASE1_SUBMISSION_V3.md")
+        assert "RESOURCE-PHASE1_SUBMISSION_V3.MD" in status.stdout
+        # and TASK-0001 itself is untouched
+        assert _claim(repo, "status", "TASK-0001").stdout.strip().endswith("unclaimed")
+
+    def test_bare_and_prefixed_forms_resolve_to_the_same_task_id(self, tmp_path):
+        """The anchored shape must not narrow any documented form: `9001`,
+        `TASK-9001`, and `task-9001` all still name the same lock."""
+        repo = _make_scratch_repo(tmp_path)
+        assert _claim(repo, "claim", "9001", "t").returncode == 0
+        for form in ("TASK-9001", "9001", "task-9001"):
+            assert "TASK-9001: claimed by 't'" in _claim(repo, "status", form).stdout
+        # a second claim via a different surface form is still refused --
+        # proves they collapse to one id, not three
+        assert _claim(repo, "claim", "TASK-9001", "u").returncode != 0
+
+    def test_dotted_subtask_shape_still_resolves(self, tmp_path):
+        repo = _make_scratch_repo(tmp_path)
+        assert _claim(repo, "claim", "9001.2", "t").returncode == 0
+        assert "TASK-9001.002: claimed by 't'" in _claim(repo, "status", "TASK-9001.002").stdout
+
+    def test_sync_ignores_a_resource_id_lock(self, tmp_path):
+        """Planned Validation: `sync --check` must stay clean when the only
+        lock present is a resource-id lock with no registry row -- it must
+        not warn 'no task file on disk' for it (that warning is scoped to
+        real TASK-XXXX ids)."""
+        repo = _make_scratch_repo(tmp_path)
+        before = _claim(repo, "sync", "--check")
+        assert _claim(repo, "claim", "RESULTS.md", "test").returncode == 0
+        after = _claim(repo, "sync", "--check")
+        assert after.returncode == before.returncode, (
+            "adding a resource-id lock changed sync --check's verdict"
+        )
+        assert "RESOURCE-RESULTS.MD" not in after.stdout
+        assert "RESOURCE-RESULTS.MD" not in after.stderr
+        assert "RESULTS.md" not in after.stderr
+
 
 class TestCheckStaleness:
     """TASK-0195: content-hash staleness detection. Deliberately not
