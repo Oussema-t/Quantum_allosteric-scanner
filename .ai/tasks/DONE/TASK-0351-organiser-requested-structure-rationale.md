@@ -1,6 +1,6 @@
 # TASK-0351 — The organisers asked us to document our structure rationale. The draft does not.
 
-- Status: TODO
+- Status: Done
 - Owner: **Reviewer thread / whoever owns the next drafting pass**
 - Priority: **High — a direct, explicit organiser instruction we are currently not meeting**
 - Filed: 2026-09-08 by Reviewer thread (id via `claim.py reserve-next`)
@@ -128,3 +128,48 @@ in error. The genuinely new items for the organisers are **`6C1H`** and
 **`8S8C`-is-holo**.
 
 The channel is live and has answered within days on both previous occasions.
+
+
+## Done — 2026-09-09, Reviewer thread
+
+**Two deliverables, both landed.**
+
+**1. The structure passage is in `PHASE1_SUBMISSION_V3.md`** (§1, beside the
+targets, where a reader asks the question). It states each structure, whether it
+deviates from Table 1, and why — and cites the 2026-08-26 clarification as the
+authority for the accepted substitutions, which is what our own file warned would
+otherwise leave three unexplained deviations visible to anyone holding only the
+published Challenge Statement.
+
+The KRAS row is written as the strength it is rather than as a deviation to
+excuse: we reported `4OBE` is wild-type → they suggested `8S8C` → **we checked it
+and it is holo (MK-1084-bound)** → we found and verified `4LDJ`. A defect
+reported, a fix proposed, the fix verified rather than assumed, a replacement
+found.
+
+The BCR-ABL1 row answers the question they actually asked — *why we kept `1OPL`
+when substitution was offered*: its myristate occupancy **is** the finding, and
+substituting it would have removed the evidence.
+
+Build after the addition: A4, **body 5/6**, appendix 1/3, 10.5pt, no overflow,
+PASS.
+
+**2. The organiser message is drafted, not sent** —
+`documentation/2026-09-09-organiser-message-DRAFT.md`, for the repo owner to
+review and send. Three items: the narrowed Constraint-3 question phrased so it
+cannot be answered about ENM again; still-open (d); and `8S8C`-is-holo plus
+`6C1H`-has-no-mavacamten offered as service to other teams rather than as
+complaint.
+
+It carries sender's notes that are **not** part of the message, the important one
+being: **do not re-report that `4OBE` is wild-type.** That was our finding,
+delivered 2026-08-26, and it is what prompted the `8S8C` suggestion — raising it
+again would claim credit twice for one finding.
+
+**Sending is deliberately left to the repo owner.** An outward-facing message to
+the sponsor is not an agent's call to make unilaterally, and the draft says so.
+
+**Open dependency, flagged not resolved**: if minimisation-based conformational
+search turns out to be out of scope, §2 component (c) needs rewording before we
+ship. It is a wording change, not a re-run, but it cannot be settled until they
+reply.

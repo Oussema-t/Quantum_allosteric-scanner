@@ -18,6 +18,17 @@ We built the method the challenge specifies — a continuous-time quantum walk o
 
 **c-Myc (`1NKP`)**, the challenge's separately named fourth target, has no drug-bound structure in the PDB — it cannot carry the apo/holo contrast by construction, so the validity rule does not apply to it at all. We ran a four-operator consensus instead (`results/MYC_MAX/`; the operators agree on residue 943). There is no ground truth to score that consensus against, so we report it together with its lack of validation rather than as a performance number.
 
+**Structures used, and why they deviate from Table 1.** We reported to the organisers that `4OBE`, the mandated KRAS G12C apo structure, is wild-type at residue 12 (GLY, not CYS). Their reply of 2026-08-26 answered three points, and we followed it in each case:
+
+| target | structure used | deviation, and the reason |
+|---|---|---|
+| KRAS G12C | `4LDJ` (apo) | The organisers suggested `8S8C`. We checked it against the PDB and it is **holo** — MK-1084-bound — so it cannot serve as the apo half of an apo/holo contrast. We searched for a genuine apo G12C structure and verified `4LDJ` (residue 12 is CYS, no ligand at the site). |
+| BCR-ABL1 | `1OPL` (apo), retained | Substitution was expressly permitted. We kept `1OPL` deliberately: its myristate occupancy is the finding, not a defect — it is how we established that "apo" depositions are not reliably ligand-free. Substituting it would have removed the evidence. |
+| Cardiac myosin | `8QYP` → `8QYR` | Our substitution, **accepted as primary** by the organisers. |
+| c-Myc | `1NKP` | Mandated; no drug-bound structure exists, so the validity rule does not apply. |
+
+A reader holding only the published Challenge Statement would otherwise see three unexplained deviations. All three trace to the 2026-08-26 clarification, and the `8S8C` check is recorded in our configuration alongside the choice it produced.
+
 **"Apo" does not mean ligand-free, and the exceptions are not random.** We assumed apo depositions were empty at the site of interest. They are not: **3 of 7** audited targets have a ligand holding the pocket open, and **40 of 40** ASBench structures we sampled carry a bound ligand at the scored site. One case is mechanistically expected — BCR-ABL1's `1OPL` carries myristate, the physiological autoinhibitory ligand of that exact pocket [3]. Two are unexplained: glucokinase `1V4S`/`MRK` (88% overlap) and PKR `7FS3` (92%). *Consequence:* the contamination correlates with the label — the most interesting targets are the ones most likely to be pre-opened — so it inflates measured performance rather than adding noise.
 
 **Our own method fails this instrument, which is the honest test of it.** Walk occupation scores AUC 0.5921 across 108 structures. Conditioned on distance to the active site it falls to **0.5184, not significant** — roughly 80% of the apparent signal was inherited proximity. We published the unconditioned number and retracted it four days later.
