@@ -1,6 +1,6 @@
 # TASK-0355 — `claim.py sync` would silently delete unique content sitting in 19 registry rows
 
-- Status: TODO
+- Status: In Progress
 - Owner: **Toolsmith** (or whoever next needs to run a real, non-`--check` `sync`)
 - Priority: Medium — no active corruption yet, but the next plain `sync` run destroys it
 - Filed: 2026-09-09 by Toolsmith thread, found while cross-checking [[TASK-0352]]'s
