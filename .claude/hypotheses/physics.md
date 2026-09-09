@@ -358,6 +358,25 @@ across the whole axis rather than being numerically degenerate somewhere
 along it. **This tenth candidate route is closed, not deferred.** Full
 detail: `.ai/tasks/DONE/TASK-0358-finite-delay-observable-in-the-phase-alive-band.md`.
 
+**Status update, 2026-09-09 ([[TASK-0359]]): the closure now holds on 129
+protein clusters, not 76, and the earlier isolated-spike artifact
+specifically washes out with more independent proteins, as predicted.**
+[[TASK-0358]]'s own f=1 anchor (`tau=min_adequate_t_max(tol=1e-2)`,
+signed + unsigned) re-run on a cohort extended by 54 genuinely new
+proteins (CASBench, dedup'd by hand against the existing 76 — see
+[[TASK-0359]]'s own pre-registration): the original-108 subset
+reproduces TASK-0358's committed f=1 numbers to <5e-5 (Planned
+Validation), then on the full 162-structure/129-cluster union: SIGNED
+raw=0.5004 resid=0.4969 cluster-p=0.822 (flat, as before). **UNSIGNED
+raw=0.5483 resid=0.5111 cluster-p=0.276 — TASK-0358's own "isolated
+spike, zero neighbour support" diagnosis for the earlier unsigned
+p=0.036 is now independently confirmed the way that diagnosis predicts:
+adding 54 more independent proteins should dilute an artifact but not a
+real signal, and the significance is gone (0.036 → 0.276), not
+strengthened.** The tenth route stays closed on more power, not just the
+same power. Full detail:
+`.ai/tasks/DONE/TASK-0359-cohort-extension-by-protein-not-by-structure.md`.
+
 ---
 
 ## HYP-P7 · Coherence adds no signal for allosteric pocket prediction on these proteins
@@ -434,6 +453,17 @@ that is removed. **Finite-T instability, found in the same run, is
 reported under [[HYP-P6]]'s own status update, not here** — a different
 claim (t-choice sensitivity vs. coherence content), kept separate per
 this register's own fold-in discipline.
+
+**Status update, 2026-09-09 ([[TASK-0359]]): the null holds, not
+strengthens, on 129 protein clusters.** Re-ran the identical decisive
+test (decoherent vs. coherent, converged, matched operator/seed/scoring)
+on the same cohort extended by 54 new proteins. Original-108 subset
+reproduces the committed 0.5921/0.5184 numbers to <4e-5 (Planned
+Validation). Union (n=162, 129 clusters): decoherent raw=0.5771
+resid=0.5115; coherent raw=0.5718 resid=0.5041; delta median=−0.00507,
+cluster-p=0.425 — non-significant, same conclusion as the 76-cluster
+run, now on ~70% more independent proteins. Full detail:
+`.ai/tasks/DONE/TASK-0359-cohort-extension-by-protein-not-by-structure.md`.
 
 ---
 
@@ -2104,3 +2134,82 @@ reduction as [[HYP-P26]]/[[TASK-0345]]) — the 63-pair figure is a lower
 bound on the population this rule was tested against, not the full
 one. Also does not re-run any register cell against the corrected 49.2%
 framing — that is a submission-drafting decision, not made here.
+
+---
+
+## HYP-P28 · A pure protein-identity channel — zero within-structure site information — reaches AUC~0.65 pooled across this register's own cohort
+
+**Claim.** [[TASK-0359]]'s own Why section named a specific failure mode
+the external `allosteric` branch's own cohort exhibits (CAS0002: 28 of 91
+distal structures are one protein; without it their CTQW AUC 0.617 →
+0.501) and that leave-one-family-out does not protect against: a pooled,
+non-per-structure family-level statistic can be carried by one protein's
+absolute score *level*, not by genuine within-protein site *location*.
+This register's own headline numbers (`raw_auc` computed separately per
+structure, then averaged/cluster-tested) are immune to this by
+construction — a per-structure-constant score is a tie within that one
+structure's own ROC curve, contributing exactly 0.5, regardless of the
+constant's value. The question this hypothesis names: **is that channel
+real** — would a classifier that sees only *which protein* a residue
+came from, nothing about *where in the structure*, predict the true-site
+label above chance once residues from many structures are pooled
+together the way a naive family-level statistic would pool them?
+
+**Status, 2026-09-09 ([[TASK-0359]]): TESTED — CONFIRMED, real and
+large, on this register's own cohort, both before and after the
+extension.** Pre-registered statistic (`protein_baseline_auc`, defined
+in [[TASK-0359]]'s own pre-registration before any scoring ran): replace
+every eligible residue's decoherent-CTQW score with its own protein
+cluster's mean eligible score (pure identity signal, zero position
+information), pool `(baseline, y)` across the cohort, `roc_auc_score`
+against the true label; significance via cluster-level permutation
+(shuffle which cluster's baseline pairs with which cluster's own fixed
+label array, 20000 draws).
+
+| cohort | n clusters | n residues | `protein_baseline_auc` | null (perm) | p |
+|---|---|---|---|---|---|
+| original 108 / 76 clusters | 76 | 96,977 | **0.6500** | 0.500±0.024 | <5e-5 |
+| extension (54 new proteins) | 54 | 33,983 | **0.5975** | 0.500±0.031 | 0.0006 |
+| union (129 clusters) | 129 | 130,960 | **0.6549** | 0.500±0.027 | <5e-5 |
+
+**Read plainly: a "classifier" with zero within-structure information —
+literally just "which protein is this" — separates true from false
+sites at AUC 0.65 pooled, a number in the same range as this register's
+own genuine per-structure CTQW performance (raw_auc ≈ 0.58–0.59).** The
+CAS0002 mechanism is not a property of one external cohort; it is
+present, independently, in both halves of this register's own cohort —
+the original 108 (p<5e-5) and, freshly, the 54 brand-new proteins added
+by [[TASK-0359]] (p=0.0006) — and does not shrink with 70% more
+independent proteins (0.6500 → 0.6549 on the union, if anything larger).
+
+**What this does and does not indict.** This is a statement about
+*pooling*, not about CTQW's own site-location ability, which this
+register's existing per-structure-averaged numbers already report
+honestly (immune by construction, per the Claim above). It is a warning
+about any **pooled, non-cluster-robust** family-level number — this
+register's own or another's — computed by lumping residues from many
+proteins into one ROC curve rather than averaging per-structure AUCs: a
+protein whose CTQW score happens to run high or low *overall* can move
+such a number by itself, with no site-specific content at all, at a
+magnitude (AUC 0.65) large enough to explain an effect the size of the
+external branch's own +0.107–0.114 claims without any genuine
+localization ability behind it.
+
+**Plausible mechanism, not verified here (Inference, disclosed as
+such):** ASBench/CASBench define the allosteric label as a small, ~fixed
+number of specific residues regardless of protein size, so larger
+proteins mechanically have a *smaller* eligible positive fraction; if
+larger proteins also carry systematically lower mean CTQW occupancy
+(probability mass spread over more residues), protein *size alone*
+would reproduce this exact signal with zero biological content. Not
+tested directly in this task — the natural next step for whoever
+extends this finding, not chased further here (budget-capped task, see
+[[TASK-0359]]'s own Budget section).
+
+**What this does not show:** which specific published pooled numbers (in
+this register or the external branch's own) are actually computed this
+way, rather than per-structure-averaged — that audit is a separate,
+document-by-document check, not made here. Does not extend to the
+cohort-matched comparison against the external branch's own 276/399-
+family numbers, still explicitly out of scope per [[TASK-0357]]/
+[[TASK-0358]].

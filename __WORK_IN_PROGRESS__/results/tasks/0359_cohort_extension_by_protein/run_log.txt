@@ -1,0 +1,107 @@
+[20:53:23] building original 108-structure ASBench cohort (reused via import, unchanged)...
+[20:54:54] 108 original structures (91s)
+[20:54:54] building CASBench extension cohort...
+[20:54:54] 82 CASBench proteins with both site types; 26 excluded as already-represented; 56 candidates
+[20:54:54]   [1/56] Acetylcholinesterase                          OK pdb=1B41 N=592 tried=1/19             elapsed=0s eta=8s
+[20:54:54]   [2/56] Adenosylmethionine Decarboxylase              OK pdb=1I72 N=312 tried=1/25             elapsed=0s eta=5s
+[20:54:54]   [3/56] Antithrombin                                  OK pdb=1ANT N=794 tried=1/27             elapsed=0s eta=8s
+[20:54:54]   [4/56] Aurora-A kinase                               OK pdb=1MQ4 N=261 tried=1/138            elapsed=0s eta=6s
+[20:54:55]   [5/56] B-Raf Kinase                                  OK pdb=1UWH N=528 tried=1/39             elapsed=1s eta=6s
+[20:54:55]   [6/56] Biotin Repressor                              OK pdb=1BIA N=292 tried=1/5              elapsed=1s eta=5s
+[20:54:57]   [7/56] Calcium Atpase                                OK pdb=1IWO N=1988 tried=1/70            elapsed=3s eta=22s
+[20:54:57]   [8/56] Carbamoyl Phosphate Synthetase                UNRESOLVED (0/10 usable)                 elapsed=3s eta=20s
+[20:54:58]   [9/56] Carbonic anhydrase 2                          OK pdb=2A8C N=1315 tried=1/17            elapsed=4s eta=22s
+[20:54:58]   [10/56] Caspase-1                                     OK pdb=1BMQ N=255 tried=1/29             elapsed=4s eta=19s
+[20:54:58]   [11/56] Citrate synthase                              OK pdb=1NXE N=852 tried=1/9              elapsed=4s eta=18s
+[20:54:59]   [12/56] Cytochrome P450                               OK pdb=1OG2 N=922 tried=1/11             elapsed=5s eta=18s
+[20:54:59]   [13/56] Cytochrome P450 2B4                           OK pdb=1PO5 N=465 tried=1/20             elapsed=5s eta=16s
+[20:54:59]   [14/56] Cytochrome P450eryF                           OK pdb=1EGY N=403 tried=1/9              elapsed=5s eta=15s
+[20:55:01]   [15/56] Cytochrome bc1                                OK pdb=1BE3 N=2049 tried=1/24            elapsed=7s eta=20s
+[20:55:02]   [16/56] D-alanine:D-alanine Ligase                    OK pdb=2I80 N=692 tried=1/4              elapsed=8s eta=19s
+[20:55:02]   [17/56] Delta-Aminolevulinic Acid Dehydratase         OK pdb=1B4E N=323 tried=1/21             elapsed=8s eta=17s
+[20:55:02]   [18/56] Dihydrofolate Reductase                       OK pdb=1BOZ N=186 tried=1/163            elapsed=8s eta=16s
+[20:55:02]   [19/56] Epoxyde hydrolase                             OK pdb=1S8O N=545 tried=1/84             elapsed=8s eta=15s
+[20:55:02]   [20/56] FKBP-rapamycin-associated protein             OK pdb=1FAP N=202 tried=1/6              elapsed=8s eta=14s
+[20:55:02]   [21/56] Farnesyl Pyrophosphate Synthase               OK pdb=1YQ7 N=334 tried=1/81             elapsed=8s eta=13s
+[20:55:02]   [22/56] Fibroblast Growth Factor Receptor 2           OK pdb=1GJO N=280 tried=1/5              elapsed=8s eta=12s
+[20:55:03]   [23/56] Fructose-1,6-Bisphosphate Aldolase            OK pdb=1ADO N=1452 tried=1/35            elapsed=9s eta=13s
+[20:55:03]   [24/56] Fructose-1,6-bisphosphatase 1                 OK pdb=1CNQ N=332 tried=1/67             elapsed=9s eta=12s
+[20:55:03]   [25/56] Fumarate Hydratase Class II                   OK pdb=1FUO N=911 tried=1/6              elapsed=9s eta=12s
+[20:55:05]   [26/56] Glutamine Phosphoribosylpyrophosphate Amidotransferase OK pdb=1AO0 N=1820 tried=1/2             elapsed=11s eta=13s
+[20:55:07]   [27/56] GroEL                                         UNRESOLVED (0/42 usable)                 elapsed=13s eta=14s
+[20:55:08]   [28/56] Hexokinase Type I                             OK pdb=1CZA N=898 tried=1/10             elapsed=14s eta=14s
+[20:55:08]   [29/56] Histidine Decarboxylase                       OK pdb=1HQ6 N=588 tried=1/6              elapsed=14s eta=13s
+[20:55:08]   [30/56] Imidazoleglycerolphosphate Synthase           OK pdb=1THF N=253 tried=1/3              elapsed=14s eta=12s
+[20:55:09]   [31/56] L-lactate Dehydrogenase                       OK pdb=1LDB N=1176 tried=1/5             elapsed=15s eta=12s
+[20:55:09]   [32/56] Mitogen-Activated Protein Kinase Kinase 1     OK pdb=1S9J N=289 tried=1/34             elapsed=15s eta=11s
+[20:55:10]   [33/56] Mitogen-Activated Protein Kinase Kinase 2     OK pdb=1S9I N=594 tried=1/1              elapsed=16s eta=11s
+[20:55:10]   [34/56] Mitogen-Activated Protein Kinase Kinase 4     OK pdb=3ALN N=716 tried=1/3              elapsed=17s eta=11s
+[20:55:11]   [35/56] Monoamine Oxidase B                           OK pdb=1GOS N=990 tried=1/40             elapsed=17s eta=10s
+[20:55:12]   [36/56] Myosin 1c in complex with Calmodulin          OK pdb=1OE9 N=869 tried=1/16             elapsed=18s eta=10s
+[20:55:13]   [37/56] Nitric Oxide Synthase                         OK pdb=1DD7 N=295 tried=1/50             elapsed=19s eta=10s
+[20:55:13]   [38/56] O-Acetylserine Sulfhydrylase                  OK pdb=1D6S N=644 tried=1/5              elapsed=19s eta=9s
+[20:55:14]   [39/56] Ornithine Transcarbamoylase                   OK pdb=1DXH N=335 tried=1/2              elapsed=20s eta=9s
+[20:55:14]   [40/56] PDK1 Kinase                                   OK pdb=1OKY N=281 tried=1/51             elapsed=20s eta=8s
+[20:55:14]   [41/56] Phenylalanine Hydroxylase                     OK pdb=1PHZ N=403 tried=1/5              elapsed=20s eta=7s
+[20:55:15]   [42/56] Phenylpyruvate Decarboxylase                  OK pdb=2NXW N=1066 tried=1/5             elapsed=21s eta=7s
+[20:55:16]   [43/56] Phosphoenolpyruvate Carboxykinase             OK pdb=1AQ2 N=534 tried=1/9              elapsed=22s eta=7s
+[20:55:17]   [44/56] Phosphoenolpyruvate Carboxylase               OK pdb=1FIY N=873 tried=1/3              elapsed=23s eta=6s
+[20:55:18]   [45/56] Phosphofructokinase-2                         OK pdb=3CQD N=612 tried=1/6              elapsed=24s eta=6s
+[20:55:21]   [46/56] Polyamine Oxidase FMS1                        OK pdb=1R1R N=2253 tried=1/21            elapsed=27s eta=6s
+[20:55:21]   [47/56] Procaspase-7                                  OK pdb=1F1J N=467 tried=1/16             elapsed=27s eta=5s
+[20:55:22]   [48/56] Protein Arginine Methyltransferase 3          OK pdb=2FYT N=311 tried=1/5              elapsed=28s eta=5s
+[20:55:22]   [49/56] Protein Kinase Chk1                           OK pdb=1IA8 N=272 tried=1/112            elapsed=28s eta=4s
+[20:55:22]   [50/56] Proto-oncogene tyrosine-protein kinase Src    OK pdb=1FMK N=437 tried=1/76             elapsed=28s eta=3s
+[20:55:26]   [51/56] Pyruvate Carboxylase                          OK pdb=2QF7 N=2091 tried=1/11            elapsed=32s eta=3s
+[20:55:27]   [52/56] Pyruvate Decarboxylase                        OK pdb=1PVD N=1074 tried=1/6             elapsed=33s eta=3s
+[20:55:27]   [53/56] Ribonucleotide Reductase                      OK pdb=1PEM N=682 tried=1/5              elapsed=34s eta=2s
+[20:55:28]   [54/56] Thymidylate Synthase                          OK pdb=1HVY N=1148 tried=1/50            elapsed=34s eta=1s
+[20:55:28]   [55/56] Tryptophan Synthase                           OK pdb=1A50 N=650 tried=1/61             elapsed=34s eta=1s
+[20:55:28]   [56/56] Tyrosine-protein Kinase ABL2                  OK pdb=2XYN N=790 tried=1/4              elapsed=35s eta=0s
+[20:55:28] extension: 54/56 candidate proteins resolved to a usable structure (2 unresolved)
+[20:55:28] 
+### contamination audit: non-JUNK HETATM within 4.5A of the TRUTH site ###
+[20:55:29]   extension: 23/54 carry a ligand at the truth site (42.6%)
+[20:55:31]   original-108 (recomputed here): 87/108 carry a ligand at the truth site (80.6%)  -- cf. TASK-0329's own reported 40/40
+[20:55:31] 
+### eigendecomposition: once per structure, reused for both re-run arms ###
+[20:55:38]   eigh: 20/162 (135s)
+[20:55:42]   eigh: 40/162 (139s)
+[20:55:46]   eigh: 60/162 (143s)
+[20:55:56]   eigh: 80/162 (153s)
+[20:56:04]   eigh: 100/162 (162s)
+[20:56:08]   eigh: 120/162 (165s)
+[20:56:11]   eigh: 140/162 (168s)
+[20:56:14]   eigh: 160/162 (172s)
+[20:56:14] 
+### Arm A: TASK-0350's decisive test (decoherent vs coherent, converged), union cohort ###
+[20:56:19]   arm A: 20/162 (176s)
+[20:56:22]   arm A: 40/162 (179s)
+[20:56:25]   arm A: 60/162 (183s)
+[20:56:31]   arm A: 80/162 (188s)
+[20:56:35]   arm A: 100/162 (192s)
+[20:56:40]   arm A: 120/162 (197s)
+[20:56:46]   arm A: 140/162 (203s)
+[20:56:52]   arm A: 160/162 (209s)
+[20:56:53]   Planned Validation (original-108 subset of union vs TASK-0308/0350 committed): raw=0.5921 (committed 0.5921) resid=0.5184 (committed 0.5184)  PASSES
+[20:56:53]   UNION (n=162, 129 clusters): decoherent raw=0.5771 resid=0.5115  coherent raw=0.5718 resid=0.5041  delta median=-0.00507 cluster-p=0.4245
+[20:56:53] 
+### Arm B: TASK-0358's f=1 anchor (finite-delay observable), union cohort ###
+[20:56:53]   arm B: 20/162 (210s)
+[20:56:53]   arm B: 40/162 (211s)
+[20:56:54]   arm B: 60/162 (211s)
+[20:56:54]   arm B: 80/162 (211s)
+[20:56:54]   arm B: 100/162 (212s)
+[20:56:55]   arm B: 120/162 (212s)
+[20:56:55]   arm B: 140/162 (212s)
+[20:56:55]   arm B: 160/162 (212s)
+[20:56:55]   Planned Validation (original-108 subset vs TASK-0358 f=1 committed): signed diffs={'raw_diff': np.float64(6.031541187168088e-06), 'rho_diff': np.float64(3.187801110845698e-05), 'resid_diff': np.float64(4.7704925489999717e-05)}  unsigned diffs={'raw_diff': np.float64(3.220977091034083e-05), 'rho_diff': np.float64(1.6877424780958883e-05), 'resid_diff': np.float64(1.837661562931192e-05)}  PASSES
+[20:56:55]   UNION SIGNED:   raw=0.5004 rho=-0.0101 resid=0.4969 cluster-p=0.8216
+[20:56:55]   UNION UNSIGNED: raw=0.5483 rho=+0.3036 resid=0.5111 cluster-p=0.2756
+[20:56:55] 
+### Arm C: protein_baseline_auc -- does the score separate proteins better than sites? ###
+[20:59:39]   original_108   n_clusters= 76 n_residues=96977  protein_baseline_auc=0.6500  null=0.5003+-0.0241  p=0
+[21:00:48]   extension      n_clusters= 54 n_residues=33983  protein_baseline_auc=0.5975  null=0.4999+-0.0306  p=0.0006
+[21:04:22]   union          n_clusters=129 n_residues=130960  protein_baseline_auc=0.6549  null=0.5001+-0.0266  p=0
+[21:04:22] 
+Wrote results/tasks/0359_cohort_extension_by_protein/cohort_extension_result.json (659s total)

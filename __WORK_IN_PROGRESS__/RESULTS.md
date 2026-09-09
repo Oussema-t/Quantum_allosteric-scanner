@@ -12881,3 +12881,97 @@ deferring it, with TASK-0157's ceiling kept in the same sentence.
 `results/tasks/0358_tau_scan/{checkpoint.jsonl,tau_scan_result.json}`,
 `documentation/PHASE1_SUBMISSION_V3.md`. **Full detail**:
 `.ai/tasks/DONE/TASK-0358-finite-delay-observable-in-the-phase-alive-band.md`.
+
+## Cohort extended by protein, not structure — both re-run nulls hold, and the protein-identity leakage the task set out to test turns out to be real, in our own cohort ([[TASK-0359]], 2026-09-09)
+
+Every quantum-arm null so far — [[TASK-0350]], [[TASK-0357]], [[TASK-0358]] —
+sat on the same 108 structures / 76 protein clusters (1.42 structures per
+cluster, already near one-structure-per-protein). Adding more PDB entries
+of proteins already represented buys no independent information; only
+distinct proteins do.
+
+**Added 54 new distinct proteins** (CASBench — [[TASK-0304]]'s own live
+scrape, already fetched, reused here for CTQW scoring for the first time),
+hand-adjudicated against the existing 76 to dedup on gene identity rather
+than string match alone (token overlap flags false positives on generic
+words like "kinase", and misses real duplicates on spelling — caught
+`Aspartate Transcarbamoylase`/`carbamoyltransferase` and `Phosphotyrosine
+Phosphatase 1B` = PTP1B, one of this project's own mandatory targets, by
+hand). 54/56 candidates resolved to a usable structure (2 large multimeric
+assemblies — Carbamoyl Phosphate Synthetase, GroEL — never satisfied the
+existing `N<=3000` cohort gate). **129 protein clusters total, up from 76.**
+
+**A real hang, caught in seconds, not two hours.** The first run stalled
+on GroEL with zero progress past ~60s — the exact `urlretrieve`-with-no-
+timeout landmine a sibling script had already diagnosed on this same
+CASBench data. Killed immediately per the standing progress-visibility
+rule this register adopted after [[TASK-0348]]'s own incident, fixed with
+the same bounded-timeout override already established elsewhere, rerun
+cleanly.
+
+**Contamination audit (non-JUNK HETATM within 4.5 Å of the truth site,
+[[TASK-0329]]'s own convention) — the extension is cleaner than the
+original, not dirtier**: 23/54 (42.6%) vs 87/108 (80.6%) recomputed on the
+original. The 80.6% figure does not reproduce [[TASK-0329]]'s own quoted
+"40/40" and isn't meant to — that number was a 40-structure sample checked
+for ANY HETATM anywhere in the deposited file, a looser test than "within
+4.5 Å of the annotated site" specifically; disclosed as a different
+measurement, not chased into agreement.
+
+**Both re-run nulls hold on ~70% more independent proteins.** [[TASK-0350]]'s
+decoherent-vs-coherent delta: cluster-p=0.425 on the union (n=162, 129
+clusters), same verdict as the 76-cluster run. [[TASK-0358]]'s f=1 anchor:
+SIGNED arm stays flat (cluster-p=0.822); **the UNSIGNED arm's earlier
+marginal p=0.036 washes out to p=0.276** — exactly what TASK-0358's own
+"isolated spike, zero neighbour support" diagnosis predicted would happen
+with more independent proteins, and did.
+
+**The new measurement — does the score separate proteins better than
+sites within a protein? — fires, decisively.** `protein_baseline_auc`
+(pre-registered before any number was seen: replace every eligible
+residue's score with its own protein cluster's mean score, zero
+within-structure position information, pool across the cohort, AUC
+against the true label):
+
+| cohort | n clusters | `protein_baseline_auc` | p |
+|---|---|---|---|
+| original 108 | 76 | **0.6500** | <5e-5 |
+| extension (54 new proteins) | 54 | **0.5975** | 0.0006 |
+| union | 129 | **0.6549** | <5e-5 |
+
+**A "classifier" that knows only which protein a residue came from —
+nothing about where in the structure — reaches AUC 0.65, comparable in
+size to this register's own genuine per-structure CTQW performance
+(raw_auc ≈ 0.58–0.59).** It is not an artifact of the original 108 that
+more proteins would dilute: it reproduces independently on the 54
+brand-new proteins alone (p=0.0006) and does not shrink on the union.
+**The CAS0002 dominance failure mode this task was built to test —
+28 of 91 of the external branch's own distal structures being one
+protein, their CTQW AUC dropping 0.617→0.501 without it — is not a
+property of that one cohort. The same channel is measurably present in
+this register's own cohort.**
+
+**What this does and does not indict.** This register's existing headline
+numbers (raw AUC computed per structure, then averaged and cluster-tested)
+are immune by construction — a per-structure-constant score ties within
+that one structure's own ROC curve, contributing exactly 0.5 regardless of
+the constant. The finding is about **pooling**: any family-level number —
+here or elsewhere — built by lumping residues from many proteins into one
+ROC curve rather than averaging per-structure AUCs is vulnerable to this
+channel, at a magnitude large enough by itself to explain an effect the
+size of the external branch's own +0.107/+0.114 claims with zero genuine
+site-localization behind it. Landed as new **HYP-P28**; folded into
+HYP-P6 and HYP-P7 as dated Status updates.
+
+**Not resolved (disclosed, not dropped)**: the cohort-matched comparison
+to the external branch's own 276/399-family numbers; the held secondary
+amplitudes-vs-probabilities arm (+0.031); root-causing
+`protein_baseline_auc`'s own mechanism (a protein-size confound is the
+leading, unverified candidate); auditing which of this register's own
+already-published numbers are actually pooled vs. per-structure-averaged.
+
+**Files**: `scripts/task0359_cohort_extension_by_protein.py` (new).
+**Data**: `results/tasks/0359_cohort_extension_by_protein/
+{checkpoint.jsonl,run_log.txt,stdout.log,cohort_extension_result.json}`.
+**Full detail**:
+`.ai/tasks/DONE/TASK-0359-cohort-extension-by-protein-not-by-structure.md`.

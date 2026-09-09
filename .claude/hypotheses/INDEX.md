@@ -9,7 +9,7 @@ file did not silently fall behind its own source files.
 
 | id | claim | status | citing tasks |
 |---|---|---|---|
-| [[HYP-P13]] | Allostery is stabilisation of an otherwise-disfavoured conformation, not a signal propa... | 2026-09-08 | 17 |
+| [[HYP-P13]] | Allostery is stabilisation of an otherwise-disfavoured conformation, not a signal propa... | 2026-09-08 | 18 |
 | [[HYP-P8]] | For several targets, the apo contact graph does not contain the allosteric pocket signa... | 2026-09-04 | 12 |
 | [[HYP-P9]] | A chiral (broken-time-reversal) walk yields a proximity-orthogonal, directional loop ob... | 2026-09-03 | 12 |
 | [[HYP-P14]] | The discriminator is blocked by a single confound, and only a proximity-orthogonal obse... | 2026-09-04 | 9 |
@@ -43,3 +43,4 @@ file did not silently fall behind its own source files.
 | [[HYP-P20]] | This register's pocket labels cannot express ligand-dependent allostery; BCR-ABL1's own... | 2026-08-25 | 0 |
 | [[HYP-P22]] | The population structure of allosteric-site distance is undetermined; a floor/continuum... | 2026-09-01 | 0 |
 | [[HYP-P23]] | Discriminator B — per-measure applicability descriptors do not predict which of the six... | 2026-09-01 | 0 |
+| [[HYP-P28]] | A pure protein-identity channel — zero within-structure site information — reaches AUC~... | 2026-09-09 | 0 |
