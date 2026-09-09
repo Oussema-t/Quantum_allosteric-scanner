@@ -221,6 +221,12 @@ _MATH_SUBSTITUTIONS = {
     "≈": _raw_latex("\\ensuremath{\\approx}"),   # was MISSING -- rendered as a
                                                 # tofu box in V3, silently turning
                                                 # "rho ~ 0.95" into "rho [] 0.95"
+    # Added 2026-09-09: the finite-delay observable `2·Re⟨r|e^{-iHτ}|a⟩` shipped
+    # inside a \texttt{} span, where the mono font has no glyph for any of these
+    # three -- caught by check_glyph_coverage as 3 tofu boxes, not by eye.
+    "τ": _raw_latex("\\ensuremath{\\tau}"),
+    "⟨": _raw_latex("\\ensuremath{\\langle}"),
+    "⟩": _raw_latex("\\ensuremath{\\rangle}"),
 }
 _SUPERSCRIPT_DIGITS = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹",
                                     "0123456789")
@@ -285,7 +291,7 @@ def _preprocess_markdown(md_text: str) -> str:
 _ALLOWED_NON_ASCII = set(
     "—–‘’“”…·°±×÷−≈≥≤→←↔⁰¹²³⁴⁵⁶⁷⁸⁹§"          # covered by the tables above
     "áàâäãåéèêëíìîïóòôöõúùûüñçšžøåæœÁÀÂÄÉÈÊËÍÎÏÓÔÖÚÜÑÇ"   # Latin-1-ish, XeTeX handles
-    "ρσμλαβγδπθΔΣΩ"                              # greek used in prose
+    "ρσμλαβγδπθΔΣΩτ⟨⟩"                              # greek used in prose
 )
 
 

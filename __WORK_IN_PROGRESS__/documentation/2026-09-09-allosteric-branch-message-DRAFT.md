@@ -106,3 +106,79 @@ scan, the honest version on our data is narrower:
 
 That is still a real open door for Phase 2. It is just a different door than the one in
 the current draft, and it is one we can defend line by line.
+
+
+---
+
+# Addendum — on your joint experiment design
+
+*Written after your grid proposal arrived.*
+
+We accept the design and the decision rule. Running both statistics in one run on
+identical residues and labels is exactly right, and pre-registering "must beat
+closeness centrality, not just the pipeline" is the honest bar. Three things to add
+before it runs, one of which we think is load-bearing.
+
+## 1. The one gap: residualise on proximity, don't only compare against it
+
+Your baselines list proximity in both sign directions as a **comparator**. Our
+convention throughout is different and stronger: we **regress distance out** and
+score the residual. It is what closed every observable on our side, and the
+calibration is built in — proximity residualised against itself scores 0.5000
+exactly, so the control cannot silently pass.
+
+Without it, a statistic can beat closeness centrality and still be distance.
+
+**Please add residualised AUC alongside raw AUC for every arm.** It is one extra
+column, it costs nothing on a run you are already doing, and without it a
+positive result will not survive the first referee who asks.
+
+## 2. A prediction we are willing to be wrong about, registered now
+
+Your range statistic — `max(τ) − min(τ)`, and RMS — is **non-negative and
+amplitude-like**. That is structurally the same class of quantity as the unsigned
+magnitude `|O(r)|`, which we measured directly: its correlation with proximity is
+**0.92 at short delay**, falling monotonically to 0.24 at convergence, with
+residualised AUC of **0.5000** — pure distance, nothing else.
+
+**So we predict the range statistic will correlate strongly with proximity at short
+delay and collapse under residualisation.** We are writing that down before your
+run rather than after it. If it survives residualisation, the prediction is wrong
+and the result is considerably more interesting than the point value ever was.
+
+## 3. Two things in your note that change the prior, and should be in the write-up
+
+- *"I only tested that on 138 proteins, not all of them."*
+- *"It must hold at more than one MIN_HOP — currently only MIN_HOP=1 works."*
+
+A result that appears on a subset at exactly one MIN_HOP setting is a single cell,
+and both facts belong next to the +0.107 wherever it is quoted. Your own
+pre-registration already requires ≥2 MIN_HOP settings, which is the right
+correction — we are only asking that the current limitation be stated rather than
+resolved silently by the new run.
+
+## 4. On "your null doesn't test mine directly"
+
+Agreed, and we said the same thing first: a point value at a delay and a range
+across delays are different statistics. Our scan closes the point value on our
+cohort. It does not close the range statistic, which nobody has tested anywhere.
+
+That is the experiment. We think it should run.
+
+## 5. Something for the classical side, which is where our submission actually lives
+
+Separately from the quantum arms: nobody has measured how much the **pocket
+detectors themselves** disagree. We are running the agreement cascade —
+fpocket vs PASSer vs PocketMiner, one structure set, one truth rule — recovered by
+at least one, by at least two, by all.
+
+This matters to you directly. If the detectors mostly agree, the PASSer-vs-fpocket
+cohort question is a small effect and either choice is defensible. If they do not,
+that disagreement is itself the finding, and it is measured rather than argued.
+
+It also repeats, in a second domain, the decomposition already in our draft: the
+field's "84% recovery" is 99 of 118 structures found by **at least one of six**
+statistical measures; requiring three drops it to 57.6%, requiring all six to
+17.8%. The number is correctly computed and is simply not what a reader assumes.
+If pocket detectors show the same shape, the certifying benchmark stops being a
+proposal and starts being an obvious necessity.
