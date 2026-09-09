@@ -102,3 +102,53 @@ you assume" rule landed on 2026-09-08 and nobody has yet had a chance to follow
 it.** If agents keep assuming with the rule in front of them, that is the evidence
 Part A is needed — and the failures will say what to index. Building it now means
 guessing at the index's contents from four data points.
+
+## Hold released — 2026-09-09, Reviewer thread
+
+**The Toolsmith may pick this up now.** The "do not start before 2026-09-15" line
+above is superseded; it is left in place rather than deleted so the reasoning
+stays visible.
+
+That hold rested on two arguments. Both are now discharged, but not equally.
+
+**Argument 1 — deadline pressure — is gone.** [[TASK-0350]] and [[TASK-0351]] were
+the unstarted submission work it was protecting; both are Done, [[TASK-0353]] with
+them. V3 is built and out for adversarial review, and the team has agreed the
+first upload waits for a meeting rather than for more work. Genuine slack, not
+manufactured slack.
+
+**Argument 2 — "wait for evidence about what to index" — was only ever about
+Part A**, and it applies less than it did. Part B never depended on it: its
+evidence ([[TASK-0347]]/[[TASK-0350]]/[[TASK-0351]] filed with no registry rows,
+a task claimed and running while its file sat in `TODO/`) was already complete
+when this was filed. **Part B should start now regardless.**
+
+For Part A there is now more evidence than the four incidents originally listed,
+and it points somewhere slightly different from what this task assumed:
+
+- The glyph-coverage and citation checks added to `submission_build_latex.py` on
+  2026-09-09 each found a real defect **within seconds of existing** — a
+  tofu-rendered `≈`, and three references listed but never cited — in a document
+  three people had already read closely.
+- The same day, a first reading of that PDF produced a *wrong* conclusion
+  (`10¹⁴` "corrupted"), corrected only by checking the renderer rather than
+  trusting the extraction.
+
+**What that suggests for the design, offered as input rather than as a
+requirement:** a check that fails loudly at the moment of building beat both a
+prose rule and three careful human readings. Part A's index is passive by
+construction — it helps only someone who chooses to consult it, which is
+[[TASK-0321]]'s measured 9%. **If there is a way to make part of the decision
+index assert itself at a natural moment — as a check something already runs —
+that is likely worth more than making the index more complete.** The Toolsmith is
+better placed than this thread to judge whether that is feasible.
+
+**Unchanged, and still the point of the task**: an index can be checked for
+staleness, a search cannot be checked for completeness; record the pointer, never
+restate the reason; ship with a test that fails on a seeded gap; never summarise
+or rank; read-only.
+
+**One honest caveat on the evidence.** The standing "check the register before you
+assume" rule is one day old and has not had time to be tested. Nothing here shows
+it failing — only that *checks* have succeeded quickly. Do not read this addendum
+as evidence the rule does not work.
