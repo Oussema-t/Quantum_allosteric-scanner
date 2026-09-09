@@ -9,7 +9,7 @@ file did not silently fall behind its own source files.
 
 | id | claim | status | citing tasks |
 |---|---|---|---|
-| [[HYP-P13]] | Allostery is stabilisation of an otherwise-disfavoured conformation, not a signal propa... | 2026-09-08 | 16 |
+| [[HYP-P13]] | Allostery is stabilisation of an otherwise-disfavoured conformation, not a signal propa... | 2026-09-08 | 17 |
 | [[HYP-P8]] | For several targets, the apo contact graph does not contain the allosteric pocket signa... | 2026-09-04 | 12 |
 | [[HYP-P9]] | A chiral (broken-time-reversal) walk yields a proximity-orthogonal, directional loop ob... | 2026-09-03 | 12 |
 | [[HYP-P14]] | The discriminator is blocked by a single confound, and only a proximity-orthogonal obse... | 2026-09-04 | 9 |
@@ -31,8 +31,8 @@ file did not silently fall behind its own source files.
 | [[HYP-P5]] | H13 (full 3N ANM Hessian) sets a performance ceiling that H_new cannot reach | 2026-07-18 | 2 |
 | [[HYP-P26]] | Computationally stripping a holo structure's ligand is not apo-isation, and cryptic-poc... | 2026-09-07 | 2 |
 | [[HYP-S3]] | Overlap measures magnitude; hardness is set by coupling; they are orthogonal | 2026-08-12 | 2 |
-| [[HYP-P6]] | Propagation time t in CTQW is currently unprincipled; a spectral choice would close a v... | 2026-07-16 | 1 |
-| [[HYP-P7]] | Coherence adds no signal for allosteric pocket prediction on these proteins | no verdict recorded | 1 |
+| [[HYP-P6]] | Propagation time t in CTQW is currently unprincipled; a spectral choice would close a v... | 2026-09-09 | 1 |
+| [[HYP-P7]] | Coherence adds no signal for allosteric pocket prediction on these proteins | 2026-09-09 | 1 |
 | [[HYP-P15]] | `dcc_low`'s cryptic-pocket signal generalizes across targets; the transport observable'... | 2026-07-24 | 1 |
 | [[HYP-P18]] | On real, field-annotated ground truth, this register's observables do not beat random a... | 2026-09-06 | 1 |
 | [[HYP-P19]] | The apo contact graph's connectivity between active site and pocket is broad and redund... | 2026-07-18 | 1 |

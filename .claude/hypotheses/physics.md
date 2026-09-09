@@ -263,6 +263,27 @@ TASK-0097); alternative 3 (mode-relaxation from apo→holo ANM projection) remai
 unexplored — not needed once alternative 2 answered the load-bearing question
 ("is t currently a live, unaccounted-for confound") with a real yes.
 
+**Status update, 2026-09-09 ([[TASK-0350]]): the t-sensitivity this
+hypothesis found on 3 targets (10/11 CARDIAC_MYOSIN floor-clears) is
+confirmed, much more starkly, at full ASBench scale.** Scored
+`time_averaged_ctqw(T=15)` against the parameter-free converged limit,
+same `H_new`, same seed, same 108-structure cohort, both `coherent`
+settings: **50/108 (46%) structures flip their residualised-AUC sign
+(above/below 0.5) between T=15 and the converged limit for the coherent
+walk; 41/108 (38%) flip for the decoherent walk.** This is not the same
+statistic as TASK-0119's floor-clearing count, but it is the same
+underlying finding restated at ~35x the target count and with an exact,
+falsifiable per-structure criterion: **any reported per-structure verdict
+computed at a finite, unprincipled T (this project's own historical
+default of T=15 included) has close to even odds of disagreeing in sign
+with the same structure's own parameter-free limit.** The converged limit
+(alternative 1 above) is not merely "a" principled choice among several —
+given this instability, it is the ONLY one of the three alternatives this
+hypothesis lists that does not require picking a T a referee could
+reasonably ask "why this one and not another." Full table and method:
+[[HYP-P7]]'s own 2026-09-09 status update (same task, same run) and
+`.ai/tasks/DONE/TASK-0350-coherent-vs-decoherent-matched-twin.md`.
+
 ---
 
 ## HYP-P7 · Coherence adds no signal for allosteric pocket prediction on these proteins
@@ -287,6 +308,58 @@ finding and should be the stated result.
 diffusion kernel for all practical purposes on these graphs. The choice between
 `ctqw()` and `heat()` then becomes a question of convenience, not physics —
 *provided H_new is PSD (which it currently is not; see HAMILTONIANS.md).*
+
+**Status, 2026-09-09 ([[TASK-0350]]): TESTED — CONFIRMED, directly and
+decisively, and the PSD caveat above is resolved rather than sidestepped.**
+This hypothesis's own "To formalize" section asked for the Haken-Strobl
+sweep "systematically across all proteins, not just KRAS." What is
+scored here is the more direct version of the same question:
+`time_averaged_ctqw_converged(H_new, seed, coherent=True)` vs.
+`coherent=False)` — **identical Hamiltonian, identical seed set,
+identical 108-structure ASBench cohort, identical scoring** (raw AUC,
+rho vs. proximity, rank-residualised AUC) — the single-variable
+comparison this register had never actually run; every prior test
+(chiral circulation [[TASK-0140]] FAIL, frequency-domain [[TASK-0146]],
+HOM [[TASK-0157]]) changed the *observable* along with the coherence.
+Planned Validation passed first: `coherent=False` reproduces
+[[TASK-0308]]'s committed numbers exactly (raw 0.5921, rho 0.7347,
+resid 0.5184, bit-for-bit).
+
+| arm | raw AUC | rho(proximity) | resid AUC |
+|---|---|---|---|
+| classical diffusion (T=15, graph Laplacian only — H_new's own graph term before any potential, genuinely PSD) | 0.6012 | 0.9531 | 0.4567 |
+| decoherent CTQW (converged) | 0.5921 | 0.7347 | 0.5184 |
+| coherent CTQW (converged) | 0.5997 | 0.6924 | 0.5207 |
+
+**Decisive test, per-structure (coherent − decoherent) resid-AUC delta,
+n=108: mean +0.0023, median −0.0029, Wilcoxon p=0.919, cluster-robust by
+protein (76 clusters, sign-flip Monte Carlo) p=0.834.** The
+pre-registered prediction ("the gap is small and non-significant,
+consistent with [[TASK-0146]]'s ≤0.005 AUC finding") **HOLDS**, this time
+on the full cohort rather than 3 targets, with a p-value indistinguishable
+from the null in both the row-level and cluster-robust test. The PSD
+caveat this hypothesis itself flagged is resolved, not ignored: the
+classical arm here is the genuine graph Laplacian (`normalised_laplacian_
+alpha`, the exact term `H_new = L_norm + potentials` adds its potential
+to), not `H_new` itself — real diffusion, not a ground-state-density
+artifact.
+
+**Read plainly: on the identical operator, seed, and cohort this register
+actually uses, coherence measurably contributes nothing beyond the
+decoherent limit — the interference content of this construction is
+zero to within Monte Carlo/Wilcoxon noise, not merely unmeasured.** This
+closes the "does interference help" question this register opened three
+separate observables (chiral circulation, frequency-domain coherence,
+HOM) trying to reach past the decoherent limit to answer, with the
+simplest and most direct test of all of them, run last. Also note: BOTH
+CTQW arms' residualised AUC sits near 0.5 (0.518/0.521) — consistent with
+[[HYP-P8]]'s standing finding that CTQW ≈ proximity and carries little
+else; the classical arm's own resid AUC (0.457, *below* chance) shows its
+raw signal is essentially entirely proximity, with nothing left over once
+that is removed. **Finite-T instability, found in the same run, is
+reported under [[HYP-P6]]'s own status update, not here** — a different
+claim (t-choice sensitivity vs. coherence content), kept separate per
+this register's own fold-in discipline.
 
 ---
 

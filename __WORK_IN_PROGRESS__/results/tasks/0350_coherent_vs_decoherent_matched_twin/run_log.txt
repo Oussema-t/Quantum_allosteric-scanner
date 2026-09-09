@@ -1,0 +1,55 @@
+[09:04:30] building cohort: fetch + build_H_new + hop_from_seed per structure (the O(N^3) eigh itself happens later, per arm)
+[09:04:49]   cohort build: 15 scanned, 15 usable so far (latest 1LVW, N=1170)
+[09:05:07]   cohort build: 30 scanned, 30 usable so far (latest 1Z8D_2, N=819)
+[09:05:14]   cohort build: 45 scanned, 45 usable so far (latest 2Q5O, N=1060)
+[09:05:24]   cohort build: 60 scanned, 60 usable so far (latest 3BZ7, N=703)
+[09:05:54]   cohort build: 75 scanned, 75 usable so far (latest 3IFA, N=1290)
+[09:06:13]   cohort build: 90 scanned, 90 usable so far (latest 3PYY, N=522)
+[09:06:29]   cohort build: 105 scanned, 105 usable so far (latest 4KZT, N=1724)
+108/118 structures usable (matches TASK-0308/0310's own n=108 filter)
+
+### Planned Validation: coherent=False must reproduce TASK-0308's committed numbers ###
+[09:06:41]   decoherent pass: 15/108
+[09:06:49]   decoherent pass: 30/108
+[09:06:53]   decoherent pass: 45/108
+[09:06:59]   decoherent pass: 60/108
+[09:07:14]   decoherent pass: 75/108
+[09:07:23]   decoherent pass: 90/108
+[09:07:32]   decoherent pass: 105/108
+  decoherent (coherent=False) raw=0.5921 (committed: 0.5921) rho=0.7347 (committed: 0.7347) resid=0.5184 (committed: 0.5184)
+  HARNESS REPRODUCES TASK-0308's own committed numbers.
+
+### Three arms: classical diffusion (T=15) -> decoherent CTQW (converged) -> coherent CTQW (converged) ###
+[09:07:39]   coherent+classical pass: 15/108
+[09:07:45]   coherent+classical pass: 30/108
+[09:07:47]   coherent+classical pass: 45/108
+[09:07:51]   coherent+classical pass: 60/108
+[09:08:02]   coherent+classical pass: 75/108
+[09:08:09]   coherent+classical pass: 90/108
+[09:08:14]   coherent+classical pass: 105/108
+  classical diffusion (T=15) raw=0.6012 rho=0.9531 resid=0.4567  (n=108)
+  decoherent CTQW (converged)   raw=0.5921 rho=0.7347 resid=0.5184  (n=108)
+  coherent CTQW (converged)     raw=0.5997 rho=0.6924 resid=0.5207  (n=108)
+
+### Decisive test: per-structure (coherent - decoherent) resid-AUC delta ###
+  n=108  mean delta=+0.00231  median delta=-0.00287  Wilcoxon p=0.9194
+  cluster-robust by protein: n_clusters=76/76 total  median=-0.00287  cluster-p=0.8344  (Monte Carlo, 100000 draws)
+
+  PRE-REGISTERED PREDICTION ('gap is small and non-significant, <=0.005 AUC'): HOLDS -- reported whichever way it lands.
+
+### Finite-T sensitivity: T=15 / T=50000 / converged, both coherent settings ###
+[09:15:40]   finite-T sensitivity pass: 15/108
+[09:23:05]   finite-T sensitivity pass: 30/108
+[09:26:34]   finite-T sensitivity pass: 45/108
+[09:32:51]   finite-T sensitivity pass: 60/108
+[09:57:31]   finite-T sensitivity pass: 75/108
+[10:03:04]   finite-T sensitivity pass: 90/108
+[10:12:13]   finite-T sensitivity pass: 105/108
+  coherent    T=15        raw=0.6001 rho=0.9023 resid=0.4793  (n=108)
+  coherent    T=50000     raw=0.5989 rho=0.6900 resid=0.5212  (n=108)
+    coherent: 50/108 structures flip resid-AUC sign between T=15 and the converged limit
+  decoherent  T=15        raw=0.6042 rho=0.9329 resid=0.4777  (n=108)
+  decoherent  T=50000     raw=0.5921 rho=0.7347 resid=0.5182  (n=108)
+    decoherent: 41/108 structures flip resid-AUC sign between T=15 and the converged limit
+
+Total wall time: 4152s. Wrote results/tasks/0350_coherent_vs_decoherent_matched_twin/coherent_vs_decoherent.json
