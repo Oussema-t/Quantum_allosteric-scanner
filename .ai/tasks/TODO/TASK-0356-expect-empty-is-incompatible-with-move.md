@@ -85,3 +85,48 @@ decisions were never run against each other in the order a real thread uses
 them** — which is exactly what [[TASK-0349]] found for the appendix marker, and
 [[TASK-0352]] found for `_parse_row`. Three instances now of a component being
 individually correct and jointly unrunnable.
+
+
+## Reproduced live, while filing this task — and the root cause is worse
+
+The commit that filed this task hit the exact failure it describes: another thread
+had `move`d [[TASK-0355]] to `IN_PROGRESS`, the rename sat staged, `--expect-empty`
+failed, and **the commit proceeded anyway and swept that rename in** — the second
+time in a week, and this time inside the task documenting it.
+
+**But the mechanism was not the one written above, and it invalidates more than
+this task.** The guard chain was written as
+`claim.py commit-guard --expect-empty 2>&1 | tail -1 && ...`.
+
+`pipefail` is **off** by default in this shell (verified: `false | tail -1` exits
+`0`). A pipeline's exit status is that of its **last** command, so `&&` was testing
+`tail`, not the guard. **Every `&&`-chained guard invocation piped to `tail`/`head`
+in this session was inert.** The switch from `;` to `&&` after the [[TASK-0330]]
+incident was believed to be the fix and changed nothing.
+
+Two independent defects, and the second is the dangerous one:
+
+1. **`--expect-empty` cannot pass after `move`** — the contradiction documented
+   above. It is what puts a thread in the position of wanting to proceed.
+2. **The guard's exit status is routinely discarded by the invocation idiom** —
+   piping to `tail` to keep output short is the natural thing to write, is used
+   throughout this register's own commit sequences, and silently disables every
+   guard in the chain.
+
+Defect 2 means the SCQ protocol has been **advisory rather than enforced** for an
+unknown number of commits, including ones that printed *"ok: staged index exactly
+matches --expect"*. Those messages were true when printed; they were not gating
+anything.
+
+### Additional scope
+
+- The sequence must be safe under the idiom people actually use. Options: print a
+  single line by default so no pipe is needed; document `set -o pipefail` as
+  mandatory; or have `commit-guard` offer a mode that **performs the commit
+  itself**, so check and action cannot be separated by a shell operator.
+- **The third is this thread's recommendation.** A guard returning a status the
+  caller must remember to honour has now been bypassed twice by two different
+  mechanisms. A guard that owns the commit cannot be bypassed by forgetting.
+- **No audit of past commits is proposed.** They are known-good by inspection and
+  re-verifying would cost more than it returns. Close the enforcement gap; do not
+  re-litigate the history.
