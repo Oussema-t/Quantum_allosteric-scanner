@@ -2213,3 +2213,25 @@ document-by-document check, not made here. Does not extend to the
 cohort-matched comparison against the external branch's own 276/399-
 family numbers, still explicitly out of scope per [[TASK-0357]]/
 [[TASK-0358]].
+
+**Status update, 2026-09-09 ([[TASK-0361]]): the audit named above as not
+made is now made, and the submission is clean.** Every AUC-type number
+quoted in `PHASE1_SUBMISSION_V3.md` was checked against its own
+producing code, `file:line` cited, not re-run: the walk-occupation
+baseline, the chiral/spectral-coherence/entanglement-entropy arms, the
+centrality ablation, [[TASK-0350]]'s coherent-decoherent delta and its
+[[TASK-0359]]-extended-cohort re-run, [[TASK-0358]]'s finite-delay arm
+and its own extension, and the combined LOPO-ceiling readout — **every
+one traces to a `roc_auc_score` called separately per structure (or per
+cluster), never to residues from multiple proteins concatenated into one
+ROC curve.** Several other quoted numbers (BH-FDR survivor counts,
+family-clearing counts, detector-agreement disjunctions, the apo/holo
+validity pass rate) are count/rate statistics this hypothesis's own
+pooling mechanism does not apply to — recorded as such, not silently
+waved through. This hypothesis's own `protein_baseline_auc` finding is
+itself confirmed **not currently quoted anywhere in the submission** —
+a fact about the current draft, not a defect this audit found. Planned
+Validation passed first: the audit procedure correctly separated
+[[TASK-0310]]'s known-per-structure 0.5921 from this hypothesis's own
+known-pooled 0.6500 before classifying anything else. Full table:
+`.ai/tasks/DONE/TASK-0361-pooled-vs-per-structure-aggregation-audit.md`.
