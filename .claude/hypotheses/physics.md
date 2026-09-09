@@ -322,6 +322,42 @@ selection on `tau`/`tol`, consistent with (not contrary to) this
 hypothesis's own core claim. Full detail:
 `.ai/tasks/DONE/TASK-0357-finite-delay-phase-observable-principled-clock.md`.
 
+**Status update, 2026-09-09 ([[TASK-0358]]) — TASK-0357 tested the wrong
+`tau`, and a proper scan closes the question decisively rather than
+ambiguously.** Two defects in TASK-0357's own design, both attribution
+errors in the filing, not the execution: (1) `min_adequate_t_max` is a
+*convergence* window (transients have died by then) — evaluating a
+phase-sensitive observable there lands precisely where TASK-0130 proves
+its phase content is smallest, not a fair test of the finite-delay claim
+at all. (2) `tau` depends on the *log* of `tol`, so TASK-0357's own
+100x sweep in `tol` (1e-3..1e-1) was only a **~3x** sweep in the variable
+that actually matters. Corrected: scanned `tau` directly, on a
+pre-registered per-protein-relative grid `tau(protein,f) = f *
+min_adequate_t_max(protein, tol=1e-2)`, `f in {0.001, 0.003, 0.01, 0.03,
+0.1, 0.3, 1, 3, 10, 30, 100}` — 11 points spanning deep short-delay
+(median tau~0.2) through deep-converged (median tau~21000), reusing
+TASK-0357's own script/cohort unchanged (Planned Validation: `f=1`
+reproduces TASK-0357's committed numbers to 5 decimal places).
+
+**Result: the SIGNED observable (the external claim's own arm) shows no
+significant signal at ANY of the 11 points** — cluster-permutation p
+ranges 0.24-0.98 across five orders of magnitude in `tau`, not a single
+nominal hit. **Not a narrow miss and not a broad band: a clean null
+across the entire delay range**, more decisive than TASK-0357's own
+single-point null. The UNSIGNED arm's earlier `p=0.036` is now shown to
+be exactly the isolated-spike artifact TASK-0357 could not itself
+distinguish from a real band: significant at exactly 1 of 11 points
+(`f=1`, TASK-0357's own original reading) with no support at any
+neighbour in either direction — as clean a selection-artifact signature
+as this register has produced. Physically coherent corroboration, not
+just a null: unsigned `rho` against proximity falls monotonically from
+0.92 (shortest delay, essentially a distance proxy at that scale, as the
+short-tau expansion in TASK-0357's own sign-derivation predicts) to 0.24
+(longest), confirming the observable behaves as theoretically expected
+across the whole axis rather than being numerically degenerate somewhere
+along it. **This tenth candidate route is closed, not deferred.** Full
+detail: `.ai/tasks/DONE/TASK-0358-finite-delay-observable-in-the-phase-alive-band.md`.
+
 ---
 
 ## HYP-P7 · Coherence adds no signal for allosteric pocket prediction on these proteins

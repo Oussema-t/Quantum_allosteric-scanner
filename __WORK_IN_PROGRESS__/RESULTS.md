@@ -12827,3 +12827,57 @@ against.
 `results/tasks/0357_finite_delay_phase_observable/{checkpoint.jsonl,finite_delay_phase_observable.json}`,
 `documentation/PHASE1_SUBMISSION_V3.md`. **Full detail**:
 `.ai/tasks/DONE/TASK-0357-finite-delay-phase-observable-principled-clock.md`.
+
+## TASK-0357 tested the wrong tau — a full scan closes the finite-delay observable cleanly instead of ambiguously ([[TASK-0358]], 2026-09-09)
+
+Two defects in TASK-0357's own design, both attribution errors in the
+filing, not the execution, per the Reviewer's own correction: (1)
+`min_adequate_t_max` is a *convergence* window (transients have died by
+then) — evaluating a phase-sensitive observable there lands exactly
+where TASK-0130 proves its phase content is smallest, not a fair test of
+a finite-delay claim at all. (2) `tau` depends on the *log* of `tol`, so
+TASK-0357's own 100x sweep in `tol` was only a ~3x sweep in the variable
+that actually matters.
+
+**Corrected: scanned `tau` directly**, on a pre-registered per-protein-
+relative grid — `tau(protein,f) = f * min_adequate_t_max(protein,
+tol=1e-2)`, `f in {0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30,
+100}`, 11 points spanning deep short-delay (median tau~0.2) through
+deep-converged (median tau~21000) — reusing TASK-0357's own validated
+script/cohort by direct import, unchanged. Planned Validation: `f=1`
+reproduces TASK-0357's committed numbers to 5 decimal places.
+
+**Result: the SIGNED observable — the arm the external claim actually
+reports — shows no significant signal at any of the 11 points.**
+Cluster-permutation p ranges 0.24–0.98 across five orders of magnitude in
+`tau`; raw AUC stays within 0.48–0.50 throughout. Not a near miss
+anywhere — a flat null across the entire measured range, more decisive
+than TASK-0357's own single-point null. **The UNSIGNED arm's earlier
+p=0.036 is now shown to be exactly the isolated-spike artifact TASK-0357
+could not itself distinguish from a real band**: significant at exactly
+1 of 11 points (`f=1`, TASK-0357's own original reading), zero support at
+either neighbour (p=0.87, p=0.32). Corroborating physical detail: unsigned
+`rho` against proximity falls monotonically from 0.92 (shortest delay,
+essentially a distance proxy there, matching the short-tau perturbative
+prediction from TASK-0357's own sign-derivation) to 0.24 (longest) —
+the observable behaves as theoretically expected across the whole axis,
+not numerically degenerate anywhere.
+
+**Verdict: the finite-delay phase-sensitive observable carries no
+detectable, tau-stable signal from deep short-delay through convergence,
+on this cohort.** The tenth candidate advantage route is closed, not
+deferred to Phase 2. Folded into [[HYP-P6]] as a further dated Status
+update. Not resolved (disclosed, not silently dropped): the cohort-
+matched comparison to the external "+0.114/p=0.004/399 families" number,
+and the held secondary claim (amplitudes vs probabilities, spectrally
+matched control) — that hold is unchanged.
+
+`PHASE1_SUBMISSION_V3.md`'s finite-delay paragraph rewritten in the same
+commit: no longer "the one quantum route we carry into Phase 2" — states
+the full scan and its clean-null result, closing the route rather than
+deferring it, with TASK-0157's ceiling kept in the same sentence.
+
+**Files**: `scripts/task0358_tau_scan.py` (new),
+`results/tasks/0358_tau_scan/{checkpoint.jsonl,tau_scan_result.json}`,
+`documentation/PHASE1_SUBMISSION_V3.md`. **Full detail**:
+`.ai/tasks/DONE/TASK-0358-finite-delay-observable-in-the-phase-alive-band.md`.

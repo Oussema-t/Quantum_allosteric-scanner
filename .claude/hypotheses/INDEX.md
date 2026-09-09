@@ -16,6 +16,8 @@ file did not silently fall behind its own source files.
 | [[HYP-P12]] | The coordinated multi-site closure is a topological void (persistent H2 / Hodge-L1), an... | 2026-07-24 | 5 |
 | [[HYP-P21]] | Finding F — a covalent/peptide-bond-adjacency confound recurs across distal-allostery b... | 2026-08-28 | 5 |
 | [[HYP-P1]] | Low-frequency GNM modes are a reliable proxy for allosteric residues (in rigid globular... | 2026-09-03 | 4 |
+| [[HYP-P6]] | Propagation time t in CTQW is currently unprincipled; a spectral choice would close a v... | 2026-09-09 | 4 |
+| [[HYP-P7]] | Coherence adds no signal for allosteric pocket prediction on these proteins | 2026-09-09 | 4 |
 | [[HYP-S1]] | The treewidth closure is objective-dependent, and a black-box detector breaks it | 2026-08-25 | 4 |
 | [[HYP-S4]] | Endpoint coupling ≠ path coupling | 2026-08-12 | 4 |
 | [[HYP-S5]] | Instance enrichment — 4–7 targets is an anecdote, but each target contains many transit... | 2026-08-12 | 4 |
@@ -23,8 +25,6 @@ file did not silently fall behind its own source files.
 | [[HYP-S7]] | Conformational sampling is legal; only MD trajectories are forbidden | 2026-08-19 | 4 |
 | [[HYP-P2]] | A pairwise residue-type correction is the highest-value diagonal-only extension | 2026-09-03 | 3 |
 | [[HYP-P3]] | V_C (currently structural centrality) would be more predictive as true dynamic covariance | 2026-09-03 | 3 |
-| [[HYP-P6]] | Propagation time t in CTQW is currently unprincipled; a spectral choice would close a v... | 2026-09-09 | 3 |
-| [[HYP-P7]] | Coherence adds no signal for allosteric pocket prediction on these proteins | 2026-09-09 | 3 |
 | [[HYP-P10]] | Cryptic pockets carry a "near-in-3D / far-on-apo-graph" coordinated-closure signature | 2026-07-22 | 3 |
 | [[HYP-P11]] | Engineered dephasing (ENAQT) does not improve pocket discrimination — it relaxes the wa... | 2026-07-20 | 3 |
 | [[HYP-P25]] | The PASSer-seeded veto pipeline's below-chance pocket pick is a measured proximity-anti... | 2026-09-07 | 3 |
