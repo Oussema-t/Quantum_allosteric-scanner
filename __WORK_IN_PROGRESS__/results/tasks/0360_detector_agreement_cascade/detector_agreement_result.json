@@ -1,0 +1,104 @@
+{
+ "n_cohort": 100,
+ "coverage": {
+  "fpocket": 96,
+  "passer": 96,
+  "p2rank": 96,
+  "pocketminer": 92
+ },
+ "n_matched": 96,
+ "cascade": {
+  ">=1": {
+   "n": 91,
+   "frac": 0.9479166666666666
+  },
+  ">=2": {
+   "n": 91,
+   "frac": 0.9479166666666666
+  },
+  ">=3": {
+   "n": 75,
+   "frac": 0.78125
+  },
+  ">=4": {
+   "n": 23,
+   "frac": 0.23958333333333334
+  }
+ },
+ "exactly_one": {
+  "n": 0,
+  "frac": 0.0
+ },
+ "pairwise": {
+  "fpocket_vs_p2rank": {
+   "jaccard": 0.8333333333333334,
+   "n_a": 90,
+   "n_b": 75,
+   "n_both": 75
+  },
+  "fpocket_vs_passer": {
+   "jaccard": 0.967032967032967,
+   "n_a": 90,
+   "n_b": 89,
+   "n_both": 88
+  },
+  "fpocket_vs_pocketminer": {
+   "jaccard": 0.27472527472527475,
+   "n_a": 90,
+   "n_b": 26,
+   "n_both": 25
+  },
+  "p2rank_vs_passer": {
+   "jaccard": 0.8021978021978022,
+   "n_a": 75,
+   "n_b": 89,
+   "n_both": 73
+  },
+  "p2rank_vs_pocketminer": {
+   "jaccard": 0.3116883116883117,
+   "n_a": 75,
+   "n_b": 26,
+   "n_both": 24
+  },
+  "passer_vs_pocketminer": {
+   "jaccard": 0.2777777777777778,
+   "n_a": 89,
+   "n_b": 26,
+   "n_both": 25
+  }
+ },
+ "per_detector_hit_rate": {
+  "fpocket": {
+   "n_hit": 90,
+   "n": 96,
+   "rate": 0.9375
+  },
+  "passer": {
+   "n_hit": 89,
+   "n": 96,
+   "rate": 0.9270833333333334
+  },
+  "p2rank": {
+   "n_hit": 75,
+   "n": 96,
+   "rate": 0.78125
+  },
+  "pocketminer": {
+   "n_hit": 26,
+   "n": 96,
+   "rate": 0.2708333333333333
+  }
+ },
+ "pocketminer_skipped_on_cost": false,
+ "errors": {
+  "fpocket": {},
+  "p2rank": {},
+  "passer": {},
+  "pocketminer": {
+   "1FRP": "ValueError: cannot reshape array of size 3843 into shape (321,4,3)",
+   "2BU8": "ValueError: cannot reshape array of size 4311 into shape (360,4,3)",
+   "2VVT": "ValueError: cannot reshape array of size 3231 into shape (270,4,3)",
+   "3BZ7": "ValueError: cannot reshape array of size 8433 into shape (703,4,3)"
+  }
+ }
+}

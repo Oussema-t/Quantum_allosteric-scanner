@@ -111,7 +111,7 @@ Component (b) is ~27 minutes of compute over 100 apo/holo pairs and half a day o
 
 **What a successful PoC demonstrates:** that cryptic-pocket method claims in this field are currently uncertifiable, and that a validated instrument changes which published results survive.
 
-The field's headline figure illustrates the gap. "84% recovery" [4] is **99 of 118 structures detected by at least one of six statistical measures**. Requiring three of six drops it to 57.6%; requiring all six, to 17.8%. The number is real and correctly computed — it is simply not what a reader assumes it means. A certifying benchmark makes that distinction automatic rather than archaeological.
+The field's headline figure illustrates the gap. "84% recovery" [4] is **99 of 118 structures detected by at least one of six statistical measures**. Requiring three of six drops it to 57.6%; requiring all six, to 17.8%. The number is real and correctly computed — it is simply not what a reader assumes it means. **The same shape reproduces in a second, independent domain**: across four pocket detectors (fpocket, PASSer, p2rank, PocketMiner) on one shared structure set and truth definition, 94.8% of structures are flagged by at least one, 24.0% by all four — driven by PocketMiner alone, whose own design (predicting which residues participate in a pocket that *opens*) answers a different question from the other three's static-cavity geometry, not by measurement noise. A certifying benchmark makes both distinctions automatic rather than archaeological.
 
 | Target | Quantitative goal | Baseline today |
 |---|---|---|

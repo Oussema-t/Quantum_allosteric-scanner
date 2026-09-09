@@ -12975,3 +12975,87 @@ already-published numbers are actually pooled vs. per-structure-averaged.
 {checkpoint.jsonl,run_log.txt,stdout.log,cohort_extension_result.json}`.
 **Full detail**:
 `.ai/tasks/DONE/TASK-0359-cohort-extension-by-protein-not-by-structure.md`.
+
+## The detector-agreement cascade — TASK-0306's 84% -> 17.8% pattern, reproduced in a second domain, but only once all four pocket detectors are counted ([[TASK-0360]], 2026-09-09)
+
+[[TASK-0306]] decomposed the field's own "84% recovery" figure into a
+disjunction over six statistical measures (99/118 by ≥1, 21/118 = 17.8% by
+all six). Nobody had asked the same question of the pocket DETECTORS this
+project and the `allosteric` branch actually use — this project runs
+fpocket, the other branch runs PASSer, both touch PocketMiner.
+
+**One structure set, one truth, one overlap rule for every detector**
+([[TASK-0336]]'s own lesson): 100 ASBench structures (96 distinct PDB
+codes — 4 carry two separately-annotated sites each), truth restricted to
+each structure's own primary chain so PocketMiner's established single-
+chain-input convention doesn't quietly give it a different candidate set
+than fpocket/PASSer/p2rank see. fpocket's own provenance re-checked first
+(Docker image SHA256 matches its most recent TASK-0285 pin — not drifted)
+before trusting anything downstream.
+
+**fpocket, PASSer, p2rank: zero coverage failures, 96/96 unique PDBs
+each.** Alone, they look shallow — the deflationary reading this task's
+own pre-registration named as one of two possible outcomes:
+
+| detected by (3 detectors, n=100) | n | frac |
+|---|---|---|
+| ≥1 of 3 | 95 | 95.0% |
+| ≥2 of 3 | 94 | 94.0% |
+| all 3 | 77 | 77.0% |
+
+Pairwise hit-set Jaccard 0.81–0.97 throughout; own hit rates 94%/93%/79%.
+
+**Adding PocketMiner (92/96 coverage — 4 genuine model failures, a real
+per-structure backbone-geometry limitation, not a bug here; ran inside its
+own pre-registered 30-minute time-box) flips the reading:**
+
+| detected by (4 detectors, n=96) | n | frac |
+|---|---|---|
+| ≥1 of 4 | 91 | 94.8% |
+| ≥2 of 4 | 91 | 94.8% |
+| ≥3 of 4 | 75 | 78.1% |
+| **all 4** | **23** | **24.0%** |
+
+**94.8% → 24.0% is a ~4x gap, closely reproducing the field's own
+84% → 17.8% shape in a second, independent domain** (pocket detectors,
+not significance tests). PocketMiner's own hit rate is 27.1% (26/96)
+against 93.8%/92.7%/78.1% for fpocket/PASSer/p2rank; its pairwise Jaccard
+with each of the other three sits at 0.28–0.31, sharply below the
+0.80–0.97 the other three share with each other.
+
+**Read plainly, and this is the finding, not a caveat on it: PocketMiner
+is not noisier than the other three, it is answering a different
+question.** fpocket/p2rank/PASSer detect geometric cavities already
+present in the deposited structure; PocketMiner predicts which residues
+participate in a pocket that *opens* — dynamics-derived from a single
+static input, closer to this project's own cryptic-pocket framing than
+to classical cavity detection. **Detector choice is a large, measurable
+source of variance here, exactly as TASK-0306's own six-measure result
+was — but the mechanism this time is legible: one of the four tools is
+measuring something else, not a redundant/noisy copy of the same test.**
+Both cascades are reported, neither substituted for the other.
+
+**Two real bugs caught before a wrong number shipped**, both from
+treating a suspicious same-input result as suspicious rather than
+trusting it: PocketMiner's actual output format is `<stem>.txt`/
+`<stem>.error.txt` (one probability per residue per line), not the
+`-preds.npy` path assumed from a different call site's own convention;
+and a skip-docker-if-already-run optimization (added between debugging
+passes to avoid re-paying an ~68s Docker batch call) accidentally
+skipped the output-*collection* step too, not just the `docker run`
+call, silently producing a second 0%-coverage result even after the
+first bug was fixed. Every detector's raw pocket data is now cached to
+disk (`{fpocket,p2rank}_pockets_cache.json`, `passer_live_fetch_cache.
+json`) — neither bug-fix cycle re-paid the ~11–19 minute Docker passes.
+
+**No quantum claim — this cannot weaken or complicate any null in this
+register.** No hypothesis-register entry landed: a classical benchmark/
+methodology finding, the same scope TASK-0306's own six-measure
+decomposition sat in without one.
+
+**Files**: `scripts/task0360_detector_agreement_cascade.py` (new).
+**Data**: `results/tasks/0360_detector_agreement_cascade/
+{detector_agreement_result.json,checkpoint.jsonl,fpocket_pockets_cache.json,
+p2rank_pockets_cache.json,passer_cache_snapshot.json,
+passer_live_fetch_cache.json,pocketminer_io/}`. **Full detail**:
+`.ai/tasks/DONE/TASK-0360-detector-agreement-cascade.md`.
