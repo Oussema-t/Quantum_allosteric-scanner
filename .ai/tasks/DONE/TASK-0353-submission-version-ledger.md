@@ -1,6 +1,6 @@
 # TASK-0353 — A submission version ledger: what each version fixed, and what must not regress
 
-- Status: TODO
+- Status: Done
 - Owner: **Reviewer thread**, maintained by whoever makes each drafting pass
 - Priority: High — cheap, and it is the only thing preventing a silent regression
 - Filed: 2026-09-09 by Reviewer thread (id via `claim.py reserve-next`)
@@ -61,3 +61,36 @@ This pairs with [[TASK-0352]]'s Part B rather than duplicating it: that check
 reconciles *task state*, this ledger records *document decisions*. Neither
 substitutes for the other, and both exist because the same thing keeps happening
 — the reasoning is recorded somewhere, and not where the next person looks.
+
+
+## Done — 2026-09-09, Reviewer thread
+
+`documentation/SUBMISSION_VERSION_LEDGER.md` created and populated retroactively
+for v0 → V1 → V2 → V3, from the task record rather than from a diff.
+
+**Verified rather than recalled**, per COMMON.md's standing rule — the c-Myc
+regression this task was filed over is confirmed in the files themselves:
+
+| file | c-Myc mentions | citations |
+|---|---|---|
+| `PHASE1_SUBMISSION_V1.md` | 1 | 0 |
+| `PHASE1_SUBMISSION_V2.md` | 2 | 15 |
+| `PHASE1_SUBMISSION_V3.md` | 2 | 15 |
+
+(V1 held it, V2's rewrite dropped it, and it was restored during V2's own
+lifetime — so the ledger records the drop as a regression *within* V2 rather than
+as a V1→V2 difference that survived. Stating it precisely matters: a reader
+comparing only the current files would not see that it ever went missing, which
+is exactly the invisibility this ledger exists to fix.)
+
+**Also carries an "Open, not yet in any version" section** so the next drafting
+pass inherits the queue rather than rediscovering it: [[TASK-0351]]'s structure
+rationale, the three `allosteric`-branch merge contributions, and the `+0.031`
+matched-twin result — the last recorded as **held**, with the reason
+([[TASK-0130]]'s phase-free finding means `p_avg` vs heat kernel differs in
+spectral weighting, not interference) rather than merely as "pending".
+
+**Not done**: the ledger is not wired into any check. Reading the *"must not
+regress"* column before shipping is a human step by design — [[TASK-0352]] Part B
+is where an automated consistency check belongs, and inventing a second one here
+would be the duplication that task explicitly warns against.
