@@ -96,6 +96,17 @@ deletion to stage, not a typo. `_is_tracked()` (a `git ls-files
 --error-unmatch` check) distinguishes the two; a genuinely never-tracked
 missing path still refuses with the original error.
 
+Extended for TASK-0024.002: `_staged_paths()` (shared by `commit-guard`
+and `stage`'s self-verification) now reads `git diff --cached --name-only
+--no-renames`. Without `--no-renames`, whether a renamed path collapsed to
+one entry or split into two (old removed, new added) depended on git's
+own content-similarity threshold -- reproduced live: a trivial rename
+reported one path, the identical rename plus a large-enough content edit
+(e.g. `move`'s own Status-line rewrite plus a big `## Done` section)
+reported two, with nothing in the `--expect` contract explaining which to
+expect. The rule is now fixed and unconditional: a rename always counts
+as two entries, list both.
+
 No third-party dependencies -- stdlib only.
 
 Usage:
@@ -1265,8 +1276,19 @@ def cmd_resolve(args):
 
 def _staged_paths():
     # type: () -> set
+    """TASK-0024.002: `--no-renames` is load-bearing, not cosmetic. Without
+    it, `git diff --cached --name-only` collapses a renamed path to just
+    the new name ONLY when the old/new content stays above git's
+    similarity threshold -- reproduced live (2026-07-09 incident, and
+    again in this task's own scratch-repo validation): a trivial rename
+    reports one path, the identical rename plus a large-enough content
+    edit reports two, with nothing about the caller's `--expect` list
+    explaining which to expect. `--no-renames` makes every rename report
+    as a plain delete+add (old path removed, new path added) unconditionally,
+    so "list both paths for a rename" becomes a fixed rule instead of a
+    threshold a caller has to discover by having a call fail."""
     proc = subprocess.run(
-        ["git", "diff", "--cached", "--name-only"],
+        ["git", "diff", "--cached", "--name-only", "--no-renames"],
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
@@ -1701,7 +1723,9 @@ def build_parser():
         "--expect",
         nargs="+",
         metavar="PATH",
-        help="exact set of paths expected to be staged for the next commit",
+        help="exact set of paths expected to be staged for the next commit "
+        "-- a renamed path always counts as TWO entries (old path removed, "
+        "new path added): list both, never just the new one (TASK-0024.002)",
     )
     guard_group.add_argument(
         "--expect-empty",
@@ -1722,7 +1746,11 @@ def build_parser():
         nargs="+",
         required=True,
         metavar="PATH",
-        help="exact paths to stage; every path must be under .ai/ or .claude/",
+        help="exact paths to stage; every path must be under .ai/ or .claude/ "
+        "-- if one of them is a rename (moved since the last commit), list "
+        "BOTH the old and new path: self-verification compares against the "
+        "actually-staged index, which always splits a rename into two "
+        "entries (TASK-0024.002)",
     )
     p_stage.set_defaults(func=cmd_stage)
 

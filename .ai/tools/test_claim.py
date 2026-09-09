@@ -339,13 +339,18 @@ class TestStageRestagesEditedContent:
         assert moved.returncode == 0
         target = repo / ".ai" / "tasks" / "IN_PROGRESS" / "TASK-9001-scratch.md"
         rel = ".ai/tasks/IN_PROGRESS/TASK-9001-scratch.md"
+        old_rel = ".ai/tasks/TODO/TASK-9001-scratch.md"  # TASK-0024.002: a
+        # rename always splits into two --expect entries now (old path
+        # removed, new path added) -- unrelated to this test's own subject
+        # (a post-move content edit getting picked up), just the current
+        # correct --expect shape for the `move` this test performs.
 
         # `move` already staged `target` via its own internal `git mv` --
         # the defect is a *second* edit, made after that, being dropped by
         # a *second* `stage --expect` call for the same path.
         target.write_text(target.read_text() + "\nedited after move, before stage\n")
 
-        result = _claim(repo, "stage", "--expect", rel)
+        result = _claim(repo, "stage", "--expect", old_rel, rel)
         assert result.returncode == 0, result.stderr
 
         staged_blob = subprocess.run(
@@ -372,6 +377,83 @@ class TestStageRestagesEditedContent:
 
         second_delete = _claim(repo, "stage", "--expect", rel)
         assert second_delete.returncode == 0, second_delete.stderr
+
+
+class TestRenameAlwaysSplitsIntoTwoPaths:
+    """TASK-0024.002: real incident, 2026-07-09 -- whether a renamed path
+    collapsed to one --expect entry or split into two (old removed, new
+    added) depended on git's own content-similarity rename-detection
+    threshold, not on anything the caller controlled. `move TASK-9001
+    DONE` (small file, plain Status-line rewrite) stayed above the
+    threshold and collapsed to one path; the same command on a file with
+    a large `## Done` section dropped below it and split into two --
+    identical shape of call, opposite --expect requirement, discoverable
+    only by having the call fail and reading the error.
+
+    `_staged_paths()` now always passes --no-renames, so both cases below
+    must behave identically: a rename is unconditionally two entries."""
+
+    def test_small_edit_rename_requires_both_paths(self, tmp_path):
+        """Before this fix, this was the surprising case: a short file's
+        Status-line-only rewrite stayed above git's similarity threshold,
+        so the rename collapsed to one path and --expect with only the
+        new path used to pass. It must now fail, naming the old path as
+        unexpectedly staged -- exactly like the large-edit case below."""
+        repo = _make_scratch_repo(tmp_path)
+        assert _claim(repo, "claim", "TASK-9001", "test").returncode == 0
+
+        moved = _claim(repo, "move", "TASK-9001", "IN_PROGRESS", "--as", "test")
+        assert moved.returncode == 0, moved.stderr
+        old_path = ".ai/tasks/TODO/TASK-9001-scratch.md"
+        new_path = ".ai/tasks/IN_PROGRESS/TASK-9001-scratch.md"
+
+        new_only = _claim(repo, "commit-guard", "--expect", new_path)
+        assert new_only.returncode == 1
+        assert old_path in new_only.stderr
+
+        both = _claim(repo, "commit-guard", "--expect", old_path, new_path)
+        assert both.returncode == 0, both.stderr
+
+    def test_large_edit_rename_requires_both_paths(self, tmp_path):
+        """The case that already worked correctly before this fix --
+        confirm it still does, so the fix closed the gap rather than
+        just relocating which case is the surprising one."""
+        repo = _make_scratch_repo(tmp_path)
+        assert _claim(repo, "claim", "TASK-9001", "test").returncode == 0
+        target = repo / ".ai" / "tasks" / "TODO" / "TASK-9001-scratch.md"
+        target.write_text(target.read_text() + ("\nmore content\n" * 50))
+
+        moved = _claim(repo, "move", "TASK-9001", "DONE", "--as", "test")
+        assert moved.returncode == 0, moved.stderr
+        old_path = ".ai/tasks/TODO/TASK-9001-scratch.md"
+        new_path = ".ai/tasks/DONE/TASK-9001-scratch.md"
+
+        new_only = _claim(repo, "commit-guard", "--expect", new_path)
+        assert new_only.returncode == 1
+        assert old_path in new_only.stderr
+
+        both = _claim(repo, "commit-guard", "--expect", old_path, new_path)
+        assert both.returncode == 0, both.stderr
+
+    def test_stage_self_verification_also_requires_both_paths(self, tmp_path):
+        """Same rule via `stage`'s own self-verification step (shared
+        `_staged_paths()`/`_compare_staged()`), not just `commit-guard`
+        called directly."""
+        repo = _make_scratch_repo(tmp_path)
+        assert _claim(repo, "claim", "TASK-9001", "test").returncode == 0
+        assert _claim(repo, "claim", "GIT-COMMIT", "test").returncode == 0
+
+        moved = _claim(repo, "move", "TASK-9001", "IN_PROGRESS", "--as", "test")
+        assert moved.returncode == 0, moved.stderr
+        old_path = ".ai/tasks/TODO/TASK-9001-scratch.md"
+        new_path = ".ai/tasks/IN_PROGRESS/TASK-9001-scratch.md"
+
+        # `move` already staged both paths; re-asserting only the new one
+        # via `stage` must fail self-verification, not silently accept a
+        # partial --expect.
+        new_only = _claim(repo, "stage", "--expect", new_path)
+        assert new_only.returncode == 1
+        assert old_path in new_only.stderr
 
 
 if __name__ == "__main__":
