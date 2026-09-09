@@ -20,11 +20,11 @@ We built the method the challenge specifies — a continuous-time quantum walk o
 
 **Structures used, and why they deviate from Table 1.** We reported to the organisers that `4OBE`, the mandated KRAS G12C apo structure, is wild-type at residue 12 (GLY, not CYS). Their reply of 2026-08-26 answered three points, and we followed it in each case:
 
-| target | structure used | deviation, and the reason |
-|---|---|---|
-| KRAS G12C | `4LDJ` (apo) | The organisers suggested `8S8C`. We checked it against the PDB and it is **holo** — MK-1084-bound — so it cannot serve as the apo half of an apo/holo contrast. We searched for a genuine apo G12C structure and verified `4LDJ` (residue 12 is CYS, no ligand at the site). |
+| target | structure | deviation, and the reason |
+|-----|-------|------------------------------------------------------|
+| KRAS G12C [14] | `4LDJ` (apo) | The organisers suggested `8S8C`. We checked it against the PDB and it is **holo** — MK-1084-bound — so it cannot serve as the apo half of an apo/holo contrast. We searched for a genuine apo G12C structure and verified `4LDJ` (residue 12 is CYS, no ligand at the site). |
 | BCR-ABL1 | `1OPL` (apo), retained | Substitution was expressly permitted. We kept `1OPL` deliberately: its myristate occupancy is the finding, not a defect — it is how we established that "apo" depositions are not reliably ligand-free. Substituting it would have removed the evidence. |
-| Cardiac myosin | `8QYP` → `8QYR` | Our substitution, **accepted as primary** by the organisers. |
+| Cardiac myosin [15] | `8QYP` → `8QYR` | Our substitution, **accepted as primary** by the organisers. |
 | c-Myc | `1NKP` | Mandated; no drug-bound structure exists, so the validity rule does not apply. |
 
 A reader holding only the published Challenge Statement would otherwise see three unexplained deviations. All three trace to the 2026-08-26 clarification, and the `8S8C` check is recorded in our configuration alongside the choice it produced.
@@ -90,7 +90,7 @@ One ordering in that experiment is worth reporting, because it is not nothing. C
 | Component | What it does | Why it is needed |
 |---|---|---|
 | **(a) Certifying cryptic-pocket benchmark** | Blind validity rule, endogenous-ligand audit, positive control, measured detection limit, at scale | 5 of 7 standard targets fail the contrast; the field uses them regardless |
-| **(b) Apo vs stripped-holo delta** | Isolates what cryptic-pocket prediction actually depends on | Leading methods report 89.8%/98.1% on ASBench/CASBench, but evaluate *ligand-removed holo*, not apo. We have found no report of the delta |
+| **(b) Apo vs stripped-holo delta** | Isolates what cryptic-pocket prediction actually depends on | Leading methods report 89.8%/98.1% on ASBench [4] / CASBench [5], but evaluate *ligand-removed holo*, not apo. We have found no report of the delta |
 | **(c) Screening criterion for the hard regime** | Decides *from apo alone* whether a target needs many-body treatment | Coupled search fires for 20% of KRAS_G12C restarts and 0 of 65 for PTP1B — two valid targets disagree, and n = 2 cannot adjudicate |
 
 Component (b) is ~27 minutes of compute over 100 apo/holo pairs and half a day of scripting against pairs we have already identified. We expect to report it before Phase 2 begins rather than propose it.

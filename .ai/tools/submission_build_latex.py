@@ -218,6 +218,9 @@ _MATH_SUBSTITUTIONS = {
     "·": _raw_latex("\\ensuremath{\\cdot}"),
     "ρ": _raw_latex("\\ensuremath{\\rho}"),
     "§": _raw_latex("\\S{}"),
+    "≈": _raw_latex("\\ensuremath{\\approx}"),   # was MISSING -- rendered as a
+                                                # tofu box in V3, silently turning
+                                                # "rho ~ 0.95" into "rho [] 0.95"
 }
 _SUPERSCRIPT_DIGITS = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹",
                                     "0123456789")
@@ -277,6 +280,52 @@ def _preprocess_markdown(md_text: str) -> str:
             part)
         rebuilt.append(part)
     return "".join(rebuilt)
+
+
+_ALLOWED_NON_ASCII = set(
+    "—–‘’“”…·°±×÷−≈≥≤→←↔⁰¹²³⁴⁵⁶⁷⁸⁹§"          # covered by the tables above
+    "áàâäãåéèêëíìîïóòôöõúùûüñçšžøåæœÁÀÂÄÉÈÊËÍÎÏÓÔÖÚÜÑÇ"   # Latin-1-ish, XeTeX handles
+    "ρσμλαβγδπθΔΣΩ"                              # greek used in prose
+)
+
+
+def check_citations(md_text: str) -> list:
+    """Every inline [n] marker must resolve to a numbered entry in the
+    reference list, and every listed reference should be cited. Added
+    2026-09-09 at the repo owner's request: the citations were added by hand
+    and nothing checked that [7] is the paper the sentence means. This does
+    NOT verify a reference is correct -- only that the numbering is
+    self-consistent, which is the part a machine can settle."""
+    import re as _re
+    cited = set()
+    for m in _re.finditer(r"\[(\d+(?:\s*,\s*\d+)*)\]", md_text):
+        for n in m.group(1).split(","):
+            cited.add(int(n.strip()))
+    listed = {int(m.group(1))
+              for m in _re.finditer(r"^(\d+)\.\s+\S", md_text, _re.M)}
+    problems = []
+    dangling = sorted(cited - listed)
+    if dangling:
+        problems.append("cited but not in the reference list: %s"
+                        % ", ".join("[%d]" % n for n in dangling))
+    uncited = sorted(listed - cited)
+    if uncited:
+        problems.append("listed but never cited: %s"
+                        % ", ".join(str(n) for n in uncited))
+    return problems
+
+
+def check_glyph_coverage(md_text: str) -> list:
+    """Every non-ASCII character that would reach LaTeX without a known
+    rendering. Added 2026-09-09 after `≈` shipped in V3 as a tofu box: the
+    substitution table silently passes through anything it does not know, and
+    the failure is invisible in the source and easy to miss in the PDF. This
+    turns that class of defect into a build failure naming the character."""
+    bad = {}
+    for ch in md_text:
+        if ord(ch) > 127 and ch not in _ALLOWED_NON_ASCII:
+            bad[ch] = bad.get(ch, 0) + 1
+    return sorted(bad.items(), key=lambda kv: -kv[1])
 
 
 def md_to_latex_body(pandoc: str, md_text: str) -> str:
@@ -583,6 +632,31 @@ def build(md_path: Path, outdir: Path, since_ref: str, version: Optional[int],
     analysis = _sb.analyze(pages)
     result, checks = _sb.evaluate(analysis)
     checks = [_relabel_small_text_check(c) for c in checks]
+    # Glyph coverage (2026-09-09): a character the substitution tables do not
+    # know is passed through and renders as a tofu box -- invisible in the
+    # source, easy to miss in the PDF, and it shipped once in V3 as
+    # "rho [] 0.95". FAIL rather than WARN: it corrupts meaning silently.
+    _uncovered = check_glyph_coverage(md_path.read_text(encoding="utf-8"))
+    if _uncovered:
+        checks.append(_sb.Check(
+            status="FAIL", name="glyph coverage",
+            detail="%d uncovered non-ASCII character(s) will render as tofu: %s"
+                   % (len(_uncovered),
+                      ", ".join("%r x%d" % (c, n) for c, n in _uncovered[:6]))))
+        result = "FAIL"
+    else:
+        checks.append(_sb.Check(
+            status="PASS", name="glyph coverage",
+            detail="every non-ASCII character has a known LaTeX rendering"))
+    _cite = check_citations(md_path.read_text(encoding="utf-8"))
+    if _cite:
+        checks.append(_sb.Check(status="FAIL", name="citations",
+                                detail="; ".join(_cite)))
+        result = "FAIL"
+    else:
+        checks.append(_sb.Check(
+            status="PASS", name="citations",
+            detail="every [n] resolves to a listed reference, and none is orphaned"))
 
     change = None
     skip_reason = ""
