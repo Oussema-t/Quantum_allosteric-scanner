@@ -284,6 +284,44 @@ reasonably ask "why this one and not another." Full table and method:
 [[HYP-P7]]'s own 2026-09-09 status update (same task, same run) and
 `.ai/tasks/DONE/TASK-0350-coherent-vs-decoherent-matched-twin.md`.
 
+**Status update, 2026-09-09 ([[TASK-0357]]) — the "principled" spectral
+clock (alternative 2) still has a free knob, and a single reading at the
+pre-registered value is not enough to trust.** Replicated an external
+finite-delay phase-sensitive observable, `O(r)=2*Re<r|exp(-iH tau)|a>`
+(TASK-0157's own cross-term), with `tau` fixed per protein via `min_
+adequate_t_max(kind="ground_state_relaxation", tol=1e-2)` — this
+hypothesis's own alternative 2, pre-registered before scoring, per
+TASK-0357's own Intent Contract. At `tol=1e-2`: unsigned `|O(r)|`
+resid-AUC excess +0.029 mean / +0.016 median, cluster-permutation
+**p=0.036** (76 protein clusters, 108 ASBench structures) — nominally
+significant. **Did not stop there.** A post-hoc (explicitly not
+pre-registered — disclosed as exploratory follow-up, not smuggled in)
+sensitivity check across nearby `tol` values, same cohort, same code:
+
+| tol | mean resid-AUC excess | cluster-permutation p |
+|---|---|---|
+| 1e-3 | +0.0095 | 0.461 |
+| **1e-2 (pre-registered)** | **+0.029** | **0.036** |
+| 5e-2 | +0.0096 | 0.523 |
+| 1e-1 | +0.0007 | 0.960 |
+
+**The nominally-significant result is isolated to the single pre-registered
+tolerance and does not replicate one order of magnitude in either
+direction.** This is exactly the signature TASK-0350's own status update
+above anticipated in the abstract ("alternative 2... still requires
+picking `tol`, a referee could reasonably ask why this one") — TASK-0357
+makes it concrete for a real observable on real data: the "principled"
+clock removed the `t_max=15-vs-converged` arbitrariness this hypothesis
+already established, but replaced it with a `tol` arbitrariness of the
+same practical kind, and at least one candidate positive result (the
+external collaborator's own finite-delay claim, independently re-derived
+here) sits on exactly that knife-edge. Verdict, per TASK-0357's own
+pre-registered "either outcome is publishable" framing: **collapse under
+scrutiny, not a surviving effect** — a clean methodological finding about
+selection on `tau`/`tol`, consistent with (not contrary to) this
+hypothesis's own core claim. Full detail:
+`.ai/tasks/DONE/TASK-0357-finite-delay-phase-observable-principled-clock.md`.
+
 ---
 
 ## HYP-P7 · Coherence adds no signal for allosteric pocket prediction on these proteins

@@ -23,6 +23,8 @@ file did not silently fall behind its own source files.
 | [[HYP-S7]] | Conformational sampling is legal; only MD trajectories are forbidden | 2026-08-19 | 4 |
 | [[HYP-P2]] | A pairwise residue-type correction is the highest-value diagonal-only extension | 2026-09-03 | 3 |
 | [[HYP-P3]] | V_C (currently structural centrality) would be more predictive as true dynamic covariance | 2026-09-03 | 3 |
+| [[HYP-P6]] | Propagation time t in CTQW is currently unprincipled; a spectral choice would close a v... | 2026-09-09 | 3 |
+| [[HYP-P7]] | Coherence adds no signal for allosteric pocket prediction on these proteins | 2026-09-09 | 3 |
 | [[HYP-P10]] | Cryptic pockets carry a "near-in-3D / far-on-apo-graph" coordinated-closure signature | 2026-07-22 | 3 |
 | [[HYP-P11]] | Engineered dephasing (ENAQT) does not improve pocket discrimination — it relaxes the wa... | 2026-07-20 | 3 |
 | [[HYP-P25]] | The PASSer-seeded veto pipeline's below-chance pocket pick is a measured proximity-anti... | 2026-09-07 | 3 |
@@ -31,8 +33,6 @@ file did not silently fall behind its own source files.
 | [[HYP-P5]] | H13 (full 3N ANM Hessian) sets a performance ceiling that H_new cannot reach | 2026-07-18 | 2 |
 | [[HYP-P26]] | Computationally stripping a holo structure's ligand is not apo-isation, and cryptic-poc... | 2026-09-07 | 2 |
 | [[HYP-S3]] | Overlap measures magnitude; hardness is set by coupling; they are orthogonal | 2026-08-12 | 2 |
-| [[HYP-P6]] | Propagation time t in CTQW is currently unprincipled; a spectral choice would close a v... | 2026-09-09 | 1 |
-| [[HYP-P7]] | Coherence adds no signal for allosteric pocket prediction on these proteins | 2026-09-09 | 1 |
 | [[HYP-P15]] | `dcc_low`'s cryptic-pocket signal generalizes across targets; the transport observable'... | 2026-07-24 | 1 |
 | [[HYP-P18]] | On real, field-annotated ground truth, this register's observables do not beat random a... | 2026-09-06 | 1 |
 | [[HYP-P19]] | The apo contact graph's connectivity between active site and pocket is broad and redund... | 2026-07-18 | 1 |

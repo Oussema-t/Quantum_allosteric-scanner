@@ -12748,3 +12748,82 @@ structure, once to validate and once to score). New rule added to
 `documentation/REFERENCES.md` (+2 rows, both DOIs live-verified via
 Crossref), `documentation/PHASE1_SUBMISSION_V2.md` (1-sentence correction).
 **Full detail**: `.ai/tasks/DONE/TASK-0348-mandatory-centrality-ablation.md`.
+
+## The finite-delay phase-sensitive observable, replicated under a principled clock, collapses under a tolerance-robustness check ([[TASK-0357]], 2026-09-09)
+
+An external (`allosteric` branch) claim reports a finite-delay,
+phase-sensitive observable `O(r) = 2·Re⟨r|e^{-iHτ}|a⟩` scoring **+0.114
+distal AUC, p=0.004**, surviving leave-one-family-out. This is a real,
+pre-derived observable — TASK-0157 (2026-08-02) proved the two-boson
+coincidence expansion retains exactly this cross-term, and its own Open
+Questions stated in advance that only the finite-time form (not the
+converged limit TASK-0350 tested) could show it. Not implemented before
+this task.
+
+**Implemented and validated.** `finite_delay_phase_observable(w, v, tau,
+source)`, built from `propagators.py`'s own coherent seed-state
+convention (`_quantum_initial_coeffs`, the same one every other
+phase-carrying arm in this register already uses). Two Planned Validation
+checks, both passed before trusting the new arm: (1) the reused ASBench
+cohort/harness reproduces TASK-0308/0350's own committed converged
+decoherent-CTQW numbers exactly; (2) time-averaged `O(r)` shrinks toward 0
+as the averaging window grows, matching TASK-0130's own proof that this
+class of quantity is phase-free at convergence — caught and fixed a real
+bug in an earlier version of this check first (averaging `|O(r,t)|`
+instead of the signed quantity does not test the right thing; it
+approaches the oscillation's own RMS magnitude, not 0, even when the
+phase genuinely cancels).
+
+**Sign pre-registered before scoring, not fitted**: no defensible physical
+argument for the sign survives at the operating timescale (a short-τ
+perturbative expansion, the only tractable closed form, does not apply —
+`τ = min_adequate_t_max(kind="ground_state_relaxation")` is deliberately
+*large* relative to the spectral gap, not small). `|O(r)|` unsigned is
+primary per the task's own explicit fallback; raw signed `O(r)` is
+secondary, with no cohort-level majority-sign fit applied (that would
+itself be a supervised, post-hoc sign choice — exactly the "sign chosen to
+fit the instability" failure mode the task warns against, just moved from
+per-fold to per-cohort).
+
+**Result: nominally significant at the pre-registered τ, and isolated to
+it.** On TASK-0350's own 108-structure/76-protein ASBench cohort, unsigned
+`|O(r)|` at the pre-registered `tol=1e-2`: resid-AUC excess +0.029 mean
+(+0.016 median), cluster-permutation **p=0.036**. A post-hoc (disclosed as
+exploratory, run because the primary result was only marginally
+significant) sensitivity sweep across nearby tolerances:
+
+| tol | mean resid-AUC excess | cluster-permutation p |
+|---|---|---|
+| 1e-3 | +0.0095 | 0.461 |
+| **1e-2 (pre-registered)** | **+0.029** | **0.036** |
+| 5e-2 | +0.0096 | 0.523 |
+| 1e-1 | +0.0007 | 0.960 |
+
+The signal does not survive one order of magnitude in either direction —
+a τ-selection artifact, not a robust effect. Per the task's own
+pre-registered "either outcome is publishable" framing: this is the
+collapse outcome. Folded into [[HYP-P6]] as a dated Status update: the
+"principled" spectral-gap clock removes the old `t_max=15`-vs-converged
+arbitrariness, but has its own free knob (`tol`), and the one available
+candidate positive result sits exactly on that knife-edge.
+
+**Not resolved here**: a cohort-matched comparison against the external
+claim's own number (theirs is the veto-pipeline's 399-family cohort; this
+task used the 276-family-adjacent ASBench cohort for Planned-Validation
+reasons, explicitly out of scope per the task's own filing) — and the
+held secondary claim (+0.031, amplitudes vs probabilities, spectrally
+matched control) — both flagged, not silently dropped; the secondary
+claim's hold is unchanged, not lifted.
+
+**Doc edit** (independent of outcome, per the filing, but the outcome
+changed what got written): `PHASE1_SUBMISSION_V3.md`'s "closed nine
+candidate advantage routes" sentence now names the finite-delay observable
+as the tested tenth, reporting the actual collapse result rather than
+asserting an unvalidated positive — naming it as "the Phase-2 route to
+build" would have been exactly what the filing's own principle warned
+against.
+
+**Files**: `scripts/task0357_finite_delay_phase_observable.py` (new),
+`results/tasks/0357_finite_delay_phase_observable/{checkpoint.jsonl,finite_delay_phase_observable.json}`,
+`documentation/PHASE1_SUBMISSION_V3.md`. **Full detail**:
+`.ai/tasks/DONE/TASK-0357-finite-delay-phase-observable-principled-clock.md`.
