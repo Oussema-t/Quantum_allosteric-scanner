@@ -17,6 +17,7 @@ Run under pytest: pytest test_claim.py -q
 """
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import subprocess
@@ -661,6 +662,222 @@ class TestCommitGuardCommitMode:
         result2 = _claim(repo, "commit-guard", "--expect", rel, "--commit", "--message-file", str(missing))
         assert result2.returncode == 1
         assert "does not exist" in result2.stderr
+
+
+class TestAddAttributedStageAndAnnotate:
+    """TASK-0061: `claim.py add` -- attributed stage-and-annotate, any
+    path. Complementary to `stage` (bulk, .ai/.claude-scoped, exact-match
+    self-verify), not a replacement: `add` is incremental/per-file and
+    deliberately unscoped by directory, since its safety property is
+    attribution (a real TASK-ID + a mandatory --purpose, permanently
+    recorded in that task's own file), not a path prefix."""
+
+    def test_single_file_add_outside_ai_claude_stages_and_annotates(self, tmp_path):
+        """The whole point of this task: `stage`'s own .ai/.claude
+        restriction must NOT apply to `add`."""
+        repo = _make_scratch_repo(tmp_path)
+        (repo / "backend").mkdir()
+        (repo / "backend" / "outside.py").write_text("# outside .ai/.claude\n")
+
+        result = _claim(repo, "add", "TASK-9001", "backend/outside.py", "--purpose", "wires up the new thing")
+        assert result.returncode == 0, result.stderr
+
+        staged = subprocess.run(
+            ["git", "diff", "--cached", "--name-only"], cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout.split()
+        assert "backend/outside.py" in staged
+        assert ".ai/tasks/TODO/TASK-9001-scratch.md" in staged, (
+            "the task file's own edit (the new annotation) must be staged too"
+        )
+
+        content = (repo / ".ai/tasks/TODO/TASK-9001-scratch.md").read_text()
+        assert "## Staged Files" in content
+        assert "`backend/outside.py` -- wires up the new thing" in content
+
+    def test_creates_section_immediately_before_done_heading(self, tmp_path):
+        repo = _make_scratch_repo(tmp_path)
+        task_path = repo / ".ai/tasks/TODO/TASK-9001-scratch.md"
+        task_path.write_text(
+            "# TASK-9001 scratch\n\n- Status: TODO\n\n## Context\n\nsome context\n\n## Done\n\n(not yet)\n"
+        )
+        subprocess.run(["git", "add", "-A"], cwd=repo, check=True, capture_output=True)
+        subprocess.run(["git", "commit", "-q", "-m", "task file with a Done heading"], cwd=repo, check=True, capture_output=True)
+        (repo / "backend").mkdir()
+        (repo / "backend" / "x.py").write_text("# x\n")
+
+        result = _claim(repo, "add", "TASK-9001", "backend/x.py", "--purpose", "test")
+        assert result.returncode == 0, result.stderr
+
+        content = task_path.read_text()
+        assert content.index("## Staged Files") < content.index("## Done"), (
+            "new section must land before ## Done, not after it or at raw EOF"
+        )
+        assert "(not yet)" in content, "## Done's own content must be untouched"
+
+    def test_second_add_appends_to_existing_section_in_call_order(self, tmp_path):
+        repo = _make_scratch_repo(tmp_path)
+        (repo / "backend").mkdir()
+        (repo / "backend" / "a.py").write_text("# a\n")
+        (repo / "backend" / "b.py").write_text("# b\n")
+
+        first = _claim(repo, "add", "TASK-9001", "backend/a.py", "--purpose", "first")
+        assert first.returncode == 0, first.stderr
+        second = _claim(repo, "add", "TASK-9001", "backend/b.py", "--purpose", "second")
+        assert second.returncode == 0, second.stderr
+
+        content = (repo / ".ai/tasks/TODO/TASK-9001-scratch.md").read_text()
+        assert content.count("## Staged Files") == 1, "must not create a second section"
+        assert content.index("`backend/a.py`") < content.index("`backend/b.py`"), "entries must stay in call order"
+
+    def test_batch_manifest_array_form(self, tmp_path):
+        repo = _make_scratch_repo(tmp_path)
+        (repo / "backend").mkdir()
+        (repo / "backend" / "a.py").write_text("# a\n")
+        (repo / "backend" / "b.py").write_text("# b\n")
+        manifest = tmp_path / "manifest.json"
+        manifest.write_text(json.dumps([
+            {"file": "backend/a.py", "purpose": "reason A"},
+            {"file": "backend/b.py", "purpose": "reason B"},
+        ]))
+
+        result = _claim(repo, "add", "TASK-9001", "--from-file", str(manifest))
+        assert result.returncode == 0, result.stderr
+
+        content = (repo / ".ai/tasks/TODO/TASK-9001-scratch.md").read_text()
+        assert "`backend/a.py` -- reason A" in content
+        assert "`backend/b.py` -- reason B" in content
+        staged = subprocess.run(
+            ["git", "diff", "--cached", "--name-only"], cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout.split()
+        assert "backend/a.py" in staged and "backend/b.py" in staged
+
+    def test_batch_manifest_object_form_shared_and_override_purpose(self, tmp_path):
+        repo = _make_scratch_repo(tmp_path)
+        (repo / "backend").mkdir()
+        (repo / "backend" / "a.py").write_text("# a\n")
+        (repo / "backend" / "b.py").write_text("# b\n")
+        (repo / "backend" / "c.py").write_text("# c\n")
+        manifest = tmp_path / "manifest.json"
+        manifest.write_text(json.dumps({
+            "purpose": "shared reason",
+            "files": ["backend/a.py", "backend/b.py", {"file": "backend/c.py", "purpose": "override reason"}],
+        }))
+
+        result = _claim(repo, "add", "TASK-9001", "--from-file", str(manifest))
+        assert result.returncode == 0, result.stderr
+
+        content = (repo / ".ai/tasks/TODO/TASK-9001-scratch.md").read_text()
+        assert "`backend/a.py` -- shared reason" in content
+        assert "`backend/b.py` -- shared reason" in content
+        assert "`backend/c.py` -- override reason" in content
+
+    def test_unknown_task_id_refuses(self, tmp_path):
+        repo = _make_scratch_repo(tmp_path)
+        result = _claim(repo, "add", "TASK-9999", "some/path.py", "--purpose", "x")
+        assert result.returncode != 0
+        assert "no task file found" in result.stderr
+
+    def test_malformed_manifest_json_refuses_with_no_side_effects(self, tmp_path):
+        repo = _make_scratch_repo(tmp_path)
+        (repo / "backend").mkdir()
+        (repo / "backend" / "a.py").write_text("# a\n")
+        manifest = tmp_path / "bad.json"
+        manifest.write_text("{not valid json")
+
+        before = subprocess.run(
+            ["git", "diff", "--cached", "--name-only"], cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout
+        result = _claim(repo, "add", "TASK-9001", "--from-file", str(manifest))
+        assert result.returncode != 0
+        assert "malformed manifest" in result.stderr
+        after = subprocess.run(
+            ["git", "diff", "--cached", "--name-only"], cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout
+        assert before == after, "a parse error must stage nothing"
+
+    def test_manifest_naming_a_missing_file_refuses_all_or_nothing(self, tmp_path):
+        repo = _make_scratch_repo(tmp_path)
+        (repo / "backend").mkdir()
+        (repo / "backend" / "a.py").write_text("# a\n")
+        manifest = tmp_path / "manifest.json"
+        manifest.write_text(json.dumps([
+            {"file": "backend/a.py", "purpose": "real"},
+            {"file": "backend/does_not_exist.py", "purpose": "missing"},
+        ]))
+
+        before = subprocess.run(
+            ["git", "diff", "--cached", "--name-only"], cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout
+        result = _claim(repo, "add", "TASK-9001", "--from-file", str(manifest))
+        assert result.returncode != 0
+        after = subprocess.run(
+            ["git", "diff", "--cached", "--name-only"], cwd=repo, capture_output=True, text=True, check=True,
+        ).stdout
+        assert before == after, "one missing path must block the whole batch, not stage the rest"
+
+    def test_manifest_entry_with_no_purpose_and_no_shared_purpose_refuses(self, tmp_path):
+        repo = _make_scratch_repo(tmp_path)
+        (repo / "backend").mkdir()
+        (repo / "backend" / "a.py").write_text("# a\n")
+        manifest = tmp_path / "manifest.json"
+        manifest.write_text(json.dumps({"files": ["backend/a.py"]}))  # no top-level purpose
+
+        result = _claim(repo, "add", "TASK-9001", "--from-file", str(manifest))
+        assert result.returncode != 0
+        assert "no purpose" in result.stderr
+
+    def test_from_file_and_positional_path_are_mutually_exclusive(self, tmp_path):
+        repo = _make_scratch_repo(tmp_path)
+        manifest = tmp_path / "manifest.json"
+        manifest.write_text(json.dumps([{"file": "x", "purpose": "y"}]))
+        result = _claim(repo, "add", "TASK-9001", "some/path.py", "--from-file", str(manifest))
+        assert result.returncode != 0
+        assert "mutually exclusive" in result.stderr
+
+    def test_single_file_form_requires_purpose(self, tmp_path):
+        repo = _make_scratch_repo(tmp_path)
+        (repo / "backend").mkdir()
+        (repo / "backend" / "a.py").write_text("# a\n")
+        result = _claim(repo, "add", "TASK-9001", "backend/a.py")  # no --purpose
+        assert result.returncode != 0
+        assert "requires both PATH and --purpose" in result.stderr
+
+    def test_path_outside_repository_refuses(self, tmp_path):
+        repo = _make_scratch_repo(tmp_path)
+        result = _claim(repo, "add", "TASK-9001", "../../etc/passwd", "--purpose", "x")
+        assert result.returncode != 0
+        assert "outside the repository" in result.stderr
+
+    def test_unchanged_file_identical_to_head_refuses_with_a_clear_message(self, tmp_path):
+        """Not gitignored -- genuinely nothing to stage. The error message
+        must not claim gitignoring as the only explanation."""
+        repo = _make_scratch_repo(tmp_path)
+        result = _claim(repo, "add", "TASK-9001", ".ai/tasks/TODO/TASK-9001-scratch.md", "--purpose", "no-op")
+        assert result.returncode != 0
+        assert "already identical to HEAD" in result.stderr
+
+    def test_stage_and_commit_guard_unaffected_by_add(self, tmp_path):
+        """Planned Validation #5: `add` must not change `stage`/
+        `commit-guard`'s own behavior at all."""
+        repo = _make_scratch_repo(tmp_path)
+        (repo / "backend").mkdir()
+        (repo / "backend" / "a.py").write_text("# a\n")
+        added = _claim(repo, "add", "TASK-9001", "backend/a.py", "--purpose", "x")
+        assert added.returncode == 0, added.stderr
+
+        # stage still refuses unclaimed GIT-COMMIT, exactly as TASK-0154 built it
+        (repo / ".ai" / "COMMON.md").write_text("# edited\n")
+        unclaimed = _claim(repo, "stage", "--expect", ".ai/COMMON.md")
+        assert unclaimed.returncode == 1
+        assert "not currently claimed" in unclaimed.stderr
+
+        # commit-guard still asserts an exact match, unaffected by add's
+        # own earlier staging of backend/a.py and the task file
+        guard = _claim(
+            repo, "commit-guard", "--expect",
+            "backend/a.py", ".ai/tasks/TODO/TASK-9001-scratch.md",
+        )
+        assert guard.returncode == 0, guard.stderr
 
 
 if __name__ == "__main__":

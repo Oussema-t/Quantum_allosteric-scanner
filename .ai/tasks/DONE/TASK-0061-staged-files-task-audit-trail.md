@@ -9,7 +9,7 @@
   task's own file, in one whitelisted call — unrestricted by directory
   (unlike `stage`), because the safety property here is *mandatory
   attribution to a real task*, not a path prefix
-- Status: TODO
+- Status: Done
 - Owner: Toolsmith
 - Claimed By: —
 - Claimed At: —
@@ -180,6 +180,124 @@
   extend the schema later if a real need shows up rather than
   speculatively widening it now.
 
+## Staged Files
+
+- [2026-09-09 16:46] `.ai/tools/claim.py` -- new add subcommand: cmd_add, _append_to_staged_files_section, _parse_manifest_entries, _resolve_add_entries, argparse registration, docstring updates
+- [2026-09-09 16:47] `.ai/tools/test_claim.py` -- 14 new tests: TestAddAttributedStageAndAnnotate (single-file, batch manifest array/object forms, section-creation position, call-order append, all refusal paths, stage/commit-guard unaffected)
+- [2026-09-09 16:47] `.claude/settings.json` -- whitelist the 3 add-subcommand Bash invocation forms, matching every other subcommand's enumeration
+- [2026-09-09 16:47] `.ai/reference/CAPABILITIES.md` -- register repo.commit.add per this task's own In Scope instruction
+
 ## Done
 
-(not yet)
+**2026-09-09, Toolsmith.** Built exactly as specified: `add` subcommand,
+single-file + manifest-file batch forms, no directory scope, mandatory
+attribution, `stage`/`commit-guard`/`move`/`sync`/`GIT-COMMIT` untouched.
+
+### Implementation
+
+`cmd_add` + three helpers in `claim.py`: `_resolve_add_entries` (CLI ->
+normalized `[(repo-relative path, purpose)]`, raises `ValueError` for any
+usage problem before touching git or the task file), `_parse_manifest_
+entries` (both accepted manifest shapes -> the same flat list), `_append_
+to_staged_files_section` (targeted read-modify-write, same discipline
+`_perform_transition`'s Status-line rewrite already uses — never a
+whole-file rewrite; creates the section immediately before `## Done` if
+that heading exists, matching every task file's own convention of `##
+Done` as the final section, else at EOF).
+
+**Manifest schema, both forms from the Intent Contract, unified**: a bare
+JSON array of `{"file","purpose"}` objects, or an object `{"purpose":
+"<shared>", "files": [...]}` whose `files` entries may be a plain path
+string (inherits the shared purpose) or a `{"file","purpose"}` object
+(overrides it) — this is the literal reading of the task's own "per-file
+purpose in the array form always wins if both are present," which only
+makes sense as a description of the object form's own mixed-entry list,
+not two fully separate schemas.
+
+**All-or-nothing, exactly as specified**: the entire manifest is parsed
+and every path's on-disk existence is checked *before* `git add` touches
+anything — a malformed manifest or one missing file blocks the whole
+batch, confirmed live (Planned Validation below), not merely a code-read
+claim.
+
+**Lighter self-check, not `stage`'s exact-match assertion** (per the
+task's own In Scope wording): after `git add`, confirms each just-added
+path is now in `git diff --cached --name-only` — catches a silent no-op
+(gitignored) or a file already byte-identical to `HEAD` (genuinely
+nothing to stage). Found while live-testing: my first error message
+blamed only "gitignored?", which is misleading for the (more common in
+practice) second case — fixed to name both possibilities plainly rather
+than ship a message that would send a future reader chasing the wrong
+cause.
+
+**No directory scope, by design** (this task's own central decision):
+confirmed live against a path under `backend/`, well outside `.ai/`/
+`.claude/` — `stage` would refuse this, `add` does not, because the
+safety property here is attribution (`--purpose`/manifest `purpose` is
+mandatory; there is no way to call `add` unattributed) rather than a path
+prefix.
+
+**Reused, not re-derived**: `find_task_file`'s zero-or-multiple-match
+refusal discipline (Dependency on TASK-0027), `_staged_paths()`/`now_str()`
+(shared with `stage`/`sync`). `add` only ever calls plain `git add` on its
+own paths, never `git mv`/rename (Dependency on Q-0002) — the stale-blob
+bug that dependency warns about structurally cannot occur here.
+
+### Planned Validation — all 5, confirmed live before writing tests
+
+1. Single-file `add` against a real scratch task: file staged, task file
+   gains exactly one new `## Staged Files` line, nothing else changed.
+2. Batch `--from-file` against a manifest covering 3 files (2 shared-
+   purpose, 1 per-file override): all 3 staged, one line each, manifest
+   order preserved, appended after the entry from (1) — call order
+   across separate invocations, not just within one manifest.
+3. Zero-match (`TASK-9999`) refuses, reusing `find_task_file` directly.
+4. A malformed manifest, and separately a manifest naming a file missing
+   on disk, both refuse with nothing staged (`git diff --cached` byte-
+   identical before/after) — confirmed by diffing the staged set, not
+   just checking the exit code.
+5. `stage`/`commit-guard` confirmed byte-identical: `stage` still refuses
+   an unclaimed `GIT-COMMIT` exactly as TASK-0154 built it; `commit-guard
+   --expect` still asserts an exact match, unaffected by `add`'s own
+   earlier staging.
+
+### Tests
+
+`test_claim.py::TestAddAttributedStageAndAnnotate`, 14 tests (all against
+a real scratch git repo, subprocess-invoked, same convention as every
+other class in this file): the 2 out-of-scope-path/attribution cases
+central to this task, section-creation position (immediately before `##
+Done`), call-order append across two separate invocations, both manifest
+forms, every refusal path in the Intent Contract plus 3 more found while
+building it (path outside the repository entirely; a manifest entry with
+neither its own nor a shared purpose; the unchanged-file-message
+correction above), and the Planned-Validation-#5 stage/commit-guard
+non-interference check.
+
+**Full suite**: `.venv/bin/python -m pytest .ai/tools/` → **148 passed**
+(134 before this task, +14 new; zero regressions).
+
+### Dogfooded
+
+This task's own file was staged and annotated using `add` itself for
+every file this task touched (`claim.py`, `test_claim.py`,
+`.claude/settings.json`, `CAPABILITIES.md`) — see the `## Staged Files`
+section above, real entries from real `add` calls, not written by hand.
+
+### Docs
+
+Module docstring's Usage block, running changelog (new TASK-0061
+paragraph), `add --help` text; `.claude/settings.json` (3-form whitelist,
+matching every other subcommand); `CAPABILITIES.md`'s new
+`repo.commit.add` row, placed directly after `repo.commit.stage` with an
+explicit "complementary, not a replacement" framing.
+
+### Out of Scope, confirmed still out (unchanged from the task's own filing)
+
+- No commit-hash second phase (Open Question's own recommendation:
+  staged-only first, add later if proven useful).
+- No copy-into-`## Done` step when a task moves to `DONE` — the running
+  log stays in place regardless of lifecycle folder (Open Question's own
+  recommendation).
+- No manifest schema widening (`category`/SEAM/INV linkage) — not needed
+  yet, extend later per a real need.

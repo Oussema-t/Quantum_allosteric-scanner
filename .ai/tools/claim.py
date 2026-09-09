@@ -138,6 +138,23 @@ the gap TASK-0042 closed, for itself alone. Old two-step usage
 (`commit-guard --expect ...` with no `--commit`) is unchanged and still
 supported for anything that wants the check without the action.
 
+Extended for TASK-0061: `add <TASK-ID> <path> --purpose TEXT` (or
+`--from-file <manifest.json>` for several files at once) stages a path
+via plain `git add` and permanently appends one dated line -- `- [<ts>]
+<path> -- <purpose>` -- to the claiming task's own `## Staged Files`
+section (created just before `## Done` if absent), so a reviewer can
+check what a task actually staged against what its own file says, without
+trusting after-the-fact Done-section prose. Unscoped by directory,
+deliberately unlike `stage` (TASK-0029): `stage`'s `.ai/`/`.claude/`
+restriction exists because an unattributed bulk `git add` wrapper on
+claim.py's own blanket whitelist would let any thread silently stage
+anything; `add` can't be used unattributed at all (`--purpose` or a
+manifest entry's `purpose` is mandatory), so the safety property here is
+attribution, not a path prefix. Does not touch `stage`, `commit-guard`,
+`move`, `sync`, or the `GIT-COMMIT` gate -- `add` only changes what gets
+staged and annotated; a thread still runs the full claim -> stage/add ->
+commit-guard --commit -> release sequence to actually commit.
+
 No third-party dependencies -- stdlib only.
 
 Usage:
@@ -153,6 +170,8 @@ Usage:
     claim.py move         TASK-0024 IN_PROGRESS --as "Toolsmith (this thread)" [--force --reason TEXT] [--keep-claim]
     claim.py resolve      TASK-0024 done --as "Toolsmith (this thread)" [--note TEXT] [--no-stage]
     claim.py stage        --expect PATH [PATH ...]
+    claim.py add          TASK-0024 path/to/file --purpose "why this is staged"
+    claim.py add          TASK-0024 --from-file manifest.json
     claim.py scq-enter    --as "Toolsmith (this thread)" --files PATH [PATH ...] --message TEXT [--message-file PATH]
     claim.py scq-leave    SCQ-0001 --as "Toolsmith (this thread)" [--strict]
 """
@@ -1609,6 +1628,192 @@ def cmd_stage(args):
     return 0
 
 
+# -------------------------------------------------------------------- add --
+# TASK-0061: attributed stage-and-annotate, any path -- complementary to
+# `stage` (bulk, .ai/.claude-scoped, exact-match self-verify), not a
+# replacement. `add` is incremental/per-file, used as work progresses, and
+# is unscoped by directory because its safety property is *attribution*
+# (every call ties a path to a real task and a required --purpose,
+# permanently recorded in that task's own file), not a path prefix.
+
+_STAGED_FILES_HEADING = "## Staged Files"
+_STAGED_FILES_HEADING_RE = re.compile(r"^## Staged Files[ \t]*$", re.MULTILINE)
+_ANY_H1_H2_RE = re.compile(r"^#{1,2} ", re.MULTILINE)
+
+
+def _append_to_staged_files_section(content, entry_line):
+    # type: (str, str) -> str
+    """Targeted read-modify-write, same discipline `_perform_transition`'s
+    Status-line rewrite uses -- never a whole-file rewrite. Creates the
+    section (right before `## Done` if that heading exists, matching
+    every task file's own convention of `## Done` as the final section;
+    otherwise at end of file) if absent; appends one line to it either way."""
+    m = _STAGED_FILES_HEADING_RE.search(content)
+    if m is None:
+        done_m = re.search(r"^## Done[ \t]*$", content, re.MULTILINE)
+        section = _STAGED_FILES_HEADING + "\n\n" + entry_line + "\n\n"
+        if done_m is None:
+            return content.rstrip("\n") + "\n\n" + section
+        return content[: done_m.start()] + section + content[done_m.start() :]
+
+    # Section exists -- append at its end (just before the next `#`/`##`
+    # heading, or EOF), not at its start, so entries stay in call order.
+    next_h = _ANY_H1_H2_RE.search(content, m.end())
+    section_end = next_h.start() if next_h else len(content)
+    body = content[m.end() : section_end].rstrip("\n")  # keeps its own
+    # leading blank line intact; only trailing newlines are trimmed here,
+    # replaced below with an exact, known amount.
+    new_body = body + "\n" + entry_line + "\n"
+    if next_h is not None:
+        new_body += "\n"
+    return content[: m.end()] + new_body + content[section_end:]
+
+
+def _parse_manifest_entries(data):
+    # type: (object) -> List[tuple]
+    """Both accepted manifest shapes -> a flat, ordered [(file, purpose)]
+    list. Raises ValueError (never a raw traceback) naming the exact
+    problem -- the caller must treat any error here as all-or-nothing,
+    nothing staged yet at this point."""
+    entries = []
+    if isinstance(data, list):
+        for i, item in enumerate(data):
+            if not isinstance(item, dict) or "file" not in item or "purpose" not in item:
+                raise ValueError(
+                    "array-form manifest entry %d must be an object with "
+                    "'file' and 'purpose' keys, got %r" % (i, item)
+                )
+            entries.append((item["file"], item["purpose"]))
+    elif isinstance(data, dict):
+        shared_purpose = data.get("purpose")
+        files = data.get("files")
+        if not isinstance(files, list):
+            raise ValueError("object-form manifest must have a 'files' array")
+        for i, item in enumerate(files):
+            if isinstance(item, str):
+                path, purpose = item, shared_purpose
+            elif isinstance(item, dict):
+                if "file" not in item:
+                    raise ValueError("files[%d] object entry missing 'file'" % i)
+                path, purpose = item["file"], item.get("purpose", shared_purpose)
+            else:
+                raise ValueError(
+                    "files[%d] must be a path string or an object, got %r" % (i, item)
+                )
+            if purpose is None:
+                raise ValueError(
+                    "files[%d] (%r) has no purpose and the manifest has no "
+                    "top-level 'purpose' to fall back to" % (i, path)
+                )
+            entries.append((path, purpose))
+    else:
+        raise ValueError("manifest JSON must be an array or an object, got %s" % type(data).__name__)
+    if not entries:
+        raise ValueError("manifest contains no file entries")
+    return entries
+
+
+def _resolve_add_entries(args):
+    # type: (object) -> List[tuple]
+    """CLI args -> a normalized, repo-relative [(path, purpose)] list.
+    Raises ValueError for any usage/parse problem -- caller prints it and
+    returns 1 before touching git or the task file at all."""
+    if args.from_file:
+        if args.path or args.purpose:
+            raise ValueError("--from-file is mutually exclusive with a positional PATH/--purpose")
+        if not os.path.exists(args.from_file):
+            raise ValueError("--from-file %s does not exist" % args.from_file)
+        with open(args.from_file, "r") as f:
+            raw = f.read()
+        try:
+            data = json.loads(raw)
+        except json.JSONDecodeError as exc:
+            raise ValueError("malformed manifest JSON in %s: %s" % (args.from_file, exc))
+        entries = _parse_manifest_entries(data)
+    else:
+        if not args.path or not args.purpose:
+            raise ValueError("single-file form requires both PATH and --purpose (or use --from-file)")
+        entries = [(args.path, args.purpose)]
+
+    normalized = []
+    for p, purpose in entries:
+        abs_p = p if os.path.isabs(p) else os.path.join(REPO_ROOT, p)
+        rel = os.path.relpath(abs_p, REPO_ROOT)
+        if rel == os.pardir or rel.startswith(os.pardir + os.sep):
+            raise ValueError("path %r resolves outside the repository" % p)
+        normalized.append((rel.replace(os.sep, "/"), purpose))
+    return normalized
+
+
+def cmd_add(args):
+    task_id = normalize_task_id(args.task_id)
+    if not is_task_id(task_id):
+        print("error: %r is not a TASK-XXXX id" % args.task_id, file=sys.stderr)
+        return 1
+
+    try:
+        entries = _resolve_add_entries(args)
+    except ValueError as exc:
+        print("error: %s" % exc, file=sys.stderr)
+        return 1
+
+    try:
+        state, filename = find_task_file(task_id)
+    except SystemExit as exc:
+        print(exc, file=sys.stderr)
+        return 1
+    task_path = os.path.join(TASKS_DIR, state, filename)
+    task_rel = os.path.relpath(task_path, REPO_ROOT).replace(os.sep, "/")
+
+    # All-or-nothing (Planned Validation #4): every target must exist on
+    # disk before `git add` touches any of them.
+    missing = [p for p, _ in entries if not os.path.exists(os.path.join(REPO_ROOT, p))]
+    if missing:
+        print(
+            "error: path(s) not found on disk, nothing staged: %s" % ", ".join(missing),
+            file=sys.stderr,
+        )
+        return 1
+
+    rel_paths = [p for p, _ in entries]
+    subprocess.run(["git", "add", "--"] + rel_paths, cwd=REPO_ROOT, check=True)
+
+    # Lighter self-check than `stage`'s exact-match assertion (this task's
+    # own In Scope wording): confirm each just-added path now actually
+    # appears staged -- catches a silent no-op (e.g. gitignored), never
+    # asserts the whole index matches only these paths.
+    staged = _staged_paths()
+    not_staged = [p for p in rel_paths if p not in staged]
+    if not_staged:
+        print(
+            "error: git add reported no error but these path(s) are not in "
+            "the staged index: %s -- either gitignored, or the file is "
+            "already identical to HEAD (nothing to stage; if you only "
+            "want to attribute an already-correct file to this task, "
+            "edit its own '## Staged Files' section by hand instead of "
+            "running `add`)" % ", ".join(not_staged),
+            file=sys.stderr,
+        )
+        return 1
+
+    with open(task_path, "r") as f:
+        content = f.read()
+    ts = now_str()
+    for p, purpose in entries:
+        content = _append_to_staged_files_section(
+            content, "- [%s] `%s` -- %s" % (ts, p, purpose)
+        )
+    with open(task_path, "w") as f:
+        f.write(content)
+    subprocess.run(["git", "add", "--", task_rel], cwd=REPO_ROOT, check=True)
+
+    print(
+        "staged %d file(s) under %s, annotated in %s"
+        % (len(entries), task_id, task_rel)
+    )
+    return 0
+
+
 # ------------------------------------------------------------------ scq ----
 # TASK-0065: Stage-Commit-Queue. Entries are SCQ-XXXX.lock files under the
 # same LOCKS_DIR as task/GIT-COMMIT locks, reusing the existing
@@ -1920,6 +2125,36 @@ def build_parser():
         "entries (TASK-0024.002)",
     )
     p_stage.set_defaults(func=cmd_stage)
+
+    p_add = sub.add_parser(
+        "add",
+        help="TASK-0061: attributed git add (any path) + a permanent "
+        "'why' record appended to the claiming task's own file",
+    )
+    p_add.add_argument("task_id")
+    p_add.add_argument(
+        "path",
+        nargs="?",
+        help="single-file form: the path to stage. Omit and use --from-file "
+        "for the batch form instead.",
+    )
+    p_add.add_argument(
+        "--purpose",
+        help="single-file form: short free-text reason, permanently recorded "
+        "in the task's own '## Staged Files' section",
+    )
+    p_add.add_argument(
+        "--from-file",
+        metavar="PATH",
+        help="batch form: path to a JSON manifest -- either an array of "
+        "{'file','purpose'} objects, or an object {'purpose': '<shared>', "
+        "'files': [...]} whose 'files' entries may be plain path strings "
+        "(inherit the shared purpose) or {'file','purpose'} objects "
+        "(override it). Mutually exclusive with the positional PATH/"
+        "--purpose. Write it with the Write tool, never inline JSON on the "
+        "command line.",
+    )
+    p_add.set_defaults(func=cmd_add)
 
     p_scq_enter = sub.add_parser(
         "scq-enter",
