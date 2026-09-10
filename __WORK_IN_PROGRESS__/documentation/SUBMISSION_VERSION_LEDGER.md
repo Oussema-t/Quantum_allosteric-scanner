@@ -105,6 +105,8 @@ Nine edits from a line-by-line read of the built PDF. Every one traceable to a r
 | **§6: the funnel ablation**, including that AUC *rises* (0.576→0.626) while the strict hit count falls 48→6 | the base rate drops 0.33→0.070; AUC is prevalence-insensitive and P@5 is not, so **AUC conceals the collapse** | Keep the AUC half. The hit-count drop alone is the weaker version of the finding |
 | **§7: "not as a credential" defence removed** | it argued with an imagined objector; the facts carry it | Do not re-add a defensive clause. State what the register caught and stop |
 | V3 kept on disk; V4 is a new file | version-history convention — see the improvement, don't lose what was being fixed | Never edit a shipped version in place |
+| Phase-2 components **relabelled (a)/(b)**, and the removed one described in prose | [[TASK-0362]] deleted the (b) row but left (a) and (c), so a reader asks "what was (b)?" — and the trailing sentence called the delta the *third* component when it was the second | **Keep the letters contiguous.** If a component is ever delivered and removed again, renumber and say in prose what left |
+| `fpocket` described as **interchangeable**, pointing at the detector-agreement measurement | naming one detector in the dependency list reads as a commitment we have not made — and we measured detector disagreement two sections earlier ([[TASK-0360]]) | Keep the pointer. The cascade is the reason the choice is open, not a hedge |
 
 **Numbers borrowed from `origin/allosteric` were read from its own committed files, not from the summary we were given** — which understated their own results in three places ([[TASK-0365]]).
 
