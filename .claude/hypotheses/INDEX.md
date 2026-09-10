@@ -13,11 +13,12 @@ file did not silently fall behind its own source files.
 | [[HYP-P8]] | For several targets, the apo contact graph does not contain the allosteric pocket signa... | 2026-09-04 | 12 |
 | [[HYP-P9]] | A chiral (broken-time-reversal) walk yields a proximity-orthogonal, directional loop ob... | 2026-09-03 | 12 |
 | [[HYP-P14]] | The discriminator is blocked by a single confound, and only a proximity-orthogonal obse... | 2026-09-04 | 9 |
+| [[HYP-P7]] | Coherence adds no signal for allosteric pocket prediction on these proteins | 2026-09-10 | 7 |
 | [[HYP-P6]] | Propagation time t in CTQW is currently unprincipled; a spectral choice would close a v... | 2026-09-09 | 6 |
-| [[HYP-P7]] | Coherence adds no signal for allosteric pocket prediction on these proteins | 2026-09-09 | 6 |
 | [[HYP-P12]] | The coordinated multi-site closure is a topological void (persistent H2 / Hodge-L1), an... | 2026-07-24 | 5 |
 | [[HYP-P21]] | Finding F — a covalent/peptide-bond-adjacency confound recurs across distal-allostery b... | 2026-08-28 | 5 |
 | [[HYP-P1]] | Low-frequency GNM modes are a reliable proxy for allosteric residues (in rigid globular... | 2026-09-03 | 4 |
+| [[HYP-P28]] | A pure protein-identity channel — zero within-structure site information — reaches AUC~... | 2026-09-09 | 4 |
 | [[HYP-S1]] | The treewidth closure is objective-dependent, and a black-box detector breaks it | 2026-08-25 | 4 |
 | [[HYP-S4]] | Endpoint coupling ≠ path coupling | 2026-08-12 | 4 |
 | [[HYP-S5]] | Instance enrichment — 4–7 targets is an anecdote, but each target contains many transit... | 2026-08-12 | 4 |
@@ -28,7 +29,6 @@ file did not silently fall behind its own source files.
 | [[HYP-P10]] | Cryptic pockets carry a "near-in-3D / far-on-apo-graph" coordinated-closure signature | 2026-07-22 | 3 |
 | [[HYP-P11]] | Engineered dephasing (ENAQT) does not improve pocket discrimination — it relaxes the wa... | 2026-07-20 | 3 |
 | [[HYP-P25]] | The PASSer-seeded veto pipeline's below-chance pocket pick is a measured proximity-anti... | 2026-09-07 | 3 |
-| [[HYP-P28]] | A pure protein-identity channel — zero within-structure site information — reaches AUC~... | 2026-09-09 | 3 |
 | [[HYP-S2]] | The "noodle wiggle" — steric infeasibility is a *coupling detector*, not a cost function | 2026-09-03 | 3 |
 | [[HYP-P4]] | The base Laplacian choice (normalised vs combinatorial, exp-decay vs binary) is load-be... | 2026-09-03 | 2 |
 | [[HYP-P5]] | H13 (full 3N ANM Hessian) sets a performance ceiling that H_new cannot reach | 2026-07-18 | 2 |

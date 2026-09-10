@@ -465,6 +465,36 @@ cluster-p=0.425 — non-significant, same conclusion as the 76-cluster
 run, now on ~70% more independent proteins. Full detail:
 `.ai/tasks/DONE/TASK-0359-cohort-extension-by-protein-not-by-structure.md`.
 
+**Status update, 2026-09-10 ([[TASK-0366]]): an external, independently-
+verified measurement directly contradicts this hypothesis's own
+conclusion — flagged, not adjudicated.** Sweeping `origin/allosteric`'s
+own committed results found `seeded_classical/README.md` (corroborated
+verbatim by two other write-ups on that branch): on 630 proteins / 399
+families, active-site-seeded coherent CTQW (`e^{-iHt}`, amplitudes)
+beats its **exact classical twin** — the heat kernel `e^{-Lt}`, same
+Laplacian/seed/time-averaging grid, probabilities instead of amplitudes,
+the only variable that differs — at **p = 2.3e-12**. Independently
+recomputed here from all 8 raw `sc_{0..7}.json` shards (630/630 scored,
+not transcribed from prose): mean CTQW 0.5999, mean heat kernel 0.5124,
+407/218/5 win/loss/tie, Wilcoxon p = 2.25e-12 — matches their own number
+exactly. This is the OPPOSITE ordering from this hypothesis's own
+committed result (classical diffusion 0.6012 beats both coherent 0.5997
+and decoherent 0.5921 CTQW here). Their own `seeded_classical/README.md`
+flags the contradiction unprompted: *"This CONTRADICTS the conclusion
+drawn on the bartosz branch... must be reconciled before submission."*
+**Not adjudicated here** — different cohorts (630/399 vs 108-162/76-129),
+different candidate-selection funnels (PASSer/MIN_HOP-filtered pipeline
+output vs the full ASBench residue set), different operators compared
+(their "classical twin" is a seeded heat kernel; this register's classical
+arm is `normalised_laplacian_alpha`-based ground-state relaxation) — both
+internally sound measurements of related but not identical questions.
+**This hypothesis's own title ("coherence adds no signal") is not
+falsified by this register's own evidence and should not be restated as
+if it were — but it is no longer uncontested, and whoever next revisits
+HYP-P7 should reconcile against this number before restating the null as
+settled.** Full detail:
+`.ai/tasks/DONE/TASK-0366-sweep-the-allosteric-branch-for-under-reported-positives.md`.
+
 ---
 
 ## Status update, 2026-07-15 — Phase 1B closed the loop on P6/P7/P8; P1/P5 remain open gaps

@@ -13059,3 +13059,54 @@ decomposition sat in without one.
 p2rank_pockets_cache.json,passer_cache_snapshot.json,
 passer_live_fetch_cache.json,pocketminer_io/}`. **Full detail**:
 `.ai/tasks/DONE/TASK-0360-detector-agreement-cascade.md`.
+
+## Sweeping `origin/allosteric` for under-reported positives — one large, unreconciled contradiction found and independently verified ([[TASK-0366]], 2026-09-10)
+
+Read-only inventory of every write-up under `allosteric/results/` (11 files/directories, full
+coverage), each candidate positive verified against its own raw artifact before being recorded
+as one — the discipline [[TASK-0365]] demonstrated by accident on the Model 1 numbers, applied
+here systematically. Planned Validation (re-deriving TASK-0365's own three findings from the
+branch's raw files) passed exactly before the sweep began.
+
+**Headline finding: the two branches' own coherence conclusions directly contradict, and theirs
+is independently verified, not just quoted.** `allosteric/results/seeded_classical/README.md`
+(corroborated verbatim by two other write-ups on that branch): on 630 proteins / 399 families,
+active-site-seeded CTQW (`e^{-iHt}`, amplitudes) beats its **exact classical twin** — the heat
+kernel `e^{-Lt}`, same Laplacian/seed/time-averaging grid, probabilities instead of amplitudes,
+the only variable that differs — at **p = 2.3e-12**. Independently recomputed here from all 8 raw
+`sc_{0..7}.json` shards (630/630 scored): mean CTQW 0.5999, mean heat kernel 0.5124, 407/218/5
+win/loss/tie, Wilcoxon p = 2.25e-12 — matches their own number exactly.
+
+**This directly contradicts this register's own headline** ([[HYP-P7]]/[[TASK-0350]]: classical
+diffusion 0.6012 beats both coherent (0.5997) and decoherent (0.5921) CTQW on our 108-structure
+cohort — the opposite ordering). Their own `seeded_classical/README.md` flags the contradiction
+unprompted, in its own text: *"This CONTRADICTS the conclusion drawn on the bartosz branch...
+must be reconciled before submission."* That reconciliation has not happened — zero mentions of
+"heat kernel", "2.3e-12", or "630 protein" anywhere in `PHASE1_SUBMISSION_V4.md`. Adjudicating
+which comparison (different cohorts, different candidate-selection funnels, different operators)
+is the fairer test is explicitly out of this task's own scope — flagging the contradiction and
+the cost of leaving it unaddressed is the deliverable.
+
+**Three smaller absent positives, each verified against its raw artifact:**
+- BCR_ABL1/asciminib: best-of-6 recommended configuration scores AUC 0.900, P@5 0.80, 4/5
+  genuine asciminib contacts — on the submission's own opening motivating example, never stated
+  as a result. Caveated: best-of-6 by the recommender's own weighting (not its top pick), 1 of 3
+  targets attempted (KRAS blocked, HIV1_RT a miss).
+- Site-level pocket ranking: CTQW best top-3 (86%, best of 7 methods) and best mean rank (2.12).
+- A 440-config residue classifier, AUC 0.654 / 35 families — independently recomputed from all 8
+  `search_{0..7}.json` shards, matches exactly. Caveated: no stated null-correction, the same
+  selection-bias mechanism the branch's own register applies to its 884-config CTQW sweep
+  ("73% of the sweep's headline is chance") — not applied here.
+
+**One dead claim found and flagged, not revived**: `proximity_floor/README.md` still states a
+decisive distal win (0.617 vs 0.227, sign-test p=5.8e-09) that the branch's own later documents
+(`ALL_RESULTS_SUMMARY.md`, `BRANCH_COMPARISON.md`) already retracted — *"I read an AUC
+backwards... the distal claim died here."* Traced to the actual mechanism in `proximity_floor.py`
+directly: `floor=roc_auc_score(y,-h)` tests the wrong direction on a subset defined as *far* from
+the active site; the fair (reversed) floor is 0.773, against which the corrected CTQW number
+(0.507 family-level) loses. The stale per-directory writeup was never fixed. Recorded here so it
+is not re-discovered and re-cited as live.
+
+Read-only task; no submission edit made. Full inventory (10-row table, every entry cited to a
+path) in the task file itself. **Full detail**:
+`.ai/tasks/DONE/TASK-0366-sweep-the-allosteric-branch-for-under-reported-positives.md`.
