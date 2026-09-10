@@ -78,6 +78,8 @@ this ledger exists to make.
 | §4: detector cascade added beside the 84% decomposition | [[TASK-0360]] — 94.8% flagged by ≥1 of four detectors, **24.0%** by all four | Keep the *mechanism*, not just the ratio: PocketMiner answers a different question (pockets that open) from the other three's static-cavity geometry. Without that, it reads as noise |
 | Phase-2 table row (b) removed; §2 sentence rewritten | (b) is delivered, so listing it as a component to build was stale — and removing it paid the page budget for the §1 promotion | Components (a) and (c) are what remain |
 | "§1" cross-reference removed from §2 | house style: no section-symbol cross-references in the shipped document | No § cross-references |
+| §5: the aggregation convention stated as **audited**, not argued | [[TASK-0361]] classified every number in the document with `file:line` citations and found **no pooled AUC among our own claims** | Keep the word "audited". The earlier wording was an argument from construction; this is a checked fact, and that difference is the point of the paragraph it sits in |
+| §2: **inherited family labels** caveated where 276 appears | the external branch found its 399 "families" are labels from five source datasets, not one clustering — and [[TASK-0336]]'s 276 derives from that same artifact | **Keep both halves**: the absolute count depends on the convention, the McNemar comparison does not, because it is paired over the same families. Do not drop the second half — without it the caveat reads as a retraction |
 
 ---
 
