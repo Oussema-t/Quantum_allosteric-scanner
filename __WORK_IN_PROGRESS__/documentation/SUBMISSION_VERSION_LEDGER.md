@@ -97,6 +97,17 @@ Nine edits from a line-by-line read of the built PDF. Every one traceable to a r
 | *Family* defined in-place: groups structures of the same protein, so a protein deposited many times counts once | the count is load-bearing and the term was never defined | Define it where the count first carries weight |
 | (a) and (c) named inline; **LOPO expanded** on first use | both were referenced before being introduced | Expand an acronym at first use, name components where invoked |
 
+## V3 → V4 (current)
+
+| change | why | must not regress |
+|---|---|---|
+| **§6: an AI stage, with both models** — topology→MIN_HOP (near/distal AUC **0.793**; **0.924 vs 0.901** running at the predicted distance) used; topology→operator (**0.625 vs 0.630**, 13 vs 15 families) reported as a negative | "AI workflows" is Submission Guidelines item 6 and asks how the *method* integrates AI — scored 5%. Our §6 architecture had no AI stage; the existing AI paragraph is about *authoring* | **Keep both models.** Reporting only the negative understates the work; reporting only the positive would be the failure this whole document argues against. Keep the cohort (597/380 — not the 630/399 used elsewhere) |
+| **§6: the funnel ablation**, including that AUC *rises* (0.576→0.626) while the strict hit count falls 48→6 | the base rate drops 0.33→0.070; AUC is prevalence-insensitive and P@5 is not, so **AUC conceals the collapse** | Keep the AUC half. The hit-count drop alone is the weaker version of the finding |
+| **§7: "not as a credential" defence removed** | it argued with an imagined objector; the facts carry it | Do not re-add a defensive clause. State what the register caught and stop |
+| V3 kept on disk; V4 is a new file | version-history convention — see the improvement, don't lose what was being fixed | Never edit a shipped version in place |
+
+**Numbers borrowed from `origin/allosteric` were read from its own committed files, not from the summary we were given** — which understated their own results in three places ([[TASK-0365]]).
+
 ---
 
 ## Open, not yet in any version
