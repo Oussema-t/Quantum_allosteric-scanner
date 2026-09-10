@@ -81,6 +81,22 @@ this ledger exists to make.
 | §5: the aggregation convention stated as **audited**, not argued | [[TASK-0361]] classified every number in the document with `file:line` citations and found **no pooled AUC among our own claims** | Keep the word "audited". The earlier wording was an argument from construction; this is a checked fact, and that difference is the point of the paragraph it sits in |
 | §2: **inherited family labels** caveated where 276 appears | the external branch found its 399 "families" are labels from five source datasets, not one clustering — and [[TASK-0336]]'s 276 derives from that same artifact | **Keep both halves**: the absolute count depends on the convention, the McNemar comparison does not, because it is paired over the same families. Do not drop the second half — without it the caveat reads as a retraction |
 
+## V3 human review pass (2026-09-10)
+
+Nine edits from a line-by-line read of the built PDF. Every one traceable to a reader question the text failed to answer.
+
+| change | why | must not regress |
+|---|---|---|
+| The "2 of 7" targets **named**: three from Table 1 (KRAS G12C, BCR-ABL1, cardiac myosin), four drawn by us from the Allosteric Database | a reader could not tell what the seven were, and guessed "4 apo + 3 holo" — a reasonable guess the text invited | Name the two sets. The number alone reads as arbitrary |
+| **Correction:** "we did not choose them; Table 1 and the source database did" → we chose the four database entries, not the three mandated | the old sentence overclaimed. The challenge names the database ([[TASK-0209]], §6); it did not pick the entries | **Never restore the stronger wording.** The point survives without it: the failure spans both sources |
+| 49% failure modes added: of the 32 failures, **19 both-miss, 10 apo-already-open, 3 inverted** | a reader can otherwise suspect the rule trivially passes apo and fails holo. It does not — the dominant failure is no pocket in either half ([[TASK-0346]]) | Keep the breakdown. It is what makes 49% a finding rather than an artifact |
+| c-Myc reframed as a **prospective, unverified prediction** | "we report it together with its lack of validation" read as apology; the challenge asks for a prediction on a target with no holo, which is exactly what we give | Keep "unverified" as a label, not a hedge |
+| "we measured the gap nobody reports" → **"a gap we have found no report of"** | we have not read all of the literature and must not imply we have | Never claim exhaustive literature coverage |
+| Organiser-clarification paragraph trimmed | it explained our reasoning about a reader rather than stating the facts | Facts about the deviations, not narration about the reader |
+| "generalise across the ensemble" **bolded** | it is the verdict of the whole section and was set in body weight | Keep the emphasis |
+| *Family* defined in-place: groups structures of the same protein, so a protein deposited many times counts once | the count is load-bearing and the term was never defined | Define it where the count first carries weight |
+| (a) and (c) named inline; **LOPO expanded** on first use | both were referenced before being introduced | Expand an acronym at first use, name components where invoked |
+
 ---
 
 ## Open, not yet in any version
