@@ -26,8 +26,8 @@ All three, for each of the four required targets, under `artefacts/<TARGET>/`:
 
 | # | Required output | File | Form |
 |---|---|---|---|
-| 1 | **Connectivity Matrix** — N×N, entry (i,j) = quantum connectivity strength between residues i and j | `quantum_connectivity_matrix.npz` | keys `matrix` (N×N float) and `resnums` (N,) so matrix indices map to PDB residue numbers |
-| 2 | **Hit List** — top 5 predicted allosteric sites per target | `hit_list.json` | `indices` (0-based) and `resnums` (PDB numbering), plus the score/floor CIs and the verdict |
+| 1 | **Connectivity Matrix** — N×N, entry (i,j) = quantum connectivity strength between residues i and j | `<TARGET>/connectivity_matrix.csv` | first row and first column are PDB residue numbers, so the file is self-describing; 6 significant figures, round-trip verified |
+| 2 | **Hit List** — top 5 predicted allosteric sites per target | `hit_list_all_targets.csv` + `<TARGET>/hit_list.json` | CSV is the consolidated ranked view; the JSON adds score/floor CIs and the per-target verdict |
 | 3 | **Methodological Report** — the quantum metric and why it proxies biological signal transmission | `report.txt` per target; the argument itself is Section 2 of the Concept Proposal | |
 
 ### Matrix dimensions, as shipped
@@ -46,17 +46,32 @@ Package size: **6.3 MB**.
 
 ---
 
-## C. Where the data files stand — read before uploading
+## C. The solution outputs are in, in conventional formats
 
-**The two documents do not agree on whether these files belong in a Phase-1 upload, and we are not guessing.**
+**Settled by the organisers, 2026-09-11.** Asked whether §5's connectivity matrix,
+hit list and methodological report have required file formats, they answered:
 
-- **Challenge Statement §5** is mandatory about the outputs themselves: *"Outputs: The solution must generate: 1. The Connectivity Matrix… 2. The Hit List… 3. Methodological Report."* We have all three, for all four targets.
-- **Submission Guidelines §4** enumerates what a submission *must include* and lists exactly four components — Team Profile, Problem Statement Selection, Concept Proposal, and Optional Supplementary Material. **There is no data-file component.** §4.4's sanctioned route for anything beyond the PDF is *"a link to a public code repository"*, which the Concept Proposal carries.
-- **Guidelines §5** constrains format only in pages and PDF, plus **file size must not exceed 20 MB**. This package is **6.3 MB**, so size is not the binding constraint either way.
+> *"No specific formats are prescribed. Please use formats accessible with
+> conventional software."*
 
-**Reading:** Challenge Statement §5 specifies what a working *solution* produces — demonstrated in the Phase-2 PoC — while Phase 1 is a Concept Proposal. Most entrants will not have produced these files at all. **We have, which is an advantage worth pressing, but the portal may have no slot for them.**
+They answered the format question rather than saying the outputs belong to Phase 2
+— so we treat them as expected now and ship them.
 
-**Therefore:** upload the four §4 components; offer the artefacts if the portal accepts an attachment; rely on the repository link if it does not. **This is a question for the organisers, not something to resolve by guessing** — it belongs in the next message to them.
+**Consequence, acted on:** the matrices were `.npz` (NumPy), which is **not**
+accessible with conventional software. They are now **CSV**, with PDB residue
+numbers as both the first row and the first column, so each file is
+self-describing and opens in Excel, R, pandas or a text editor. The `.npz` copies
+were dropped from the package rather than shipped alongside — same data, less
+accessible format, and two copies invites a question about which is authoritative.
+They remain in the repository.
+
+Round-trip verified on export: re-reading each CSV reproduces the source array to
+`rtol=1e-5`. Symmetry checked, not assumed.
+
+Added a consolidated `artefacts/hit_list_all_targets.csv` and
+`artefacts/README.md` describing all three output types and their columns.
+
+**Package total: 8.8 MB**, against the §5 cap of 20 MB.
 
 ## D. Open items before this can be sent
 
