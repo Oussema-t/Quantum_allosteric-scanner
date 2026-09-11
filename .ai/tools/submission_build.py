@@ -504,6 +504,12 @@ class RenderedPage:
     # fix itself could introduce -- something that, once allowed to reflow
     # instead of being clipped, spills PAST the printable margin instead.
     words: List[Tuple[float, float, str]] = field(default_factory=list)
+    # (word, size) for every extracted word -- TASK-0367's heading-vs-body-
+    # prose disambiguation (a route that locates the appendix split by its
+    # own real heading text, not an injected marker, needs to tell "Appendix"
+    # the heading apart from "(Appendix C)" the inline citation, and the two
+    # render at different sizes even though both are literal text matches).
+    word_sizes: List[Tuple[str, float]] = field(default_factory=list)
 
 
 def pdf_to_pages(pdf_path: Path) -> List[RenderedPage]:
@@ -517,9 +523,12 @@ def pdf_to_pages(pdf_path: Path) -> List[RenderedPage]:
                      for c in p.chars if c.get("size")]
             words = [(float(w["x0"]), float(w["x1"]), w["text"])
                      for w in p.extract_words()]
+            sized_words = [(w["text"], round(float(w["size"]), 2))
+                          for w in p.extract_words(extra_attrs=["size"])]
             pages.append(RenderedPage(
                 width=float(p.width), height=float(p.height),
-                text=(p.extract_text() or ""), char_sizes=sizes, words=words))
+                text=(p.extract_text() or ""), char_sizes=sizes, words=words,
+                word_sizes=sized_words))
     return pages
 
 
@@ -527,6 +536,35 @@ def _first_appendix_page(pages: List[RenderedPage]) -> Optional[int]:
     for i, pg in enumerate(pages, start=1):
         if _APPENDIX_MARKER_TOKEN in pg.text:
             return i
+    return None
+
+
+# TASK-0367: empirically picked, not guessed -- measured directly against the
+# real shipped LaTeX PDF (pdfplumber, `extract_words(extra_attrs=["size"])`):
+# body text renders at 10.5pt (the project-wide floor, TASK-0342/0344), the
+# real "Appendix" heading at 11.96pt (article.cls's default `\large` for a
+# `\subsection`), a clean gap either side of this threshold. Overridable per
+# call for a different template's own heading size.
+APPENDIX_HEADING_MIN_SIZE_PT = 11.0
+
+
+def _locate_appendix_by_heading(pages: List[RenderedPage], heading_pattern: str,
+                                min_size_pt: float = APPENDIX_HEADING_MIN_SIZE_PT
+                                ) -> Optional[int]:
+    """1-indexed page of the first occurrence of `heading_pattern` rendered
+    as a HEADING (>= min_size_pt), not mere body prose that happens to
+    contain the same words. TASK-0342's own false-positive class -- an
+    inline "(Appendix C)" citation -- renders at body size, never heading
+    size, so the size floor is what a plain text search on its own cannot
+    provide. TASK-0367: the preferred fix (Intent Contract's own ordering)
+    over the injected marker this replaces for the LaTeX route -- no
+    build-internal string ever needs to exist in the rendered output at
+    all, because the split is located by content the document already has
+    a reason to contain."""
+    for i, pg in enumerate(pages, start=1):
+        for word, size in pg.word_sizes:
+            if heading_pattern in word and size >= min_size_pt:
+                return i
     return None
 
 
@@ -577,11 +615,39 @@ class Check:
     detail: str
 
 
-def analyze(pages: List[RenderedPage]) -> Dict:
+def analyze(pages: List[RenderedPage], appendix_page: Optional[int] = None,
+           appendix_heading_pattern: Optional[str] = None) -> Dict:
+    """
+    appendix_page: pre-located 1-indexed appendix-start page, for a caller
+        that finds the split its own way (TASK-0367: the LaTeX route's
+        heading+font-size detector, `_locate_appendix_by_heading`) instead
+        of this module's own marker-token search. None (default): auto-
+        detect via `_first_appendix_page`, unchanged from before this task.
+    appendix_heading_pattern: literal substring of the appendix heading
+        (e.g. "Appendix"), used ONLY to detect a page SHARED between body
+        and appendix content (TASK-0367's Defect 1) -- checked against the
+        located page's own extracted text, independent of how that page
+        was found. A page counts as shared, and therefore as BOTH a body
+        page and the first appendix page, when real content precedes the
+        heading's own occurrence on it -- not merely "any text precedes
+        the split point," which would misfire on the heading's own line
+        (whatever comes immediately after "Appendix" on its own heading
+        line is not body content). None (default): no shared-page
+        detection -- unchanged behavior, matches every pre-existing call
+        site/test.
+    """
     total = len(pages)
-    appx_start = _first_appendix_page(pages)
+    appx_start = appendix_page if appendix_page is not None else _first_appendix_page(pages)
+    shared_page: Optional[int] = None
+    if appx_start is not None and appendix_heading_pattern and 1 <= appx_start <= total:
+        pg = pages[appx_start - 1]
+        heading_idx = pg.text.find(appendix_heading_pattern)
+        if heading_idx != -1 and pg.text[:heading_idx].strip():
+            shared_page = appx_start
     if appx_start is None:
         body_pages, appx_pages = total, 0
+    elif shared_page:
+        body_pages, appx_pages = appx_start, total - appx_start + 1
     else:
         body_pages, appx_pages = appx_start - 1, total - (appx_start - 1)
     modal, small_ct, small_sizes = _dominant_font(pages)
@@ -595,6 +661,7 @@ def analyze(pages: List[RenderedPage]) -> Dict:
         "body_pages": body_pages,
         "appendix_pages": appx_pages,
         "appendix_starts_on_page": appx_start,
+        "shared_page": shared_page,
         "page_size_pt": [round(pages[0].width, 1), round(pages[0].height, 1)] if pages else None,
         "page_size_is_a4": size_ok,
         "modal_font_pt": modal,
@@ -615,18 +682,23 @@ def evaluate(analysis: Dict) -> Tuple[str, List[Check]]:
         else "no pages"))
 
     b = analysis["body_pages"]
+    shared = analysis.get("shared_page")
+    if analysis["appendix_starts_on_page"]:
+        note = ("  (page %d carries both body content and the appendix "
+                "start -- counted in both totals, TASK-0367)" % shared) if shared else ""
+    else:
+        note = "  (no #appendix marker found in the render -- whole doc counted as body)"
     checks.append(Check(
         "body pages",
         "PASS" if b <= MAX_BODY_PAGES else "FAIL",
-        "%d / %d%s" % (b, MAX_BODY_PAGES,
-                       "" if analysis["appendix_starts_on_page"]
-                       else "  (no #appendix marker found in the render -- whole doc counted as body)")))
+        "%d / %d%s" % (b, MAX_BODY_PAGES, note)))
 
     a = analysis["appendix_pages"]
     checks.append(Check(
         "appendix pages",
         "PASS" if a <= MAX_APPENDIX_PAGES else "FAIL",
-        "%d / %d" % (a, MAX_APPENDIX_PAGES)))
+        "%d / %d%s" % (a, MAX_APPENDIX_PAGES,
+                       "  (page %d shared with body)" % shared if shared else "")))
 
     modal = analysis["modal_font_pt"]
     if modal is None:
@@ -807,8 +879,9 @@ def render_report(ctx: Dict, verbose: bool = False) -> str:
         L.append("  [%-4s] %-15s %s" % (c.status, c.name, c.detail))
     if a["appendix_starts_on_page"]:
         L.append("  split rule: '#appendix' forced to a page break; "
-                 "body = pages 1-%d, appendix = pages %d-%d"
-                 % (a["body_pages"], a["appendix_starts_on_page"], a["total_pages"]))
+                 "body = pages 1-%d, appendix = pages %d-%d%s"
+                 % (a["body_pages"], a["appendix_starts_on_page"], a["total_pages"],
+                    "  (page %d shared)" % a["shared_page"] if a.get("shared_page") else ""))
     L.append("  NOTE (TASK-0342): 'no horizontal overflow' catches content spilling")
     L.append("  PAST the page margin. It cannot see content an overflow:hidden/auto box")
     L.append("  clips to nothing -- that leaves no trace in the PDF to check. Open the")

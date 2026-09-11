@@ -144,39 +144,96 @@ def test_preprocess_combines_superscript_digit_runs():
     assert sbl._raw_latex("\\textsuperscript{14}") in out
 
 
-# ---------------------------------------------------------------- appendix marker
+# ---------------------------------------------------------- appendix split (TASK-0367)
+#
+# TASK-0347/0349's invisible-marker mechanism (`mark_appendix_start`,
+# `_APPENDIX_MARKER_TOKEN`) is retired -- see submission_build_latex.py's own
+# module docstring and submission_build.py's `_locate_appendix_by_heading`
+# for why (Defect 1: the marker's own page was always counted as 100%
+# appendix even when real body content shared it; Defect 2: the marker text
+# survived, merely colour-hidden, into the shipped PDF's extractable text).
+# Coverage for the two defects TASK-0367 found:
 
-def test_mark_appendix_start_inserts_after_matched_line():
-    tex = "\\subsection{Body}\ntext\n\\subsection{Appendix A}\nmore\n"
-    out = sbl.mark_appendix_start(tex, "Appendix A")
-    escaped = sbl._APPENDIX_MARKER_TOKEN.replace("_", r"\_")
-    assert escaped in out
-    assert out.index(escaped) > out.index("Appendix A")
-    assert out.index(escaped) < out.index("more")
-
-
-def test_mark_appendix_start_escapes_underscores_for_tex_text_mode():
-    """TASK-0349: the shared `_APPENDIX_MARKER_TOKEN` contains raw `_`,
-    which is the math-mode subscript operator in plain LaTeX text -- writing
-    it unescaped produced "Missing $ inserted" and an unrecoverable XeTeX
-    halt (this task's own bisection). The raw, un-escaped token must never
-    appear in LaTeX output again -- this is a regression guard on the exact
-    defect, not just a check that a marker exists somewhere."""
-    tex = "\\subsection{Appendix A}\nmore\n"
-    out = sbl.mark_appendix_start(tex, "Appendix A")
-    assert sbl._APPENDIX_MARKER_TOKEN not in out, \
-        "raw underscore token leaked into LaTeX source -- reintroduces TASK-0349"
-    assert r"\_" in out
+def _sized_page(text, heading_word=None, heading_size=None):
+    """A submission_build.RenderedPage fixture carrying word_sizes, for the
+    heading+font-size locator and the shared-page check -- both operate on
+    that field, not on `words`/`char_sizes` (TASK-0342's/TASK-0344's own
+    clipping/font-floor checks)."""
+    word_sizes = [(heading_word, heading_size)] if heading_word is not None else []
+    return sb.RenderedPage(width=sb.A4_PT[0], height=sb.A4_PT[1], text=text,
+                           word_sizes=word_sizes)
 
 
-def test_mark_appendix_start_noop_when_pattern_missing():
-    tex = "\\subsection{Body}\ntext\n"
-    assert sbl.mark_appendix_start(tex, "Appendix A") == tex
+def test_locate_appendix_by_heading_ignores_body_sized_mention():
+    """TASK-0342's own false-positive class, generalized to the new
+    locator: an inline "(Appendix C)" citation renders at body size and
+    must not be mistaken for the real heading."""
+    pages = [
+        _sized_page("... our other disclosed limitations (Appendix C) ...",
+                    heading_word="Appendix", heading_size=10.5),
+        _sized_page("Appendix -- References", heading_word="Appendix",
+                    heading_size=11.96),
+    ]
+    assert sb._locate_appendix_by_heading(pages, "Appendix") == 2
 
 
-def test_mark_appendix_start_noop_when_pattern_none():
-    tex = "\\subsection{Body}\ntext\n"
-    assert sbl.mark_appendix_start(tex, None) == tex
+def test_locate_appendix_by_heading_returns_none_when_absent():
+    pages = [_sized_page("no appendix mention here", heading_word="Body", heading_size=10.5)]
+    assert sb._locate_appendix_by_heading(pages, "Appendix") is None
+
+
+def test_analyze_detects_a_page_shared_between_body_and_appendix():
+    """TASK-0367 Defect 1: real body content precedes the heading on the
+    SAME page the heading itself is found on -- the exact shape the real
+    shipped PDF had (Team Capability table + reference list before
+    'Appendix -- References', all on page 7)."""
+    real_body_text = "Member Discipline Role\nOussema Turki Quantum algorithms ...\n"
+    pages = [sb.RenderedPage(width=sb.A4_PT[0], height=sb.A4_PT[1], text="body page %d" % i)
+            for i in range(6)]
+    pages.append(sb.RenderedPage(
+        width=sb.A4_PT[0], height=sb.A4_PT[1],
+        text=real_body_text + "Appendix -- References\nsome appendix content",
+        word_sizes=[("Appendix", 11.96)]))
+    appendix_page = sb._locate_appendix_by_heading(pages, "Appendix")
+    a = sb.analyze(pages, appendix_page=appendix_page, appendix_heading_pattern="Appendix")
+    assert a["appendix_starts_on_page"] == 7
+    assert a["shared_page"] == 7
+    assert a["body_pages"] == 7        # NOT 6 -- this is the bug this task fixes
+    assert a["appendix_pages"] == 1    # page 7 counted in both totals
+    # TASK-0367's own required regression test: a fixture whose body spills
+    # onto the appendix's first page must FAIL the page check (6-page limit).
+    result, checks = sb.evaluate(a)
+    assert result == "FAIL"
+    body_check = next(c for c in checks if c.name == "body pages")
+    assert body_check.status == "FAIL" and "7 / 6" in body_check.detail
+
+
+def test_analyze_clean_break_reports_no_shared_page():
+    """The heading is the first thing on its own page (nothing precedes it
+    but its own heading line) -- must NOT be flagged as shared; the
+    pre-TASK-0367 math (`appendix_start - 1`) is still correct here."""
+    pages = [sb.RenderedPage(width=sb.A4_PT[0], height=sb.A4_PT[1], text="body page %d" % i)
+            for i in range(6)]
+    pages.append(sb.RenderedPage(
+        width=sb.A4_PT[0], height=sb.A4_PT[1],
+        text="Appendix -- References\nsome appendix content",
+        word_sizes=[("Appendix", 11.96)]))
+    appendix_page = sb._locate_appendix_by_heading(pages, "Appendix")
+    a = sb.analyze(pages, appendix_page=appendix_page, appendix_heading_pattern="Appendix")
+    assert a["shared_page"] is None
+    assert a["body_pages"] == 6
+    assert a["appendix_pages"] == 1
+
+
+def test_build_latex_source_never_emits_the_retired_marker_string():
+    """TASK-0367 Defect 2, checked at the SOURCE level (no compile needed):
+    the (former) marker string must never appear in build_latex_source's
+    output for any input -- the mechanism that used to emit it is gone,
+    not merely unused for this particular fixture."""
+    assert "SUBMISSION_BUILD" not in sbl.LATEX_PREAMBLE
+    assert "SUBMISSION_BUILD" not in sbl.LATEX_POSTAMBLE
+    assert not hasattr(sbl, "mark_appendix_start")
+    assert not hasattr(sbl, "_APPENDIX_MARKER_TOKEN")
 
 
 # ---------------------------------------------------------------- change report (markdown)
@@ -287,22 +344,20 @@ def test_end_to_end_real_submission_compiles_and_passes(tmp_path):
 
 @pytest.mark.skipif(not _e2e_ready, reason="needs pandoc + tectonic + pdfplumber")
 def test_end_to_end_appendix_heading_split_compiles_and_lands_correctly(tmp_path):
-    """TASK-0349: `mark_appendix_start`'s insertion branch had NEVER executed
-    in a passing build before this task -- every prior end-to-end test built
-    the real submission WITHOUT `--appendix-heading`, so `_e2e_ready`'s own
-    build() call always took the no-op path. This fixture is the first test
-    that actually exercises the split: a document with real body content
-    (>=1 full page) followed by an "Appendix" heading with its own content,
-    built WITH `--appendix-heading`, asserting both that it compiles (the
-    literal defect: an unescaped `_` in the marker token halted XeTeX with
-    "Missing $ inserted") and that the reported split lands on the body's
-    last real page, not page 1 or page 0."""
+    """Real pandoc+tectonic compile, real heading-size detection (TASK-0367
+    retired the injected-marker mechanism TASK-0349 fixed a compile bug in --
+    that bug is moot now, the marker is never emitted): a document with real
+    body content (>=1 full page) followed by an "Appendix" heading with its
+    own content, asserting both that the split lands on the body's last real
+    page (not page 1 or page 0) and that no build-internal string reaches
+    the shipped PDF's extractable text (Defect 2, checked against a REAL
+    compiled PDF here, not just the .tex source)."""
     filler = ("This is a long filler sentence written to occupy real "
              "vertical space on the page so the body genuinely spans "
              "multiple pages before the appendix begins. " * 20)
     body = "\n\n".join("## Section %d\n\n%s" % (i, filler) for i in range(6))
     md = ("# Split fixture\n\n" + body +
-         "\n\n## Appendix\n\nThis is the appendix content, after the split marker.\n")
+         "\n\n## Appendix\n\nThis is the appendix content, after the split.\n")
     md_path = tmp_path / "appendix_split.md"
     md_path.write_text(md, encoding="utf-8")
     code, ctx = sbl.build(md_path, tmp_path, "HEAD", version=98, want_change=False,
@@ -311,9 +366,22 @@ def test_end_to_end_appendix_heading_split_compiles_and_lands_correctly(tmp_path
     assert "error" not in ctx, ctx.get("error")
     a = ctx["analysis"]
     assert a["appendix_starts_on_page"] is not None, \
-        "split marker not found in the rendered PDF -- compiled, but detection regressed"
-    assert 1 < a["appendix_starts_on_page"] <= a["total_pages"], a
-    assert a["body_pages"] == a["appendix_starts_on_page"] - 1, a
+        "appendix heading not found in the rendered PDF -- detection regressed"
+    assert 1 <= a["appendix_starts_on_page"] <= a["total_pages"], a
+    # Real two-column layout: whether the appendix heading lands cleanly on
+    # its own page or shares one with the last of the body is a real
+    # property of how the content flows, not something this fixture
+    # controls precisely -- assert the RELATIONSHIP holds either way
+    # (TASK-0367's own two cases), not one hardcoded shape.
+    if a["shared_page"]:
+        assert a["body_pages"] == a["appendix_starts_on_page"] == a["shared_page"], a
+    else:
+        assert a["body_pages"] == a["appendix_starts_on_page"] - 1, a
+
+    pages = sb.pdf_to_pages(Path(ctx["pdf_path"]))
+    for i, pg in enumerate(pages, start=1):
+        assert "SUBMISSION_BUILD" not in pg.text, \
+            "build-internal marker string leaked into the shipped PDF's text layer, page %d" % i
 
 
 @pytest.mark.skipif(not _e2e_ready, reason="needs pandoc + tectonic + pdfplumber")
