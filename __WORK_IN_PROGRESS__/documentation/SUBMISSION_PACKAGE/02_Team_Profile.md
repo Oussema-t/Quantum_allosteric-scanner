@@ -9,10 +9,7 @@ document is the reference material behind that argument.*
 
 **Team name**: AuraQu
 
-**Lead contact**: **MISSING — flagged, not invented.** §4.1 requires lead
-contact details and none exist anywhere in this submission set today. This
-needs the repo owner's own name/email/affiliation before the portal upload;
-it cannot be supplied by this task.
+**Lead contact**: **Bartosz Chmura**. chmura.quantum@gmail.com, Unaffiliated
 
 ## Team members — description, expertise, and prior quantum experience
 
@@ -42,18 +39,40 @@ and structural validity are his research area; this is the expertise behind
 every biological correction and target-classification judgement in the
 Concept Proposal.
 
-**Bartosz Chmura** — PhD, molecular photophysics; 14 years software quality
-assurance. Role on this project: scope and narrative decisions, and the
-verification methodology (separation of the party that builds from the
-party that verifies, negative controls, reproducibility discipline) applied
+**Bartosz Chmura** — Molecular quantum dynamics / photophysics; software
+quality assurance.
+PhD, Institute of Physics, Polish Academy of Sciences, Warsaw (2005–2010):
+time-dependent quantum wave-packet dynamics of photochemical reactions,
+including conical-intersection dynamics of the water dimer (*J. Chem.
+Phys.* 2009) and oxo-hydroxy phototautomerism (*J. Phys. Chem. A* 2008).
+Postdoc (Wissenschaftlicher Mitarbeiter), Technische Universität München,
+Garching (2010–2012): ab-initio quantum chemistry (Molpro, Molcas,
+Gaussian, Turbomole) and C++ molecular-quantum-dynamics code for
+open-shell systems. Author of a solo quant-ph preprint, *"The Geometry of
+Clifford Algorithms: Bernstein-Vazirani as Classical Computation in a
+Rotated Basis"* (arXiv:2603.12127, 2026). Since 2010: 14 years in
+software quality assurance, currently leading QA engineering and test
+automation at Appsfactory (Munich).
+**Prior quantum-computing experience**: a PhD and postdoc in quantum
+dynamics / ab-initio quantum chemistry (not quantum information), plus
+one solo quant-ph preprint. Project role: QA/verification
+discipline (separation of the party that builds from the party that
+verifies, negative controls, reproducibility discipline) applied
 throughout the register cited in the Concept Proposal.
-**Prior quantum-computing experience**: none claimed here; his contribution
-is the QA/verification discipline, not quantum-domain expertise — stated
-plainly rather than implied otherwise.
 
 ## How the team worked — elaboration on the Concept Proposal's short disclosure
 
-*The Concept Proposal (§7) discloses this briefly, as required there. This
+Apart from the human-contributor interactions according to the roles, 
+most of the investigation regarding building complete notebooks, operators, 
+hamiltonians, observables, building visualisation tools, main effort of analysing
+CTQW in various settings are attributable to Oussema; 
+the work on validating protein structures, explaining the apo/holo structure 
+types, pockets, ortho-/allostery as mechanism, are attributable to Berke; 
+the construction of the AI-scaffolding, reviewing process, unit testing, 
+formulating and verifying the hypotheses, positive/negative checks, 
+null formulation, are attributable to Bartosz.   
+
+*The Concept Proposal (§7) discloses this briefly. This
 section is the full version, since a Quantum *and* AI challenge that
 permits AI involvement should not have that involvement minimised or
 under-documented.*
@@ -79,8 +98,8 @@ mode:
 |---|---|---|
 | Repository | Claude Sonnet | Implementers, Toolsmith, Architect/Planner |
 | Repository | Claude Opus | Code Reviewer |
-| Project | Claude Opus | **Adversarial Reviewer / Critic** |
-| Project | Google Gemini 2.6 Pro | Critic / Reviewer / Researcher / Brainstormer |
+| Project | Claude Opus | **Adversarial Reviewers / Critics** |
+| Project | Google Gemini 2.6 Pro | Critics / Reviewers / Researchers / Brainstormers |
 
 Four of the five retractions in the Concept Proposal's Appendix B were
 produced by the adversarial reviewer role attacking work the implementing
