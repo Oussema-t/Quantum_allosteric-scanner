@@ -48,7 +48,7 @@ Principled per-distance rule (chosen in advance, not per-protein cherry-pick): ~
 | fpocket druggability | 17 | 2 | 15 |
 | degree | 11 | 2 | 9 |
 
-The walk beats every classical descriptor, **decisively on distal (19 vs 1)** — where proximity/size/
+~~The walk beats every classical descriptor, decisively on distal (19 vs 1)~~ **[CORRECTED 2026-09-11: scored against the one-directional proximity floor; the distal subset's real floor is REVERSED distance (0.773 family-weighted), which the walk loses to — see proximity_floor/README.md, commit f23fae6. Do not quote.]** — where proximity/size/
 centrality collapse. That distal margin is the quantum-connectivity contribution.
 
 ## Honest caveats
