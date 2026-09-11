@@ -233,7 +233,7 @@ for our submission in either direction — already a dead claim on their own sid
 
 | # | finding | file | verified how | present in V4? | verdict |
 |---|---|---|---|---|---|
-| 1 | CTQW beats classical heat-kernel twin, p=2.3e-12, n=630 | `seeded_classical/README.md` + 2 corroborating write-ups | independently recomputed from `sc_{0..7}.json`, exact match | **absent** — contradicts our own HYP-P7 | flag for reconciliation, highest priority |
+| 1 | CTQW beats classical heat-kernel twin, p=2.3e-12, n=630 | `seeded_classical/README.md` + 2 corroborating write-ups | independently recomputed from `sc_{0..7}.json`, exact match | **absent** | **SUPERSEDED — see Correction, 2026-09-11. Not a coherence result and not a contradiction of HYP-P7. Do not open a reconciliation on it.** |
 | 2 | Model 1 (topology→MIN_HOP), AUC 0.793 / 0.924 vs 0.901 | `ml_model/README.md` | Planned Validation calibration, exact match | **present** (added by [[TASK-0365]]) | resolved, no action |
 | 3 | BCR_ABL1/asciminib hit, AUC 0.900, P@5 0.80 | `challenge_targets/README.md` | read directly, internally cross-checked against the same file's own caveats | **absent** | candidate, caveated (best-of-6, 1 of 3 targets) |
 | 4 | Site-level: CTQW best top-3 (86%), best mean rank | `classical_comparison/UNCONSTRAINED_AND_SITE_LEVEL.md` | 2 independent write-ups agree verbatim | **absent** | candidate, modest |
@@ -276,3 +276,74 @@ edit made — the inventory is delivered; the Team Lead decides what travels int
 
 **Files**: none produced — read-only task, per its own Owner/Out-of-Scope. Full inventory lives
 in this Done section.
+
+
+---
+
+## Correction, 2026-09-11 (Reviewer) — finding #1 is not a coherence result, and not a contradiction
+
+**The arithmetic in finding #1 is right and was independently reproduced twice. The
+interpretation is wrong.** Recorded as a dated correction rather than an edit, per this
+register's own discipline; the original text above stands as written.
+
+### What the comparison actually compares
+
+`allosteric/results/seeded_classical/seeded_classical.py:76`:
+
+```python
+ns=len(y); ctqw=1.0-(np.asarray(v["ranks"][FIX],float)-1)/max(ns-1,1)
+```
+
+with `FIX="gauss|sym|neg_dE"` at line 25. **The CTQW arm is never computed in that
+script** — it is read from precomputed ranks (`r2_minhop1.json.gz`) for one fixed cell.
+The heat-kernel arm *is* computed there, fresh, on the plain Laplacian `L` (lines 44-52).
+
+So the contrast is `gauss|sym|neg_dE` **versus** `e^{-Lt}`, and **two variables differ —
+the operator and the score.** The branch's own README frames it as *"the exact classical
+twin: same Laplacian, same seed"*, which its own code contradicts: the CTQW arm never
+touches that Laplacian.
+
+### Why it cannot speak to coherence at all
+
+`allosteric/results/ALL_RESULTS_SUMMARY.md:99-104`, the branch's own analysis of its own
+best score:
+
+> Our best score reproduces **exactly (rho = 1.0000)** from the diagonals of H and H². It
+> sees only two-step neighbourhoods... it carries **no phase, no interference, no
+> long-range coupling**, and **the same formula on the classical operator gives the same
+> numbers.**
+
+`neg_dE` is **phase-free by the source branch's own measurement**. A comparison whose
+quantum arm is a phase-free score cannot be evidence about coherence, whatever its
+p-value.
+
+### What the result *is*, stated at its real strength
+
+`p = 2.3e-12` on n=630 remains a real, well-powered finding — about **operator and score
+choice**: a two-step energy-uncertainty score on a Gaussian symmetric-normalised operator
+beats a plain-Laplacian heat kernel. That is worth knowing. It is not a quantum-versus-
+classical result, and the branch's own `neg_dE` note says the same formula on the
+classical operator returns the same numbers.
+
+### Consequence for [[HYP-P7]] — no change
+
+[[TASK-0350]] toggles `coherent=True/False` on a **fixed** Hamiltonian, seed, cohort and
+scoring. This measures a different operator with a different, phase-free score. **The two
+are not in conflict, no reconciliation is owed, and HYP-P7's status is unchanged.** The
+"flag for reconciliation, highest priority" verdict in the inventory table is withdrawn —
+five days from the deadline, acting on it would have cost a day and returned nothing.
+
+### Process note, worth more than the finding
+
+The sweep **did** recompute finding #1 from the raw shards and matched to four decimals.
+Reproduction confirmed the arithmetic and concealed the error, because the error was in
+what the arm *was*, not in what it summed to. **Reproducing a number verifies arithmetic;
+only reading the code that produces it verifies what was measured.** This register has now
+been caught by that distinction twice — [[TASK-0348]]'s JACS rho=0.95, and here.
+
+### Owed to the other branch
+
+Their `seeded_classical/README.md`'s "exact classical twin — same Laplacian, same seed"
+claim is wrong about their own code, and they would want that before it reaches a
+reviewer. Not a criticism: the file that states it is not the file that computes it, which
+is exactly how this kind of thing survives. Sending it is the Team Lead's call.
