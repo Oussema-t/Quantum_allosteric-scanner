@@ -29,6 +29,30 @@ The top five predicted allosteric residues per target, ranked. The CSV is the
 consolidated view; the per-target JSON additionally carries the score and
 trivial-baseline confidence intervals and our own verdict for that target.
 
+### The two columns are not the same number — read this before using them
+
+| column | meaning |
+|---|---|
+| `residue_number` | the **PDB residue number**, as deposited. This is the one to quote, and the one that matches the Concept Proposal's five-guess table. |
+| `residue_index_0based` | the **row/column position in the connectivity matrix**, counting from 0. |
+
+They differ because PDB numbering does not start at zero and is not always
+contiguous — a structure can begin at residue 81, or skip numbers where residues
+were unresolved. The matrix is a dense N×N array, so its positions are
+0…N−1 regardless.
+
+| target | residue numbers run | contiguous? | example |
+|---|---|---|---|
+| KRAS_G12C (`4LDJ`) | 0 → 169 | yes | index 31 **is** residue 31 — the two columns coincide |
+| BCR_ABL1 (`1OPL`) | 81 → 531 | yes | index 321 is residue 402 |
+| CARDIAC_MYOSIN (`8QYR`) | 32 → 780 | **no** — gaps at unresolved residues | index 611 is residue 682 |
+| MYC_MAX (`1NKP`) | 897 → 284 | **no** — two chains concatenated, so the sequence is not even monotonic | index 46 is residue 943 |
+
+**KRAS is the trap**: its two columns are identical, so code tested only on KRAS
+will silently use the wrong column everywhere else. The CSV matrices avoid the
+problem entirely — their row and column headers are residue *numbers*, so no
+index arithmetic is needed to read them.
+
 **Read the verdicts with the list.** For the three targets where a drug-bound
 structure exists to check against, our own validation reports
 `NO_SIGNAL_IN_APO` — the score's confidence interval overlaps the best trivial
