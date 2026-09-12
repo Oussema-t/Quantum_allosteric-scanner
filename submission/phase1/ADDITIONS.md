@@ -61,33 +61,17 @@ A second pipeline on the `allosteric` track (PASSer detection, 630 proteins in 3
 
 **B.1 The construction.** Residues are C-alpha nodes, edges within 10 A; the walk is `U(t)=exp(-iHt)` seeded at the active site, read as the converged average `p_avg(s->a)=sum_k |v_k(s)|^2 |v_k(a)|^2` -- a sum of squares, hence phase-free. The **connectivity matrix** `C_ij` (the first required deliverable) is that average-mixing matrix, `(V o V)(V o V)^T`; it is symmetric, row-stochastic, and depends on the operator only. Thirteen operators (four weightings x three normalisations, plus `H_new = L_sym + diag(0.08 V_B + 0.16 V_T + 0.08 V_R + 0.04 V_C + 0.04 V_M)`) x seventeen scores (occupation, proximity-corrected, resolvent, dispersion, energy-uncertainty) give the 221 cells. `neg_dE`, the strongest single score, is time-independent and equals `sqrt(sum_j W_ij^2)` to machine precision -- a classical local statistic, so it cannot carry interference.
 
-**B.2 Per-target connectivity (mandated targets).** Each target's 221 cells, best and worst by P@5 (the hit-list criterion; AUC saturates when distal positives are few). Connectivity matrices, top-5 x active-site sub-blocks and figures are in `results/connectivity/`.
+**B.2 Per-target connectivity (mandated targets).** For each target the best cell of its 221 (operator x score), chosen by P@5 (the hit-list criterion; AUC saturates when distal positives are few), beside the pre-registered single cell. Connectivity matrices, top-5 x active-site sub-blocks and figures are in `results/connectivity/`.
 
-*Table B.2a -- KRAS G12C, apo `4LDJ` [14] (true G12C; Table 1's `4OBE` is wild-type at residue 12), MIN_HOP 1.*
+*Table B.2 -- Best cell per mandated target; pre-registered `H_new` cell for reference.*
 
-| cell | operator | score | AUC | P@5 |
+| target (apo) | best operator / score | AUC | P@5 | pre-reg `H_new` |
 |---|---|---|---|---|
-| best | `H_new` | resolvent (band top) | 0.809 | 0.6 |
-| worst | `H11_aniso` | residual RAW | 0.184 | 0.0 |
-| pre-registered | `H_new` | residual | 0.479 | p=0.57 |
+| KRAS G12C (`4LDJ`) [14] | `H_new` / resolvent | 0.809 | 0.6 | 0.479, p=0.57 |
+| BCR-ABL1 (`1OPL`) [1-3] | `H6_exp` / residual+focus | 0.796 | **1.0** | 0.411, p=0.84 |
+| Cardiac myosin (`8QYP`->`8QYR`) [15] | `H3_normL` / dX dip | 0.685 | 0.4 | 0.601, p=0.12 |
 
-*Table B.2b -- BCR-ABL1, apo `1OPL` [1-3] (myristate pre-bound, so the site is already open), MIN_HOP 2.*
-
-| cell | operator | score | AUC | P@5 |
-|---|---|---|---|---|
-| best | `H6_exp` | residual + focus | 0.796 | **1.0** |
-| worst | `H5_gauss` | ratio p_peak/p_avg | 0.227 | 0.0 |
-| pre-registered | `H_new` | residual | 0.411 | p=0.84 |
-
-*Table B.2c -- Cardiac myosin, apo `8QYP` -> `8QYR` [15] (drug XB2), true pocket seeded at top-10, MIN_HOP 2.*
-
-| cell | operator | score | AUC | P@5 |
-|---|---|---|---|---|
-| best | `H3_normL` | dX dip depth | 0.685 | 0.4 |
-| worst | `H8_gnm` | -dD mean | 0.068 | 0.0 |
-| pre-registered | `H_new` | residual | 0.601 | p=0.12 |
-
-Across all three the outcome turns on the selection stage, not the walk: BCR-ABL1's 5/5 is a pocket myristate already opened; KRAS and cardiac myosin reach the pocket only once it is seeded, and their pre-registered single cells are honest negatives. Half the 221 cells sit at chance.
+`4LDJ` is true G12C (Table 1's `4OBE` is wild-type at residue 12); `1OPL` has myristate pre-bound, so its site is already open; cardiac myosin's pocket is reached only once seeded at top-10. The worst cell of each falls to AUC 0.18 / 0.23 / 0.07 -- the spread is the score, not the operator. Every pre-registered single cell is an honest negative, and half the 221 cells sit at chance.
 
 **B.3 The seeded-CTQW pipeline across 630 proteins.** PASSer top-10 -> drop the active-site pocket -> distal `MIN_HOP` filter -> CTQW -> PocketMiner veto [6] (apo-ligand protected) -> CTQW -> rank pockets. One fixed operator+score.
 
