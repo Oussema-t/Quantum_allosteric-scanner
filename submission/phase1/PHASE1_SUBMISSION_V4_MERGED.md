@@ -131,9 +131,6 @@ Built and in use, not proposed:
 
 - **Proximity floor.** Every score must beat the strongest trivial baseline — degree, hop distance, Euclidean distance from the seed. This is what demoted our own headline result.
 - **Protein-identity floor.** A second floor, which we found because we looked for it: replace every residue's score with its own protein's mean — destroying all information about *where* in the structure anything is — and pool across the cohort as a family-level metric ordinarily does. That constant-per-protein score reaches **AUC 0.65** (p < 5e-5), reproduced independently on 54 proteins added afterwards. Any AUC pooled across proteins must be reported against it. Per-structure metrics are immune by construction — a score that is constant within a structure is a tie inside that structure's own curve. **We audited every AUC in this document against that distinction rather than assuming it: each is computed per structure and averaged, none pooled across proteins.** A pooled figure without this floor is not interpretable, and we have found no report of the check.
-
-Re-measured on the second cohort described in Appendix B, the same constant-per-protein score reaches **AUC 0.771** across 630 proteins — above every method either track has tested, and a wider margin than the 0.65 above.
-
 - **Spatially matched nulls.** Three generations, each fixing a measured defect in the last. The current pocket-block null [11,12] matches the real positives' own spatial concentration; moving to it changed BH-FDR [10] survivors from 45/110 to **0/110**.
 - **Positive control with a measured detection limit.** Planted, confound-orthogonal signal — so a null result can be distinguished from an underpowered test. On a genuinely distal subset our design cannot detect even proximity (p = 0.89), so we report that it cannot adjudicate rather than reporting a false negative.
 - **A convergence check on the propagation time.** Not a detail: between a typical finite `T = 15` and the converged limit, **50 of 108 structures flip the sign of their verdict** (41 of 108 in the decoherent arm). A continuous-time walk reported at a fixed finite `T` without a convergence check is reporting a coin flip on roughly 40% of its cohort, and we have found no report of this check in the published lineage.
@@ -169,9 +166,6 @@ Full biographies, affiliations and prior quantum-computing experience are in the
 
 **One methodological commitment shaped this submission.** We used an AI-assisted workflow, which accelerates work and generates plausible errors at the same rate. So we built the register to catch its own failures: the role that implements is separated from the role that verifies and assigned to a different model, every positive control has a negative one, and every claim carries the cohort it was measured on. It found five of our own errors in seven days, including our headline result. The full task history, including every retraction, is public at `github.com/Oussema-t/Quantum_allosteric-scanner` (branch `bartosz`).
 
-The same register operating on the second branch caught three more: an AUC read backwards in a distal proximity-floor claim, a classical-comparison arm that differed in operator as well as in coherence, and a blind positive filed as a to-do rather than reported. All three are corrected in the public history.
-
-
 ## Appendix B — A second pipeline, on a second cohort
 
 Sections 1-7 report the `bartosz` track: fpocket candidates, 108 structures for the coherence tests, 1022 proteins in 276 families for the ensemble sweep. A second pipeline was built independently on the `allosteric` track, with a different pocket detector and a different candidate filter, and reaches the same verdict. It is reported here as **replication, not as an enlarged n**: the two cohorts differ in detector (PASSer against fpocket) and in family convention (399 against 276), so their counts are not interchangeable and are never pooled. Every AUC below is computed per structure and averaged, as in the main text.
@@ -193,7 +187,9 @@ There is no distal-filter setting at which the walk beats closeness centrality. 
 
 **Two-source interference at scale.** The finite-delay phase-sensitive observable of section 2 was run on all 630 proteins at `MIN_HOP` 1 to 4 across the same eleven-delay grid, as a point statistic at each delay and as range statistics across delays, with configuration and sign chosen blind by leave-one-family-out. Both arms fail every pre-registered test at every setting and rank below closeness centrality throughout.
 
-**Protein-identity floor on this cohort.** The section 5 floor re-measured here: a constant-per-protein score reaches pooled AUC **0.771** across 630 proteins, above every method either track has tested and a wider margin than the 0.65 reported there.
+**Protein-identity floor on this cohort.** The section 5 floor re-measured here: a constant-per-protein score reaches pooled AUC **0.771** across 630 proteins — above every method either track has tested, and a wider margin than the 0.65 section 5 reports on the first cohort. Any AUC pooled across proteins must clear it; the per-structure metrics used throughout both tracks are immune by construction.
+
+**Retractions on this track.** The same register operating on the second branch caught three more: an AUC read backwards in a distal proximity-floor claim, a classical-comparison arm that differed in operator as well as in coherence, and a blind positive filed as a to-do rather than reported. All three are corrected in the public history.
 
 **Why the family counts differ between tracks.** The 399 labels are inherited from five source datasets under three conventions: CASBench group codes (227 entries), UniProt accessions, and free-text names (CryptoBench 308, ASBench 67, PocketMiner 21, CryptoSite 7). The four largest families are all CASBench. A single clustering rule is a Phase-2 prerequisite for any absolute family count; the paired comparisons above do not depend on it.
 

@@ -25,7 +25,7 @@ Rules, from PROVENANCE.md:
 ## Candidates — awaiting your decision
 
 ### ADD-1 — Protein-identity floor, second cohort
-status: APPROVED
+status: REJECTED  # its 2 lines in section 5 pushed 3 sentences of section 7 past page 6; the 0.771 is already stated in Appendix B
 section: 5. Validation Plan
 anchor: A pooled figure without this floor is not interpretable, and we have found no report of the check.
 cost: 2 lines
@@ -76,7 +76,9 @@ There is no distal-filter setting at which the walk beats closeness centrality. 
 
 **Two-source interference at scale.** The finite-delay phase-sensitive observable of section 2 was run on all 630 proteins at `MIN_HOP` 1 to 4 across the same eleven-delay grid, as a point statistic at each delay and as range statistics across delays, with configuration and sign chosen blind by leave-one-family-out. Both arms fail every pre-registered test at every setting and rank below closeness centrality throughout.
 
-**Protein-identity floor on this cohort.** The section 5 floor re-measured here: a constant-per-protein score reaches pooled AUC **0.771** across 630 proteins, above every method either track has tested and a wider margin than the 0.65 reported there.
+**Protein-identity floor on this cohort.** The section 5 floor re-measured here: a constant-per-protein score reaches pooled AUC **0.771** across 630 proteins — above every method either track has tested, and a wider margin than the 0.65 section 5 reports on the first cohort. Any AUC pooled across proteins must clear it; the per-structure metrics used throughout both tracks are immune by construction.
+
+**Retractions on this track.** The same register operating on the second branch caught three more: an AUC read backwards in a distal proximity-floor claim, a classical-comparison arm that differed in operator as well as in coherence, and a blind positive filed as a to-do rather than reported. All three are corrected in the public history.
 
 **Why the family counts differ between tracks.** The 399 labels are inherited from five source datasets under three conventions: CASBench group codes (227 entries), UniProt accessions, and free-text names (CryptoBench 308, ASBench 67, PocketMiner 21, CryptoSite 7). The four largest families are all CASBench. A single clustering rule is a Phase-2 prerequisite for any absolute family count; the paired comparisons above do not depend on it.
 
@@ -107,7 +109,7 @@ This is the funnel ablation of section 6 seen on one target: the classical selec
 Read together the two targets make one point, and it is not about which operator wins. On KRAS the selection stage decided the answer was unreachable; on BCR-ABL1 it delivered a pocket myristate had already opened. In neither case did the transport subroutine determine the outcome. On both, half of the 238 cells sit at chance (median 0.500 and 0.491) and the spread from best to worst — 0.67 and 0.57 AUC — is larger than any margin between methods reported in section 2. The best cell is the tail of a distribution centred on nothing, which is why the pre-registered cell lands at 0.479 and 0.411. Nor is the winning score the occupation measure the method is usually described by: it is the resolvent on one target and the proximity-corrected residual on the other, while the explicitly coherence-sensitive ratio is the worst cell on both.
 
 ### ADD-5 — Our retractions in the §7 ledger
-status: APPROVED
+status: REJECTED  # moved into Appendix B; in section 7 it pushed 3 sentences past page 6
 section: 7. Team Capability
 anchor: It found five of our own errors in seven days, including our headline result.
 cost: 2 lines
