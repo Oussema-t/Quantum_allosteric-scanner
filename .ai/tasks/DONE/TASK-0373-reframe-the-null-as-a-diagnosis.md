@@ -1,6 +1,6 @@
 # TASK-0373 — Reframe the central null as a diagnosis of the input, not a dead end
 
-- Status: TODO
+- Status: Done
 - Owner: **Reviewer**
 - Priority: **High value per word — but blocked on space**
 - **Blocked on [[TASK-0369]].** The body is currently **7/6 pages and FAILING** ([[TASK-0367]] now reports this correctly). Nothing may be added until something is cut.
@@ -55,3 +55,26 @@ representation itself is the third and cheapest answer.
 - No claim of quantum advantage, under any framing.
 - Update `SUBMISSION_VERSION_LEDGER.md` per [[TASK-0353]]'s format, including what
   must not regress: *this is a diagnosis, not a result.*
+
+
+---
+
+## Done, 2026-09-12 (Reviewer)
+
+Landed in Section 2, immediately before *"A remaining quantum route must supply
+something the static graph does not have"* — the sentence that already gestured at
+this and named only many-body objects and dynamics:
+
+> **The likeliest reason these nulls are nulls is the input, not the walk.** An
+> 8 Å Cα contact graph cannot represent a π system — to it, phenylalanine and
+> alanine are both "a residue" — so a walk on it has no electronic degrees of
+> freedom to find. We have not measured electronic coupling; we say it because it
+> is where we would look next.
+
+**The honesty guard survived the compression.** It cost four rounds of cutting to
+fit, and the sentence that could most easily have been dropped for space — *"we
+have not measured electronic coupling"* — is the one this task said must not be.
+Without it the paragraph reads as a finding, which it is not.
+
+No number changed. Every null stands exactly as measured; this explains them
+rather than softening them.

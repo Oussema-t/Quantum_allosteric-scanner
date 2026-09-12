@@ -111,6 +111,24 @@ Nine edits from a line-by-line read of the built PDF. Every one traceable to a r
 
 **Numbers borrowed from `origin/allosteric` were read from its own committed files, not from the summary we were given** — which understated their own results in three places ([[TASK-0365]]).
 
+## V4 review-response pass (2026-09-12) — [[TASK-0369]] + [[TASK-0373]] + [[TASK-0371]]
+
+Entered at **body 7/6 and FAILING** — a real page-limit violation, visible only because [[TASK-0367]] fixed the check that had been reporting 6/6. Left at **6/6 PASS with content added on net**.
+
+| change | why | must not regress |
+|---|---|---|
+| **The null reframed as a diagnosis of the input** — an 8 Å Cα graph cannot represent a π system | stated alone, "the walk adds nothing" reads as a dead end; this explains the nulls without softening one | **Keep the sentence "We have not measured electronic coupling."** Without it the paragraph reads as a finding. It is a hypothesis about why our null is a null |
+| Coupled conformational search: **one surviving route, not two** | [[TASK-0213]] closed it; the text said it survived | Do not restore a second route without a task that reopens it |
+| 170–704 qubits (was 169); "0.4960 — at chance" (was "below chance") | 169 was `4OBE`'s N and we ship `4LDJ`; 0.4960 is not below chance | — |
+| Phase-2 criteria **concede two are already partly met**, and name the binding one (≥40 pairs, at 31) | a reviewer would otherwise find it next to "none of ours generalises" | Keep the concession. Stating it is worth more than the criterion looked worth |
+| "Two deviations and one retention", not three deviations | we **declined** the organisers' `8S8C`; the old wording obscured that | — |
+| **Repository publication date (2026-09-15) stated in the document** | the link 404s until then, and it is load-bearing in four places | Keep the date while the repo is not yet public |
+| "We built the circuit and transpiled it…" | Challenge Statement §4.1 makes building a circuit mandatory; the old wording implied it | — |
+| **Noise resilience: pre-registered and falsified** | §4.2 names it a secondary objective and we had said nothing, which read as never having addressed noise | Keep the falsification. A falsified pre-registration is a stronger answer than silence |
+| Member roster inlined; §6's duplicate opener, the duplicate retraction story, and the duplicate re-audit row cut | these paid for everything above | The roster belongs in the Team Profile (§4.1), not the Concept Proposal (§4.3 item 7) |
+
+**Open and visible, not silently dropped**: item 13 (`NO_SIGNAL_IN_APO` needs a paired score−floor bootstrap — a measurement change, not wording); items 11/12 (apo-draw sensitivity, fpocket beating the walk by ~0.3 AUC — both true, both helpful, both needing words we do not have; **first two to buy back** if anything is cut later); item 31's citation attributions.
+
 ---
 
 ## Open, not yet in any version

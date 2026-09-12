@@ -1,6 +1,6 @@
 # TASK-0369 — Concept Proposal: factual corrections, and the statistical framing the reviewer turned back on us
 
-- Status: TODO
+- Status: Done
 - Owner: **Reviewer** (judgement-heavy; not a mechanical pass)
 - Priority: **High**
 - **Blocked on [[TASK-0367]]** for anything that changes length — the page count is currently wrong and we would be trimming against a false measurement. Text corrections that are length-neutral can start immediately.
@@ -112,3 +112,68 @@ submission's thesis stronger, not weaker**, which is why they are worth the word
   additions cost words the body does not have. Expect to cut before adding, and do
   it against [[TASK-0367]]'s corrected count.
 - Update `SUBMISSION_VERSION_LEDGER.md` per [[TASK-0353]]'s format.
+
+
+---
+
+## Done, 2026-09-12 (Reviewer)
+
+**Build PASS at last: body 6/6, appendix 2/3, 10.5pt, zero overflow, glyph coverage
+clean, every citation resolving.** The document entered this task at **7/6 and
+FAILING** (a real violation, visible only because [[TASK-0367]] fixed the check
+first) and came out compliant **with content added, not removed on net**.
+
+### Cuts — what paid for the corrections
+
+- **Section 6's opening paragraph**, which restated the "Pipeline" paragraph below
+  it almost word for word.
+- **The retraction story told twice** in Section 1; the fuller telling sits in the
+  selection paragraph, where it does work.
+- **The Section 7 member roster**, inlined as a sentence. Guidelines §4.1 wants a
+  roster in the *Team Profile* — a separate component with no page limit, which
+  already carries the full version; §4.3 item 7 asks for the *argument*.
+- **The impact table's re-audit row**, which restated the 84% decomposition given
+  in prose two paragraphs above.
+- Compression, not deletion: the structure-rationale KRAS and BCR rows, the
+  workflow paragraph, the protein-identity-floor bullet, the c-Myc paragraph, and
+  three sentences in Section 3.
+
+### Corrections applied
+
+| # | What changed |
+|---|---|
+| 8 | Coupled conformational search: **one surviving route, not two** — [[TASK-0213]] closed it, and the text said it survived. Now says we closed it ourselves. |
+| 9 | **170–704 qubits**, not 169 — 169 was `4OBE`'s N and we ship `4LDJ`. |
+| 15 | **"0.4960 — at chance"**, not "below chance". |
+| 17 | The Phase-2 criteria now **concede that two are already partly met** on our own cohort, and name the binding one: certifying ≥ 40 pairs, where we stand at 31. Stated rather than left for a reviewer to notice. |
+| 27 | **Two deviations and one retention**, not three deviations — we *declined* the organisers' `8S8C`, which the old wording obscured. |
+| 29/30 | Section cross-references removed; the "largest single analysis" self-contradiction removed with the sentence that carried it. |
+| — | **The repository's publication date is now in the document** (2026-09-15). A link that 404s until the deadline becomes a disclosed fact, whenever we upload. |
+
+### Carried in from [[TASK-0371]]
+
+- **"We built the circuit and transpiled it against a real IBM device calibration
+  snapshot"** — Challenge Statement §4.1 makes building a circuit mandatory, and
+  the old wording implied it without saying it.
+- **Noise resilience**: the pre-registered robustness hypothesis, and that we
+  **falsified** it — holds on two mandated targets, reverses on the third. §4.2
+  names it as a secondary objective and we had said nothing.
+
+### Also caught
+
+`Å` had no LaTeX rendering and **would have shipped as tofu** in the new text.
+Added to the glyph map with a test-covered fix — the third glyph this check has
+caught before a reader did.
+
+### Not done, and why
+
+- **Hit-list biology (items 3, 19, 21, 22)** waits on [[TASK-0368]]; Berke is
+  working on it. No text about which pockets our five residues are has moved.
+- **Item 13** (`NO_SIGNAL_IN_APO`'s near-unfalsifiability, and the paired
+  score−floor bootstrap it needs) is a **measurement change**, not a wording one,
+  and there is no space and no time to do it honestly. Left open and visible.
+- **Items 11, 12** (apo-draw sensitivity; fpocket beating the walk by ~0.3 AUC)
+  are both true and both help us. They need words the body does not have. If
+  anything is cut later, these are the first two to buy back.
+- **Item 31's citation attributions** (89.8% vs 84% both credited to [4]; whether
+  98.1% is Wu et al. on CASBench) need the papers re-read, not a guess.
