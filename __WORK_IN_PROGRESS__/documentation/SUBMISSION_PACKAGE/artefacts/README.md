@@ -182,6 +182,111 @@ separate hyperparameter search was run per target, so this value equals
 `AUC_apo_Hnew_default` in every shipped file; not a claim that tuning was
 attempted and found unnecessary.
 
+## 4. Known limitations, measured (TASK-0376)
+
+The six-page limit binds the Concept Proposal's body, not this package. Three
+corrections an external review raised, that the body conceded were correct
+and left unaddressed for space, measured and stated here in full. **Two of
+the three numbers below were the reviewer's own and unverified by us until
+this task; one of the two turned out to be stale** — see item 12.
+
+### 13. `NO_SIGNAL_IN_APO`, properly: a paired bootstrap, and the detection limit it implies
+
+The Concept Proposal's own diagnostic bootstraps `score` and `floor`
+**separately**, then checks whether the two independent 95% CIs overlap.
+Score and floor are computed on the same structure and are correlated —
+an independent-CI-overlap check throws that correlation away, and as
+constructed the check is close to unfalsifiable for these targets:
+clearing it needs `score_lo > floor_hi`, which on this cohort would
+require AUC ≈ 0.80–0.89.
+
+**Fixed here**: a **paired** block bootstrap of `score − floor`. Same
+resampling scheme the existing diagnostic already uses
+(`metrics.block_bootstrap_ci`: sequence-window blocks, `block_size=10`,
+`rng=default_rng(42)`) — but each of 5000 bootstrap replicates resamples
+**one** index set and evaluates *both* AUCs on it, so the difference's own
+distribution reflects the real (positive) correlation between score and
+floor rather than the independent-CI approximation.
+
+| target | score AUC | floor (winning baseline) | score − floor | 95% CI | detection limit ΔAUC |
+|---|---|---|---|---|---|
+| KRAS_G12C | 0.5136 | 0.5288 (hop-from-seed) | −0.015 | [−0.100, +0.087] | 0.093 |
+| BCR_ABL1 | 0.5408 | 0.5031 (hop-from-seed) | +0.038 | [−0.057, +0.130] | 0.094 |
+| CARDIAC_MYOSIN | 0.5485 | 0.4538 (hop-from-seed) | +0.095 | [−0.008, +0.201] | 0.104 |
+
+Every CI includes zero. **The verdict is unchanged** — `NO_SIGNAL_IN_APO` at
+all three — but now on a statistic that could plausibly have come out the
+other way: a real difference smaller than roughly 0.09–0.10 AUC is not
+resolvable by this design at this sample size, at any of the three targets.
+That number is the honest scope of what "no signal" claims here: not "no
+difference exists," but "no difference this design could see, above
+~0.1 AUC, does."
+
+Planned Validation, run before the CI above was trusted: the same code path
+reproduces the committed per-target AUCs (0.514 / 0.541 / 0.548) to <0.001 —
+`score_auc` above is bit-identical to `end_to_end.json`'s own stored value
+for KRAS_G12C, matching to every printed digit.
+
+**Script**: `scripts/task0376_paired_bootstrap_no_signal.py`. **Data**:
+`results/tasks/0376_paired_bootstrap_no_signal/paired_bootstrap_result.json`.
+
+### 11. Apo-draw sensitivity — each shipped hit list is one draw among many plausible ones
+
+Already measured in this register, not new: [[TASK-0155]] scored the
+identical pipeline across **ten independently deposited true-G12C KRAS apo
+structures** (not just `4LDJ`, the one this package ships) — **AUC ranges
+0.408–0.595, median 0.482**. [[TASK-0124]] separately found the CARDIAC_MYOSIN
+apo-structure substitution (`5TBY` → the currently-shipped structure) moves
+AUC by **0.27** on its own.
+
+**A reader holding this package's four connectivity matrices and four
+five-residue hit lists cannot otherwise know this.** Each is one apo
+crystal structure's own draw from a distribution that spans chance to
+respectable-looking and back within the *same* true genotype, for the *same*
+target, before any modelling choice is touched. This is not a claim that our
+own pipeline is unusually unstable — it is a property of scoring a single
+apo deposition at all, and it applies to every number in this package the
+same way it applies to the field's own published claims (Section 1's own
+thesis, turned on ourselves).
+
+### 12. fpocket, run fresh on the currently-shipped apo structures — one correction, one confirmation
+
+A 2009 purely-geometric cavity detector, run on the same apo structure this
+package ships, no active-site seed, no propagator. **Checked directly
+against the vendored, provenance-pinned build (`tools/fpocket/`,
+`PROVENANCE.json`) rather than transcribed from an earlier report** — and
+one of the two numbers we were given turned out to be stale:
+
+| target | fpocket AUC (fresh) | our walk AUC | fpocket beats the walk? |
+|---|---|---|---|
+| BCR_ABL1 | **0.860** | 0.541 | **yes, by 0.32** |
+| CARDIAC_MYOSIN | 0.535 | 0.548 | no (already known, [[TASK-0163]]) |
+| KRAS_G12C | **0.420** | 0.514 | **no — the walk beats fpocket here** |
+
+BCR_ABL1 confirms the external review's own point: fpocket is in our own
+pipeline (it feeds candidate pockets to the veto stage elsewhere in this
+register), and a purely classical, decades-old geometric tool beating our
+own walk by a third of an AUC point on a structure we ship **is evidence
+the instrument is easy here, which is our own thesis** — more credible
+disclosed in our own artefacts than found by a reviewer.
+
+**KRAS_G12C does not confirm it, and did not until this run.** The figure
+we were given for KRAS (fpocket ≈0.835, beating a walk AUC of ≈0.590) is
+this register's own [[TASK-0169]] number — computed against the *old* KRAS
+apo structure, `4OBE`. [[TASK-0270]] swapped the shipped apo to `4LDJ`
+(`4OBE` is wild-type, not the mandated G12C genotype) after that number was
+recorded, and **nobody re-ran fpocket against the new structure until this
+task.** Freshly run against `4LDJ` — the structure this package actually
+ships — fpocket scores **0.420, below chance**, and our own walk (0.514)
+beats it. The direction of the claim reverses for this one target; the
+mechanism (which structure fpocket saw) is fully accounted for, not a new
+mystery.
+
+**Script**: `scripts/task0163_external_baseline_scoring.py` (existing,
+re-run fresh, not modified). **fpocket provenance**:
+`tools/fpocket/PROVENANCE.json` — the running build's SHA256 was confirmed
+against this pin before trusting the numbers above.
+
 ## Provenance
 
 Produced by the pipeline in `github.com/Oussema-t/Quantum_allosteric-scanner`

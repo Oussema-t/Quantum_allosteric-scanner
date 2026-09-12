@@ -13193,3 +13193,47 @@ file asserts a result the Concept Proposal disclaims.
 UniProt-equivalent c-Myc numbering, both tracked to [[TASK-0368]]; the mechanistic biology behind
 items 20/21, also [[TASK-0368]]. **Full detail**:
 `.ai/tasks/DONE/TASK-0370-deliverable-artefact-corrections.md`.
+
+## The six-page limit binds the body, not the package — three conceded corrections landed, and checking one before it shipped caught it stale ([[TASK-0376]], 2026-09-12)
+
+[[TASK-0369]] conceded three external-review corrections as correct and shelved them for page
+budget. The reviewer's own answer: *"the measurement is the cost, the words are nearly free — the
+six-page constraint binds the body, not the package."* `artefacts/README.md` has no page limit and
+ships with the submission. All three landed there, in a new §4 ("Known limitations, measured").
+
+**Item 13 — `NO_SIGNAL_IN_APO`, properly.** The existing diagnostic bootstraps `score` and `floor`
+independently, then checks CI overlap — throwing away their real correlation (same structure) and,
+as constructed, close to unfalsifiable (clearing it needs AUC ≈0.80–0.89 here). Fixed: a **paired**
+block bootstrap of `score − floor` (5000 replicates, `metrics.block_bootstrap_ci`'s own resampling
+scheme, but one resampled index set scoring both arrays per replicate). All three mandatory
+targets: CI includes zero, **detection limit ΔAUC ≈0.09–0.10** — verdict unchanged, now falsifiable
+with a stated resolution. Planned Validation: the harness reproduces the committed 0.514/0.541/0.548
+to <0.001 (KRAS_G12C bit-identical to `end_to_end.json`'s own stored value). A short clause landed
+in `PHASE1_SUBMISSION_V4.md`'s own body, budget-checked rather than assumed to fit — a fuller first
+draft pushed the body to 7/6 (FAIL); trimmed to **6/6 PASS**, per this task's own "the clause is
+what gets cut, not the README section."
+
+**Item 11 — apo-draw sensitivity — already ours, verified against source, not re-run.**
+[[TASK-0155]]'s own ten-true-genotype KRAS sweep (AUC 0.408–0.595, median 0.482) and
+[[TASK-0124]]'s own CARDIAC_MYOSIN apo-substitution swing (0.27) are already-committed findings in
+this register — the reviewer's number matches ours exactly.
+
+**Item 12 — fpocket vs the walk: one confirmed, one reversed by checking it.** Re-ran
+`task0163_external_baseline_scoring.py`'s own scoring fresh against the currently-shipped apo
+structures (fpocket provenance re-verified first: running SHA256 matches `PROVENANCE.json`'s
+TASK-0285 pin). **BCR_ABL1 confirms** the reviewer's claim (fpocket 0.860 vs our own walk 0.541).
+**KRAS_G12C reverses it**: fpocket scores **0.420, below chance**; our own walk (0.514) wins. The
+reviewer's quoted 0.835 is this register's own stale [[TASK-0169]] number, computed against KRAS's
+*old* apo structure (`4OBE`, wild-type) — [[TASK-0270]] swapped the shipped apo to the genuine
+G12C structure (`4LDJ`) afterward, and fpocket was never re-run against it until this task.
+`PROVENANCE.json` itself already flagged "not comparable"; nobody had closed the gap. Caught by
+treating the task's own "unverified by us" instruction literally rather than transcribing a prior
+report's number.
+
+No shipped residue, matrix, or headline AUC changed — this task adds disclosure, not results.
+
+**Files**: `scripts/task0376_paired_bootstrap_no_signal.py` (new). **Data**:
+`results/tasks/0376_paired_bootstrap_no_signal/{checkpoint.jsonl,paired_bootstrap_result.json}`.
+**Docs**: `documentation/PHASE1_SUBMISSION_V4.md`,
+`documentation/SUBMISSION_PACKAGE/artefacts/README.md` §4. **Full detail**:
+`.ai/tasks/DONE/TASK-0376-known-limitations-in-the-artefacts-readme.md`.
