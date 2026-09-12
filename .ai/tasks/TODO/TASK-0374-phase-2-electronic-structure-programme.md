@@ -20,16 +20,15 @@ a cofactor or effector where electronic structure is plausibly load-bearing**:
 | **Aromatic *effector*** | 13 | DAHP synthase Phe-sensitive (`1KFL`) and Tyr-inhibited (`1OF6`); prephenate dehydratase; anthranilate synthase |
 | Heme peroxidase | 1 | COX-2 (`3QH0`) |
 
-**Not verified by this thread.** The tier assignment is the reviewer's reading of
-the catalogue; confirm entry-by-entry before any of it is quoted. This register
-has twice been caught repeating a number instead of checking it ([[TASK-0348]],
-[[TASK-0366]]).
+**Provenance, disclosed by its own author on 2026-09-12 and weaker than it looked**: the tiering is **keyword matching on the catalogue's `protein` name field plus the reviewer's own knowledge of which cofactors those enzymes carry**. **No PDB was fetched and it was never checked against HETATM records.** "Glycogen phosphorylase has PLP" is correct, but it is knowledge, not measurement — and several of these enzymes are deposited *without* their cofactor, so the tier can be right about the enzyme and wrong about the entry.
+
+**Do not verify all 42.** With E0 negative the tiering's only remaining job is picking one or two E3 targets, and at n=2 it does not need to be right in aggregate. **Verify the entries E3 actually uses and skip the rest** — the reviewer's own recommendation, and it is the right one.
 
 ## The arms
 
 *Read the Gating section below first: three of these four are closed.*
 
-### E1 — π-stack connectivity, not residue counts — **CLOSED 2026-09-12**
+### E1 — π-stack connectivity, not residue counts — **prior lowered 2026-09-12, not closed on evidence**
 
 Build a second graph on **aromatic ring centroids**, edges weighted by real
 stacking geometry (centroid distance ≤ 7 Å, interplanar angle, offset). Ask
@@ -101,8 +100,17 @@ exactly why the within-protein pairing was made mandatory rather than optional.
 
 ### Consequence
 
-- **E1 (π-stack connectivity) — CLOSED.** Its premise was that aromatic content
-  marks allosteric sites. It does not.
+- **E1 (π-stack connectivity) — prior substantially lowered, premise NOT
+  falsified.** *Corrected 2026-09-12 after the external reviewer flagged the
+  logical gap, which was real and ours.* E1 was scoped as **connectivity**, not
+  composition: whether a π-stack graph connects the two sites when the Cα graph
+  does not. **Those are separable** — a protein can have background-level
+  aromatic content and still have a connected ring path between distant sites,
+  because path existence depends on geometric arrangement rather than count. So
+  [[HYP-P29]] lowers E1's prior substantially and does **not** refute it. Not
+  reopened, and the reviewer does not argue to reopen it: with composition
+  negative, matched-subset nulls get harder and E3 is the better use of Phase 2.
+  **But the register must not claim more than it measured.**
 - **E2 (DAHP synthase) — CLOSED as scoped here.** It was an n=2 illustration of a
   general effect that does not exist. A separate, differently-motivated task could
   still ask why those isoforms are effector-specific, but it would not be this
@@ -114,7 +122,7 @@ exactly why the within-protein pairing was made mandatory rather than optional.
   advance. That separation is the reason a negative gate cost us three arms
   instead of four.
 
-**Do not resurrect E1/E2/E4 on the strength of the raw 15.6% figure.** It is real
+**Do not resurrect E2/E4 on the strength of the raw 15.6% figure**, and do not describe E1 as refuted. It is real
 and it is not allostery-specific, and [[HYP-P29]] records exactly that.
 
 ## Constraints
@@ -279,3 +287,89 @@ established practice here, not an improvisation.
   the IBM hardware question.
 - [[TASK-0182]] — local-simulator-first precedent when hardware access is
   unconfirmed.
+
+---
+
+## Reviewer's Q1 answer, and where our own check contradicts it (2026-09-12)
+
+**The reviewer recommends nitrite reductase first, P450 as the stated stretch.**
+Their reasoning is good and worth recording in full, because most of it survives:
+
+> **Cu nitrite reductase (`1ZDS`), primary.** Donor–acceptor pair unambiguous —
+> Type-1 Cu to Type-2 Cu, ~12.5 Å, bridged by the adjacent Cys–His pair. `H_AB`
+> for that transfer has published experimental rate constants and decades of
+> classical pathway calculations to check against. Cu(II) is d⁹ — one unpaired
+> electron, the simplest open-shell case available. And ASBench's own allosteric
+> annotation (His60, His95, Trp144, His145) sits in the bridge region, so the site
+> you would fragment is the site the catalogue names.
+>
+> **P450 3A4 (`1W0F`), stretch.** Fe(III) heme is d⁵ with a dense low-lying spin
+> manifold and strong static correlation — simultaneously the best advertisement
+> for the method and the likeliest place to fail to converge with nothing to show.
+
+**Their framing of the real trade is the part to keep**, and the Architect's
+target table does not address it:
+
+> Nitrite reductase has ground truth and no pharmacological relevance; P450 3A4
+> has enormous pharmacological relevance and no ground truth. For a Cleveland
+> Clinic panel that trade is not obviously in nitrite reductase's favour on
+> Impact.
+
+### But the Architect's verification blocks their primary choice
+
+The Architect checked both entries against source rather than reasoning from
+enzyme identity, and found two facts the reviewer's recommendation does not
+survive unchanged:
+
+- **`1ZDS` is an M150G mutant, not wild-type.**
+- **`1ZDS` is itself holo** (6 Cu, acetamide bound), and no clean apo/wild-type
+  pair was found in that pass.
+
+E3's observable is `ΔH_AB` **apo vs holo**. Without an apo/wild-type partner,
+nitrite reductase cannot carry the comparison as scoped — however good its ground
+truth is. **That is a blocker, not a disqualification**: the entry needs curation,
+not abandonment.
+
+**This is the third time in a week that an unverified structure recommendation has
+not survived contact with the deposition** — after `8S8C` (suggested as apo, is
+holo) and `8QYR` (labelled apo by us, is the holo validation structure). The
+pattern is now strong enough to state as a rule: **a PDB ID is a claim until
+someone opens the entry.**
+
+### Recommendation, taking both inputs
+
+Adopt the reviewer's *structure* with the Architect's *ordering*:
+
+1. **Pre-register both targets**, as they suggest.
+2. **Run P450 3A4 (`1W0E` apo / `1W0F` holo) first** — not because it is the
+   better science question, but because it is the one with a verified apo/holo
+   pair and an independently published peripheral allosteric site in the exact
+   structure already in our cohort.
+3. **State in the text that the pipeline is target-agnostic**, with nitrite
+   reductase named as the validatable case **pending curation of a wild-type apo
+   partner** — which is an honest disclosure of exactly why the order is what it
+   is, not a preference dressed as a decision.
+4. Carry the reviewer's own caveat about 3A4 unchanged: d⁵ with strong static
+   correlation is where classical DFT genuinely struggles **and** where a
+   non-converged run leaves us with nothing to show. That risk is stated in
+   advance, not discovered.
+
+**Verify only these two entries' HETATM records**, per the tiering note above.
+
+## Reusable asset from a negative result (2026-09-12)
+
+The reviewer asks that one number survive the dead hypothesis, and they are right
+to:
+
+> **The 12.8% figure is worth keeping as infrastructure, separate from the dead
+> hypothesis.** Any future composition test against pockets in this cohort should
+> use it rather than bulk frequency. It is a small reusable asset produced by a
+> negative result, and it is the kind of thing that gets re-derived expensively
+> later if it isn't filed now.
+
+**Recorded here and in [[HYP-P29]]: the matched baseline for aromatic content at
+ligand-binding pockets in the ASBench cohort is 12.76% (F/Y/W/H, active sites,
+n=2422 residues across 79 proteins), not the ~10.2% bulk-protein frequency.** Any
+future composition test on this cohort uses the former. Source artifact:
+`results/tasks/0372_aromatic_enrichment_gate/aromatic_enrichment_gate.json`,
+key `planned_validation_raw_reproduction.act_aromatic_frac`.
