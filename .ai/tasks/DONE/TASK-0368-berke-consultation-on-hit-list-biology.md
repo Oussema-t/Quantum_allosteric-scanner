@@ -1,6 +1,6 @@
 # TASK-0368 — Consult Berke: are our five shipped residues per target the pockets we say they are?
 
-- Status: TODO
+- Status: Done
 - Owner: **Berke Turkaydin** (team member, not an agent) — coordinated by the Reviewer
 - Priority: **High. It concerns the only per-target deliverable a medicinal chemist will actually read.**
 - Filed: 2026-09-11 by Reviewer thread (id via `claim.py reserve-next`)
@@ -134,3 +134,56 @@ register confirmed *Bos taurus* on 2026-06 and the submission never discloses it
 waiting. **Item 3 still goes to Berke** — reduced to a confirmation rather than an
 investigation, and he should still say whether the bovine origin needs disclosing in
 the submission and whether it affects the biological reading at all.
+
+
+---
+
+## Answered, 2026-09-12 — Berke's verdicts, item by item
+
+| # | Berke's verdict | Effect |
+|---|---|---|
+| 1 | **BCR-ABL1 numbering is correct** as the reviewer mapped it | The external reviewer's reading stands: our five are ATP-site residues under `1OPL`'s Abl-1b numbering |
+| 2 | **All small molecules were discarded before calculation**, so "apo" *"works but is not fully correct saying that"* | The reviewer's "apo is wrong twice over" is answered on mechanism, and it opens a larger point — see below |
+| 3 | **`8QYP` is apo; `8QYR` is mavacamten-bound, not apo** | Confirms the register and [[TASK-0370]]'s label fix. Settled three ways |
+| 4 | **Not the mavacamten pocket** — near the ADP site but not it; a flexible loop region, *"might be biologically relevant"*. **One-site region** | Confirms the reviewer's "five hits are one site" |
+| 5 | **c-Myc numbering is fine** given `1NKP`'s multiple chains with independent numbering; **no active site is expected** for MYC-type multi-chain proteins, since a ligand could bind almost anywhere | Answers the reviewer's "cannot be UniProt" objection — it is per-chain PDB numbering, correctly |
+| 6 | **Switch-I, not switch-II** — and Berke reads that as *"it produces something good"* | **Disagreement, recorded not resolved** — see below |
+
+### Item 2 is the biggest of the six, and it points at us
+
+Berke confirms the pipeline strips ligands. `clean.py`'s own header, line 11:
+*"Waters, common ions, and crystallographic cofactors are removed."*
+
+**So "apo" in this project means ligand-stripped input, not an apo deposition** —
+and [[TASK-0345]] measured exactly that difference at **+0.199 AUC** in favour of
+stripped-holo. Our own headline finding about the field's central measurement
+error applies to our own inputs.
+
+**The narrow, correct version, which is stronger than the loose one**: `4LDJ` and
+`8QYP` are genuine apo depositions, so they are unaffected. `1OPL` is not — it
+carries myristate *and* an ATP-site inhibitor, both stripped, which puts it in the
+category our own delta says is **easier to score**. **And it still returns AUC
+0.541 and fails its own floor.** Stated that way it strengthens the negative
+rather than qualifying it: BCR-ABL1 failed on the *easy* version of its own input.
+
+Worth one clause in the submission, if [[TASK-0376]] or a later cut frees room.
+
+### Item 6 — Berke and the external reviewer disagree, and we should not paper over it
+
+The reviewer reads switch-I as the **proximity confound in a deliverable**: switch
+II is where the G12C allosteric pocket sits, and our five contain no switch-II
+residues. Berke reads switch-I as *"produces something good"* — but does not say
+why, and the claim is not argued.
+
+**Recorded as an open disagreement.** Nothing downstream depends on it: KRAS is
+reported as `NO_SIGNAL_IN_APO` with its floor CI containing the score, so the
+submission makes no claim about what those residues are. **Do not resolve this by
+picking the answer we prefer.** If it is revisited, it needs the one thing neither
+side supplied: which pocket the G12C allosteric programmes actually target, cited.
+
+### Status
+
+Items 1, 3, 4, 5 answered and closed. Item 2 answered, with a consequence for us
+filed above. Item 6 answered and **disputed** — left open, harming nothing.
+[[TASK-0370]] needed none of this for the cardiac label, which the register had
+already settled.
