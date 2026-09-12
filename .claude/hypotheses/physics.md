@@ -2321,3 +2321,80 @@ composition check, entirely classical) — it does not test electronic
 coupling, conical intersections, or any quantum-mechanical claim, and
 should not be read as evidence against those (E1–E4, [[TASK-0374]]'s own
 scope, untouched here).
+
+## HYP-P30 · KRAS_G12C's headline number is reproducible to every decision-relevant digit across thread count; the degenerate-subspace hazard is measured and absent
+
+**Claim.** The Team Lead observed KRAS's number "keeps moving" across
+casual re-runs and asked for ten repeats to check stability. The scoring
+path looks deterministic by construction (`propagators.py`'s occupation
+observable is `|amplitude|²`, sign-safe against `eigh`'s arbitrary
+per-eigenvector sign; the only RNG is explicitly seeded) — **except**
+inside a degenerate or near-degenerate eigenvalue subspace, where `eigh`
+can legitimately return a different orthonormal basis across LAPACK
+builds/thread counts, and only the *summed projector* over that subspace
+is invariant, not the individual `|v_k|²` terms
+(`time_averaged_ctqw_converged`'s own `degenerate_tol`, default 1e-6 of
+spectral bandwidth). That is a real, checkable mechanism that could
+produce exactly this kind of flip.
+
+**Status, 2026-09-12 ([[TASK-0378]]): TESTED — reproducible at every
+decision-relevant precision; the degenerate-subspace hazard is absent
+for this structure, by measurement, not argument.** Ten re-runs of the
+identical `4LDJ` KRAS_G12C scoring path, in ten genuinely fresh
+interpreter processes (thread-count env vars only take effect at
+process start), sweeping `OMP_NUM_THREADS`/`OPENBLAS_NUM_THREADS`/
+`MKL_NUM_THREADS` ∈ {1,2,4,8}. Planned Validation gate passed first:
+run 1 reproduces [[TASK-0376]]'s committed `score_auc = 0.5136485966935793`
+and floor `hop_from_seed = 0.5288350634371395` to every printed digit.
+
+| quantity | max deviation across all 10 runs |
+|---|---|
+| `score_auc` | **0.0** (exact) |
+| floor AUC | **0.0** (exact) |
+| top-5 residue set | identical in all 10 (Jaccard 1.000) |
+| full `winner_occ` vector | 4.7×10⁻¹⁵ (machine-epsilon scale) |
+
+**Every quantity a decision is ever made on — AUC, floor, ranking — is
+bit-for-bit identical across all ten runs and all four thread counts.**
+The raw per-residue occupation vector is not literally byte-identical
+(4.7e-15 max element-wise difference), which is ordinary floating-point
+non-associativity from a different summation/reduction order inside
+BLAS at different thread counts — not a defect, and roughly 10 orders of
+magnitude below anything that could move an AUC's third decimal.
+Reported because this task's own filed Constraint states "any variation
+at all is a finding, not noise," so the honest report distinguishes
+*this* class of variation from the flips the Team Lead was asking about,
+rather than rounding "basically deterministic" up to "deterministic."
+
+**Degenerate-subspace hazard, measured directly, not inferred:** `4LDJ`'s
+winner Hamiltonian (N=170) has **0 of 169 eigenvalue gaps** below the
+shipped `degenerate_tol` (1e-6 × bandwidth = 2.15e-6 absolute); the
+smallest real gap is 1.44e-4 — **67× above the threshold**. The hazard
+this task was filed to check for does not fire on this structure at the
+shipped configuration. A follow-up synthetic stress test (fixed thread
+count, `degenerate_tol` swept from 0 to 1e-2) confirms the mechanism is
+real in principle — at `tol=1e-4` (just above the real 1.44e-4 gap)
+`score_auc` shifts to 0.5152; at `tol=1e-2` it drops to 0.4975 and the
+top-5 set changes entirely — but the production default (1e-6) sits
+three orders of magnitude below where any effect starts, consistent
+with the direct gap measurement.
+
+**Read plainly, and stated the way the pre-registration asked for:**
+the numbers are exactly reproducible, and the input choice — not
+run-to-run noise, not thread count, not the degenerate-subspace hazard
+on this structure — is what moves KRAS's number. That converts "the
+numbers jump around" into a sharper, already-argued claim: apo draw
+(AUC 0.408–0.595, [[TASK-0155]]), structure swap (druggability 0.835→0.420,
+[[TASK-0270]]/[[TASK-0376]]), clock (46% sign flips, [[TASK-0350]]), and
+seed set (70–75% reproduction, [[TASK-0102]]) are the real, named,
+already-measured sources of spread — this task rules out a fifth,
+previously-unmeasured candidate (numerical non-reproducibility) rather
+than finding a sixth.
+
+**What this does not show:** whether the degenerate-subspace hazard is
+absent on OTHER targets in this register — `4LDJ`'s own gap spectrum is
+what was measured; a target with a genuinely tighter near-degenerate
+pair could behave differently and this is not tested here. Also does not
+test cross-machine reproducibility (only cross-thread-count, same
+machine) — a different LAPACK/BLAS vendor library is a distinct,
+untested axis.

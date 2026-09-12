@@ -13237,3 +13237,74 @@ No shipped residue, matrix, or headline AUC changed — this task adds disclosur
 **Docs**: `documentation/PHASE1_SUBMISSION_V4.md`,
 `documentation/SUBMISSION_PACKAGE/artefacts/README.md` §4. **Full detail**:
 `.ai/tasks/DONE/TASK-0376-known-limitations-in-the-artefacts-readme.md`.
+
+## KRAS's number is reproducible at every decision-relevant precision; the degenerate-subspace hazard is measured and absent ([[TASK-0378]], 2026-09-12)
+
+The Team Lead's instinct — "re-run KRAS 10 times, those back-and-forth
+flips just don't seem right" — is right that something moves, but a
+naive ten-identical-calls test would have measured nothing: the scoring
+path is deterministic by construction (`propagators.py`'s occupation
+observable is `|amplitude|²`, sign-safe against `eigh`'s arbitrary
+per-eigenvector sign; the only RNG is explicitly seeded). The one real,
+checkable hazard is a degenerate eigenvalue subspace, where `eigh` can
+legitimately return a different basis across LAPACK builds or thread
+counts — only the summed projector over that subspace is invariant, not
+the individual `|v_k|²` terms.
+
+**Ten re-runs, each a genuinely fresh interpreter process** (thread-count
+env vars are read at BLAS init time only, so a loop inside one process
+would test nothing): `OMP_NUM_THREADS`/`OPENBLAS_NUM_THREADS`/
+`MKL_NUM_THREADS` swept across {1,2,4,8}. Planned Validation passed
+first: run 1 reproduces [[TASK-0376]]'s committed `score_auc =
+0.5136485966935793` and floor `hop_from_seed = 0.5288350634371395` to
+every printed digit.
+
+| quantity | max deviation across all 10 runs |
+|---|---|
+| `score_auc` | **0.0** (exact) |
+| floor AUC | **0.0** (exact) |
+| top-5 residue set | identical in all 10 (Jaccard 1.000) |
+| full `winner_occ` vector | 4.7×10⁻¹⁵ |
+
+**Every quantity a decision is ever made on is bit-for-bit identical
+across all ten runs and all four thread counts.** The raw per-residue
+vector is not literally byte-identical — a 4.7e-15 max element-wise
+deviation, ordinary floating-point non-associativity from BLAS's
+summation order at different thread counts, ~10 orders of magnitude
+below anything that could move an AUC's third decimal. Reported
+precisely rather than rounded up to "byte-identical," per the task's own
+filed rule that any variation is a finding.
+
+**Degenerate-subspace hazard, measured with a number, not an
+argument:** `4LDJ`'s winner Hamiltonian (N=170) has **0 of 169**
+eigenvalue gaps below the shipped `degenerate_tol` (1e-6 × bandwidth =
+2.15e-6 absolute); the smallest real gap is 1.44e-4 — **67× above the
+threshold**. The hazard the task was filed to check for does not fire on
+this structure at the shipped configuration.
+
+**Because the 4.7e-15 deviation counted as "variation found," the
+Intent Contract's own item 4 triggered**: a fixed-thread,
+`degenerate_tol`-swept follow-up (0 → 1e-2). Confirms the mechanism is
+real in principle — `score_auc` moves to 0.5152 at `tol=1e-4` (just
+above the real 1.44e-4 gap) and to 0.4975 with a fully different top-5 at
+`tol=1e-2` — but the production default sits three orders of magnitude
+below where any effect starts, exactly consistent with the direct gap
+measurement. Nothing was changed; this is measurement, not a fix.
+
+**Read plainly: the pre-registered prediction holds where it matters.**
+KRAS's number is exactly reproducible, and the input choice — not
+run-to-run noise, not thread count, not the degenerate-subspace hazard on
+this structure — is what moves it. This rules out a fifth, previously
+unmeasured candidate for "the numbers jump around" rather than finding a
+sixth: apo draw ([[TASK-0155]]), structure swap
+([[TASK-0270]]/[[TASK-0376]]), clock ([[TASK-0350]]), and seed set
+([[TASK-0102]]) remain the real, already-measured, already-argued
+sources.
+
+Landed as new hypothesis **HYP-P30** in `physics.md`. `INDEX.md`
+regenerated; `hyp_register_check.py` shows only pre-existing staleness
+flags, none from this entry.
+
+**Files**: `scripts/task0378_kras_determinism_child.py`,
+`scripts/task0378_kras_determinism_probe.py`. **Full detail**:
+`.ai/tasks/DONE/TASK-0378-kras-determinism-probe.md`.
