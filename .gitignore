@@ -68,3 +68,11 @@ __WORK_IN_PROGRESS__/documentation/references/
 # project's own code, not a decided-on artifact -- discussion material, kept
 # local for reference. See the tracked README.md alongside it for context.
 .ai/reviews/2026-08-23 - hamiltonians/hamiltonians.py
+# Outbound correspondence drafts written for a specific recipient at a specific
+# moment (external reviewer briefs, collaborator replies). Tracked message drafts
+# live alongside the other documentation; this directory is for the ones that are
+# situational rather than durable -- superseded the moment they are sent, and not
+# a record anyone should later mistake for a project artifact. The findings they
+# summarise are tracked in .ai/tasks/ and the hypothesis register, which are the
+# durable sources.
+__WORK_IN_PROGRESS__/documentation/_outbox/
