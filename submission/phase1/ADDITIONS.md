@@ -33,7 +33,7 @@ cost: 2 lines
 Re-measured on the second cohort described in Appendix B, the same constant-per-protein score reaches **AUC 0.771** across 630 proteins — above every method either track has tested, and a wider margin than the 0.65 above.
 
 ### ADD-2 — Independent replication of the central null
-status: APPROVED
+status: REJECTED  # moved into Appendix B to keep sections 6-7 inside the 6-page body
 section: 2. Technical Approach
 anchor: because McNemar is a paired test over the same families.
 cost: 2 lines
@@ -41,7 +41,7 @@ cost: 2 lines
 A second pipeline, built independently on a different detector and a different candidate filter, reaches the same verdict on a larger cohort: across 630 proteins in 399 families the seeded walk loses to closeness centrality at every distal-filter setting (Wilcoxon p = 0.001, 0.003, 0.044, 0.258). The cohorts are not pooled — they differ in detector and family convention — so this is replication, not an enlarged n. Appendix B reports it in full.
 
 ### ADD-3 — A blind model over all 221 observables reproduces distance
-status: APPROVED
+status: REJECTED  # moved into Appendix B to keep sections 6-7 inside the 6-page body
 section: 2. Technical Approach
 anchor: What it adds is simply not coherence
 cost: 3 lines
@@ -81,7 +81,14 @@ There is no distal-filter setting at which the walk beats closeness centrality. 
 **Why the family counts differ between tracks.** The 399 labels are inherited from five source datasets under three conventions: CASBench group codes (227 entries), UniProt accessions, and free-text names (CryptoBench 308, ASBench 67, PocketMiner 21, CryptoSite 7). The four largest families are all CASBench. A single clustering rule is a Phase-2 prerequisite for any absolute family count; the paired comparisons above do not depend on it.
 
 
+
+**Replication, the blind model, and the construction.** A second pipeline, built independently on a different detector and a different candidate filter, reaches the same verdict on a larger cohort: across 630 proteins in 399 families the seeded walk loses to closeness centrality at every distal-filter setting (Wilcoxon p = 0.001, 0.003, 0.044, 0.258). The cohorts are not pooled — they differ in detector and family convention — so this is replication, not an enlarged n.
+
+The same conclusion survives combining the observables rather than choosing among them. A logistic regression over all 221 per-residue score vectors, true leave-one-family-out, reaches family-weighted AUC **0.7216** on the distal subset — against 0.5405 for the best single cell selected on the same data, and **0.7219** for the trivial reversed-distance floor. The difference from the floor is -0.0003 (Wilcoxon p = 0.90): optimally combined, the quantum observables reproduce distance and nothing further.
+
 ### B.0 — The thirteen operators and seventeen scores
+
+**The construction.** Residues are nodes at their C-alpha coordinates, edges within a 10 A cutoff. The challenge-specified operator is `H_new = L_sym + diag(0.08 V_B + 0.16 V_T + 0.08 V_R + 0.04 V_C + 0.04 V_M)`, the symmetric normalised Laplacian of the exponential contact graph plus a diagonal site potential, each term z-scored and signed so penalties raise it and rewards lower it: `V_B` B-factor disorder, `V_T` chain termini and exposure, `V_R` rigidity, `V_C` GNM covariance with the core, `V_M` slow-mode participation. Real symmetric, hence Hermitian, at every setting we swept. The walk is `U(t) = exp(-iHt)` seeded at the active site, reported in the converged time-average `p_avg(s->a) = sum_k |v_k(s)|^2 |v_k(a)|^2` — a sum of squares, which is the one-line reason the converged propagator is phase-free.
 
 Four edge weightings — binary (`d < 10 A`), exponential `exp(-0.3 d)`, Gaussian `exp(-d^2/72)` and harmonic `1/(d + 0.5)^2` — under three normalisations: the adjacency `W`, the combinatorial Laplacian `L = D - W`, and the symmetric normalised `L_sym = I - D^{-1/2} W D^{-1/2}`. Twelve operators, `binary/adj` through `harm/sym`, plus `H_new` gives thirteen. The seventeen scores fall in five families: **occupation** (`p_avg`, `p_peak`, and their ratio `R`); **proximity-corrected** (`residLOG`, `residRAW`, each optionally focused by walker spread, and `pavg_over_dX`); **resolvent** (`green_zero_0.01`, `green_zero_0.05`, `green_lmax_0.05`, i.e. `|<a|(E + i eta - H)^{-1}|s>|^2`, a commute-time analogue); **dispersion** (`neg_dD_mean`, `neg_ED_final`, `QMI`); and **energy-uncertainty** (`neg_dE` and two combinations). Thirteen times seventeen is the 221 cells per protein.
 
@@ -108,7 +115,7 @@ cost: 2 lines
 The same register operating on the second branch caught three more: an AUC read backwards in a distal proximity-floor claim, a classical-comparison arm that differed in operator as well as in coherence, and a blind positive filed as a to-do rather than reported. All three are corrected in the public history.
 
 ### ADD-6 — The operator and the walk, in one paragraph
-status: APPROVED
+status: REJECTED  # moved into Appendix B to keep sections 6-7 inside the 6-page body
 section: 2. Technical Approach (Paradigm)
 anchor: That measured boundary, not a preference, is what sends the remaining quantum candidates toward many-body objects and conformational ensembles rather than single-structure optimisation.
 cost: 4 lines
