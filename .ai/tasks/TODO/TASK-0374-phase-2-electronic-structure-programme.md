@@ -1,7 +1,7 @@
 # TASK-0374 — Phase-2 programme: π-connectivity, the DAHP natural experiment, PCET chains, and the one arm that needs quantum hardware
 
-- Status: TODO
-- Owner: **Architect/Planner** to scope; Implementers per arm
+- Status: TODO — **E3 scoped 2026-09-12 (Architect), ready for Implementer pending the IBM-access question below**
+- Owner: **Architect/Planner** to scope (done); Implementer for E3's build
 - Priority: **Phase-2 planning — reduced to E3 alone. The gate fired: [[TASK-0372]] returned a clean negative on 2026-09-12 and E1/E2/E4 are closed with it.**
 - Filed: 2026-09-12 by Reviewer thread (id via `claim.py reserve-next`)
 - Source: external reviewer discussion, 2026-09-11/12
@@ -154,3 +154,128 @@ E0 might kill it, and it did. That is the system working: a pre-registered gate,
 run before the expensive arms, returning the outcome it predicted was most likely.
 The reframe that made this worth exploring survives on its own argument, not on
 this measurement.
+
+## E3 — scoped (2026-09-12, Architect)
+
+Picked up per direct instruction. E3's own paragraph named two candidate targets
+and one method (EWF-TrimSQD) without checking either against source — the same
+discipline this task's own Gating section just enforced on the reviewer's cohort
+table applies here too.
+
+### Target: P450 3A4, not nitrite reductase — verified, not assumed
+
+| Check | P450 3A4 | Cu nitrite reductase |
+|---|---|---|
+| Apo structure | **`1W0E`**, confirmed via RCSB + the original paper (Williams et al. 2004, *Science* 305:683, PMID 15256616) | Not confirmed — `1ZDS` (Yamaguchi et al.) is an **M150G mutant**, not wild-type; a clean apo/wild-type pair was not found in this pass |
+| Holo structure | `1W0F` (progesterone), `1W0G` (metyrapone) — same paper, same crystal series | `1ZDS` itself is holo (6 Cu, acetamide bound) |
+| Allosteric site, independently published | **Yes, directly on point**: the paper reports "an unexpected peripheral binding site... located above a phenylalanine cluster, which may be involved in the initial recognition of substrates or allosteric effectors" — a site distinct from the heme catalytic pocket, in the exact structure already in our own cohort table | Abstract discusses external ligands as "allosteric effectors" for the Type-1 Cu site, but no inter-copper coupling literature found in this pass |
+| Electronic question | Heme Fe spin state (high/low-spin gates catalysis) vs. peripheral-site occupancy — single well-defined metal centre | Type-1→Type-2 Cu electron transfer — two metal centres, but the wild-type/apo pairing gap above blocks a clean apo-vs-holo comparison as scoped |
+
+**Recommendation: P450 3A4 (`1W0E` apo / `1W0F` holo).** Clean apo/holo pair,
+independently published peripheral allosteric site, matches this programme's own
+distal-effector framing directly. Nitrite reductase is not dropped, but its
+current entry needs curation (find a real apo/wild-type structure) before it is
+usable the same way — a blocker, not a disqualification.
+
+### Method: do not attempt to replicate EWF-TrimSQD — scope down to the same method class on open tooling
+
+Read the sponsor's own paper (Merz, Shajan, Kaliakin et al., arXiv:2605.01138,
+IBM + Cleveland Clinic + RIKEN, T4-lysozyme/trypsin, up to 94 qubits / 9200
+circuits / 1.3B shots across `ibm_cleveland`/`ibm_kobe`) before scoping this,
+per this task's own standing discipline. Three findings change the plan:
+
+1. **EWF-TrimSQD is not public.** The paper names its own fragment-construction
+   and TrimSQD code as "in-house"; no repository is given for either (only a
+   *different*, RIKEN-authored tool, SBD, has one:
+   `github.com/r-ccs-cms/sbd`). It cannot be ported the way this register
+   usually ports published methods — there is nothing to port.
+2. **It has never been pointed at a two-fragment coupling question.** Every
+   demonstration to date is whole-protein solvation/binding energetics
+   (T4-lysozyme, trypsin). E3's own observable — `ΔH_AB` between two named
+   fragments — is a materially different calculation, not a re-run of the
+   published one at smaller scale.
+3. **The generic method underneath it — sample-based quantum diagonalization
+   (SQD) — is public.** `qiskit-addon-sqd` (Qiskit's own addon,
+   `github.com/Qiskit/qiskit-addon-sqd`, on PyPI) implements the base
+   algorithm TrimSQD extends. Using it directly, honestly described as the
+   generic method rather than the sponsor's own trimmed variant, is buildable
+   here; claiming EWF-TrimSQD itself is not.
+
+**Revised plan**: a minimal two-fragment active-space model — heme Fe +
+proximal ligand vs. the peripheral Phe-cluster pocket — built classically with
+PySCF (open source, the same tool the sponsor's own paper uses for its
+classical reference calculations), diagonalized with `qiskit-addon-sqd`. This
+is a capability claim in the **same method class** as the sponsor's published
+work, scoped to what is actually buildable with public tooling — not a
+replication, and the write-up must say so plainly.
+
+### Hardware access — a real, unconfirmed gap, distinct from Braket/Classiq
+
+The sponsor's own demonstration ran on `ibm_cleveland`/`ibm_kobe` (IBM Heron
+r2, 156 qubits). **This project has never confirmed IBM Quantum access.**
+[[TASK-0221]] resolved AWS Braket/Classiq as Phase-2-only, at no cost, per the
+organisers — IBM Quantum is a third, separate platform that promise does not
+cover. Given Cleveland Clinic's own direct collaboration with IBM on exactly
+this method, access may be obtainable, but that is **unverified — a question
+for Bartosz, not an assumption**, matching [[TASK-0221]]'s own pattern rather
+than repeating the "assume access, get surprised at the end" mistake that
+task was filed to prevent.
+
+**Sequencing, so hardware access does not block starting**: run the two-fragment
+SQD calculation on a local Qiskit Aer simulator first — feasibility and
+correctness (does the fragment converge, is `ΔH_AB` even computable at this
+active-space size) do not need real hardware to check. Real-hardware execution
+is the stretch goal once (a) the simulator run works and (b) access is
+confirmed one way or the other. This mirrors [[TASK-0182]]'s own
+local-simulator-first precedent when Braket credentials were unavailable —
+established practice here, not an improvisation.
+
+### Intent Contract
+
+- **Outcome**: a `ΔH_AB` (or equivalent electronic coupling observable) computed
+  for CYP3A4's heme-Fe fragment vs. its peripheral Phe-cluster fragment, apo
+  (`1W0E`) vs. holo (`1W0F`), on a local simulator at minimum; real-hardware
+  execution contingent on the access question above.
+- **In scope**: fragment/active-space definition and its own justification
+  (orbital count, atoms included — stated up front, per this register's
+  standing "state the null and the positive control before it runs"
+  discipline); PySCF classical embedding; `qiskit-addon-sqd` diagonalization;
+  apo-vs-holo comparison of the resulting coupling.
+- **Out of scope**: any claim this replicates or matches EWF-TrimSQD's own
+  published results; any advantage claim (per this task's own Constraints,
+  unchanged); nitrite reductase (blocked on curation, not in this pass).
+- **Positive control**: hemoglobin (`1B86`/`1IWH`/`2D60`, already in the
+  cohort table) is a second, independent heme system with well-characterized
+  allosteric behaviour (T-to-R spin/coordination coupling) — a natural
+  second case if CYP3A4 alone is underpowered as n=1, not required to start.
+- **Planned Validation**: the simulator run must reproduce a *known* quantity
+  first (e.g. the heme Fe spin gap alone, without the second fragment, against
+  a literature or PySCF-only reference) before the two-fragment coupling
+  number is trusted — the same "does the detector work on a case with a known
+  answer" discipline [[TASK-0374]]'s own E4 arm required of PCET chains.
+
+### TODO
+
+- [ ] Ask Bartosz: is IBM Quantum hardware access available via Cleveland
+      Clinic's own collaboration, or is this platform genuinely out of reach
+      for this submission? (File alongside/inside [[TASK-0221]] if that task
+      is still the right home for organiser/account questions.)
+- [ ] Define the heme-Fe and peripheral-Phe-cluster fragments concretely
+      (residue lists, active-space orbital count) from `1W0E`/`1W0F`.
+- [ ] Classical PySCF embedding for each fragment; validate the heme-alone
+      spin gap against a known reference before adding the second fragment.
+- [ ] `qiskit-addon-sqd` diagonalization on Aer simulator; compute `ΔH_AB`
+      apo vs. holo.
+- [ ] Write up as a capability claim in the sponsor's own method *class*, not
+      as EWF-TrimSQD replication — state the difference explicitly.
+- [ ] If simulator result is real and stable, and hardware access is
+      confirmed: real-hardware run as the stretch goal, not the gate for
+      reporting the simulator result.
+
+### Dependency
+
+- [[TASK-0372]] — the gate that closed E1/E2/E4 and left this arm standing.
+- [[TASK-0221]] — organiser/account-access question pattern, reused here for
+  the IBM hardware question.
+- [[TASK-0182]] — local-simulator-first precedent when hardware access is
+  unconfirmed.
