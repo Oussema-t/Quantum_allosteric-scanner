@@ -13308,3 +13308,89 @@ flags, none from this entry.
 **Files**: `scripts/task0378_kras_determinism_child.py`,
 `scripts/task0378_kras_determinism_probe.py`. **Full detail**:
 `.ai/tasks/DONE/TASK-0378-kras-determinism-probe.md`.
+
+## Seed choice is a fourth overfitting axis with real capacity — the submission's "221 chances" is silent on it, but the shipped seed was never selected from it ([[TASK-0379]], 2026-09-12)
+
+The Team Lead's question: if operator/score choice can be shown to
+"overfit," can seed choice too? The submission's own §1 counts "221
+chances per target" (13 operators x 17 scores) as its honest multiplicity
+disclosure — the seed set is a third axis nobody had measured.
+
+**Operator and score fixed throughout** (`H_new`, occupation AUC), 7
+register targets with a real UniProt active site and a real drug-derived
+pocket label ([[TASK-0209]]'s own cohort) — a direct extension of
+[[TASK-0102]] (one target, single-residue seeds only) to all 7, matched
+seed-set sizes, and a genuine matched null.
+
+**A real performance defect caught before trusting the run.** The
+label-permutation null needs 400,000 AUC evaluations per null type per
+target; `allostery.metrics.auc` (`sklearn.roc_auc_score`) per call took
+851s for KRAS_G12C alone, the smallest of the 7 — killed rather than run
+for hours. Fixed with a vectorized Mann-Whitney rank-sum AUC computing
+all cached occupation vectors against one permuted label per pass —
+**verified byte-identical to `roc_auc_score` on 20 synthetic trials**
+before use, and confirmed to reproduce the pre-fix pilot's exact numbers.
+Full run: 987s, all 7 targets.
+
+**Arm A — capacity ceiling: large, on 6 of 7 targets.**
+
+| target | true-seed percentile | best-of-2000 | matched-null best-of-2000 | excess | p |
+|---|---|---|---|---|---|
+| KRAS_G12C | 49.6th | 0.8750 | 0.7324 | +0.143 | <0.005 |
+| BCR_ABL1 | 42.5th | 0.8825 | 0.7339 | +0.149 | <0.005 |
+| CARDIAC_MYOSIN | 56.1th | 0.9143 | 0.7540 | +0.160 | <0.005 |
+| PTP1B | 34.8th | 0.8514 | 0.7384 | +0.113 | <0.005 |
+| GLUCOKINASE | 44.8th | 0.8523 | 0.7217 | +0.131 | <0.005 |
+| CASPASE1 (n_seed=2) | 90.5th | 0.8581 | 0.8246 | +0.034 | 0.290 |
+| CASPASE7 (n_seed=2) | 52.6th | 0.9113 | 0.7966 | +0.115 | 0.005 |
+
+**Best-of-2000 reaches AUC 0.85-0.91 on every target — including
+0.72-0.82 from a label-permutation null carrying no information at
+all.** On top of that already-high selection-alone baseline, the real
+label adds a further, statistically significant +0.11 to +0.16 AUC on
+6/7 targets. **This falsifies the pre-registered prediction** ("the
+excess over a matched null is small") on 6 of 7 — the largest number this
+task produced. CASPASE1 (n_seed=2, the smallest seed in the cohort by a
+wide margin) is the one exception, plausibly the same small-seed-size
+mechanism behind its own percentile outlier (90.5th, vs 35th-56th for
+the other 6).
+
+**The shipped seed's own percentile among 2000 arbitrary matched-size
+seeds stays unremarkable for 6/7 targets** — generalizing [[TASK-0102]]'s
+BCR_ABL1-only finding across the full cohort: the reported seed was not
+itself cherry-picked. **Read together: the seed axis has real, material
+capacity to inflate an AUC through selection alone, but the actual
+reported numbers were never produced that way.** The submission's "221
+chances per target" is accurate about what was searched (one
+pre-specified seed per target, never varied) but silent on what COULD
+have been searched — exactly the gap a reviewer could reasonably probe,
+now measured rather than assumed absent. **Flagged for the next
+submission-drafting pass, not edited here** (this task's own Out-of-scope:
+no shipped seed, residue, or number changed).
+
+**Arm B — which seeding rule is physical: not a tie, and not in the
+direction anticipated.** Five candidate rules scored at the same fixed
+operator/score. Six of the ten rule-pairs across the cohort turned out
+forced-equal-by-construction or N/A once `labels.py`'s own tiering logic
+was checked directly (its tier-1 active-site resolution IS func-ligand
+contact for 4/7 targets, so the "shipped" and "ligand-contact" rules
+cannot differ there regardless of biology) — caught before being reported
+as findings, not after. The two genuinely independent comparisons:
+
+- **Rule 5 (single centroid point) beats rule 1 (full curated
+  multi-residue annotation) on 5 of 7 targets, by up to +0.12 AUC
+  (KRAS_G12C), never losing by more than -0.036 (BCR_ABL1).** Not a tie —
+  a frequent **win** for the minimal possible seed, consistent with
+  [[HYP-P8]]/[[TASK-0102]]'s ground-mode-dominance mechanism: the fixed
+  Hamiltonian's leading eigenmode shape barely depends on which
+  residue(s) seed it, so a single well-placed point often projects onto
+  it more cleanly than an averaged multi-source mixture does.
+- **Rule 4 (fpocket structural pocket) sits close to rule 1 in both
+  directions** (-0.049 to +0.044 across all 7) — no consistent winner.
+
+Landed as new hypothesis **HYP-P31** in `physics.md`. `INDEX.md`
+regenerated; `hyp_register_check.py` shows only pre-existing staleness
+flags, none from this entry.
+
+**Files**: `scripts/task0379_seed_capacity_and_definition.py`. **Full
+detail**: `.ai/tasks/DONE/TASK-0379-seed-set-as-a-fourth-overfitting-axis.md`.

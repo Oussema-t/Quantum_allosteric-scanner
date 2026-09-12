@@ -2398,3 +2398,78 @@ pair could behave differently and this is not tested here. Also does not
 test cross-machine reproducibility (only cross-thread-count, same
 machine) — a different LAPACK/BLAS vendor library is a distinct,
 untested axis.
+
+## HYP-P31 · The seed set is a real, high-capacity overfitting axis the submission's own multiplicity count omits — but the shipped seed was not selected from it
+
+**Claim.** The submission's own §1 states "with thirteen operators and
+seventeen scores there are 221 chances per target" as its honest account
+of this project's own multiplicity. The Team Lead asked whether seed
+choice is a fourth, uncounted axis: if an arbitrary seed set can be
+selected to inflate AUC the way operator/score selection can, 221
+understates the real search space in the project's own favour. [[TASK-
+0102]] (one target, BCR_ABL1, single-residue seeds only) found the true
+active site sits unremarkably among arbitrary seeds — suggestive of a
+null result, but never tested a best-of-N selection scenario or a
+matched null, so it could not answer the capacity question directly.
+
+**Status, 2026-09-12 ([[TASK-0379]]): TESTED — capacity is large and
+real; the shipped seed itself was not drawn from it.** Operator (`H_new`)
+and score (occupation AUC) fixed throughout, one `eigh` per target reused
+for every seed; 7 register targets with a real active site and real
+pocket label (KRAS_G12C, BCR_ABL1, CARDIAC_MYOSIN, PTP1B, GLUCOKINASE,
+CASPASE1, CASPASE7 — [[TASK-0209]]'s own cohort).
+
+| target | true-seed percentile (of 2000 arbitrary, matched-size) | best-of-2000 | matched-null best-of-2000 | excess | p |
+|---|---|---|---|---|---|
+| KRAS_G12C | 49.6th | 0.8750 | 0.7324 | +0.143 | <0.005 |
+| BCR_ABL1 | 42.5th | 0.8825 | 0.7339 | +0.149 | <0.005 |
+| CARDIAC_MYOSIN | 56.1th | 0.9143 | 0.7540 | +0.160 | <0.005 |
+| PTP1B | 34.8th | 0.8514 | 0.7384 | +0.113 | <0.005 |
+| GLUCOKINASE | 44.8th | 0.8523 | 0.7217 | +0.131 | <0.005 |
+| CASPASE1 (n_seed=2) | 90.5th | 0.8581 | 0.8246 | +0.034 | 0.290 |
+| CASPASE7 (n_seed=2) | 52.6th | 0.9113 | 0.7966 | +0.115 | 0.005 |
+
+**Two distinct, both-real findings, and they point in different
+directions.** (1) The shipped seed's own percentile among arbitrary
+matched-size seed sets is unremarkable for 6/7 targets (35th-56th) —
+generalizing [[TASK-0102]]'s BCR_ABL1-only finding to the full cohort:
+the reported seed was not cherry-picked, and a typical arbitrary seed of
+the same size would score comparably. (2) **best-of-2000 reaches
+AUC 0.85-0.91 on every target — including 0.72-0.82 from a
+label-permutation null that carries no information at all.** On top of
+that already-high selection-alone baseline, the true label adds a
+further, significant +0.11 to +0.16 AUC on 6/7 targets (p<0.005 for 5,
+p=0.005 for the sixth; CASPASE1's n_seed=2 is the one target where the
+excess is not distinguishable from the null, p=0.29, plausibly the same
+small-seed-size mechanism behind its percentile outlier).
+
+**This falsifies the pre-registered prediction** ("the excess over a
+matched null is small") **on 6 of 7 targets — the largest single number
+this task produced.** The seed axis has real, material capacity to
+inflate an AUC through selection alone, independent of whether the
+selected seed carries genuine information. The submission's 221-chances
+framing is accurate about what was actually searched (one pre-specified
+seed per target, never varied) but silent on what COULD have been
+searched — exactly the gap a reviewer could reasonably probe, now
+measured rather than assumed absent.
+
+**A second, related finding (same task, Arm B): seed DEFINITION matters
+even less than seed CAPACITY suggests.** Scoring 5 candidate seeding
+rules at the same fixed operator/score: a single point at the seed
+region's own centroid beats the full curated multi-residue annotation on
+5/7 targets, by up to +0.12 AUC, and never loses by more than -0.036 —
+not a tie (the pre-registered prediction), a frequent **win** for the
+minimal possible seed. Consistent with the same ground-mode-dominance
+mechanism [[HYP-P8]]/[[TASK-0102]] already established: the fixed
+Hamiltonian's leading eigenmode shape barely depends on which residue(s)
+seed it, so a single well-placed point often projects onto that mode
+more cleanly than an averaged multi-source mixture does.
+
+**What this does not show:** whether the same capacity holds on the
+13-operator x 17-score grid or the ~1022-protein/276-family cohort the
+submission's own matched-multiplicity analysis uses ([[TASK-0336]]/
+[[TASK-0338]]) — fixing operator and score to isolate the seed axis, per
+this task's own Constraint, makes that a different, larger measurement
+this task does not attempt. Also does not change any shipped seed,
+residue, or number — flagged for the next submission-drafting pass, not
+acted on here.
