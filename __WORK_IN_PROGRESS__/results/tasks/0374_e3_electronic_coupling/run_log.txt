@@ -1,0 +1,13 @@
+[   0.0s] fetching 1W0E (apo), 1W0F (holo)
+[   0.0s] ### Geometry checks (already run and disclosed in module docstring) ###
+[   0.0s]   apo_1W0E: Fe-Sgamma(Cys442) = 2.47 A
+[   0.0s]   holo_1W0F: Fe-Sgamma(Cys442) = 2.41 A
+[   0.0s] 
+### Heme-alone spin-state validation (AVAS + CASCI) ###
+[   0.0s]     apo_1W0E/low_spin_doublet: ROHF starting (spin=1)...
+[ 534.9s]     apo_1W0E/low_spin_doublet: ROHF done in 535s, converged=False, E=-3422.0325576724827
+[ 534.9s]     apo_1W0E/intermediate_quartet: ROHF starting (spin=3)...
+[1075.9s]     apo_1W0E/intermediate_quartet: ROHF done in 541s, converged=False, E=-3422.2392603811313
+[1075.9s]     apo_1W0E/high_spin_sextet: ROHF starting (spin=5)...
+[1615.7s]     apo_1W0E/high_spin_sextet: ROHF done in 540s, converged=False, E=-3422.3616605199095
+[1615.7s]     holo_1W0F/low_spin_doublet: ROHF starting (spin=1)...

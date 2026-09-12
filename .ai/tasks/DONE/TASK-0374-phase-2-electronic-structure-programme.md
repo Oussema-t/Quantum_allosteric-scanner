@@ -1,6 +1,6 @@
 # TASK-0374 — Phase-2 programme: π-connectivity, the DAHP natural experiment, PCET chains, and the one arm that needs quantum hardware
 
-- Status: TODO — **E3 scoped 2026-09-12 (Architect), ready for Implementer pending the IBM-access question below**
+- Status: Done — **E3 scoped (Architect) then attempted (Implementer), 2026-09-12: a real capability gap found (SCF non-convergence + a venv/jaxlib blocker for SQD), `ΔH_AB` not computed. Concrete next steps recorded below, not a finished result.**
 - Owner: **Architect/Planner** to scope (done); Implementer for E3's build
 - Priority: **Phase-2 planning — reduced to E3 alone. The gate fired: [[TASK-0372]] returned a clean negative on 2026-09-12 and E1/E2/E4 are closed with it.**
 - Filed: 2026-09-12 by Reviewer thread (id via `claim.py reserve-next`)
@@ -373,3 +373,134 @@ n=2422 residues across 79 proteins), not the ~10.2% bulk-protein frequency.** An
 future composition test on this cohort uses the former. Source artifact:
 `results/tasks/0372_aromatic_enrichment_gate/aromatic_enrichment_gate.json`,
 key `planned_validation_raw_reproduction.act_aromatic_frac`.
+
+## Done (2026-09-12, Implementer A) — E3 attempted, a real capability gap found, not the coupling number
+
+Picked up after E3 was scoped (above). No blocker before pickup (claim
+released cleanly by the prior Reviewer-thread session). Script:
+`scripts/task0374_e3_electronic_coupling.py`.
+
+### What was built and verified, not assumed
+
+- **`pyscf`, `qiskit-addon-sqd` installed** (neither was present before
+  this task).
+- **Geometry, checked directly against the deposited structures, not
+  the paper's own description alone**: both `1W0E` (apo) and `1W0F`
+  (holo) are 5-coordinate at Fe — 4 porphyrin N (2.03-2.07 Å) + Cys442
+  Sγ (2.41-2.47 Å per structure) — **no axial water within 3.2 Å in
+  either structure.** This corrects the Architect's own scoping
+  paragraph above, which carried over the field's general "apo =
+  6-coordinate low-spin, substrate-bound = 5-coordinate high-spin"
+  picture without checking it against this specific pair — checked
+  here, and it does not hold for `1W0E`/`1W0F`: the apo/holo difference
+  in this pair is not a coordination-number change at Fe.
+- **Fragment A (heme site)**: the deposited `HEM` group (43 atoms,
+  unmodified) + Cys442's own thiolate, capped at the Sγ-Cβ bond with a
+  link H (1.34 Å) — the field's own standard minimal P450 model,
+  Fe(porphine)(SH).
+- **Fragment B (peripheral site)**: PHE213/PHE219/PHE220's aromatic
+  rings — ASBench's own annotated `allosteric_residues` for `1W0F`,
+  restricted to the aromatic subset (ASP214/ASP217/VAL240 excluded, not
+  part of the π-system this observable is about) — each capped at
+  Cγ-Cβ with a link H, a toluene-like model per residue.
+- Both fragments taken from each structure's own real coordinates
+  (apo from `1W0E`, holo from `1W0F` independently), not superposed or
+  idealised.
+
+### What was attempted, and where it stopped
+
+**Planned Validation (this task's own requirement): get the heme-alone
+fragment to a converged mean-field reference before trusting an active
+space built on it.** Tried, in order, each a standard, documented
+remedy for exactly this failure mode, not an ad hoc guess:
+
+1. **ROHF**, 3 spin states (doublet/quartet/sextet), `level_shift=0.2`,
+   `max_cycle=150`: **none converged**, ~535-541s each (apo structure;
+   holo not reached).
+2. **UHF**, stronger aids (`level_shift=0.5`, `init_guess='atom'`,
+   `diis_start_cycle=1`), sextet only: **did not converge** in 458s;
+   spin contamination severe (`S²=20.5` vs. an ideal ≈9 for a clean
+   sextet).
+3. **UKS/B3LYP** (DFT in place of bare HF — standard practice for
+   transition-metal active-space work, since HF's self-interaction
+   error is a well-documented source of exactly this class of
+   convergence failure for near-degenerate metal d-orbitals), sextet
+   only: **still did not converge**, in 1479s (25 min) — slower, not
+   faster, and still spin-contaminated (`S²=13.2` vs. ideal ≈7.3).
+
+**Stopped here rather than keep iterating indefinitely.** Total
+compute spent on convergence attempts alone: ~61 minutes, zero
+converged results, escalating (not shrinking) cost per attempt. This
+is reported as a capability finding, not smoothed into "in progress":
+**a minimal-basis (STO-3G), single-determinant treatment of the
+Fe-porphyrin-thiolate fragment does not converge on this hardware with
+the standard remedies tried.** The general difficulty of describing
+iron-heme electronic structure at the single-reference level — near-
+degenerate d-orbitals, genuine multireference character — is
+independently documented in the literature (Radoń, M.; Pierloot, K.
+"Binding of CO, NO, and O2 to Heme by Density Functional and
+Multireference ab Initio Calculations." *J. Phys. Chem. A* **2008**,
+*112*, 11824-11832. DOI: [10.1021/jp806075b](https://doi.org/10.1021/jp806075b),
+live-verified via Crossref) — cited as the source of the general
+principle this task's own convergence failure is consistent with, not
+as the source of any number here; this task's own failure was not
+compared against that paper's specific results.
+
+**A second, independent blocker, found and disclosed, not hidden:**
+`qiskit_addon_sqd.fermion` imports `jax`; this repo's `.venv` is an
+x86_64 (Rosetta) virtualenv on Apple Silicon (confirmed directly:
+`.venv/bin/python3.13` is a Mach-O x86_64 executable), and the `jaxlib`
+wheel pip installed into it was built with AVX instructions Rosetta
+does not emulate — `qiskit_addon_sqd.fermion` cannot be imported at
+all in this environment (`RuntimeError: ... built using AVX
+instructions, which your CPU and/or operating system do not support`).
+This is unrelated to the convergence problem above and would block a
+real SQD run even if the classical reference converged. Fixing it
+needs a native arm64 `.venv` (or a dedicated arm64 virtualenv for this
+one dependency) — a shared-infrastructure change affecting every
+concurrent thread's own `.venv`, out of this task's own scope to make
+unilaterally.
+
+**A separate, useful process finding from the same investigation**:
+running `claim.py`'s `commit-guard`/`stage` subcommands with this same
+x86_64 `.venv` activated breaks their internal `git diff --cached` call
+for the identical reason (macOS's fat-binary architecture inheritance
+execs `git`'s x86_64 slice from an x86_64 parent, which then needs the
+same missing x86_64 `libxcrun.dylib`) — already worked around directly
+in [[TASK-0372]]'s own commit and confirmed fixed by not having `.venv`
+active for `claim.py` calls specifically.
+
+### Consequence
+
+- **`ΔH_AB` itself was not computed** — neither the Löwdin-Fock-matrix
+  estimate (needs the same converged mean-field step) nor the
+  SQD-based version (blocked twice over, independently).
+- **This is not a null result about the electronic coupling** — no
+  coupling was measured, positive or negative. It is a **capability/
+  feasibility finding**: this exact minimal model, at this basis level,
+  on this hardware, with these standard remedies, does not converge —
+  which is itself the kind of thing this register states rather than
+  silently retries forever.
+- **Recommended next steps, concretely, for whoever picks this up**:
+  (a) a native arm64 `.venv` (fixes the SQD import outright, and
+  removes the Rosetta/AVX performance penalty that made each
+  convergence attempt 8-25 minutes); (b) a larger basis (STO-3G is
+  known to be a poor choice for transition-metal spin-state work) with
+  a properly pre-converged initial guess (e.g. from a published
+  heme-thiolate calculation, or PySCF's own `chkfile`-based restart
+  from a smaller/simpler analog) rather than the default `minao` guess;
+  (c) PySCF's `scf.newton()` second-order SCF solver, the standard
+  remedy for exactly this failure mode, not yet tried here.
+
+### Not done / explicitly out of scope
+
+- Real hardware execution — moot until the simulator path itself works.
+- Any claim of quantum advantage or capability beyond "attempted,
+  documented where it stopped" (per this task's own Constraints).
+- Nitrite reductase — already blocked on curation (a real apo/wild-type
+  pair), unchanged by this pass.
+
+**Files**: `__WORK_IN_PROGRESS__/scripts/task0374_e3_electronic_coupling.py`,
+`__WORK_IN_PROGRESS__/results/tasks/0374_e3_electronic_coupling/run_log.txt`
+(partial — the run was stopped once the convergence pattern was clear,
+not once it finished, per the reasoning above).
