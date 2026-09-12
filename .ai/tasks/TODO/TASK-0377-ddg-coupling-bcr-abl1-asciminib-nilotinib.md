@@ -1,7 +1,7 @@
 # TASK-0377 — Compute the thing allostery is actually defined as: ΔΔG coupling on BCR-ABL1, with dasatinib as the discriminative control
 
-- Status: TODO
-- Owner: **Architect/Planner** to scope; Implementer with GPU access to run
+- Status: TODO — **scoped 2026-09-12 (Architect); one premise corrected (Tier-1 gate target), target/staging unchanged; not executed, per "Not before 2026-09-15"**
+- Owner: **Architect/Planner** to scope (done); Implementer with GPU access to run
 - Priority: **Phase-2 headline candidate. Not before 2026-09-15.**
 - Filed: 2026-09-12 by Reviewer thread (id via `claim.py reserve-next`)
 - Source: external reviewer discussion, 2026-09-12
@@ -133,3 +133,80 @@ one interface.** The Team Lead has already accepted that trade explicitly —
 *"This is about allostery. Running a QC just to run it is madness."*
 
 Recorded because a later reader will otherwise assume drift rather than a decision.
+
+## Scoped, and one premise corrected (2026-09-12, Architect)
+
+Picked up per direct instruction. **Environment check first**: this machine has
+no GPU and no MD engine at all (`nvidia-smi`, `gmx`, `sander`, `pmemd.cuda`,
+`openmm` all absent) — confirms the task's own "Implementer with **GPU access**"
+framing is load-bearing, not a formality. Tier 1+ cannot run here under any
+circumstance; that is a resourcing question (where does GPU time come from),
+not a blocker to scoping. Respecting **"Not before 2026-09-15"** literally —
+nothing below was executed, only verified.
+
+**`5MO4`/the +19 offset — independently corroborated, not just re-derived.**
+`targets.yaml:140-182` already carries this exact fact from **TASK-0003,
+2026-07-06** — RCSB-reconfirmed title, AY7/NIL ligand identity, and the same
++19 arithmetic (334-315=19, 382-363=19) this filing re-derived from scratch.
+Two independent checks agree. Solid.
+
+**The JBC 2022 paper itself, read directly (PMC9386466) — one correction that
+changes the Tier-1 gate, not the target choice:**
+
+1. **"Nobody has published that split" is not quite right.** The paper
+   *does* report both pieces, quantitatively: the conformational/activation
+   term (metadynamics, inactive state stabilized **3.7 ± 0.5 kcal/mol** by
+   asciminib) and the direct term (**2.7 kcal/mol WT, 6.7 kcal/mol T315I** —
+   the task's "~3"/"~7" round these). What is genuinely missing is a
+   **self-consistent decomposition from one coherent method with propagated
+   error bars** — the paper computed the two pieces with two *different*
+   methods (metadynamics; static-cluster DFT) and did not sum or
+   cross-validate them. **The deliverable narrows to that, not to a wholly
+   unpublished split.** Say this precisely in any write-up — the previous
+   framing overclaims what is new here.
+2. **The "~7 kcal/mol published number" is a small-cluster DFT estimate, not
+   an experimental or full-system value.** Method: "only those residues that
+   form hydrogen bonds... with nilotinib," M06/def2-TZVP, on a truncated
+   cluster — not the full binding interface, not MM/GBSA, not an alchemical
+   calculation of any kind. **Tier 1's own gate — "MM/GBSA... must reproduce
+   the published ~7 kcal/mol" — is comparing two different levels of theory
+   on two different system definitions, not replicating a method.**
+   Agreement would be reassuring; disagreement would not by itself mean the
+   MM/GBSA setup is wrong, only that a small H-bond-only DFT cluster and a
+   full-system classical free-energy calculation can legitimately differ.
+   State this explicitly before running Tier 1, so a miss is diagnosed
+   correctly rather than treated as a failed gate.
+3. **No direct experimental ΔΔG (Kd/ITC/SPR) exists anywhere in this
+   paper for calibration.** The only experimental numbers are cell-based
+   IC50 (Table 1: K562 7.0→1.5 nM, KCL-22 9.4→2.3 nM, KCL-22NR 14.6→6.9 nM,
+   nilotinib alone vs. + asciminib) — a phenotypic readout confounded by
+   permeability, efflux and target occupancy nonlinearity, not a binding
+   free energy. Converting these fold-changes naively via RT·ln(fold) at
+   298 K (RT ≈ 0.593 kcal/mol) gives **≈0.4–0.9 kcal/mol**, an order of
+   magnitude below the 3–7 kcal/mol claimed — expected, given how many
+   confounds sit between cellular potency and isolated binding affinity, but
+   **worth stating up front so a large gap here is not mistaken for a
+   detector failure later.** There is no clean experimental ground truth for
+   this system; both the DFT-cluster number and whatever Tier 1/2 produce
+   are simulation estimates being cross-checked against each other, not
+   against measurement.
+
+**Consequence for the gate, not the plan**: Tier 1 remains the right first
+step and BCR-ABL1/dasatinib remains the right system — nothing here changes
+the target or the staging. What changes is the **success criterion's own
+honesty**: "reproduces the published DFT-cluster estimate" is weaker
+evidence than the original framing implied, and the write-up must say so
+rather than present a Tier-1 match as validation against a firm number.
+
+### TODO, added
+
+- [ ] State the corrected framing (item 1 above) in whatever document first
+      describes this task's deliverable — do not ship "nobody has published
+      this."
+- [ ] Tier 1's own report must show the MM/GBSA number **alongside** the
+      DFT-cluster number and the IC50-derived rough estimate, with the
+      difference in method/system size stated plainly, not just a pass/fail
+      against "~7 kcal/mol."
+- [ ] Resourcing: identify where GPU time for Tier 1 (~10 GPU-days) comes
+      from — this environment has none. A question for Bartosz, not an
+      assumption, same pattern as [[TASK-0374]]'s IBM-access question.
