@@ -35,6 +35,17 @@ verifies it against the committed notebook matrix. Reproduces it to a relative F
 
 Source of the matrices: `Quantum_Allosteric_Scanner_v2.ipynb`, cell 14w.
 
+
+## MIN_HOP per target (affects the top-5 selection, NOT the matrix)
+
+The N x N connectivity matrix `C` depends on the **operator only** and is byte-identical at every
+MIN_HOP (verified: max|diff| = 0 between MIN_HOP 1 and 2). MIN_HOP filters which residues are
+*candidates* for the top-5, so the top-5 sub-blocks and their AUCs are MIN_HOP-dependent.
+
+- **KRAS G12C: MIN_HOP = 1** (report-matching; the switch-II pocket is near the active site).
+  Best `H_new`/Green AUC 0.809, worst `H11_aniso` AUC 0.184, 3 of 5 predicted residues in the pocket.
+- **BCR-ABL1: MIN_HOP = 2** (the myristoyl pocket is distal). Best `H6_exp` AUC 0.796, P@5 1.0.
+
 ## Top-5 predicted residues x all active-site residues
 
 `*_top5xactive_<best|worst>_<operator>.csv` : the 5 x (n_active) sub-block of C, rows = the five
@@ -44,8 +55,8 @@ cell AUC exactly, so the top-5 are the faithful hit list, not a proxy.
 
 | target | operator | score | AUC | drug residues in top-5 |
 |---|---|---|---|---|
-| KRAS G12C | `H_new` (best) | Green E=lmax eta=0.05 | 0.828 | 2 of 5 (res 61, 95) |
-| KRAS G12C | `H7_harm` (worst) | residual LOG | 0.161 | 0 of 5 |
+| KRAS G12C | `H_new` (best) | Green E=lmax eta=0.05 | 0.809 | 3 of 5 (res 60, 96, 61) |
+| KRAS G12C | `H11_aniso` (worst) | residual RAW | 0.184 | 0 of 5 |
 | BCR-ABL1 | `H6_exp` (best) | residual LOG + dX | 0.796 | **5 of 5** |
 | BCR-ABL1 | `H5_gauss` (worst) | R = p_peak/p_avg | 0.227 | 0 of 5 |
 
