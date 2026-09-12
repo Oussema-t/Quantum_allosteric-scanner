@@ -284,3 +284,47 @@ stands regardless of hardware. **Both the DFT-cluster number and whatever Tier 1
 produce are simulation estimates cross-checked against each other, not against
 measurement.** Their correction is right and the write-up must carry it. Compute
 capacity does not create ground truth.
+
+### Probe, machine 1 of 2 (2026-09-12, Architect) — this machine
+
+Script: `scripts/task0377_hardware_probe.py`, stdlib-only per the probe's own
+constraint (must run unmodified on a machine with nothing installed). Output:
+`results/tasks/0377_hardware_probe/Bartoszs-MacBook-Pro_arm64.json`.
+
+| | this machine |
+|---|---|
+| Host / arch | Bartoszs-MacBook-Pro / arm64 |
+| CPU | Apple M2 Pro, 10 physical / 10 logical cores |
+| RAM | 17.18 GB |
+| GPU | Apple M2 Pro integrated — **no CUDA, ever**; `pmemd.cuda`/GROMACS-CUDA structurally cannot use it regardless of what gets installed |
+| `openmm` / `gmx` / `pmemd.cuda` / `sander` | all **absent** |
+| Benchmark | not run — no engine present |
+| ns/day, Tier-1/2 wall time | not derivable here |
+
+**Degraded correctly, per spec**: every check completed and reported absence
+rather than raising, matching the "must degrade, never fail" constraint.
+
+**One genuine surprise, disclosed rather than resolved in either direction**:
+the probe's own Rosetta-translation check (`sysctl.proc_translated`, the
+same class of arch issue [[TASK-0375]] hit) returned **inconsistent answers
+depending on how it was invoked** — "1" (translated) when called via this
+script's `subprocess.run`, but "0" (native) when the identical command was
+typed directly in an interactive shell in the same session, and
+`platform.machine()` reported `arm64` throughout (genuine Rosetta
+translation would show `x86_64`). Most likely an artifact of how this
+specific coding-agent sandbox spawns subprocesses, not a fact about the
+machine a human sees at a real terminal — recorded as a caveat in the JSON
+(`cpu.running_under_translation_caveat`) rather than picking one answer.
+**A human should re-check this by hand outside any agent sandbox before it
+is trusted either way** — do not cite `running_under_translation` from this
+JSON as settled.
+
+**Answers zero of the resourcing question by itself** — this machine was
+never going to be the answer; it establishes the honest baseline (nothing
+here, and structurally never can be for CUDA-only engines) that the
+desktop's probe run is compared against. **Waiting on the Team Lead's
+desktop run to complete the comparison** — same script, same command,
+`../.venv/bin/python3 -u scripts/task0377_hardware_probe.py` (or plain
+`python3`, no venv packages required), output lands in the same
+`results/tasks/0377_hardware_probe/` directory keyed by hostname so both
+are distinguishable without collision.
