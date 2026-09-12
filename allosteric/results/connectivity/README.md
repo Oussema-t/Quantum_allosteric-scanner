@@ -61,3 +61,22 @@ cell AUC exactly, so the top-5 are the faithful hit list, not a proxy.
 | BCR-ABL1 | `H5_gauss` (worst) | R = p_peak/p_avg | 0.227 | 0 of 5 |
 
 Source: `Quantum_Allosteric_Scanner_v2.ipynb`, cell 14w.
+
+## Cardiac myosin (8QYP -> 8QYR, drug XB2) -- NEGATIVE / uninformative
+
+Ran with apo `8QYP` (the submission's substitution). The connectivity matrices are valid
+(704 x 704, symmetric, row-stochastic) and saved as `CARDIAC_MYOSIN_8QYP_connectivity_*.csv.gz`,
+but the **AUC-based best/worst labels are not meaningful for this target** and must not be quoted
+as a result:
+
+- The true drug pocket is fpocket **P55 (14 of 15 drug residues), which is EXCLUDED from the seed
+  set** -- it ranks too low on druggability to make the top-3 seeded pockets (P1, P42, P51). So only
+  **1 of 52 seeds** is a drug-pocket residue (base rate 0.019) and P@5 = 0 by construction.
+- The apparent "best AUC 1.000" (`H2_combL`) is that single positive residue ranking first; its P@5
+  is only 0.2. The notebook's own cross-score consensus elects a true drug pocket in **0 of 16**
+  scores.
+- This matches the submission's `NO_SIGNAL_IN_APO` verdict for cardiac myosin.
+
+Caveat carried in code: `_score_vector` cannot reconstruct the QMI score exactly (reconstruction
+AUC 0.53 vs reported 0.10), so the QMI-based worst top-5 for this target is unreliable and is not
+reported.
