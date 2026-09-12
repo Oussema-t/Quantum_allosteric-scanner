@@ -34,3 +34,19 @@ verifies it against the committed notebook matrix. Reproduces it to a relative F
 6.6e-6 — the CSV's own 6-significant-figure write precision, i.e. bit-for-bit the same operator.
 
 Source of the matrices: `Quantum_Allosteric_Scanner_v2.ipynb`, cell 14w.
+
+## Top-5 predicted residues x all active-site residues
+
+`*_top5xactive_<best|worst>_<operator>.csv` : the 5 x (n_active) sub-block of C, rows = the five
+residues the pipeline predicts (ranked by that operator's winning score), cols = every active-site
+residue. Row/column residue numbers are in the CSV header. The ranking's AUC reproduces the reported
+cell AUC exactly, so the top-5 are the faithful hit list, not a proxy.
+
+| target | operator | score | AUC | drug residues in top-5 |
+|---|---|---|---|---|
+| KRAS G12C | `H_new` (best) | Green E=lmax eta=0.05 | 0.828 | 2 of 5 (res 61, 95) |
+| KRAS G12C | `H7_harm` (worst) | residual LOG | 0.161 | 0 of 5 |
+| BCR-ABL1 | `H6_exp` (best) | residual LOG + dX | 0.796 | **5 of 5** |
+| BCR-ABL1 | `H5_gauss` (worst) | R = p_peak/p_avg | 0.227 | 0 of 5 |
+
+Source: `Quantum_Allosteric_Scanner_v2.ipynb`, cell 14w.
