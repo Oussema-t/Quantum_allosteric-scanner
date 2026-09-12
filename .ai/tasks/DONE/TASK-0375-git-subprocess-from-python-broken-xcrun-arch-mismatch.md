@@ -1,6 +1,6 @@
 # TASK-0375 — `git` invoked as a subprocess of `python3` fails on this machine (xcrun arch mismatch)
 
-- Status: In Progress
+- Status: Done
 - Owner: **Toolsmith** (finding + workaround); the actual fix needs the human user
 - Priority: High — silently degrades every thread's commit-safety tooling
 - Filed: 2026-09-12 by Toolsmith thread, corroborating an independent report
@@ -100,13 +100,18 @@ user directly, not attempting it.
 
 ## Outcome
 
-- [ ] User (or a thread with explicit authorization) repairs the CLT
-      installation.
-- [ ] Re-run the reproduction below; confirm it succeeds.
-- [ ] Re-run `test_claim.py`'s full scratch-repo suite; confirm it's back to
-      passing (it was, earlier this same session, before this broke —
-      not a pre-existing failure to route around).
-- [ ] Close this task once confirmed; no code change is this task's own
+- [x] User repairs the CLT installation. `xcode-select --install` alone
+      reported "already installed" and did NOT fix it (expected -- that
+      command only installs when CLT is absent, it doesn't repair a broken
+      one); `sudo rm -rf /Library/Developer/CommandLineTools` followed by
+      `xcode-select --install` (GUI installer) did.
+- [x] Re-run the reproduction below; confirm it succeeds. Confirmed, both
+      interpreters: pyenv `python3` (`git rev-parse HEAD` -> exit 0, empty
+      stderr) and `.venv/bin/python` (same).
+- [x] Re-run `test_claim.py`'s full scratch-repo suite; confirm it's back to
+      passing. `.ai/tools/` full suite: **161 passed**, 0 failed -- back to
+      the pre-incident all-green state, not routed around.
+- [x] Close this task once confirmed; no code change is this task's own
       deliverable, the finding + workaround + user handoff are.
 
 ## Reproduction (for whoever verifies the fix)
@@ -131,3 +136,28 @@ still broken.
   a clean CLT reinstall (e.g. if something keeps re-triggering it) — nothing
   in either incident points at a repo-side cause, but not proven absent
   either.
+
+## Done — 2026-09-12, Toolsmith
+
+Fixed by the user, confirmed by this thread. `xcode-select --install` alone
+was not sufficient (reported "already installed," left the broken lib in
+place, exactly as this task's own Recommended Fix anticipated as a possible
+outcome) -- `sudo rm -rf /Library/Developer/CommandLineTools` followed by
+`xcode-select --install` (the GUI installer) resolved it.
+
+Verified, not assumed: the exact reproduction command from this task's own
+"Reproduction" section now returns exit 0 with empty stderr, checked against
+BOTH interpreters this task named as affected (pyenv `python3` and
+`.venv/bin/python`) -- the earlier finding never pinned the mechanism down
+to one specific interpreter, so both needed checking, not just the one that
+happened to be tested first. `claim.py commit-guard --expect-empty` (the
+exact subcommand that raised `CalledProcessError` while filing this task)
+now succeeds. Full `.ai/tools/` suite: **161 passed**, 0 failed -- the
+scratch-repo suite this task's own Impact section said "cannot currently run
+to completion" is confirmed back to fully passing, not routed around or
+partially checked.
+
+Root-cause mechanism (Open Questions' first item) remains genuinely
+unconfirmed -- out of this task's own scope to chase further now that the
+fix is verified and the symptom is gone; recorded as-is for whoever
+re-diagnoses a recurrence, not closed as resolved.
