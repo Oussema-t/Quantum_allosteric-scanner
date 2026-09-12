@@ -1,8 +1,8 @@
 # TASK-0377 — Compute the thing allostery is actually defined as: ΔΔG coupling on BCR-ABL1, with dasatinib as the discriminative control
 
-- Status: TODO — **scoped 2026-09-12 (Architect); one premise corrected (Tier-1 gate target), target/staging unchanged; not executed, per "Not before 2026-09-15"**
+- Status: TODO — **UNBLOCKED 2026-09-12 (Team Lead). The 2026-09-15 hold is lifted. First step is the hardware probe below, not Tier 1.**
 - Owner: **Architect/Planner** to scope (done); Implementer with GPU access to run
-- Priority: **Phase-2 headline candidate. Not before 2026-09-15.**
+- Priority: **Phase-2 headline candidate. Cleared to start — probe first.**
 - Filed: 2026-09-12 by Reviewer thread (id via `claim.py reserve-next`)
 - Source: external reviewer discussion, 2026-09-12
 - Related: [[TASK-0229.006]], [[TASK-0166]], [[TASK-0345]], [[TASK-0374]], [[TASK-0371]]
@@ -210,3 +210,77 @@ rather than present a Tier-1 match as validation against a firm number.
 - [ ] Resourcing: identify where GPU time for Tier 1 (~10 GPU-days) comes
       from — this environment has none. A question for Bartosz, not an
       assumption, same pattern as [[TASK-0374]]'s IBM-access question.
+
+
+---
+
+## UNBLOCKED 2026-09-12 — and the first step is a hardware probe, not Tier 1
+
+**The 2026-09-15 hold is lifted (Team Lead).** It was there to protect the
+submission's remaining days, and the submission is going out tonight.
+
+The Architect's environment check already answered half the resourcing question:
+**this machine has no GPU and no MD engine at all** (`nvidia-smi`, `gmx`,
+`sander`, `pmemd.cuda`, `openmm` all absent). Their own open TODO asks where
+~10 GPU-days comes from. **The Team Lead has a desktop with a graphics card**, so
+the answer is measurable rather than guessable.
+
+### The probe — scoped as a measurement, not a smoke test
+
+**Owner: Architect/Planner. Run on both machines: this one, then the Team Lead's
+desktop.**
+
+The point is a **like-for-like effort comparison**, so the probe has to be the
+same work on both boxes, and it has to record its own numbers to an artifact.
+Two machines compared from memory is not a comparison.
+
+**In scope:**
+
+1. **Inventory, and it must not require the engine to be present.** CPU model,
+   physical/logical cores, RAM, OS/arch; GPU model, VRAM, driver and CUDA/Metal
+   version; and for each of `openmm`, `gmx`, `pmemd.cuda`, `sander`: present or
+   absent, and the version if present. **On this machine every engine is absent
+   and the probe must still complete and say so** — a probe that only works where
+   the answer is already good measures nothing.
+2. **One fixed benchmark, identical on both.** A single solvated-protein system
+   with a **fixed step count** (not a fixed wall time), reporting **ns/day** and
+   total wall seconds. Use the engine's own published benchmark system if one is
+   available for the installed version, so the number is comparable to something
+   outside this project too.
+3. **Scale the estimate, don't assert it.** From measured ns/day, derive the wall
+   time Tier 1 (~10 GPU-days on the reference hardware) and Tier 2 (~2,000 GPU-h)
+   would actually take **on each machine**, and state the arithmetic. This is the
+   number the resourcing decision needs.
+4. **Write it to an artifact**, one JSON per machine under
+   `results/tasks/0377_hardware_probe/`, with a hostname/arch key so the two are
+   distinguishable, plus a short comparison table in the Done section.
+
+**Out of scope:** any ΔΔG calculation. **The probe must not attempt Tier 0/1/2
+work** — it measures capacity, and mixing the two makes a slow probe look like a
+failed gate.
+
+**Constraints:**
+
+- **The probe must degrade, never fail.** Missing engine, missing GPU, missing
+  driver are all *results*. Report them; do not raise.
+- **Do not install an MD engine on this machine as part of the probe.** If Tier 1
+  needs one, that is a deliberate dependency decision, not a side effect of
+  benchmarking.
+- Record **arch** explicitly (this machine has already produced one
+  arm64/x86_64 breakage this week, [[TASK-0375]]), and note whether Python was
+  running under translation.
+
+**Success criterion:** a table with both machines side by side, the measured
+ns/day for each, and the derived Tier-1/Tier-2 wall times — enough to answer
+*"where does the GPU time come from"* with a number instead of a guess. **A
+result showing the desktop is also insufficient is a perfectly good outcome**, and
+is better learned now than after Tier 1 is committed to.
+
+### One thing the probe does not settle
+
+The Architect's finding that **no experimental ΔΔG exists for this system** — only
+cell IC50s, which convert to ≈0.4–0.9 kcal/mol against a 3–7 kcal/mol claim —
+stands regardless of hardware. **Both the DFT-cluster number and whatever Tier 1/2
+produce are simulation estimates cross-checked against each other, not against
+measurement.** Their correction is right and the write-up must carry it. Compute
+capacity does not create ground truth.
