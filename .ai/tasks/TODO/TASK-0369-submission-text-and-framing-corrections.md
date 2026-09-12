@@ -28,6 +28,13 @@ upload on the 15th, or confirm the portal does not surface links to reviewers be
 the deadline closes. Do not leave this to chance — the link is load-bearing in four
 separate places.
 
+**Simplest resolution, and the one to take: say so in the document.** One clause
+next to the repository link — that it is published on 2026-09-15, the submission
+deadline — turns a potential 404 into a stated fact. It costs a handful of words,
+removes the timing risk entirely regardless of when we upload, and is consistent
+with a submission whose whole argument is that you disclose what you did rather
+than hope nobody checks.
+
 ## B. Factual corrections — the reviewer is right and these are cheap
 
 | # | Correction |

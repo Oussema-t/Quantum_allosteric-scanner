@@ -2,7 +2,7 @@
 
 - Status: TODO
 - Owner: **Implementer**
-- Priority: **High for Phase 2. DO NOT RUN BEFORE 2026-09-15** — see Timing.
+- Priority: **High. Cleared to run — compute is available (Team Lead, 2026-09-12).**
 - Filed: 2026-09-12 by Reviewer thread (id via `claim.py reserve-next`)
 - Source: external reviewer discussion, 2026-09-11/12 (conical intersections / electronic coupling)
 - Related: [[TASK-0329]], [[TASK-0345]], [[TASK-0373]], [[TASK-0374]], [[HYP-P13]]
@@ -75,13 +75,25 @@ allosteric sites are *more* aromatic than equally-buried, equally-ligand-contact
 active sites **in the same protein**, that is a real asymmetry and nothing in this
 register explains it.
 
-## Timing — do not run this before the deadline
+## Timing — cleared to run, with the reason the gate existed still standing
 
-Three days remain, the submission body is over its page limit, and [[TASK-0370]]
-is mid-flight. **A rushed E0 that omits the ligand-contact stratum would reproduce
-the proximity confound in a new costume** — the exact failure this register has
-already retracted a headline for. This is Phase-2 work and the gate for
-[[TASK-0374]].
+**Ungated 2026-09-12: compute is available, so run it.**
+
+The original hold was never about the calendar — it was about the risk of a rushed
+E0 that omits the ligand-contact stratum and reports burial as electronics. **That
+risk does not go away because there is more compute.** Run it properly or not at
+all: the stratum is not optional, and neither is the within-protein pairing.
+
+Two consequences of running before the deadline rather than after:
+
+- **A result in hand is worth more than a plan**, and if the enrichment survives,
+  [[TASK-0373]]'s reframe stops being purely a hypothesis about the input and
+  gains one measured fact behind it. **It still must not be stated as a quantum
+  result** — surviving E0 means "aromatic composition differs", not "electronic
+  coupling matters".
+- **A clean negative is equally usable and costs nothing**, because the submission
+  does not currently claim anything here. Report it either way, as this register
+  reports every other null.
 
 ## Dependency
 
