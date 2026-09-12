@@ -17,8 +17,16 @@ repository"*), `03_Problem_Statement_Selection.md` and both READMEs all rest on 
 
 **Every verifiability claim in this submission is currently unsupported.** Either
 the repository is made public before upload, or every sentence that offers it as
-evidence must be rewritten. **Team Lead decision — this task cannot proceed on
-those sentences until it is made.**
+evidence must be rewritten.
+
+**DECIDED, 2026-09-12 (Team Lead):** Oussema will make the repository public **on
+2026-09-15**, deliberately late so the data cannot be borrowed before the deadline.
+That resolves the decision and unblocks the sentences — with one timing caveat to
+check rather than assume: **if the package is uploaded before the 15th, a reviewer
+clicking the link in the window between upload and publication gets a 404.** Either
+upload on the 15th, or confirm the portal does not surface links to reviewers before
+the deadline closes. Do not leave this to chance — the link is load-bearing in four
+separate places.
 
 ## B. Factual corrections — the reviewer is right and these are cheap
 

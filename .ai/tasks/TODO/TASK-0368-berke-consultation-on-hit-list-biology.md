@@ -104,3 +104,33 @@ We ship **31, 122, 33, 121, 29**.
 A single message with the six questions and the shipped five-residue lists,
 answerable in prose. Berke does not need the register to answer it, and should not
 have to read it.
+
+
+---
+
+## Status, 2026-09-12
+
+**Asked and accepted.** The six questions have been put to Berke and he has
+confirmed he is working on them. Nothing in [[TASK-0369]] or [[TASK-0370]] that
+touches hit-list biology moves until the answers arrive.
+
+### Item 3 narrowed by the register — the reviewer is right, and so was the recollection
+
+Grepped, as the Team Lead suggested, and it settles it:
+
+- `.ai/tasks/DONE/TASK-0003-targets-yaml-reconciliation.md:91` — *"8QYR: confirmed
+  real **Bos taurus** MYH7, 1.80 Å X-ray"*, and `:102` records it as the
+  **`holo_validation=8QYR` substitute**.
+- `.ai/tasks/DONE/TASK-0114-pocket-label-cutoff-sensitivity.md:113` — **`8QYP`, N=704**,
+  which is exactly the shipped matrix's dimension.
+
+**So `8QYR` is the holo validation structure, `8QYP` is the apo input, and the shipped
+matrix is `8QYP`.** The external reviewer's item 3 is a **label error in
+`artefacts/README.md`**, not a wrong structure — the scanner was not run on the
+drug-bound structure. **The species claim is also correct and is ours**: our own
+register confirmed *Bos taurus* on 2026-06 and the submission never discloses it.
+
+[[TASK-0370]]'s cardiac label fix may therefore proceed on register evidence without
+waiting. **Item 3 still goes to Berke** — reduced to a confirmation rather than an
+investigation, and he should still say whether the bovine origin needs disclosing in
+the submission and whether it affects the biological reading at all.
