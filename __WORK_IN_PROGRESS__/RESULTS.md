@@ -13394,3 +13394,79 @@ flags, none from this entry.
 
 **Files**: `scripts/task0379_seed_capacity_and_definition.py`. **Full
 detail**: `.ai/tasks/DONE/TASK-0379-seed-set-as-a-fourth-overfitting-axis.md`.
+
+## Where the best seeds are — mostly location, not fully ([[TASK-0380]], 2026-09-13)
+
+[[TASK-0379]] measured that seed-set choice alone reaches a large excess over
+a matched null but never asked *where* the winning seeds sit — the
+difference between a mechanism and a capacity number. This task answers it
+by recovering the un-persisted draws and testing the working hypothesis
+directly: **the seed behaves substantially, but not entirely, as a location
+parameter.**
+
+**Recovery validated bit-for-bit before anything was built on it.**
+`run_target`'s `np.random.default_rng(det_seed(name))` draws deterministically
+in a fixed order (2000 scattered-residue draws, then 2000 spatial-patch
+draws, then 200 label-permutation null draws) — replaying that exact
+sequence via `scripts/task0380_seed_location_residualisation.py` (which
+imports [[TASK-0379]]'s own module directly rather than re-deriving any of
+its logic) reproduced every one of the 7 targets' committed best-of-2000
+AUCs and matched-null means to exact equality. No new sampling, no new
+`eigh` — this is read-only re-analysis of an already-committed result.
+
+**The decisive test: rank-residualise each seed set's AUC on its Cα-centroid
+distance to the true drug-pocket centroid** ([[TASK-0310]]'s own OLS-on-ranks
+convention, reused verbatim). Averaged over the 5 well-sized targets, the
+raw excess over a matched null (+0.139 residue-family / +0.283 patch-family)
+drops to +0.049 / +0.034 after residualisation — a **65% (residue) to 88%
+(patch) reduction**, confirming the pre-registered prediction at the
+"largely vanishes" reading. **Not a clean, uniform vanish**: KRAS_G12C and
+BCR_ABL1 — whose true active sites sit at the 0.0th/0.2nd percentile of the
+random-seed distance distribution, i.e. essentially *at* the pocket already
+— collapse almost completely (to ≈0 or negative excess); CARDIAC_MYOSIN's
+patch-family excess survives at nominal p=0.020, and 4 of the 10
+target×family cells land at nominal p=0.05–0.074. **None of the 10
+comparisons run here would survive Bonferroni correction for having run
+10** (threshold p<0.005, smallest observed p=0.020) — this register's own
+standing multiplicity discipline, applied to itself. Internally consistent
+detail: the three targets whose true active site is *not* trivially close
+to the pocket (CARDIAC_MYOSIN 34th percentile, PTP1B 15th, GLUCOKINASE at
+the exact 51st — no more informative than an arbitrary seed) are exactly
+the three whose nominal residual sits closest to significance.
+
+**Candidate-list-stated-before-computing check for what the top seeds
+concentrate on** (betweenness/closeness/degree centrality, SASA burial via
+BioPython ShrakeRupley, a GNM hinge-residue proxy, sequence conservation via
+live Pfam-seed alignment — all reused from existing project modules, none
+reimplemented): **no feature concentrates the top-scoring scattered seeds
+consistently across targets** (|ρ|<0.28 throughout, sign flips
+target-to-target). The patch family shows large, highly significant
+correlations with hub/burial features even after distance-residualisation
+(e.g. CARDIAC_MYOSIN: degree ρ=−0.42, p=4e-87) — **flagged, not read as
+biology**: this register's own repeated lesson is that these features are
+themselves imperfectly-linear proximity proxies, so the honest reading is
+"more location than a straight-line centroid-distance regression removes,"
+not an answer-blind biological rule. CARDIAC_MYOSIN — the one target with a
+surviving nominal residual — has no usable conservation data at all (its
+best Pfam domain match mapped 0 of 704 residues; disclosed as unavailable,
+not fabricated), so the one feature most likely to matter there could not be
+tested.
+
+**A real bug caught before trusting the full run**: the first pilot reported
+residualised "excess" values of magnitude ~15 — nonsensical against a [0,1]
+AUC scale. Cause: the rank-OLS residual itself lives on a rank scale, not
+an AUC scale; reporting its raw magnitude as an AUC silently compared two
+different units. Fixed by using the residual only to *select* which draw is
+best after controlling for distance, then reporting that draw's own *raw*
+AUC (applied identically to every null replicate) — before/after are now in
+the same units throughout. Caught on a 100-draw pilot, before the full
+2000-draw/200-permutation run (1004s, all 7 targets) was trusted.
+
+Updated **HYP-P31** in `physics.md` with this status (not yet committed —
+`physics.md`/`INDEX.md` currently also carry another thread's concurrent,
+unrelated, uncommitted hypothesis addition; left for a later commit to
+avoid misattributing it).
+
+**Files**: `scripts/task0380_seed_location_residualisation.py`. **Data**:
+`results/tasks/0380_seed_location_residualisation/{result.json,run_log.txt}`.
+**Full detail**: `.ai/tasks/DONE/TASK-0380-where-are-the-best-seeds.md`.
