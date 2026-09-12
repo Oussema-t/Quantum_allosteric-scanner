@@ -42,7 +42,8 @@ All three, for each of the four required targets, under `artefacts/<TARGET>/`:
 The five residues in each row match the Concept Proposal's own five-guess table
 exactly — checked, not assumed.
 
-Package size: **6.3 MB**.
+Package size: **8.8 MB** (see §C — this line previously said 6.3 MB, stale
+from before §C's own artefact-format conversion; TASK-0370, item 26).
 
 ---
 
@@ -77,10 +78,13 @@ Added a consolidated `artefacts/hit_list_all_targets.csv` and
 
 1. **Terms & Conditions acceptance** by the team lead at the point of submission (§3).
 2. **`CARDIAC_MYOSIN_TABLE1` produced only an `error.txt`** and is deliberately not
-   included: the Table-1 structure could not be processed, and the substitution
-   (`8QYP` → `8QYR`) was accepted as primary by the organisers. The shipped
-   `CARDIAC_MYOSIN` artefacts are the substituted structure. The Concept Proposal
-   states the substitution and the reason.
+   included: the Table-1-mandated structure could not be processed, and our own
+   substitute apo/holo pair (`8QYP`/`8QYR` — see `artefacts/README.md`'s
+   TASK-0370 correction; not "Table-1 structure → substitute", both `8QYP` and
+   `8QYR` are ours) was accepted as primary by the organisers. The shipped
+   `CARDIAC_MYOSIN` artefacts are this substitute pair. **The Concept Proposal's
+   own stated substitution reason is still open — tracked against [[TASK-0368]]/
+   the external review's item 4, not this correction.**
 3. **Body is at 6 of 6 pages.** Any further addition to the Concept Proposal now
    requires removing something. One appendix page of the three remains.
 

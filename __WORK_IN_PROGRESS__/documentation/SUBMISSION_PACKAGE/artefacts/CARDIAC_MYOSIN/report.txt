@@ -1,3 +1,4 @@
+Target: CARDIAC_MYOSIN  |  Structure: 8QYP (apo, Bos taurus)
 ========================================================================
 HEADLINE VERDICT
 ========================================================================
@@ -24,6 +25,6 @@ HEADLINE VERDICT
 
 DECISION-SUPPORT RECOMMENDATION
 --------------------------------
-1) Operator gain over H10 baseline (apo): DAUC = +0.081  (meaningful).
+1) Operator gain over H10 baseline (apo): DAUC = +0.081  (meaningful). -- but not statistically distinguishable from the trivial floor at 95% CI (see _diagnosis above); read this point estimate as a lead, not an established gain
 2) CTQW vs ground-state relaxation on H_new (same operator, not a classical-diffusion comparison -- see TASK-0095): DAUC = +0.035  (within graph-kernel noise -- CTQW does NOT add biological information beyond the operator).
 3) Most/least impactful potential terms: most = V_B, least = V_R.

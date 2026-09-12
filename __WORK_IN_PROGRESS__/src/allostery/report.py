@@ -150,9 +150,20 @@ def _has_valid_frozen_stamp(results: dict) -> bool:
     return verify_frozen_stamp(results)
 
 
-def verdict_template(results: dict, *, provenance: str = "dev") -> str:
+def verdict_template(
+    results: dict, *, provenance: str = "dev",
+    target_name: str | None = None, structure: str | None = None,
+) -> str:
     """Render Sec.15's headline verdict + Sec.16's parameterized 5-point
     recommendation from an already-assembled `results` dict.
+
+    `target_name`/`structure` (TASK-0370, external adversarial review item
+    25 -- "three of four files have no target or PDB header"): optional,
+    rendered as one header line before HEADLINE VERDICT when given. Kept
+    optional rather than required so every existing call site (and this
+    module's own tests) keeps working unchanged with no header at all --
+    additive, matching `no_ground_truth_report`'s own header convention,
+    not a new requirement on every caller.
 
     `results` keys (verbatim from cell 58's `verdict` dict) --
     AUC_apo_Hnew_default, AUC_apo_H10_baseline, AUC_apo_Hnew_optimised,
@@ -185,6 +196,11 @@ def verdict_template(results: dict, *, provenance: str = "dev") -> str:
     out of this module's scope per this task's own Intent Contract.
     """
     lines = []
+    if target_name is not None or structure is not None:
+        header = f"Target: {target_name or 'N/A'}"
+        if structure is not None:
+            header += f"  |  Structure: {structure}"
+        lines.append(header)
     if not (provenance == "frozen" and _has_valid_frozen_stamp(results)):
         lines.append(_DEV_BANNER.rstrip("\n"))
 
@@ -263,21 +279,41 @@ def verdict_template(results: dict, *, provenance: str = "dev") -> str:
     lines.append("DECISION-SUPPORT RECOMMENDATION")
     lines.append("-" * 32)
 
+    # TASK-0370 (external adversarial review, item 6): the two DAUC lines
+    # below classify by a raw point-estimate threshold, independent of the
+    # _diagnosis/CI-overlap block rendered just above -- so a target the
+    # headline already calls NO_SIGNAL_IN_APO (score statistically
+    # indistinguishable from the trivial floor) could still get "(meaningful)"
+    # or "CTQW genuinely helps" a few lines down, in the same file. That
+    # shipped as the KRAS report contradicting the Concept Proposal's own
+    # §1 finding. Fixed at the generator, not the file: append the CI-overlap
+    # caveat inline whenever it applies, so the two sections can no longer
+    # disagree with each other. Existing tests (no `_diagnosis_ci_overlap`
+    # key) are unaffected -- `ci_overlap` is None/falsy there.
+    ci_overlap = results.get("_diagnosis_ci_overlap")
+    overlap_note = (
+        " -- but not statistically distinguishable from the trivial floor "
+        "at 95% CI (see _diagnosis above); read this point estimate as a "
+        "lead, not an established gain"
+    )
+
     opt = results.get("AUC_apo_Hnew_optimised")
     base = results.get("AUC_apo_H10_baseline")
     if opt is not None and base is not None:
         diff = opt - base
         verdict = "meaningful" if diff > 0.05 else "marginal" if diff > 0.02 else "noise-level"
-        lines.append(
-            f"1) Operator gain over H10 baseline (apo): DAUC = {diff:+.3f}  ({verdict})."
-        )
+        line1 = f"1) Operator gain over H10 baseline (apo): DAUC = {diff:+.3f}  ({verdict})."
+        if ci_overlap and verdict != "noise-level":
+            line1 += overlap_note
+        lines.append(line1)
 
     ctqw = results.get("AUC_ctqw_mean")
     heat = results.get("AUC_heat_mean")
     if ctqw is not None and heat is not None:
         diff_qc = ctqw - heat
+        helps = diff_qc > 0.05
         verdict_qc = (
-            "CTQW genuinely helps" if diff_qc > 0.05
+            "CTQW genuinely helps" if helps
             else "within graph-kernel noise -- CTQW does NOT add biological "
                  "information beyond the operator"
         )
@@ -286,11 +322,14 @@ def verdict_template(results: dict, *, provenance: str = "dev") -> str:
         # indefinite operator -- NOT a diffusion process. Keep this line's
         # wording accurate; the old framing here was a false physical claim
         # on every H_new run.
-        lines.append(
+        line2 = (
             f"2) CTQW vs ground-state relaxation on H_new (same operator, "
             f"not a classical-diffusion comparison -- see TASK-0095): "
             f"DAUC = {diff_qc:+.3f}  ({verdict_qc})."
         )
+        if helps and ci_overlap:
+            line2 += overlap_note
+        lines.append(line2)
 
     most_term = results.get("most_impactful_term")
     least_term = results.get("least_impactful_term")
@@ -335,19 +374,39 @@ def verdict_template(results: dict, *, provenance: str = "dev") -> str:
 def _consensus_confidence_statement(consensus: dict) -> str:
     """Honest, qualitative confidence read of a `analysis.consensus_ranking`
     result -- no AUC exists here to attach a number to, so the statement is
-    about *operator agreement*, the only holo-free signal this report has."""
+    about *operator agreement*, the only holo-free signal this report has.
+
+    TASK-0370 (external adversarial review, item 6): this used to read
+    "high" whenever every operator agreed, which the Concept Proposal
+    itself contradicts (§1 calls this target's prediction "unverified").
+    Operator agreement is not validated confidence -- the CP's own §2
+    measures the walk as "a distance measure with extra steps" (its hit
+    rate anti-correlates with true-pocket distance) rather than an
+    independent detector, so agreement across operators can mean "the
+    same distance confound, seen four times," not independent
+    corroboration. Fixed at the generator so every future render says
+    this, not just the shipped snapshot. (Corrected again, same task: the
+    CP has no numbered "Finding N" statements -- the prior wording here
+    cited a "Finding 3" that does not exist in the document.)"""
     counts = consensus["consensus_count"]
     n_ops = consensus["n_operators"]
     max_agree = int(counts.max()) if len(counts) else 0
     if max_agree == n_ops:
         return (
-            f"high -- at least one residue appears in all {n_ops} operators' "
-            f"own top-{consensus['k']}, independent of any labeled pocket"
+            f"unverified -- at least one residue appears in all {n_ops} "
+            f"operators' own top-{consensus['k']}, but operator agreement is "
+            "not validated confidence: no ground truth exists for this "
+            "target to check against, and the Concept Proposal's own §2 "
+            "measures these operators as correlated distance detectors, "
+            "not independent evidence"
         )
     if max_agree >= max(2, n_ops - 1):
-        return f"moderate -- best cross-operator agreement is {max_agree}/{n_ops}"
+        return (
+            f"unverified -- best cross-operator agreement is {max_agree}/{n_ops}, "
+            "and (as above) agreement is not itself validation"
+        )
     return (
-        f"low -- no residue clears {max_agree}/{n_ops} operator agreement; "
+        f"unverified -- no residue clears {max_agree}/{n_ops} operator agreement; "
         "the prediction is operator-dependent, not convergent, and should be "
         "read as exploratory, not a confident hit list"
     )

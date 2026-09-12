@@ -13110,3 +13110,86 @@ is not re-discovered and re-cited as live.
 Read-only task; no submission edit made. Full inventory (10-row table, every entry cited to a
 path) in the task file itself. **Full detail**:
 `.ai/tasks/DONE/TASK-0366-sweep-the-allosteric-branch-for-under-reported-positives.md`.
+
+## Shipped artefacts corrected to stop contradicting our own proposal — fixed at the generator, not the file ([[TASK-0370]], 2026-09-12)
+
+Seven items from the external adversarial review (`REVIEW-2026-09-11-external-adversarial-
+submission-package.md`, items 3, 6, 20–26), all against already-shipped `SUBMISSION_PACKAGE/`
+artefacts, under one hard constraint: **no shipped number or residue may change** — only
+labelling, documentation, and removing claims the files should never have made.
+
+**Item 6, the worst of it: shipped `report.txt` files claimed wins the Concept Proposal itself
+disclaims.** KRAS's said *"CTQW genuinely helps"* on a one-structure, CI-overlapping result; MYC's
+said *"Confidence: high"* where the CP says *unverified*. Per this task's own Constraint, fixed at
+the generator (`src/allostery/report.py`), not by hand-editing strings: `_consensus_confidence_
+statement` now returns "unverified" in every branch, citing the CP's own measurement that these
+operators are correlated distance detectors rather than independent evidence; `verdict_template`
+gained an optional target/structure header and a CI-overlap reconciliation so a "meaningful"/
+"genuinely helps" DAUC line is qualified whenever the same file's own CI-overlap diagnosis already
+says the gain is statistically indistinguishable from the trivial floor. 41/41 tests pass
+(`pytest tests/test_report.py -q`). The four already-shipped `report.txt` files then got the
+*exact* verified new substrings hand-applied next to their original, untouched numbers — full
+regeneration from the *displayed* 3-decimal AUCs was tried and rejected first, because it does not
+reproduce the shipped values bit-for-bit (recomputes KRAS's shipped +0.171 as +0.172 from rounded
+inputs).
+
+**Item 3 — a real mislabelling, not blocked.** `artefacts/README.md` labelled `8QYR` "(apo)" for
+cardiac myosin; it is the mavacamten-complexed, bovine holo structure. `8QYP` is the true apo
+input. Confirmed three independent ways: `config/targets.yaml`'s own `apo_pdb`/`apo_chains`
+fields, a live ProDy parse showing chain A of `8QYP` (not `8QYR`) holds all 5 shipped hit-list
+residues and `8QYP`'s N=704 matches the shipped matrix, and — found after the fix was already
+made — `PHASE1_SUBMISSION_V4.md` §1's own deviation table stating `8QYP → 8QYR` (apo → holo) for
+this target. Species (*Bos taurus*) disclosed, previously omitted.
+
+**Items 20/21/22/23/24 — missing information that made the deliverable unreproducible, all shipped
+now.** Matrix entry (i,j) documented as the time-averaged CTQW transition probability (rows sum to
+1, diagonal is the row max in ~78% of rows — recomputed independently from the shipped
+`CARDIAC_MYOSIN` matrix at 78.27%, matching the reviewer's own figure); per-target seed residues
+shipped for the first time, re-derived from this repository's own `build_labels`/
+`functional_indices` call path (not guessed) with confirmed zero overlap against each target's own
+top-5 for KRAS/BCR/CARDIAC. **Disclosed rather than hidden: MYC_MAX's seed set is bit-identical to
+its own shipped top-5 hit list** — `func_ligand: DNA` matched nothing in the apo structure, so the
+pipeline's own logged fallback (top-5-by-degree) produced both the seed and, via the
+degree-correlated consensus ranking, the same five residues again. Recorded as a circular result
+in the one target with no ground truth to catch it, not as corroboration — consistent with this
+register's other proximity/degree-confound findings. BCR's unmentioned site-level result (56
+residues, zero overlap with the true pocket, centroid 20.4 Å away, `knob_spread: UNSTABLE`) and
+cardiac's five-residues-are-one-cluster (680–683 sequential, confirmed coupling to 127/128/134 in
+the shipped matrix) are now both disclosed rather than silently shipped. CSV gained a `chain`
+column, resolved per-residue for MYC_MAX via ProDy against the deposited structure, not assumed.
+
+**Item 25 — `V_B`/`V_T`/`V_R`/`V_C`/`V_M` were never defined anywhere shipped, and a draft
+correction claimed they were defined in the Concept Proposal. That claim was false, caught before
+shipping.** A verification grep against `PHASE1_SUBMISSION_V1.md` returned zero matches for these
+terms. Checking further (`git log` on `01_Concept_Proposal.pdf`, commits `9f1d521`/`48033c8`)
+found the actual current Concept Proposal is `PHASE1_SUBMISSION_V4.md` — advanced by other threads
+in parallel, not previously visible to this thread — which also has zero matches. The terms are
+defined only in `src/allostery/potentials.py`'s own docstrings, and that is now what
+`artefacts/README.md` cites, with a plain-language table (`V_B`: low B-factor; `V_T`:
+non-terminal; `V_R`: rigidity via degree+clustering−MSF; `V_C`: DCC covariance centrality,
+Haliloglu & Bahar 1999; `V_M`: low-mode participation). The same check surfaced a second,
+broader error: **`PHASE1_SUBMISSION_V4.md` has no numbered "Finding N" statements at all** — four
+places across this task's own edits (`report.py`, `test_report.py`, the shipped `MYC_MAX/
+report.txt`, and `artefacts/README.md`) had cited a "Finding 3" for the operators-are-distance-
+detectors result. All four corrected to cite §2 by its actual content instead. Every other
+Concept-Proposal cross-reference written during this task (§1/§2/§6 citations, the five-guess
+table match, the "cannot disagree with each other" quote) was re-checked directly against V4's
+real text and held without change. Also clarified: `AUC_heat_mean` is `H_new`'s own ground-state
+relaxation score, not a diffusion baseline; "optimised" means the default configuration (equals
+`_default` in every shipped file, checked).
+
+**Item 26 — smaller documentation gaps.** CI array order (`[estimate, lower, upper]`) documented;
+"the JSON carries a verdict" now explicitly scoped to the three targets where one exists —
+`MYC_MAX`'s JSON has no verdict/CI fields by design, not an omission; `SUBMISSION_PACKAGE/
+README.md`'s stale 6.3 MB package-size line corrected to 8.8 MB, matching its own §C.
+
+**Planned Validation passed**: re-read all four shipped `report.txt` files and inspected all four
+`hit_list.json`'s top-level verdict fields directly — KRAS/BCR/CARDIAC all report
+`NO_SIGNAL_IN_APO`/`ci_overlap: true`, consistent with the CP's "we cannot certify them"; MYC_MAX
+carries no verdict/CI fields at all, consistent with its "no ground truth" framing. No shipped
+file asserts a result the Concept Proposal disclaims.
+
+**Left alone, per this task's own Constraints**: item 4 (the substitution-*reason* text) and
+UniProt-equivalent c-Myc numbering, both tracked to [[TASK-0368]]; the mechanistic biology behind
+items 20/21, also [[TASK-0368]]. **Full detail**:
+`.ai/tasks/DONE/TASK-0370-deliverable-artefact-corrections.md`.

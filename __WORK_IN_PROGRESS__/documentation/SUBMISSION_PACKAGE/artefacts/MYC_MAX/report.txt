@@ -13,7 +13,7 @@ Consensus prediction across 4 independent operators (H_new_default, H10_disorder
   4. residue 226 -- 2/4 operators agree (top-5), mean occupancy=0.0413
   5. residue 243 -- 2/4 operators agree (top-5), mean occupancy=0.0405
 
-Confidence: high -- at least one residue appears in all 4 operators' own top-5, independent of any labeled pocket
+Confidence: unverified -- at least one residue appears in all 4 operators' own top-5, but operator agreement is not validated confidence: no ground truth exists for this target to check against, and the Concept Proposal's own §2 measures these operators as correlated distance detectors, not independent evidence
 
 Theoretical docking viability (fpocket):
   pocket 1: score=0.305, druggability_score=0.161

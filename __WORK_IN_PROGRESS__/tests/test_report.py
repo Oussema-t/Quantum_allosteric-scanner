@@ -191,6 +191,46 @@ class TestVerdictTemplate:
         text = verdict_template(results, provenance="frozen")
         assert "within graph-kernel noise" in text
 
+    def test_ci_overlap_caveats_a_meaningful_gain(self):
+        """TASK-0370 (external adversarial review, item 6): a shipped report
+        called a gain "meaningful"/"CTQW genuinely helps" in its
+        DECISION-SUPPORT section while the HEADLINE block, a few lines
+        above in the same file, already said NO_SIGNAL_IN_APO with
+        overlapping CIs -- contradicting the Concept Proposal's own
+        disclosed negative. Both qualifying lines must carry the
+        reconciling caveat when `_diagnosis_ci_overlap` is True."""
+        results = dict(self.FULL_RESULTS)
+        results["_diagnosis_ci_overlap"] = True
+        text = verdict_template(results, provenance="frozen")
+        assert "(meaningful)" in text
+        assert "CTQW genuinely helps" in text
+        assert text.count("not statistically distinguishable from the trivial floor") == 2
+
+    def test_no_ci_overlap_key_leaves_lines_unqualified(self):
+        """Backward compatibility: a `results` dict with no
+        `_diagnosis_ci_overlap` key (e.g. no diagnosis was computed at all)
+        renders exactly as before -- the caveat is additive, not a change
+        to the default rendering."""
+        text = verdict_template(self.FULL_RESULTS, provenance="frozen")
+        assert "not statistically distinguishable" not in text
+
+    def test_ci_overlap_false_leaves_lines_unqualified(self):
+        results = dict(self.FULL_RESULTS)
+        results["_diagnosis_ci_overlap"] = False
+        text = verdict_template(results, provenance="frozen")
+        assert "not statistically distinguishable" not in text
+
+    def test_ci_overlap_does_not_caveat_a_noise_level_gain(self):
+        """A gain already classified "noise-level" needs no reconciling
+        caveat -- it never claimed anything to reconcile."""
+        results = dict(self.FULL_RESULTS)
+        results["AUC_apo_Hnew_optimised"] = 0.605  # 0.005 gap -> noise-level
+        results["_diagnosis_ci_overlap"] = True
+        text = verdict_template(results, provenance="frozen")
+        assert "(noise-level)" in text
+        line1 = next(l for l in text.split("\n") if l.startswith("1)"))
+        assert "not statistically distinguishable" not in line1
+
     def test_transfers_cleanly_above_threshold(self):
         text = verdict_template(self.FULL_RESULTS, provenance="frozen")
         assert "transfers cleanly" in text  # rho=0.6 > 0.5
@@ -206,6 +246,24 @@ class TestVerdictTemplate:
         assert "N/A" in text
         assert "Operator gain over H10 baseline" not in text
         assert "CTQW vs ground-state relaxation" not in text
+
+    def test_no_header_by_default(self):
+        """Backward compatibility: omitting target_name/structure renders
+        exactly as before -- additive, not a new requirement on callers."""
+        text = verdict_template(self.FULL_RESULTS, provenance="frozen")
+        assert "Target:" not in text
+
+    def test_target_and_structure_header_when_given(self):
+        """TASK-0370 (external adversarial review, item 25): "three of four
+        [shipped report.txt] files have no target or PDB header." Header
+        renders before HEADLINE VERDICT when the caller supplies it."""
+        text = verdict_template(
+            self.FULL_RESULTS, provenance="frozen",
+            target_name="KRAS_G12C", structure="4LDJ (apo)",
+        )
+        assert "Target: KRAS_G12C" in text
+        assert "Structure: 4LDJ (apo)" in text
+        assert text.index("Target:") < text.index("HEADLINE VERDICT")
 
     def test_line_2_never_claims_classical_diffusion(self):
         """TASK-0095 / REVIEW-2026-07-13 P1-B: the AUC_heat_mean side of
@@ -283,9 +341,16 @@ class TestNoGroundTruthReport:
         assert "residue 102" in text
         assert "4/4" in text
 
-    def test_high_confidence_when_all_operators_agree(self):
+    def test_full_agreement_reads_unverified_not_high(self):
+        """TASK-0370 (external adversarial review, item 6): full cross-operator
+        agreement used to render "Confidence: high", which the Concept
+        Proposal itself contradicts by calling this target's prediction
+        "unverified" -- agreement among operators the CP's own §2 measures
+        as correlated distance detectors is not validated confidence."""
         text = no_ground_truth_report("MYC_MAX", _synth_consensus(), {"error": "x"})
-        assert "Confidence: high" in text
+        assert "Confidence: unverified" in text
+        assert "Confidence: high" not in text
+        assert "not validated confidence" in text
 
     def test_docking_error_rendered_honestly_not_hidden(self):
         text = no_ground_truth_report(
