@@ -55,57 +55,43 @@ anchor: uding our headline result. The full task history, including every retrac
 cost: ~1 page
 ---
 
-## Appendix B — The walk, the operators, and what they score
+## Appendix B — The walk, the operators, and per-target connectivity
 
-This appendix reports the second of our two tracks. Sections 1-7 report the `bartosz` track: fpocket candidates, 108 structures for the coherence tests, 1022 proteins in 276 families for the ensemble sweep. What follows was built independently on the `allosteric` track with a different detector and a different candidate filter. It is **replication, not an enlarged n** — the cohorts differ in detector (PASSer against fpocket) and in family convention (399 against 276), so their counts are never pooled. Every AUC is computed per structure and averaged, as in the main text.
+A second pipeline on the `allosteric` track (PASSer detection, 630 proteins in 399 families [4-6]), reported as **replication** of sections 1-7's `bartosz` track (fpocket), not pooled with it -- the two differ in detector and family convention. Every AUC is per structure, averaged.
 
-### B.1 — The construction
+**B.1 The construction.** Residues are C-alpha nodes, edges within 10 A; the walk is `U(t)=exp(-iHt)` seeded at the active site, read as the converged average `p_avg(s->a)=sum_k |v_k(s)|^2 |v_k(a)|^2` -- a sum of squares, hence phase-free. The **connectivity matrix** `C_ij` (the first required deliverable) is that average-mixing matrix, `(V o V)(V o V)^T`; it is symmetric, row-stochastic, and depends on the operator only. Thirteen operators (four weightings x three normalisations, plus `H_new = L_sym + diag(0.08 V_B + 0.16 V_T + 0.08 V_R + 0.04 V_C + 0.04 V_M)`) x seventeen scores (occupation, proximity-corrected, resolvent, dispersion, energy-uncertainty) give the 221 cells. `neg_dE`, the strongest single score, is time-independent and equals `sqrt(sum_j W_ij^2)` to machine precision -- a classical local statistic, so it cannot carry interference.
 
-Residues are nodes at their C-alpha coordinates, edges within a 10 A cutoff. The walk is `U(t) = exp(-iHt)` seeded at the active site and reported in the converged time-average
+**B.2 Per-target connectivity (mandated targets).** Each target's 221 cells, best and worst by P@5 (the hit-list criterion; AUC saturates when distal positives are few). Connectivity matrices, top-5 x active-site sub-blocks and figures are in `results/connectivity/`.
 
-  `p_avg(s -> a) = sum_k |v_k(s)|^2 |v_k(a)|^2`,
-
-a sum of squares — which is the one-line reason the converged propagator is phase-free, the result section 2 states. Every operator below is real symmetric, hence Hermitian.
-
-**Thirteen operators.** Four edge weightings — binary (`d < 10 A`), exponential `exp(-0.3 d)`, Gaussian `exp(-d^2/72)`, harmonic `1/(d + 0.5)^2` — each under three normalisations: the adjacency `W`, the combinatorial Laplacian `L = D - W`, and the symmetric normalised `L_sym = I - D^{-1/2} W D^{-1/2}`. That is twelve, `binary/adj` through `harm/sym`. The thirteenth is the challenge-specified `H_new = L_sym + diag(0.08 V_B + 0.16 V_T + 0.08 V_R + 0.04 V_C + 0.04 V_M)`, each term z-scored and signed so penalties raise the potential and rewards lower it: `V_B` B-factor disorder, `V_T` chain termini and solvent exposure, `V_R` rigidity, `V_C` GNM covariance with the core, `V_M` participation in the ten slowest GNM modes. The weights are the notebook's pre-registered values, not fitted here.
-
-**Seventeen scores**, in five families: **occupation** (`p_avg`, `p_peak`, and their ratio `R = p_peak/p_avg`, which measures how far a transient interference peak rises above the settled level); **proximity-corrected** (`residLOG`, `residRAW`, each optionally focused by walker spread, and `pavg_over_dX`); **resolvent** (`green_*`, i.e. `|<a|(E + i eta - H)^{-1}|s>|^2`, a commute-time analogue); **dispersion** (`neg_dD_mean`, `neg_ED_final`, `QMI`); and **energy-uncertainty** (`neg_dE` and two combinations). Thirteen times seventeen is the 221 cells per protein quoted in section 1.
-
-One qualification belongs with that list rather than buried in it. `neg_dE`, the strongest single score on the ensemble, is time-independent by construction and equals `sqrt(sum_j W_ij^2)` to machine precision — a classical local statistic under a quantum name. It ranks well and it cannot carry interference, which is one measured reason the coherent and decoherent arms agree.
-
-### B.2 — KRAS G12C (`4LDJ`)
-
-We verified the structure before using it: residue 12 is CYS, the only heteroatoms are GDP and Mg, and six apo G12C depositions exist in the PDB — Table 1's `4OBE` is wild-type at residue 12, and the organisers' suggested `8S8C` is drug-bound, so neither can serve as the apo half of an apo/holo contrast.
-
-The result is then decided before the walk runs. Candidate pockets are cut to a top-K before seeding: under a narrower setting (detector ranking, top-5 by druggability) the true sotorasib pocket ranks **sixth** and is discarded, so P@5 is zero by construction whatever the operator does. Under the druggability-and-allostery consensus at top-10 it is seeded, leaving 38 distal seeds at `MIN_HOP` 2, of which 6 are drug-pocket residues.
+*Table B.2a -- KRAS G12C, apo `4LDJ` [14] (true G12C; Table 1's `4OBE` is wild-type at residue 12), MIN_HOP 1.*
 
 | cell | operator | score | AUC | P@5 |
 |---|---|---|---|---|
-| best AUC | `H_new` | resolvent, band top | **0.828** | 0.4 |
-| best P@5 | `H3_normL` | resolvent, band median | 0.828 | **0.6** |
-| worst | `H7_harm` | residual | **0.161** | 0.0 |
-| median | - | - | 0.500 | 0.2 |
-| pre-reg | `H_new` | residual | 0.479 | p 0.57 |
+| best | `H_new` | resolvent (band top) | 0.809 | 0.6 |
+| worst | `H11_aniso` | residual RAW | 0.184 | 0.0 |
+| pre-registered | `H_new` | residual | 0.479 | p=0.57 |
 
-### B.3 — BCR-ABL1 (`1OPL`)
-
-The same pipeline and settings on the myristoyl target. Here the true asciminib pocket **is** seeded, and 18 of 43 distal seeds are drug-pocket residues — a base rate of 0.419, which is the finding rather than a convenience: 1OPL carries myristate in that pocket, as section 1 records, so the cavity is already open and this is not cryptic-pocket prediction.
+*Table B.2b -- BCR-ABL1, apo `1OPL` [1-3] (myristate pre-bound, so the site is already open), MIN_HOP 2.*
 
 | cell | operator | score | AUC | P@5 |
 |---|---|---|---|---|
-| best | `H6_exp` | residual, focused | **0.796** | **1.0** |
-| worst | `H5_gauss` | ratio `p_peak/p_avg` | **0.227** | 0.0 |
-| best `H_new` | `H_new` | spread dip depth | 0.707 | 0.6 |
-| median | - | - | 0.491 | 0.2 |
-| pre-reg | `H_new` | residual | 0.411 | p 0.84 |
+| best | `H6_exp` | residual + focus | 0.796 | **1.0** |
+| worst | `H5_gauss` | ratio p_peak/p_avg | 0.227 | 0.0 |
+| pre-registered | `H_new` | residual | 0.411 | p=0.84 |
 
-Read together the two targets make one point, and it is not about which operator wins. On KRAS the selection stage decided the answer was unreachable; on BCR-ABL1 it delivered a pocket myristate had already opened. In neither case did the transport subroutine determine the outcome. On both, half of the 238 cells sit at chance and the spread from best to worst — 0.67 and 0.57 AUC — is larger than any margin between methods reported in section 2. The best cell is the tail of a distribution centred on nothing, which is why the pre-registered cell lands at 0.479 and 0.411. Nor is the winning score the occupation measure the method is usually described by: it is the resolvent on one target and the proximity-corrected residual on the other, while the explicitly coherence-sensitive ratio is the worst cell on BCR-ABL1 and near-bottom on KRAS. Further targets are in preparation on the same settings.
+*Table B.2c -- Cardiac myosin, apo `8QYP` -> `8QYR` [15] (drug XB2), true pocket seeded at top-10, MIN_HOP 2.*
 
-### B.4 — The seeded-CTQW pipeline across 630 proteins
+| cell | operator | score | AUC | P@5 |
+|---|---|---|---|---|
+| best | `H3_normL` | dX dip depth | 0.685 | 0.4 |
+| worst | `H8_gnm` | -dD mean | 0.068 | 0.0 |
+| pre-registered | `H_new` | residual | 0.601 | p=0.12 |
 
-**The pipeline.** PASSer top-10 pockets, drop the pocket holding the active site, apply the distal seed filter `MIN_HOP`, run the walk, apply a cryptic-opening veto [6] with pockets already holding an apo-deposited ligand protected, run the walk again on survivors, rank pockets by best residue. One operator-and-score pair fixed in advance and applied to every protein. Cohort: 630 proteins in 399 families from the same five public benchmarks [4-6]; 199 further proteins were removed by the veto before scoring.
+Across all three the outcome turns on the selection stage, not the walk: BCR-ABL1's 5/5 is a pocket myristate already opened; KRAS and cardiac myosin reach the pocket only once it is seeded, and their pre-registered single cells are honest negatives. Half the 221 cells sit at chance.
 
-**Against its classical peers, on identical residues.** Family-weighted AUC, one vote per family, Wilcoxon paired on families:
+**B.3 The seeded-CTQW pipeline across 630 proteins.** PASSer top-10 -> drop the active-site pocket -> distal `MIN_HOP` filter -> CTQW -> PocketMiner veto [6] (apo-ligand protected) -> CTQW -> rank pockets. One fixed operator+score.
+
+*Table B.3 -- Family-weighted AUC (one vote per family), seeded walk vs classical baselines on identical residues; Wilcoxon paired [4-6, 9, 13].*
 
 | MIN_HOP | families | seeded walk | closeness | proximity | p |
 |---|---|---|---|---|---|
@@ -114,17 +100,7 @@ Read together the two targets make one point, and it is not about which operator
 | 3 | 157 | 0.544 | 0.575 | 0.563 | 0.044 |
 | 4 | 50 | 0.543 | 0.580 | 0.581 | 0.258 |
 
-There is no distal-filter setting at which the walk beats closeness centrality. Per-protein means show the opposite ordering at every setting, and that reversal is pseudo-replication: two proteins supply 68% of the walk's strict hits. Paired McNemar on which families each method clears at P@5 >= 0.8 is non-significant throughout (p = 0.078, 0.238, 0.754, 1.000).
-
-**Combining all 221 observables reproduces distance.** A logistic regression over the per-residue score vectors, true leave-one-family-out so the fold's model never sees its own family, reaches family-weighted AUC **0.7216** on the 91 distal proteins — against 0.5405 for the best single cell selected on the same data. The floor on that subset is *reversed* distance, since the subset is defined as truth at least 3 hops away: **0.7219**. The difference is -0.0003 (Wilcoxon p = 0.90). On the full 630 the model and the fixed cell are indistinguishable (0.5847 against 0.5854, p = 0.985). This is section 2's phase-free conclusion measured with a trained model rather than a single cell.
-
-**Two-source interference at scale.** The finite-delay phase-sensitive observable of section 2 was run on all 630 proteins at `MIN_HOP` 1 to 4 across the same eleven-delay grid, as a point statistic at each delay and as range statistics across delays, with configuration and sign chosen blind by leave-one-family-out. Both arms fail every pre-registered test at every setting and rank below closeness centrality throughout.
-
-**Protein-identity floor on this cohort.** A constant-per-protein score reaches pooled AUC **0.771** across 630 proteins — above every method either track has tested, and a wider margin than the 0.65 section 5 reports on the first cohort.
-
-**Why the family counts differ between tracks.** The 399 labels are inherited from five source datasets under three conventions: CASBench group codes (227 entries), UniProt accessions, and free-text names (CryptoBench 308, ASBench 67, PocketMiner 21, CryptoSite 7). The four largest families are all CASBench. A single clustering rule is a Phase-2 prerequisite for any absolute family count; the paired comparisons above do not depend on it.
-
-**Retractions on this track**, alongside those of section 7: a distal proximity-floor claim read an AUC backwards — the floor is reversed distance at 0.773, not 0.227, and the walk loses to it; a classical-comparison arm labelled an exact twin differed in operator as well as in coherence, and its quantum arm was the phase-free score above; and a blind positive was filed as a to-do rather than reported. All three are corrected in the public history.
+The walk never beats closeness centrality; the per-protein ordering reverses this and is pseudo-replication (two proteins supply 68% of strict hits), non-significant under paired McNemar (p=0.08-1.0). A blind leave-one-family-out regression over all 221 scores reaches 0.7216 on the 91 distal proteins against a reversed-distance floor of 0.7219 (p=0.90) -- distance reproduced, nothing beyond. Two-source interference, run on all 630 at `MIN_HOP` 1-4 blind, fails every pre-registered test. The protein-identity floor here is pooled AUC 0.771 [10-12], above every method either track has tested -- any pooled AUC must clear it. The 399 family labels are inherited from five datasets under three conventions; a single clustering rule is a Phase-2 prerequisite, but the paired comparisons do not depend on it. Three results on this track were retracted and corrected in the public history: an inverted distal proximity-floor AUC, a classical twin differing in operator as well as coherence, and a blind positive filed as a to-do.
 
 
 ### ADD-5 — Our retractions in the §7 ledger
