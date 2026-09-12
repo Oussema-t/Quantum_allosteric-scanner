@@ -2265,3 +2265,59 @@ Validation passed first: the audit procedure correctly separated
 [[TASK-0310]]'s known-per-structure 0.5921 from this hypothesis's own
 known-pooled 0.6500 before classifying anything else. Full table:
 `.ai/tasks/DONE/TASK-0361-pooled-vs-per-structure-aggregation-audit.md`.
+
+---
+
+## HYP-P29 · ASBench's aromatic-residue enrichment at allosteric sites is burial and ligand contact, not a within-protein asymmetry
+
+**Claim.** An external reviewer (2026-09-11/12) reported allosteric sites
+15.7% aromatic (F/Y/W/H) vs. ~10.2% cross-protein background across
+ASBench's 118 curated entries — a real 1.54× — and pre-registered burial
+as the first gate to check. This hypothesis names the gate they did not:
+ASBench annotates allosteric sites as **ligand-contact** residues, and
+this register's own [[TASK-0329]]/[[TASK-0345]] already measured that
+40/40 sampled ASBench structures carry a bound ligand at the scored site.
+Aromatics dominate ligand binding generically, so the naive enrichment
+may be "aromatics touch ligands," not allostery — and a cross-protein
+background cannot separate the two, since it doesn't control for a
+protein's own active site being ligand-adjacent too. The claim under
+test: does the enrichment survive a control matched on both burial *and*
+ligand contact, paired against active sites **in the same protein**?
+
+**Status, 2026-09-12 ([[TASK-0372]]): TESTED — the naive claim does not
+survive; a burial+ligand-contact confound, not a within-protein
+asymmetry.** Planned Validation first: the reviewer's own raw number
+reproduces almost exactly on this cohort (15.6% vs. their 15.7%) —
+harness trusted. Active-site fraction, the matched (not cross-protein)
+control, is itself 12.8% (ratio 1.22, not 1.54) — active sites are
+*also* aromatic-enriched relative to bulk composition, so part of the
+reviewer's own 1.54× was already the wrong baseline. Rank-residualised
+on burial (`allostery.corex`'s validated ShrakeRupley SASA, Tien et al.
+2013 `MAX_ASA`), paired within-protein against active sites, cluster-
+tested by protein (79 clusters, sign-flip permutation):
+
+| stratum | n proteins | raw allo | raw act | cluster-p |
+|---|---|---|---|---|
+| all residues | 79 | 15.6% | 12.8% | 0.856 |
+| ligand-contacting | 49 | 16.5% | 14.0% | 0.515 |
+| non-contacting | 20 (exact) | 11.7% | 11.9% | 0.406 |
+
+**Not significant in any stratum.** The non-contacting stratum's point
+estimate reverses sign (allosteric slightly *less* aromatic there),
+though at n=20 that reversal is itself nowhere near significant —
+reported because the design calls for it, not treated as a finding.
+**This is the pre-registered most-likely outcome, not the narrower
+"real asymmetry" alternative**: composition looks different in the raw
+numbers because active sites and allosteric sites are both more
+aromatic than bulk protein and ASBench's own labels are ligand-contact
+residues, not because allosteric sites carry a distinguishable
+electronic signature. Full table, method, and the "wrong baseline"
+sub-finding: `.ai/tasks/DONE/TASK-0372-aromatic-enrichment-gate-with-
+ligand-contact-control.md`.
+
+**What this does and does not bear on.** This closes E0 of the external
+reviewer's own proposed electronic-structure programme cleanly (a
+composition check, entirely classical) — it does not test electronic
+coupling, conical intersections, or any quantum-mechanical claim, and
+should not be read as evidence against those (E1–E4, [[TASK-0374]]'s own
+scope, untouched here).

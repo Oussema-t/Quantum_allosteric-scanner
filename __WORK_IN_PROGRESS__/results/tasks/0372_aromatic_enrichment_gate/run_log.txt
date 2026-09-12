@@ -1,0 +1,26 @@
+[09:36:34] 118 ASBench entries
+[09:37:07]   [15/118] 1JLR     allo=13/13 act=9/9 (34s)
+[09:37:30]   [30/118] 1W96     allo=15/15 act=11/11 (56s)
+[09:37:46]   [45/118] 2PA3     allo=8/8 act=37/37 (72s)
+[09:38:08]   [60/118] 2Y0P     allo=18/18 act=36/36 (94s)
+[09:38:09]   [63/118] 3BCR     FETCH FAILED: 404 Client Error: Not Found for url: https://files.rcsb.org/download/3BCR.pdb
+[09:38:41]   [75/118] 3ETG     allo=6/6 act=10/10 (127s)
+[09:39:09]   [90/118] 3M3F     allo=12/12 act=21/21 (156s)
+[09:39:40]   [105/118] 4B2D     allo=11/11 act=20/20 (186s)
+[09:39:59] done: 3830 residue-rows, 1 structures failed to fetch/parse (205s total)
+[09:39:59] 
+### Planned Validation: reproduce the reviewer's own raw numbers ###
+[09:39:59]   allosteric aromatic frac = 0.1562 (reviewer: 0.157)
+[09:39:59]   active-site aromatic frac = 0.1276 (reviewer background: ~0.102)
+[09:39:59]   ratio = 1.225 (reviewer: 1.54)
+[09:39:59] 
+### Burial-residualised, paired within-protein, ALL residues ###
+[09:39:59]   [all] n_rows=3830 n_proteins=79 raw_allo=0.15625 raw_act=0.12758051197357556 mean_resid_delta=5.860542236579143 p=0.85581 (Monte Carlo)
+[09:39:59] 
+### Ligand-contact stratum ###
+[09:39:59]   [ligand-contacting] n_rows=2147 n_proteins=49 raw_allo=0.1645133505598622 raw_act=0.13995943204868155 mean_resid_delta=18.435343236016635 p=0.51488 (Monte Carlo)
+[09:39:59] 
+### Non-contact stratum ###
+[09:40:04]   [non-contacting] n_rows=1683 n_proteins=20 raw_allo=0.11740890688259109 raw_act=0.1190807799442897 mean_resid_delta=-25.397938597440692 p=0.40601158142089844 (exact)
+[09:40:04] 
+Wrote results/tasks/0372_aromatic_enrichment_gate/aromatic_enrichment_gate.json

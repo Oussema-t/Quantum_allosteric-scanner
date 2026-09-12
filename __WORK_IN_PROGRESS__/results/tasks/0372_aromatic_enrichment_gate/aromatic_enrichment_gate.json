@@ -1,0 +1,46 @@
+{
+ "n_entries": 118,
+ "planned_validation_raw_reproduction": {
+  "n_allo": 1408,
+  "n_act": 2422,
+  "allo_aromatic_frac": 0.15625,
+  "act_aromatic_frac": 0.12758051197357556,
+  "ratio": 1.2247168284789645
+ },
+ "all_residues": {
+  "n_rows": 3830,
+  "n_proteins_paired": 79,
+  "raw_allo_aromatic_frac": 0.15625,
+  "raw_act_aromatic_frac": 0.12758051197357556,
+  "n": 79,
+  "statistic": 462.9828366897523,
+  "mean_delta": 5.860542236579143,
+  "median_delta": 4.750188154942599,
+  "p_value": 0.85581,
+  "exact": false
+ },
+ "ligand_contacting_stratum": {
+  "n_rows": 2147,
+  "n_proteins_paired": 49,
+  "raw_allo_aromatic_frac": 0.1645133505598622,
+  "raw_act_aromatic_frac": 0.13995943204868155,
+  "n": 49,
+  "statistic": 903.3318185648152,
+  "mean_delta": 18.435343236016635,
+  "median_delta": 31.57259021024446,
+  "p_value": 0.51488,
+  "exact": false
+ },
+ "non_contacting_stratum": {
+  "n_rows": 1683,
+  "n_proteins_paired": 20,
+  "raw_allo_aromatic_frac": 0.11740890688259109,
+  "raw_act_aromatic_frac": 0.1190807799442897,
+  "n": 20,
+  "statistic": -507.9587719488138,
+  "mean_delta": -25.397938597440692,
+  "median_delta": -13.90835457712577,
+  "p_value": 0.40601158142089844,
+  "exact": true
+ }
+}
