@@ -365,7 +365,8 @@ _LONGTABLE_RE = re.compile(
     r"\\bottomrule\\noalign\{\}\n"
     r"\\endlastfoot\n"
     r"(?P<body>.*?)"
-    r"\\end\{longtable\}\n\}",
+    r"\\end\{longtable\}\n\}"
+    r"(?:\n\n(?P<caption>\\emph\{Table[^\n]*\}))?",   # optional caption paragraph right after
     re.S)
 
 _MINIPAGE_CELL_RE = re.compile(
@@ -393,6 +394,10 @@ def widen_tables_to_full_width(tex: str) -> str:
         # verbatim from pandoc's "...\end{minipage} \\" line) -- appending
         # another "\\\\" here double-escapes it into 4 backslashes, a real
         # bug caught by actually compiling, not by reading the regex.
+        cap = (m.group("caption") or "").strip()
+        # place the caption as a plain centered italic line below the tabular (no
+        # \caption* -> avoids the "Table N:" auto-label without the caption package)
+        cap_tex = ("\\smallskip\\par\n%s\n" % cap) if cap else ""
         return (
             # No \small here (first version had it, measured 9pt, FAILED the
             # floor): Guidelines S5's 10pt minimum has no table exemption --
@@ -400,8 +405,8 @@ def widen_tables_to_full_width(tex: str) -> str:
             # route. Left at \normalsize (10.5pt) instead.
             "\\begin{table*}[t]\n\\centering\n"
             "\\begin{tabular}{@{}%s@{}}\n\\toprule\n%s\n\\midrule\n%s\n"
-            "\\bottomrule\n\\end{tabular}\n\\end{table*}\n"
-            % (colspec, header, body)
+            "\\bottomrule\n\\end{tabular}\n%s\\end{table*}\n"
+            % (colspec, header, body, cap_tex)
         )
     out, n = _LONGTABLE_RE.subn(repl, tex)
     return out

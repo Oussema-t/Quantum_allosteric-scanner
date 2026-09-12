@@ -55,15 +55,13 @@ anchor: uding our headline result. The full task history, including every retrac
 cost: ~1 page
 ---
 
-## Appendix B — The walk, the operators, and per-target connectivity
+## Appendix B — The walk, the operators, per-target connectivity, and the AI stage
 
-A second pipeline on the `allosteric` track (PASSer detection, 630 proteins in 399 families [4-6]), reported as **replication** of sections 1-7's `bartosz` track (fpocket), not pooled with it -- the two differ in detector and family convention. Every AUC is per structure, averaged.
+A second pipeline on the `allosteric` track (PASSer detection, 630 proteins in 399 families [4-6]), reported as **replication** of sections 1-7's `bartosz` track (fpocket), not pooled with it. Every AUC is per structure, averaged.
 
-**B.1 The construction.** Residues are C-alpha nodes, edges within 10 A; the walk is `U(t)=exp(-iHt)` seeded at the active site, read as the converged average `p_avg(s->a)=sum_k |v_k(s)|^2 |v_k(a)|^2` -- a sum of squares, hence phase-free. The **connectivity matrix** `C_ij` (the first required deliverable) is that average-mixing matrix, `(V o V)(V o V)^T`; it is symmetric, row-stochastic, and depends on the operator only. Thirteen operators (four weightings x three normalisations, plus `H_new = L_sym + diag(0.08 V_B + 0.16 V_T + 0.08 V_R + 0.04 V_C + 0.04 V_M)`) x seventeen scores (occupation, proximity-corrected, resolvent, dispersion, energy-uncertainty) give the 221 cells. `neg_dE`, the strongest single score, is time-independent and equals `sqrt(sum_j W_ij^2)` to machine precision -- a classical local statistic, so it cannot carry interference.
+**B.1 The construction.** Residues are C-alpha nodes, edges within 10 A; the walk is `U(t)=exp(-iHt)` seeded at the active site, read as the converged average `p_avg(s->a)=sum_k |v_k(s)|^2 |v_k(a)|^2` -- a sum of squares, hence phase-free. The **connectivity matrix** `C_ij` (first required deliverable) is that average-mixing matrix, `(V o V)(V o V)^T`: symmetric, row-stochastic, operator-only. Thirteen operators (four weightings x three normalisations, plus `H_new = L_sym + diag(0.08 V_B + 0.16 V_T + 0.08 V_R + 0.04 V_C + 0.04 V_M)`) x seventeen scores give the 221 cells. `neg_dE`, the strongest single score, is time-independent and equals `sqrt(sum_j W_ij^2)` to machine precision -- a classical local statistic, so it cannot carry interference.
 
-**B.2 Per-target connectivity (mandated targets).** For each target we report both the **best and the worst cell**, each selected across all **221 cells (13 Hamiltonians x 17 scores)** by P@5 -- the hit-list criterion; AUC saturates when distal positives are few. The gap between them, on one protein under one seeding, is the size of the selection effect this proposal warns about. Connectivity matrices, top-5 x active-site sub-blocks and figures are in `results/connectivity/`.
-
-*Table B.2 -- Best and worst of 221 cells per mandated target, chosen by P@5.*
+**B.2 Per-target connectivity.** Best and worst cell per mandated target, each selected across all 221 cells (13 Hamiltonians x 17 scores) by P@5. Connectivity matrices and top-5 x active-site sub-blocks are in `results/connectivity/`.
 
 | target (apo) | cell | operator / score | AUC | P@5 |
 |---|---|---|---|---|
@@ -74,20 +72,30 @@ A second pipeline on the `allosteric` track (PASSer detection, 630 proteins in 3
 | Cardiac myosin (`8QYP`->`8QYR`) [15] | best | `H3_normL` / dX dip depth | 0.685 | 0.4 |
 | Cardiac myosin (`8QYP`->`8QYR`) [15] | worst | `H8_gnm` / -dD mean | 0.068 | 0.0 |
 
-`4LDJ` is true G12C (Table 1's `4OBE` is wild-type at residue 12); `1OPL` has myristate pre-bound, so its site is already open; cardiac myosin's pocket is reached only once seeded at top-10. Best and worst share the protein, seeding and scoring -- the AUC spread (0.63 / 0.57 / 0.62) is the operator-and-score choice alone. The pre-registered single `H_new` cell, fixed before scoring, is an honest negative on all three (KRAS 0.479 p=0.57, BCR-ABL1 0.411 p=0.84, cardiac myosin 0.601 p=0.12), and half the 221 cells sit at chance.
+*Table B.2 -- best and worst of 221 cells per target, chosen by P@5. `4LDJ` is true G12C (`4OBE` is wild-type at residue 12); `1OPL` has myristate pre-bound; cardiac myosin's pocket is reached only once seeded at top-10. The AUC spread on one protein (0.63/0.57/0.62) is the operator-and-score choice alone; the pre-registered `H_new` cell is an honest negative on all three (KRAS 0.479 p=0.57, BCR 0.411 p=0.84, myosin 0.601 p=0.12).*
 
-**B.3 The seeded-CTQW pipeline across 630 proteins.** PASSer top-10 -> drop the active-site pocket -> distal `MIN_HOP` filter -> CTQW -> PocketMiner veto [6] (apo-ligand protected) -> CTQW -> rank pockets. One fixed operator+score.
+**B.3 Seeded-CTQW vs classical baselines, 630 proteins.** Pipeline: PASSer top-10 -> drop the active-site pocket -> distal `MIN_HOP` filter -> CTQW -> PocketMiner veto [6] (apo-ligand protected) -> CTQW -> rank pockets, one fixed operator+score. Hit-list counts on identical residues (MIN_HOP=1; P@5 with AUC>=0.6):
 
-*Table B.3 -- Family-weighted AUC (one vote per family), seeded walk vs classical baselines on identical residues; Wilcoxon paired [4-6, 9, 13].*
+| method | seeded | AUC | P@5>=0.8 prot / fam | P@5>=0.6 prot / fam |
+|---|---|---|---|---|
+| **Seeded-CTQW-pipeline** | yes | **0.600** | **69** / 20 | **101** / 45 |
+| closeness centrality | no | 0.576 | 48 / **29** | 83 / **55** |
+| eigenvector centrality | no | 0.529 | 61 / 25 | 81 / 44 |
+| proximity (closer) | yes | 0.574 | 30 / 15 | 63 / 44 |
+| heat kernel `e^{-Lt}` (classical twin) | yes | 0.512 | 23 / 17 | 44 / 34 |
 
-| MIN_HOP | families | seeded walk | closeness | proximity | p |
-|---|---|---|---|---|---|
-| 1 | 399 | 0.585 | 0.601 | 0.616 | 0.001 |
-| 2 | 291 | 0.542 | 0.569 | 0.570 | 0.003 |
-| 3 | 157 | 0.544 | 0.575 | 0.563 | 0.044 |
-| 4 | 50 | 0.543 | 0.580 | 0.581 | 0.258 |
+*Table B.3 -- seeded-CTQW vs four of thirteen classical baselines [4-6, 9, 13], identical residues. The pipeline leads on AUC and on every per-protein count, but closeness centrality -- which has no active site -- leads on families (29 vs 20 at P@5>=0.8). Family-weighted AUC confirms it: seeded walk 0.585/0.542/0.544/0.543 vs closeness 0.601/0.569/0.575/0.580 at MIN_HOP 1-4 (Wilcoxon p=0.001-0.26), non-significant under paired McNemar. Per-protein leads are pseudo-replication (two proteins supply 68% of strict hits). A blind leave-one-family-out regression over all 221 scores reaches 0.7216 on the 91 distal proteins against a reversed-distance floor of 0.7219 -- distance reproduced, nothing beyond. Protein-identity floor here is pooled AUC 0.771 [10-12], above every method tested.*
 
-The walk never beats closeness centrality; the per-protein ordering reverses this and is pseudo-replication (two proteins supply 68% of strict hits), non-significant under paired McNemar (p=0.08-1.0). A blind leave-one-family-out regression over all 221 scores reaches 0.7216 on the 91 distal proteins against a reversed-distance floor of 0.7219 (p=0.90) -- distance reproduced, nothing beyond. Two-source interference, run on all 630 at `MIN_HOP` 1-4 blind, fails every pre-registered test. The protein-identity floor here is pooled AUC 0.771 [10-12], above every method either track has tested -- any pooled AUC must clear it. The 399 family labels are inherited from five datasets under three conventions; a single clustering rule is a Phase-2 prerequisite, but the paired comparisons do not depend on it. Three results on this track were retracted and corrected in the public history: an inverted distal proximity-floor AUC, a classical twin differing in operator as well as coherence, and a blind positive filed as a to-do.
+**B.4 The AI stage: a configuration recommender.** Two models set the quantum stage from topology alone, so the pipeline can be applied to a new apo protein without a sweep. **Input** (both): 9 graph features -- residues, edges, mean/variance/CV of degree, clustering coefficient, diameter, algebraic connectivity, spectral radius. **Training:** leave-one-family-out GroupKFold over 597 proteins in 380 families; every protein scored by a model that never saw its family.
+
+| model | output | result |
+|---|---|---|
+| Model 1 (`RandomForestClassifier`) | MIN_HOP (near vs distal) | near/distal AUC **0.793**; at predicted MIN_HOP 0.924 vs 0.901 always-hop-1 |
+| Model 2 (`RandomForestRegressor`, 221 outputs) | best (Hamiltonian, score) | 0.625 vs 0.630 for one fixed cell -- does **not** beat it |
+
+*Table B.4 -- the two configuration models. Model 1 works as a coarse near/distal switch; Model 2 shows topology carries essentially no information about which operator and score win (rank-1 explains 48% of the 13x17 AUC matrix, main effects 1%).*
+
+The recommender (`results/ml_model/recommender.py`) exposes this as: 9 features -> StandardScaler -> Ridge multi-output -> 884 predicted AUCs -> rank -> **top-k with softmax weights**. The caller picks **k** -- how many (MIN_HOP, Hamiltonian, score) configurations to run -- and may constrain MIN_HOP; at k=6 the shortlist's best cell averages AUC 0.724 over 43 families. We use Model 1 to set MIN_HOP and then a single fixed cell; the honest finding is that the winner cannot be predicted from topology, so best-of-221 is reported as selection, never as performance.
 
 
 ### ADD-5 — Our retractions in the §7 ledger
