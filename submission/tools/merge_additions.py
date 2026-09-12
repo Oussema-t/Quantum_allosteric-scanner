@@ -20,7 +20,10 @@ def parse(md):
         blocks.append({"title": title, "status": meta.get("status", "PENDING").strip(),
                        "section": meta.get("section", "?").strip(),
                        "anchor": meta.get("anchor", "").strip(),
-                       "text": body.split("\n### ")[0].strip()})
+                       # NOTE: do NOT truncate at "\n### " -- the regex split above already
+                       # ends each chunk at the next ADD- block, and a body may legitimately
+                       # contain "### " subsections (Appendix B has B.0 / B.1).
+                       "text": body.strip()})
     return blocks
 
 def main():
