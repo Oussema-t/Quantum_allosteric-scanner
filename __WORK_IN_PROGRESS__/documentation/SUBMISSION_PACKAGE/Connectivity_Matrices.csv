@@ -1,7 +1,18 @@
 # Connectivity Matrix -- Challenge Statement section 5, output 1.
-# One row per residue pair. Symmetric, so only i <= j is listed; entry (j,i) equals entry (i,j).
-# residue_i / residue_j are PDB residue numbers as deposited, not array indices.
-# value = time-averaged quantum connectivity strength, dimensionless, 6 significant figures.
+# One row per residue pair. Symmetric: each unordered pair is listed exactly once, in each
+# matrix's own row/column order (not sorted) -- entry (j,i) equals entry (i,j); do not assume
+# residue_i <= residue_j.
+# residue_i / residue_j are PDB residue numbers as deposited, not array indices; they differ
+# from array indices for three of the four targets. MYC_MAX (1NKP) is the two-chain target;
+# its chains have non-overlapping numbering (chain A 897-984, chain B 202-284), so no separate
+# chain column is needed to place a row unambiguously.
+# value = time-averaged transition probability of the underlying continuous-time quantum walk
+# from residue_i to residue_j, dimensionless, 6 significant figures. Each row of the full N x N
+# matrix sums to 1 (+/-1e-6), and the diagonal is that row's own maximum in ~78% of rows (checked
+# on CARDIAC_MYOSIN) -- a naive heatmap of this matrix reads as diagonal-dominated, which is the
+# walk's own probability of staying near its start over the averaging window, not a defect or a
+# sign that off-diagonal transport is absent. Mask the diagonal or use a log/percentile colour
+# scale to see off-diagonal structure.
 target,pdb_id,residue_i,residue_j,value
 KRAS_G12C,4LDJ,0,0,0.18079
 KRAS_G12C,4LDJ,0,1,0.232677

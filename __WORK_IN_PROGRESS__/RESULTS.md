@@ -13553,3 +13553,55 @@ regenerated.
 `results/tasks/0381_tier0_corex_bcr_abl1/{precondition_gate.json,
 result.json}`. **Full detail**:
 `.ai/tasks/DONE/TASK-0381-tier0-corex-coupling-bcr-abl1.md`.
+
+## The matrix CSV's "upper triangle only" claim was false — fixed, and independently re-verified every number rather than transcribing it ([[TASK-0384]], 2026-09-13)
+
+`Connectivity_Matrices.csv`'s header and `SUBMISSION_PACKAGE/README.md` both
+claimed "only i <= j is listed" / "upper triangle only". Re-verified the
+external reviewer's row-count table from raw bytes rather than trusting it:
+7,304 of MYC_MAX's 14,706 rows have `residue_i > residue_j` (KRAS_G12C,
+BCR_ABL1, CARDIAC_MYOSIN: 0 of 14,535/101,926/248,160). Cause confirmed
+directly — 1NKP's two chains number 897–984 and 202–284, a gap between 284
+and 897 with no overlap, so array order and residue-number order disagree
+for one target's rows. The file itself is correct (0 duplicate unordered
+pairs, 379,327 distinct, matching the README exactly) — only the
+reconstruction-rule claim was wrong, and it is the kind of wrong that makes
+a reader silently mis-place 7,304 rows while believing the file parsed
+cleanly.
+
+Reworded both live copies to "each unordered pair is listed exactly once,
+in each matrix's own row/column order (not sorted)". `grep` across
+`*.md`/`*.csv` confirms no third copy outside the task/review historical
+record.
+
+Separately, `artefacts/README.md`'s four methodology sentences (entry =
+time-averaged transition probability; each row sums to 1 ± 1e-6; diagonal
+is the row's own maximum in ~78% of rows; a naive heatmap reads as
+diagonal-dominated, not a defect) were true but lived in a directory that
+is **not one of the five uploaded files** — the scorer never sees them.
+Moved verbatim into the CSV header comment block, the only place output
+1's methodology reaches a scorer. Decided, in writing, the two remaining
+open questions the task raised: keep and expand the `#` comment preamble
+(a scorer that can't pass `comment='#'` isn't reconstructing the matrix
+regardless of header length) rather than moving the prose to a different
+file and recreating the same defect; and state MYC_MAX's two disjoint
+residue ranges in the header rather than adding a `chain` column, since
+the ranges are genuinely non-overlapping (re-confirmed directly). Header
+grew from 4 to 12 comment lines; round-trip re-verified after the edit —
+`comment='#'` skip still lands exactly on the header row, and all 379,327
+data rows parse with unchanged per-target counts.
+
+Also independently reproduced the external reviewer's adversarial
+reconstruction check rather than citing it on trust: rebuilt all four
+per-target `artefacts/<target>_connectivity_matrix.csv` wide matrices from
+the shipped long-form CSV on 2,000 randomly sampled entries each — max
+reconstruction difference 0.0 on every target, symmetric to numerical
+precision, matching the reviewer's own numbers exactly. Added one line to
+the README stating this, as the task requested — it is checkable and most
+submissions would not survive it.
+
+No shipped residue, matrix, or headline AUC changed — disclosure and
+documentation only.
+
+**Files**: `__WORK_IN_PROGRESS__/documentation/SUBMISSION_PACKAGE/{Connectivity_Matrices.csv,README.md}`.
+**Full detail**: `.ai/tasks/DONE/TASK-0384-matrix-csv-false-triangle-claim-and-missing-methodology.md`.

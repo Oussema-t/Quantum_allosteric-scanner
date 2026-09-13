@@ -39,14 +39,21 @@ accepted format, so the matrices are in **long form**:
 target,pdb_id,residue_i,residue_j,value
 ```
 
-- **Upper triangle only.** Each matrix was checked symmetric on export, so (j,i)
-  equals (i,j) and listing both would double the file for no information.
+- **Each unordered pair is listed exactly once**, in each matrix's own row/column
+  order — not sorted, so `residue_i > residue_j` occurs (true for MYC_MAX; see
+  the CSV header). Each matrix was checked symmetric on export, so (j,i) equals
+  (i,j) and listing both would double the file for no information.
 - `residue_i`/`residue_j` are **PDB residue numbers as deposited**, not array
   indices. The two differ for three of the four targets.
 - Values are dimensionless transport weights to 6 significant figures.
 - **379,327 rows**, and the reconstruction was verified: cardiac myosin's full
   704×704 was rebuilt from the CSV and compared to the source array —
   `allclose` at rtol 1e-5, max absolute difference 4.9e-07.
+- **All four targets survive independent adversarial reconstruction**: rebuilding
+  each per-target matrix from this file reproduces the `artefacts/` source array
+  exactly (max |diff| = 0.0 over 2,000 sampled entries per target), every matrix
+  is symmetric to numerical precision, and row counts match this table exactly
+  (TASK-0384).
 
 | target | structure | N | pairs |
 |---|---|---|---|
