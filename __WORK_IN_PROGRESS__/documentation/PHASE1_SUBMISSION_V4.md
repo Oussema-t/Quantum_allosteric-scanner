@@ -24,10 +24,10 @@ We built the method the challenge specifies — a continuous-time quantum walk o
 |-----|-------|------------------------------------------------------|
 | KRAS G12C [14] | `4LDJ` (apo) | The organisers suggested `8S8C`; we checked it and it is **holo** (MK-1084-bound), so it cannot be the apo half of a contrast. `4LDJ` verified: residue 12 is CYS, no ligand at the site. |
 | BCR-ABL1 | `1OPL`, retained | Substitution was permitted; we declined it. Its myristate occupancy is the finding, not a defect — it is how we established that "apo" depositions are not reliably ligand-free. |
-| Cardiac myosin [15] | `8QYP` → `8QYR` | Our substitution, **accepted as primary** by the organisers. |
+| Cardiac myosin [15] | `8QYP` (apo)\* → `8QYR` (holo)\* | Our substitution, **accepted as primary** by the organisers. |
 | c-Myc | `1NKP` | Mandated; no drug-bound structure exists, so the validity rule does not apply. |
 
-Two of these are deviations and one is a retention; all three trace to that clarification, and the `8S8C` check — which we ran and which led us to decline the organisers' own suggestion — is recorded in our configuration alongside the choice it produced.
+\*Both halves substituted: Table 1 mandates `5TBY` → `6C1H` — a homology model fitted to a 20 Å negative-stain reconstruction, and *rat* myosin-Ib on rabbit actin carrying ADP, not mavacamten. Two rows above are deviations, one a retention; all trace to that clarification.
 
 **"Apo" does not mean ligand-free, and the exceptions are not random.** We assumed apo depositions were empty at the site of interest. They are not: **3 of 7** audited targets have a ligand holding the pocket open, and **40 of 40** ASBench structures we sampled carry a bound ligand at the scored site. One case is mechanistically expected — BCR-ABL1's `1OPL` carries myristate, the physiological autoinhibitory ligand of that exact pocket [3]. Two are unexplained: glucokinase `1V4S`/`MRK` (88% overlap) and PKR `7FS3` (92%). *Consequence:* the contamination correlates with the label — the most interesting targets are the ones most likely to be pre-opened — so it inflates measured performance rather than adding noise.
 
@@ -54,7 +54,7 @@ A paired score-minus-floor bootstrap agrees at all three (detection limit ΔAUC 
 
 ---
 
-## 2. Technical Approach
+## 2. Technical Approach — and the required methodological report
 
 ### Paradigm
 
@@ -153,7 +153,7 @@ The rationale for the split is empirical: the classical stages carry the signal 
 
 ## 7. Team Capability
 
-Three disciplines, one each: **Oussema Turki** (quantum algorithms — operators, propagators, ensemble sweeps), **Berke Turkaydin** (computational biophysics — targets, structural validity, biological interpretation), and **Bartosz Chmura** (molecular quantum dynamics and software QA — verification methodology, scope and reporting). Full biographies, affiliations and prior quantum-computing experience are in the separate Team Profile.
+Three disciplines, one each: **Oussema Turki** (quantum algorithms — operators, propagators, ensemble sweeps), **Berke Turkaydin** (computational biophysics — targets, structural validity, biological interpretation), and **Bartosz Chmura** (molecular quantum dynamics and software QA — verification methodology, scope and reporting). Full biographies and prior quantum experience are in the separate Team Profile.
 
 **One methodological commitment shaped this submission.** We used an AI-assisted workflow, which accelerates work and generates plausible errors at the same rate, so the role that implements is separated from the role that verifies and runs on a different model, every positive control has a negative, and every claim carries its cohort. That caught five of our own errors in seven days, including our headline result. Full history, retractions included: `github.com/Oussema-t/Quantum_allosteric-scanner` (branch `bartosz`), published 2026-09-15.
 

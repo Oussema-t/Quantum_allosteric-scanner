@@ -1,10 +1,5 @@
 # Team Profile — Team AuraQu
 
-*Guidelines §4.1 — a separate submission component, not part of the 6-page
-Concept Proposal, and not counted against its page limit. §4.3 item 7 (Team
-Capability) is answered inside the Concept Proposal itself, briefly; this
-document is the reference material behind that argument.*
-
 ## Team name and lead contact
 
 **Team name**: AuraQu
@@ -83,7 +78,7 @@ The register behind this submission — 350+ task files, 580+
 commits as of `ffcfaca` (2026-09-07) — is too large for one person to
 review unaided, and we would rather say so than pretend to a reading
 nobody performs. The traces that matter — human-in-the-loop decisions,
-team disagreement, how conflicts were resolved — are visible in it, which
+team discussions, hypothesis tensions, and how debates were verified and resolved, how conflicts were resolved — are visible in it, which
 is the evidence for every capability claim in the Concept Proposal. What
 should be judged is whether the verification was real, not how it was
 produced, and we have made that checkable by publishing the working
@@ -101,7 +96,7 @@ mode:
 | Project | Claude Opus 5 | **Adversarial Reviewers / Critics** |
 | Project | Google Gemini 3.X Pro / 3.X Flash | Critics / Reviewers / Researchers / Brainstormers |
 
-Four of the five retractions in the Concept Proposal's Appendix B were
+Four of the five retractions the Concept Proposal reports were
 produced by the adversarial reviewer role attacking work the implementing
 role had just completed and believed correct — catching the proximity
 confound, the missing baseline comparison, a symmetry category error, and a
@@ -110,11 +105,5 @@ miscalibrated test.
 | Artefact | What is in it |
 |---|---|
 | **Repository** `github.com/Oussema-t/Quantum_allosteric-scanner` | The scanner, the pipeline, the analysis scripts behind every number in the Concept Proposal. |
-| **Branch `bartosz`** | 350+ task files · 580+ commits (as of `ffcfaca`, 2026-09-07) · the full falsification record |
-| **Branch `allosteric`** | investigation of various CTQW approaches, hamiltonians, AI/ML methods  |
----
-
-*This document is §4.1's own component. It is not the Concept Proposal and
-is not subject to its 6-page limit. Content parity with the Concept
-Proposal's own §7 is not required — this is the fuller version that §7's
-short capability argument points to, not a duplicate of it.*
+| **Branch `bartosz`** | 400 task files · 374 done · 687 commits (as of `6ccc5f7`, 2026-09-13) · the full falsification record, including every retraction |
+| **Branch `allosteric`** | The seeded-CTQW pipeline and its ensemble sweep: 13 Hamiltonians × 17 scores over 1022 proteins, thirteen classical baselines scored on identical residues at 630-protein scale, and two random-forest models predicting walk configuration from graph topology |

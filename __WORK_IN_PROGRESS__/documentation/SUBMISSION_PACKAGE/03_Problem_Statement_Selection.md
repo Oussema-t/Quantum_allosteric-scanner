@@ -1,15 +1,38 @@
 # Problem Statement Selection
 
-*Phase 1 Submission Guidelines §4.2.*
+**Problem statement addressed:** Cleveland Clinic — *Unlocking undruggable
+targets: quantum simulation of allosteric signal propagation*
+(Global Quantum + AI Challenge 2026, `Cleveland-Clinic-Challenge-Statement-vF-1.pdf`).
 
-**Problem statement addressed:** Cleveland Clinic — *Quantum Allosteric Scanner*
-(Global Quantum + AI Challenge 2026, Enterprise Challenge Statement,
-`Cleveland-Clinic-Challenge-Statement-vF-1.pdf`).
+## How we interpreted it
 
-**One proposal, one problem statement.** We submit to this statement only, so
-§4.2's "each must be a separate submission" rule does not apply.
+Rather than only running the requested algorithm on the provided structures, our
+Phase-1 work audited the challenge's own premise and dataset. Our measurements
+show that the standard benchmark targets conflate **static cavity retrieval** with
+**genuine cryptic-pocket discovery**: roughly half of apo/holo pairs cannot
+express the required contrast at all.
 
-**Targets addressed:** the minimum set required by Challenge Statement §6 — the
-three Table 1 targets (KRAS G12C, BCR-ABL1, cardiac myosin) plus c-Myc — with
-structure substitutions and the reason for each recorded in the Concept Proposal
-and traceable to the organisers' clarification of 2026-08-26.
+Our proposal therefore addresses the challenge's core objective by delivering a
+**validated, unconfounded benchmarking instrument** capable of certifying
+allosteric methods — quantum or classical — alongside the required predictions.
+
+## Targets
+
+We address the complete mandatory set required by Challenge Statement §6: **KRAS
+G12C, BCR-ABL1, cardiac myosin, and c-Myc.**
+
+Four structure choices deviate from Table 1. **Each is stated, with its reason and
+its evidence, in Section 1 of the Concept Proposal**, and each traces to the
+organisers' clarification of 2026-08-26. They are not repeated here: a single
+authoritative statement is less likely to drift than two, and the Concept Proposal
+is the document a reviewer assesses.
+
+## Required outputs
+
+Challenge Statement §5's three deliverables are supplied as follows:
+
+| § 5 output | Where |
+|---|---|
+| **Connectivity Matrix** — N×N quantum connectivity strength | `Connectivity_Matrices.csv` |
+| **Hit List** — top five predicted allosteric residues per target | `Solution_Outputs.pdf`, and machine-readable in the same file set |
+| **Methodological Report** — the quantum metric chosen, and why it proxies biological signal transmission | **Section 2 of the Concept Proposal**, with per-target detail in `Solution_Outputs.pdf` |

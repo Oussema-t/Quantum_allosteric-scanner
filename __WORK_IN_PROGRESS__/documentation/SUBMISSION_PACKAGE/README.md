@@ -1,95 +1,78 @@
 # Phase-1 submission package — Team AuraQu
 
-Assembled 2026-09-11. Sources are the two governing documents, quoted rather than
-remembered:
+Assembled 2026-09-11, restructured 2026-09-13 for the portal's **five-file** limit.
+Sources are the two governing documents, quoted rather than remembered:
 
 - `documentation/2026-04-06-Phase-1-Submission-Guidelines-VF.md` §4 — *what to submit*
 - `documentation/Cleveland-Clinic-Challenge-Statement-vF-1.md` §5 — *what the solution must generate*
 
 ---
 
-## A. Submission components (Guidelines §4)
+## The five files to upload
 
-| § | Required | In this folder | Status |
+| # | file | size | covers |
 |---|---|---|---|
-| 4.1 | Team Profile — team name, **lead contact details**, member descriptions, prior quantum experience | `02_Team_Profile.md` | **Complete** — lead contact is Bartosz Chmura, chmura.quantum@gmail.com, Unaffiliated |
-| 4.2 | Problem Statement Selection | `03_Problem_Statement_Selection.md` | Complete |
-| 4.3 | Concept Proposal, **max 6 pages, PDF** | `01_Concept_Proposal.pdf` | Complete — **body is 6/6 pages, at the limit**, appendix 1/3 |
-| 4.4 | *Optional*: up to 3 pages of appendices; link to a public code repository | appendix is inside the PDF (1 of 3 used); repo link is stated in the Concept Proposal | Complete |
+| 1 | `01_Concept_Proposal.pdf` | 84 K | Guidelines §4.3 **and** Challenge Statement §5's methodological report |
+| 2 | `02_Team_Profile.pdf` | 40 K | Guidelines §4.1 |
+| 3 | `03_Problem_Statement_Selection.pdf` | 28 K | Guidelines §4.2 |
+| 4 | `Connectivity_Matrices.csv` | 13 M | Challenge Statement §5, output 1 |
+| 5 | `Solution_Outputs.pdf` | 56 K | Challenge Statement §5, outputs 2 and 3 |
 
-Also required by §3 and not a file: **the team lead must have accepted the
-Challenge Terms & Conditions at the point of submission.**
+**Total ≈ 14 MB** against the §5 cap of 20 MB. **Markdown is not an accepted upload
+format**, which is why 2, 3 and 5 are PDFs; their `.md` sources sit alongside them
+and are not uploaded.
 
-## B. Solution outputs (Challenge Statement §5)
+### How §5's three outputs are satisfied without a sixth file
 
-All three, for each of the four required targets, under `artefacts/<TARGET>/`:
+| §5 output | where |
+|---|---|
+| **Connectivity Matrix** — N×N, entry (i,j) = quantum connectivity strength | file 4 |
+| **Hit List** — top five predicted allosteric residues per target | file 5 (and machine-readable under `artefacts/`) |
+| **Methodological Report** — the metric, and why it proxies signal transmission | **Section 2 of the Concept Proposal**, which now says so in its own heading; per-target detail in file 5 |
 
-| # | Required output | File | Form |
+## File 4 — how the matrices were combined
+
+Four targets with different N cannot share one wide CSV, and archives are not an
+accepted format, so the matrices are in **long form**:
+
+```
+target,pdb_id,residue_i,residue_j,value
+```
+
+- **Upper triangle only.** Each matrix was checked symmetric on export, so (j,i)
+  equals (i,j) and listing both would double the file for no information.
+- `residue_i`/`residue_j` are **PDB residue numbers as deposited**, not array
+  indices. The two differ for three of the four targets.
+- Values are dimensionless transport weights to 6 significant figures.
+- **379,327 rows**, and the reconstruction was verified: cardiac myosin's full
+  704×704 was rebuilt from the CSV and compared to the source array —
+  `allclose` at rtol 1e-5, max absolute difference 4.9e-07.
+
+| target | structure | N | pairs |
 |---|---|---|---|
-| 1 | **Connectivity Matrix** — N×N, entry (i,j) = quantum connectivity strength between residues i and j | `<TARGET>/connectivity_matrix.csv` | first row and first column are PDB residue numbers, so the file is self-describing; 6 significant figures, round-trip verified |
-| 2 | **Hit List** — top 5 predicted allosteric sites per target | `hit_list_all_targets.csv` + `<TARGET>/hit_list.json` | CSV is the consolidated ranked view; the JSON adds score/floor CIs and the per-target verdict |
-| 3 | **Methodological Report** — the quantum metric and why it proxies biological signal transmission | `report.txt` per target; the argument itself is Section 2 of the Concept Proposal | |
+| KRAS_G12C | `4LDJ` (apo) | 170 | 14,535 |
+| BCR_ABL1 | `1OPL` (apo) | 451 | 101,926 |
+| CARDIAC_MYOSIN | `8QYP` (apo) | 704 | 248,160 |
+| MYC_MAX | `1NKP` | 171 | 14,706 |
 
-### Matrix dimensions, as shipped
+**`8QYP` is the apo input. `8QYR` is the mavacamten-bound holo validation
+structure and is not in these matrices** — an earlier draft of this file had that
+backwards.
 
-| target | N | top-5 (PDB residue numbers) |
-|---|---|---|
-| KRAS_G12C | 170 | 31, 122, 33, 121, 29 |
-| BCR_ABL1 | 451 | 402, 311, 310, 301, 338 |
-| CARDIAC_MYOSIN | 704 | 682, 683, 681, 680, 133 |
-| MYC_MAX | 171 | 943, 246, 925, 226, 243 |
+## Not uploaded, kept for provenance
 
-The five residues in each row match the Concept Proposal's own five-guess table
-exactly — checked, not assumed.
+`artefacts/` holds the per-target sources these files were built from — the
+individual matrices, the hit-list JSON with its confidence intervals, and each
+target's `report.txt`. They are the inputs to files 4 and 5, not additional
+submission components.
 
-Package size: **8.8 MB** (see §C — this line previously said 6.3 MB, stale
-from before §C's own artefact-format conversion; TASK-0370, item 26).
-
----
-
-## C. The solution outputs are in, in conventional formats
-
-**Settled by the organisers, 2026-09-11.** Asked whether §5's connectivity matrix,
-hit list and methodological report have required file formats, they answered:
-
-> *"No specific formats are prescribed. Please use formats accessible with
-> conventional software."*
-
-They answered the format question rather than saying the outputs belong to Phase 2
-— so we treat them as expected now and ship them.
-
-**Consequence, acted on:** the matrices were `.npz` (NumPy), which is **not**
-accessible with conventional software. They are now **CSV**, with PDB residue
-numbers as both the first row and the first column, so each file is
-self-describing and opens in Excel, R, pandas or a text editor. The `.npz` copies
-were dropped from the package rather than shipped alongside — same data, less
-accessible format, and two copies invites a question about which is authoritative.
-They remain in the repository.
-
-Round-trip verified on export: re-reading each CSV reproduces the source array to
-`rtol=1e-5`. Symmetry checked, not assumed.
-
-Added a consolidated `artefacts/hit_list_all_targets.csv` and
-`artefacts/README.md` describing all three output types and their columns.
-
-**Package total: 8.8 MB**, against the §5 cap of 20 MB.
-
-## D. Open items before this can be sent
+## Open items before upload
 
 1. **Terms & Conditions acceptance** by the team lead at the point of submission (§3).
-2. **`CARDIAC_MYOSIN_TABLE1` produced only an `error.txt`** and is deliberately not
-   included: the Table-1-mandated structure could not be processed, and our own
-   substitute apo/holo pair (`8QYP`/`8QYR` — see `artefacts/README.md`'s
-   TASK-0370 correction; not "Table-1 structure → substitute", both `8QYP` and
-   `8QYR` are ours) was accepted as primary by the organisers. The shipped
-   `CARDIAC_MYOSIN` artefacts are this substitute pair. **The Concept Proposal's
-   own stated substitution reason is still open — tracked against [[TASK-0368]]/
-   the external review's item 4, not this correction.**
-3. **Body is at 6 of 6 pages.** Any further addition to the Concept Proposal now
-   requires removing something. One appendix page of the three remains.
-
-## E. Not part of the submission
-
-The task register, the version ledger, and the `_build_latex` working directory
-are development artefacts. The public repository link in the Concept Proposal is
-how a reviewer reaches them if they want to.
+2. **The repository is published on 2026-09-15.** The Concept Proposal states that
+   date, so a reviewer following the link before then sees a stated fact rather
+   than a 404. If uploading earlier, confirm the portal does not surface links to
+   reviewers before the deadline closes.
+3. `CARDIAC_MYOSIN_TABLE1` produced only an `error.txt` and is deliberately absent:
+   the Table-1 structure could not be processed, and the substitution was accepted
+   as primary by the organisers.
