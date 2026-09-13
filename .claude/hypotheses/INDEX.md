@@ -9,8 +9,8 @@ file did not silently fall behind its own source files.
 
 | id | claim | status | citing tasks |
 |---|---|---|---|
-| [[HYP-P13]] | Allostery is stabilisation of an otherwise-disfavoured conformation, not a signal propa... | 2026-09-08 | 20 |
-| [[HYP-P8]] | For several targets, the apo contact graph does not contain the allosteric pocket signa... | 2026-09-04 | 13 |
+| [[HYP-P13]] | Allostery is stabilisation of an otherwise-disfavoured conformation, not a signal propa... | 2026-09-08 | 22 |
+| [[HYP-P8]] | For several targets, the apo contact graph does not contain the allosteric pocket signa... | 2026-09-04 | 14 |
 | [[HYP-P9]] | A chiral (broken-time-reversal) walk yields a proximity-orthogonal, directional loop ob... | 2026-09-03 | 12 |
 | [[HYP-P14]] | The discriminator is blocked by a single confound, and only a proximity-orthogonal obse... | 2026-09-04 | 9 |
 | [[HYP-P7]] | Coherence adds no signal for allosteric pocket prediction on these proteins | 2026-09-10 | 7 |
@@ -34,6 +34,7 @@ file did not silently fall behind its own source files.
 | [[HYP-P5]] | H13 (full 3N ANM Hessian) sets a performance ceiling that H_new cannot reach | 2026-07-18 | 2 |
 | [[HYP-P26]] | Computationally stripping a holo structure's ligand is not apo-isation, and cryptic-poc... | 2026-09-07 | 2 |
 | [[HYP-P29]] | ASBench's aromatic-residue enrichment at allosteric sites is burial and ligand contact,... | 2026-09-12 | 2 |
+| [[HYP-P31]] | The seed set is a real, high-capacity overfitting axis the submission's own multiplicit... | 2026-09-12 | 2 |
 | [[HYP-S3]] | Overlap measures magnitude; hardness is set by coupling; they are orthogonal | 2026-08-12 | 2 |
 | [[HYP-P15]] | `dcc_low`'s cryptic-pocket signal generalizes across targets; the transport observable'... | 2026-07-24 | 1 |
 | [[HYP-P18]] | On real, field-annotated ground truth, this register's observables do not beat random a... | 2026-09-06 | 1 |
@@ -41,7 +42,7 @@ file did not silently fall behind its own source files.
 | [[HYP-P24]] | V_C separates allosteric from orthosteric holo sites, but tracks occupancy/coupling-cap... | 2026-08-28 | 1 |
 | [[HYP-P27]] | The register's own "7 audited, 2 pass" blind-validity headline is a property of the man... | 2026-09-08 | 1 |
 | [[HYP-P30]] | KRAS_G12C's headline number is reproducible to every decision-relevant digit across thr... | 2026-09-12 | 1 |
-| [[HYP-P31]] | The seed set is a real, high-capacity overfitting axis the submission's own multiplicit... | 2026-09-12 | 1 |
+| [[HYP-P32]] | COREX/EAM ensemble coupling between BCR-ABL1's myristoyl and ATP sites is real but smal... | 2026-09-13 | 1 |
 | [[HYP-P16]] | The pipeline's own statistical test lacks power to detect a real signal at realistic st... | 2026-07-31 | 0 |
 | [[HYP-P17]] | Purpose-built cryptic/allosteric-pocket predictors do not close this register's own res... | 2026-08-25 | 0 |
 | [[HYP-P20]] | This register's pocket labels cannot express ligand-dependent allostery; BCR-ABL1's own... | 2026-08-25 | 0 |

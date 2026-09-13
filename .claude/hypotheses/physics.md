@@ -2473,3 +2473,83 @@ this task's own Constraint, makes that a different, larger measurement
 this task does not attempt. Also does not change any shipped seed,
 residue, or number — flagged for the next submission-drafting pass, not
 acted on here.
+
+## HYP-P32 · COREX/EAM ensemble coupling between BCR-ABL1's myristoyl and ATP sites is real but small, does not discriminate nilotinib from dasatinib, and its own coupling metric is asymmetric between regions of different intrinsic stability — diagnosed, not a bug
+
+**Claim.** [[TASK-0377]]'s Tier 0 names COREX/EAM (ref [4], Motlagh, Wrabl,
+Li & Hilser 2014, *Nature* 508:331 — a partition-function view of
+allosteric coupling over folded/unfolded microstates) as CPU-only,
+GPU-independent, and the mechanism the field's own thermodynamics
+literature considers dominant. The pre-registered question: does a
+crude, no-MD, no-fitted-parameter ensemble model reproduce the published
+pharmacological asymmetry that asciminib enhances nilotinib but not
+dasatinib? A precondition must hold first: nilotinib and dasatinib must
+contact materially different residue sets, or a coarse windowed-region
+model cannot discriminate them regardless of any real biology.
+
+**Status, 2026-09-13 ([[TASK-0381]]): TESTED — coupling exists, is real
+but small, does not discriminate the two inhibitors (for a diagnosed
+reason), and the coupling metric itself is asymmetric between regions of
+different baseline stability (diagnosed as a log-odds transform artifact,
+not a code defect).**
+
+**A real numbering trap reversed the precondition gate's own first
+answer.** Nilotinib/asciminib contacts (`5MO4`, one chain, one numbering)
+mapped cleanly onto the apo structure (`1OPL`); dasatinib's contacts
+(`2GQG`) did not (1/21 identity match) until the same **+19 Abl-1b
+offset** [[TASK-0377]] already documented for T315I/T334I was applied
+(21/21 after correction). Raw resnums gave nilotinib-vs-dasatinib
+Jaccard 0.09 (looks near-disjoint); corrected, Jaccard **0.567** — 17/21
+(81%) of dasatinib's contacts are also nilotinib contacts. Real, but far
+weaker discriminating capacity than the uncorrected number suggested.
+
+**Four-state cycle** (`corex.py`'s own already-existing `coupling_score`
+mechanism, generalized from single-residue to named-region
+perturbation — no new code in `corex.py` itself): coupling
+myristoyl→ATP-site = **+0.0106 kcal/mol**; ATP-site→myristoyl =
+**+0.1422 kcal/mol** — both correctly signed (stabilizing one site
+destabilizes the other's own folding), both small against the 3 kcal/mol
+stabilization bonus driving them (<5% propagation either way).
+
+**The filing's own "symmetric by construction, asymmetry is a bug
+signal" claim is falsified for the dGf-based metric — and the reason is
+diagnosed, not left as an anomaly.** A genuine Maxwell-relation-type
+reciprocity does guarantee symmetry, but only for the RAW (linear)
+unfolded-population response in the infinitesimal-bonus limit — tested
+directly by sweeping the bonus toward zero: the raw-population coupling
+ratio converges to **1.000** (confirming the underlying thermodynamics is
+sound, not a bug), while the dGf-based ratio stays near **0.08** even in
+that same limit. Mechanism: myristoyl (baseline unfolded probability
+0.0142) and the ATP site (0.2131) sit at very different points on dGf's
+own nonlinear log-odds curve — a 15× baseline-stability difference — so
+the same symmetric linear response, passed through `dGf = -RT·ln(folded/
+unfolded)` at two different operating points, comes out asymmetric.
+**General lesson for any future use of `coupling_score`-style aggregate
+dGf readouts**: they are not comparable in magnitude, and not
+exchange-symmetric, between two regions of very different intrinsic
+stability — a real, previously undocumented property of this metric,
+not specific to BCR-ABL1.
+
+**Discriminative control does not discriminate — and now the reason is
+known, not mysterious.** Coupling myristoyl→nilotinib-site (+0.01063
+kcal/mol) and myristoyl→dasatinib-site (+0.01062 kcal/mol, corrected
+numbering) are indistinguishable. Given the corrected gate's own 81%
+contact overlap, this is exactly what a coarse windowed-region model
+should produce — not a null pharmacological result, a direct consequence
+of the two ligands sharing most of their own footprint at this level of
+resolution.
+
+**Read against the pre-registered prediction**: "coupling exists and is
+non-trivial" holds partially (real, correctly signed, reproducible, but
+small); "dasatinib discrimination is genuinely uncertain" resolves to
+does-not-discriminate, for a mechanistic reason rather than an
+unexplained gap. Ordinal only throughout — no comparison to the ~7
+kcal/mol DFT estimate or the ≈0.4-0.9 kcal/mol IC50-derived figure, per
+this task's own Constraint.
+
+**What this does not show:** whether a finer-grained (non-windowed, or
+smaller-window) COREX construction would discriminate the two ligands
+better; whether the dGf-asymmetry finding generalizes beyond this
+specific two-region case (tested on exactly one pair, M vs T, on one
+protein); Tier 1 (MM/GBSA) remains the un-run, GPU-gated arm this Tier-0
+result sits alongside, not in place of.

@@ -13470,3 +13470,86 @@ avoid misattributing it).
 **Files**: `scripts/task0380_seed_location_residualisation.py`. **Data**:
 `results/tasks/0380_seed_location_residualisation/{result.json,run_log.txt}`.
 **Full detail**: `.ai/tasks/DONE/TASK-0380-where-are-the-best-seeds.md`.
+
+## COREX/EAM coupling exists between BCR-ABL1's myristoyl and ATP sites, is small, does not discriminate nilotinib from dasatinib, and its own metric is asymmetric between regions of different stability — diagnosed, not a bug ([[TASK-0381]], 2026-09-13)
+
+Tier 1 (MM/GBSA) is GPU-gated; Tier 0 (COREX/EAM, [[TASK-0229.006]]) is
+not — CPU-only, and it tests the mechanism the field's own thermodynamics
+literature (Motlagh, Wrabl, Li & Hilser 2014, *Nature* 508:331) considers
+dominant: allosteric coupling as a partition-function quantity over
+folded/unfolded microstates, not a pathway on a contact graph.
+
+**A real numbering trap caught before trusting the precondition gate.**
+The gate requires nilotinib and dasatinib to contact materially different
+residue sets, or a coarse windowed-region model cannot discriminate them
+by construction. Nilotinib/asciminib contacts (`5MO4`, one chain, one
+numbering) mapped cleanly onto the apo structure (`1OPL`, 25/26 and
+20/20 identity matches). Dasatinib's contacts (`2GQG`) did not — 1/21
+identity match at raw resnums — until [[TASK-0377]]'s own documented
+Abl-1b **+19 numbering offset** (the same one behind that task's
+T315I/T334I finding) was applied: 21/21 after correction. **Raw resnums
+give a false pass** (nilotinib-vs-dasatinib Jaccard 0.09, looks
+near-disjoint); **corrected, Jaccard is 0.567** — 17/21 (81%) of
+dasatinib's own contacts are also nilotinib contacts. Real, but far
+weaker discriminating capacity than the uncorrected number suggested.
+Proceeded on the corrected numbers, with every downstream result read
+against this real overlap.
+
+**Planned Validation passed twice.** `corex.py`'s own sanity check
+reproduces [[TASK-0229.006]]'s committed KRAS_G12C/PTP1B numbers exactly
+(ρ=−0.365/−0.2979, p=1.06×10⁻⁶/1.61×10⁻⁷, matching to every printed
+digit); BCR_ABL1 itself also passes the same qualitative gate
+(ρ=−0.2693, p=6.2×10⁻⁹). The empty-perturbation no-op check reproduces
+the unperturbed dGf to the last digit.
+
+**Item 1 needed no new code**: `corex.py::coupling_score` already
+implements the "folded constraint" mechanism this task asked to add —
+generalized here from single-residue to an arbitrary named region (the
+same math [[TASK-0229.006]]'s own per-candidate sweep already validated),
+`corex.py` itself untouched.
+
+**Four-state cycle**: coupling myristoyl→ATP-site = **+0.0106 kcal/mol**;
+ATP-site→myristoyl = **+0.1422 kcal/mol**. Both correctly signed
+(stabilizing one site destabilizes the other's own folding a little),
+both small against the 3 kcal/mol stabilization bonus driving them
+(<5% propagation either way) — real, but not "non-trivial" in the sense
+the pre-registered prediction hoped for.
+
+**The filing's own "symmetric by construction, asymmetry is a bug
+signal" claim is falsified for the dGf-based metric — and the reason is
+diagnosed, not left as an anomaly.** A genuine Maxwell-relation-type
+reciprocity guarantees symmetry for the RAW (linear) unfolded-population
+response, in the infinitesimal-bonus limit — tested directly by sweeping
+the bonus toward zero: the raw-population coupling ratio converges to a
+perfect **1.000** (confirming the underlying thermodynamics holds, not a
+bug), while the dGf-based ratio stays near **0.08** even in that same
+limit. Mechanism: myristoyl (baseline unfolded probability 0.0142) and
+the ATP site (0.2131) sit at a **15× different** point on dGf's own
+nonlinear log-odds curve, so the same symmetric linear response, passed
+through `dGf = -RT·ln(folded/unfolded)` at two different operating
+points, comes out asymmetric. **General lesson for any future
+`coupling_score`-style aggregate dGf readout**: not comparable in
+magnitude, and not exchange-symmetric, between two regions of very
+different intrinsic stability.
+
+**Discriminative control does not discriminate — and the reason is now
+known.** Coupling myristoyl→nilotinib-site (+0.01063 kcal/mol) and
+myristoyl→dasatinib-site (+0.01062 kcal/mol, corrected numbering) are
+indistinguishable. Given the corrected gate's own 81% contact overlap,
+this is exactly what a coarse windowed-region model should produce, not
+an unexplained pharmacological null.
+
+**Read against the pre-registered prediction**: "coupling exists and is
+non-trivial" holds partially (real, correctly signed, reproducible, but
+small); "dasatinib discrimination is genuinely uncertain" resolves to
+does-not-discriminate, for a diagnosed mechanistic reason. Ordinal only
+throughout — no comparison to the ~7 kcal/mol DFT estimate or the
+≈0.4-0.9 kcal/mol IC50-derived figure, per this task's own Constraint.
+
+Landed as new hypothesis **HYP-P32** in `physics.md`. `INDEX.md`
+regenerated.
+
+**Files**: `scripts/task0381_corex_bcr_abl1_coupling.py`. **Data**:
+`results/tasks/0381_tier0_corex_bcr_abl1/{precondition_gate.json,
+result.json}`. **Full detail**:
+`.ai/tasks/DONE/TASK-0381-tier0-corex-coupling-bcr-abl1.md`.
