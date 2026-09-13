@@ -32,7 +32,7 @@ Active site vs allosteric pocket: KRAS overlaps (switch-II, 4 shared residues); 
 (myristoyl), cardiac (converter, ~30 Å from the P-loop) and HIV-1 RT (NNRTI pocket) are distal.
 
 Selection is **best-of-221 cells by P@5** (13 Hamiltonians × 17 scores), seeded by the
-consensus of fpocket druggability and PASSer allostery (top-10, MIN_HOP 2). These are
+consensus of fpocket druggability and PASSer allostery (top-10; the distal filter is MIN_HOP 1 for KRAS, whose switch-II pocket abuts the active site, and MIN_HOP 2 for BCR-ABL1, cardiac myosin and HIV-1 RT). These are
 selection ceilings, not blind performance (see Appendix B.3). **Cardiac's best-operator
 label is a near-tie that varies run-to-run** (the 15-residue pocket in 704 residues makes
 AUC-based operator selection unstable); what is stable is that the consensus seeding
