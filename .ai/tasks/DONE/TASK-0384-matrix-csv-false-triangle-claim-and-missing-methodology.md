@@ -1,11 +1,12 @@
 # TASK-0384 — The matrix CSV states a false reconstruction rule, and output 1's methodology is in a file nobody receives
 
-- Status: TODO
+- Status: Done
 - Owner: Implementer
 - Priority: **High and FREE — costs no Concept Proposal page budget.** Take this one regardless of what is decided about §1's space.
 - Filed: 2026-09-13 by Reviewer thread
 - Source: [[REVIEW-2026-09-13-adversarial-submission-package]] §A3, §D
 - Related: [[TASK-0370]]
+- Done: 2026-09-13, Implementer B
 
 ## Part 1 — "upper triangle only" is false, and it can actively mislead
 
@@ -93,3 +94,84 @@ survive that check and ours does.
 - Part 3 and Part 4 decided in writing here, not left implicit.
 - Round-trip re-verified after any header change (the parser must still skip the
   right number of lines).
+
+## Done (2026-09-13, Implementer B)
+
+All five parts closed. No shipped residue, matrix, or headline AUC changed —
+this task is disclosure/documentation only. Independently re-verified every
+claimed number rather than transcribing the reviewer's or the task's own prose.
+
+**Part 1 — false triangle claim, fixed.** Reworded both live copies:
+`Connectivity_Matrices.csv` header line 2 and `SUBMISSION_PACKAGE/README.md`
+("Upper triangle only" bullet). Both now say "each unordered pair is listed
+exactly once, in each matrix's own row/column order (not sorted)." Confirmed by
+`grep -rn "pper triangle\|only i <= j"` across `*.md`/`*.csv`: the only matches
+left are inside `.ai/tasks/`, `.ai/reviews/`, and `.ai/COMMON.md` — the task and
+review records themselves, which are historical and correctly left as-is.
+
+Re-verified the reviewer's row-count table from raw bytes (not trusted):
+
+| target | rows | `residue_i > residue_j` |
+|---|---:|---:|
+| KRAS_G12C | 14,535 | 0 |
+| BCR_ABL1 | 101,926 | 0 |
+| CARDIAC_MYOSIN | 248,160 | 0 |
+| MYC_MAX | 14,706 | 7,304 |
+
+Exact match. Also independently confirmed MYC_MAX's residue numbering: 171
+distinct residue numbers, contiguous 202–284 (83 residues) and 897–984 (88
+residues), one gap between 284 and 897 — the two chains genuinely do not
+overlap, so a reader cannot silently collide them even without a chain column.
+
+**Part 2 — methodology, moved into the uploaded file.** All four sentences from
+`artefacts/README.md` (entry = time-averaged transition probability; each row
+sums to 1 ± 1e-6; diagonal is the row max in ~78% of rows, checked on
+CARDIAC_MYOSIN; naive heatmap reads diagonal-dominated, not a defect) are now in
+`Connectivity_Matrices.csv`'s own header comment block — the file the scorer
+actually receives.
+
+**Part 3 — decided: keep the `#` comments and expand them**, per the reviewer's
+own read. Rationale adopted as-is: a scorer that cannot pass `comment='#'` to a
+CSV reader is not reconstructing the matrix regardless of header length, and
+moving the prose to file 5 (the PDF) would recreate the exact defect Part 2
+fixes — output 1's methodology landing somewhere the scorer for output 1 doesn't
+look. Header grew from 4 comment lines to 12; round-trip re-verified after the
+edit (see Planned Validation below) — `comment='#'` skip still lands exactly on
+the `target,pdb_id,...` header row and all 379,327 data rows parse.
+
+**Part 4 — decided: no `chain` column.** Cheaper option taken, per the task's
+own suggestion: the header now states MYC_MAX's two chain ranges explicitly
+(897–984 / 202–284) and that they don't overlap, so a `(residue_i, residue_j)`
+pair is unambiguous without a chain field. Verified the ranges are genuinely
+disjoint (previous paragraph) rather than assuming the reviewer's numbers were
+current.
+
+**Part 5 — added the checkable reconstruction claim.** Independently reproduced
+the reviewer's adversarial check rather than citing it on trust: rebuilt each of
+the four `artefacts/<target>/<target>_connectivity_matrix.csv` wide matrices
+from the shipped long-form CSV, on 2,000 randomly sampled entries per target
+(`rng` seed 42) —
+
+| target | max reconstruction diff | max asymmetry (source matrix) |
+|---|---:|---:|
+| KRAS_G12C | 0.0 | 0.0 |
+| BCR_ABL1 | 0.0 | 0.0 |
+| CARDIAC_MYOSIN | 0.0 | 0.0 |
+| MYC_MAX | 0.0 | 0.0 |
+
+Exact match to the reviewer's own numbers (max |diff| = 0.0, symmetric to
+numerical precision, zero missing lookups once order-dependent pair storage —
+the same non-sorted convention Part 1 documents — is accounted for). One line
+added to `SUBMISSION_PACKAGE/README.md` stating this, as the task requested.
+
+**Planned Validation.** `comment='#'` parse of the edited
+`Connectivity_Matrices.csv` reproduces 379,327 total data rows and the
+per-target row counts in the table above, unchanged from before the header
+edit — confirms the header rewrite did not shift or corrupt any data row.
+
+**Not done / explicitly out of scope.** No code change: nothing in the repo
+parses this CSV with a hardcoded comment-line count (`grep -rn "skiprows"`
+across `*.py`: no hits), so the header-length change needed no code update.
+TASK-0169-style historical citations are untouched; this task only touches the
+two live copies of the false claim plus the CSV header and the one new README
+line.
