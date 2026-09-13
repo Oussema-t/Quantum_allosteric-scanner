@@ -172,7 +172,7 @@ A second pipeline on the `allosteric` track (PASSer detection, 630 proteins in 3
 
 **B.1 The construction.** Residues are C-alpha nodes, edges within 10 A; the walk is `U(t)=exp(-iHt)` seeded at the active site, read as the converged average `p_avg(s->a)=sum_k |v_k(s)|^2 |v_k(a)|^2` -- a sum of squares, hence phase-free. The **connectivity matrix** `C_ij` (first required deliverable) is that average-mixing matrix, `(V o V)(V o V)^T`: symmetric, row-stochastic, operator-only. Thirteen operators (four weightings x three normalisations, plus `H_new = L_sym + diag(0.08 V_B + 0.16 V_T + 0.08 V_R + 0.04 V_C + 0.04 V_M)`) x seventeen scores give the 221 cells. `neg_dE`, the strongest single score, is time-independent and equals `sqrt(sum_j W_ij^2)` to machine precision -- a classical local statistic, so it cannot carry interference.
 
-**B.2 Per-target connectivity.** Best and worst cell per mandated target, each selected across all 221 cells (13 Hamiltonians x 17 scores) by P@5. Connectivity matrices and top-5 x active-site sub-blocks are in `results/connectivity/`.
+**B.2 Per-target connectivity.** Best and worst cell per target -- the three mandated (KRAS, BCR-ABL1, cardiac myosin) plus one additional allosteric target (HIV-1 RT, the NNRTI pocket) -- each selected across all 221 cells (13 Hamiltonians x 17 scores) by P@5, all seeded identically (consensus of fpocket druggability and PASSer allostery, top-10, MIN_HOP 2). Connectivity matrices and top-5 x active-site sub-blocks are in `results/connectivity/`.
 
 | target (apo) | cell | operator / score | AUC | P@5 |
 |---|---|---|---|---|
@@ -182,8 +182,10 @@ A second pipeline on the `allosteric` track (PASSer detection, 630 proteins in 3
 | BCR-ABL1 (`1OPL`) [1-3] | worst | `H5_gauss` / ratio p_peak/p_avg | 0.227 | 0.0 |
 | Cardiac myosin (`8QYP`->`8QYR`) [15] | best | `H3_normL` / dX dip depth | 0.685 | 0.4 |
 | Cardiac myosin (`8QYP`->`8QYR`) [15] | worst | `H8_gnm` / -dD mean | 0.068 | 0.0 |
+| HIV-1 RT (`1DLO`->`3V81`, NNRTI) | best | `H14_anmP` / p_peak | 0.963 | 0.8 |
+| HIV-1 RT (`1DLO`->`3V81`, NNRTI) | worst | `H14_anmP` / Green E=lmax | 0.196 | 0.0 |
 
-*Table B.2 -- best and worst of 221 cells per target, chosen by P@5. `4LDJ` is true G12C (`4OBE` is wild-type at residue 12); `1OPL` has myristate pre-bound; cardiac myosin's pocket is reached only once seeded at top-10. The AUC spread on one protein (0.63/0.57/0.62) is the operator-and-score choice alone; the pre-registered `H_new` cell is an honest negative on all three (KRAS 0.479 p=0.57, BCR 0.411 p=0.84, myosin 0.601 p=0.12).*
+*Table B.2 -- best and worst of 221 cells per target, chosen by P@5. `4LDJ` is true G12C (`4OBE` is wild-type at residue 12); `1OPL` has myristate pre-bound; cardiac myosin's and HIV-1 RT's pockets are reached only once seeded by the consensus (their true pocket ranks outside fpocket's top-10 on druggability alone but 3rd on PASSer allostery). Best and worst share the protein, seeding and scoring, so the AUC spread (0.63/0.57/0.62/0.77) is the operator-and-score choice alone -- on HIV-1 RT the same operator (`H14_anmP`) is both best and worst depending on the score. The pre-registered `H_new` cell is an honest near-negative on all four (KRAS 0.479 p=0.57, BCR 0.411 p=0.84, myosin 0.601 p=0.12, HIV-1 RT 0.665 p=0.060).*
 
 **B.3 Seeded-CTQW vs classical baselines, 630 proteins.** Pipeline: PASSer top-10 -> drop the active-site pocket -> distal `MIN_HOP` filter -> CTQW -> PocketMiner veto [6] (apo-ligand protected) -> CTQW -> rank pockets, one fixed operator+score. Hit-list counts on identical residues (MIN_HOP=1; P@5 with AUC>=0.6):
 
