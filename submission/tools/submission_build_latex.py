@@ -133,6 +133,9 @@ LATEX_PREAMBLE = r"""\documentclass[10pt,a4paper,twocolumn]{article}
 %% 1--7 exactly as the Guidelines require, rather than renumbering them.
 \setcounter{secnumdepth}{0}
 \usepackage{booktabs}
+\usepackage{graphicx}
+\providecommand{\pandocbounded}[1]{#1}
+%(graphicspath)s
 \usepackage{array}
 \usepackage{calc}
 \usepackage{xcolor}
@@ -463,15 +466,42 @@ def mark_appendix_start(tex: str, appendix_heading_pattern: Optional[str]) -> st
     return tex[:line_end + 1] + marker + tex[line_end + 1:]
 
 
+
+_FIGURE_IMG_RE = re.compile(
+    r"\\begin\{figure\}\n"
+    r"(?P<pre>.*?)"
+    r"\\includegraphics\[[^\]]*\]\{(?P<img>[^}]+)\}"
+    r"(?P<mid>.*?)"
+    r"\\end\{figure\}\n",
+    re.S)
+
+def widen_figures(tex: str) -> str:
+    """Every pandoc image figure -> a full-width figure* (starred float, the
+    twocolumn-class full-width mechanism), image at \\textwidth, caption kept."""
+    def repl(m: "re.Match") -> str:
+        img = m.group("img")
+        cap = ""
+        cm = re.search(r"\\caption\{(?P<c>.*)\}\n", m.group("mid"), re.S)
+        if cm:
+            # plain centered line, no \caption* -> avoids the "Figure N:" auto-label
+            cap = "\\smallskip\\par{\\itshape %s}\n" % cm.group("c").strip()
+        return ("\\begin{figure*}[t]\\centering\n"
+                "\\includegraphics[width=\\textwidth]{%s}\n%s"
+                "\\end{figure*}\n" % (img, cap))
+    return _FIGURE_IMG_RE.sub(repl, tex)
+
 def build_latex_source(pandoc: str, md_path: Path,
                        appendix_heading_pattern: Optional[str] = None) -> str:
     md_text = _preprocess_markdown(md_path.read_text(encoding="utf-8"))
     body = md_to_latex_body(pandoc, md_text)
     body = widen_tables_to_full_width(body)
     body = widen_code_blocks(body)
+    body = widen_figures(body)
     body = mark_appendix_start(body, appendix_heading_pattern)
+    _figdir = (md_path.resolve().parent / "figures")
+    _gpath = ("\\graphicspath{{%s/}}" % _figdir) if _figdir.is_dir() else ""
     preamble = LATEX_PREAMBLE % {"margin": MARGIN_MM, "fontpt": BODY_FONT_PT,
-                                 "leadpt": BODY_LEADING_PT}
+                                 "leadpt": BODY_LEADING_PT, "graphicspath": _gpath}
     return preamble + body + LATEX_POSTAMBLE
 
 
