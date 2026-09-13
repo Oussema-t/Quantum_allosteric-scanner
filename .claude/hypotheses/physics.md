@@ -2474,6 +2474,47 @@ this task does not attempt. Also does not change any shipped seed,
 residue, or number — flagged for the next submission-drafting pass, not
 acted on here.
 
+**Status update, 2026-09-13 ([[TASK-0380]]): the capacity is
+substantially, not entirely, a location effect.** [[TASK-0379]] never
+persisted the 2000+2000 draws, only summary statistics; [[TASK-0380]]
+recovered them exactly (`np.random.default_rng(det_seed(target))` draws
+in the same fixed order, validated bit-for-bit against every committed
+number above before anything further was computed) and rank-residualised
+each seed set's AUC on its own Ca-centroid distance to the true pocket
+centroid ([[TASK-0310]]'s own residualisation convention).
+
+| target | excess before → after, residue (p) | excess before → after, patch (p) |
+|---|---|---|
+| KRAS_G12C | +0.143 → −0.001 (0.505) | +0.287 → −0.084 (0.965) |
+| BCR_ABL1 | +0.149 → +0.052 (0.070) | +0.331 → −0.006 (0.530) |
+| CARDIAC_MYOSIN | +0.160 → +0.056 (0.050) | +0.313 → +0.126 (0.020) |
+| PTP1B | +0.113 → +0.074 (0.055) | +0.218 → +0.092 (0.050) |
+| GLUCOKINASE | +0.131 → +0.064 (0.050) | +0.268 → +0.041 (0.205) |
+
+Averaged over these 5: distance residualisation removes **65% of the
+residue-family excess and 88% of the patch-family excess** — confirming
+the seed behaves substantially as a location parameter, as this task's
+own working hypothesis anticipated. **Not a clean full vanish**:
+CARDIAC_MYOSIN's patch excess survives at nominal p=0.020, and 4 of the
+10 target x family cells sit at nominal p=0.05-0.074 — but **none of the
+10 comparisons would survive Bonferroni correction for having run 10**
+(threshold p<0.005). Read plainly: location explains most, and what
+nominally remains is not distinguishable from this task's own
+multiplicity once accounted for. KRAS_G12C/BCR_ABL1 — the two targets
+whose true active site sits almost exactly at the pocket itself
+(0.0th/0.2nd percentile of the random-seed distance distribution) — are
+exactly the two whose excess collapses most completely, an internally
+consistent detail rather than a separate finding.
+
+No feature among betweenness/closeness/degree centrality, burial (SASA),
+a GNM hinge-residue proxy, or sequence conservation concentrates the
+top-scoring scattered seeds consistently across targets (|rho|<0.28,
+inconsistent sign target-to-target); CARDIAC_MYOSIN — the one target
+with a surviving nominal residual — has no usable conservation data
+(Pfam match mapped 0/704 residues, disclosed as unavailable rather than
+fabricated). Full detail: `.ai/tasks/DONE/TASK-0380-where-are-the-best-
+seeds.md`.
+
 ## HYP-P32 · COREX/EAM ensemble coupling between BCR-ABL1's myristoyl and ATP sites is real but small, does not discriminate nilotinib from dasatinib, and its own coupling metric is asymmetric between regions of different intrinsic stability — diagnosed, not a bug
 
 **Claim.** [[TASK-0377]]'s Tier 0 names COREX/EAM (ref [4], Motlagh, Wrabl,
