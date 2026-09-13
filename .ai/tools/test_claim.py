@@ -928,5 +928,71 @@ class TestAddAttributedStageAndAnnotate:
         assert guard.returncode == 0, guard.stderr
 
 
+class TestGitExecutionErrorDetection:
+    """TASK-0375, second occurrence: `_perform_transition`'s `tracked`/
+    `final_tracked` checks and `_is_tracked` all read a git subprocess's
+    `returncode == 0` alone to answer a yes/no question -- so when git
+    itself fails to run at all (this machine's xcrun/CLT breakage, exit 1
+    or 128 just like a legitimate negative answer), the failure was
+    silently indistinguishable from "no" and `move` reported success while
+    its own `git mv` silently never ran. `_run_git_bool_check` is the fix:
+    only trust a nonzero exit as a real negative if stderr actually looks
+    like git ran and answered.
+
+    Mocked, not scratch-repo-based (unlike every other class in this file)
+    -- deliberately: reproducing a genuine git-execution failure needs
+    breaking git itself, which isn't something a test should do to the
+    environment it runs in. Imports the real `claim.py` directly (no
+    scratch copy needed -- `subprocess.run` is mocked out, no actual git
+    repo state is touched), same "unit test on an internal is more direct
+    than the CLI" precedent `_assert_single_tracked_path`'s own tests use
+    elsewhere in this file."""
+
+    @staticmethod
+    def _import_claim():
+        import importlib
+        sys.path.insert(0, str(_HERE))
+        import claim as claim_module
+        importlib.reload(claim_module)  # pick up this session's file, not a stale cached import
+        return claim_module
+
+    def test_returncode_zero_is_true(self, monkeypatch):
+        claim = self._import_claim()
+        monkeypatch.setattr(claim.subprocess, "run", lambda *a, **k: subprocess.CompletedProcess(
+            args=a, returncode=0, stdout="", stderr=""))
+        assert claim._run_git_bool_check(["git", "ls-files", "--error-unmatch", "x"], "did not match any file") is True
+
+    def test_expected_negative_message_is_false(self, monkeypatch):
+        claim = self._import_claim()
+        monkeypatch.setattr(claim.subprocess, "run", lambda *a, **k: subprocess.CompletedProcess(
+            args=a, returncode=1, stdout="",
+            stderr="error: pathspec 'x' did not match any file(s) known to git"))
+        assert claim._run_git_bool_check(["git", "ls-files", "--error-unmatch", "x"], "did not match any file") is False
+
+    def test_unexpected_stderr_raises_git_execution_error_not_false(self, monkeypatch):
+        """The exact TASK-0375 shape: xcrun's error text, not git's own
+        negative-answer text. Must raise, never silently become False."""
+        claim = self._import_claim()
+        monkeypatch.setattr(claim.subprocess, "run", lambda *a, **k: subprocess.CompletedProcess(
+            args=a, returncode=1, stdout="",
+            stderr="xcrun: error: unable to load libxcrun (need x86_64)"))
+        with pytest.raises(claim.GitExecutionError, match="xcrun"):
+            claim._run_git_bool_check(["git", "ls-files", "--error-unmatch", "x"], "did not match any file")
+
+    def test_is_tracked_raises_on_git_execution_failure(self, monkeypatch):
+        claim = self._import_claim()
+        monkeypatch.setattr(claim.subprocess, "run", lambda *a, **k: subprocess.CompletedProcess(
+            args=a, returncode=1, stdout="", stderr="xcrun: error: unable to load libxcrun"))
+        with pytest.raises(claim.GitExecutionError):
+            claim._is_tracked("some/path.md")
+
+    def test_is_tracked_legitimate_negative_still_returns_false(self, monkeypatch):
+        claim = self._import_claim()
+        monkeypatch.setattr(claim.subprocess, "run", lambda *a, **k: subprocess.CompletedProcess(
+            args=a, returncode=128, stdout="",
+            stderr="fatal: path 'some/path.md' does not exist in 'HEAD'"))
+        assert claim._is_tracked("some/path.md") is False
+
+
 if __name__ == "__main__":
     raise SystemExit(pytest.main([__file__, "-v"]))

@@ -169,6 +169,20 @@ attribution, not a path prefix. Does not touch `stage`, `commit-guard`,
 staged and annotated; a thread still runs the full claim -> stage/add ->
 commit-guard --commit -> release sequence to actually commit.
 
+Extended for TASK-0375: `_perform_transition`'s `tracked`/`final_tracked`
+checks (`move`/`resolve`'s "git mv or plain filesystem move" decision) and
+`_is_tracked` (`stage`'s TASK-0197 deletion check) all used to read a git
+subprocess's `returncode == 0` alone to answer a yes/no question -- found
+live on a machine where `git`-via-`python3` was broken (xcrun/Command Line
+Tools architecture mismatch): the broken-git exit code was indistinguishable
+from a legitimate negative answer, so `move` reported success while its own
+`git mv` silently never ran, with no error at all. New `_run_git_bool_check`
+only trusts a nonzero exit as a real negative if stderr actually looks like
+git ran and answered (matches the expected message for that check, e.g.
+"did not match any file"); anything else raises `GitExecutionError`, which
+every call site now catches and reports as a clear, loud failure instead of
+a silent wrong answer.
+
 No third-party dependencies -- stdlib only.
 
 Usage:
@@ -1071,6 +1085,39 @@ def _assert_single_tracked_path(task_id):
     return matches if len(matches) > 1 else None
 
 
+class GitExecutionError(RuntimeError):
+    """git itself failed to run (e.g. this machine's xcrun/Command Line
+    Tools are broken, TASK-0375) -- distinct from a normal negative git
+    answer (not tracked, no match, doesn't exist at HEAD). Callers must
+    never silently treat this as "the answer is no.\""""
+
+
+def _run_git_bool_check(args, expected_no_needle):
+    # type: (List[str], str) -> bool
+    """Run a git subcommand that answers a yes/no question via exit code
+    (0 = yes, nonzero = no), but only trust a nonzero exit as a real "no"
+    if stderr actually looks like git ran and answered -- not like git
+    failed to run at all. TASK-0375, found live: `_perform_transition`'s
+    `git ls-files --error-unmatch` check and `_is_tracked`'s `git cat-file
+    -e` check both read `returncode == 0` alone, so this machine's xcrun
+    breakage (also exit 1/128, just from a git process that never actually
+    answered) was silently indistinguishable from a legitimate negative --
+    `move` reported success while its own `git mv` silently never ran,
+    with no error at all. Raises GitExecutionError for anything that
+    doesn't match the expected negative-answer shape; callers must handle
+    it as a hard failure, never fall through to a truthy/falsy default."""
+    proc = subprocess.run(args, cwd=REPO_ROOT, capture_output=True, text=True)
+    if proc.returncode == 0:
+        return True
+    if expected_no_needle in (proc.stderr or ""):
+        return False
+    raise GitExecutionError(
+        "%s exited %d, but not with the expected negative-answer message -- "
+        "git may not have run at all: %s"
+        % (" ".join(args), proc.returncode, (proc.stderr or "").strip())
+    )
+
+
 def _perform_transition(task_id, target_state, keep_claim, content_transform):
     # type: (str, str, bool, object) -> object
     """Shared relocate + registry-sync + claim-release logic used by both
@@ -1105,14 +1152,19 @@ def _perform_transition(task_id, target_state, keep_claim, content_transform):
 
     if need_file_move:
         os.makedirs(os.path.join(TASKS_DIR, target_state), exist_ok=True)
-        tracked = (
-            subprocess.run(
+        try:
+            tracked = _run_git_bool_check(
                 ["git", "ls-files", "--error-unmatch", src_rel],
-                cwd=REPO_ROOT,
-                capture_output=True,
-            ).returncode
-            == 0
-        )
+                "did not match any file",
+            )
+        except GitExecutionError as exc:
+            print(
+                "error: could not determine whether %s is tracked -- git "
+                "itself did not run as expected (%s), not a real answer; "
+                "nothing moved" % (src_rel, exc),
+                file=sys.stderr,
+            )
+            return {"error": True}
         try:
             if tracked:
                 subprocess.run(
@@ -1141,14 +1193,20 @@ def _perform_transition(task_id, target_state, keep_claim, content_transform):
     # Re-add the final path so the staged blob always matches what's
     # actually on disk post-move (mirrors commit-guard's disk-vs-expect
     # verification, per Q-0002).
-    final_tracked = (
-        subprocess.run(
+    try:
+        final_tracked = _run_git_bool_check(
             ["git", "ls-files", "--error-unmatch", final_rel],
-            cwd=REPO_ROOT,
-            capture_output=True,
-        ).returncode
-        == 0
-    )
+            "did not match any file",
+        )
+    except GitExecutionError as exc:
+        print(
+            "error: could not determine whether %s is tracked -- git itself "
+            "did not run as expected (%s), not a real answer; the file was "
+            "physically moved but its staged state is now unknown, verify "
+            "by hand before committing" % (final_rel, exc),
+            file=sys.stderr,
+        )
+        return {"error": True}
     if final_tracked:
         subprocess.run(
             ["git", "add", final_rel],
@@ -1563,14 +1621,14 @@ def _is_tracked(rel_path):
     (TASK-0027/TASK-0029), which intentionally asks "is this staged right
     now" for a different purpose (deciding `git mv` vs. a plain filesystem
     move on a file that, at that point in `move`'s flow, has not yet had
-    anything staged for it this session)."""
-    return (
-        subprocess.run(
-            ["git", "cat-file", "-e", "HEAD:%s" % rel_path],
-            cwd=REPO_ROOT,
-            capture_output=True,
-        ).returncode
-        == 0
+    anything staged for it this session).
+
+    Raises GitExecutionError (TASK-0375) rather than silently returning
+    False if git itself didn't run -- the caller must not read "git
+    couldn't answer" as "not tracked.\""""
+    return _run_git_bool_check(
+        ["git", "cat-file", "-e", "HEAD:%s" % rel_path],
+        "does not exist in",
     )
 
 
@@ -1612,7 +1670,16 @@ def cmd_stage(args):
     # had no whitelisted path forward, forcing a bare `git add` outside
     # this tool entirely.
     missing_on_disk = [p for p in expect if not os.path.exists(os.path.join(REPO_ROOT, p))]
-    untracked_missing = [p for p in missing_on_disk if not _is_tracked(p)]
+    try:
+        untracked_missing = [p for p in missing_on_disk if not _is_tracked(p)]
+    except GitExecutionError as exc:
+        print(
+            "error: could not determine tracked status for one or more "
+            "--expect paths -- git itself did not run as expected (%s), "
+            "not a real answer; nothing staged" % exc,
+            file=sys.stderr,
+        )
+        return 1
     if untracked_missing:
         print(
             "error: --expect names paths that do not exist on disk and are "

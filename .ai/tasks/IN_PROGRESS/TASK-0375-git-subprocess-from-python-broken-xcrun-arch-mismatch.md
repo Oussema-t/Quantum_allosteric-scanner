@@ -1,6 +1,6 @@
 # TASK-0375 — `git` invoked as a subprocess of `python3` fails on this machine (xcrun arch mismatch)
 
-- Status: Done
+- Status: In Progress
 - Owner: **Toolsmith** (finding + workaround); the actual fix needs the human user
 - Priority: High — silently degrades every thread's commit-safety tooling
 - Filed: 2026-09-12 by Toolsmith thread, corroborating an independent report
@@ -161,3 +161,91 @@ Root-cause mechanism (Open Questions' first item) remains genuinely
 unconfirmed -- out of this task's own scope to chase further now that the
 fix is verified and the symptom is gone; recorded as-is for whoever
 re-diagnoses a recurrence, not closed as resolved.
+
+## Correction, 2026-09-13 (Toolsmith) — recurred; the "closed as resolved"
+## framing above was wrong, not the fix itself
+
+**Reopened, not superseding the 2026-09-12 Done section above** (kept
+verbatim, per this project's no-silent-overwrite convention) -- the CLT
+repair genuinely worked THAT day, this is a second, independent
+recurrence, reported by another thread and reproduced directly by this one
+before touching anything:
+
+```
+python3 -c "import subprocess; print(subprocess.run(['git','rev-parse','HEAD'],
+cwd='.', capture_output=True, text=True).stderr)"
+```
+-> the identical `xcrun: error: unable to load libxcrun ... need x86_64`
+text, unchanged from the original finding. `claim.py commit-guard
+--expect-empty` fails with the identical traceback too.
+
+**New finding this pass, not documented before**: the Open Questions'
+"not yet confirmed broken live" caveat about `move`/`resolve`'s internal
+`git mv` is now confirmed, and the failure mode is WORSE than `stage`/
+`commit-guard`'s loud crash. `_perform_transition`'s `tracked` check
+(`claim.py:1108`) is `subprocess.run(["git", "ls-files", ...]).returncode
+== 0` -- no `check=True`, so when `git` itself fails to run at all (the
+xcrun error), `tracked` silently evaluates to `False` and the code takes
+the "untracked, plain filesystem move" branch instead of `git mv`.
+Reproduced live moving this very task file back to `IN_PROGRESS`: `move`
+reported success ("moved TASK-0375 -> IN_PROGRESS ... registry updated"),
+but `git status` showed the rename as a plain untracked add + unstaged
+delete -- **nothing staged at all**, no error, no warning. A thread
+trusting `move`'s own success message here would ship a commit missing
+the very file it just "moved." Workaround unchanged (stage everything by
+hand, verify by eye), but now known to apply to `move`/`resolve` too, not
+only `stage`/`commit-guard`.
+
+Recurrence is itself the answer to the Open Questions' second item
+("would this recur after a clean reinstall") -- yes, on this machine, at
+least once. Root cause still unconfirmed; not pursued further here either,
+same reasoning as 2026-09-12.
+
+### Code hardening landed this pass (does not wait on the CLT reinstall)
+
+The silent-staging-fallback bug above is a real code defect independent of
+whether this specific xcrun incident ever recurs again -- ANY transient git
+execution failure (disk full, permissions, a future toolchain break of a
+different shape) would have hit the identical silent misread. Fixed at the
+source: new `GitExecutionError` + `_run_git_bool_check(args,
+expected_no_needle)` (`claim.py`) -- runs a git subcommand that answers a
+yes/no question via exit code, but only trusts a nonzero exit as a real "no"
+if stderr matches the expected negative-answer shape (e.g. "did not match
+any file" for `git ls-files --error-unmatch`, "does not exist in" for `git
+cat-file -e HEAD:...`); anything else raises instead of silently returning
+`False`. Wired into all three call sites that had this pattern:
+`_perform_transition`'s `tracked` and `final_tracked` (`move`/`resolve`),
+and `_is_tracked` (`stage`'s TASK-0197 deletion check) -- each site's own
+caller now catches `GitExecutionError` and prints a clear `error: ... git
+itself did not run as expected ...` message instead of either crashing with
+a raw traceback or (the actual bug) silently proceeding as if nothing was
+wrong.
+
+**Tested without needing the environment fixed**: 5 new mocked tests
+(`test_claim.py::TestGitExecutionErrorDetection`) -- fabricate the exact
+`CompletedProcess` shapes for "tracked," "legitimately not tracked," and
+"xcrun broken," asserting the third raises `GitExecutionError` rather than
+returning `False`. Deliberately not scratch-repo-based like every other
+class in this file: reproducing a genuine git-execution failure would mean
+breaking git itself, not something a test should do to its own environment.
+Full `.ai/tools/` suite otherwise unaffected: `test_submission_build.py`/
+`test_submission_build_latex.py`/`test_pytest_local.py` -- 57 passed;
+`test_claim.py` itself -- the 46 pre-existing scratch-repo failures are
+unchanged in count and cause (still the environment, not this change), the
+5 new tests pass, nothing newly broken.
+
+### Outcome, this occurrence (separate from the 2026-09-12 checklist above)
+
+- [x] Code hardening (above) -- landed and tested independent of the
+      environment state.
+- [ ] User repairs the CLT installation again.
+- [ ] Re-run the reproduction; confirm it succeeds on both interpreters.
+- [ ] Re-run the full `.ai/tools/` suite; confirm 0 failures (should now
+      also implicitly re-validate the hardening's real-git-success path,
+      already covered by the mocked tests but worth seeing live too).
+- [ ] Specifically re-check `move`/`resolve`'s own staging (not just that
+      they don't crash) -- stage something via `move`, confirm with `git
+      status` that it actually landed in the index, not just on disk. The
+      2026-09-12 pass never checked this and should have; the hardening
+      above should now make a future recurrence LOUD here instead of
+      silent, but confirm the happy path still stages correctly too.
