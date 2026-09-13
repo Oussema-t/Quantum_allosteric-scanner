@@ -147,6 +147,19 @@ targets:
     pocket_contact_cutoff: 4.5
     drug_ligand: AY7
     func_ligand: ["NIL"]
+    func_ligand_note: >-
+      TASK-0386: NIL (nilotinib) is present in the HOLO structure 5MO4, not in
+      this entry's own apo_pdb (1OPL) -- confirmed directly against
+      pdb_cache/1OPL.pdb, whose only HETATM codes are MYR and P16. This means
+      labels.functional_indices' func_ligand-contact lookup finds no match on
+      this target and falls through silently (its own "not resolvable is not a
+      failure" design, which cannot distinguish this from a deliberately empty
+      func_ligand) -- the orthosteric exclusion never fires for BCR_ABL1. Root
+      cause of TASK-0385's #5 hit (residue 338) being the gatekeeper threonine,
+      4.2A from the orthosteric ligand, submitted as if allosteric. Named, not
+      fixed, before the Phase-1 deadline (re-running invalidates shipped
+      numbers with no time to re-audit) -- see TASK-0386. Fix tracked as
+      TASK-0391.
     pocket_label:
       method: consensus  # TASK-0177: >=3-of-{n_available} vote across C1(contact 3.5-6.0A)/C2(dSASA)/C3(fpocket cavity)/C4(depositor SITE); core=all-agree. Frozen under frozen_context by scripts/task0177_consensus_labels.py -- do not hand-edit, regenerate.
       criteria_available: ["C1_contact", "C2_dsasa", "C3_fpocket_holo", "C4_depositor_site"]
@@ -199,6 +212,17 @@ targets:
     pocket_contact_cutoff: 4.5
     drug_ligand: XB2
     func_ligand: ["ADP", "ATP"]
+    func_ligand_note: >-
+      TASK-0386: ADP matches this entry's own apo_pdb (8QYP) and does exclude
+      its contacts, but the list omits VO4 -- confirmed directly against
+      pdb_cache/8QYP.pdb, whose HETATM codes are ADP, VO4, MG, M3L. VO4 is the
+      ADP.VO4- transition-state mimic sitting beside ADP in the same
+      orthosteric site, so any residue contacting only VO4 (not ADP itself)
+      is not excluded -- a partial, not total, func_ligand miss (contrast
+      BCR_ABL1's full miss, same root cause). Named, not fixed, before the
+      Phase-1 deadline -- see TASK-0386. Fix (add VO4, or derive func_ligand
+      from the apo structure's own ligands rather than hand-listing) tracked
+      as TASK-0391.
     pocket_label:
       method: consensus  # TASK-0177: >=3-of-{n_available} vote across C1(contact 3.5-6.0A)/C2(dSASA)/C3(fpocket cavity)/C4(depositor SITE); core=all-agree. Frozen under frozen_context by scripts/task0177_consensus_labels.py -- do not hand-edit, regenerate.
       criteria_available: ["C1_contact", "C2_dsasa", "C3_fpocket_holo"]  # C4 unavailable: 8QYR has no legacy SITE records -- core==consensus here is degenerate (unanimity of only 3 criteria), NOT strong agreement; see RESULTS.md negative-control caveat.

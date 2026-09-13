@@ -13605,3 +13605,59 @@ documentation only.
 
 **Files**: `__WORK_IN_PROGRESS__/documentation/SUBMISSION_PACKAGE/{Connectivity_Matrices.csv,README.md}`.
 **Full detail**: `.ai/tasks/DONE/TASK-0384-matrix-csv-false-triangle-claim-and-missing-methodology.md`.
+
+## `func_ligand` orthosteric exclusion never fires on two of three scoreable apo inputs ([[TASK-0386]], 2026-09-13)
+
+Named the mechanistic cause of [[TASK-0385]]'s BCR-ABL1 #5 hit (residue 338, the
+gatekeeper threonine, 4.2 Å from the orthosteric ligand, submitted as if
+allosteric). `labels.py::functional_indices` excludes active-site contacts by
+exact ligand-code match against the input structure's own `ligand_groups`; if no
+code matches, the loop falls through silently (`if ligand is None: continue`),
+by design indistinguishable from a deliberately empty `func_ligand`.
+
+Re-verified directly against raw structures before trusting the filed table:
+
+| target | `func_ligand` | apo input's actual HETATM codes (`grep "^HETATM" pdb_cache/*.pdb`) | exclusion fires? |
+|---|---|---|---|
+| BCR_ABL1 | `["NIL"]` (nilotinib, holo `5MO4` only) | `1OPL.pdb`: `MYR`, `P16` | **no** — full miss |
+| CARDIAC_MYOSIN | `["ADP","ATP"]` | `8QYP.pdb`: `ADP`, `VO4`, `MG`, `M3L` | partial — `ADP` matches, **`VO4` (the ADP-vanadate transition-state mimic) is not listed** |
+| KRAS_G12C | `["GDP"]` | `4LDJ.pdb`: `GDP`, `MG` | yes (control, exclusion working as intended) |
+
+**Decision (per the filing Reviewer thread's own recommendation): name it, do
+not fix it before the deadline.** Fixing the data and re-running would change
+every hit list, matrix, and AUC already shipped, with no time left to re-audit
+the result.
+
+**Landed in `Solution_Outputs.pdf` §2, not the Concept Proposal** — the Concept
+Proposal body is at 6/6 page budget with no slack ([[TASK-0385]]); Solution
+Outputs carries no page limit per the submission package's own `README.md`.
+Rebuilt the actual PDF (not just the `.md` source): no committed build script
+handles this file's shape (`submission_build.py`/`submission_build_latex.py`
+are both for the numbered `PHASE1_SUBMISSION_*`/Concept-Proposal pipeline), so
+rebuilt directly via `pandoc --pdf-engine=tectonic -V geometry:margin=0.6in -V
+fontsize=10pt -V papersize=letter` — tuned after a naive default run produced
+30+pt overfull hboxes on the verbatim report blocks (the same class of bug
+TASK-0367/0369 fixed once before). **Caught a real glyph bug before shipping
+it**: a first draft used `ADP·VO₄⁻` (Unicode subscript-4/superscript-minus);
+tectonic's default font rendered it as literal `VOffff` in the extracted text —
+found by reading the rebuilt PDF back rather than assuming pandoc's output was
+correct. Fixed to plain-ASCII `ADP-vanadate`; final build has only the
+pre-existing 1.4pt (sub-visible) overfull warning, confirmed present even in an
+unmodified-source baseline rebuild.
+
+`targets.yaml` gained a `func_ligand_note` at both `BCR_ABL1` and
+`CARDIAC_MYOSIN` (following the file's own existing convention, e.g. PTP1B's
+note), each citing the exact `pdb_cache` check and the downstream consequence.
+Confirmed via `yaml.safe_load` that the file still parses and the new keys land
+on only the two intended entries (absent from `CARDIAC_MYOSIN_TABLE1`).
+
+Follow-up fix filed as [[TASK-0391]] (task id reserved via `claim.py
+reserve-next`, not hand-picked — TASK-0387 was already taken by a concurrent
+thread, the exact collision class [[TASK-0045]] exists to prevent). Not done:
+the actual code fix, any re-run of hit lists/AUCs/matrices, or reconciling the
+original (untraceable) `Solution_Outputs.pdf` build recipe.
+
+**Files**: `__WORK_IN_PROGRESS__/documentation/SUBMISSION_PACKAGE/{Solution_Outputs.md,Solution_Outputs.pdf}`,
+`__WORK_IN_PROGRESS__/config/targets.yaml`.
+**Full detail**: `.ai/tasks/DONE/TASK-0386-func-ligand-exclusion-never-fires-on-our-own-inputs.md`,
+`.ai/tasks/TODO/TASK-0391-fix-func-ligand-silent-fallthrough.md`.

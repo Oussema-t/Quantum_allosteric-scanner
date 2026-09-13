@@ -73,6 +73,19 @@ protein's mean — reaches pooled **AUC 0.65**. Every AUC in this submission is
 computed per structure and averaged, never pooled; we audited that rather than
 assuming it.
 
+**Our own orthosteric-exclusion filter never fires on two of the three scoreable
+apo inputs, and this is why BCR-ABL1's #5 hit is the gatekeeper residue, not a
+distal one.** `func_ligand` excludes active-site contacts by exact ligand-code
+match against the input structure; BCR-ABL1's declared code is `NIL` (nilotinib),
+present only in the holo structure `5MO4` and absent from the apo input `1OPL`
+(which carries `MYR`/`P16` instead), and cardiac myosin's list omits `VO4`, the
+ADP-vanadate transition-state mimic sitting in `8QYP` beside the `ADP` that is listed.
+The lookup fails closed rather than erroring, so a stale or incomplete code
+produces no signal that exclusion did not happen. Named here rather than fixed:
+with under 36 hours to the deadline, re-running invalidates every number already
+in this package. TASK-0386 tracks the finding; TASK-0391 tracks the fix, scoped
+for after submission.
+
 ---
 
 ## 3. Methodological report, per target
