@@ -63,26 +63,26 @@ cell AUC exactly, so the top-5 are the faithful hit list, not a proxy.
 Source: `Quantum_Allosteric_Scanner_v2.ipynb`, cell 14w.
 
 
-## Cardiac myosin (8QYP -> 8QYR, drug XB2), MIN_HOP=2, seeded top-10
+## Cardiac myosin (8QYP -> 8QYR, drug XB2), MIN_HOP=2, consensus seeding SEED_WEIGHTS=(0,1,0)
 
-With top-10 seeding the true pocket (fpocket P96, mavacamten site) is seeded: 243 seeds, 12
-drug-pocket residues (base rate 0.049). Selection by **P@5** (the hit-list criterion), not AUC:
+The consensus seeding (rank fpocket pockets by PASSer allostery, not druggability) reproducibly seeds
+the true mavacamten pocket: fpocket P55 (druggability rank #33, PASSer allostery rank #2, 14 drug
+residues) enters the seeded top-10. Selection by **P@5** (the hit-list criterion), not AUC:
 
 | cell | operator | score | AUC | P@5 |
 |---|---|---|---|---|
-| best (P@5) | `H3_normL` | dX dip depth | 0.685 | **0.4** (2 of top-5 in the pocket) |
-| best (AUC) | `H_new` | Green E=zero eta=0.01 | 0.795 | 0.0 |
-| worst | `H8_gnm` | -dD mean | 0.068 | 0.0 |
-| median cell | - | - | 0.504 | 0.0 |
+| best (P@5) | `H1_adj` | dX dip depth | 0.733 | **0.4** (2 of top-5 in the pocket: 774, 721) |
+| worst | `H12_anmS` | -E[D] final | 0.233 | 0.0 |
 
-Matrices: `_connectivity_best_H3_normL.csv.gz` and `_connectivity_worst_H8_gnm.csv.gz`
-(704 x 704, operator-only, so seeding-independent). The best cell reaches P@5 0.4 -- 2 of the 5
-predicted residues are genuine mavacamten-site residues -- the median cell is at chance (0.504),
-so this is a weak partial hit, not a clean success.
+Matrices: `_connectivity_best_H1_adj.csv.gz` and `_connectivity_worst_H12_anmS.csv.gz` (704 x 704,
+operator-only). Top-5 x active sub-blocks: `_top5xactive_best_H1_adj.csv` and `_top5xactive_worst_H12_anmS.csv`.
 
-NOTE: fpocket pocket detection was not bit-reproducible between runs (a fresh headless run detected
-a different pocket set that missed P96); the seeding above is from the notebook run that seeds P96.
-The connectivity matrices themselves are operator+structure-only and reproduce exactly.
+CAVEAT: the single best-OPERATOR identity is a near-tie that varies run-to-run (H3_normL, H1_adj and
+H8_gnm have each won across runs) -- the 15-residue pocket among 704 residues makes AUC-based operator
+selection unstable. What IS stable: the consensus seeding recovers the true pocket, and the top-5 reaches
+P@5 0.4 (2 genuine mavacamten-site residues, 774 and 721). The connectivity matrix for any FIXED operator
+is structure+operator-only and reproduces exactly; earlier runs' matrices (H3_normL, H8_gnm, H_new,
+H2_combL) remain in this directory as additional per-operator data.
 
 
 ## HIV-1 RT (1DLO -> 3V81, NNRTI pocket) -- additional allosteric target
