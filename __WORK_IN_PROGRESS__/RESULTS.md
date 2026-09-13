@@ -13661,3 +13661,76 @@ original (untraceable) `Solution_Outputs.pdf` build recipe.
 `__WORK_IN_PROGRESS__/config/targets.yaml`.
 **Full detail**: `.ai/tasks/DONE/TASK-0386-func-ligand-exclusion-never-fires-on-our-own-inputs.md`,
 `.ai/tasks/TODO/TASK-0391-fix-func-ligand-silent-fallthrough.md`.
+
+## Six internal contradictions — five fixed, one dropped for a measured page-budget reason ([[TASK-0387]], 2026-09-13)
+
+All six items re-verified against the current live documents before touching
+anything — the submission package was restructured to a 5-file portal upload
+the same day this task was filed, so the filing's own line numbers no longer
+matched (`PHASE1_SUBMISSION_V4.md` grew; `03_Problem_Statement_Selection.md`
+and `Solution_Outputs.md` are now separate files, each with their own PDF).
+
+**Items 1, 2, 5 — near-free, all applied.** (1) `PHASE1_SUBMISSION_V4.md`'s
+"we followed it in each case" — false; the very next row shows the organisers'
+suggested `8S8C` was rejected (rightly: it is holo). Replaced with the review's
+own rewrite verbatim. (2) `03_Problem_Statement_Selection.md` said "Four
+structure choices deviate"; the true count is **three deviating structures**
+(`4LDJ`, `8QYP`, `8QYR`) across **two** deviating rows (BCR-ABL1's `1OPL` is a
+retention) — both numbers now stated explicitly, agreeing with the Concept
+Proposal's own footnote rather than repeating an ambiguous bare number. (5)
+Added the missing `(8QYP)` PDB code to the Cardiac myosin row of the
+five-guess table, matching the other three rows' own convention.
+
+**Item 6 — shipped in full, no page-budget cost.** `Solution_Outputs.md` is a
+separate deliverable file, not the Concept Proposal, so its 6-page cap does
+not apply. Verified `config/targets.yaml:461`
+(`allosteric_pocket_exists: false`, documented rationale: Myc/Max are IDPs
+with no folded-dimer surface pocket) and the shipped druggability values (max
+0.161) directly before writing the review's suggested sentence, plus
+confirming `DRUGGABILITY_BAR = 0.5` is a real, pre-existing project
+convention (`task0204`/`task0209`/`task0214`/`task0230`/`task0346`), not
+invented for this sentence.
+
+**Item 3 — shipped, but the real finding is that the Concept Proposal has
+*zero* page-budget slack, empirically, not by assumption.** Verified `4LDJ`
+(`GDP`+`MG`), `8QYP` (`ADP`+`VO4`+`MG`), `1OPL` (`MYR`+`P16`) directly against
+cached PDB HETATM records before writing anything — independently
+cross-confirmed by [[TASK-0386]]'s own unrelated verification of the same
+three structures the same day. With items 1/2/5 applied, body sits at exactly
+6/6; the review's own full suggested sentence for item 3, and three
+progressively shorter rewrites, each independently pushed body to 7/6 —
+including a version tested with item 4 completely absent, isolating that item
+3 alone is enough to overflow. Only a minimal in-sentence insertion (extending
+the existing myristate clause rather than adding a new sentence, and dropping
+the explicit re-statement of `1OPL`'s second ligand `P16`, already disclosed
+elsewhere in `Solution_Outputs.md` §2) fit inside 6/6. Caught and fixed a real
+defect in the same pass: `VO₄` (Unicode subscript) is not renderable by this
+LaTeX template (`[FAIL] glyph coverage`) — switched to plain-ASCII `VO4`,
+matching the convention already used elsewhere in the same document.
+
+**Item 4 — dropped, exactly per this task's own pre-stated fallback order
+("if page budget forces a choice ... → 6 → 4").** Tried at three lengths (full,
+shortened, minimal); even the shortest version did not fit once item 3 had
+already claimed the one available line. Not a content judgment — a measured
+fact about remaining space, confirmed by testing item 4 in isolation (item 3
+absent) and finding it, too, overflows alone. Left ready to apply verbatim
+(the bovine-species disclosure already exists in `artefacts/README.md`) the
+next time the Concept Proposal's page budget has any slack.
+
+**All three affected PDFs rebuilt** (`submission_build_latex.py`) and
+copied into `SUBMISSION_PACKAGE/`, each verified by text extraction
+(`pdfplumber`) to contain the new wording and not the old. Final
+`01_Concept_Proposal.pdf`: body 6/6 PASS, appendix 1/3, glyph coverage clean,
+citations clean, one pre-existing small-text warning unchanged from an
+unmodified-baseline rebuild (not introduced here). `03_Problem_Statement_
+Selection.pdf` and `Solution_Outputs.pdf`: both PASS, no page cap applies to
+either. Package total ≈13.6 MB against the 20 MB cap.
+
+Independently corroborated the same day by [[TASK-0390]] (triaging a
+collaborator's merged PDF draft): its own text adopts "All three deviations"
+— the same count this task's item 2 arrived at separately.
+
+**Files**: `PHASE1_SUBMISSION_V4.md`, `SUBMISSION_PACKAGE/{03_Problem_
+Statement_Selection.md,Solution_Outputs.md,01_Concept_Proposal.pdf,
+03_Problem_Statement_Selection.pdf,Solution_Outputs.pdf}`.
+**Full detail**: `.ai/tasks/DONE/TASK-0387-internal-contradictions-in-the-scored-documents.md`.

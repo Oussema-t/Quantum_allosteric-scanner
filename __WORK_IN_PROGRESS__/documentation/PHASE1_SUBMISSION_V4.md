@@ -18,7 +18,7 @@ We built the method the challenge specifies — a continuous-time quantum walk o
 
 **c-Myc (`1NKP`)**, the separately named fourth target, has no drug-bound structure in the PDB, so the validity rule cannot apply and no ground truth exists to score against — which is precisely what the challenge asks for here: a genuinely prospective prediction. We report a four-operator consensus and label it **unverified** rather than as a measured result.
 
-**Structures used, and why they deviate from Table 1.** We reported to the organisers that `4OBE`, the mandated KRAS G12C apo structure, is wild-type at residue 12 (GLY, not CYS). Their reply of 2026-08-26 answered three points, and we followed it in each case:
+**Structures used, and why they deviate from Table 1.** We reported to the organisers that `4OBE`, the mandated KRAS G12C apo structure, is wild-type at residue 12 (GLY, not CYS). Their reply of 2026-08-26 answered three points; we adopted two and, on the third, checked the suggested structure, found it holo, and substituted a verified apo instead:
 
 | target | structure | deviation, and the reason |
 |-----|-------|------------------------------------------------------|
@@ -29,7 +29,7 @@ We built the method the challenge specifies — a continuous-time quantum walk o
 
 \*Both halves substituted: Table 1 mandates `5TBY` → `6C1H` — a homology model fitted to a 20 Å negative-stain reconstruction, and *rat* myosin-Ib on rabbit actin carrying ADP, not mavacamten. Two rows above are deviations, one a retention; all trace to that clarification.
 
-**"Apo" does not mean ligand-free, and the exceptions are not random.** We assumed apo depositions were empty at the site of interest. They are not: **3 of 7** audited targets have a ligand holding the pocket open, and **40 of 40** ASBench structures we sampled carry a bound ligand at the scored site. One case is mechanistically expected — BCR-ABL1's `1OPL` carries myristate, the physiological autoinhibitory ligand of that exact pocket [3]. Two are unexplained: glucokinase `1V4S`/`MRK` (88% overlap) and PKR `7FS3` (92%). *Consequence:* the contamination correlates with the label — the most interesting targets are the ones most likely to be pre-opened — so it inflates measured performance rather than adding noise.
+**"Apo" does not mean ligand-free, and the exceptions are not random.** We assumed apo depositions were empty at the site of interest. They are not: **3 of 7** audited targets have a ligand holding the pocket open, and **40 of 40** ASBench structures we sampled carry a bound ligand at the scored site. One case is mechanistically expected — BCR-ABL1's `1OPL` carries myristate, the physiological autoinhibitory ligand of that exact pocket [3] — as do `4LDJ` (GDP·Mg) and `8QYP` (ADP·VO4·Mg). Two are unexplained: glucokinase `1V4S`/`MRK` (88% overlap) and PKR `7FS3` (92%). *Consequence:* the contamination correlates with the label — the most interesting targets are the ones most likely to be pre-opened — so it inflates measured performance rather than adding noise.
 
 **And ligand-removed holo is measurably easier than apo — a gap we have found no report of.** The field's leading recovery figures, 89.8% on ASBench [4] and 98.1% on CASBench [5], are obtained on structures where the ligand is deleted from a holo deposition, not on genuine apo structures. Across 63 apo/holo pairs spanning 59 distinct proteins, cavity detection scores **+0.199 higher on the stripped-holo half than on the true apo half** (median +0.184; Wilcoxon p = 2.6e-4; sign-flip permutation p < 1e-4; bootstrap 95% CI [+0.102, +0.296], excluding zero by a wide margin), with the same sign in both source cohorts. *Consequence:* those headline numbers describe a task roughly 0.2 AUC easier than the one they are read as solving, and the difference is not a rounding detail — it is larger than the margin separating most published methods from each other. We report it at n = 63 pairs; the ≥ 100 the instrument should certify remains a Phase-2 target.
 
@@ -41,7 +41,7 @@ We built the method the challenge specifies — a continuous-time quantum walk o
 |---|---|---|---|
 | KRAS_G12C (`4LDJ`) | 31, 122, 33, 121, 29 | 0.514 | `NO_SIGNAL_IN_APO` |
 | BCR-ABL1 (`1OPL`) | 402, 311, 310, 301, 338 | 0.541 | `NO_SIGNAL_IN_APO` |
-| Cardiac myosin | 682, 683, 681, 680, 133 | 0.548 | `NO_SIGNAL_IN_APO` |
+| Cardiac myosin (`8QYP`) | 682, 683, 681, 680, 133 | 0.548 | `NO_SIGNAL_IN_APO` |
 | c-Myc (`1NKP`) | 943, 246, 925, 226, 243 | — | no ground truth; 4-operator consensus |
 
 A paired score-minus-floor bootstrap agrees at all three (detection limit ΔAUC ≈ 0.1; `artefacts/README.md`). **We submit the five as required and state plainly that we cannot certify them** — the conclusion this proposal reaches about the field's published numbers, applied to our own.

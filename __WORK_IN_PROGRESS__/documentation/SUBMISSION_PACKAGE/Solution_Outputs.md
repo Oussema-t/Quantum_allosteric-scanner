@@ -253,6 +253,12 @@ Theoretical docking viability (fpocket):
   pocket 5: score=0.054, druggability_score=0.0
 ```
 
+Our own configuration records that this target has no folded-state allosteric
+pocket (`allosteric_pocket_exists: false`, `config/targets.yaml` — Myc/Max are
+IDPs with no surface pocket in the folded dimer); we supply the five because the
+challenge requires them, and we report that our best candidate site scores 0.161
+druggability against our own 0.5 fpocket druggable/non-druggable threshold.
+
 ---
 
 ## Provenance

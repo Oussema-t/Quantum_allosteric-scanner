@@ -21,11 +21,12 @@ allosteric methods — quantum or classical — alongside the required predictio
 We address the complete mandatory set required by Challenge Statement §6: **KRAS
 G12C, BCR-ABL1, cardiac myosin, and c-Myc.**
 
-Four structure choices deviate from Table 1. **Each is stated, with its reason and
-its evidence, in Section 1 of the Concept Proposal**, and each traces to the
-organisers' clarification of 2026-08-26. They are not repeated here: a single
-authoritative statement is less likely to drift than two, and the Concept Proposal
-is the document a reviewer assesses.
+Three structures deviate from Table 1 (`4LDJ` replacing `4OBE`; `8QYP`/`8QYR`
+replacing `5TBY`/`6C1H`); BCR-ABL1's `1OPL` is retained, not substituted. **Each
+is stated, with its reason and its evidence, in Section 1 of the Concept
+Proposal**, and each traces to the organisers' clarification of 2026-08-26. They
+are not repeated here: a single authoritative statement is less likely to drift
+than two, and the Concept Proposal is the document a reviewer assesses.
 
 ## Required outputs
 
