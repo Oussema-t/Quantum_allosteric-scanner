@@ -50,7 +50,7 @@ Garching (2010–2012): ab-initio quantum chemistry (Molpro, Molcas,
 Gaussian, Turbomole) and C++ molecular-quantum-dynamics code for
 open-shell systems. Author of a solo quant-ph preprint, *"The Geometry of
 Clifford Algorithms: Bernstein-Vazirani as Classical Computation in a
-Rotated Basis"* (arXiv:2603.12127, 2026). Since 2010: 14 years in
+Rotated Basis"* (arXiv:2603.12127, 2026). Since 2012: 14 years in
 software quality assurance, currently leading QA engineering and test
 automation at Appsfactory (Munich).
 **Prior quantum-computing experience**: a PhD and postdoc in quantum
@@ -79,7 +79,7 @@ under-documented.*
 
 This is a Quantum *and AI* challenge that permits AI involvement, so
 treating our own use of it as something to minimise would be incoherent.
-The register behind this submission — 359 task files, 328 done, 580
+The register behind this submission — 350+ task files, 580+
 commits as of `ffcfaca` (2026-09-07) — is too large for one person to
 review unaided, and we would rather say so than pretend to a reading
 nobody performs. The traces that matter — human-in-the-loop decisions,
@@ -96,10 +96,10 @@ mode:
 
 | Layer | Model | Roles |
 |---|---|---|
-| Repository | Claude Sonnet | Implementers, Toolsmith, Architect/Planner |
-| Repository | Claude Opus | Code Reviewer |
-| Project | Claude Opus | **Adversarial Reviewers / Critics** |
-| Project | Google Gemini 2.6 Pro | Critics / Reviewers / Researchers / Brainstormers |
+| Repository | Claude Sonnet 5 | Implementers, Toolsmith, Architect/Planner |
+| Repository | Claude Opus 5 | Code Reviewer |
+| Project | Claude Opus 5 | **Adversarial Reviewers / Critics** |
+| Project | Google Gemini 3.X Pro / 3.X Flash | Critics / Reviewers / Researchers / Brainstormers |
 
 Four of the five retractions in the Concept Proposal's Appendix B were
 produced by the adversarial reviewer role attacking work the implementing
@@ -110,8 +110,8 @@ miscalibrated test.
 | Artefact | What is in it |
 |---|---|
 | **Repository** `github.com/Oussema-t/Quantum_allosteric-scanner` | The scanner, the pipeline, the analysis scripts behind every number in the Concept Proposal. |
-| **Branch `bartosz`** | 359 task files · 328 done · 580 commits (as of `ffcfaca`, 2026-09-07) · the full falsification record |
-
+| **Branch `bartosz`** | 350+ task files · 580+ commits (as of `ffcfaca`, 2026-09-07) · the full falsification record |
+| **Branch `allosteric`** | investigation of various CTQW approaches, hamiltonians, AI/ML methods  |
 ---
 
 *This document is §4.1's own component. It is not the Concept Proposal and
