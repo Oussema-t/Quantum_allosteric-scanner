@@ -83,3 +83,13 @@ so this is a weak partial hit, not a clean success.
 NOTE: fpocket pocket detection was not bit-reproducible between runs (a fresh headless run detected
 a different pocket set that missed P96); the seeding above is from the notebook run that seeds P96.
 The connectivity matrices themselves are operator+structure-only and reproduce exactly.
+
+
+## HIV-1 RT (1DLO -> 3V81, NNRTI pocket) -- additional allosteric target
+
+Seeded like the mandated three: consensus (fpocket druggability + PASSer allostery), top-10,
+MIN_HOP 2. The NNRTI pocket (fpocket P1) ranks #11 on druggability but #3 on PASSer allostery, so
+consensus seeds it (112 seeds, 9 drug) where fpocket-only top-10 does not. Best cell
+`H14_anmP`/p_peak AUC 0.963 P@5 0.8; worst (different operator, for a distinct matrix)
+`H9_bfac` AUC 0.230. Pre-registered `H_new` held-out 0.665, p=0.060. Matrices are operator-only
+(556 x 556), reproducible from 1DLO chain A; the *seeding* needs `passer_cache.json` present.
