@@ -1,9 +1,11 @@
-# TASK-0383 — Publish the repo on 2026-09-14 and change the proposal's wording to present tense
+# TASK-0383 — Publish the repo before the deadline and flip the proposal to present tense
 
-- Status: **BLOCKED on [[TASK-0382]].** The Team Lead asked the organisers
-  (2026-09-13) whether their replies may be published verbatim. **Do not publish
-  the repo until that answer lands** — publishing is the harm 0382 describes, and
-  it is irreversible once other teams have the file.
+- Status: **UNBLOCKED 2026-09-14** — [[TASK-0382]] resolved; the organisers'
+  fairness concern is answered by the note now in
+  `03_Problem_Statement_Selection.pdf`. **Waiting on Oussema**, who owns the
+  repo and was asked by the Team Lead to publish it today.
+- **Checked 2026-09-14 15:30: still HTTP 404.**
+
 - Owner: **Team Lead** (only Bartosz can push/publish)
 - Priority: High — cheap, and it removes an asymmetric risk
 - Filed: 2026-09-13 by Reviewer thread
@@ -38,3 +40,39 @@ nothing, publishing on the deadline risks the central claim.
 
 Repo resolves 200 for a logged-out client, the proposal says so in present tense,
 and the rebuilt PDF still reports body 6/6 PASS.
+
+---
+
+## Status note — 2026-09-14, Reviewer thread
+
+**The wording flip is deliberately NOT done yet.** The proposal currently reads:
+
+> Full history, retractions included: `github.com/Oussema-t/Quantum_allosteric-scanner` (branch `bartosz`), published 2026-09-15.
+
+That is **true as written** — a future-dated statement, and 2026-09-15 is the
+deadline. Changing it to present tense while the repo returns 404 would make the
+document **false**, which is strictly worse than the 404 risk it was meant to
+fix. Flip it only once the repo actually resolves.
+
+**When it does resolve, the edit is 30 seconds and it *frees* page budget:**
+delete `, published 2026-09-15` — five words out of a body sitting at exactly
+6/6. Rebuild and re-check.
+
+### If Oussema does not publish and we clone instead — read this first
+
+**The URL appears in two shipped files, not one:**
+
+| file | where |
+|---|---|
+| `PHASE1_SUBMISSION_V4.md` | §7, the "Full history, retractions included" sentence |
+| `SUBMISSION_PACKAGE/02_Team_Profile.md` | the **Repository** row of the verification table |
+
+A clone under a different account changes the URL in both, and **both PDFs must
+be rebuilt** — `01_Concept_Proposal.pdf` *and* `02_Team_Profile.pdf`. The Team
+Profile is the one most likely to be forgotten, because it has not been rebuilt
+since 2026-09-13 18:42 while everything else has.
+
+Also: a clone loses the commit history, and §7's claim is specifically *"the full
+task history, including every retraction"*. If we clone, clone with history
+(`git clone --mirror` then push), not a snapshot — otherwise the sentence stops
+being true in a second way.

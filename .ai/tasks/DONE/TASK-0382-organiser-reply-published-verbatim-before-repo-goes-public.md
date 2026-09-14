@@ -1,6 +1,6 @@
 # TASK-0382 — BLOCKER: publishing the repo publishes the organisers' private reply verbatim
 
-- Status: IN PROGRESS — **BLOCKER. Must be resolved before the repo is made public.**
+- Status: Done
   Team Lead decision (2026-09-13, Bartosz): pursuing **Option 2**. Asked the
   Cleveland Clinic organisers directly whether we may publish their prior
   replies verbatim in the repo, or whether we are required to remove/redact
@@ -72,3 +72,58 @@ sceptic most wants is the one missing.
   quoted fragments that would reconstitute the content (`grep -rn` for
   distinctive phrases, not just the filename).
 - If 2: the organisers' answer is recorded in the repo before publication.
+
+---
+
+## Resolved — 2026-09-14. Organisers answered; Option 2 succeeded.
+
+**Their reply, relayed by the Team Lead:**
+
+> Within your submissions, please just add a note documenting how some of your
+> answers were submitted based on the following responses received by the
+> Cleveland Clinic team "…". This will ensure you are neither put at advantage
+> nor at disadvantage vs other teams in regards of your submission evaluation.
+
+**What they granted, and what they did not.** They named a remedy — disclosure
+inside our submission — and framed the whole matter as **evaluation fairness**.
+They did *not* say "you may republish our private correspondence publicly", and
+the distinction matters: our submission is read by evaluators, the repository is
+read by everyone including competing teams. **The note satisfies their
+instruction. It does not by itself settle the repo question.**
+
+### Done: the note is in the submission
+
+Added to `03_Problem_Statement_Selection.md` as **"Note on organiser
+correspondence"**, opening with the organisers' own stated purpose (neither
+advantaged nor disadvantaged). It documents each reply and what it changed:
+
+| reply | changed |
+|---|---|
+| 2026-08-26 — cardiac `8QYP`–`8QYR` accepted as primary | the scored cardiac structures |
+| 2026-08-26 — `8S8C` suggested for KRAS G12C | we checked it, found it **holo**, substituted `4LDJ` |
+| 2026-08-26 — BCR-ABL1 may be substituted, *"please document the rationale"* | we **declined**; rationale given, as they asked |
+| 2026-08-26 — no prescribed formats | the five-file package, CSV rather than an archive |
+| 2026-09-07 — documents may be re-uploaded | nothing in the science |
+| 2026-09-08 — ENM allowed; MD-trained/MD-free inference permitted | PocketMiner kept as the veto |
+
+Closing line, deliberate: *"These replies granted latitude on structure choice
+and deliverable format. They did not endorse any finding in this submission, and
+no finding here is presented as endorsed."* That matches the caution the
+clarification file itself records — answers 2 and 4 are substantively responsive
+to our benchmark-validity finding but are **not** an endorsement of it.
+
+`03_Problem_Statement_Selection.pdf` rebuilt: 2 pages, `RESULT: PASS`,
+text-extraction verified.
+
+### Still the Team Lead's call: the file in the public repo
+
+Reviewer's read, for the record. Publishing the verbatim file is now **low risk
+and defensible** — the content is disclosed in our own submission, the
+organisers treated it as a fairness matter rather than a confidence, and Phase 1
+closes 2026-09-15 so any competitor window is hours. But it is still not
+something they explicitly authorised.
+
+**Recommendation: keep the file, and add one line to its header** — *"Disclosed
+in our Phase-1 submission at the organisers' instruction, 2026-09-13"* — so the
+repo and the submission tell the same story. Redacting now would be inconsistent
+with having just documented the content ourselves.
