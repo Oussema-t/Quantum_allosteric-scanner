@@ -1,6 +1,6 @@
 # TASK-0390 — Triage Oussema's merged PDF: salvage Appendix B, do not ship the body
 
-- Status: TODO
+- Status: In Progress
 - Owner: Implementer to apply; Team Lead to decide the page-budget items
 - Priority: High — Appendix B contains our best independent corroboration, and the body it is attached to would undo a week of fixes
 - Filed: 2026-09-13 by Reviewer thread

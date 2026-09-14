@@ -13734,3 +13734,69 @@ collaborator's merged PDF draft): its own text adopts "All three deviations"
 Statement_Selection.md,Solution_Outputs.md,01_Concept_Proposal.pdf,
 03_Problem_Statement_Selection.pdf,Solution_Outputs.pdf}`.
 **Full detail**: `.ai/tasks/DONE/TASK-0387-internal-contradictions-in-the-scored-documents.md`.
+
+## The hit list reconstructs exactly from the matrix on 3/4 targets — verified, not asserted; MYC_MAX is a real, disclosed exception ([[TASK-0389]], 2026-09-14)
+
+The Concept Proposal claims "a hit list cannot disagree with the matrix it
+came from." An external reviewer tried to reconstruct every shipped top-5
+from the matrix and failed on all four targets, independently confirming an
+already-open item (TASK-0370 item 24: the seed set was never shipped).
+
+Rather than trust either side's claim, reconstructed the actual computation.
+First confirmed the operator, not assumed: each of KRAS_G12C/BCR_ABL1/
+CARDIAC_MYOSIN's own `verdict.json` carries `_winner_index: 0`, and index 0
+is `H_new_default` in `_make_candidates_builder`'s two-candidate list
+(`[H_new_default, H10_disorder_suppressed]`) — `H_new_default` won all
+three, cross-checked against `AUC_apo_Hnew_default == AUC_apo_Hnew_optimised`
+in every file (already an established finding, TASK-0370 item 25). Read
+`run_challenge.py:441-452` directly: the hit list's source occupation and
+the connectivity matrix come from one eigendecomposition of one winner `H`,
+not two independent computations.
+
+A shared operator alone doesn't prove reconstructability — the true seed is
+multi-residue, and `time_averaged_ctqw_converged`'s `coherent=False`
+multi-source semantics needed checking rather than assuming. Read
+`propagators.py:1088-1099`: `coherent=False` is exactly the unweighted mean
+of each seed residue's own single-source converged occupation. Using the
+seed sets already documented in `artefacts/README.md` (TASK-0370 item 24,
+never shipped) — KRAS_G12C 18 residues (GDP/Cys12 contact), BCR_ABL1 26
+(nilotinib/ATP-site), CARDIAC_MYOSIN 18 (mavacamten-site) — averaged the
+shipped per-target matrix's own rows over each seed, excluded the seed
+residues from ranking (the pipeline's own exclusion logic, confirmed in
+item 24), and compared to each target's shipped `hit_list.json`:
+
+| target | reconstructed top-5 (rank order) | shipped top-5 |
+|---|---|---|
+| KRAS_G12C | 31, 122, 33, 121, 29 | 31, 122, 33, 121, 29 |
+| BCR_ABL1 | 402, 311, 310, 301, 338 | 402, 311, 310, 301, 338 |
+| CARDIAC_MYOSIN | 682, 683, 681, 680, 133 | 682, 683, 681, 680, 133 |
+
+**Exact match, in rank order, on all three.** The external reviewer's
+non-reproduction traces to seeding methodology — a guessed or single-residue
+seed — not a real inconsistency between the shipped artefacts.
+
+MYC_MAX was tested too, not assumed exempt by analogy: averaging its matrix
+over its own 5-residue seed gives `[943, 246, 243, 242, 225]` (seed can't be
+excluded here — MYC_MAX's seed *is* its shipped hit list, an
+already-disclosed circularity) against the shipped `[943, 246, 925, 226,
+243]` — 3/5 overlap, wrong set. Traced to `run_challenge.py`'s
+`run_target_no_ground_truth` path (lines 250-295): MYC_MAX's matrix is bare
+`H_new` alone, but its hit list is `consensus_ranking` across **four**
+operators (H_new/H10/H2/H14) — a structurally different computation for the
+one target with no ground truth to check the mismatch against. The code's
+own existing comment already said as much; this confirms it empirically
+rather than by reading the comment alone.
+
+**Shipped the provenance** (the task's own recommended fix, since the claim
+is now proven checkable): `Connectivity_Matrices.csv`'s header gained the
+operator identity, the reconstruction rule, all three seed sets (in the same
+compressed range notation `artefacts/README.md` already used, cross-checked
+against the expanded lists actually tested before reuse), and MYC_MAX's
+exception stated plainly — 12→31 comment lines, round-trip re-verified
+(379,327 rows unchanged). One line added to `SUBMISSION_PACKAGE/README.md`.
+§6 of the Concept Proposal was not touched — it is literally true as written
+(one runner, one pass), and the one real exception is now disclosed in the
+CSV header at no page-budget cost.
+
+**Files**: `__WORK_IN_PROGRESS__/documentation/SUBMISSION_PACKAGE/{Connectivity_Matrices.csv,README.md}`.
+**Full detail**: `.ai/tasks/DONE/TASK-0389-hit-list-not-reproducible-from-the-shipped-matrix.md`.

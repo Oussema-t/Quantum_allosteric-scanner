@@ -54,6 +54,12 @@ target,pdb_id,residue_i,residue_j,value
   exactly (max |diff| = 0.0 over 2,000 sampled entries per target), every matrix
   is symmetric to numerical precision, and row counts match this table exactly
   (TASK-0384).
+- **The hit list is reproducible from this matrix, verified not asserted**: for
+  KRAS_G12C/BCR_ABL1/CARDIAC_MYOSIN, averaging this matrix's own rows over each
+  target's seed residue set (in the CSV header) and re-ranking (seed excluded)
+  reproduces the shipped top-5, in rank order, exactly (TASK-0389). MYC_MAX is
+  the disclosed exception — its hit list is a separate 4-operator consensus
+  ranking, not derived from this matrix's single operator.
 
 | target | structure | N | pairs |
 |---|---|---|---|

@@ -1,6 +1,6 @@
 # TASK-0391 — Fix `func_ligand`'s silent fall-through on stale/incomplete codes
 
-- Status: TODO
+- Status: In Progress
 - Owner: unassigned
 - Priority: High — Phase-2, explicitly deferred past the Phase-1 deadline
 - Filed: 2026-09-13 by Implementer C
