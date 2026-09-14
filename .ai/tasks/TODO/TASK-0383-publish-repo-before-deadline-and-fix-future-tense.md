@@ -76,3 +76,26 @@ Also: a clone loses the commit history, and §7's claim is specifically *"the fu
 task history, including every retraction"*. If we clone, clone with history
 (`git clone --mirror` then push), not a snapshot — otherwise the sentence stops
 being true in a second way.
+
+### Do TASK-0387 item 4 in the same rebuild — the budget lines up
+
+[[TASK-0387]] shipped 5 of its 6 items and dropped **item 4** (cardiac myosin is
+*Bos taurus* and the scored document never says so) purely for page budget.
+Verified 2026-09-14: `bovine`/`Bos taurus` still appears **0 times** in
+`PHASE1_SUBMISSION_V4.md`.
+
+Deleting `, published 2026-09-15` frees ~22 characters. A minimal species
+disclosure costs less than that. **So the repo going live is also the moment
+item 4 becomes affordable** — one edit, one rebuild, one page check.
+
+Why it is worth the words: our stated objection to Table 1's `6C1H` is partly a
+*species* objection (rat myosin-Ib on rabbit actin). Scoring our own substitute
+without disclosing it is bovine leaves that asymmetry visible to any reviewer who
+opens the PDB entry, and the defence is strong — bovine β-cardiac myosin is a
+near-identical orthologue of the human target, whereas myosin-Ib is a different
+class entirely. We just have to make it.
+
+**Residual, not worth the page:** §1 names `4LDJ` (GDP·Mg) and `8QYP`
+(ADP·VO4·Mg) as our own non-ligand-free inputs but still omits `1OPL`'s second
+ligand, the ATP-site inhibitor `P16`. It is disclosed in `Solution_Outputs.pdf`.
+Add it only if the flip frees more than expected.
