@@ -13855,3 +13855,82 @@ back, not by trusting the build's own success report.
 **Files**: `__WORK_IN_PROGRESS__/documentation/PHASE1_SUBMISSION_V4.md`,
 `__WORK_IN_PROGRESS__/documentation/SUBMISSION_PACKAGE/01_Concept_Proposal.pdf`.
 **Full detail**: `.ai/tasks/DONE/TASK-0388-rescope-apo-holo-priority-claim-against-cryptobench.md`.
+
+## `func_ligand` diagnostics — and a correction to TASK-0386's own root-cause claim ([[TASK-0391]], 2026-09-14)
+
+Picked up with scope decided explicitly at pickup: this task's own filing is
+"Phase-2, explicitly deferred past the Phase-1 deadline," so only the two
+diagnostic options (warn at compute time; lint at config time) were built —
+option 3 (correct `func_ligand`, re-run and re-ship every affected hit
+list/AUC/matrix) stays fully deferred, exactly as [[TASK-0386]] itself
+decided. Nothing here changes any shipped number.
+
+**Before building anything, re-verified [[TASK-0386]]'s own root-cause claim
+directly against the real pipeline rather than trusting it — and it is not
+quite right.** `targets.yaml`'s existing note says BCR_ABL1's
+`func_ligand: ["NIL"]` "finds no match on this target and falls through
+silently." Empirically, `allostery.labels.build_labels` on real BCR_ABL1
+data resolves `provenance == "func_ligand-contact:NIL"` — not a fallback.
+NIL is present in the HOLO structure (`5MO4`) and reaches apo's own index
+space via [[TASK-0217.001]]'s cross-structure (Needleman-Wunsch) heavy-atom
+translation. Root cause, confirmed directly: `apo.ligand_groups` is
+**unconditionally empty for every target in this pipeline** (checked across
+4 targets — apo cleaning never extracts ligands at all), so
+`functional_indices` can never check contacts against `1OPL`'s own,
+apo-native second inhibitor (`P16`) directly; P16 is simply absent from
+`func_ligand`, so no tier ever considers it. The measured **outcome** is
+unaffected and still real — of the 26 residues NIL's translated contact
+excludes, 337 and 340 are in, 338 (the shipped #5 hit) is not — but the
+**mechanism** is "the declared list omits a real ligand" (the same shape as
+CARDIAC_MYOSIN's already-diagnosed VO4 case), not "declared code fails to
+match anything." Appended as a dated correction to `targets.yaml`'s own
+existing note (internal documentation only, no `func_ligand` value
+changed, no submitted file touched).
+
+**Option 2 — `scripts/task0391_func_ligand_linter.py`.** Reads each
+target's `apo_pdb`/`holo_pdb` directly via raw HETATM parsing (deliberately
+independent of the pipeline's own `ligand_groups`, which — per the finding
+above — is empty for apo) and cross-references against declared
+`func_ligand` codes, plus reports apo's own HETATM codes not covered by any
+declared code (after an explicit, conservative denylist of inert
+crystallisation additives — never metals or nucleotide-family codes, which
+must be judged, not silently dropped). **Run across all 15 targets in
+`targets.yaml`, not just the 2 checked by hand.** Reproduces both known
+cases exactly and surfaces one new, previously undocumented issue in the
+shipped Phase-1 cohort: **CARDIAC_MYOSIN's declared `"ATP"` code is present
+in neither `8QYP` nor `8QYR`'s own HETATM records at all** — dead weight in
+the list, a different defect shape than the VO4 omission. `PTP1B`/
+`CASPASE1`/`CASPASE7` correctly report "empty, deliberate," matching
+[[TASK-0216]]'s own documented decision — no false positive on the
+legitimate empty case.
+
+**Option 1 — one additive `RuntimeWarning` in `allostery/labels.py::
+functional_indices`.** Fires exactly where a tier-1 match is about to
+return via cross-structure-translated geometry; no return value or control
+flow changed. Verified it fires for **every** real tier-1 match in this
+pipeline (KRAS_G12C's GDP included) — expected, given `apo.ligand_groups`
+is confirmed always empty: every successful match relies on holo-translated
+geometry by construction, not a per-target anomaly. Two new tests, including
+a negative control (`warnings.simplefilter("error")` proving the warning is
+genuinely conditional, not unconditional noise).
+
+**Verification**: `pytest tests/test_labels.py` 37/37 (was 35 before the two
+new tests), zero regressions. Full `pytest tests/` run separately: 2
+failures, both confirmed pre-existing and unrelated by stashing this task's
+changes and reproducing them identically on the untouched tree
+(`test_fpocket_pin.py`'s pinned-binary-SHA256 check and
+`test_ground_state_relaxation_guard.py`'s classical/heat text-co-occurrence
+scan — neither touches `labels.py` or `func_ligand`).
+
+**Left for the post-deadline pass**: correcting `func_ligand` itself
+(BCR_ABL1 → add `P16`; CARDIAC_MYOSIN → `VO4` in, reconsider `ATP`) and
+re-running/re-shipping every affected result, plus the deeper architectural
+question this task's diagnostics surfaced but did not resolve — whether apo
+cleaning should extract ligands at all, given `apo.ligand_groups` being
+unconditionally empty means tier-1 exclusion never uses same-structure
+geometry for **any** target, not only the two already flagged.
+
+**Files**: `src/allostery/labels.py`, `tests/test_labels.py`,
+`scripts/task0391_func_ligand_linter.py`, `config/targets.yaml` (two dated
+note addenda only, no `func_ligand` value changed).
+**Full detail**: `.ai/tasks/DONE/TASK-0391-fix-func-ligand-silent-fallthrough.md`.

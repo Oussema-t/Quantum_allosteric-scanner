@@ -8,6 +8,8 @@ pocket_full[4.5] 21/21 residues using the heavy-atom contact path
 (protein_heavy_atoms_by_residue), vs. 9/21 with the Calpha-only
 approximation alone -- see TASK-0004's Done section for the full numbers.
 """
+import warnings
+
 import numpy as np
 import pytest
 
@@ -267,6 +269,45 @@ class TestFunctionalIndices:
             f"apo residue 2 under the 2-residue offset), got {list(idx)} "
             "-- the cross-structure translation is not landing correctly."
         )
+
+    def test_cross_structure_match_warns(self):
+        """TASK-0391 (diagnostics): a successful tier-1 match that relies on
+        cross-structure (holo-translated) geometry must warn, since it is
+        not a same-structure contact against a ligand physically present in
+        `coords`' own structure -- the exact mechanism behind BCR_ABL1's
+        NIL/338 near-miss. Purely additive: must not change the return
+        value (same fixture/assertions as the untested-for-warnings case
+        above)."""
+        apo_resnames = _SEQ3
+        holo_resnames = _SEQ3[2:]
+        ligand = LigandGroup("LIG", 900, "A", np.array([[0.0, 0.0, 0.0]]), 1)
+        heavy_atom_coords = np.array([[0.0, 0.0, 0.0]])
+        heavy_atom_seq_index = np.array([0])
+
+        with pytest.warns(RuntimeWarning, match="cross-structure"):
+            idx, provenance = functional_indices(
+                COORDS, [ligand], {"func_ligand": ["LIG"]},
+                heavy_atom_coords=heavy_atom_coords,
+                heavy_atom_seq_index=heavy_atom_seq_index,
+                heavy_atom_resnames=holo_resnames,
+                coords_resnames=apo_resnames,
+            )
+        assert provenance == "func_ligand-contact:LIG"
+        assert list(idx) == [2]
+
+    def test_same_structure_match_does_not_warn(self):
+        """Negative control for the warning above: a same-structure match
+        (no heavy_atom_coords at all, `coords`' own Ca geometry against a
+        ligand in the SAME structure) must not warn -- only cross-structure
+        translation should, or the warning is not diagnostic."""
+        ligand = LigandGroup("LIG", 900, "A", COORDS[:1], 1)
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", RuntimeWarning)
+            idx, provenance = functional_indices(
+                COORDS, [ligand], {"func_ligand": ["LIG"]},
+            )
+        assert provenance == "func_ligand-contact:LIG"
+        assert len(idx)
 
     def test_cross_structure_heavy_atoms_without_resnames_raises(self):
         """The bug this guard exists to close: heavy_atom_coords/

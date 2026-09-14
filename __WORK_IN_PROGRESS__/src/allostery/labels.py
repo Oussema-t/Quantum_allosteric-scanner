@@ -467,6 +467,33 @@ def functional_indices(
                     "correctly, rather than silently misindexing."
                 )
         if len(idx):
+            if heavy_atom_coords is not None and len(heavy_atom_coords):
+                # TASK-0391 (diagnostics only -- warns, changes no return
+                # value): this match's contact geometry comes from a
+                # cross-structure (Needleman-Wunsch-translated) heavy-atom
+                # set, not a direct match against a ligand physically
+                # present in `coords`' own structure. Exactly the mechanism
+                # behind BCR_ABL1's NIL/338 near-miss (TASK-0386/TASK-0391):
+                # `func_ligand: ["NIL"]` resolves via holo `5MO4`'s NIL,
+                # translated into apo `1OPL`'s index space, because apo's
+                # own ligand_groups are never populated by this pipeline --
+                # a real ligand physically present in the apo structure
+                # itself (there, `P16`) is never checked unless it is also
+                # separately named in `func_ligand`. Not necessarily wrong
+                # (translation is deliberate, documented machinery -- TASK-
+                # 0217.001), but geometrically weaker than a same-structure
+                # match, and worth a human glance at this target's own
+                # `func_ligand` completeness -- see `task0391_func_ligand_
+                # linter.py` for a config-time check of exactly this.
+                warnings.warn(
+                    f"functional_indices: {code!r} matched via cross-structure "
+                    "(holo-translated) contact geometry, not a ligand present "
+                    "in this call's own `coords` structure directly -- check "
+                    "whether `func_ligand` also needs the apo structure's own "
+                    "ligand code(s) (see TASK-0391).",
+                    RuntimeWarning,
+                    stacklevel=2,
+                )
             return idx, f"func_ligand-contact:{code}"
 
     if uniprot_resnums and coords_resnums is not None:

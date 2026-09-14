@@ -160,6 +160,26 @@ targets:
       fixed, before the Phase-1 deadline (re-running invalidates shipped
       numbers with no time to re-audit) -- see TASK-0386. Fix tracked as
       TASK-0391.
+      CORRECTION 2026-09-14 (TASK-0391, diagnostics pass): the mechanism above
+      is not quite right -- verified directly against the real pipeline
+      (allostery.labels.build_labels) before trusting it further. Tier 1 does
+      NOT fall through for BCR_ABL1: it resolves as func_ligand-contact:NIL,
+      using NIL's HOLO (5MO4) position cross-structure-translated into apo's
+      own index space (TASK-0217.001's Needleman-Wunsch machinery) -- because
+      apo.ligand_groups is unconditionally empty for every target in this
+      pipeline (apo cleaning never extracts ligands at all, confirmed across
+      4 targets), functional_indices can NEVER check contacts against 1OPL's
+      own, apo-native P16 directly; P16 is simply never in func_ligand at all,
+      so no tier considers it. The measured OUTCOME is unchanged and still
+      the real root cause of TASK-0385's finding: of the 26 residues NIL
+      cross-translated contact excludes, 337 and 340 are in but 338 is not --
+      just outside the translated cutoff though real-space close to apo's own
+      P16. So: "declared func_ligand list omits a real ligand" (same shape as
+      CARDIAC_MYOSIN's VO4 case), not "declared code fails to match anything."
+      See task0391_func_ligand_linter.py for a config-time check of exactly
+      this, run across every target, and a new finding it surfaced that
+      neither TASK-0386 nor this note caught: CARDIAC_MYOSIN's own declared
+      "ATP" code is not present in either 8QYP or 8QYR at all.
     pocket_label:
       method: consensus  # TASK-0177: >=3-of-{n_available} vote across C1(contact 3.5-6.0A)/C2(dSASA)/C3(fpocket cavity)/C4(depositor SITE); core=all-agree. Frozen under frozen_context by scripts/task0177_consensus_labels.py -- do not hand-edit, regenerate.
       criteria_available: ["C1_contact", "C2_dsasa", "C3_fpocket_holo", "C4_depositor_site"]
@@ -223,6 +243,12 @@ targets:
       Phase-1 deadline -- see TASK-0386. Fix (add VO4, or derive func_ligand
       from the apo structure's own ligands rather than hand-listing) tracked
       as TASK-0391.
+      ADDITIONAL FINDING 2026-09-14 (TASK-0391's config-time linter,
+      task0391_func_ligand_linter.py, run across every target in this file):
+      the declared "ATP" code is not present in either 8QYP or 8QYR's own
+      HETATM records at all -- dead weight in this list, not merely
+      incomplete. Does not change the VO4 finding above; ADP's own match and
+      exclusion behave as documented. Diagnostic only, not corrected here.
     pocket_label:
       method: consensus  # TASK-0177: >=3-of-{n_available} vote across C1(contact 3.5-6.0A)/C2(dSASA)/C3(fpocket cavity)/C4(depositor SITE); core=all-agree. Frozen under frozen_context by scripts/task0177_consensus_labels.py -- do not hand-edit, regenerate.
       criteria_available: ["C1_contact", "C2_dsasa", "C3_fpocket_holo"]  # C4 unavailable: 8QYR has no legacy SITE records -- core==consensus here is degenerate (unanimity of only 3 criteria), NOT strong agreement; see RESULTS.md negative-control caveat.
