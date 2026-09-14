@@ -16,9 +16,11 @@ Sources are the two governing documents, quoted rather than remembered:
 | 2 | `02_Team_Profile.pdf` | 40 K | Guidelines §4.1 |
 | 3 | `03_Problem_Statement_Selection.pdf` | 28 K | Guidelines §4.2 |
 | 4 | `Connectivity_Matrices.csv` | 13 M | Challenge Statement §5, output 1 |
-| 5 | `Solution_Outputs.pdf` | 56 K | Challenge Statement §5, outputs 2 and 3 |
+| 5 | `Solution_Outputs.pdf` | 2.7 M | Challenge Statement §5, outputs 2 and 3 |
 
-**Total ≈ 14 MB** against the §5 cap of 20 MB. **Markdown is not an accepted upload
+**Total ≈ 16 MB** against the §5 cap of 20 MB (file 5 grew from 56 K after
+TASK-0390 added an independent-corroboration section with a connectivity
+figure — still comfortably under cap). **Markdown is not an accepted upload
 format**, which is why 2, 3 and 5 are PDFs; their `.md` sources sit alongside them
 and are not uploaded.
 

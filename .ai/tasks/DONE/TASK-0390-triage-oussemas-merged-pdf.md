@@ -1,6 +1,6 @@
 # TASK-0390 — Triage Oussema's merged PDF: salvage Appendix B, do not ship the body
 
-- Status: In Progress
+- Status: Done
 - Owner: Implementer to apply; Team Lead to decide the page-budget items
 - Priority: High — Appendix B contains our best independent corroboration, and the body it is attached to would undo a week of fixes
 - Filed: 2026-09-13 by Reviewer thread
@@ -113,21 +113,36 @@ different candidate funnel. It is **corroboration** on B3/B5 and a
 **contradiction** on coherence. Use "independent second pipeline", never
 "replication".
 
-**D2. The coherence contradiction is disclosed nowhere in the merged PDF — and
-his own branch README flags it unprompted.** `seeded_classical/README.md` says:
-*"This CONTRADICTS the conclusion drawn on the bartosz branch… must be reconciled
-before submission."* On his cohort, coherent CTQW beats its exact classical twin
-at **p = 2.3e-12** (we independently recomputed from his raw shards: 0.5999 vs
-0.5124, Wilcoxon p = 2.25e-12, matching his number). Our §2 reports a
-well-powered coherence **null**.
+**D2 — CORRECTED (2026-09-14, Implementer A): stale. There is no contradiction to
+disclose.** This item quotes `allosteric/results/seeded_classical/README.md`'s
+original claim, but that exact file was corrected **2026-09-11** (commit
+`f8d79b6`, two days *before* this task was filed 2026-09-13) — checked directly
+against `origin/allosteric` rather than trusted from this task's own paraphrase:
 
-**This is the biggest content risk in the merged document.** Shipping an appendix
-badged "replication" while omitting the one place the two tracks disagree — on
-the central question of the whole proposal — is exactly the failure mode §1
-accuses the field of. Either disclose it in one sentence, or do not attach his
-track to ours at all. Reviewer's recommendation: **disclose it.** A submission
-that names its own internal contradiction is worth more than one that hides it,
-and this document has already spent six pages earning that posture.
+> **CORRECTED 2026-09-11 — the "exact classical twin" framing was wrong about
+> our own code…** The two arms are not operator-matched (`seeded_classical.py:76`
+> reads a precomputed rank vector for the CTQW arm; the heat kernel is computed
+> fresh on plain `L` — two variables differ, not one), and the quantum arm's
+> score (`neg_dE`) is phase-free by the source branch's own measurement
+> (`ALL_RESULTS_SUMMARY.md:99-104`, ρ=1.0000 from the diagonals of H and H²) — so
+> **p = 2.3e-12 cannot be evidence about coherence at any p-value.** … **The
+> operator-matched coherence test … gives +0.0104, p = 0.079 — not significant.
+> That is the number that answers the coherence question, and it is the one to
+> quote.**
+
+Our own [[TASK-0366]] (Done, corrected 2026-09-11) independently reproduced this
+from all 8 raw `sc_*.json` shards, reached the identical conclusion by reading
+the producing code, and explicitly withdrew the "highest priority, needs
+reconciliation" flag: *"HYP-P7 unchanged, no reconciliation owed."* The
+corrected coherence-matched number (p = 0.079) is **not significant**, and is
+consistent with — not in tension with — our own §2 null (p = 0.83–0.92 across
+two cohort sizes). **Nothing needs disclosing because the two tracks agree on
+coherence; they never disagreed once the code was read.** The word "replication"
+badge (D1) is still wrong for the reason D1 gives (different detector/cohort/
+funnel), but not because of a coherence conflict. Do not add a coherence
+disclosure sentence anywhere in the appendix content — it would be describing a
+contradiction that does not exist, sourced from a version of the README that
+was already superseded before this task was filed.
 
 **D3. HIV-1 RT best cell, AUC 0.963 / P@5 0.8.** Correctly captioned as
 best-of-221 selection, but it is a near-perfect number in a document whose
@@ -167,3 +182,76 @@ conventions, and the glyph map in `submission_build_latex.py` already handles Å
 Appendix content is on HEAD or explicitly declined item by item; nothing from the
 merged body is merged; the rebuilt PDF reports body 6/6 PASS and **zero**
 `SUBMISSION_BUILD` occurrences.
+
+## Done (2026-09-14, Implementer A) — Implementer's scope closed; two items left for Team Lead
+
+**Sourced from the actual appendix, not this task's paraphrase.** Pulled the merged
+PDF's true text (`pypdf`, pages 8-9) and the `.md` source it was built from
+(`git show origin/allosteric:submission/phase1/PHASE1_SUBMISSION_V4_MERGED.md`)
+before writing anything — every B1-B5 number below is checked against that
+source, not copied from this task file.
+
+**D2 corrected, not actioned** — see the correction inline above. The
+"coherence contradiction" this item told the next thread to disclose does not
+exist: `seeded_classical/README.md` was corrected 2026-09-11 (`f8d79b6`),
+*before* this task was filed, and [[TASK-0366]] already closed the question
+(coherence-matched test p=0.079, not significant, consistent with our own
+null). No disclosure sentence was added. This is the highest-value finding in
+this pass — it would have shipped a disclosure describing a disagreement that
+does not exist.
+
+**B1-B5 + C.1/C.2/C.4 landed in `Solution_Outputs.md`/`.pdf`** (not
+page-limited), new §4 "Independent second-pipeline corroboration". Applied in
+the same edit: **D1** (never "replication" — states "independent second
+pipeline, not a replication" up front), **D3** (HIV-1 RT's 0.963/0.8 shipped
+only beside the `H_new` near-negative, never standalone), **D4** (cardiac
+myosin's fpocket-seeding non-reproducibility stated in prose, not left in a
+figure caption), **D6** (all of Oussema's ASCII math converted — but see
+correction below). **D5 is moot**: the new material is `Solution_Outputs.md`
+§4, not "Appendix B", so there is no numbering collision with the CP's own
+"Appendix — References" to fix.
+
+**D6 correction, found while applying it:** tried to render the section with
+proper Unicode math (≥, α, λ, ∘, ᵀ) per this item's instruction that "the body
+uses proper math." Rebuilding `Solution_Outputs.pdf` (`pandoc
+--pdf-engine=tectonic`) threw `Missing character` for every one of them —
+`Solution_Outputs.pdf`'s build has no glyph-substitution step (that
+infrastructure — cited in this item — lives in `submission_build_latex.py`,
+which only builds the Concept Proposal). Converted the new section back to
+ASCII (`>=`, `C-alpha`, `sqrt(...)`, `lambda_max`, `(V o V)(V o V)^T`) to match
+the document's own existing convention and its actual build pipeline. **Found
+the same bug already live in the previously-shipped PDF**: one pre-existing
+`≥` (§2, Jaccard threshold line) was already throwing the identical error —
+fixed it too (`>=`), same cause, same fix, zero risk.
+
+**Figure (C, page-9 heat-maps) moved with the matrix deliverable**: extracted
+`connectivity_sites.png` from `origin/allosteric:submission/phase1/figures/`
+(2.9 MB) into `SUBMISSION_PACKAGE/figures/`, referenced in the new §4.
+`Solution_Outputs.pdf` rebuilt end to end and verified by text-extraction
+(`neg_dE`, `0.771`, `0.7216`, `0.963`, `independent second pipeline` all
+present; no `Missing character` warnings; two pre-existing 5pt overfull-hbox
+warnings confirmed unrelated — identical in a rebuild of the un-edited file).
+Package total grew 56 K → 2.7 M for that one file (the figure); README's size
+table and total (14 MB → 16 MB) updated; still well under the 20 MB §5 cap.
+
+**Not actioned — Team Lead's call, per this task's own Owner line:**
+
+1. **Reply to Oussema** (recommended order, item 1) — a communication action,
+   not mine to send. Ask him to rebase onto HEAD rather than merge; no need to
+   separately ask about D2 (resolved above, nothing to reconcile).
+2. **B1/B2 into the 6-page Concept Proposal body** — not done. [[TASK-0385]]
+   and [[TASK-0387]] both already have that body at 6/6 with zero slack
+   (verified again here: `01_Concept_Proposal.pdf` is 7 pages — 6 body + 1
+   appendix — `SUBMISSION_BUILD` occurrences: 0, so HEAD's own build stayed
+   clean throughout this task). Adding either number costs a page-budget fight
+   that is explicitly not this task's call.
+3. **[[TASK-0387]] item 2, "adopt his wording"** — declined. TASK-0387 is
+   Done; its own note says four longer drafts of that exact footnote each
+   pushed the body to 7/6 before landing the current minimal form, and its
+   numbers already agree with the source ("three structures across two
+   deviating rows"). Re-opening a 6/6 body for a wording preference, not a
+   correctness fix, is not worth the risk this close to submission.
+
+Verified before finishing: `git status` on everything touched, PDF rebuild
+warnings read in full (not just exit code), and the CP re-checked clean as
+above. Nothing from the merged body (§§1-7) was merged anywhere.
