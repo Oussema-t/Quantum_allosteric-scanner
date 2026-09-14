@@ -1,6 +1,6 @@
 # TASK-0385 — Say where our five actually sit, with numbers we computed ourselves
 
-- Status: TODO
+- Status: Done
 - Owner: Reviewer to supply numbers (**done — below**); Team Lead to decide the page-budget trade
 - Priority: **Highest-value content change in the review.** Also the one that costs page budget.
 - Filed: 2026-09-13 by Reviewer thread
@@ -94,3 +94,77 @@ scorer may not read**, so the fallback is materially weaker.
 
 The paragraph is in §1 with the table above's numbers, the PDF rebuilds at
 6/6 PASS, and `verifyB.py` is committed so the numbers are reproducible.
+
+---
+
+## Done — 2026-09-14, Reviewer thread
+
+**Landed in §1 of the Concept Proposal, merged into the paragraph it subsumes.**
+The standalone "Our own method fails this instrument" paragraph and this one made
+the same argument at two scales, so they are now one: the cohort-level number
+(AUC 0.5921 → 0.5184, ~80% inherited proximity) followed by the deliverable-level
+fact. Final text:
+
+> **Our own method fails this instrument, and the hit list shows how.** Walk
+> occupation scores AUC 0.5921 across 108 structures; conditioned on distance to
+> the active site it falls to **0.5184, not significant** — roughly 80% of the
+> apparent signal was inherited proximity. The deliverable makes it concrete: all
+> fifteen residues we submit lie at the **orthosteric** site, 4.2–11.8 Å from the
+> bound nucleotide or inhibitor, and site-level overlap with the validated pocket
+> is Jaccard **0.077 / 0.000 / 0.000** against our own 0.3 threshold — **0 of 3**.
+> BCR-ABL1's fifth is the gatekeeper threonine, offered as a predicted
+> *allosteric* residue on the asciminib target. **This is the proximity confound
+> in a deliverable**.
+
+**Site-level Jaccard verified before printing, not taken from the review.**
+Recomputed from the shipped `*_hit_list.json` `sites.top_sites[].member_resnums`
+against the same truth pockets: KRAS 20/3/**0.077**, BCR-ABL1 56/0/**0.000**,
+cardiac 85/0/**0.000**. Reproduces the external review exactly.
+
+**The two corrections held.** The review's "21–33 Å in BCR-ABL1" and "three of
+five within 4.5 Å of GDP/Mg" were **not** used. Neither the wrong range nor the
+4.5 Å framing appears in any shipped file.
+
+### The page trade, and what paid for it
+
+Body was at 6/6 with zero slack, so the paragraph had to be funded. Nothing was
+deleted that carried a unique claim:
+
+| change | saved |
+|---|---|
+| merged the two paragraphs (one heading, one lead-in) | ~2 lines |
+| folded the `NO_SIGNAL_IN_APO` definition into the sentence above it; dropped the standalone paragraph, whose second sentence this paragraph now states concretely | ~3 lines |
+| dropped "We report it at n = 63 pairs; the ≥ 100 … remains a Phase-2 target" — restated verbatim in §5's Phase-2 table | ~1.5 lines |
+| dropped the inline *family* gloss in §1 — §2 defines it again two pages later | ~2 lines |
+| per-target distance ranges → one range (detail moved to `Solution_Outputs.pdf`) | ~2 lines |
+| tightened the PocketMiner parenthetical in §4 | ~1 line |
+
+**Final: `[PASS] body pages 6 / 6`, appendix 1/3, A4, 10.5 pt, 0 words past the
+margin, glyph coverage clean, every citation resolving, `SUBMISSION_BUILD`
+occurrences 0.** The one `[WARN] small text` is the pre-existing table-font
+residual, unchanged from the baseline measured before any edit.
+
+### Also done, not in the original scope
+
+- **The per-target detail went into `Solution_Outputs.md` §2**, which is not
+  page-limited — a table of pocket distance, orthosteric distance and top-site
+  Jaccard per target, plus the method and a pointer to
+  `.ai/tools/verify_hit_list_distances.py`. **This is where the two facts §1 could
+  not afford now live**: that BCR-ABL1 and cardiac myosin miss by 16 Å, and that
+  **KRAS is not a partial success but an unresolvable case** — residue 33 sits
+  1.3 Å from the pocket *and* 4.3 Å from GDP·Mg, so at that separation the labels
+  cannot be told apart. Stating it as a near-miss would have been the dishonest
+  reading. Solution_Outputs is now 6 pages (no cap applies).
+- **Fixed a live defect found in passing**: §1 cross-referenced
+  `artefacts/README.md` for the detection limit. [[TASK-0384]] established that
+  `artefacts/` **is not uploaded**, so the pointer sent a scorer to a file they do
+  not receive. Now points at `Solution_Outputs.pdf`.
+
+### Verification
+
+Text-extracted both shipped PDFs with `pdfplumber` rather than trusting the build:
+every figure above present in `01_Concept_Proposal.pdf`, the per-target table
+present in `Solution_Outputs.pdf`, zero `SUBMISSION_BUILD` occurrences in either.
+
+**Files**: `PHASE1_SUBMISSION_V4.md`,
+`SUBMISSION_PACKAGE/{Solution_Outputs.md,01_Concept_Proposal.pdf,Solution_Outputs.pdf}`.

@@ -57,6 +57,30 @@ score against. Its five are a genuinely prospective prediction, labelled
 
 ## 2. Known limitations, measured
 
+**Where the five actually sit, per target.** Measured here rather than asserted:
+heavy-atom minimum distance, altloc A only, hydrogens excluded; the truth pocket is
+every residue within 5.0 Å of the validation ligand (`MYR` in `1OPL`, sotorasib
+`MOV` in `6OIM`, mavacamten `XB2` in `8QYR`). Reproducible with
+`.ai/tools/verify_hit_list_distances.py`.
+
+| target | → validated pocket | → orthosteric ligand | top-site Jaccard |
+|---|---|---|---|
+| KRAS_G12C (`4LDJ`) | 1.3–14.2 Å | 4.3–8.6 Å (GDP·Mg) | 0.077 (3/20 overlap) |
+| BCR_ABL1 (`1OPL`) | 16.7–26.0 Å | 4.2–11.5 Å (P16) | 0.000 (0/56) |
+| CARDIAC_MYOSIN (`8QYP`) | 16.6–26.1 Å | 6.6–11.8 Å (ADP·VO4·Mg) | 0.000 (0/85) |
+
+Three readings the Concept Proposal compresses into one line. **BCR-ABL1 and
+cardiac myosin miss completely** — nothing we submit comes within 16 Å of the
+validated pocket, while everything we submit sits 4–12 Å from the orthosteric
+ligand. **KRAS is not a partial success but an unresolvable case**: its switch-II
+pocket abuts the nucleotide, so residue 33 lies 1.3 Å from the pocket *and* 4.3 Å
+from GDP·Mg — at this separation the two labels cannot be told apart, which is the
+confound itself rather than a recovery. **BCR-ABL1's #5 is residue 338**, the
+gatekeeper threonine (T315 in Abl-1a numbering, 338 − 19), 4.2 Å from the ATP-site
+inhibitor and 16.7 Å from the myristoyl pocket the challenge names as the target.
+
+Against our own site-level detection threshold of Jaccard ≥ 0.3, that is **0 of 3**.
+
 **Each hit list is one draw.** Ten genuine G12C apo structures span AUC
 **0.408–0.595** (median 0.482); substituting the cardiac apo structure moved AUC by
 **0.27**. A different, equally defensible apo deposition would give a different five.
