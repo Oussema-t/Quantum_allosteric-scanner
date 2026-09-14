@@ -1,10 +1,13 @@
 # Connectivity matrices from the CTQW
 
-> **Note (regenerated):** the per-target best/worst cells and AUC/P@5 were regenerated from one
-> consistent pipeline run; the current table is in `submission/phase1/supplementary/README.md` and
-> Appendix B.2. The winning operator shifts slightly run-to-run (fpocket seed set is not bit-stable),
-> so some best/worst operators below differ from the current run; matrices for any fixed operator
-> reproduce exactly.
+> **Note (regenerated 2026-09-14):** the per-target best/worst cells, AUC/P@5, top-5 sub-blocks, walk traces
+> and Appendix B.2 were all regenerated from ONE run per target with the seeding recorded in
+> `submission/phase1/supplementary/README.md` (seed-pocket cut and MIN_HOP are per-target choices: KRAS and
+> BCR-ABL1 top-5 by min-rank, HIV-1 RT top-10 rank-fusion, cardiac myosin top-10 by PASSer allostery;
+> MIN_HOP 1 for KRAS and cardiac myosin, 2 for BCR-ABL1 and HIV-1 RT). The numbers below match that table
+> except where a section says otherwise (KRAS best-by-P@5 is `H9_bfac` 0.806 / 0.8; the `H_new` 0.809 / 0.6
+> row is the pre-registered operator, best by AUC). Matrices for any fixed operator are structure+operator-only
+> and reproduce exactly; fpocket output is cached, so a fixed seeding setting reproduces the seed set exactly.
 
 
 The first of the three required deliverables: the residue-by-residue transport matrix
@@ -70,7 +73,7 @@ cell AUC exactly, so the top-5 are the faithful hit list, not a proxy.
 Source: `Quantum_Allosteric_Scanner_v2.ipynb`, cell 14w.
 
 
-## Cardiac myosin (8QYP -> 8QYR, drug XB2), MIN_HOP=2, consensus seeding SEED_WEIGHTS=(0,1,0)
+## Cardiac myosin (8QYP -> 8QYR, drug XB2), MIN_HOP=1, consensus seeding SEED_WEIGHTS=(0,1,0), top-10
 
 The consensus seeding (rank fpocket pockets by PASSer allostery, not druggability) reproducibly seeds
 the true mavacamten pocket: fpocket P55 (druggability rank #33, PASSer allostery rank #2, 14 drug
