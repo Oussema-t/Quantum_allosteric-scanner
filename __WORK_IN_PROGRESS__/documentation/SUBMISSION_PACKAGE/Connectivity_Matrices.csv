@@ -1,34 +1,3 @@
-# Connectivity Matrix -- Challenge Statement section 5, output 1.
-# One row per residue pair. Symmetric: each unordered pair is listed exactly once, in each
-# matrix's own row/column order (not sorted) -- entry (j,i) equals entry (i,j); do not assume
-# residue_i <= residue_j.
-# residue_i / residue_j are PDB residue numbers as deposited, not array indices; they differ
-# from array indices for three of the four targets. MYC_MAX (1NKP) is the two-chain target;
-# its chains have non-overlapping numbering (chain A 897-984, chain B 202-284), so no separate
-# chain column is needed to place a row unambiguously.
-# value = time-averaged transition probability of the underlying continuous-time quantum walk
-# from residue_i to residue_j, dimensionless, 6 significant figures. Each row of the full N x N
-# matrix sums to 1 (+/-1e-6), and the diagonal is that row's own maximum in ~78% of rows (checked
-# on CARDIAC_MYOSIN) -- a naive heatmap of this matrix reads as diagonal-dominated, which is the
-# walk's own probability of staying near its start over the averaging window, not a defect or a
-# sign that off-diagonal transport is absent. Mask the diagonal or use a log/percentile colour
-# scale to see off-diagonal structure.
-# Hit-list provenance (TASK-0389), verified by reconstruction, not asserted: for KRAS_G12C,
-# BCR_ABL1 and CARDIAC_MYOSIN, this matrix and the site-level hit list share the same operator --
-# H_new, default/optimised configuration (confirmed the winning candidate over H10 for all three
-# via each target's own verdict.json, AUC_apo_Hnew_default == AUC_apo_Hnew_optimised in every
-# case). The hit list's score for residue j is the unweighted mean of this matrix's own rows over
-# that target's seed residue set below, seed residues excluded from ranking; averaging this
-# matrix's rows over each seed and re-ranking reproduces the shipped top-5, in rank order, exactly,
-# for all three. Seed sets (PDB residue numbers): KRAS_G12C (GDP/Cys12 contact, 18 residues)
-# 11-18,28,30,32,116,117,119,120,145-147; BCR_ABL1 (nilotinib/ATP-site contact, 26 residues)
-# 267,272,275,288-290,304,305,308,309,312,317,318,332,334,336,337,340,373,378,380,389,398-401;
-# CARDIAC_MYOSIN (mavacamten-site contact, 18 residues) 114,115,126-128,134,179-186,238,240,242,461.
-# MYC_MAX is the disclosed exception: it has no ground truth, so its hit list is a separate
-# 4-operator consensus ranking (H_new/H10/H2/H14), not this matrix's single H_new operator, and
-# does not reconstruct the same way. Its 5-residue seed is 226,243,246,925,943 -- identical to its
-# own shipped hit list, because with no active site to seed from, `functional_indices` fell back to
-# a top-degree proxy and the (degree-correlated) consensus ranking converged on the same residues.
 target,pdb_id,residue_i,residue_j,value
 KRAS_G12C,4LDJ,0,0,0.18079
 KRAS_G12C,4LDJ,0,1,0.232677
