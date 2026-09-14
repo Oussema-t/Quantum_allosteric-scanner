@@ -1,5 +1,12 @@
 # Connectivity matrices from the CTQW
 
+> **Note (regenerated):** the per-target best/worst cells and AUC/P@5 were regenerated from one
+> consistent pipeline run; the current table is in `submission/phase1/supplementary/README.md` and
+> Appendix B.2. The winning operator shifts slightly run-to-run (fpocket seed set is not bit-stable),
+> so some best/worst operators below differ from the current run; matrices for any fixed operator
+> reproduce exactly.
+
+
 The first of the three required deliverables: the residue-by-residue transport matrix
 
     C_ij = lim_{T->inf} (1/T) integral_0^T |<j|e^{-iHt}|i>|^2 dt = sum_k |v_k(i)|^2 |v_k(j)|^2
