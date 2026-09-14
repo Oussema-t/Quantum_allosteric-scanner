@@ -13800,3 +13800,58 @@ CSV header at no page-budget cost.
 
 **Files**: `__WORK_IN_PROGRESS__/documentation/SUBMISSION_PACKAGE/{Connectivity_Matrices.csv,README.md}`.
 **Full detail**: `.ai/tasks/DONE/TASK-0389-hit-list-not-reproducible-from-the-shipped-matrix.md`.
+
+## The apo/holo priority claim was overclaimed on existence, not just magnitude ([[TASK-0388]], 2026-09-14)
+
+`PHASE1_SUBMISSION_V4.md:34` claimed "ligand-removed holo is measurably easier
+than apo — a gap we have found no report of." An external reviewer flagged
+CryptoBench (Škrhák et al., *Bioinformatics* 2025) as stating this same
+qualitative gap in its own abstract. **Verified directly rather than taken on
+trust** (this register's own "a PDB ID is a claim until someone opens the
+entry" rule, applied to a citation): fetched the actual abstract from two
+independent sources (Oxford Academic, PMC), both returning the identical
+verbatim sentence confirming current methods "rely on holo... overlooking...
+apo states," "particularly problematic" for cryptic sites. Confirmed — the
+claim of *existence*-priority does not survive.
+
+**Went one level further than the filed task's own pre-drafted fix**: checked
+whether CryptoBench also reports a *quantitative* apo-vs-holo gap, which would
+have undercut even a rescoped "magnitude not reported" claim. Partially yes —
+its own Table 5 gives P2Rank AUC 0.81 (apo) → 0.89 (holo), but with the ligand
+**retained**, not stripped. Our own 63-pair measurement uses ligand-**stripped**
+holo (removing the leakage channel a retained ligand's own atoms create) and a
+single detector (fpocket) — a materially different, still-unreported design.
+The rescoped claim holds.
+
+**Also caught while re-deriving the number to cite**: the filed task's own
+pre-drafted fix text, and the existing submission text one sentence later,
+both called the +0.199 figure "AUC." Checked against [[TASK-0345]]'s committed
+Result table directly — it is a mean fpocket **druggability-score** delta;
+TASK-0345 never computed an AUC for this comparison. Fixed both instances
+while rewriting the paragraph rather than propagating a pre-existing units
+error.
+
+**Two fixes applied**, both budget-neutral (final body paragraph is 69
+characters *shorter* than the original despite adding a citation — the body
+was at 6/6 with zero slack, confirmed via `submission_build_latex.py`, and a
+first-draft edit briefly pushed it to 7/6 before trimming): (1) line 34
+rescoped to "the direction is known [16], its size on a matched cohort was
+not"; (2) the §5 Phase-2 table's "(a) Certifying cryptic-pocket benchmark" row
+now names CryptoBench/AHoJ-DB as the incumbent next to what our own instrument
+adds beyond their pair curation.
+
+**A second real glyph-coverage bug this review cycle** (same class as
+[[TASK-0386]]'s Unicode-subscript failure): the new reference's Czech
+diacritics (`Škrhák`, `Krivák`) have no LaTeX rendering in this template and
+failed the build's own glyph-coverage check. Fixed by ASCII-transliterating
+the author names in the reference entry, caught before shipping rather than
+after.
+
+Final build: `submission_build_latex.py` → PASS (A4, body 6/6, appendix 1/3,
+10.5pt, 0 words past margin, glyph coverage clean, every citation resolving
+including the new [16]). Rebuilt PDF verified by reading the rendered output
+back, not by trusting the build's own success report.
+
+**Files**: `__WORK_IN_PROGRESS__/documentation/PHASE1_SUBMISSION_V4.md`,
+`__WORK_IN_PROGRESS__/documentation/SUBMISSION_PACKAGE/01_Concept_Proposal.pdf`.
+**Full detail**: `.ai/tasks/DONE/TASK-0388-rescope-apo-holo-priority-claim-against-cryptobench.md`.
