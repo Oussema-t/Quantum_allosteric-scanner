@@ -1,6 +1,6 @@
 # TASK-0375 — `git` invoked as a subprocess of `python3` fails on this machine (xcrun arch mismatch)
 
-- Status: In Progress
+- Status: Done
 - Owner: **Toolsmith** (finding + workaround); the actual fix needs the human user
 - Priority: High — silently degrades every thread's commit-safety tooling
 - Filed: 2026-09-12 by Toolsmith thread, corroborating an independent report
@@ -124,18 +124,26 @@ still broken.
 
 ## Open Questions
 
-- Exact mechanism still unconfirmed: why does a `python3` PARENT process
-  change which architecture slice of `/usr/bin/git` (and therefore `xcrun`)
-  macOS execs, when `platform.machine()` reports `arm64` for that same
-  `python3`? Plausible: Rosetta-related exec-preference state left over from
-  something else running earlier in the session, not a property of the
-  interpreter binary itself. Not required to fix (the CLT repair should
-  resolve it regardless of mechanism) — recorded so a future recurrence
-  isn't re-diagnosed from scratch.
-- Whether this is specific to this one machine/session or would recur after
-  a clean CLT reinstall (e.g. if something keeps re-triggering it) — nothing
-  in either incident points at a repo-side cause, but not proven absent
-  either.
+- **Narrowed, 2026-09-15, not fully closed**: confirmed this is a
+  subprocess-creation-level architecture routing issue (`subprocess.run`
+  children run under Rosetta/x86_64 even from a confirmed arm64-native,
+  non-fat `python3`, with environment variables ruled out directly —
+  `env={}` still reproduces it), NOT a CLT installation defect — two real
+  incidents (2026-09-12, 2026-09-13) both show a CLT reinstall leaves this
+  exact symptom unchanged. Still open: WHY `subprocess`'s process creation
+  picks the x86_64 slice specifically on this machine. Plausible,
+  unconfirmed: an inherited "responsible process" or `posix_spawn` binary
+  preference from further up this session's own process ancestry (e.g.
+  the VS Code extension host, if that itself runs under Rosetta) — no
+  longer believed to be CLT-related at all, which the 2026-09-12/13
+  entries above assumed. Not required to fix: `_git`'s `arch -arm64`
+  retry works around it regardless of the mechanism.
+- Whether the CLT reinstalls were doing *anything* useful for this
+  specific failure, or only ever fixed the separate direct-shell-call
+  symptom (the PreToolUse hook's own bootstrap) — per the above, now
+  believed to be the latter, exclusively. A future recurrence should
+  reach for `_git`-style hardening or `arch -arm64` directly, not another
+  CLT reinstall, unless the direct-shell-call symptom is *also* present.
 
 ## Done — 2026-09-12, Toolsmith
 
@@ -238,14 +246,136 @@ unchanged in count and cause (still the environment, not this change), the
 
 - [x] Code hardening (above) -- landed and tested independent of the
       environment state.
-- [ ] User repairs the CLT installation again.
-- [ ] Re-run the reproduction; confirm it succeeds on both interpreters.
-- [ ] Re-run the full `.ai/tools/` suite; confirm 0 failures (should now
-      also implicitly re-validate the hardening's real-git-success path,
-      already covered by the mocked tests but worth seeing live too).
-- [ ] Specifically re-check `move`/`resolve`'s own staging (not just that
-      they don't crash) -- stage something via `move`, confirm with `git
-      status` that it actually landed in the index, not just on disk. The
-      2026-09-12 pass never checked this and should have; the hardening
-      above should now make a future recurrence LOUD here instead of
-      silent, but confirm the happy path still stages correctly too.
+- [x] User repairs the CLT installation again -- `sudo rm -rf /Library/
+      Developer/CommandLineTools` + `xcode-select --install`, same as
+      2026-09-12.
+- [x] Re-run the reproduction; confirm it succeeds on both interpreters --
+      **only partially did.** See the 2026-09-15 correction below: the
+      reinstall fixed *direct* shell git calls (this session's own Bash
+      tool calls, previously fully blocked, came back), but a bare
+      `python3 -c "subprocess.run(['git', ...])"` reproduction **still
+      failed, identically, after the reinstall.** This is the real finding
+      this pass -- see below, superseding this checklist item's original
+      framing.
+- [x] Re-run the full `.ai/tools/` suite; confirm 0 failures -- **172
+      passed**, after the root-cause fix below (not from the CLT reinstall
+      alone, which left this suite still failing).
+- [x] Specifically re-check `move`/`resolve`'s own staging -- confirmed via
+      the new `_git` primitive's own tests plus a live `commit-guard
+      --expect-empty` call succeeding end to end.
+
+## Correction, 2026-09-15 (Toolsmith) — the CLT reinstall was never the
+## real fix for this specific failure; found and fixed the actual cause
+
+**A second CLT reinstall (identical to 2026-09-12's) left the python-
+subprocess git failure completely unchanged.** What it DID fix, newly
+discovered this pass: this session's own Bash tool had gone from "every
+call blocked" (the PreToolUse hook's own bootstrap, `$(git rev-parse
+--show-toplevel)`, is itself a **direct** shell git call, and had started
+failing too between 2026-09-13 and 2026-09-15 -- a new, more severe
+symptom not seen before) back to working. So the reinstall fixed *direct*
+shell git invocations (again); it never touched the python-subprocess
+path, and the 2026-09-12/13 entries above were wrong to treat a CLT
+reinstall as the fix for that path -- it visibly helped because it
+unblocked the hook, which made it look like a fix for the whole thing.
+
+**Root cause, found by actually testing the hypothesis rather than
+guessing further:**
+
+```
+python3 -c "import subprocess; print(subprocess.run(['arch']).stdout)"
+```
+prints `i386` -- from inside a confirmed-arm64, non-fat `python3` binary
+(`platform.machine()` also says `arm64`; `lipo -info` on the interpreter
+itself confirms single-architecture arm64, not a Rosetta-translated
+binary). The **same** `arch` command typed directly in a shell prints
+`arm64`. Ruled out environment variables as the cause directly: `arch`
+run via `subprocess.run(['arch'], env={})` (a completely empty
+environment) still prints `i386`. So an arm64-native python process's
+*subprocess children* are, on this machine, routed through Rosetta/the
+x86_64 execution context regardless of environment or the parent's own
+architecture -- a process-creation-level behavior (`posix_spawn`
+architecture preference, plausibly inherited from further up this
+session's own process ancestry, e.g. the VS Code extension host), not a
+CLT installation defect at all. `git`'s x86_64 slice then needs `xcrun`,
+whose x86_64 support was never present to begin with on an Apple-Silicon
+CLT install -- **there was never anything to reinstall for this specific
+symptom.**
+
+**Confirmed the fix, not guessed:**
+```
+python3 -c "import subprocess; r=subprocess.run(['arch','-arm64','git','rev-parse','HEAD'], cwd='.', capture_output=True, text=True); print(r.returncode, r.stdout, r.stderr)"
+```
+succeeds (exit 0, real commit hash, empty stderr) from the exact same
+python process where a plain `git rev-parse HEAD` fails. Forcing the
+arm64 slice explicitly, from inside the subprocess call itself, works
+around the routing regardless of its own root cause.
+
+### The real fix: `_git`, a single retrying wrapper, all call sites routed through it
+
+New `_git(args, check=False, capture_output=False, cwd=None, input=None)`
+in `claim.py` (module-level, right after the path constants): runs
+`["git"] + args`; if that fails with the `xcrun: error: unable to load
+libxcrun` signature specifically, retries once with `["arch", "-arm64",
+"git"] + args`. Safe to retry unconditionally on that one signature: a
+failed git invocation had no real side effect (it errored before doing
+anything), so retrying a normally non-idempotent command like `git mv`/
+`git commit` is still safe -- confirmed by design, not just assumed.
+Always captures internally (so the retry decision always has real stderr
+to inspect, regardless of what the caller asked for) and writes captured
+output through to the real stdout/stderr when the caller wanted it live
+(`git commit -F`) rather than silently swallowing it.
+
+**Every one of this file's ~16 `subprocess.run(["git", ...])` call sites
+now goes through `_git`** -- `_stage_registry_row_only`'s surgical
+COMMON.md staging, `_warn_if_duplicate_tracked`'s write-tree/ls-tree
+check, `_perform_transition`'s `git mv`/`git add`/both tracked-checks,
+`cmd_resolve`'s `git reset`, `_staged_paths` (the exact call that started
+this whole task), `cmd_commit_guard`'s `git commit -F`, `_is_tracked`, and
+`cmd_stage`/`cmd_add`'s `git add` calls -- not a partial fix. Also
+refactored `_run_git_bool_check` (the 2026-09-12 hardening) to call `_git`
+internally rather than a second raw `subprocess.run`, so the arch-retry
+applies there too, ahead of its own execution-failure detection.
+
+**`test_claim.py`'s own scratch-repo bootstrap and ~25 direct git
+verification calls had the identical unpatched bug** (they call git via
+their own raw `subprocess.run`, not through `claim.py`) -- this is why
+the suite had 46 failures even after `claim.py` itself was fixed earlier
+in this pass. Fixed the same way: a module-level `_git` helper in
+`test_claim.py` that delegates to `claim.py`'s own `_git` (reused, not a
+second copy of the same workaround), and every raw git call in the file
+converted to go through it.
+
+**Tested, not just fixed:**
+- New `test_claim.py::TestGitArchFallback` (6 tests, mocked
+  `subprocess.run`, same reasoning as `TestGitExecutionErrorDetection` --
+  reproducing a real git-execution failure means breaking git itself):
+  success-on-first-try doesn't retry (asserts exactly 1 subprocess call);
+  the xcrun signature retries exactly once with the correct `arch -arm64
+  git ...` argv; an unrelated git failure (e.g. "not a git repository")
+  does NOT retry; `check=True` still raises after the retry also fails;
+  `capture_output=False` replays captured output to the real
+  stdout/stderr (`capsys`); `input=` passes through.
+- Live, against the actually-broken machine (no mocking): `claim.py
+  commit-guard --expect-empty` -- the exact command that crashed opening
+  this correction -- now succeeds.
+- Full `.ai/tools/` suite: **172 passed**, 0 failed. `test_claim.py`
+  alone: 51 -> 57 (the 6 new `TestGitArchFallback` tests), zero of the
+  previous 46 scratch-repo failures remain.
+
+### Outcome, 2026-09-15 (supersedes the incomplete checklist above)
+
+- [x] Root cause identified precisely (Rosetta/posix_spawn subprocess
+      routing, not a CLT defect) and confirmed by testing the fix
+      directly, not guessed.
+- [x] `_git` arch-fallback landed in `claim.py`, all git subprocess call
+      sites routed through it.
+- [x] `test_claim.py`'s own independent copy of the same unpatched bug
+      found and fixed the same way.
+- [x] Full suite green: 172 passed, 0 failed.
+- [ ] Still open, correctly not claimed as closed: WHY subprocess children
+      of an arm64-native python get Rosetta-routed on this machine
+      specifically remains unconfirmed (Open Questions, below, updated).
+      Does not block this task -- the fix works regardless of the
+      mechanism -- but a future CLT reinstall attempt for a *different*
+      symptom should not be assumed to touch this one again.

@@ -221,6 +221,61 @@ LOCKS_DIR = os.path.join(TASKS_DIR, ".locks")
 COMMON_MD = os.path.join(REPO_ROOT, ".ai", "COMMON.md")
 TASK_STATE_DIRS = ["TODO", "IN_PROGRESS", "DONE"]
 
+# TASK-0375 (addendum, 2026-09-15): on this machine, a `git` subprocess
+# spawned via Python's `subprocess` module resolves `/usr/bin/git`'s
+# universal-binary x86_64 slice regardless of the parent process's own
+# architecture -- confirmed directly: `subprocess.run(["arch"])` reports
+# `i386` from inside this exact python, while the identical `arch`
+# command typed directly in a shell reports `arm64`. That x86_64 slice
+# needs `xcrun`, whose x86_64 support does not exist on this Apple-
+# Silicon-only Command Line Tools install. **Reinstalling CLT does not
+# fix this** -- there is no x86_64 xcrun to reinstall, and two real
+# incidents (2026-09-12, 2026-09-13) both confirmed a full CLT reinstall
+# left this exact subprocess-only failure unchanged, even though it did
+# separately fix *direct* shell git calls (a different symptom of the
+# same underlying breakage, not the same bug). Forcing the arm64 slice
+# explicitly -- `arch -arm64 git ...` -- works around it, confirmed live.
+_GIT_ARCH_BUG_NEEDLE = "xcrun: error: unable to load libxcrun"
+
+
+def _git(args, check=False, capture_output=False, cwd=None, input=None):  # noqa: A002 (shadows builtin, matches subprocess.run's own kwarg name)
+    # type: (List[str], bool, bool, Optional[str], Optional[str]) -> subprocess.CompletedProcess
+    """The one place this file shells out to `git` -- every call site
+    below goes through this, not a bare `subprocess.run(["git", ...])`,
+    so the TASK-0375 arch-fallback (see the module-level note above) lives
+    in exactly one place instead of being reproduced at each call site.
+
+    Mirrors `subprocess.run`'s own `check`/`capture_output`/`cwd`/`input`
+    contract (always text mode; no call site in this file uses bytes
+    mode). Always runs with real output captured internally, regardless
+    of what the caller asked for, so the retry-detection has stderr to
+    inspect no matter which call site is asking -- if the caller didn't
+    want `capture_output`, that captured output is written straight
+    through to the real stdout/stderr afterward, so it's still visible,
+    just not streamed live. Exactly one git process actually runs in the
+    healthy case; the arm64 retry only fires when the first attempt
+    failed with this exact signature, and a failed git invocation had no
+    real side effect to double up on (it errored before doing anything),
+    so the retry is safe even for a non-idempotent command like `git
+    mv`/`git commit`.
+    """
+    real_cwd = cwd if cwd is not None else REPO_ROOT
+    proc = subprocess.run(["git"] + args, cwd=real_cwd, capture_output=True, text=True, input=input)
+    if proc.returncode != 0 and _GIT_ARCH_BUG_NEEDLE in (proc.stderr or ""):
+        proc = subprocess.run(["arch", "-arm64", "git"] + args, cwd=real_cwd, capture_output=True, text=True, input=input)
+    if not capture_output:
+        if proc.stdout:
+            sys.stdout.write(proc.stdout)
+        if proc.stderr:
+            sys.stderr.write(proc.stderr)
+    if check and proc.returncode != 0:
+        raise subprocess.CalledProcessError(
+            proc.returncode, ["git"] + args, output=proc.stdout, stderr=proc.stderr
+        )
+    if capture_output:
+        return proc
+    return subprocess.CompletedProcess(proc.args, proc.returncode, None, None)
+
 # TASK-0024.001: anchored task-id SHAPE, not a loose digit search. The
 # original `re.search(r"(\d+)(?:\.(\d+))?")` matched a digit ANYWHERE in
 # the argument, so a real filename with a digit in it (`PHASE1_SUBMISSION_
@@ -881,12 +936,7 @@ def _stage_registry_row_only(task_id, new_status, new_path):
     for shared-file commits this session. Returns True if a row was
     found and staged, False otherwise (no row for task_id, or unchanged)."""
     common_md_rel = os.path.relpath(COMMON_MD, REPO_ROOT)
-    show = subprocess.run(
-        ["git", "show", ":%s" % common_md_rel],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-    )
+    show = _git(["show", ":%s" % common_md_rel], capture_output=True)
     if show.returncode != 0:
         return False
 
@@ -895,20 +945,16 @@ def _stage_registry_row_only(task_id, new_status, new_path):
     if not changed:
         return False
 
-    blob_sha = subprocess.run(
-        ["git", "hash-object", "-w", "--path=%s" % common_md_rel, "--stdin"],
-        cwd=REPO_ROOT,
+    blob_sha = _git(
+        ["hash-object", "-w", "--path=%s" % common_md_rel, "--stdin"],
         input="".join(new_lines),
         capture_output=True,
-        text=True,
         check=True,
     ).stdout.strip()
-    subprocess.run(
-        ["git", "update-index", "--cacheinfo", "100644,%s,%s" % (blob_sha, common_md_rel)],
-        cwd=REPO_ROOT,
+    _git(
+        ["update-index", "--cacheinfo", "100644,%s,%s" % (blob_sha, common_md_rel)],
         check=True,
         capture_output=True,
-        text=True,
     )
     return True
 
@@ -1061,18 +1107,13 @@ def _assert_single_tracked_path(task_id):
     matched paths (length >= 2) if the defect is present -- printing is
     the caller's job, so `move`/`resolve` can each phrase the warning in
     their own voice."""
-    tree = subprocess.run(
-        ["git", "write-tree"], cwd=REPO_ROOT, capture_output=True, text=True,
-    )
+    tree = _git(["write-tree"], capture_output=True)
     if tree.returncode != 0:
         # An unmerged/conflicted index can't produce a tree -- not this
         # check's failure mode to diagnose; skip rather than crash the
         # move/resolve call that already succeeded on disk.
         return None
-    out = subprocess.run(
-        ["git", "ls-tree", "-r", "--name-only", tree.stdout.strip()],
-        cwd=REPO_ROOT, capture_output=True, text=True,
-    )
+    out = _git(["ls-tree", "-r", "--name-only", tree.stdout.strip()], capture_output=True)
     if out.returncode != 0:
         return None
     tasks_prefix = os.path.relpath(TASKS_DIR, REPO_ROOT).replace(os.sep, "/") + "/"
@@ -1105,8 +1146,12 @@ def _run_git_bool_check(args, expected_no_needle):
     `move` reported success while its own `git mv` silently never ran,
     with no error at all. Raises GitExecutionError for anything that
     doesn't match the expected negative-answer shape; callers must handle
-    it as a hard failure, never fall through to a truthy/falsy default."""
-    proc = subprocess.run(args, cwd=REPO_ROOT, capture_output=True, text=True)
+    it as a hard failure, never fall through to a truthy/falsy default.
+    Routed through `_git` (`args[0]` is always literally "git" at every
+    call site -- stripped here since `_git` prepends it itself), so this
+    machine's TASK-0375 arch-retry already applies before this function's
+    own stderr-shape check ever has to fire."""
+    proc = _git(args[1:], capture_output=True)
     if proc.returncode == 0:
         return True
     if expected_no_needle in (proc.stderr or ""):
@@ -1167,13 +1212,7 @@ def _perform_transition(task_id, target_state, keep_claim, content_transform):
             return {"error": True}
         try:
             if tracked:
-                subprocess.run(
-                    ["git", "mv", src_rel, dst_rel],
-                    cwd=REPO_ROOT,
-                    check=True,
-                    capture_output=True,
-                    text=True,
-                )
+                _git(["mv", src_rel, dst_rel], check=True, capture_output=True)
             else:
                 os.replace(src_path, dst_path)
         except (subprocess.CalledProcessError, FileNotFoundError) as exc:
@@ -1208,13 +1247,7 @@ def _perform_transition(task_id, target_state, keep_claim, content_transform):
         )
         return {"error": True}
     if final_tracked:
-        subprocess.run(
-            ["git", "add", final_rel],
-            cwd=REPO_ROOT,
-            check=True,
-            capture_output=True,
-            text=True,
-        )
+        _git(["add", final_rel], check=True, capture_output=True)
 
     target_status_text = STATE_TO_STATUS[target_state]
     registry_path_cell = "`%s`" % dst_rel.replace(os.sep, "/")
@@ -1430,13 +1463,7 @@ def cmd_resolve(args):
         # deletion still staged. Reset both unconditionally; when no move
         # happened, src_rel == final_rel and this is a harmless no-op repeat.
         reset_paths = sorted(set([result["src_rel"], result["final_rel"]]))
-        subprocess.run(
-            ["git", "reset", "--"] + reset_paths,
-            cwd=REPO_ROOT,
-            check=True,
-            capture_output=True,
-            text=True,
-        )
+        _git(["reset", "--"] + reset_paths, check=True, capture_output=True)
         stage_note = ", not staged (--no-stage)"
     else:
         if result["registry_changed"]:
@@ -1477,13 +1504,7 @@ def _staged_paths():
     as a plain delete+add (old path removed, new path added) unconditionally,
     so "list both paths for a rename" becomes a fixed rule instead of a
     threshold a caller has to discover by having a call fail."""
-    proc = subprocess.run(
-        ["git", "diff", "--cached", "--name-only", "--no-renames"],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=True,
-    )
+    proc = _git(["diff", "--cached", "--name-only", "--no-renames"], capture_output=True, check=True)
     return set(line for line in proc.stdout.splitlines() if line)
 
 
@@ -1565,7 +1586,7 @@ def cmd_commit_guard(args):
         print("error: refusing to commit -- %s" % reason, file=sys.stderr)
         return 1
 
-    proc = subprocess.run(["git", "commit", "-F", args.message_file], cwd=REPO_ROOT)
+    proc = _git(["commit", "-F", args.message_file])
     if proc.returncode != 0:
         print(
             "error: git commit exited %d -- staged index is untouched, "
@@ -1707,7 +1728,7 @@ def cmd_stage(args):
     still_missing = set(missing_on_disk) & _staged_paths()
     to_add = [p for p in expect if p not in still_missing]
     if to_add:
-        subprocess.run(["git", "add", "--"] + to_add, cwd=REPO_ROOT, check=True)
+        _git(["add", "--"] + to_add, check=True)
 
     unexpected, missing = _compare_staged(set(expect))
     if unexpected or missing:
@@ -1871,7 +1892,7 @@ def cmd_add(args):
         return 1
 
     rel_paths = [p for p, _ in entries]
-    subprocess.run(["git", "add", "--"] + rel_paths, cwd=REPO_ROOT, check=True)
+    _git(["add", "--"] + rel_paths, check=True)
 
     # Lighter self-check than `stage`'s exact-match assertion (this task's
     # own In Scope wording): confirm each just-added path now actually
@@ -1900,7 +1921,7 @@ def cmd_add(args):
         )
     with open(task_path, "w") as f:
         f.write(content)
-    subprocess.run(["git", "add", "--", task_rel], cwd=REPO_ROOT, check=True)
+    _git(["add", "--", task_rel], check=True)
 
     print(
         "staged %d file(s) under %s, annotated in %s"

@@ -30,6 +30,19 @@ import pytest
 _HERE = Path(__file__).resolve().parent
 CLAIM_PY = _HERE / "claim.py"
 
+# TASK-0375: reuse claim.py's own arch-fallback (`_git`) for every git call
+# THIS file makes to set up/verify a scratch repo, rather than a second,
+# unpatched copy of the same machine-specific workaround -- every one of
+# them is just as exposed to the bug (a python-subprocess git call routing
+# through this machine's broken x86_64 xcrun) as claim.py's own internals.
+sys.path.insert(0, str(_HERE))
+import claim as _claim_tool  # noqa: E402  (path insert must precede this import)
+
+
+def _git(args, cwd, check=True, capture_output=True):
+    # type: (list, Path, bool, bool) -> subprocess.CompletedProcess
+    return _claim_tool._git(args, check=check, capture_output=capture_output, cwd=str(cwd))
+
 
 def _make_scratch_repo(tmp_path: Path) -> Path:
     """A throwaway repo with the same `.ai/tasks/{TODO,IN_PROGRESS,DONE,
@@ -60,14 +73,11 @@ def _make_scratch_repo(tmp_path: Path) -> Path:
         "original content\n"
     )
 
-    def _git(*args):
-        subprocess.run(["git", *args], cwd=repo, check=True, capture_output=True, text=True)
-
-    _git("init", "-q")
-    _git("config", "user.email", "test@test.com")
-    _git("config", "user.name", "test")
-    _git("add", "-A")
-    _git("commit", "-q", "-m", "initial commit with TASK-9001 in TODO")
+    _git(["init", "-q"], repo)
+    _git(["config", "user.email", "test@test.com"], repo)
+    _git(["config", "user.name", "test"], repo)
+    _git(["add", "-A"], repo)
+    _git(["commit", "-q", "-m", "initial commit with TASK-9001 in TODO"], repo)
     return repo
 
 
@@ -79,10 +89,7 @@ def _claim(repo: Path, *args, env: dict | None = None) -> subprocess.CompletedPr
 
 
 def _tracked_paths_for(repo: Path, task_id: str) -> list[str]:
-    out = subprocess.run(
-        ["git", "ls-tree", "-r", "HEAD", "--name-only"],
-        cwd=repo, capture_output=True, text=True, check=True,
-    ).stdout
+    out = _git(["ls-tree", "-r", "HEAD", "--name-only"], repo).stdout
     return [line for line in out.splitlines() if f"{task_id}-" in line and line.endswith(".md")]
 
 
@@ -105,7 +112,7 @@ class TestChainedTransitionNoDuplicate:
         result = _claim(repo, "move", "TASK-9001", "DONE", "--as", "test")
         assert result.returncode == 0
 
-        subprocess.run(["git", "commit", "-q", "-m", "chained move"], cwd=repo, check=True)
+        _git(["commit", "-q", "-m", "chained move"], repo)
 
         tracked = _tracked_paths_for(repo, "TASK-9001")
         assert tracked == [".ai/tasks/DONE/TASK-9001-scratch.md"], (
@@ -128,7 +135,7 @@ class TestChainedTransitionNoDuplicate:
         result = _claim(repo, "resolve", "TASK-9001", "done", "--as", "test")
         assert result.returncode == 0
 
-        subprocess.run(["git", "commit", "-q", "-m", "move then resolve"], cwd=repo, check=True)
+        _git(["commit", "-q", "-m", "move then resolve"], repo)
 
         tracked = _tracked_paths_for(repo, "TASK-9001")
         assert tracked == [".ai/tasks/DONE/TASK-9001-scratch.md"], (
@@ -190,7 +197,7 @@ class TestAssertSingleTrackedPath:
         repo = _make_scratch_repo(tmp_path)
         (repo / ".ai" / "tasks" / "TODO" / "TASK-9002-scratch.md").write_text("stale\n")
         (repo / ".ai" / "tasks" / "DONE" / "TASK-9002-scratch.md").write_text("real\n")
-        subprocess.run(["git", "add", "-A"], cwd=repo, check=True, capture_output=True)
+        _git(["add", "-A"], repo)
 
         sys.path.insert(0, str(repo / ".ai" / "tools"))
         try:
@@ -403,9 +410,7 @@ class TestStageRestagesEditedContent:
         result = _claim(repo, "stage", "--expect", old_rel, rel)
         assert result.returncode == 0, result.stderr
 
-        staged_blob = subprocess.run(
-            ["git", "show", f":{rel}"], cwd=repo, capture_output=True, text=True, check=True,
-        ).stdout
+        staged_blob = _git(["show", f":{rel}"], repo).stdout
         assert "edited after move, before stage" in staged_blob, (
             "stage --expect reported success but the staged content is stale "
             "relative to the working tree -- TASK-0223's own regression"
@@ -557,9 +562,7 @@ class TestExpectEmptyIncompatibleWithMove:
         released = _claim(repo, "release", "GIT-COMMIT")
         assert released.returncode == 0, released.stderr
 
-        log = subprocess.run(
-            ["git", "log", "--oneline", "-1"], cwd=repo, capture_output=True, text=True, check=True,
-        ).stdout
+        log = _git(["log", "--oneline", "-1"], repo).stdout
         assert "sequence smoke test" in log
 
 
@@ -587,23 +590,17 @@ class TestCommitGuardCommitMode:
         repo = _make_scratch_repo(tmp_path)
         rel, msg = self._prep_staged_commit_file(repo, tmp_path)
 
-        before = subprocess.run(
-            ["git", "log", "--oneline"], cwd=repo, capture_output=True, text=True, check=True,
-        ).stdout
+        before = _git(["log", "--oneline"], repo).stdout
 
         result = _claim(repo, "commit-guard", "--expect", rel, "--commit", "--message-file", str(msg))
         assert result.returncode == 0, result.stderr
         assert "committed" in result.stdout
 
-        after = subprocess.run(
-            ["git", "log", "--oneline"], cwd=repo, capture_output=True, text=True, check=True,
-        ).stdout
+        after = _git(["log", "--oneline"], repo).stdout
         assert after != before
         assert "commit-guard --commit smoke test" in after
 
-        status = subprocess.run(
-            ["git", "status", "--porcelain"], cwd=repo, capture_output=True, text=True, check=True,
-        ).stdout
+        status = _git(["status", "--porcelain"], repo).stdout
         real_changes = [l for l in status.splitlines() if ".locks" not in l]
         assert not real_changes, "expected a clean tree after the atomic commit"
 
@@ -611,9 +608,7 @@ class TestCommitGuardCommitMode:
         repo = _make_scratch_repo(tmp_path)
         rel, msg = self._prep_staged_commit_file(repo, tmp_path)
 
-        before = subprocess.run(
-            ["git", "log", "--oneline"], cwd=repo, capture_output=True, text=True, check=True,
-        ).stdout
+        before = _git(["log", "--oneline"], repo).stdout
 
         result = _claim(
             repo, "commit-guard", "--expect", ".ai/COMMON.md",  # wrong path
@@ -622,9 +617,7 @@ class TestCommitGuardCommitMode:
         assert result.returncode == 1
         assert rel in result.stderr
 
-        after = subprocess.run(
-            ["git", "log", "--oneline"], cwd=repo, capture_output=True, text=True, check=True,
-        ).stdout
+        after = _git(["log", "--oneline"], repo).stdout
         assert after == before, "a mismatched --expect must not commit anything"
 
     def test_refuses_and_does_not_commit_when_git_commit_unclaimed(self, tmp_path):
@@ -633,21 +626,17 @@ class TestCommitGuardCommitMode:
         (repo / rel).write_text((repo / rel).read_text() + "\nedited, but never claimed GIT-COMMIT\n")
         # Stage directly with plain git (bypassing `stage`'s own
         # claim-required check) to isolate --commit's own re-verification.
-        subprocess.run(["git", "add", rel], cwd=repo, check=True)
+        _git(["add", rel], repo)
         msg = tmp_path / "msg.txt"
         msg.write_text("should never land\n")
 
-        before = subprocess.run(
-            ["git", "log", "--oneline"], cwd=repo, capture_output=True, text=True, check=True,
-        ).stdout
+        before = _git(["log", "--oneline"], repo).stdout
 
         result = _claim(repo, "commit-guard", "--expect", rel, "--commit", "--message-file", str(msg))
         assert result.returncode == 1
         assert "not currently claimed" in result.stderr
 
-        after = subprocess.run(
-            ["git", "log", "--oneline"], cwd=repo, capture_output=True, text=True, check=True,
-        ).stdout
+        after = _git(["log", "--oneline"], repo).stdout
         assert after == before
 
     def test_refuses_and_does_not_commit_on_session_id_mismatch(self, tmp_path):
@@ -672,9 +661,7 @@ class TestCommitGuardCommitMode:
         this_session_env = dict(os.environ)
         this_session_env["CLAUDE_CODE_SESSION_ID"] = "this-session-bbbb"
 
-        before = subprocess.run(
-            ["git", "log", "--oneline"], cwd=repo, capture_output=True, text=True, check=True,
-        ).stdout
+        before = _git(["log", "--oneline"], repo).stdout
 
         result = _claim(
             repo, "commit-guard", "--expect", rel, "--commit", "--message-file", str(msg),
@@ -683,9 +670,7 @@ class TestCommitGuardCommitMode:
         assert result.returncode == 1
         assert "not this session" in result.stderr
 
-        after = subprocess.run(
-            ["git", "log", "--oneline"], cwd=repo, capture_output=True, text=True, check=True,
-        ).stdout
+        after = _git(["log", "--oneline"], repo).stdout
         assert after == before, "a session_id mismatch must not commit anything"
 
     def test_refuses_combination_with_expect_empty(self, tmp_path):
@@ -730,9 +715,7 @@ class TestAddAttributedStageAndAnnotate:
         result = _claim(repo, "add", "TASK-9001", "backend/outside.py", "--purpose", "wires up the new thing")
         assert result.returncode == 0, result.stderr
 
-        staged = subprocess.run(
-            ["git", "diff", "--cached", "--name-only"], cwd=repo, capture_output=True, text=True, check=True,
-        ).stdout.split()
+        staged = _git(["diff", "--cached", "--name-only"], repo).stdout.split()
         assert "backend/outside.py" in staged
         assert ".ai/tasks/TODO/TASK-9001-scratch.md" in staged, (
             "the task file's own edit (the new annotation) must be staged too"
@@ -748,8 +731,8 @@ class TestAddAttributedStageAndAnnotate:
         task_path.write_text(
             "# TASK-9001 scratch\n\n- Status: TODO\n\n## Context\n\nsome context\n\n## Done\n\n(not yet)\n"
         )
-        subprocess.run(["git", "add", "-A"], cwd=repo, check=True, capture_output=True)
-        subprocess.run(["git", "commit", "-q", "-m", "task file with a Done heading"], cwd=repo, check=True, capture_output=True)
+        _git(["add", "-A"], repo)
+        _git(["commit", "-q", "-m", "task file with a Done heading"], repo)
         (repo / "backend").mkdir()
         (repo / "backend" / "x.py").write_text("# x\n")
 
@@ -794,9 +777,7 @@ class TestAddAttributedStageAndAnnotate:
         content = (repo / ".ai/tasks/TODO/TASK-9001-scratch.md").read_text()
         assert "`backend/a.py` -- reason A" in content
         assert "`backend/b.py` -- reason B" in content
-        staged = subprocess.run(
-            ["git", "diff", "--cached", "--name-only"], cwd=repo, capture_output=True, text=True, check=True,
-        ).stdout.split()
+        staged = _git(["diff", "--cached", "--name-only"], repo).stdout.split()
         assert "backend/a.py" in staged and "backend/b.py" in staged
 
     def test_batch_manifest_object_form_shared_and_override_purpose(self, tmp_path):
@@ -832,15 +813,11 @@ class TestAddAttributedStageAndAnnotate:
         manifest = tmp_path / "bad.json"
         manifest.write_text("{not valid json")
 
-        before = subprocess.run(
-            ["git", "diff", "--cached", "--name-only"], cwd=repo, capture_output=True, text=True, check=True,
-        ).stdout
+        before = _git(["diff", "--cached", "--name-only"], repo).stdout
         result = _claim(repo, "add", "TASK-9001", "--from-file", str(manifest))
         assert result.returncode != 0
         assert "malformed manifest" in result.stderr
-        after = subprocess.run(
-            ["git", "diff", "--cached", "--name-only"], cwd=repo, capture_output=True, text=True, check=True,
-        ).stdout
+        after = _git(["diff", "--cached", "--name-only"], repo).stdout
         assert before == after, "a parse error must stage nothing"
 
     def test_manifest_naming_a_missing_file_refuses_all_or_nothing(self, tmp_path):
@@ -853,14 +830,10 @@ class TestAddAttributedStageAndAnnotate:
             {"file": "backend/does_not_exist.py", "purpose": "missing"},
         ]))
 
-        before = subprocess.run(
-            ["git", "diff", "--cached", "--name-only"], cwd=repo, capture_output=True, text=True, check=True,
-        ).stdout
+        before = _git(["diff", "--cached", "--name-only"], repo).stdout
         result = _claim(repo, "add", "TASK-9001", "--from-file", str(manifest))
         assert result.returncode != 0
-        after = subprocess.run(
-            ["git", "diff", "--cached", "--name-only"], cwd=repo, capture_output=True, text=True, check=True,
-        ).stdout
+        after = _git(["diff", "--cached", "--name-only"], repo).stdout
         assert before == after, "one missing path must block the whole batch, not stage the rest"
 
     def test_manifest_entry_with_no_purpose_and_no_shared_purpose_refuses(self, tmp_path):
@@ -992,6 +965,110 @@ class TestGitExecutionErrorDetection:
             args=a, returncode=128, stdout="",
             stderr="fatal: path 'some/path.md' does not exist in 'HEAD'"))
         assert claim._is_tracked("some/path.md") is False
+
+
+class TestGitArchFallback:
+    """TASK-0375, third occurrence (2026-09-15): a CLT reinstall fixed
+    *direct* shell git calls but left this machine's real bug unchanged --
+    a `git` subprocess spawned via Python's `subprocess` module resolves
+    the universal binary's x86_64 slice regardless of the parent's own
+    architecture (confirmed live: `subprocess.run(["arch"])` reports
+    `i386` from inside this exact python; the same command typed in a
+    shell reports `arm64`), and that slice's `xcrun` has no x86_64
+    support on this Apple-Silicon-only CLT install. `_git` is the fix:
+    retry once under `arch -arm64` when the first attempt fails with
+    exactly that signature. Mocked, same reasoning as
+    `TestGitExecutionErrorDetection` above -- reproducing this for real
+    means breaking git itself."""
+
+    @staticmethod
+    def _import_claim():
+        import importlib
+        sys.path.insert(0, str(_HERE))
+        import claim as claim_module
+        importlib.reload(claim_module)
+        return claim_module
+
+    def test_success_on_first_try_does_not_retry(self, monkeypatch):
+        claim = self._import_claim()
+        calls = []
+
+        def fake_run(args, **kwargs):
+            calls.append(args)
+            return subprocess.CompletedProcess(args=args, returncode=0, stdout="ok\n", stderr="")
+
+        monkeypatch.setattr(claim.subprocess, "run", fake_run)
+        proc = claim._git(["status"], capture_output=True)
+        assert proc.returncode == 0 and proc.stdout == "ok\n"
+        assert len(calls) == 1, "a healthy first attempt must not trigger a second git process"
+        assert calls[0] == ["git", "status"]
+
+    def test_xcrun_failure_retries_once_under_arch_arm64(self, monkeypatch):
+        claim = self._import_claim()
+        calls = []
+
+        def fake_run(args, **kwargs):
+            calls.append(args)
+            if args[0] == "git":
+                return subprocess.CompletedProcess(
+                    args=args, returncode=1, stdout="",
+                    stderr="xcrun: error: unable to load libxcrun (need x86_64)")
+            return subprocess.CompletedProcess(args=args, returncode=0, stdout="fixed\n", stderr="")
+
+        monkeypatch.setattr(claim.subprocess, "run", fake_run)
+        proc = claim._git(["rev-parse", "HEAD"], capture_output=True)
+        assert proc.returncode == 0 and proc.stdout == "fixed\n"
+        assert calls == [["git", "rev-parse", "HEAD"], ["arch", "-arm64", "git", "rev-parse", "HEAD"]]
+
+    def test_unrelated_failure_does_not_retry(self, monkeypatch):
+        """A real git error (not this machine's specific bug) must not
+        trigger the arm64 retry -- that would just mask a genuine failure
+        behind an extra, pointless process spawn."""
+        claim = self._import_claim()
+        calls = []
+
+        def fake_run(args, **kwargs):
+            calls.append(args)
+            return subprocess.CompletedProcess(
+                args=args, returncode=128, stdout="", stderr="fatal: not a git repository")
+
+        monkeypatch.setattr(claim.subprocess, "run", fake_run)
+        proc = claim._git(["status"], capture_output=True)
+        assert proc.returncode == 128
+        assert len(calls) == 1
+
+    def test_check_true_raises_after_the_retry_also_fails(self, monkeypatch):
+        claim = self._import_claim()
+        monkeypatch.setattr(claim.subprocess, "run", lambda args, **k: subprocess.CompletedProcess(
+            args=args, returncode=1, stdout="",
+            stderr="xcrun: error: unable to load libxcrun (need x86_64)"))
+        with pytest.raises(claim.subprocess.CalledProcessError):
+            claim._git(["status"], check=True, capture_output=True)
+
+    def test_capture_output_false_writes_through_to_real_streams(self, monkeypatch, capsys):
+        """The internal diagnostic run always captures (needed to inspect
+        stderr for the retry decision) -- a caller that asked for live
+        output must still see it, just replayed rather than streamed."""
+        claim = self._import_claim()
+        monkeypatch.setattr(claim.subprocess, "run", lambda args, **k: subprocess.CompletedProcess(
+            args=args, returncode=0, stdout="hello stdout\n", stderr="hello stderr\n"))
+        proc = claim._git(["commit"])
+        captured = capsys.readouterr()
+        assert "hello stdout" in captured.out
+        assert "hello stderr" in captured.err
+        assert proc.stdout is None, "capture_output=False must match subprocess.run's own shape"
+
+    def test_input_is_passed_through(self, monkeypatch):
+        claim = self._import_claim()
+        received = {}
+
+        def fake_run(args, **kwargs):
+            received.update(kwargs)
+            return subprocess.CompletedProcess(args=args, returncode=0, stdout="", stderr="")
+
+        monkeypatch.setattr(claim.subprocess, "run", fake_run)
+        claim._git(["hash-object", "-w", "--stdin"], capture_output=True, input="some content")
+        assert received.get("input") == "some content"
 
 
 if __name__ == "__main__":
